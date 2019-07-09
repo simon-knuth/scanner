@@ -7,75 +7,88 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
     x:Class="Scanner.MainPage"
-    mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    mc:Ignorable="d" SizeChanged="Page_SizeChanged">
 
     <Grid>
-        <SplitView IsPaneOpen="True" DisplayMode="Inline" PaneBackground="{ThemeResource SystemControlAcrylicWindowBrush}" OpenPaneLength="300" PanePlacement="Left">
-            <SplitView.Pane>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition MaxHeight="75"/>
-                    </Grid.RowDefinitions>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
-                        <StackPanel Orientation="Vertical" Padding="24,0,24,6">
-                            <TextBlock Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
-                                <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,12,0" />
-                                <TextBlock FontFamily="Segoe UI" Margin="0,0,12,0"><Hyperlink UnderlineStyle="None"><Run Text="Refresh list"/></Hyperlink></TextBlock>
-                                <ProgressRing IsActive="True"/>
-                            </StackPanel>
-                            <ComboBox HorizontalAlignment="Stretch" Margin="0,6,0,0"/>
-                            <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                                <RadioButton GroupName="RadioButtonGroupSource" IsEnabled="False"  IsChecked="True" HorizontalAlignment="Stretch">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Automatic"/>
-                                        <TextBlock Text=" (recommended)" Opacity="0.5"/>
-                                    </StackPanel>
-                                </RadioButton>
-                                <RadioButton GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                                <RadioButton GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            </StackPanel>
-                            <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                            <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,6,0,0">
-                                <RadioButton GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" IsChecked="True" HorizontalAlignment="Stretch"/>
-                                <RadioButton GroupName="RadioButtonGroupColor" Content="Black &amp; White" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                                <RadioButton GroupName="RadioButtonGroupColor" Content="Sepia" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            </StackPanel>
-                            <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                            <ComboBox Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" SelectedIndex="0">
-                                <ComboBoxItem Content="JPG (prioritize file size)"/>
-                                <ComboBoxItem Content="PNG (prioritize quality)"/>
-                            </ComboBox>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
+            <ColumnDefinition x:Name="ColumnRight" Width="7*"/>
+        </Grid.ColumnDefinitions>
+
+        <Frame Grid.Column="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition MaxHeight="75"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
+                    <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,6" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                            <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,12,0" />
+                            <TextBlock FontFamily="Segoe UI" Margin="0,0,12,0"><Hyperlink UnderlineStyle="None"><Run Text="Refresh list"/></Hyperlink></TextBlock>
+                            <ProgressRing IsActive="True"/>
                         </StackPanel>
-                    </ScrollViewer>
-                    <Grid Grid.Row="1" Padding="24,12,24,12" VerticalAlignment="Stretch">
-                        <Button Content="Scan" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Button ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0">
-                                <SymbolIcon Symbol="Setting"/>
-                            </Button>
-                            <Button ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
-                            </Button>
+                        <ComboBox HorizontalAlignment="Stretch" Margin="0,6,0,0"/>
+                        <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
+                            <RadioButton GroupName="RadioButtonGroupSource" IsEnabled="False"  IsChecked="True" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Automatic"/>
+                                    <TextBlock Text=" (recommended)" Opacity="0.5"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
-                    </Grid>
+                        <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
+                        <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,6,0,0">
+                            <RadioButton GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" IsChecked="True" HorizontalAlignment="Stretch"/>
+                            <RadioButton GroupName="RadioButtonGroupColor" Content="Black &amp; White" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton GroupName="RadioButtonGroupColor" Content="Sepia" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                        <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
+                        <ComboBox Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="JPG (prioritize file size)"/>
+                            <ComboBoxItem Content="PNG (prioritize quality)"/>
+                        </ComboBox>
+                    </StackPanel>
+                </ScrollViewer>
+                <Grid Grid.Row="1" Padding="24,12,24,12" VerticalAlignment="Stretch">
+                    <Button Content="Scan" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold" MinWidth="100"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Button ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0">
+                            <SymbolIcon Symbol="Setting"/>
+                        </Button>
+                        <Button ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
+                        </Button>
+                    </StackPanel>
                 </Grid>
-                
-            </SplitView.Pane>
+            </Grid>
+        </Frame>
+
+        <RelativePanel Grid.Column="1" Name="RelativePanelRight">
+            <Frame Name="TitleBarFrame" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Height="50" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
+            <Frame Name="LeftFrame" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Width="50" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
             <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.3" OffsetX="40" OffsetY="40" OffsetZ="0"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                        HorizontalContentAlignment="Stretch">
-                <Grid  CornerRadius="10, 0, 0, 0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="32,32,0,0">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12"/>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                            <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
+                                        HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
+                                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                                        RelativePanel.AlignBottomWithPanel="True">
+                <Grid  CornerRadius="10, 0, 0, 0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="32,32,0,0" VerticalAlignment="Stretch">
+                    <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0">
+                        <StackPanel.OpacityTransition>
+                            <ScalarTransition/>
+                        </StackPanel.OpacityTransition>
+                        
+                        <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords" Opacity="0.75"/>
+                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.5">
+                                <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
                         </TextBlock>
                     </StackPanel>
                 </Grid>
             </controls:DropShadowPanel>
-        </SplitView>
+        </RelativePanel>
+
     </Grid>
 </Page>

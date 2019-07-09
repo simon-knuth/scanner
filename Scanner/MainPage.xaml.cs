@@ -24,10 +24,12 @@ namespace Scanner
 
         private Windows.UI.Xaml.Controls.StackPanel[] radioButtonStackPanels;
         private DeviceWatcher scannerWatcher;
+        private double ColumnLeftDefaultMaxWidth;
 
         public MainPage()
         {
             this.InitializeComponent();
+            ColumnLeftDefaultMaxWidth = ColumnLeft.MaxWidth;
             this.radioButtonStackPanels = new Windows.UI.Xaml.Controls.StackPanel[] { StackPanelSource, StackPanelColor };
             refreshScannerList();
         }
@@ -83,6 +85,32 @@ namespace Scanner
         private async void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
         {
 
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (((Page) sender).ActualWidth < 900)
+            {
+                StackPanelTextRight.Opacity = 0.0;
+                if (((Page) sender).ActualWidth < 700)
+                {
+                    ColumnLeft.MaxWidth = Double.PositiveInfinity;
+                    DropShadowPanelRight.Visibility = Visibility.Collapsed;
+                    LeftFrame.Visibility = Visibility.Collapsed;
+                    ColumnRight.MaxWidth = 0;
+                    TitleBarFrame.Visibility = Visibility.Collapsed;
+                } else
+                {
+                    ColumnRight.MaxWidth = Double.PositiveInfinity;
+                    ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
+                    TitleBarFrame.Visibility = Visibility.Visible;
+                    DropShadowPanelRight.Visibility = Visibility.Visible;
+                    LeftFrame.Visibility = Visibility.Visible;
+                }
+            } else 
+            {
+                StackPanelTextRight.Opacity = 1.0;
+            }
         }
     }
 }
