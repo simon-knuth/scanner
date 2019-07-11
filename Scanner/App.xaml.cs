@@ -78,10 +78,28 @@ namespace Scanner
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
-            // Set title bar buttons color
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            // Update theme and setup watcher to correct titlebar colors when the theme changes
+            updateTheme(null, null);
+            (new UISettings()).ColorValuesChanged += updateTheme;
+        }
+
+        private void updateTheme(UISettings uISettings, object theObject)
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;        // TODO fix issue #1
+
             titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+
+            if ((new UISettings()).GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).ToString() == "#FF000000")
+            {
+                // Dark mode is active
+                titleBar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+            }
+            else
+            {
+                // Light mode is active
+                titleBar.ButtonForegroundColor = Windows.UI.Colors.Black;
+            }
         }
 
         /// <summary>

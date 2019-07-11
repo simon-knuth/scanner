@@ -13,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,17 +27,24 @@ namespace Scanner
     public sealed partial class MainPage : Page
     {
 
-        private Windows.UI.Xaml.Controls.StackPanel[] radioButtonStackPanels;
         private DeviceWatcher scannerWatcher;
         private double ColumnLeftDefaultMaxWidth;
-        private ObservableCollection<string> scannerList = new ObservableCollection<string>();
+        private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
+        private List<DeviceInformation> deviceInformations = new List<DeviceInformation>();
+        private ImageScanner selectedScanner = null;
+        
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            // initialize veriables
             ColumnLeftDefaultMaxWidth = ColumnLeft.MaxWidth;
-            this.radioButtonStackPanels = new Windows.UI.Xaml.Controls.StackPanel[] { StackPanelSource, StackPanelColor };
+
+            // populate the scanner list
             refreshScannerList();
+
+            CoreApplication.MainView.TitleBar.LayoutMetricsChanged += correct_titlebar;
         }
 
         public void refreshScannerList()
@@ -60,30 +68,94 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
                 {
-                    scannerList.Add(deviceInfo.Name);
+                    bool duplicate = false;
+
+                    foreach (var check in scannerList)
+                    {
+                        if (check.Tag.ToString() == deviceInfo.Id)
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!duplicate)
+                    {
+                        ComboBoxItem item = new ComboBoxItem();
+
+                        if (deviceInfo.IsDefault)
+                        {
+                            item.Content = deviceInfo.Name + " (default)";
+                        } else
+                        {
+                            item.Content = deviceInfo.Name;
+                        }
+                        item.Tag = deviceInfo.Id;
+
+                        deviceInformations.Add(deviceInfo);
+                        scannerList.Add(item);
+                    }
+                    
                 }
             );
         }
 
         private async void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
         {
-            Debug.WriteLine("OnScannerRemoved() with " + deviceInfoUpdate.ToString());
+            Debug.WriteLine("Lost scanner " + deviceInfoUpdate.Id + ", remove it from the scanner list");
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                // find lost scanner in scanner to remove the corresponding scanner and its list entry
+                foreach (var item in scannerList)
+                {
+                    if (item.Tag.ToString() == deviceInfoUpdate.Id)
+                    {
+                        Debug.WriteLine("Attempt to remove scanner " + item.Content.ToString() + " from list index " + scannerList.IndexOf(item));
+                        ComboBoxScanners.IsDropDownOpen = false;
+                        if (item.IsSelected)
+                        {
+                            no_scanner_selected();
+                            ComboBoxScanners.SelectedIndex = -1;
+                            selectedScanner = null;
+                        }
+
+                        scannerList.Remove(item);
+
+                        foreach (DeviceInformation check in deviceInformations)
+                        {
+                            if (check.Id == deviceInfoUpdate.Id)
+                            {
+                                deviceInformations.Remove(check);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            });
         }
+            
 
         private async void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
         {
             Debug.WriteLine("OnScannerEnumerationComplete()");
-
+            
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
                 {
                     ProgressBarRefresh.Visibility = Visibility.Collapsed;
+                    TextBlockRefreshHint.Visibility = Visibility.Visible;
+                    ComboBoxScanners.IsEnabled = true;
+                    StackPanelTextRight.Opacity = 1.0;
                 }
             );
         }
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            // responsive behavior
             if (((Page) sender).ActualWidth < 900)
             {
                 StackPanelTextRight.Opacity = 0.0;
@@ -104,19 +176,121 @@ namespace Scanner
                 }
             } else 
             {
-                StackPanelTextRight.Opacity = 1.0;
+                if (selectedScanner != null)
+                {
+                    StackPanelTextRight.Opacity = 1.0;
+                }
             }
-        }
-
-        private void Hyperlink_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            refreshScannerList();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             StorageFolder folder = await KnownFolders.PicturesLibrary.GetFolderAsync("Scans");
             await Launcher.LaunchFolderAsync(folder);
+        }
+
+        private async void no_scanner_selected()
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+
+                foreach (RadioButton radioButton in StackPanelColor.Children)
+                {
+                    radioButton.IsEnabled = false;
+                }
+
+                foreach (RadioButton radioButton in StackPanelSource.Children)
+                {
+                    radioButton.IsEnabled = false;
+                }
+
+                ComboBoxResolution.IsEnabled = false;
+                ComboBoxType.IsEnabled = false;
+                ButtonScan.IsEnabled = false;
+                StackPanelTextRight.Opacity = 1.0;
+            }
+            );
+        }
+
+        private async void scanner_selected()
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            async () =>
+            {
+                // unlock basic options
+                foreach (RadioButton radioButton in StackPanelColor.Children)
+                {
+                    radioButton.IsEnabled = true;
+                }
+
+                ComboBoxScanners.IsEnabled = true;
+                ComboBoxResolution.IsEnabled = true;
+                ComboBoxType.IsEnabled = true;
+                ButtonScan.IsEnabled = true;
+                StackPanelTextRight.Opacity = 0.0;
+
+                // unlock supported options
+                foreach (DeviceInformation check in deviceInformations)
+                {
+                    if (check.Id == ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag.ToString())
+                    {
+                        selectedScanner = await ImageScanner.FromIdAsync(check.Id);
+                        break;
+                    }
+                }
+
+                if (selectedScanner.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured))
+                {
+                    RadioButtonSourceAutomatic.IsEnabled = true;
+                    RadioButtonSourceAutomatic.IsChecked = true;
+                } else
+                {
+                    RadioButtonSourceAutomatic.IsChecked = false;
+                }
+
+                if (selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed))
+                {
+                    RadioButtonSourceFlatbed.IsEnabled = true;
+                    if (RadioButtonSourceAutomatic.IsChecked == false)
+                    {
+                        RadioButtonSourceFlatbed.IsChecked = true;
+                    }
+                } else
+                {
+                    RadioButtonSourceFlatbed.IsChecked = false;
+                }
+
+                if (selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Feeder))
+                {
+                    RadioButtonSourceFeeder.IsEnabled = true;
+                    if (RadioButtonSourceAutomatic.IsChecked == false && RadioButtonSourceFlatbed.IsChecked == false)
+                    {
+                        RadioButtonSourceFeeder.IsChecked = true;
+                    }
+                } else
+                {
+                    RadioButtonSourceFeeder.IsChecked = false;
+                }
+            });
+        }
+
+        private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxScanners.SelectedIndex == -1)
+            {
+                no_scanner_selected();
+            } else
+            {
+                string scannerID = ((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag.ToString();
+                selectedScanner = await ImageScanner.FromIdAsync(scannerID);
+                scanner_selected();
+            }
+        }
+
+        private void correct_titlebar(CoreApplicationViewTitleBar coreApplicationViewTitleBar, object theObject)
+        {
+            GridPanelRight.Margin = new Thickness(32, CoreApplication.MainView.TitleBar.Height, 0, 0);
         }
     }
 }
