@@ -7,7 +7,8 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
     x:Class="Scanner.MainPage"
-    mc:Ignorable="d" SizeChanged="Page_SizeChanged">
+    mc:Ignorable="d" 
+    SizeChanged="Page_SizeChanged">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,7 +28,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                             <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock Name="TextBlockRefreshHint" Text=" (Refreshes automatically)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
-                            <ProgressBar Name="ProgressBarRefresh" IsIndeterminate="True" Width="100" Background="Transparent" Margin="12,0,0,0"/>
+                            <ProgressBar Name="ProgressBarRefresh" Opacity="0.5" IsIndeterminate="True" Width="100" Background="Transparent" Margin="12,0,0,0"/>
                         </StackPanel>
                         <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
@@ -42,9 +43,9 @@
                         </StackPanel>
                         <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
                         <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,6,0,0">
-                            <RadioButton GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" IsChecked="True" HorizontalAlignment="Stretch"/>
-                            <RadioButton GroupName="RadioButtonGroupColor" Content="Black &amp; White" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton GroupName="RadioButtonGroupColor" Content="Sepia" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" IsChecked="True" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Name="RadioButtonColorModeBW" GroupName="RadioButtonGroupColor" Content="Black &amp; White" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Name="RadioButtonColorModeSepia" GroupName="RadioButtonGroupColor" Content="Sepia" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
                         <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
                         <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False"/>
@@ -56,12 +57,12 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid Grid.Row="1" Padding="24,12,24,12" VerticalAlignment="Stretch">
-                    <Button Name="ButtonScan" Content="Scan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold" MinWidth="100" IsEnabled="False" Foreground="{ThemeResource SystemColorHighlightTextColor}"/>
+                    <Button Name="ButtonScan" Content="Scan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold" MinWidth="100" IsEnabled="False" Foreground="{ThemeResource SystemColorHighlightTextColor}" Click="ButtonScan_Click"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <Button ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0">
+                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
-                        <Button ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="Button_Click">
+                        <Button x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="Button_Click">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
                         </Button>
                     </StackPanel>
@@ -72,7 +73,7 @@
         <RelativePanel Grid.Column="1" Name="RelativePanelRight">
             <Frame Name="TitleBarFrame" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Height="50" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
             <Frame Name="LeftFrame" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Width="50" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
-            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.3" OffsetX="40" OffsetY="40" OffsetZ="0"
+            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.5" OffsetX="40" OffsetY="40" OffsetZ="0"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                         HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
                                         RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
@@ -88,6 +89,7 @@
                                 <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
                         </TextBlock>
                     </StackPanel>
+                    <Image x:Name="ImageScanViewer"/>
                 </Grid>
             </controls:DropShadowPanel>
         </RelativePanel>
