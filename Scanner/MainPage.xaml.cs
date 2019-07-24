@@ -63,7 +63,7 @@ namespace Scanner
         public void refreshScannerList()
         {
             Debug.WriteLine("refreshing scanner list");
-            ProgressBarRefresh.IsEnabled = true;
+            ProgressRingRefresh.IsActive = true;
             // Create a Device Watcher class for type Image Scanner for enumerating scanners
             scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
 
@@ -170,6 +170,7 @@ namespace Scanner
                     TextBlockRefreshHint.Visibility = Visibility.Visible;
                     UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
                     StackPanelTextRight.Opacity = 1.0;
+                    HyperlinkSettings.IsTabStop = true;
                 }
             );
         }
@@ -180,6 +181,7 @@ namespace Scanner
             if (((Page) sender).ActualWidth < 900)
             {
                 StackPanelTextRight.Opacity = 0.0;
+                HyperlinkSettings.IsTabStop = false;
                 if (((Page) sender).ActualWidth < 700)
                 {
                     ColumnLeft.MaxWidth = Double.PositiveInfinity;
@@ -197,9 +199,10 @@ namespace Scanner
                 }
             } else 
             {
-                if (selectedScanner != null)
+                if (selectedScanner == null)
                 {
                     StackPanelTextRight.Opacity = 1.0;
+                    HyperlinkSettings.IsTabStop = true;
                 }
             }
         }
@@ -211,7 +214,7 @@ namespace Scanner
         }
 
         private async void UI_enabled(bool comboBoxScannerSource, bool radioButtonRadioButtonSourceAutomatic, bool radioButtonSourceFlatbed,
-            bool radioButtonSourceFeeder, bool radioButtonColorModeColor, bool radioButtonColorModeBW, bool radioButtonColorModeSepia,
+            bool radioButtonSourceFeeder, bool radioButtonColorModeColor, bool radioButtonColorModeGrayscale, bool radioButtonColorModeMonochrome,
             bool comboBoxResolution, bool comboBoxType, bool buttonScan, bool buttonSettings, bool buttonRecents)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -222,8 +225,8 @@ namespace Scanner
                 RadioButtonSourceFlatbed.IsEnabled = radioButtonSourceFlatbed;
                 RadioButtonSourceFeeder.IsEnabled = radioButtonSourceFeeder;
                 RadioButtonColorModeColor.IsEnabled = radioButtonColorModeColor;
-                RadioButtonColorModeBW.IsEnabled = radioButtonColorModeBW;
-                RadioButtonColorModeSepia.IsEnabled = radioButtonColorModeSepia;
+                RadioButtonColorModeGrayscale.IsEnabled = radioButtonColorModeGrayscale;
+                RadioButtonColorModeMonochrome.IsEnabled = radioButtonColorModeMonochrome;
                 ComboBoxResolution.IsEnabled = comboBoxResolution;
                 ComboBoxType.IsEnabled = comboBoxType;
                 ButtonScan.IsEnabled = buttonScan;
@@ -231,7 +234,7 @@ namespace Scanner
                 ButtonRecents.IsEnabled = buttonRecents;
             }
             );
-            Debug.WriteLine("UI_enabled done");
+            Debug.WriteLine("UI_enabled done, bool radioButtonRadioButtonSourceAutomatic was " + radioButtonRadioButtonSourceAutomatic.ToString());
         }
 
         private void no_scanner_selected()
@@ -239,6 +242,7 @@ namespace Scanner
             UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
 
             StackPanelTextRight.Opacity = 1.0;
+            HyperlinkSettings.IsTabStop = true;
         }
 
         private async void scanner_selected()
@@ -259,19 +263,20 @@ namespace Scanner
                 bool flatbedAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
                 bool feederAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Feeder);
 
-                UI_enabled(true, autoAllowed, flatbedAllowed, feederAllowed, true, true, true, true, true, true, true, true);
+                UI_enabled(true, autoAllowed, flatbedAllowed, feederAllowed, false, false, false, true, true, true, true, true);
 
                 if (autoAllowed) RadioButtonSourceAutomatic.IsChecked = true;
                 else if (flatbedAllowed) RadioButtonSourceFlatbed.IsChecked = true;
                 else if (feederAllowed) RadioButtonSourceFeeder.IsChecked = true;
 
                 StackPanelTextRight.Opacity = 0.0;
+                HyperlinkSettings.IsTabStop = false;
             });
         }
 
         private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBoxScanners.SelectedIndex == -1)
+            if (((ComboBox) sender).SelectedIndex == -1)
             {
                 no_scanner_selected();
             } else
@@ -293,12 +298,39 @@ namespace Scanner
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, false);
 
             // check folder and attempt to create it if necessary
+            // TODO
 
             // start scan and show progress and cancel button
             var cancellationToken = new CancellationTokenSource();
             var progress = new Progress<UInt32>(scanProgress);
-            var result = await selectedScanner.ScanFilesToFolderAsync(
-            ImageScannerScanSource.AutoConfigured, scanFolder).AsTask(cancellationToken.Token, progress);
+
+            ImageScannerScanResult result = null;
+            if (RadioButtonSourceAutomatic.IsChecked.Value)
+            {
+                result = await selectedScanner.ScanFilesToFolderAsync(
+                ImageScannerScanSource.AutoConfigured, scanFolder).AsTask(cancellationToken.Token, progress);
+            } else if (RadioButtonSourceFlatbed.IsChecked.Value)
+            {
+                result = await selectedScanner.ScanFilesToFolderAsync(
+                ImageScannerScanSource.Flatbed, scanFolder).AsTask(cancellationToken.Token, progress);
+            } else if (RadioButtonSourceFeeder.IsChecked.Value)
+            {
+                result = await selectedScanner.ScanFilesToFolderAsync(
+                ImageScannerScanSource.Feeder, scanFolder).AsTask(cancellationToken.Token, progress);
+            } else
+            {
+                ContentDialog dialog = new ContentDialog();
+                TextBlock dialogContent = new TextBlock();
+
+                dialogContent.Text = "Please select a source mode.";
+                dialogContent.TextWrapping = TextWrapping.WrapWholeWords;
+                dialog.Title = "Error";
+                dialog.Content = dialogContent;
+                dialog.CloseButtonText = "Close";
+
+                await dialog.ShowAsync();
+            }
+
 
             // show result
             IRandomAccessStream stream = await result.ScannedFiles[0].OpenAsync(FileAccessMode.Read);
@@ -310,6 +342,40 @@ namespace Scanner
         private void scanProgress(UInt32 numberOfScannedDocuments)
         {
             // TODO
+        }
+
+        private void RadioButtonSourceChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender == RadioButtonSourceAutomatic)
+            {
+                Debug.WriteLine("Calling UI_enabled with RadioButtonSourceAutomatic.IsEnabled = " + RadioButtonSourceAutomatic.IsEnabled.ToString());
+                StackPanelColor.Visibility = Visibility.Collapsed;
+                StackPanelResolution.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                if (sender == RadioButtonSourceFlatbed)
+                {
+                    StackPanelColor.Visibility = Visibility.Visible;
+                    StackPanelResolution.Visibility = Visibility.Visible;
+                    RadioButtonColorModeColor.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                    RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                    RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                }
+                else if (sender == RadioButtonSourceFeeder)
+                {
+                    StackPanelColor.Visibility = Visibility.Visible;
+                    StackPanelResolution.Visibility = Visibility.Visible;
+                    RadioButtonColorModeColor.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                    RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                    RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                }
+
+                // select first available color mode
+                if (RadioButtonColorModeColor.IsEnabled) RadioButtonColorModeColor.IsChecked = true;
+                else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
+                else if (RadioButtonColorModeMonochrome.IsEnabled) RadioButtonColorModeMonochrome.IsChecked = true;
+            }
         }
     }
 }

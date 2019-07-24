@@ -27,32 +27,37 @@
                         <TextBlock Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                             <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock Name="TextBlockRefreshHint" Text=" (Refreshes automatically)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
-                            <ProgressBar Name="ProgressBarRefresh" Opacity="0.5" IsIndeterminate="True" Width="100" Background="Transparent" Margin="12,0,0,0"/>
+                            <TextBlock Name="TextBlockRefreshHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
+                            <ProgressRing Name="ProgressRingRefresh" IsActive="False" Opacity="0.5" Background="Transparent" Margin="12,0,0,0"/>
                         </StackPanel>
                         <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                            <RadioButton Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" IsEnabled="False" HorizontalAlignment="Stretch">
+                            <RadioButton Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Automatic"/>
+                                    <TextBlock Text="Automatic configuration"/>
                                     <TextBlock Text=" (Recommended)" Opacity="0.5"/>
                                 </StackPanel>
                             </RadioButton>
-                            <RadioButton Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                         </StackPanel>
-                        <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,6,0,0">
-                            <RadioButton x:Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" IsChecked="True" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Name="RadioButtonColorModeBW" GroupName="RadioButtonGroupColor" Content="Black &amp; White" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Name="RadioButtonColorModeSepia" GroupName="RadioButtonGroupColor" Content="Sepia" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                        <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
+                            <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <RadioButton Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
+                            <RadioButton Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
-                        <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False"/>
+                        <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
+                            </StackPanel>
+                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False"/>
+                        </StackPanel>
                         <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
                         <ComboBox Name="ComboBoxType" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" SelectedIndex="0">
-                            <ComboBoxItem Content="JPG (prioritize file size)"/>
-                            <ComboBoxItem Content="PNG (prioritize quality)"/>
+                            <ComboBoxItem Content="JPG image (prioritize file size)"/>
+                            <ComboBoxItem Content="PNG image (prioritize quality)"/>
                         </ComboBox>
                     </StackPanel>
                 </ScrollViewer>
@@ -83,10 +88,10 @@
                         <StackPanel.OpacityTransition>
                             <ScalarTransition/>
                         </StackPanel.OpacityTransition>
-                        
+
                         <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                                <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
+                                <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
                         </TextBlock>
                     </StackPanel>
                     <Image x:Name="ImageScanViewer"/>
