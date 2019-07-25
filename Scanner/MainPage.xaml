@@ -32,12 +32,7 @@
                         </StackPanel>
                         <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                            <RadioButton Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Automatic configuration"/>
-                                    <TextBlock Text=" (Recommended)" Opacity="0.5"/>
-                                </StackPanel>
-                            </RadioButton>
+                            <RadioButton Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                             <RadioButton Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                             <RadioButton Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                         </StackPanel>
@@ -55,10 +50,7 @@
                             <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False"/>
                         </StackPanel>
                         <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox Name="ComboBoxType" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" SelectedIndex="0">
-                            <ComboBoxItem Content="JPG image (prioritize file size)"/>
-                            <ComboBoxItem Content="PNG image (prioritize quality)"/>
-                        </ComboBox>
+                        <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Grid Grid.Row="1" Padding="24,12,24,12" VerticalAlignment="Stretch">
