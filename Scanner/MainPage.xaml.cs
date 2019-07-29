@@ -38,6 +38,7 @@ namespace Scanner
         private ImageScanner selectedScanner = null;
         private StorageFolder scanFolder;
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
+        private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
 
 
         public MainPage()
@@ -132,7 +133,7 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                // find lost scanner in scanner to remove the corresponding scanner and its list entry
+                // find lost scanner in scannerList to remove the corresponding scanner and its list entry
                 foreach (var item in scannerList)
                 {
                     if (item.Tag.ToString() == deviceInfoUpdate.Id)
@@ -323,8 +324,8 @@ namespace Scanner
 
         private async void ButtonScan_Click(object sender, RoutedEventArgs e)
         {
-            // lock entire left panel
-            UI_enabled(false, false, false, false, false, false, false, false, false, false, false, false);
+            // lock (almost) entire left panel
+            UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
 
             // gather options
             if (RadioButtonSourceAutomatic.IsChecked.Value)
@@ -348,6 +349,15 @@ namespace Scanner
                 }
                 selectedScanner.FlatbedConfiguration.ColorMode = GetDesiredColorMode();
 
+                if (ComboBoxResolution.SelectedIndex == -1)
+                {
+                    // TODO no resolution selected
+                }
+                ImageScannerResolution res = new ImageScannerResolution {
+                    DpiX = float.Parse(((ComboBoxItem) ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
+                    DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])};
+                selectedScanner.FlatbedConfiguration.DesiredResolution = res;
+
                 if (ComboBoxFormat.SelectedIndex == -1)
                 {
                     // TODO no format selected
@@ -365,6 +375,17 @@ namespace Scanner
                     // TODO no color mode selected
                 }
                 selectedScanner.FeederConfiguration.ColorMode = GetDesiredColorMode();
+
+                if (ComboBoxResolution.SelectedIndex == -1)
+                {
+                    // TODO no resolution selected
+                }
+                ImageScannerResolution res = new ImageScannerResolution
+                {
+                    DpiX = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
+                    DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
+                };
+                selectedScanner.FeederConfiguration.DesiredResolution = res;
 
                 if (ComboBoxFormat.SelectedIndex == -1)
                 {
@@ -416,6 +437,10 @@ namespace Scanner
             BitmapImage bmp = new BitmapImage();
             await bmp.SetSourceAsync(stream);
             ImageScanViewer.Source = bmp;
+
+            // unlock UI
+            RadioButtonSourceChanged(null, null);
+            UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
 
@@ -463,6 +488,57 @@ namespace Scanner
             // TODO
         }
 
+        /// <summary>
+        ///     Updates resolutions according to given configuration (flatbed or feeder) and protects ComboBoxResolutions while running.
+        /// </summary>
+        /// <param name="config">
+        ///     The configuration that resolutions shall be generated for.
+        /// </param>
+        private void GenerateResolutions(IImageScannerSourceConfiguration config)
+        {
+            ComboBoxResolution.IsEnabled = false;
+
+            float minX = config.MinResolution.DpiX;
+            float minY = config.MinResolution.DpiY;
+            float maxX = config.MaxResolution.DpiX;
+            float maxY = config.MaxResolution.DpiY;
+            float actualX = config.ActualResolution.DpiX;
+            float actualY = config.ActualResolution.DpiY;
+
+            Debug.WriteLine("minX: " + minX + " | minY: " + minY);
+
+            resolutions.Clear();
+            int lowerBound = -1;
+            for (int i = 0; actualX - (i * 100) >= minX && actualY * (actualX - (i * 100)) / actualX >= minY; i++)
+            {
+                lowerBound++;   
+            }
+
+            for (int i = lowerBound; i >= 0; i--)
+            {
+                float x = actualX - (i * 100);
+                float y = actualY * x / actualX;
+                if (i == 0)
+                {
+                    resolutions.Add(CreateComboBoxItem(x + " x " + y + " (Default)", x + "," + y));
+                } else
+                {
+                    resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
+                }
+                
+            }
+
+            ComboBoxResolution.SelectedIndex = lowerBound;
+
+            for (int i = 1; actualX + (i * 100) <= maxX && actualY * (actualX + (i * 100)) / actualX <= maxY; i++)
+            {
+                float x = actualX + (i * 100);
+                float y = actualY * x / actualX;
+                resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
+            }
+
+            ComboBoxResolution.IsEnabled = true;
+        }
 
         /// <summary>
         ///     Is called if another source mode was selected. Hides/shows available options in the left panel and updates the available file formats. 
@@ -477,7 +553,7 @@ namespace Scanner
                 StackPanelColor.Visibility = Visibility.Collapsed;
                 StackPanelResolution.Visibility = Visibility.Collapsed;
 
-                var previousFormat = ((ComboBoxItem)ComboBoxFormat.SelectedItem);
+                // detect available file formats and update UI accordingly
                 formats.Clear();
                 if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
                 if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
@@ -486,7 +562,6 @@ namespace Scanner
                 if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "openxps"));
                 if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
                 if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
-
                 ComboBoxFormat.SelectedIndex = 0;
             }
             else
@@ -499,7 +574,7 @@ namespace Scanner
                     RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                     RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
 
-                    var previousFormat = ((ComboBoxItem)ComboBoxFormat.SelectedItem);
+                    // detect available file formats and update UI accordingly
                     formats.Clear();
                     if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
                     if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
@@ -508,8 +583,10 @@ namespace Scanner
                     if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "xps"));
                     if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
                     if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
-
                     ComboBoxFormat.SelectedIndex = 0;
+
+                    // detect available resolutions and update UI accordingly
+                    GenerateResolutions(selectedScanner.FlatbedConfiguration);
                 }
                 else if (sender == RadioButtonSourceFeeder)
                 {
@@ -519,7 +596,7 @@ namespace Scanner
                     RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                     RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
 
-                    var previousFormat = ((ComboBoxItem)ComboBoxFormat.SelectedItem);
+                    // detect available file formats and update UI accordingly
                     formats.Clear();
                     if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
                     if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
@@ -528,8 +605,10 @@ namespace Scanner
                     if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "xps"));
                     if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
                     if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
-
                     ComboBoxFormat.SelectedIndex = 0;
+
+                    // detect available resolutions and update UI accordingly
+                    GenerateResolutions(selectedScanner.FlatbedConfiguration);
                 }
 
                 // select first available color mode
@@ -537,6 +616,11 @@ namespace Scanner
                 else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
                 else if (RadioButtonColorModeMonochrome.IsEnabled) RadioButtonColorModeMonochrome.IsChecked = true;
             }
+        }
+
+        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ScrollViewerScan.ChangeView(0, 0, 0);
         }
     }
 }

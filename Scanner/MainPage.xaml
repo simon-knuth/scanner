@@ -44,10 +44,10 @@
                         </StackPanel>
                         <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Resolution in DPI" Style="{StaticResource BaseTextBlockStyle}"/>
                                 <TextBlock Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
                             </StackPanel>
-                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False"/>
+                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
                         <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
                         <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
@@ -56,7 +56,7 @@
                 <Grid Grid.Row="1" Padding="24,12,24,12" VerticalAlignment="Stretch">
                     <Button Name="ButtonScan" Content="Scan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold" MinWidth="100" IsEnabled="False" Foreground="{ThemeResource SystemColorHighlightTextColor}" Click="ButtonScan_Click"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0">
+                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
                         <Button x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="Button_Click">
@@ -83,10 +83,12 @@
 
                         <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                                <Span xml:space="preserve"><Run>If your scanner doesn't show up, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
+                                <Span xml:space="preserve"><Run>If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
                         </TextBlock>
                     </StackPanel>
-                    <Image x:Name="ImageScanViewer"/>
+                    <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Image x:Name="ImageScanViewer" Source="Assets\SplashScreen.scale-200.png" Width="{Binding Path=ViewportWidth, ElementName=ScrollViewerScan}"/>
+                    </ScrollViewer>
                 </Grid>
             </controls:DropShadowPanel>
         </RelativePanel>
