@@ -70,6 +70,9 @@ namespace Scanner
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
+                // Set minimum width and height
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
+
                 // Ensure the current window is active
                 Window.Current.Activate();
             }

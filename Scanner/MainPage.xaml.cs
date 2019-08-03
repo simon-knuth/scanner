@@ -8,10 +8,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -39,6 +41,9 @@ namespace Scanner
         private StorageFolder scanFolder;
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
+        private StorageFile scannedFile;
+        private int state = 0;
+        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
 
         public MainPage()
@@ -54,9 +59,16 @@ namespace Scanner
             // get ScanFolder
             getScanFolder();
 
-            CoreApplication.MainView.TitleBar.LayoutMetricsChanged += correct_titlebar;
+            //CoreApplication.MainView.TitleBar.LayoutMetricsChanged += correct_titlebar;
+
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
+            args.Request.Data.Properties.Title = scannedFile.Name;
+        }
 
         private async void getScanFolder()
         {
@@ -64,13 +76,13 @@ namespace Scanner
         }
 
 
-        public void refreshScannerList()
+        public async void refreshScannerList()
         {
             Debug.WriteLine("refreshing scanner list");
             ProgressRingRefresh.IsActive = true;
             // Create a Device Watcher class for type Image Scanner for enumerating scanners
             scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
-
+            
             scannerWatcher.Added += OnScannerAdded;
             scannerWatcher.Removed += OnScannerRemoved;
             scannerWatcher.EnumerationCompleted += OnScannerEnumerationComplete;
@@ -104,7 +116,8 @@ namespace Scanner
                         if (deviceInfo.IsDefault)
                         {
                             item.Content = deviceInfo.Name + " (default)";
-                        } else
+                        }
+                        else
                         {
                             item.Content = deviceInfo.Name;
                         }
@@ -113,6 +126,7 @@ namespace Scanner
                         deviceInformations.Add(deviceInfo);
                         scannerList.Add(item);
                     }
+                    else return;
 
                     if (!ComboBoxScanners.IsDropDownOpen && selectedScanner == null && deviceInformations.Count == 1)
                     {
@@ -175,7 +189,7 @@ namespace Scanner
                 {
                     TextBlockRefreshHint.Visibility = Visibility.Visible;
                     UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
-                    StackPanelTextRight.Opacity = 1.0;
+                    StackPanelTextRight.Visibility = Visibility.Visible;
                     HyperlinkSettings.IsTabStop = true;
                 }
             );
@@ -185,30 +199,30 @@ namespace Scanner
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // responsive behavior
-            if (((Page) sender).ActualWidth < 900)
+            if (((Page)sender).ActualWidth < 900)
             {
-                StackPanelTextRight.Opacity = 0.0;
+                StackPanelTextRight.Visibility = Visibility.Collapsed;
                 HyperlinkSettings.IsTabStop = false;
-                if (((Page) sender).ActualWidth < 700)
+                if (((Page)sender).ActualWidth < 700)
                 {
                     ColumnLeft.MaxWidth = Double.PositiveInfinity;
                     DropShadowPanelRight.Visibility = Visibility.Collapsed;
                     LeftFrame.Visibility = Visibility.Collapsed;
                     ColumnRight.MaxWidth = 0;
-                    TitleBarFrame.Visibility = Visibility.Collapsed;
-                } else
+                }
+                else
                 {
                     ColumnRight.MaxWidth = Double.PositiveInfinity;
                     ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
-                    TitleBarFrame.Visibility = Visibility.Visible;
                     DropShadowPanelRight.Visibility = Visibility.Visible;
                     LeftFrame.Visibility = Visibility.Visible;
                 }
-            } else 
+            }
+            else
             {
                 if (selectedScanner == null)
                 {
-                    StackPanelTextRight.Opacity = 1.0;
+                    StackPanelTextRight.Visibility = Visibility.Visible;
                     HyperlinkSettings.IsTabStop = true;
                 }
             }
@@ -251,7 +265,7 @@ namespace Scanner
         {
             UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
 
-            StackPanelTextRight.Opacity = 1.0;
+            StackPanelTextRight.Visibility = Visibility.Visible;
             HyperlinkSettings.IsTabStop = true;
         }
 
@@ -280,7 +294,7 @@ namespace Scanner
                 else if (flatbedAllowed) RadioButtonSourceFlatbed.IsChecked = true;
                 else if (feederAllowed) RadioButtonSourceFeeder.IsChecked = true;
 
-                StackPanelTextRight.Opacity = 0.0;
+                StackPanelTextRight.Visibility = Visibility.Collapsed;
                 HyperlinkSettings.IsTabStop = false;
             });
         }
@@ -324,8 +338,10 @@ namespace Scanner
 
         private async void ButtonScan_Click(object sender, RoutedEventArgs e)
         {
-            // lock (almost) entire left panel
+            // lock (almost) entire left panel and clean up right side
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
+            CommandBarScan.Visibility = Visibility.Collapsed;
+            ImageScanViewer.Visibility = Visibility.Collapsed;
 
             // gather options
             if (RadioButtonSourceAutomatic.IsChecked.Value)
@@ -336,7 +352,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.AutoConfiguration.Format = GetDesiredFormat();
+                selectedScanner.AutoConfiguration.Format = GetDesiredImageScannerFormat();
 
             } else if (RadioButtonSourceFlatbed.IsChecked.Value)
             {
@@ -362,7 +378,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.FlatbedConfiguration.Format = GetDesiredFormat();
+                selectedScanner.FlatbedConfiguration.Format = GetDesiredImageScannerFormat();
 
             } else if (RadioButtonSourceFeeder.IsChecked.Value)
             {
@@ -391,7 +407,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.FeederConfiguration.Format = GetDesiredFormat();
+                selectedScanner.FeederConfiguration.Format = GetDesiredImageScannerFormat();
 
             } else
             {
@@ -433,16 +449,24 @@ namespace Scanner
             }
 
             // show result
-            IRandomAccessStream stream = await result.ScannedFiles[0].OpenAsync(FileAccessMode.Read);
-            BitmapImage bmp = new BitmapImage();
-            await bmp.SetSourceAsync(stream);
-            ImageScanViewer.Source = bmp;
+            scannedFile = result.ScannedFiles[0];
+            DisplayImageAsync(scannedFile);
+            await ImageCropper.LoadImageFromFile(scannedFile);
 
             // unlock UI
+            CommandBarScan.Visibility = Visibility.Visible;
             RadioButtonSourceChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
+        private async void DisplayImageAsync(StorageFile image)
+        {
+            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.Read);
+            BitmapImage bmp = new BitmapImage();
+            await bmp.SetSourceAsync(stream);
+            ImageScanViewer.Source = bmp;
+            ImageScanViewer.Visibility = Visibility.Visible;
+        }
 
         /// <summary>
         ///     Returns the ImageScannerFormat to the corresponding ComboBox entry selected by the user.
@@ -453,7 +477,7 @@ namespace Scanner
         /// <returns>
         ///     The corresponding ImageScannerFormat.
         /// </returns>
-        private ImageScannerFormat GetDesiredFormat()
+        private ImageScannerFormat GetDesiredImageScannerFormat()
         {
             ComboBoxItem selectedFormat = ((ComboBoxItem) ComboBoxFormat.SelectedItem);
 
@@ -618,9 +642,176 @@ namespace Scanner
             }
         }
 
+        private void AppBarButtonCopy_Click(object sender, RoutedEventArgs e)
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private async void ScrollViewerScan_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ScrollViewer scrollViewer = sender as ScrollViewer;
+            var doubleTapPoint = e.GetPosition(scrollViewer);
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (scrollViewer.ZoomFactor != 1)
+                {
+                    scrollViewer.ChangeView(0, 0, 1);
+                }
+                else
+                {
+                    scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 2);
+                }
+            });
+        }
+
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
-            ScrollViewerScan.ChangeView(0, 0, 0);
+            AppBarButtonCrop.Visibility = Visibility.Collapsed;
+        }
+
+        private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.ShowShareUI();
+        }
+
+        private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await scannedFile.DeleteAsync(StorageDeleteOption.Default);
+            FlyoutAppBarButtonDelete.Hide();
+            CommandBarScan.Visibility = Visibility.Collapsed;
+            ImageScanViewer.Visibility = Visibility.Collapsed;
+        }
+
+        private async void ButtonRename_Click(object sender, RoutedEventArgs e)
+        {
+            await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);    // TODO process error
+            //scannedFile = StorageFile.GetFileFromPathAsync(scannedFile.GetParentAsync)      // TODO accomodate rename
+            FlyoutAppBarButtonRename.Hide();
+        }
+
+        private void FlyoutAppBarButtonRename_Opening(object sender, object e)
+        {
+            TextBoxRename.Text = scannedFile.Name.Split(".")[0];
+        }
+
+        private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
+        {
+            // deactivate other buttons
+            foreach (Control item in CommandBarScan.PrimaryCommands)
+            {
+                if (item != AppBarButtonCrop) item.IsEnabled = false;
+            }
+
+            // zoom out for a smoother transition
+            if (ScrollViewerScan.ZoomFactor != 1)
+            {
+                ScrollViewerScan.ChangeView(0, 0, 1);
+            }
+
+            // show ImageCropper
+            ImageCropper.Visibility = Visibility.Visible;
+        }
+
+        private Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat GetBitmapFileFormat(StorageFile file)
+        {
+            string formatString = file.Name.Split(".")[1];
+
+            switch (formatString)
+            {
+                case "jpg":
+                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
+                case "jpeg":
+                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
+                case "png":
+                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Png;
+                case "bmp":
+                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Bmp;
+                case "tif":
+                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Tiff;
+            }
+
+            throw new Exception();      // TODO add meaningful exception
+        }
+
+        private async void AppBarButtonCrop_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // save file
+            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+            await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
+            stream.Dispose();
+
+            // refresh preview
+            stream = await scannedFile.OpenAsync(FileAccessMode.Read);
+            BitmapImage bmp = new BitmapImage();
+            await bmp.SetSourceAsync(stream);
+            ImageScanViewer.Source = bmp;
+
+            // return UI to normal
+            ImageCropper.Visibility = Visibility.Collapsed;
+            foreach (Control item in CommandBarScan.PrimaryCommands)
+            {
+                item.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        ///     Reacts to the enter key while TextBoxRename is focused.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBoxRename_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter) ButtonRename_Click(sender, null);
+        }
+
+        private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
+        {
+            AppBarButtonRotate.IsEnabled = false;
+            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+            SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+            string formatString = scannedFile.Name.Split(".")[1];
+            Guid encoderId;
+
+            switch (formatString)
+            {
+                case "jpg":
+                    encoderId = BitmapEncoder.JpegEncoderId;
+                    break;
+                case "jpeg":
+                    encoderId = BitmapEncoder.JpegEncoderId;
+                    break;
+                case "png":
+                    encoderId = BitmapEncoder.PngEncoderId;
+                    break;
+                case "bmp":
+                    encoderId = BitmapEncoder.BmpEncoderId;
+                    break;
+                case "tif":
+                    encoderId = BitmapEncoder.TiffEncoderId;
+                    break;
+            }
+
+            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+            encoder.SetSoftwareBitmap(softwareBitmap);
+            encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+
+            try { await encoder.FlushAsync(); }
+            catch (Exception exc)
+            {
+                // TODO process error
+            }
+
+            DisplayImageAsync(scannedFile);
+            stream.Dispose();
+
+            AppBarButtonRotate.IsEnabled = true;
         }
     }
 }
