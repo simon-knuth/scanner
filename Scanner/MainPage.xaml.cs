@@ -188,11 +188,11 @@ namespace Scanner
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // responsive behavior
-            if (((Page)sender).ActualWidth < 900)
+            if (e.NewSize.Width < 900)
             {
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
                 HyperlinkSettings.IsTabStop = false;
-                if (((Page)sender).ActualWidth < 700)
+                if (e.NewSize.Width < 700)
                 {
                     ColumnLeft.MaxWidth = Double.PositiveInfinity;
                     DropShadowPanelRight.Visibility = Visibility.Collapsed;
@@ -207,6 +207,10 @@ namespace Scanner
             }
             else
             {
+                ColumnRight.MaxWidth = Double.PositiveInfinity;
+                ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
+                DropShadowPanelRight.Visibility = Visibility.Visible;
+
                 if (selectedScanner == null)
                 {
                     StackPanelTextRight.Visibility = Visibility.Visible;
@@ -291,6 +295,7 @@ namespace Scanner
         {
             if (((ComboBox) sender).SelectedIndex == -1)
             {
+                selectedScanner = null;
                 no_scanner_selected();
             } else
             {
@@ -611,7 +616,7 @@ namespace Scanner
 
         private void Page_ActualThemeChanged(FrameworkElement sender, object args)
         {
-            UpdateTheme(null, null);
+            UpdateTheme(null, null, DropShadowPanelRight);
         }
     }
 }

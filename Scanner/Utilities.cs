@@ -122,9 +122,9 @@ static class Utilities
     }
 
     // TODO add documentation
-    public static void UpdateTheme(UISettings uISettings, object theObject)
+    public static void UpdateTheme(UISettings uISettings, object theObject, DropShadowPanel dropShadowPanel)
     {
-        var titleBar = ApplicationView.GetForCurrentView().TitleBar;        // TODO fix issue #1
+        var titleBar = ApplicationView.GetForCurrentView().TitleBar;
 
         titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
         titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
@@ -133,11 +133,13 @@ static class Utilities
         {
             // Dark mode is active
             titleBar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+            if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
         }
         else
         {
             // Light mode is active
             titleBar.ButtonForegroundColor = Windows.UI.Colors.Black;
+            if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
         }
     }
 }

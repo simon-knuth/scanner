@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
+using static Utilities;
 
 namespace Scanner
 {
@@ -82,7 +75,7 @@ namespace Scanner
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
             // Update theme once to ensure that the titlebar buttons are correct
-            UpdateTheme(null, null);
+            UpdateTheme(null, null, null);
         }
 
 

@@ -68,7 +68,7 @@
         </Frame>
 
         <RelativePanel Grid.Column="1" Name="RelativePanelRight">
-            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.3" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
+            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.6" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
                                         OffsetY="{Binding Path=Margin.Top, ElementName=GridPanelRight}"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                         HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
