@@ -2,31 +2,22 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+
+using static ScannerOperation;
+using static Utilities;
 
 namespace Scanner
 {
@@ -59,8 +50,6 @@ namespace Scanner
             // get ScanFolder
             getScanFolder();
 
-            //CoreApplication.MainView.TitleBar.LayoutMetricsChanged += correct_titlebar;
-
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
@@ -76,7 +65,7 @@ namespace Scanner
         }
 
 
-        public async void refreshScannerList()
+        public void refreshScannerList()
         {
             Debug.WriteLine("refreshing scanner list");
             ProgressRingRefresh.IsActive = true;
@@ -300,17 +289,6 @@ namespace Scanner
         }
 
 
-        private ComboBoxItem CreateComboBoxItem(string content, string tag)
-        {
-            ComboBoxItem item = new ComboBoxItem();
-
-            item.Content = content;
-            item.Tag = tag;
-
-            return item;
-        }
-
-
         private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox) sender).SelectedIndex == -1)
@@ -322,17 +300,6 @@ namespace Scanner
                 selectedScanner = await ImageScanner.FromIdAsync(scannerID);
                 scanner_selected();
             }
-        }
-
-
-        /// <summary>
-        ///     Makes sure that the right panel is aligned to the bottom of the title bar buttons.
-        /// </summary>
-        /// <param name="coreApplicationViewTitleBar"></param>
-        /// <param name="theObject"></param>
-        private void correct_titlebar(CoreApplicationViewTitleBar coreApplicationViewTitleBar, object theObject)
-        {
-            GridPanelRight.Margin = new Thickness(32, coreApplicationViewTitleBar.Height, 0, 0);
         }
 
 
@@ -352,7 +319,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.AutoConfiguration.Format = GetDesiredImageScannerFormat();
+                selectedScanner.AutoConfiguration.Format = GetDesiredImageScannerFormat(ComboBoxScanners);
 
             } else if (RadioButtonSourceFlatbed.IsChecked.Value)
             {
@@ -378,7 +345,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.FlatbedConfiguration.Format = GetDesiredImageScannerFormat();
+                selectedScanner.FlatbedConfiguration.Format = GetDesiredImageScannerFormat(ComboBoxScanners);
 
             } else if (RadioButtonSourceFeeder.IsChecked.Value)
             {
@@ -407,7 +374,7 @@ namespace Scanner
                 {
                     // TODO no format selected
                 }
-                selectedScanner.FeederConfiguration.Format = GetDesiredImageScannerFormat();
+                selectedScanner.FeederConfiguration.Format = GetDesiredImageScannerFormat(ComboBoxScanners);
 
             } else
             {
@@ -421,73 +388,18 @@ namespace Scanner
             var cancellationToken = new CancellationTokenSource();
             var progress = new Progress<UInt32>(scanProgress);
 
-            ImageScannerScanResult result = null;
-            if (RadioButtonSourceAutomatic.IsChecked.Value)
-            {
-                result = await selectedScanner.ScanFilesToFolderAsync(
-                ImageScannerScanSource.AutoConfigured, scanFolder).AsTask(cancellationToken.Token, progress);
-            } else if (RadioButtonSourceFlatbed.IsChecked.Value)
-            {
-                result = await selectedScanner.ScanFilesToFolderAsync(
-                ImageScannerScanSource.Flatbed, scanFolder).AsTask(cancellationToken.Token, progress);
-            } else if (RadioButtonSourceFeeder.IsChecked.Value)
-            {
-                result = await selectedScanner.ScanFilesToFolderAsync(
-                ImageScannerScanSource.Feeder, scanFolder).AsTask(cancellationToken.Token, progress);
-            } else
-            {
-                ContentDialog dialog = new ContentDialog();
-                TextBlock dialogContent = new TextBlock();
-
-                dialogContent.Text = "Please select a source mode.";
-                dialogContent.TextWrapping = TextWrapping.WrapWholeWords;
-                dialog.Title = "Error";
-                dialog.Content = dialogContent;
-                dialog.CloseButtonText = "Close";
-
-                await dialog.ShowAsync();
-            }
+            ImageScannerScanResult result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
 
             // show result
             scannedFile = result.ScannedFiles[0];
-            DisplayImageAsync(scannedFile);
+            DisplayImageAsync(scannedFile, ImageScanViewer);
             await ImageCropper.LoadImageFromFile(scannedFile);
 
             // unlock UI
             CommandBarScan.Visibility = Visibility.Visible;
             RadioButtonSourceChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
-        }
-
-        private async void DisplayImageAsync(StorageFile image)
-        {
-            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.Read);
-            BitmapImage bmp = new BitmapImage();
-            await bmp.SetSourceAsync(stream);
-            ImageScanViewer.Source = bmp;
-            ImageScanViewer.Visibility = Visibility.Visible;
-        }
-
-        /// <summary>
-        ///     Returns the ImageScannerFormat to the corresponding ComboBox entry selected by the user.
-        /// </summary>
-        /// <remarks>
-        ///     Returns ImageScannerFormat.bitmap if no other option could be matched.
-        /// </remarks>
-        /// <returns>
-        ///     The corresponding ImageScannerFormat.
-        /// </returns>
-        private ImageScannerFormat GetDesiredImageScannerFormat()
-        {
-            ComboBoxItem selectedFormat = ((ComboBoxItem) ComboBoxFormat.SelectedItem);
-
-            if (selectedFormat.Tag.ToString() == "jpeg") return ImageScannerFormat.Jpeg;
-            if (selectedFormat.Tag.ToString() == "png") return ImageScannerFormat.Png;
-            if (selectedFormat.Tag.ToString() == "pdf") return ImageScannerFormat.Pdf;
-            if (selectedFormat.Tag.ToString() == "xps") return ImageScannerFormat.Xps;
-            if (selectedFormat.Tag.ToString() == "openxps") return ImageScannerFormat.OpenXps;
-            if (selectedFormat.Tag.ToString() == "tiff") return ImageScannerFormat.Tiff;
-            return ImageScannerFormat.DeviceIndependentBitmap;
         }
 
 
@@ -512,57 +424,6 @@ namespace Scanner
             // TODO
         }
 
-        /// <summary>
-        ///     Updates resolutions according to given configuration (flatbed or feeder) and protects ComboBoxResolutions while running.
-        /// </summary>
-        /// <param name="config">
-        ///     The configuration that resolutions shall be generated for.
-        /// </param>
-        private void GenerateResolutions(IImageScannerSourceConfiguration config)
-        {
-            ComboBoxResolution.IsEnabled = false;
-
-            float minX = config.MinResolution.DpiX;
-            float minY = config.MinResolution.DpiY;
-            float maxX = config.MaxResolution.DpiX;
-            float maxY = config.MaxResolution.DpiY;
-            float actualX = config.ActualResolution.DpiX;
-            float actualY = config.ActualResolution.DpiY;
-
-            Debug.WriteLine("minX: " + minX + " | minY: " + minY);
-
-            resolutions.Clear();
-            int lowerBound = -1;
-            for (int i = 0; actualX - (i * 100) >= minX && actualY * (actualX - (i * 100)) / actualX >= minY; i++)
-            {
-                lowerBound++;   
-            }
-
-            for (int i = lowerBound; i >= 0; i--)
-            {
-                float x = actualX - (i * 100);
-                float y = actualY * x / actualX;
-                if (i == 0)
-                {
-                    resolutions.Add(CreateComboBoxItem(x + " x " + y + " (Default)", x + "," + y));
-                } else
-                {
-                    resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
-                }
-                
-            }
-
-            ComboBoxResolution.SelectedIndex = lowerBound;
-
-            for (int i = 1; actualX + (i * 100) <= maxX && actualY * (actualX + (i * 100)) / actualX <= maxY; i++)
-            {
-                float x = actualX + (i * 100);
-                float y = actualY * x / actualX;
-                resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
-            }
-
-            ComboBoxResolution.IsEnabled = true;
-        }
 
         /// <summary>
         ///     Is called if another source mode was selected. Hides/shows available options in the left panel and updates the available file formats. 
@@ -578,14 +439,7 @@ namespace Scanner
                 StackPanelResolution.Visibility = Visibility.Collapsed;
 
                 // detect available file formats and update UI accordingly
-                formats.Clear();
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "pdf"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "xps"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "openxps"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
-                if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
+                GetSupportedFormats(selectedScanner.AutoConfiguration, formats, selectedScanner);
                 ComboBoxFormat.SelectedIndex = 0;
             }
             else
@@ -599,18 +453,11 @@ namespace Scanner
                     RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
 
                     // detect available file formats and update UI accordingly
-                    formats.Clear();
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "pdf"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "xps"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "xps"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
-                    if (selectedScanner.FlatbedConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
+                    GetSupportedFormats(selectedScanner.FlatbedConfiguration, formats, selectedScanner);
                     ComboBoxFormat.SelectedIndex = 0;
 
                     // detect available resolutions and update UI accordingly
-                    GenerateResolutions(selectedScanner.FlatbedConfiguration);
+                    GenerateResolutions(selectedScanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
                 }
                 else if (sender == RadioButtonSourceFeeder)
                 {
@@ -621,18 +468,11 @@ namespace Scanner
                     RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
 
                     // detect available file formats and update UI accordingly
-                    formats.Clear();
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "pdf"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "xps"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "xps"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
-                    if (selectedScanner.FeederConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
+                    GetSupportedFormats(selectedScanner.FeederConfiguration, formats, selectedScanner);
                     ComboBoxFormat.SelectedIndex = 0;
 
                     // detect available resolutions and update UI accordingly
-                    GenerateResolutions(selectedScanner.FlatbedConfiguration);
+                    GenerateResolutions(selectedScanner.FeederConfiguration, ComboBoxResolution, resolutions);
                 }
 
                 // select first available color mode
@@ -690,7 +530,6 @@ namespace Scanner
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
         {
             await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);    // TODO process error
-            //scannedFile = StorageFile.GetFileFromPathAsync(scannedFile.GetParentAsync)      // TODO accomodate rename
             FlyoutAppBarButtonRename.Hide();
         }
 
@@ -717,42 +556,22 @@ namespace Scanner
             ImageCropper.Visibility = Visibility.Visible;
         }
 
-        private Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat GetBitmapFileFormat(StorageFile file)
-        {
-            string formatString = file.Name.Split(".")[1];
-
-            switch (formatString)
-            {
-                case "jpg":
-                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
-                case "jpeg":
-                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
-                case "png":
-                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Png;
-                case "bmp":
-                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Bmp;
-                case "tif":
-                    return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Tiff;
-            }
-
-            throw new Exception();      // TODO add meaningful exception
-        }
 
         private async void AppBarButtonCrop_Unchecked(object sender, RoutedEventArgs e)
         {
+            AppBarButtonCrop.IsEnabled = false;
+
             // save file
             IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
             await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
             stream.Dispose();
 
             // refresh preview
-            stream = await scannedFile.OpenAsync(FileAccessMode.Read);
-            BitmapImage bmp = new BitmapImage();
-            await bmp.SetSourceAsync(stream);
-            ImageScanViewer.Source = bmp;
+            DisplayImageAsync(scannedFile, ImageScanViewer);
 
             // return UI to normal
             ImageCropper.Visibility = Visibility.Collapsed;
+            AppBarButtonCrop.IsEnabled = true;
             foreach (Control item in CommandBarScan.PrimaryCommands)
             {
                 item.IsEnabled = true;
@@ -776,27 +595,7 @@ namespace Scanner
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-            string formatString = scannedFile.Name.Split(".")[1];
-            Guid encoderId;
-
-            switch (formatString)
-            {
-                case "jpg":
-                    encoderId = BitmapEncoder.JpegEncoderId;
-                    break;
-                case "jpeg":
-                    encoderId = BitmapEncoder.JpegEncoderId;
-                    break;
-                case "png":
-                    encoderId = BitmapEncoder.PngEncoderId;
-                    break;
-                case "bmp":
-                    encoderId = BitmapEncoder.BmpEncoderId;
-                    break;
-                case "tif":
-                    encoderId = BitmapEncoder.TiffEncoderId;
-                    break;
-            }
+            Guid encoderId = GetBitmapEncoderId(scannedFile.Name.Split(".")[1]);
 
             BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
             encoder.SetSoftwareBitmap(softwareBitmap);
@@ -808,7 +607,7 @@ namespace Scanner
                 // TODO process error
             }
 
-            DisplayImageAsync(scannedFile);
+            DisplayImageAsync(scannedFile, ImageScanViewer);
             stream.Dispose();
 
             AppBarButtonRotate.IsEnabled = true;

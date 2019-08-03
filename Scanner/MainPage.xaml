@@ -82,10 +82,6 @@
                         </ScrollViewer>
 
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0" Opacity="0.0">
-                            <StackPanel.OpacityTransition>
-                                <ScalarTransition/>
-                            </StackPanel.OpacityTransition>
-
                             <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
                                 <Span xml:space="preserve"><Run>If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
