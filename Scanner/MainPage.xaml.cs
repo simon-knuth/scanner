@@ -33,7 +33,8 @@ namespace Scanner
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
         private StorageFile scannedFile;
-        private int state = 0;
+        private FlowState flowState = FlowState.initial;
+        private UIstate uiState;
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
 
@@ -178,7 +179,6 @@ namespace Scanner
                 {
                     TextBlockRefreshHint.Visibility = Visibility.Visible;
                     UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
-                    StackPanelTextRight.Visibility = Visibility.Visible;
                     HyperlinkSettings.IsTabStop = true;
                 }
             );
@@ -196,7 +196,6 @@ namespace Scanner
                 {
                     ColumnLeft.MaxWidth = Double.PositiveInfinity;
                     DropShadowPanelRight.Visibility = Visibility.Collapsed;
-                    LeftFrame.Visibility = Visibility.Collapsed;
                     ColumnRight.MaxWidth = 0;
                 }
                 else
@@ -204,7 +203,6 @@ namespace Scanner
                     ColumnRight.MaxWidth = Double.PositiveInfinity;
                     ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
                     DropShadowPanelRight.Visibility = Visibility.Visible;
-                    LeftFrame.Visibility = Visibility.Visible;
                 }
             }
             else
@@ -395,6 +393,7 @@ namespace Scanner
             scannedFile = result.ScannedFiles[0];
             DisplayImageAsync(scannedFile, ImageScanViewer);
             await ImageCropper.LoadImageFromFile(scannedFile);
+            flowState = FlowState.result;
 
             // unlock UI
             CommandBarScan.Visibility = Visibility.Visible;
@@ -546,11 +545,7 @@ namespace Scanner
                 if (item != AppBarButtonCrop) item.IsEnabled = false;
             }
 
-            // zoom out for a smoother transition
-            if (ScrollViewerScan.ZoomFactor != 1)
-            {
-                ScrollViewerScan.ChangeView(0, 0, 1);
-            }
+            flowState = FlowState.crop;
 
             // show ImageCropper
             ImageCropper.Visibility = Visibility.Visible;
@@ -576,6 +571,7 @@ namespace Scanner
             {
                 item.IsEnabled = true;
             }
+            flowState = FlowState.result;
         }
 
         /// <summary>
@@ -611,6 +607,11 @@ namespace Scanner
             stream.Dispose();
 
             AppBarButtonRotate.IsEnabled = true;
+        }
+
+        private void Page_ActualThemeChanged(FrameworkElement sender, object args)
+        {
+            UpdateTheme(null, null);
         }
     }
 }

@@ -6,9 +6,29 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
+using Windows.UI.ViewManagement;
 
 static class Utilities
 {
+    /// <summary>
+    ///     Accomodates the responsiveness of the UI.
+    /// </summary>
+    public enum UIstate
+    {
+        full = 0,                   // the whole UI is visible
+        small_initial = 1,          // only the options pane is visible
+        small_result = 2            // only the result of a scan is visible
+    }
+
+
+    public enum FlowState
+    {
+        initial = 0,                // there is no result visible
+        result = 1,                 // there is a result visible but no crop in progress
+        crop = 2                    // there is a result visible and a crop in progress
+    }
+
+
     /// <summary>
     ///     Creates a ComboBoxItem with the specified content string and tag string.
     /// </summary>
@@ -99,5 +119,25 @@ static class Utilities
         }
 
         throw new Exception();      // TODO add meaningful exception
+    }
+
+    // TODO add documentation
+    public static void UpdateTheme(UISettings uISettings, object theObject)
+    {
+        var titleBar = ApplicationView.GetForCurrentView().TitleBar;        // TODO fix issue #1
+
+        titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+        titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+
+        if ((new UISettings()).GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).ToString() == "#FF000000")
+        {
+            // Dark mode is active
+            titleBar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+        }
+        else
+        {
+            // Light mode is active
+            titleBar.ButtonForegroundColor = Windows.UI.Colors.Black;
+        }
     }
 }
