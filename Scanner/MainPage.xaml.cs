@@ -74,7 +74,7 @@ namespace Scanner
         public void refreshScannerList()
         {
             Debug.WriteLine("refreshing scanner list");
-            ProgressRingRefresh.IsActive = true;
+            if (settingSearchIndicator) ProgressRingRefresh.IsActive = true;
             // Create a Device Watcher class for type Image Scanner for enumerating scanners
             scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
             
@@ -647,6 +647,12 @@ namespace Scanner
                 }
             }
 
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (settingSearchIndicator) ProgressRingRefresh.IsActive = true;
+            else ProgressRingRefresh.IsActive = false;
         }
     }
 }

@@ -10,7 +10,7 @@
     mc:Ignorable="d" 
     SizeChanged="Page_SizeChanged" 
     ActualThemeChanged="Page_ActualThemeChanged" 
-    NavigationCacheMode="Required">
+    NavigationCacheMode="Required" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.ColumnDefinitions>
