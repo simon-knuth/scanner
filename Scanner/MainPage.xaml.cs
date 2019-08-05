@@ -222,6 +222,9 @@ namespace Scanner
                     HyperlinkSettings.IsTabStop = true;
                 }
             }
+
+            ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
+            ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight;
         }
 
 

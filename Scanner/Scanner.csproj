@@ -135,8 +135,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Scan_20131209.jpg" />
-    <Content Include="Assets\SCN_20190731 %289%29.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -174,7 +172,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\animation-w300-h300.json" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>

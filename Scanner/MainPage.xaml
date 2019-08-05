@@ -79,7 +79,7 @@
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <Grid Name="GridPanelRight" CornerRadius="0,0,0,0" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" DoubleTapped="ScrollViewerScan_DoubleTapped" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <Image x:Name="ImageScanViewer" MaxWidth="{Binding ActualWidth, ElementName=ScrollViewerScan}" MaxHeight="{Binding ActualHeight, ElementName=ScrollViewerScan}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Image x:Name="ImageScanViewer" MaxWidth="{Binding ActualWidth, ElementName=ScrollViewerScan}" MaxHeight="{Binding ActualHeight, ElementName=ScrollViewerScan}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </ScrollViewer>
 
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0">
