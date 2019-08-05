@@ -8,7 +8,9 @@
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
     x:Class="Scanner.MainPage"
     mc:Ignorable="d" 
-    SizeChanged="Page_SizeChanged" ActualThemeChanged="Page_ActualThemeChanged">
+    SizeChanged="Page_SizeChanged" 
+    ActualThemeChanged="Page_ActualThemeChanged" 
+    NavigationCacheMode="Required">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,7 +25,7 @@
                     <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
-                    <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,6" HorizontalAlignment="Stretch">
+                    <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
                         <TextBlock Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                             <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
@@ -68,7 +70,7 @@
         </Frame>
 
         <RelativePanel Grid.Column="1" Name="RelativePanelRight">
-            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.6" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
+            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.3" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
                                         OffsetY="{Binding Path=Margin.Top, ElementName=GridPanelRight}"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                         HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
@@ -85,6 +87,11 @@
                             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
                                 <Span xml:space="preserve"><Run>If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
                             </TextBlock>
+                        </StackPanel>
+
+                        <StackPanel x:Name="StackPanelScanText"  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                            <TextBlock Text="Scanning..." TextWrapping="WrapWholeWords" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                            <ProgressBar HorizontalAlignment="Center" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="200"/>
                         </StackPanel>
 
                         <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="12,50,12,80"/>

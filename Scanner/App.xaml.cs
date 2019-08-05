@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
+using static Globals;
 using static Utilities;
 
 namespace Scanner
@@ -23,6 +24,21 @@ namespace Scanner
         /// </summary>
         public App()
         {
+            // Load settings from local app data
+            LoadSettings();
+
+            switch (settingAppTheme)
+            {
+                case Theme.system:
+                    break;
+                case Theme.light:
+                    this.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                case Theme.dark:
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+            }
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
@@ -74,8 +90,16 @@ namespace Scanner
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
+            applicationViewTitlebar = ApplicationView.GetForCurrentView().TitleBar;
+
+            applicationViewTitlebar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            applicationViewTitlebar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+
+            UISettings uISettings = new UISettings();
+            uISettings.ColorValuesChanged += UpdateTheme;
+
             // Update theme once to ensure that the titlebar buttons are correct
-            UpdateTheme(null, null, null);
+            UpdateTheme(null, null);
         }
 
 

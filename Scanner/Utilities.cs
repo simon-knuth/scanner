@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
 using Windows.UI.ViewManagement;
 
+using static Globals;
+using Windows.ApplicationModel.Core;
+
 static class Utilities
 {
     /// <summary>
@@ -121,25 +124,159 @@ static class Utilities
         throw new Exception();      // TODO add meaningful exception
     }
 
-    // TODO add documentation
-    public static void UpdateTheme(UISettings uISettings, object theObject, DropShadowPanel dropShadowPanel)
+
+    public static void LoadSettings()
     {
-        var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+        localSettingsContainer = ApplicationData.Current.LocalSettings;
 
-        titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-        titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-
-        if ((new UISettings()).GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).ToString() == "#FF000000")
+        if (localSettingsContainer.Values["settingAppTheme"] != null)
         {
-            // Dark mode is active
-            titleBar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
-            if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
+            switch ((int)localSettingsContainer.Values["settingAppTheme"])
+            {
+                case 0:
+                    settingAppTheme = Theme.system;
+                    break;
+                case 1:
+                    settingAppTheme = Theme.light;
+                    break;
+                case 2:
+                    settingAppTheme = Theme.dark;
+                    break;
+                default:
+                    settingAppTheme = Theme.system;
+                    break;
+            }
         }
         else
         {
-            // Light mode is active
-            titleBar.ButtonForegroundColor = Windows.UI.Colors.Black;
-            if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
+            settingAppTheme = Theme.system;
+            localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
         }
+
+        if (localSettingsContainer.Values["settingSearchIndicator"] != null)
+        {
+            settingSearchIndicator = (bool)localSettingsContainer.Values["settingSearchIndicator"];
+        }
+        else
+        {
+            settingSearchIndicator = true;
+            localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
+        }
+
+        if (localSettingsContainer.Values["settingNotificationScanComplete"] != null)
+        {
+            settingNotificationScanComplete = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
+        }
+        else
+        {
+            settingNotificationScanComplete = true;
+            localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
+        }
+
+        if (localSettingsContainer.Values["settingUnsupportedFileFormat"] != null)
+        {
+            settingUnsupportedFileFormat = (bool)localSettingsContainer.Values["settingUnsupportedFileFormat"];
+        }
+        else
+        {
+            settingUnsupportedFileFormat = true;
+            localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
+        }
+    }
+
+
+
+    public static void LockCommandBar(CommandBar commandBar, Control except)
+    {
+        if (except == null)
+        {
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                item.IsEnabled = false;
+            }
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                item.IsEnabled = false;
+            }
+        } else
+        {
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                if (item != except) item.IsEnabled = false;
+            }
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                if (item != except) item.IsEnabled = false;
+            }
+        }
+    }
+
+
+    public static void UnlockCommandBar(CommandBar commandBar, Control except)
+    {
+
+        if (except == null)
+        {
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                item.IsEnabled = true;
+            }
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                item.IsEnabled = true;
+            }
+        }
+        else
+        {
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                if (item != except) item.IsEnabled = true;
+            }
+            foreach (Control item in commandBar.PrimaryCommands)
+            {
+                if (item != except) item.IsEnabled = true;
+            }
+        }
+    }
+
+
+    // TODO add documentation
+    public static void UpdateTheme(UISettings uISettings, object theObject)
+    {
+        if (settingAppTheme == Theme.system)
+        {
+            if ((new UISettings()).GetColorValue(UIColorType.Background).ToString() == "#FF000000")
+            {
+                // Dark mode is active
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
+            }
+            else
+            {
+                // Light mode is active
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
+            }
+        } else
+        {
+            if (settingAppTheme == Theme.light)
+            {
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
+            } else
+            {
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
+            }
+        }
+    }
+
+
+    public static void SaveSettings()
+    {
+        localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
+        localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
+        localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
+        localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
     }
 }

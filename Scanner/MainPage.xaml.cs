@@ -12,10 +12,13 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 
+using static Globals;
 using static ScannerOperation;
 using static Utilities;
 
@@ -41,6 +44,8 @@ namespace Scanner
         public MainPage()
         {
             this.InitializeComponent();
+
+            Page_ActualThemeChanged(null, null);
 
             // initialize veriables
             ColumnLeftDefaultMaxWidth = ColumnLeft.MaxWidth;
@@ -266,6 +271,9 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             async () =>
             {
+                StackPanelTextRight.Visibility = Visibility.Collapsed;
+                HyperlinkSettings.IsTabStop = false;
+
                 foreach (DeviceInformation check in deviceInformations)
                 {
                     if (check.Id == ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag.ToString())
@@ -284,9 +292,6 @@ namespace Scanner
                 if (autoAllowed) RadioButtonSourceAutomatic.IsChecked = true;
                 else if (flatbedAllowed) RadioButtonSourceFlatbed.IsChecked = true;
                 else if (feederAllowed) RadioButtonSourceFeeder.IsChecked = true;
-
-                StackPanelTextRight.Visibility = Visibility.Collapsed;
-                HyperlinkSettings.IsTabStop = false;
             });
         }
 
@@ -312,6 +317,7 @@ namespace Scanner
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
             CommandBarScan.Visibility = Visibility.Collapsed;
             ImageScanViewer.Visibility = Visibility.Collapsed;
+            StackPanelScanText.Visibility = Visibility.Visible;
 
             // gather options
             if (RadioButtonSourceAutomatic.IsChecked.Value)
@@ -396,6 +402,7 @@ namespace Scanner
 
             // show result
             scannedFile = result.ScannedFiles[0];
+            StackPanelScanText.Visibility = Visibility.Collapsed;
             DisplayImageAsync(scannedFile, ImageScanViewer);
             await ImageCropper.LoadImageFromFile(scannedFile);
             flowState = FlowState.result;
@@ -515,7 +522,7 @@ namespace Scanner
 
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
-            AppBarButtonCrop.Visibility = Visibility.Collapsed;
+            Frame.Navigate(typeof(SettingsPage), null, new EntranceNavigationTransitionInfo());
         }
 
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
@@ -529,6 +536,7 @@ namespace Scanner
             FlyoutAppBarButtonDelete.Hide();
             CommandBarScan.Visibility = Visibility.Collapsed;
             ImageScanViewer.Visibility = Visibility.Collapsed;
+            flowState = FlowState.initial;
         }
 
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
@@ -545,10 +553,7 @@ namespace Scanner
         private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate other buttons
-            foreach (Control item in CommandBarScan.PrimaryCommands)
-            {
-                if (item != AppBarButtonCrop) item.IsEnabled = false;
-            }
+            LockCommandBar(CommandBarScan, AppBarButtonCrop);
 
             flowState = FlowState.crop;
 
@@ -572,10 +577,7 @@ namespace Scanner
             // return UI to normal
             ImageCropper.Visibility = Visibility.Collapsed;
             AppBarButtonCrop.IsEnabled = true;
-            foreach (Control item in CommandBarScan.PrimaryCommands)
-            {
-                item.IsEnabled = true;
-            }
+            UnlockCommandBar(CommandBarScan, null);
             flowState = FlowState.result;
         }
 
@@ -591,7 +593,7 @@ namespace Scanner
 
         private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            AppBarButtonRotate.IsEnabled = false;
+            LockCommandBar(CommandBarScan, null);
             IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
@@ -610,13 +612,38 @@ namespace Scanner
 
             DisplayImageAsync(scannedFile, ImageScanViewer);
             stream.Dispose();
+            await ImageCropper.LoadImageFromFile(scannedFile);
 
-            AppBarButtonRotate.IsEnabled = true;
+            UnlockCommandBar(CommandBarScan, null);
         }
 
         private void Page_ActualThemeChanged(FrameworkElement sender, object args)
         {
-            UpdateTheme(null, null, DropShadowPanelRight);
+            if (settingAppTheme == Theme.system)
+            {
+                if ((new UISettings()).GetColorValue(UIColorType.Background).ToString() == "#FF000000")
+                {
+                    // Dark mode is active
+                    DropShadowPanelRight.ShadowOpacity = 0.6;
+                }
+                else
+                {
+                    // Light mode is active
+                    DropShadowPanelRight.ShadowOpacity = 0.3;
+                }
+            }
+            else
+            {
+                if (settingAppTheme == Theme.light)
+                {
+                    DropShadowPanelRight.ShadowOpacity = 0.3;
+                }
+                else
+                {
+                    DropShadowPanelRight.ShadowOpacity = 0.6;
+                }
+            }
+
         }
     }
 }
