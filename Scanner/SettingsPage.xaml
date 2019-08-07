@@ -46,25 +46,26 @@
                     <ToggleSwitch x:Name="ToggleSwitchSearchIndicator" Header="Show scanner search indicator" Margin="0,24,0,0"/>
                     <ToggleSwitch x:Name="ToggleSwitchNotificationScanComplete" Header="Send a notification when scanning ends in the background" Margin="0,24,0,0"/>
                     <ToggleSwitch x:Name="ToggleSwitchUnsupportedFileFormat" Header="Allow unsupported file formats by converting to them from a supported one" Margin="0,24,0,0"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,48,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     </StackPanel>
                     <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                         <Span><Run xml:space="preserve">Use the </Run><Hyperlink UnderlineStyle="None">Feedback Hub</Hyperlink><Run xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run><Hyperlink UnderlineStyle="None">rate Scanner in the Microsoft Store</Hyperlink><Run xml:space="preserve"> to help others decide whether this is the right app for them.</Run></Span>
                     </TextBlock>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,48,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8E1;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock Text="Support development" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,48,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     </StackPanel>
                     <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span>Scanner<LineBreak/>Made by Simon Knuth<LineBreak/>2019<LineBreak/>
-                        <LineBreak/><Hyperlink UnderlineStyle="None">Website</Hyperlink></Span>
+                        <Span>Scanner<LineBreak/>Developed by Simon Knuth<LineBreak/>2019<LineBreak/>
+                        <LineBreak/><Hyperlink UnderlineStyle="None">Website</Hyperlink><LineBreak/></Span>
                     </TextBlock>
+                    <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 </StackPanel>
             </ScrollViewer>
         </Grid>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
@@ -29,6 +30,7 @@ namespace Scanner
 
         private DeviceWatcher scannerWatcher;
         private double ColumnLeftDefaultMaxWidth;
+        private double ColumnLeftDefaultMinWidth;
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
         private List<DeviceInformation> deviceInformations = new List<DeviceInformation>();
         private ImageScanner selectedScanner = null;
@@ -36,19 +38,23 @@ namespace Scanner
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
         private StorageFile scannedFile;
+        private UIstate uiState = UIstate.unset;
         private FlowState flowState = FlowState.initial;
-        private UIstate uiState;
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+        private bool inForeground = true;
 
 
         public MainPage()
         {
             this.InitializeComponent();
 
+            TextBlockHeader.Text = Package.Current.DisplayName.ToString();
+
             Page_ActualThemeChanged(null, null);
 
             // initialize veriables
             ColumnLeftDefaultMaxWidth = ColumnLeft.MaxWidth;
+            ColumnLeftDefaultMinWidth = ColumnLeft.MinWidth;
 
             // populate the scanner list
             refreshScannerList();
@@ -57,6 +63,9 @@ namespace Scanner
             getScanFolder();
 
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+
+            CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
+            CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
@@ -74,7 +83,7 @@ namespace Scanner
         public void refreshScannerList()
         {
             Debug.WriteLine("refreshing scanner list");
-            if (settingSearchIndicator) ProgressRingRefresh.IsActive = true;
+            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
             // Create a Device Watcher class for type Image Scanner for enumerating scanners
             scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
             
@@ -190,48 +199,86 @@ namespace Scanner
         }
 
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // responsive behavior
-            if (e.NewSize.Width < 900)
+            double width = ((Frame)Window.Current.Content).ActualWidth;
+            if (width < 700)
             {
+                // small ////////////////////////////////////////////////////////
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
                 HyperlinkSettings.IsTabStop = false;
-                if (e.NewSize.Width < 700)
+
+                if (flowState == FlowState.result || flowState == FlowState.crop)
                 {
-                    ColumnLeft.MaxWidth = Double.PositiveInfinity;
-                    DropShadowPanelRight.Visibility = Visibility.Collapsed;
-                    ColumnRight.MaxWidth = 0;
+                    // small and result visible
+                    if (uiState != UIstate.small_result)
+                    {
+                        ColumnLeft.MaxWidth = 0;
+                        ColumnLeft.MinWidth = 0;
+                        ColumnRight.MaxWidth = Double.PositiveInfinity;
+
+                        DropShadowPanelRight.Visibility = Visibility.Visible;
+                        CommandBarDone.Visibility = Visibility.Visible;
+                    }
+                    uiState = UIstate.small_result;
                 }
                 else
                 {
+                    // small and no result visible
+                    if (uiState != UIstate.small_initial)
+                    {
+                        ColumnLeft.MaxWidth = Double.PositiveInfinity;
+                        ColumnLeft.MinWidth = ColumnLeftDefaultMinWidth;
+                        ColumnRight.MaxWidth = 0;
+
+                        DropShadowPanelRight.Visibility = Visibility.Collapsed;
+                        CommandBarDone.Visibility = Visibility.Collapsed;
+                    }
+                    uiState = UIstate.small_initial;
+                }
+            }
+            else if (700 < width && width < 900)
+            {
+                // medium ///////////////////////////////////////////////////////
+                if (uiState != UIstate.full)
+                {
                     ColumnRight.MaxWidth = Double.PositiveInfinity;
                     ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
+                    ColumnLeft.MinWidth = ColumnLeftDefaultMinWidth;
+
                     DropShadowPanelRight.Visibility = Visibility.Visible;
+                    CommandBarDone.Visibility = Visibility.Collapsed;
+                    StackPanelTextRight.Visibility = Visibility.Collapsed;
+                    HyperlinkSettings.IsTabStop = false;
                 }
+                uiState = UIstate.full;
             }
-            else
+            else if (900 < width)
             {
-                ColumnRight.MaxWidth = Double.PositiveInfinity;
-                ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
-                DropShadowPanelRight.Visibility = Visibility.Visible;
-
-                if (selectedScanner == null)
+                // large ////////////////////////////////////////////////////////
+                if (uiState != UIstate.full)
                 {
-                    StackPanelTextRight.Visibility = Visibility.Visible;
-                    HyperlinkSettings.IsTabStop = true;
-                }
-            }
+                    ColumnRight.MaxWidth = Double.PositiveInfinity;
+                    ColumnLeft.MaxWidth = ColumnLeftDefaultMaxWidth;
+                    ColumnLeft.MinWidth = ColumnLeftDefaultMinWidth;
 
-            ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
-            ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight;
+                    DropShadowPanelRight.Visibility = Visibility.Visible;
+                    CommandBarDone.Visibility = Visibility.Collapsed;
+                    if (selectedScanner == null)
+                    {
+                        StackPanelTextRight.Visibility = Visibility.Visible;
+                        HyperlinkSettings.IsTabStop = true;
+                    }
+                }
+                uiState = UIstate.full;
+            }
         }
 
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void ButtonRecents_Click(object sender, RoutedEventArgs e)
         {
-            StorageFolder folder = await KnownFolders.PicturesLibrary.GetFolderAsync("Scans");
-            await Launcher.LaunchFolderAsync(folder);
+            await Launcher.LaunchFolderAsync(scanFolder);
         }
 
 
@@ -252,6 +299,7 @@ namespace Scanner
                 ComboBoxResolution.IsEnabled = comboBoxResolution;
                 ComboBoxFormat.IsEnabled = comboBoxType;
                 ButtonScan.IsEnabled = buttonScan;
+                if (buttonScan) TextBlockButtonScan.Opacity = 1; else TextBlockButtonScan.Opacity = 0.5;
                 ButtonSettings.IsEnabled = buttonSettings;
                 ButtonRecents.IsEnabled = buttonRecents;
             }
@@ -320,7 +368,8 @@ namespace Scanner
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
             CommandBarScan.Visibility = Visibility.Collapsed;
             ImageScanViewer.Visibility = Visibility.Collapsed;
-            StackPanelScanText.Visibility = Visibility.Visible;
+            TextBlockButtonScan.Visibility = Visibility.Collapsed;
+            ProgressRingScan.Visibility = Visibility.Visible;
 
             // gather options
             if (RadioButtonSourceAutomatic.IsChecked.Value)
@@ -405,13 +454,18 @@ namespace Scanner
 
             // show result
             scannedFile = result.ScannedFiles[0];
-            StackPanelScanText.Visibility = Visibility.Collapsed;
+            TextBlockButtonScan.Visibility = Visibility.Visible;
+            ProgressRingScan.Visibility = Visibility.Collapsed;
             DisplayImageAsync(scannedFile, ImageScanViewer);
             await ImageCropper.LoadImageFromFile(scannedFile);
             flowState = FlowState.result;
 
-            // unlock UI
+            // send toast if the app isn't in the foreground
+            if (settingNotificationScanComplete && !inForeground) SendToastNotification("Scan complete", "Return to the app for editing and more.", null);
+
+            // modify UI
             CommandBarScan.Visibility = Visibility.Visible;
+            Page_SizeChanged(null, null);
             RadioButtonSourceChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
@@ -560,6 +614,12 @@ namespace Scanner
 
             flowState = FlowState.crop;
 
+            // make sure that the ImageCropper won't be obstructed
+            ImageCropper.Padding = new Thickness(24,
+                24 + CoreApplication.GetCurrentView().TitleBar.Height + CommandBarDone.ActualHeight +
+                DropShadowPanelCommandBarDone.Margin.Top, 24, 24 + CommandBarScan.ActualHeight + 
+                DropShadowPanelCommandBar.Margin.Bottom);
+
             // show ImageCropper
             ImageCropper.Visibility = Visibility.Visible;
         }
@@ -651,8 +711,30 @@ namespace Scanner
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (settingSearchIndicator) ProgressRingRefresh.IsActive = true;
-            else ProgressRingRefresh.IsActive = false;
+            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
+            else ProgressBarRefresh.Visibility = Visibility.Collapsed;
+        }
+
+        private void AppBarButtonDone_Click(object sender, RoutedEventArgs e)
+        {
+            if (flowState == FlowState.crop)
+            {
+                AppBarButtonCrop.IsChecked = false;
+            }
+            else
+            {
+                flowState = FlowState.initial;
+                CommandBarScan.Visibility = Visibility.Collapsed;
+                ImageScanViewer.Visibility = Visibility.Collapsed;
+                Page_SizeChanged(null, null);
+            }
+        }
+
+        private void ScrollViewerScan_LayoutUpdated(object sender, object e)
+        {
+            // fix image
+            ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
+            ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight;
         }
     }
 }

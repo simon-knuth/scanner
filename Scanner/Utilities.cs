@@ -1,15 +1,18 @@
 ﻿using System;
+using Microsoft.QueryStringDotNET;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
+using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 
 using static Globals;
-using Windows.ApplicationModel.Core;
+
 
 static class Utilities
 {
@@ -18,6 +21,7 @@ static class Utilities
     /// </summary>
     public enum UIstate
     {
+        unset = -1,
         full = 0,                   // the whole UI is visible
         small_initial = 1,          // only the options pane is visible
         small_result = 2            // only the result of a scan is visible
@@ -209,6 +213,47 @@ static class Utilities
                 if (item != except) item.IsEnabled = false;
             }
         }
+    }
+
+
+    public static void SendToastNotification(string title, string content, string imageURI)
+    {
+        // Construct the visuals of the toast
+        ToastVisual visual = new ToastVisual()
+        {
+            BindingGeneric = new ToastBindingGeneric()
+            {
+                Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = title
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = content
+                    },
+
+                    //new AdaptiveImage()
+                    //{
+                    //    Source = imageURI
+                    //}
+                },
+            }
+        };
+
+        // Construct final toast
+        ToastContent toastContent = new ToastContent()
+        {
+            Visual = visual,
+        };
+
+
+        var toast = new ToastNotification(toastContent.GetXml());
+        toast.ExpirationTime = DateTime.Now.AddMinutes(5);
+
+        ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
 

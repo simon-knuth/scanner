@@ -1,4 +1,6 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using System;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -52,6 +54,9 @@ namespace Scanner
             ToggleSwitchSearchIndicator.IsOn = settingSearchIndicator;
             ToggleSwitchNotificationScanComplete.IsOn = settingNotificationScanComplete;
             ToggleSwitchUnsupportedFileFormat.IsOn = settingUnsupportedFileFormat;
+
+            PackageVersion version = Package.Current.Id.Version;
+            TextBlockVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)

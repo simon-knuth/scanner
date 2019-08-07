@@ -26,11 +26,11 @@
                 </Grid.RowDefinitions>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                     <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
-                        <TextBlock Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
+                        <TextBlock x:Name="TextBlockHeader" Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                             <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock Name="TextBlockRefreshHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
-                            <ProgressRing Name="ProgressRingRefresh" IsActive="False" Opacity="0.5" Background="Transparent" Margin="12,0,0,0"/>
+                            <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed"/>
                         </StackPanel>
                         <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
@@ -56,12 +56,17 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                    <Button Name="ButtonScan" Content="Scan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" FontWeight="SemiBold" MinWidth="100" IsEnabled="False" Foreground="{ThemeResource SystemColorHighlightTextColor}" Click="ButtonScan_Click"/>
+                    <Button Name="ButtonScan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="100" IsEnabled="False" Click="ButtonScan_Click">
+                        <Grid>
+                            <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemAltHighColor}" Opacity="0.5"/>
+                            <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
+                        </Grid>
+                    </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
-                        <Button x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="Button_Click">
+                        <Button x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonRecents_Click">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
                         </Button>
                     </StackPanel>
@@ -78,7 +83,7 @@
                                         RelativePanel.AlignBottomWithPanel="True">
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <Grid Name="GridPanelRight" CornerRadius="0,0,0,0" VerticalAlignment="Stretch">
-                        <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" DoubleTapped="ScrollViewerScan_DoubleTapped" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" DoubleTapped="ScrollViewerScan_DoubleTapped" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Image x:Name="ImageScanViewer" MaxWidth="{Binding ActualWidth, ElementName=ScrollViewerScan}" MaxHeight="{Binding ActualHeight, ElementName=ScrollViewerScan}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </ScrollViewer>
 
@@ -89,12 +94,15 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <StackPanel x:Name="StackPanelScanText"  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
-                            <TextBlock Text="Scanning..." TextWrapping="WrapWholeWords" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12"/>
-                            <ProgressBar HorizontalAlignment="Center" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="200"/>
-                        </StackPanel>
-
-                        <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="12,50,12,80"/>
+                        <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
+                        
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarDone" BlurRadius="20" ShadowOpacity="0.3" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
+                            <Frame CornerRadius="3">
+                                <CommandBar x:Name="CommandBarDone" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
+                                    <AppBarButton x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
+                                </CommandBar>
+                            </Frame>
+                        </controls:DropShadowPanel>
 
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBar" BlurRadius="20" ShadowOpacity="0.3" OffsetY="5" CornerRadius="3" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
