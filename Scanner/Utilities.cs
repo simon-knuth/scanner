@@ -1,9 +1,9 @@
 ﻿using System;
-using Microsoft.QueryStringDotNET;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -12,7 +12,10 @@ using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 
 using static Globals;
-
+using System.IO;
+using Windows.ApplicationModel;
+using Windows.UI.Core;
+using Windows.System;
 
 static class Utilities
 {
@@ -32,7 +35,8 @@ static class Utilities
     {
         initial = 0,                // there is no result visible
         result = 1,                 // there is a result visible but no crop in progress
-        crop = 2                    // there is a result visible and a crop in progress
+        crop = 2,                   // there is a result visible and a crop in progress
+        draw = 3                    // there is a result visible and drawing in progress
     }
 
 
@@ -129,9 +133,34 @@ static class Utilities
     }
 
 
-    public static void LoadSettings()
+    public static bool IsCtrlKeyPressed()
+    {
+        var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+        return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+    }
+
+
+    public async static void LoadSettings()
     {
         localSettingsContainer = ApplicationData.Current.LocalSettings;
+        
+        if (futureAccessList.Entries.Count != 0)
+        {
+            try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
+            catch (Exception)
+            {
+                try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists); }
+                catch (Exception)
+                {
+                    // tell the user that something went wrong and they should try setting a folder manually
+                    ShowMessageDialog("Something went wrong", "Unable to access the last selected scan folder or the default scan folder. Please try to select a new folder in the settings menu.");
+                }
+                futureAccessList.AddOrReplace("scanFolder", scanFolder);
+            }
+        } else
+        {
+            ShowMessageDialog("Something went wrong", "Unable to access the default scan folder. Please try to select a new folder in the settings menu.");
+        }
 
         if (localSettingsContainer.Values["settingAppTheme"] != null)
         {
@@ -186,6 +215,23 @@ static class Utilities
             settingUnsupportedFileFormat = true;
             localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
         }
+
+        PackageVersion version = Package.Current.Id.Version;
+        string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+        if (localSettingsContainer.Values["lastKnownVersion"] != null)
+        {
+            string lastKnownVersionNumber = (string) localSettingsContainer.Values["lastKnownVersion"];
+
+            if (currentVersionNumber != lastKnownVersionNumber) firstAppLaunchWithThisVersion = true;
+            else firstAppLaunchWithThisVersion = false;
+
+            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
+        }
+        else
+        {
+            // first launch of the app ever
+            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
+        }
     }
 
 
@@ -216,7 +262,7 @@ static class Utilities
     }
 
 
-    public static void SendToastNotification(string title, string content, string imageURI)
+    public static void SendToastNotification(string title, string content, string imageURI, int expirationTime)
     {
         // Construct the visuals of the toast
         ToastVisual visual = new ToastVisual()
@@ -235,10 +281,10 @@ static class Utilities
                         Text = content
                     },
 
-                    //new AdaptiveImage()
-                    //{
-                    //    Source = imageURI
-                    //}
+                    new AdaptiveImage()
+                    {
+                        Source = imageURI
+                    }
                 },
             }
         };
@@ -251,36 +297,30 @@ static class Utilities
 
 
         var toast = new ToastNotification(toastContent.GetXml());
-        toast.ExpirationTime = DateTime.Now.AddMinutes(5);
+        toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
 
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
 
+    public async static void ShowMessageDialog(string title, string message)
+    {
+        MessageDialog messageDialog = new MessageDialog(message, title);
+        await messageDialog.ShowAsync();
+    }
+
+
     public static void UnlockCommandBar(CommandBar commandBar, Control except)
     {
-
         if (except == null)
         {
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                item.IsEnabled = true;
-            }
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                item.IsEnabled = true;
-            }
+            foreach (Control item in commandBar.PrimaryCommands) item.IsEnabled = true;
+            foreach (Control item in commandBar.PrimaryCommands) item.IsEnabled = true;
         }
         else
         {
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                if (item != except) item.IsEnabled = true;
-            }
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                if (item != except) item.IsEnabled = true;
-            }
+            foreach (Control item in commandBar.PrimaryCommands) if (item != except) item.IsEnabled = true;
+            foreach (Control item in commandBar.PrimaryCommands) if (item != except) item.IsEnabled = true;
         }
     }
 
@@ -294,25 +334,16 @@ static class Utilities
             {
                 // Dark mode is active
                 applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
-                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
             }
             else
             {
                 // Light mode is active
                 applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
-                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
             }
         } else
         {
-            if (settingAppTheme == Theme.light)
-            {
-                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
-                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.3;
-            } else
-            {
-                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
-                //if (dropShadowPanel != null) dropShadowPanel.ShadowOpacity = 0.6;
-            }
+            if (settingAppTheme == Theme.light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+            else applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
         }
     }
 

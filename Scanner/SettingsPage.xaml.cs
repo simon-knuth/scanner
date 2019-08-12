@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -13,6 +15,8 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
+        private string websiteUrl = "http://simon-knuth.github.io/scanner";
+
         public SettingsPage()
         {
             this.InitializeComponent();
@@ -35,6 +39,15 @@ namespace Scanner
 
         private void Page_Loading(FrameworkElement sender, object args)
         {
+            if (scanFolder != null)
+            {
+                TextBoxSaveLocation.Text = scanFolder.Path;
+            } else
+            {
+                // TODO do something if no scan folder has been selected due to an error
+            }
+            
+
             switch (settingAppTheme)
             {
                 case Theme.system:
@@ -76,10 +89,70 @@ namespace Scanner
             TextBlockRestart.Visibility = Visibility.Visible;
         }
 
-        private void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        private async void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             ButtonSave_Click(null, null);
-            CoreApplication.RequestRestartAsync("");
+            await CoreApplication.RequestRestartAsync("");
+        }
+
+        private async void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            folderPicker.FileTypeFilter.Add("*");
+
+            StorageFolder folder;
+            try
+            {
+                folder = await folderPicker.PickSingleFolderAsync();
+            }
+            catch (Exception exc)
+            {
+                ShowMessageDialog("Error", "Something went wrong while picking a folder. The error message is:" + "\n" + exc.Message);
+                return;
+            }
+
+            if (folder != null)
+            {
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace("scanFolder", folder);
+                scanFolder = folder;
+                TextBoxSaveLocation.Text = scanFolder.Path;
+            }
+        }
+
+        private void ToggleSwitchUnsupportedFileFormat_Toggled(object sender, RoutedEventArgs e)
+        {
+            formatSettingChanged = true;
+        }
+
+        private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(websiteUrl));
+        }
+
+        private async void ButtonResetLocation_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder folder;
+            try
+            {
+                folder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                ShowMessageDialog("Access denied", "Access to the pictures library has been denied.");
+                return;
+            }
+            catch (Exception exc)
+            {
+                ShowMessageDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
+                return;
+            }
+            
+            Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace("scanFolder", folder);
+            scanFolder = folder;
+            TextBoxSaveLocation.Text = scanFolder.Path;
         }
     }
 }

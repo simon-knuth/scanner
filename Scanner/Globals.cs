@@ -1,4 +1,6 @@
-﻿using Windows.UI.ViewManagement;
+﻿using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.UI.ViewManagement;
 
 public static class Globals
 {
@@ -6,8 +8,12 @@ public static class Globals
     public static bool settingSearchIndicator;
     public static bool settingNotificationScanComplete;
     public static bool settingUnsupportedFileFormat;
-    public static Windows.Storage.ApplicationDataContainer localSettingsContainer;
+    public static bool formatSettingChanged = false;
+    public static bool? firstAppLaunchWithThisVersion;
+    public static StorageFolder scanFolder = null;
+    public static ApplicationDataContainer localSettingsContainer;
     public static ApplicationViewTitleBar applicationViewTitlebar;
+    public static StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
     
 
     public enum Theme {

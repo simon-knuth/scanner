@@ -12,7 +12,7 @@
     ActualThemeChanged="Page_ActualThemeChanged" 
     NavigationCacheMode="Required" Loaded="Page_Loaded">
 
-    <Grid>
+    <Grid x:Name="GridMainPage" KeyDown="GridMainPage_KeyDown">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
             <ColumnDefinition x:Name="ColumnRight" Width="7*"/>
@@ -58,7 +58,7 @@
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
                     <Button Name="ButtonScan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="100" IsEnabled="False" Click="ButtonScan_Click">
                         <Grid>
-                            <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemAltHighColor}" Opacity="0.5"/>
+                            <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
                             <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
                         </Grid>
                     </Button>

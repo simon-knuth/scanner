@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
+using static Globals;
 using static Utilities;
 
 class ScannerOperation
@@ -82,22 +83,60 @@ class ScannerOperation
     /// <returns>
     ///     The corresponding ImageScannerFormat.
     /// </returns>
-    public static ImageScannerFormat GetDesiredImageScannerFormat(ComboBox comboBox)
+    public static Tuple<ImageScannerFormat, string> GetDesiredImageScannerFormat(ComboBox comboBox, ObservableCollection<ComboBoxItem> formats)
     {
-        ComboBoxItem selectedFormat = ((ComboBoxItem) comboBox.SelectedItem);
+        ComboBoxItem selectedItem = ((ComboBoxItem) comboBox.SelectedItem);
+        ImageScannerFormat desiredFormat = ImageScannerFormat.DeviceIndependentBitmap;          // initialize with most supported type
+        string secondFormat = "";
 
-        if (selectedFormat.Tag.ToString() == "jpeg") return ImageScannerFormat.Jpeg;
-        if (selectedFormat.Tag.ToString() == "png") return ImageScannerFormat.Png;
-        if (selectedFormat.Tag.ToString() == "pdf") return ImageScannerFormat.Pdf;
-        if (selectedFormat.Tag.ToString() == "xps") return ImageScannerFormat.Xps;
-        if (selectedFormat.Tag.ToString() == "openxps") return ImageScannerFormat.OpenXps;
-        if (selectedFormat.Tag.ToString() == "tiff") return ImageScannerFormat.Tiff;
-        return ImageScannerFormat.DeviceIndependentBitmap;
+        if (selectedItem.Tag.ToString().Split(",")[1] == "converted")
+        {
+            secondFormat = selectedItem.Tag.ToString().Split(",")[0];
+            foreach (ComboBoxItem item in formats)
+            {
+                if (item.Tag.ToString().Split(",")[1] == "native")
+                {
+                    // found a native format, is it an image format?
+                    string tmp = item.Tag.ToString().Split(",")[0];
+                    if (tmp == "jpg")
+                    {
+                        desiredFormat = ImageScannerFormat.Jpeg;
+                        break;
+                    }
+                    else if (tmp == "png")
+                    {
+                        desiredFormat = ImageScannerFormat.Png;
+                        break;
+                    }
+                    else if (tmp == "tif")
+                    {
+                        desiredFormat = ImageScannerFormat.Tiff;
+                        break;
+                    }
+                    else if (tmp == "bmp")
+                    {
+                        desiredFormat = ImageScannerFormat.DeviceIndependentBitmap;
+                        break;
+                    }
+                }
+            }
+        } else
+        {
+            if (selectedItem.Tag.ToString().Split(",")[0] == "jpg") desiredFormat = ImageScannerFormat.Jpeg;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "png") desiredFormat = ImageScannerFormat.Png;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "pdf") desiredFormat = ImageScannerFormat.Pdf;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "xps") desiredFormat = ImageScannerFormat.Xps;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "openxps") desiredFormat = ImageScannerFormat.OpenXps;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "tif") desiredFormat = ImageScannerFormat.Tiff;
+        }
+
+        return new Tuple<ImageScannerFormat, string>(desiredFormat, secondFormat);
     }
 
 
     /// <summary>
-    ///     Gets the formats supported by the given scanner's configuration.
+    ///     Gets the formats supported by the given scanner's configuration. If the corresponding option is enabled and a base image
+    ///     format is supported, also add unsupported formats which can be reached through conversion.
     /// </summary>
     /// <param name="config">
     ///     The configuration that determines whether to check the auto, flatbed or feeder mode.
@@ -109,16 +148,47 @@ class ScannerOperation
     ///     The scanner that the configuration belongs to.
     /// </param>
     public static void GetSupportedFormats(IImageScannerFormatConfiguration config, ObservableCollection<ComboBoxItem> formats,
-        ImageScanner selectedScanner)
+        ImageScanner selectedScanner, ComboBox comboBoxFormats)
     {
+        string currentlySelected = "";
+        if ((ComboBoxItem) comboBoxFormats.SelectedItem != null) currentlySelected = ((ComboBoxItem) comboBoxFormats.SelectedItem).Tag.ToString().Split(",")[0];
         formats.Clear();
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg)) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpeg"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) formats.Add(CreateComboBoxItem("PNG", "png"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "pdf"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "xps"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "openxps"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) formats.Add(CreateComboBoxItem("TIFF", "tiff"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) formats.Add(CreateComboBoxItem("Bitmap", "bitmap"));
+        LinkedList<string> determinedImageFormats = new LinkedList<string>();
+
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
+        {
+            formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpg,native"));
+            determinedImageFormats.AddLast("jpg");
+        }
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) {
+            formats.Add(CreateComboBoxItem("PNG", "png,native"));
+            determinedImageFormats.AddLast("png");
+        }
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) {
+            formats.Add(CreateComboBoxItem("TIF", "tif,native"));
+            determinedImageFormats.AddLast("tif");
+        }
+        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) {
+            formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
+            determinedImageFormats.AddLast("bmp");
+        }
+
+        if (determinedImageFormats.Count > 0 && settingUnsupportedFileFormat)
+        {
+            // can convert and user wants it too ~> add missing formats
+            if (!determinedImageFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpg,converted"));
+            if (!determinedImageFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
+            if (!determinedImageFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
+            if (!determinedImageFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+        }
+
+        for (int i = 0; i < formats.Count; i++)
+        {
+            if (((ComboBoxItem) formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
+        } 
     }
 
 

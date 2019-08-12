@@ -32,6 +32,11 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                 <StackPanel x:Name="StackPanelSettings" MaxWidth="600" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Left">
                     <TextBlock Text="Settings" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="TextBoxSaveLocation" IsReadOnly="True" Margin="0,36,0,0" Header="Save location" HorizontalAlignment="Left" CornerRadius="3" Text="" TextAlignment="Right" MinWidth="150" MaxWidth="400"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" >
+                        <Button x:Name="ButtonBrowse" Content="Choose folder" CornerRadius="3" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
+                        <Button x:Name="ButtonResetLocation" Content="Reset to default" CornerRadius="3" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
+                    </StackPanel>
                     <ComboBox x:Name="ComboBoxTheme" Header="Theme" CornerRadius="3" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged">
                         <ComboBox.Items>
                             <ComboBoxItem Content="Use system setting" Tag="0"/>
@@ -45,7 +50,7 @@
 
                     <ToggleSwitch x:Name="ToggleSwitchSearchIndicator" Header="Show scanner search indicator" Margin="0,24,0,0"/>
                     <ToggleSwitch x:Name="ToggleSwitchNotificationScanComplete" Header="Send a notification when scanning ends in the background" Margin="0,24,0,0"/>
-                    <ToggleSwitch x:Name="ToggleSwitchUnsupportedFileFormat" Header="Allow unsupported file formats by converting to them from a supported one" Margin="0,24,0,0"/>
+                    <ToggleSwitch x:Name="ToggleSwitchUnsupportedFileFormat" Header="Allow unsupported file formats by converting to them from a supported one" Margin="0,24,0,0" Toggled="ToggleSwitchUnsupportedFileFormat_Toggled"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
@@ -63,7 +68,7 @@
                     </StackPanel>
                     <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                         <Span>Scanner<LineBreak/>Developed by Simon Knuth<LineBreak/>2019<LineBreak/>
-                        <LineBreak/><Hyperlink UnderlineStyle="None">Website</Hyperlink><LineBreak/></Span>
+                        <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink><LineBreak/></Span>
                     </TextBlock>
                     <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 </StackPanel>
