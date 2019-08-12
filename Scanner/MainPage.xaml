@@ -134,8 +134,8 @@
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator/>
-                                    <AppBarButton x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
-                                    <AppBarButton x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
+                                    <AppBarButton x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl + C)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
+                                    <AppBarButton x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl + S)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
