@@ -41,7 +41,7 @@ namespace Scanner
         {
             if (scanFolder != null)
             {
-                TextBoxSaveLocation.Text = scanFolder.Path;
+                TextBlockSaveLocation.Text = scanFolder.Path;
             } else
             {
                 // TODO do something if no scan folder has been selected due to an error
@@ -74,9 +74,14 @@ namespace Scanner
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            Windows.Storage.AccessCache.StorageApplicationPermissions.
+            if (newScanFolder != null)
+            {
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
                     FutureAccessList.AddOrReplace("scanFolder", newScanFolder);
-            scanFolder = newScanFolder;
+                scanFolder = newScanFolder;
+            }
+
+            
 
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
             settingSearchIndicator = ToggleSwitchSearchIndicator.IsOn;
@@ -119,7 +124,7 @@ namespace Scanner
             if (folder != null)
             {
                 newScanFolder = folder;
-                TextBoxSaveLocation.Text = newScanFolder.Path;
+                TextBlockSaveLocation.Text = newScanFolder.Path;
             }
         }
 
@@ -152,7 +157,7 @@ namespace Scanner
             }
 
             newScanFolder = folder;
-            TextBoxSaveLocation.Text = newScanFolder.Path;
+            TextBlockSaveLocation.Text = newScanFolder.Path;
         }
 
     }

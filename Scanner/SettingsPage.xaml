@@ -32,8 +32,12 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                 <StackPanel x:Name="StackPanelSettings" MaxWidth="600" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Left">
                     <TextBlock Text="Settings" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="TextBoxSaveLocation" IsReadOnly="True" Margin="0,36,0,0" Header="Save location" HorizontalAlignment="Left" CornerRadius="3" Text="" TextAlignment="Right" MinWidth="150" MaxWidth="400"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" >
+                    <TextBlock Text="Save location" Style="{ThemeResource BodyTextBlockStyle}" Margin="0,36,0,0"/>
+                    <RelativePanel Margin="0,6,0,0">
+                        <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                        <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,0,0" IsTextSelectionEnabled="True"/>
+                    </RelativePanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
                         <Button x:Name="ButtonBrowse" Content="Choose folder" CornerRadius="3" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
                         <Button x:Name="ButtonResetLocation" Content="Reset to default" CornerRadius="3" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
                     </StackPanel>
