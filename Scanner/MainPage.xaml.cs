@@ -220,12 +220,6 @@ namespace Scanner
                     }
                     else return;
 
-                    if (!ComboBoxScanners.IsDropDownOpen && selectedScanner == null && deviceInformations.Count == 1)
-                    {
-                        // automatically select first detected scanner if the ComboBox dropdown isn't open
-                        ComboBoxScanners.SelectedIndex = 0;
-                    }
-
                     TextBlockRefreshHint.Text = " (" + scannerList.Count.ToString() + " found)";
                 }
             );

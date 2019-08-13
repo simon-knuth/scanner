@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -16,6 +15,7 @@ namespace Scanner
     public sealed partial class SettingsPage : Page
     {
         private string websiteUrl = "http://simon-knuth.github.io/scanner";
+        private StorageFolder newScanFolder = null;
 
         public SettingsPage()
         {
@@ -74,6 +74,10 @@ namespace Scanner
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
+            Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace("scanFolder", newScanFolder);
+            scanFolder = newScanFolder;
+
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
             settingSearchIndicator = ToggleSwitchSearchIndicator.IsOn;
             settingNotificationScanComplete = ToggleSwitchNotificationScanComplete.IsOn;
@@ -114,10 +118,8 @@ namespace Scanner
 
             if (folder != null)
             {
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.AddOrReplace("scanFolder", folder);
-                scanFolder = folder;
-                TextBoxSaveLocation.Text = scanFolder.Path;
+                newScanFolder = folder;
+                TextBoxSaveLocation.Text = newScanFolder.Path;
             }
         }
 
@@ -148,11 +150,10 @@ namespace Scanner
                 ShowMessageDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
                 return;
             }
-            
-            Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.AddOrReplace("scanFolder", folder);
-            scanFolder = folder;
-            TextBoxSaveLocation.Text = scanFolder.Path;
+
+            newScanFolder = folder;
+            TextBoxSaveLocation.Text = newScanFolder.Path;
         }
+
     }
 }
