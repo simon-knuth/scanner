@@ -95,7 +95,7 @@
                         </StackPanel>
 
                         <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
-                        
+
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarDone" BlurRadius="20" ShadowOpacity="0.3" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
                                 <CommandBar x:Name="CommandBarDone" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
@@ -119,6 +119,11 @@
                                                     <TextBox x:Name="TextBoxRename" CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
                                                     <Button x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
                                                 </StackPanel>
+                                                <Flyout.FlyoutPresenterStyle>
+                                                    <Style TargetType="FlyoutPresenter">
+                                                        <Setter Property="CornerRadius" Value="3"/>
+                                                    </Style>
+                                                </Flyout.FlyoutPresenterStyle>
                                             </Flyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
@@ -130,6 +135,11 @@
                                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
                                                     <Button x:Name="ButtonDelete" CornerRadius="3" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
                                                 </StackPanel>
+                                                <Flyout.FlyoutPresenterStyle>
+                                                    <Style TargetType="FlyoutPresenter">
+                                                        <Setter Property="CornerRadius" Value="3"/>
+                                                    </Style>
+                                                </Flyout.FlyoutPresenterStyle>
                                             </Flyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
@@ -143,6 +153,5 @@
                 </Grid>
             </controls:DropShadowPanel>
         </RelativePanel>
-
     </Grid>
 </Page>
