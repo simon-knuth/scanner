@@ -133,6 +133,7 @@ namespace Scanner
                                     "No information about the scanner you selected could be retrieved. The scanner list will be reinitialized. The error description is:" + "\n" + exc.Message);
 
                                 // (almost) start from scratch to hopefully get rid of dead scanners
+                                autoSelectScanner = false;
                                 scannerList.Clear();
                                 scannerWatcher.Stop();
                                 ComboBoxScanners.SelectedIndex = -1;
@@ -142,6 +143,7 @@ namespace Scanner
                                 scannerWatcher.Start();
                                 return;
                             }
+                            autoSelectScanner = true;
                             break;
                         }
                     }
@@ -219,6 +221,11 @@ namespace Scanner
                         scannerList.Add(item);
                     }
                     else return;
+
+                    if (autoSelectScanner && !ComboBoxScanners.IsDropDownOpen && selectedScanner == null && deviceInformations.Count == 1)
+                    {
+                        ComboBoxScanners.SelectedIndex = 0;
+                    }
 
                     TextBlockRefreshHint.Text = " (" + scannerList.Count.ToString() + " found)";
                 }

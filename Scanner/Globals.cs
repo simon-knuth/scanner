@@ -14,6 +14,7 @@ public static class Globals
     public static ApplicationDataContainer localSettingsContainer;
     public static ApplicationViewTitleBar applicationViewTitlebar;
     public static StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
+    public static bool autoSelectScanner = true;
     
 
     public enum Theme {
