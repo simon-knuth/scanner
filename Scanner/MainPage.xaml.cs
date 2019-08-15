@@ -9,6 +9,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
@@ -130,7 +131,7 @@ namespace Scanner
                             {
                                 // notify user that something went wrong
                                 ShowMessageDialog("Unable to use scanner",
-                                    "No information about the scanner you selected could be retrieved. The scanner list will be reinitialized. The error description is:" + "\n" + exc.Message);
+                                    "No information about the selected scanner could be retrieved. The scanner list will be reinitialized. The error description is:" + "\n" + exc.Message);
 
                                 // (almost) start from scratch to hopefully get rid of dead scanners
                                 autoSelectScanner = false;
@@ -141,9 +142,11 @@ namespace Scanner
                                 deviceInformations.Clear();
                                 refreshLeftPanel();
                                 scannerWatcher.Start();
+                                ComboBoxScanners.IsEnabled = true;
                                 return;
                             }
                             autoSelectScanner = true;
+                            ComboBoxScanners.IsEnabled = true;
                             break;
                         }
                     }
@@ -506,13 +509,32 @@ namespace Scanner
                 }
                 stream.Dispose();
 
-                string path = result.ScannedFiles[0].Path
-                    .Replace("." + result.ScannedFiles[0].Name.Split(".")[1], "." + formatFlow.Item2);
+                string newNameWithoutNumbering = RemoveNumbering(result.ScannedFiles[0].Name
+                    .Replace("." + result.ScannedFiles[0].Name.Split(".")[1], "." + formatFlow.Item2));
+                string newName = newNameWithoutNumbering;
 
-                await result.ScannedFiles[0].RenameAsync(result.ScannedFiles[0].Name
-                    .Replace("." + result.ScannedFiles[0].Name.Split(".")[1], "." + formatFlow.Item2));     // TODO catch exceptions
+                try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
+                catch (Exception)
+                {
+                    // cycle through file numberings until one is not occupied
+                    for (int i = 1; true; i++)
+                    {
+                        try
+                        {
+                            await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() 
+                                + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                        newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
+                        break;
+                    }
+                }
 
-                scannedFile = await StorageFile.GetFileFromPathAsync(path);     // TODO catch exceptions
+                scannedFile = await StorageFile
+                    .GetFileFromPathAsync(result.ScannedFiles[0].Path.Replace(result.ScannedFiles[0].Name, newName));
             }
             else
             {
@@ -530,7 +552,7 @@ namespace Scanner
             flowState = FlowState.result;
 
             // send toast if the app isn't in the foreground
-            if (settingNotificationScanComplete && !inForeground) SendToastNotification("Scan complete", "Return to the app for editing and more.", null, 5);
+            if (settingNotificationScanComplete && !inForeground) SendToastNotification("Scan complete", "Return to the app for editing and more.", 5);
 
             // modify UI
             CommandBarScan.Visibility = Visibility.Visible;
@@ -630,7 +652,7 @@ namespace Scanner
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
             Clipboard.SetContent(dataPackage);
-            SendToastNotification("Copied scan to the clipboard", "", scannedFile.Path, 5);
+            SendToastNotification("Copied scan to the clipboard", "", 5, scannedFile.Path);
         }
 
         private async void ScrollViewerScan_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -833,6 +855,7 @@ namespace Scanner
 
         private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ComboBoxScanners.IsEnabled = false;
             refreshLeftPanel();
         }
 

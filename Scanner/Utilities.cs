@@ -262,7 +262,24 @@ static class Utilities
     }
 
 
-    public static void SendToastNotification(string title, string content, string imageURI, int expirationTime)
+    public static string RemoveNumbering(string input)
+    {
+        // expect string like "abc (def).xyz" and deliver "abc.xyz"
+        string name = input.Substring(0, input.LastIndexOf("."));       // get name without file extension
+        string extension = input.Substring(input.LastIndexOf("."));     // get file extension (with ".")
+
+        if (name[name.Length - 1] == ')' && name.Contains(" ("))
+        {
+            name = name.Substring(0, name.LastIndexOf(" ("));
+            return name + extension;
+        } else
+        {
+            return input;
+        }
+    }
+
+
+    public static void SendToastNotification(string title, string content, int expirationTime, string imageURI)
     {
         // Construct the visuals of the toast
         ToastVisual visual = new ToastVisual()
@@ -301,6 +318,42 @@ static class Utilities
 
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
+
+    public static void SendToastNotification(string title, string content, int expirationTime)
+    {
+        // Construct the visuals of the toast
+        ToastVisual visual = new ToastVisual()
+        {
+            BindingGeneric = new ToastBindingGeneric()
+            {
+                Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = title
+                    },
+
+                    new AdaptiveText()
+                    {
+                        Text = content
+                    },
+                },
+            }
+        };
+
+        // Construct final toast
+        ToastContent toastContent = new ToastContent()
+        {
+            Visual = visual,
+        };
+
+
+        var toast = new ToastNotification(toastContent.GetXml());
+        toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
+
+        ToastNotificationManager.CreateToastNotifier().Show(toast);
+    }
+
 
 
     public async static void ShowMessageDialog(string title, string message)
