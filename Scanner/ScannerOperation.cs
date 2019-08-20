@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -52,7 +53,7 @@ class ScannerOperation
             float y = actualY * x / actualX;
             if (i == 0)
             {
-                resolutions.Add(CreateComboBoxItem(x + " x " + y + " (Default)", x + "," + y));
+                resolutions.Add(CreateComboBoxItem(x + " x " + y + " (" + ResourceLoader.GetForCurrentView().GetString("DefaultResolutionIndicator") + ")", x + "," + y));
             }
             else
             {
@@ -157,7 +158,7 @@ class ScannerOperation
 
         if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
         {
-            formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpg,native"));
+            formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
             determinedImageFormats.AddLast("jpg");
         }
         if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) {

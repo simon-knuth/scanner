@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,6 +21,10 @@ namespace Scanner
         public SettingsPage()
         {
             this.InitializeComponent();
+
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
         }
 
 
@@ -65,6 +70,7 @@ namespace Scanner
             }
             TextBlockRestart.Visibility = Visibility.Collapsed;
             ToggleSwitchSearchIndicator.IsOn = settingSearchIndicator;
+            ToggleSwitchAutomaticScannerSelection.IsOn = settingAutomaticScannerSelection;
             ToggleSwitchNotificationScanComplete.IsOn = settingNotificationScanComplete;
             ToggleSwitchUnsupportedFileFormat.IsOn = settingUnsupportedFileFormat;
 
@@ -85,6 +91,7 @@ namespace Scanner
 
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
             settingSearchIndicator = ToggleSwitchSearchIndicator.IsOn;
+            settingAutomaticScannerSelection = ToggleSwitchAutomaticScannerSelection.IsOn;
             settingNotificationScanComplete = ToggleSwitchNotificationScanComplete.IsOn;
             settingUnsupportedFileFormat = ToggleSwitchUnsupportedFileFormat.IsOn;
 
@@ -159,6 +166,5 @@ namespace Scanner
             newScanFolder = folder;
             TextBlockSaveLocation.Text = newScanFolder.Path;
         }
-
     }
 }

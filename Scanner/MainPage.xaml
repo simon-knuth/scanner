@@ -28,30 +28,30 @@
                     <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
                         <TextBlock x:Name="TextBlockHeader" Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
-                            <TextBlock Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock Name="TextBlockRefreshHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
+                            <TextBlock x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock Name="TextBlockFoundScannersHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
                             <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed"/>
                         </StackPanel>
                         <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                            <RadioButton Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceAutomatic" Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceFlatbed" Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceFeeder" Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                         </StackPanel>
                         <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
-                            <TextBlock Text="Color Mode" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <RadioButton Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
-                            <RadioButton Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <TextBlock x:Uid="TextBlockColorMode" Text="Color mode" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <RadioButton x:Uid="RadioButtonColorModeColor" Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Uid="RadioButtonColorModeGrayscale" Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Uid="RadioButtonColorModeMonochrome" Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
                         <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Resolution in DPI" Style="{StaticResource BaseTextBlockStyle}"/>
-                                <TextBlock Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
+                                <TextBlock x:Uid="TextBlockResolution" Text="Resolution in DPI" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock x:Uid="TextBlockResolutionFileSizeHint" Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
                             </StackPanel>
                             <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
-                        <TextBlock Text="Save result as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
+                        <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
                         <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
                     </StackPanel>
                 </ScrollViewer>
@@ -63,10 +63,10 @@
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
+                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
-                        <Button x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonRecents_Click">
+                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonRecents_Click">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
                         </Button>
                     </StackPanel>
@@ -83,14 +83,14 @@
                                         RelativePanel.AlignBottomWithPanel="True">
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <Grid Name="GridPanelRight" CornerRadius="0,0,0,0" VerticalAlignment="Stretch">
-                        <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" DoubleTapped="ScrollViewerScan_DoubleTapped" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
+                        <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Image x:Name="ImageScanViewer" MaxWidth="{Binding ActualWidth, ElementName=ScrollViewerScan}" MaxHeight="{Binding ActualHeight, ElementName=ScrollViewerScan}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </ScrollViewer>
 
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0">
-                            <TextBlock Text="Select a scanner to start" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
-                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                                <Span xml:space="preserve"><Run>If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run> first.</Run></Span>
+                            <TextBlock x:Uid="TextBlockScannerSelectionHintHeader" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
+                                <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" NavigateUri="ms-settings:printers">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> first.</Run></Span>
                             </TextBlock>
                         </StackPanel>
 
@@ -99,7 +99,7 @@
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarDone" BlurRadius="20" ShadowOpacity="0.3" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
                                 <CommandBar x:Name="CommandBarDone" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarButton x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
@@ -107,17 +107,18 @@
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBar" BlurRadius="20" ShadowOpacity="0.3" OffsetY="5" CornerRadius="3" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
                                 <CommandBar x:Name="CommandBarScan" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarToggleButton x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked" Unchecked="AppBarButtonCrop_Unchecked"/>
-                                    <AppBarButton x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarButton x:Name="AppBarButtonDraw" Icon="Edit" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1"/>
+                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked" Unchecked="AppBarButtonCrop_Unchecked"/>
+                                    <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Icon="Edit" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1"/>
                                     <Custom:ToolbarSeparator/>
-                                    <AppBarButton x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
+                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
                                             <Flyout x:Name="FlyoutAppBarButtonRename" LightDismissOverlayMode="On" Opening="FlyoutAppBarButtonRename_Opening">
                                                 <StackPanel Orientation="Vertical">
-                                                    <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Rename the scanned file"/>
+                                                    <TextBlock x:Uid="TextBlockRenameHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Rename"/>
+                                                    <TextBlock x:Uid="TextBlockRenameBody" Style="{StaticResource BodyTextBlockStyle}" Text="Enter a new name for the file" Margin="0,12,0,0"/>
                                                     <TextBox x:Name="TextBoxRename" CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
-                                                    <Button x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
+                                                    <Button x:Uid="ButtonRename" x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
                                                 </StackPanel>
                                                 <Flyout.FlyoutPresenterStyle>
                                                     <Style TargetType="FlyoutPresenter">
@@ -127,13 +128,13 @@
                                             </Flyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
-                                    <AppBarButton x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
+                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
                                             <Flyout x:Name="FlyoutAppBarButtonDelete" LightDismissOverlayMode="On">
                                                 <StackPanel Orientation="Vertical">
-                                                    <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Are you sure?"/>
-                                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
-                                                    <Button x:Name="ButtonDelete" CornerRadius="3" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
+                                                    <TextBlock x:Uid="TextBlockDeleteHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Are you sure?"/>
+                                                    <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
+                                                    <Button x:Uid="ButtonDelete" x:Name="ButtonDelete" CornerRadius="3" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
                                                 </StackPanel>
                                                 <Flyout.FlyoutPresenterStyle>
                                                     <Style TargetType="FlyoutPresenter">
@@ -144,8 +145,8 @@
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator/>
-                                    <AppBarButton x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl + C)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
-                                    <AppBarButton x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl + S)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>

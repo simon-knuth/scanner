@@ -5,6 +5,7 @@ using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
@@ -47,6 +48,8 @@ namespace Scanner
             this.InitializeComponent();
 
             TextBlockHeader.Text = Package.Current.DisplayName.ToString();
+
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkScannerSelectionHintBodyLink");
 
             Page_ActualThemeChanged(null, null);
 
@@ -130,11 +133,11 @@ namespace Scanner
                             catch (Exception exc)
                             {
                                 // notify user that something went wrong
-                                ShowMessageDialog("Unable to use scanner",
-                                    "No information about the selected scanner could be retrieved. The scanner list will be reinitialized. The error description is:" + "\n" + exc.Message);
+                                ShowMessageDialog(ResourceLoader.GetForCurrentView().GetString("ErrorMessageScannerInformationHeader"),
+                                    ResourceLoader.GetForCurrentView().GetString("ErrorMessageScannerInformationBody") + "\n" + exc.Message);
 
                                 // (almost) start from scratch to hopefully get rid of dead scanners
-                                autoSelectScanner = false;
+                                possiblyDeadScanner = true;
                                 scannerList.Clear();
                                 scannerWatcher.Stop();
                                 ComboBoxScanners.SelectedIndex = -1;
@@ -145,7 +148,7 @@ namespace Scanner
                                 ComboBoxScanners.IsEnabled = true;
                                 return;
                             }
-                            autoSelectScanner = true;
+                            possiblyDeadScanner = false;
                             ComboBoxScanners.IsEnabled = true;
                             break;
                         }
@@ -212,7 +215,7 @@ namespace Scanner
 
                         if (deviceInfo.IsDefault)
                         {
-                            item.Content = deviceInfo.Name + " (default)";
+                            item.Content = deviceInfo.Name + " (" + ResourceLoader.GetForCurrentView().GetString("DefaultScannerIndicator") + ")";
                         }
                         else
                         {
@@ -225,12 +228,13 @@ namespace Scanner
                     }
                     else return;
 
-                    if (autoSelectScanner && !ComboBoxScanners.IsDropDownOpen && selectedScanner == null && deviceInformations.Count == 1)
+                    if (!possiblyDeadScanner && !ComboBoxScanners.IsDropDownOpen && settingAutomaticScannerSelection
+                        && selectedScanner == null && deviceInformations.Count == 1)
                     {
                         ComboBoxScanners.SelectedIndex = 0;
                     }
 
-                    TextBlockRefreshHint.Text = " (" + scannerList.Count.ToString() + " found)";
+                    TextBlockFoundScannersHint.Text = " (" + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintAfterNumber") + ")";
                 }
             );
         }
@@ -263,7 +267,7 @@ namespace Scanner
                     }
                 }
 
-                TextBlockRefreshHint.Text = " (" + scannerList.Count.ToString() + " found)";
+                TextBlockFoundScannersHint.Text = " (" + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintAfterNumber") + ")";
             });
         }
 
@@ -273,7 +277,7 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
                 {
-                    TextBlockRefreshHint.Visibility = Visibility.Visible;
+                    TextBlockFoundScannersHint.Visibility = Visibility.Visible;
                     UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
                     HyperlinkSettings.IsTabStop = true;
                 }
@@ -331,9 +335,11 @@ namespace Scanner
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
                     CommandBarDone.Visibility = Visibility.Collapsed;
-                    StackPanelTextRight.Visibility = Visibility.Collapsed;
-                    HyperlinkSettings.IsTabStop = false;
                 }
+
+                StackPanelTextRight.Visibility = Visibility.Collapsed;
+                HyperlinkSettings.IsTabStop = false;
+
                 uiState = UIstate.full;
             }
             else if (900 < width)
@@ -347,12 +353,19 @@ namespace Scanner
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
                     CommandBarDone.Visibility = Visibility.Collapsed;
-                    if (selectedScanner == null)
-                    {
-                        StackPanelTextRight.Visibility = Visibility.Visible;
-                        HyperlinkSettings.IsTabStop = true;
-                    }
                 }
+
+                if (selectedScanner == null)
+                {
+                    StackPanelTextRight.Visibility = Visibility.Visible;
+                    HyperlinkSettings.IsTabStop = true;
+                }
+                else
+                {
+                    StackPanelTextRight.Visibility = Visibility.Collapsed;
+                    HyperlinkSettings.IsTabStop = false;
+                }
+
                 uiState = UIstate.full;
             }
         }
@@ -552,7 +565,7 @@ namespace Scanner
             flowState = FlowState.result;
 
             // send toast if the app isn't in the foreground
-            if (settingNotificationScanComplete && !inForeground) SendToastNotification("Scan complete", "Return to the app for editing and more.", 5);
+            if (settingNotificationScanComplete && !inForeground) SendToastNotification(ResourceLoader.GetForCurrentView().GetString("NotificationScanCompleteHeader"), ResourceLoader.GetForCurrentView().GetString("NotificationScanCompleteBody"), 5);
 
             // modify UI
             CommandBarScan.Visibility = Visibility.Visible;
@@ -655,25 +668,6 @@ namespace Scanner
             SendToastNotification("Copied scan to the clipboard", "", 5, scannedFile.Path);
         }
 
-        private async void ScrollViewerScan_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            ScrollViewer scrollViewer = sender as ScrollViewer;
-            var doubleTapPoint = e.GetPosition(scrollViewer);
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                if (scrollViewer.ZoomFactor != 1)
-                {
-                    scrollViewer.ChangeView(0, 0, 1);
-                }
-                else
-                {
-                    scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 2);
-                }
-            });
-        }
-
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SettingsPage), null, new EntranceNavigationTransitionInfo());
@@ -686,11 +680,13 @@ namespace Scanner
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            await scannedFile.DeleteAsync(StorageDeleteOption.Default);
+            ButtonDelete.IsEnabled = false;
+            await scannedFile.DeleteAsync(StorageDeleteOption.Default);         // TODO catch exception
             FlyoutAppBarButtonDelete.Hide();
             CommandBarScan.Visibility = Visibility.Collapsed;
             ImageScanViewer.Visibility = Visibility.Collapsed;
             flowState = FlowState.initial;
+            ButtonDelete.IsEnabled = true;
         }
 
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
@@ -701,7 +697,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                ShowMessageDialog("Rename unsuccessful", "Perhaps a file with that name already exists?");
+                ShowMessageDialog(ResourceLoader.GetForCurrentView().GetString("ErrorMessageRenameHeader"), ResourceLoader.GetForCurrentView().GetString("ErrorMessageRenameBody"));
             }
             FlyoutAppBarButtonRename.Hide();
         }

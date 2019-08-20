@@ -196,6 +196,16 @@ static class Utilities
             localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
         }
 
+        if (localSettingsContainer.Values["settingAutomaticScannerSelection"] != null)
+        {
+            settingAutomaticScannerSelection = (bool)localSettingsContainer.Values["settingAutomaticScannerSelection"];
+        }
+        else
+        {
+            settingAutomaticScannerSelection = true;
+            localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
+        }
+
         if (localSettingsContainer.Values["settingNotificationScanComplete"] != null)
         {
             settingNotificationScanComplete = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
@@ -405,6 +415,7 @@ static class Utilities
     {
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
         localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
+        localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
     }
