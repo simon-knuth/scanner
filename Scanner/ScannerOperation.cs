@@ -218,4 +218,11 @@ class ScannerOperation
             throw new Exception();          // TODO throw meaningful exception
         }
     }
+
+
+    public static bool ScanResultValid(ImageScannerScanResult result)
+    {
+        try { return (result != null && result.ScannedFiles != null && result.ScannedFiles[0] != null && result.ScannedFiles.Count != 0); }
+        catch (Exception) { return false; }
+    }
 }

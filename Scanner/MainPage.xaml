@@ -24,7 +24,7 @@
                     <RowDefinition/>
                     <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,24,0,0">
                     <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
                         <TextBlock x:Name="TextBlockHeader" Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
@@ -56,26 +56,30 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                    <Button Name="ButtonScan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="100" IsEnabled="False" Click="ButtonScan_Click">
+                    <Button Name="ButtonScan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="ButtonScan_Click">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
                             <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
+                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
-                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonRecents_Click">
+                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonRecents_Click">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
                         </Button>
+                        <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonCancel_Click" Visibility="Collapsed">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;"/>
+                        </Button>
+
                     </StackPanel>
                 </Grid>
             </Grid>
         </Frame>
 
         <RelativePanel Grid.Column="1" Name="RelativePanelRight">
-            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.3" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
+            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.2" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
                                         OffsetY="{Binding Path=Margin.Top, ElementName=GridPanelRight}"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                         HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
@@ -109,15 +113,14 @@
                                 <CommandBar x:Name="CommandBarScan" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked" Unchecked="AppBarButtonCrop_Unchecked"/>
                                     <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Icon="Edit" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1"/>
+                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Icon="Edit" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed"/>
                                     <Custom:ToolbarSeparator/>
                                     <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
                                             <Flyout x:Name="FlyoutAppBarButtonRename" LightDismissOverlayMode="On" Opening="FlyoutAppBarButtonRename_Opening">
                                                 <StackPanel Orientation="Vertical">
                                                     <TextBlock x:Uid="TextBlockRenameHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Rename"/>
-                                                    <TextBlock x:Uid="TextBlockRenameBody" Style="{StaticResource BodyTextBlockStyle}" Text="Enter a new name for the file" Margin="0,12,0,0"/>
-                                                    <TextBox x:Name="TextBoxRename" CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
+                                                    <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
                                                     <Button x:Uid="ButtonRename" x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
                                                 </StackPanel>
                                                 <Flyout.FlyoutPresenterStyle>

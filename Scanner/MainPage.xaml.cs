@@ -41,6 +41,8 @@ namespace Scanner
         private FlowState flowState = FlowState.initial;
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
         private bool inForeground = true;
+        CancellationTokenSource cancellationToken = null;
+        private bool canceledScan = false;
 
 
         public MainPage()
@@ -49,7 +51,7 @@ namespace Scanner
 
             TextBlockHeader.Text = Package.Current.DisplayName.ToString();
 
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkScannerSelectionHintBodyLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = LocalizedString("HyperlinkScannerSelectionHintBodyLink");
 
             Page_ActualThemeChanged(null, null);
 
@@ -116,7 +118,6 @@ namespace Scanner
                 // scanner selected ///////////////////////////////////////////////////////////////////////
                 // hide text on the right side
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
-                HyperlinkSettings.IsTabStop = false;
 
                 if (selectedScanner == null)
                 {
@@ -133,8 +134,8 @@ namespace Scanner
                             catch (Exception exc)
                             {
                                 // notify user that something went wrong
-                                ShowMessageDialog(ResourceLoader.GetForCurrentView().GetString("ErrorMessageScannerInformationHeader"),
-                                    ResourceLoader.GetForCurrentView().GetString("ErrorMessageScannerInformationBody") + "\n" + exc.Message);
+                                ShowMessageDialog(LocalizedString("ErrorMessageScannerInformationHeader"),
+                                    LocalizedString("ErrorMessageScannerInformationBody") + "\n" + exc.Message);
 
                                 // (almost) start from scratch to hopefully get rid of dead scanners
                                 possiblyDeadScanner = true;
@@ -215,7 +216,7 @@ namespace Scanner
 
                         if (deviceInfo.IsDefault)
                         {
-                            item.Content = deviceInfo.Name + " (" + ResourceLoader.GetForCurrentView().GetString("DefaultScannerIndicator") + ")";
+                            item.Content = deviceInfo.Name + " (" + LocalizedString("DefaultScannerIndicator") + ")";
                         }
                         else
                         {
@@ -234,7 +235,7 @@ namespace Scanner
                         ComboBoxScanners.SelectedIndex = 0;
                     }
 
-                    TextBlockFoundScannersHint.Text = " (" + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintAfterNumber") + ")";
+                    TextBlockFoundScannersHint.Text = " (" + LocalizedString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + LocalizedString("FoundScannersHintAfterNumber") + ")";
                 }
             );
         }
@@ -267,7 +268,7 @@ namespace Scanner
                     }
                 }
 
-                TextBlockFoundScannersHint.Text = " (" + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + ResourceLoader.GetForCurrentView().GetString("FoundScannersHintAfterNumber") + ")";
+                TextBlockFoundScannersHint.Text = " (" + LocalizedString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + LocalizedString("FoundScannersHintAfterNumber") + ")";
             });
         }
 
@@ -278,9 +279,7 @@ namespace Scanner
             () =>
                 {
                     TextBlockFoundScannersHint.Visibility = Visibility.Visible;
-                    UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
-                    HyperlinkSettings.IsTabStop = true;
-                }
+                    UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);                }
             );
         }
 
@@ -293,8 +292,6 @@ namespace Scanner
             {
                 // small ////////////////////////////////////////////////////////
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
-                HyperlinkSettings.IsTabStop = false;
-
                 if (flowState == FlowState.result || flowState == FlowState.crop)
                 {
                     // small and result visible
@@ -338,8 +335,6 @@ namespace Scanner
                 }
 
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
-                HyperlinkSettings.IsTabStop = false;
-
                 uiState = UIstate.full;
             }
             else if (900 < width)
@@ -358,12 +353,10 @@ namespace Scanner
                 if (selectedScanner == null)
                 {
                     StackPanelTextRight.Visibility = Visibility.Visible;
-                    HyperlinkSettings.IsTabStop = true;
                 }
                 else
                 {
                     StackPanelTextRight.Visibility = Visibility.Collapsed;
-                    HyperlinkSettings.IsTabStop = false;
                 }
 
                 uiState = UIstate.full;
@@ -410,6 +403,9 @@ namespace Scanner
             ImageScanViewer.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
+            ScrollViewerScan.ChangeView(0, 0, 1);
+
+            canceledScan = false;
 
             if (scanFolder == null)
             {
@@ -495,15 +491,37 @@ namespace Scanner
             }
 
             // start scan and show progress and cancel button
-            var cancellationToken = new CancellationTokenSource();
+            cancellationToken = new CancellationTokenSource();
             var progress = new Progress<UInt32>(scanProgress);
 
+            ImageScannerScanResult result = null;
 
             if (formatFlow.Item2 != "")
             {
                 // save file in base format to later convert it
-                ImageScannerScanResult result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                try
+                {
+                    ButtonCancel.Visibility = Visibility.Visible;
+                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                    RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                    if (!ScanResultValid(result)) throw new Exception();
+                }
+                catch (System.Runtime.InteropServices.COMException exc)
+                {
+                    if (!canceledScan) ScannerError(exc);
+                    return;
+                }
+                catch (Exception)
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
+
+                if (!ScanResultValid(result))
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
 
                 IRandomAccessStream stream = await result.ScannedFiles[0].OpenAsync(FileAccessMode.ReadWrite);
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
@@ -552,12 +570,37 @@ namespace Scanner
             else
             {
                 // no need to convert
-                ImageScannerScanResult result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                ButtonCancel.Visibility = Visibility.Visible;
+                try
+                {
+                    ButtonCancel.Visibility = Visibility.Visible;
+                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                    RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                }
+                catch (System.Runtime.InteropServices.COMException exc)
+                {
+                    if (!canceledScan) ScannerError(exc);
+                    return;
+                }
+                catch (Exception)
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
+
+                if (!ScanResultValid(result))
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
+
                 scannedFile = result.ScannedFiles[0];
             }
 
+            cancellationToken = null;
+
             // show result
+            ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;
             DisplayImageAsync(scannedFile, ImageScanViewer);
@@ -565,7 +608,7 @@ namespace Scanner
             flowState = FlowState.result;
 
             // send toast if the app isn't in the foreground
-            if (settingNotificationScanComplete && !inForeground) SendToastNotification(ResourceLoader.GetForCurrentView().GetString("NotificationScanCompleteHeader"), ResourceLoader.GetForCurrentView().GetString("NotificationScanCompleteBody"), 5);
+            if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
             // modify UI
             CommandBarScan.Visibility = Visibility.Visible;
@@ -589,6 +632,24 @@ namespace Scanner
             if (RadioButtonColorModeGrayscale.IsChecked.Value) return ImageScannerColorMode.Grayscale;
             return ImageScannerColorMode.Monochrome;
         }
+
+
+        private void ScanCanceled()
+        {
+            CommandBarScan.Visibility = Visibility.Visible;
+            ImageScanViewer.Visibility = Visibility.Visible;
+            ProgressRingScan.Visibility = Visibility.Collapsed;
+            ButtonCancel.Visibility = Visibility.Collapsed;
+            TextBlockButtonScan.Visibility = Visibility.Visible;
+            flowState = FlowState.result;
+            scannedFile = null;
+
+            CommandBarScan.Visibility = Visibility.Collapsed;
+            Page_SizeChanged(null, null);
+            UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
+
+        }
+
 
         private void scanProgress(UInt32 numberOfScannedDocuments)
         {
@@ -697,7 +758,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                ShowMessageDialog(ResourceLoader.GetForCurrentView().GetString("ErrorMessageRenameHeader"), ResourceLoader.GetForCurrentView().GetString("ErrorMessageRenameBody"));
+                ShowMessageDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
             }
             FlyoutAppBarButtonRename.Hide();
         }
@@ -792,14 +853,14 @@ namespace Scanner
                 else
                 {
                     // Light mode is active
-                    DropShadowPanelRight.ShadowOpacity = 0.3;
+                    DropShadowPanelRight.ShadowOpacity = 0.2;
                 }
             }
             else
             {
                 if (settingAppTheme == Theme.light)
                 {
-                    DropShadowPanelRight.ShadowOpacity = 0.3;
+                    DropShadowPanelRight.ShadowOpacity = 0.2;
                 }
                 else
                 {
@@ -872,6 +933,52 @@ namespace Scanner
                         break;
                 }
             }
+        }
+
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            if (cancellationToken != null)
+            {
+                canceledScan = true;
+                try { cancellationToken.Cancel(); }
+                catch (Exception)
+                {
+                    ShowMessageDialog(LocalizedString("ErrorMessageScanCancelHeader"), LocalizedString("ErrorMessageScanCancelBody"));
+                    return;
+                }
+            }
+            cancellationToken = null;
+            ScanCanceled();
+        }
+
+
+        private void ScannerError(System.Runtime.InteropServices.COMException exc)
+        {
+            // scanner error while scanning
+            if (!inForeground)
+            {
+                SendToastNotification(LocalizedString("NotificationScanErrorHeader"),
+                    LocalizedString("NotificationScanErrorBody"), 5);
+            }
+            ShowMessageDialog(LocalizedString("ErrorMessageScanScannerErrorHeader"),
+                    LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
+            ScanCanceled();
+            return;
+        }
+
+
+        private void ScannerError()
+        {
+            // unknown error while scanning
+            if (!inForeground)
+            {
+                SendToastNotification(LocalizedString("NotificationScanErrorHeader"),
+                    LocalizedString("NotificationScanErrorBody"), 5);
+            }
+            ShowMessageDialog(LocalizedString("ErrorMessageScanErrorHeader"),
+                    LocalizedString("ErrorMessageScanErrorBody"));
+            ScanCanceled();
+            return;
         }
     }
 }

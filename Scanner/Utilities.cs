@@ -16,6 +16,7 @@ using System.IO;
 using Windows.ApplicationModel;
 using Windows.UI.Core;
 using Windows.System;
+using Windows.ApplicationModel.Resources;
 
 static class Utilities
 {
@@ -244,6 +245,11 @@ static class Utilities
         }
     }
 
+
+    public static string LocalizedString(string resource)
+    {
+        return ResourceLoader.GetForCurrentView().GetString(resource);
+    }
 
 
     public static void LockCommandBar(CommandBar commandBar, Control except)

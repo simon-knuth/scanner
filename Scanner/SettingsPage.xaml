@@ -33,11 +33,11 @@
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
                 </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold" Margin="24,0,0,6" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                <Grid x:Name="GridSettingsHeader" Padding="0,24,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold" Margin="24,0,0,12" VerticalAlignment="Top" Padding="0,0,0,0"/>
                 </Grid>
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="GridSettingsHeader" RelativePanel.AlignBottomWithPanel="True">
-                    <StackPanel Padding="24,18,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left" Margin="0,0,0,0">
+                    <StackPanel Padding="24,12,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left" Margin="0,0,0,0">
                         <TextBlock x:Uid="TextBlockSettingsSaveLocationHeader" Text="Save location" Style="{ThemeResource BodyTextBlockStyle}"/>
                         <RelativePanel Margin="0,6,0,0">
                             <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
@@ -62,14 +62,14 @@
                         <ToggleSwitch x:Uid="ToggleSwitchSettingsAutomaticScannerSelection" x:Name="ToggleSwitchAutomaticScannerSelection" Header="Automatically select first available scanner" Margin="0,24,0,0"/>
                         <ToggleSwitch x:Uid="ToggleSwitchSettingsBackgroundNotification" x:Name="ToggleSwitchNotificationScanComplete" Header="Send a notification when scanning ends in the background" Margin="0,24,0,0"/>
                         <ToggleSwitch x:Uid="ToggleSwitchSettingsUnsupportedFormat" x:Name="ToggleSwitchUnsupportedFileFormat" Header="Allow unsupported file formats by converting to them from a supported one" Margin="0,24,0,0" Toggled="ToggleSwitchUnsupportedFileFormat_Toggled"/>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsFeedbackHeader" Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                         <Span><Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run><Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None">Feedback Hub</Hyperlink><Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None">rate Scanner in the Microsoft Store</Hyperlink><Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run></Span>
                         </TextBlock>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,96,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>

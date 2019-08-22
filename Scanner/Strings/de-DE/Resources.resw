@@ -181,6 +181,10 @@
     <value>Teilen (Strg+S)</value>
     <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
   </data>
+  <data name="ButtonCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>The tooltip text that appears while hovering the cancel button.</comment>
+  </data>
   <data name="ButtonDelete.Content" xml:space="preserve">
     <value>Bestätigen</value>
     <comment>The text inside the delete button confirming the process.</comment>
@@ -237,6 +241,22 @@
     <value>Umbenennen fehlgeschlagen</value>
     <comment>The header for the error message that appears when renaming the scan failed.</comment>
   </data>
+  <data name="ErrorMessageScanCancelBody" xml:space="preserve">
+    <value>Der Scanvorgang konnte nicht abgebrochen werden.</value>
+    <comment>The body for the error message that appears when cancelling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when cancelling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorBody" xml:space="preserve">
+    <value>Der Scanvorgang wurde aufgrund eines unbekannten Fehlers abgebrochen.</value>
+    <comment>The body for the error message that appears when scanning failed due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when scanning failed due to an unknown error.</comment>
+  </data>
   <data name="ErrorMessageScannerInformationBody" xml:space="preserve">
     <value>Es konnten keine Daten zum ausgewählten Scanner abgefragt werden. The Scannerliste wird neu initialisiert. Die Fehlermeldung lautet:</value>
     <comment>[ends with a colon] The body for the error message that appears when no information related to the selected scanner could be retrieved and the scanner can not be used.</comment>
@@ -244,6 +264,14 @@
   <data name="ErrorMessageScannerInformationHeader" xml:space="preserve">
     <value>Scanner nicht verfügbar</value>
     <comment>The header for the error message that appears when no information related to the selected scanner could be retrieved and the scanner can not be used.</comment>
+  </data>
+  <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
+    <value>Der Scanner hat die folgende Fehlermeldung zurückgegeben:</value>
+    <comment>The body for the error message that appears when scanning failed due to a scanner error.</comment>
+  </data>
+  <data name="ErrorMessageScanScannerErrorHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when scanning failed due to a scanner error.</comment>
   </data>
   <data name="FoundScannersHintAfterNumber" xml:space="preserve">
     <value>gefunden</value>
@@ -276,6 +304,14 @@
   <data name="NotificationScanCompleteHeader" xml:space="preserve">
     <value>Scan fertiggestellt</value>
     <comment>The header for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="NotificationScanErrorBody" xml:space="preserve">
+    <value>Kehren Sie für mehr Informationen zur App zurück.</value>
+    <comment>The body for the notification that appears when an error occurs while scanning and the app is in the background.</comment>
+  </data>
+  <data name="NotificationScanErrorHeader" xml:space="preserve">
+    <value>Scannen fehlgeschlagen</value>
+    <comment>The header for the notification that appears when an error occurs while scanning and the app is in the background.</comment>
   </data>
   <data name="RadioButtonColorModeColor.Content" xml:space="preserve">
     <value>Farbe</value>
@@ -353,11 +389,7 @@
     <value>Speichern als</value>
     <comment>The header for the ComboBox where users select the desired file format.</comment>
   </data>
-  <data name="TextBlockRenameBody.Text" xml:space="preserve">
-    <value>Geben Sie einen neuen Namen für die Datei ein</value>
-    <comment>The text inside the rename flyout.</comment>
-  </data>
-  <data name="TextBlockRenameHeader.Text" xml:space="preserve">
+  <data name="TextbLockRenameHeader.Text" xml:space="preserve">
     <value>Umbenennen</value>
     <comment>The header for the the rename flyout.</comment>
   </data>
@@ -392,6 +424,10 @@
   <data name="TextBlockSource.Text" xml:space="preserve">
     <value>Quelle</value>
     <comment>The header for the ComboBox where users select the source scanner.</comment>
+  </data>
+  <data name="TextBoxRename.Header" xml:space="preserve">
+    <value>Geben Sie einen neuen Namen für die Datei ein.</value>
+    <comment>The text inside the rename flyout.</comment>
   </data>
   <data name="ToggleSwitchSettingsAutomaticScannerSelection.Header" xml:space="preserve">
     <value>Automatisch ersten verfügbaren Scanner wählen</value>
