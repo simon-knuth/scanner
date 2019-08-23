@@ -331,7 +331,9 @@ namespace Scanner
                     ColumnLeft.MinWidth = ColumnLeftDefaultMinWidth;
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
-                    CommandBarDone.Visibility = Visibility.Collapsed;
+
+                    if (flowState == FlowState.crop) CommandBarDone.Visibility = Visibility.Visible;
+                    else CommandBarDone.Visibility = Visibility.Collapsed;
                 }
 
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
@@ -348,6 +350,9 @@ namespace Scanner
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
                     CommandBarDone.Visibility = Visibility.Collapsed;
+
+                    if (flowState == FlowState.crop) CommandBarDone.Visibility = Visibility.Visible;
+                    else CommandBarDone.Visibility = Visibility.Collapsed;
                 }
 
                 if (selectedScanner == null)
@@ -404,6 +409,7 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
+            AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
 
             canceledScan = false;
 
@@ -604,6 +610,7 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;
             DisplayImageAsync(scannedFile, ImageScanViewer);
+            SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
             await ImageCropper.LoadImageFromFile(scannedFile);
             flowState = FlowState.result;
 
@@ -783,6 +790,8 @@ namespace Scanner
 
             // show ImageCropper
             ImageCropper.Visibility = Visibility.Visible;
+            AppBarButtonAspectRatio.Visibility = Visibility.Visible;
+            CommandBarDone.Visibility = Visibility.Visible;
         }
 
 
@@ -801,8 +810,11 @@ namespace Scanner
             // return UI to normal
             ImageCropper.Visibility = Visibility.Collapsed;
             AppBarButtonCrop.IsEnabled = true;
+            AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
             UnlockCommandBar(CommandBarScan, null);
             flowState = FlowState.result;
+
+            if (uiState != UIstate.small_result) CommandBarDone.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -979,6 +991,34 @@ namespace Scanner
                     LocalizedString("ErrorMessageScanErrorBody"));
             ScanCanceled();
             return;
+        }
+
+        private void SetFixedAspectRatio(object sender, RoutedEventArgs e)
+        {
+            // only check selected item
+            foreach (var item in MenuFlyoutAspectRatio.Items)
+            {
+                try { ((ToggleMenuFlyoutItem)item).IsChecked = false; }
+                catch (InvalidCastException) { }
+            }
+            ((ToggleMenuFlyoutItem)sender).IsChecked = true;
+
+            // set aspect ratio according to tag
+            ImageCropper.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString());
+        }
+
+        private void SetCustomAspectRatio(object sender, RoutedEventArgs e)
+        {
+            // only check selected item
+            foreach (var item in MenuFlyoutAspectRatio.Items)
+            {
+                try { ((ToggleMenuFlyoutItem)item).IsChecked = false; }
+                catch (InvalidCastException) { }
+            }
+            ((ToggleMenuFlyoutItem)sender).IsChecked = true;
+
+            // set aspect ratio to custom
+            ImageCropper.AspectRatio = null;
         }
     }
 }

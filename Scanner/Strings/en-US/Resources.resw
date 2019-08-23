@@ -117,6 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppBarButtonAspectRatio.Label" xml:space="preserve">
+    <value>Aspect Ratio</value>
+    <comment>The text inside the button that allows the user to set an aspect ratio while cropping the result.</comment>
+  </data>
+  <data name="AppBarButtonAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aspect Ratio</value>
+    <comment>The tooltip text that appears while hovering the aspect ratio button.</comment>
+  </data>
   <data name="AppBarButtonCopy.Label" xml:space="preserve">
     <value>Copy</value>
     <comment>The text inside the button that allows the user to copy the result.</comment>
@@ -428,6 +436,26 @@
   <data name="TextBoxRename.Header" xml:space="preserve">
     <value>Enter a new name for the file.</value>
     <comment>The text inside the rename flyout.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutAspectRatioHeaderChinese.Text" xml:space="preserve">
+    <value>Chinese</value>
+    <comment>The header for the Chinese aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutAspectRatioHeaderInternational.Text" xml:space="preserve">
+    <value>International</value>
+    <comment>The header for the international aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutAspectRatioHeaderNA.Text" xml:space="preserve">
+    <value>North American</value>
+    <comment>The header for the North American aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
+    <value>Custom</value>
+    <comment>The text that appears inside the menu item that unlocks the aspect ratio of the crop.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioSquare.Text" xml:space="preserve">
+    <value>Square</value>
+    <comment>The text that appears inside the menu item that sets the aspect ratio of the crop to square.</comment>
   </data>
   <data name="ToggleSwitchSettingsAutomaticScannerSelection.Header" xml:space="preserve">
     <value>Automatically select first available scanner</value>
