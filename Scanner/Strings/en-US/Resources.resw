@@ -241,6 +241,14 @@
     <value>default</value>
     <comment>The text that appears behind the default scanner in the scanner list. It is automatically encapsulated by brackets.</comment>
   </data>
+  <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
+    <value>The Feedback Hub couldn't be launched. The error message is:</value>
+    <comment>The body for the error message that appears when launching the Feedback Hub fails.</comment>
+  </data>
+  <data name="ErrorMessageFeedbackHubHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when launching the feedback hub fails.</comment>
+  </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
     <value>Perhaps a file with that name already exists.</value>
     <comment>The body for the error message that appears when renaming the scan failed, probably due to this name already being in use.</comment>
@@ -351,19 +359,19 @@
   </data>
   <data name="RunScannerSelectionHintBodyBeforeLink.Text" xml:space="preserve">
     <value>If your scanner doesn't show up within three minutes, you might need to add it in the </value>
-    <comment>[ends with a whitespace] The text that is in front of the settings app link.</comment>
+    <comment>[begins with a whitespace] The text that is in front of the settings app link.</comment>
   </data>
   <data name="RunSettingsAfterFeedbackLink.Text" xml:space="preserve">
-    <value> to request new features, report bugs and vote on suggestions or </value>
-    <comment>[begins and ends with a whitespace] The text that is in between the settings Feedback Hub link and rate link.</comment>
+    <value>to request new features, report bugs and vote on suggestions or</value>
+    <comment>The text that is in between the settings Feedback Hub link and rate link.</comment>
   </data>
   <data name="RunSettingsAfterRateLink.Text" xml:space="preserve">
-    <value> to help others decide whether this is the right app for them.</value>
-    <comment>[begins with a whitespace] The text that is behind the settings rate link.</comment>
+    <value>to help others decide whether this is the right app for them.</value>
+    <comment>The text that is behind the settings rate link.</comment>
   </data>
   <data name="RunSettingsBeforeFeedbackLink.Text" xml:space="preserve">
-    <value>Use the </value>
-    <comment>[ends with a whitespace] The text that is in front of the settings Feedback Hub link.</comment>
+    <value>Use the</value>
+    <comment>The text that is in front of the settings Feedback Hub link.</comment>
   </data>
   <data name="RunSettingsDevelopedBy.Text" xml:space="preserve">
     <value>Developed by Simon Knuth</value>

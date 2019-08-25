@@ -67,14 +67,20 @@
                             <TextBlock x:Uid="TextBlockSettingsFeedbackHeader" Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run><Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None">Feedback Hub</Hyperlink><Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None">rate Scanner in the Microsoft Store</Hyperlink><Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run></Span>
+                            <Span>
+                                <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
+                                <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click">Feedback Hub</Hyperlink>
+                                <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
+                                <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="ms-windows-store://review/?productid=9N438MZHD3ZF">rate Scanner in the Microsoft Store</Hyperlink>
+                                <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
+                            </Span>
                         </TextBlock>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run>Scanner</Run><LineBreak/><Run x:Uid="RunSettingsDevelopedBy">Developed by Simon Knuth</Run><LineBreak/><Run>2019</Run><LineBreak/>
+                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run x:Uid="RunSettingsDevelopedBy">Developed by Simon Knuth</Run><LineBreak/><Run>2019</Run><LineBreak/>
                         <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink><LineBreak/></Span>
                         </TextBlock>
                         <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,6"/>

@@ -15,7 +15,7 @@
 
   <Properties>
     <DisplayName>Scanner</DisplayName>
-    <PublisherDisplayName>simon</PublisherDisplayName>
+    <PublisherDisplayName>Simon Knuth</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

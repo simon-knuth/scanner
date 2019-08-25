@@ -166,5 +166,20 @@ namespace Scanner
             newScanFolder = folder;
             TextBlockSaveLocation.Text = newScanFolder.Path;
         }
+
+        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            try
+            {
+                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+                await launcher.LaunchAsync();
+            }
+            catch (Exception exc)
+            {
+                ShowMessageDialog(LocalizedString("ErrorMessageFeedbackHubHeader"), 
+                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
+            }
+            
+        }
     }
 }
