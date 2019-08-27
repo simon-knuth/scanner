@@ -41,6 +41,15 @@ static class Utilities
     }
 
 
+    public enum SecondaryMenuConfig
+    {
+        hidden = 0,                 // the secondary CommandBar is hidden
+        done = 1,                   // the secondary CommandBar shows the "done" button
+        crop = 2,                   // the secondary CommandBar shows the crop commands
+        draw = 3                    // the secondary CommandBar shows the draw commands
+    }
+
+
     /// <summary>
     ///     Creates a ComboBoxItem with the specified content string and tag string.
     /// </summary>

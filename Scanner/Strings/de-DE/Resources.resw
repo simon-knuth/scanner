@@ -313,6 +313,14 @@
     <value>Einstellungen speichern und die App neu starten</value>
     <comment>The hyperlink text that allows the user to save and restart the app after a theme change.</comment>
   </data>
+  <data name="HyperlinkSettingsWebsiteLink" xml:space="preserve">
+    <value>Website</value>
+    <comment>The hyperlink that opens the app's website.</comment>
+  </data>
+  <data name="MenuFlyoutItemFlipAspectRatio" xml:space="preserve">
+    <value>Flip aspect ratio</value>
+    <comment>The text inside the MenuItem that allows to flip the orientation of the fixed aspect ratio while cropping.</comment>
+  </data>
   <data name="NotificationScanCompleteBody" xml:space="preserve">
     <value>Kehren Sie zum Bearbeiten sowie für weitere Optionen zur App zurück.</value>
     <comment>The text for the notification that appears when a scan is completed in the background.</comment>
@@ -445,21 +453,21 @@
     <value>Geben Sie einen neuen Namen für die Datei ein.</value>
     <comment>The text inside the rename flyout.</comment>
   </data>
-  <data name="ToggleMenuFlyoutAspectRatioHeaderChinese.Text" xml:space="preserve">
-    <value>Chinesisch</value>
-    <comment>The header for the Chinese aspect ratios.</comment>
-  </data>
-  <data name="ToggleMenuFlyoutAspectRatioHeaderInternational.Text" xml:space="preserve">
-    <value>International</value>
-    <comment>The header for the international aspect ratios.</comment>
-  </data>
-  <data name="ToggleMenuFlyoutAspectRatioHeaderNA.Text" xml:space="preserve">
-    <value>Nordamerikanisch</value>
-    <comment>The header for the North American aspect ratios.</comment>
-  </data>
   <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
     <value>Manuell</value>
     <comment>The text that appears inside the menu item that unlocks the aspect ratio of the crop.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderChinese.Text" xml:space="preserve">
+    <value>Chinesisch</value>
+    <comment>The header for the Chinese aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderInternational.Text" xml:space="preserve">
+    <value>International</value>
+    <comment>The header for the international aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderNA.Text" xml:space="preserve">
+    <value>Nordamerikanisch</value>
+    <comment>The header for the North American aspect ratios.</comment>
   </data>
   <data name="ToggleMenuFlyoutItemAspectRatioSquare.Text" xml:space="preserve">
     <value>Quadrat</value>

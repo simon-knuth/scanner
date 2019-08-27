@@ -302,7 +302,7 @@ namespace Scanner
                         ColumnRight.MaxWidth = Double.PositiveInfinity;
 
                         DropShadowPanelRight.Visibility = Visibility.Visible;
-                        CommandBarDone.Visibility = Visibility.Visible;
+                        if (flowState == FlowState.result) ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
                     }
                     uiState = UIstate.small_result;
                 }
@@ -316,7 +316,7 @@ namespace Scanner
                         ColumnRight.MaxWidth = 0;
 
                         DropShadowPanelRight.Visibility = Visibility.Collapsed;
-                        CommandBarDone.Visibility = Visibility.Collapsed;
+                        ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
                     }
                     uiState = UIstate.small_initial;
                 }
@@ -332,8 +332,8 @@ namespace Scanner
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
 
-                    if (flowState == FlowState.crop) CommandBarDone.Visibility = Visibility.Visible;
-                    else CommandBarDone.Visibility = Visibility.Collapsed;
+                    if (flowState == FlowState.crop) ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
+                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
                 }
 
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
@@ -349,10 +349,10 @@ namespace Scanner
                     ColumnLeft.MinWidth = ColumnLeftDefaultMinWidth;
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
-                    CommandBarDone.Visibility = Visibility.Collapsed;
+                    ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
-                    if (flowState == FlowState.crop) CommandBarDone.Visibility = Visibility.Visible;
-                    else CommandBarDone.Visibility = Visibility.Collapsed;
+                    if (flowState == FlowState.crop) CommandBarSecondary.Visibility = Visibility.Visible;
+                    else CommandBarSecondary.Visibility = Visibility.Collapsed;
                 }
 
                 if (selectedScanner == null)
@@ -409,7 +409,7 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
-            AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
             canceledScan = false;
 
@@ -778,44 +778,21 @@ namespace Scanner
         private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate other buttons
-            LockCommandBar(CommandBarScan, AppBarButtonCrop);
+            LockCommandBar(CommandBarScan, null);
 
             flowState = FlowState.crop;
 
             // make sure that the ImageCropper won't be obstructed
             ImageCropper.Padding = new Thickness(24,
-                24 + CoreApplication.GetCurrentView().TitleBar.Height + CommandBarDone.ActualHeight +
-                DropShadowPanelCommandBarDone.Margin.Top, 24, 24 + CommandBarScan.ActualHeight +
+                24 + CoreApplication.GetCurrentView().TitleBar.Height + CommandBarSecondary.ActualHeight +
+                DropShadowPanelCommandBarSecondary.Margin.Top, 24, 24 + CommandBarScan.ActualHeight +
                 DropShadowPanelCommandBar.Margin.Bottom);
 
-            // show ImageCropper
+            // show ImageCropper and secondary commands
             ImageCropper.Visibility = Visibility.Visible;
-            AppBarButtonAspectRatio.Visibility = Visibility.Visible;
-            CommandBarDone.Visibility = Visibility.Visible;
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
         }
 
-
-        private async void AppBarButtonCrop_Unchecked(object sender, RoutedEventArgs e)
-        {
-            AppBarButtonCrop.IsEnabled = false;
-
-            // save file
-            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
-            await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
-            stream.Dispose();
-
-            // refresh preview
-            DisplayImageAsync(scannedFile, ImageScanViewer);
-
-            // return UI to normal
-            ImageCropper.Visibility = Visibility.Collapsed;
-            AppBarButtonCrop.IsEnabled = true;
-            AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
-            UnlockCommandBar(CommandBarScan, null);
-            flowState = FlowState.result;
-
-            if (uiState != UIstate.small_result) CommandBarDone.Visibility = Visibility.Collapsed;
-        }
 
         /// <summary>
         ///     Reacts to the enter key while TextBoxRename is focused.
@@ -902,17 +879,10 @@ namespace Scanner
 
         private void AppBarButtonDone_Click(object sender, RoutedEventArgs e)
         {
-            if (flowState == FlowState.crop)
-            {
-                AppBarButtonCrop.IsChecked = false;
-            }
-            else
-            {
-                flowState = FlowState.initial;
-                CommandBarScan.Visibility = Visibility.Collapsed;
-                ImageScanViewer.Visibility = Visibility.Collapsed;
-                Page_SizeChanged(null, null);
-            }
+            flowState = FlowState.initial;
+            CommandBarScan.Visibility = Visibility.Collapsed;
+            ImageScanViewer.Visibility = Visibility.Collapsed;
+            Page_SizeChanged(null, null);
         }
 
         private void ScrollViewerScan_LayoutUpdated(object sender, object e)
@@ -1019,6 +989,145 @@ namespace Scanner
 
             // set aspect ratio to custom
             ImageCropper.AspectRatio = null;
+        }
+
+        private void AppBarButtonDiscard_Click(object sender, RoutedEventArgs e)
+        {
+            switch (flowState)
+            {
+                case FlowState.crop:
+                    // return UI to normal
+                    ImageCropper.Visibility = Visibility.Collapsed;
+                    flowState = FlowState.result;
+                    AppBarButtonCrop.IsChecked = false;
+                    UnlockCommandBar(CommandBarScan, null);
+
+                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+                    break;
+                case FlowState.draw:
+                    // TODO implement
+                    break;
+            }
+        }
+
+        private async void AppBarButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            LockCommandBar(CommandBarSecondary, null);
+
+            switch (flowState)
+            {
+                case FlowState.crop:
+                    // save file
+                    IRandomAccessStream stream;
+                    try
+                    {
+                        stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+                        await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
+                    }
+                    catch (Exception)
+                    {
+                        // TODO process exception
+                        throw;
+                    }
+                    
+                    stream.Dispose();
+
+                    // refresh preview
+                    DisplayImageAsync(scannedFile, ImageScanViewer);
+
+                    // return UI to normal
+                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+                    
+                    flowState = FlowState.result;
+                    AppBarButtonCrop.IsChecked = false;
+                    ImageCropper.Visibility = Visibility.Collapsed;
+                    UnlockCommandBar(CommandBarScan, null);
+
+                    break;
+                case FlowState.draw:
+                    // TODO implement
+                    break;
+            }
+
+            UnlockCommandBar(CommandBarSecondary, null);
+        }
+
+        private async void AppBarButtonSaveCopy_Click(object sender, RoutedEventArgs e)
+        {
+            LockCommandBar(CommandBarSecondary, null);
+
+            switch (flowState)
+            {
+                case FlowState.crop:
+                    // save as new file
+                    IRandomAccessStream stream;
+                    try
+                    {
+                        StorageFolder folder = await scannedFile.GetParentAsync();
+                        StorageFile file = await folder.CreateFileAsync(scannedFile.Name, CreationCollisionOption.GenerateUniqueName);
+                        stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                        await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
+                    }
+                    catch (Exception)
+                    {
+                        // TODO process exception
+                        throw;
+                    }
+
+                    stream.Dispose();
+
+                    break;
+                case FlowState.draw:
+                    // TODO implement
+                    break;
+            }
+
+            UnlockCommandBar(CommandBarSecondary, null);
+        }
+
+
+        private void ShowSecondaryMenuConfig(SecondaryMenuConfig config)
+        {
+            switch (config)
+            {
+                case SecondaryMenuConfig.hidden:
+                    CommandBarSecondary.Visibility = Visibility.Collapsed;
+                    break;
+                case SecondaryMenuConfig.done:
+                    AppBarButtonDone.Visibility = Visibility.Visible;
+
+                    ToolbarSeparatorSecondary.Visibility = Visibility.Collapsed;
+
+                    AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
+                    AppBarButtonSave.Visibility = Visibility.Collapsed;
+                    AppBarButtonSaveCopy.Visibility = Visibility.Collapsed;
+                    AppBarButtonDiscard.Visibility = Visibility.Collapsed;
+
+                    CommandBarSecondary.Visibility = Visibility.Visible;
+                    break;
+                case SecondaryMenuConfig.crop:
+                    AppBarButtonDone.Visibility = Visibility.Collapsed;
+
+                    ToolbarSeparatorSecondary.Visibility = Visibility.Visible;
+
+                    AppBarButtonAspectRatio.Visibility = Visibility.Visible;
+                    AppBarButtonSave.Visibility = Visibility.Visible;
+                    AppBarButtonSaveCopy.Visibility = Visibility.Visible;
+                    AppBarButtonDiscard.Visibility = Visibility.Visible;
+
+                    CommandBarSecondary.Visibility = Visibility.Visible;
+                    break;
+                case SecondaryMenuConfig.draw:
+                    // TODO
+                    break;
+            }
+        }
+
+        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {   
+            ImageCropper.AspectRatio = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
         }
     }
 }

@@ -12,6 +12,13 @@
     ActualThemeChanged="Page_ActualThemeChanged" 
     NavigationCacheMode="Required" Loaded="Page_Loaded">
 
+    <Page.Resources>
+        <Style x:Name="MenuFlyoutPresenterStyleRound" TargetType="MenuFlyoutPresenter">
+            <Setter Property="CornerRadius" Value="3"/>
+        </Style>
+    </Page.Resources>
+    
+    
     <Grid x:Name="GridMainPage" KeyDown="GridMainPage_KeyDown">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
@@ -100,28 +107,28 @@
 
                         <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarDone" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
-                                <CommandBar x:Name="CommandBarDone" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
+                                <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;"/>
                                         <AppBarButton.Flyout>
-                                            <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="TopEdgeAlignedRight">
+                                            <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="TopEdgeAlignedRight" MenuFlyoutPresenterStyle="{StaticResource MenuFlyoutPresenterStyleRound}">
                                                 <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" Text="Custom" IsChecked="True" FontWeight="Medium" Click="SetCustomAspectRatio"/>
                                                 <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioSquare" Text="Square" Tag="1" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="3:2" Tag="0.6666" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="4:3" Tag="0.7500" Click="SetFixedAspectRatio"/>
+                                                <MenuFlyoutItem x:Uid="MenuFlyoutItemFlipAspectRatio" Text="Flip aspect ratio" Icon="Orientation" Click="ToggleMenuFlyoutItem_Click"/>
                                                 <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutAspectRatioHeaderInternational" Text="International" IsEnabled="False" FontWeight="Medium"/>
+                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderInternational" Text="International" IsEnabled="False" FontWeight="Medium"/>
                                                 <ToggleMenuFlyoutItem Text="DIN A" Tag="1.4142" Click="SetFixedAspectRatio"/>
                                                 <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutAspectRatioHeaderNA" Text="North American" IsEnabled="False" FontWeight="Medium"/>
+                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderNA" Text="North American" IsEnabled="False" FontWeight="Medium"/>
                                                 <ToggleMenuFlyoutItem Text="ANSI A - Letter" Tag="1.2941" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="ANSI B - Ledger/Tabloid" Tag="1.5455" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="ANSI C - Broadsheet" Tag="1.2941" Click="SetFixedAspectRatio"/>
                                                 <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutAspectRatioHeaderChinese" Text="Chinese" IsEnabled="False" FontWeight="Medium"/>
+                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderChinese" Text="Chinese" IsEnabled="False" FontWeight="Medium"/>
                                                 <ToggleMenuFlyoutItem Text="Kai 4" Tag="1.3894" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="Kai 8" Tag="1.4230" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="Kai 16" Tag="1.4054" Click="SetFixedAspectRatio"/>
@@ -129,6 +136,13 @@
                                             </MenuFlyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
+                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorSecondary"/>
+                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonSave" x:Name="AppBarButtonSave" Icon="Save" Label="Save" ToolTipService.ToolTip="Save" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSave_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonSaveCopy" x:Name="AppBarButtonSaveCopy" Label="Save copy" ToolTipService.ToolTip="Save copy" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSaveCopy_Click">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;"/>
+                                    </AppBarButton>
+                                    <AppBarButton x:Uid="AppBarButtonDiscard" x:Name="AppBarButtonDiscard" Icon="Cancel" Label="Discard" ToolTipService.ToolTip="Discard" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDiscard_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
@@ -136,9 +150,11 @@
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBar" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
                                 <CommandBar x:Name="CommandBarScan" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked" Unchecked="AppBarButtonCrop_Unchecked"/>
+                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked"/>
                                     <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Icon="Edit" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed"/>
+                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
+                                    </AppBarButton>
                                     <Custom:ToolbarSeparator/>
                                     <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>

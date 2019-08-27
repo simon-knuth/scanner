@@ -25,6 +25,7 @@ namespace Scanner
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
         }
 
 
