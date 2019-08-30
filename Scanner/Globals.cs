@@ -19,6 +19,7 @@ public static class Globals
     public static bool possiblyDeadScanner = false;
 
     public static bool? firstAppLaunchWithThisVersion;
+    public static int scanNumber;
 
 
 

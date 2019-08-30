@@ -390,14 +390,8 @@ namespace Scanner
                     }
                 }
 
-                if (selectedScanner == null)
-                {
-                    StackPanelTextRight.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    StackPanelTextRight.Visibility = Visibility.Collapsed;
-                }
+                if (selectedScanner == null) StackPanelTextRight.Visibility = Visibility.Visible;
+                else StackPanelTextRight.Visibility = Visibility.Collapsed;
 
                 uiState = UIstate.full;
             }
@@ -641,7 +635,10 @@ namespace Scanner
 
             cancellationToken = null;
             imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
-            
+
+            if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
+            localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
+
             // show result
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
@@ -786,7 +783,15 @@ namespace Scanner
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             ButtonDelete.IsEnabled = false;
-            await scannedFile.DeleteAsync(StorageDeleteOption.Default);         // TODO catch exception
+            try
+            {
+                await scannedFile.DeleteAsync(StorageDeleteOption.Default);
+            }
+            catch (Exception)
+            {
+                ShowMessageDialog(LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
+                return;
+            }
             FlyoutAppBarButtonDelete.Hide();
             CommandBarScan.Visibility = Visibility.Collapsed;
             ImageScanViewer.Visibility = Visibility.Collapsed;
@@ -798,11 +803,12 @@ namespace Scanner
         {
             try
             {
-                await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);    // TODO process error
+                await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);
             }
             catch (Exception)
             {
                 ShowMessageDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
+                return;
             }
             FlyoutAppBarButtonRename.Hide();
         }
@@ -857,7 +863,7 @@ namespace Scanner
             try { await encoder.FlushAsync(); }
             catch (Exception)
             {
-                // TODO process error
+                ShowMessageDialog(LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
             }
 
             DisplayImageAsync(scannedFile, ImageScanViewer);
@@ -884,16 +890,9 @@ namespace Scanner
             }
             else
             {
-                if (settingAppTheme == Theme.light)
-                {
-                    DropShadowPanelRight.ShadowOpacity = 0.2;
-                }
-                else
-                {
-                    DropShadowPanelRight.ShadowOpacity = 0.6;
-                }
+                if (settingAppTheme == Theme.light) DropShadowPanelRight.ShadowOpacity = 0.2;
+                else DropShadowPanelRight.ShadowOpacity = 0.6;
             }
-
         }
 
 
@@ -1067,7 +1066,7 @@ namespace Scanner
             {
                 case FlowState.crop:
                     // save file
-                    IRandomAccessStream stream;
+                    IRandomAccessStream stream = null;
                     try
                     {
                         stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
@@ -1075,8 +1074,9 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        // TODO process exception
-                        throw;
+                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        try { stream.Dispose(); } catch (Exception) { }
+                        return;
                     }
                     
                     stream.Dispose();
@@ -1097,6 +1097,7 @@ namespace Scanner
                     break;
                 case FlowState.draw:
                     // save file
+                    stream = null;
                     try
                     {
                         CanvasDevice device = CanvasDevice.GetSharedDevice();
@@ -1115,8 +1116,9 @@ namespace Scanner
                         await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(scannedFile), 1f);
                     } catch (Exception)
                     {
-                        // TODO process exception
-                        throw;
+                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        try { stream.Dispose(); } catch (Exception) { }
+                        return;
                     }
 
                     stream.Dispose();
@@ -1147,7 +1149,7 @@ namespace Scanner
             {
                 case FlowState.crop:
                     // save as new file
-                    IRandomAccessStream stream;
+                    IRandomAccessStream stream = null;
                     try
                     {
                         StorageFolder folder = await scannedFile.GetParentAsync();
@@ -1157,8 +1159,9 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        // TODO process exception
-                        throw;
+                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        try { stream.Dispose(); } catch (Exception) { }
+                        return;
                     }
 
                     stream.Dispose();
@@ -1166,6 +1169,7 @@ namespace Scanner
                     break;
                 case FlowState.draw:
                     // save as new file
+                    stream = null;
                     try
                     {
                         CanvasDevice device = CanvasDevice.GetSharedDevice();
@@ -1193,8 +1197,9 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        // TODO process exception
-                        throw;
+                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        try { stream.Dispose(); } catch (Exception) { }
+                        return;
                     }
 
                     break;
@@ -1288,5 +1293,21 @@ namespace Scanner
                 CommandBarScan.Visibility = Visibility.Visible;
             }
         }
+
+        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            try
+            {
+                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+                await launcher.LaunchAsync();
+            }
+            catch (Exception exc)
+            {
+                ShowMessageDialog(LocalizedString("ErrorMessageFeedbackHubHeader"),
+                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
+            }
+
+        }
+
     }
 }

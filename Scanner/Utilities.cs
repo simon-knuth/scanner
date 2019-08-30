@@ -294,6 +294,17 @@ static class Utilities
             // first launch of the app ever
             localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
         }
+
+        if (localSettingsContainer.Values["scanNumber"] != null)
+        {
+            scanNumber = (int) localSettingsContainer.Values["scanNumber"];
+        }
+        else
+        {
+            // first launch of the app ever
+            localSettingsContainer.Values["scanNumber"] = 1;
+            scanNumber = 1;
+        }
     }
 
 
