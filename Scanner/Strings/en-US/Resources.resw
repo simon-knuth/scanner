@@ -250,7 +250,7 @@
     <comment>The text that appears behind the default scanner in the scanner list. It is automatically encapsulated by brackets.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>The scan couldn't be deleted.</value>
+    <value>The scan could not be deleted.</value>
     <comment>The body for the error message that appears when deleting the scan fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeader" xml:space="preserve">
@@ -258,7 +258,7 @@
     <comment>The header for the error message that appears when deleting the scan fails.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>The Feedback Hub couldn't be launched. The error message is:</value>
+    <value>The Feedback Hub could not be launched. The error message is:</value>
     <comment>The body for the error message that appears when launching the Feedback Hub fails.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubHeader" xml:space="preserve">
@@ -274,7 +274,7 @@
     <comment>The header for the error message that appears when renaming the scan failed.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>The scan couldn't be rotated.</value>
+    <value>The scan could not be rotated.</value>
     <comment>The body for the error message that appears when rotating the scan fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeader" xml:space="preserve">
@@ -282,7 +282,7 @@
     <comment>The header for the error message that appears when rotating the scan fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>The changes couldn't be saved.</value>
+    <value>The changes could not be saved.</value>
     <comment>The body for the error message that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeader" xml:space="preserve">
@@ -290,7 +290,7 @@
     <comment>The header for the error message that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>The scan couldn't be canceled.</value>
+    <value>The scan could not be canceled.</value>
     <comment>The body for the error message that appears when cancelling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeader" xml:space="preserve">
@@ -398,7 +398,7 @@
     <comment>[begins with a whitespace] The text that is behind the settings app link.</comment>
   </data>
   <data name="RunScannerSelectionHintBodyBeforeLink.Text" xml:space="preserve">
-    <value>If your scanner doesn't show up within three minutes, you might need to add it in the </value>
+    <value>If your scanner does not show up within three minutes, you might need to add it in the </value>
     <comment>[begins with a whitespace] The text that is in front of the settings app link.</comment>
   </data>
   <data name="RunSettingsAfterFeedbackLink.Text" xml:space="preserve">
