@@ -17,6 +17,8 @@ using Windows.ApplicationModel;
 using Windows.UI.Core;
 using Windows.System;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage.FileProperties;
+using Microsoft.Graphics.Canvas;
 
 static class Utilities
 {
@@ -143,10 +145,50 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Gets the CanvasBitmapFileFormat corresponding to a file's format.
+    /// </summary>
+    /// <param name="file">
+    ///     The file of which to determine the CanvasBitmapFileFormat.
+    /// </param>
+    /// <returns>
+    ///     The corresponding CanvasBitmapFileFormat.
+    /// </returns>
+    public static CanvasBitmapFileFormat GetCanvasBitmapFileFormat(StorageFile file)
+    {
+        string formatString = file.Name.Split(".")[1];
+
+        switch (formatString)
+        {
+            case "jpg":
+                return CanvasBitmapFileFormat.Jpeg;
+            case "jpeg":
+                return CanvasBitmapFileFormat.Jpeg;
+            case "png":
+                return CanvasBitmapFileFormat.Png;
+            case "bmp":
+                return CanvasBitmapFileFormat.Bmp;
+            case "tif":
+                return CanvasBitmapFileFormat.Tiff;
+        }
+
+        throw new Exception();      // TODO add meaningful exception
+    }
+
+
+
     public static bool IsCtrlKeyPressed()
     {
         var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
         return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+    }
+
+
+    public static void InitializeInkCanvas(InkCanvas canvas, ImageProperties properties)
+    {
+        canvas.Width = properties.Width;
+        canvas.Height = properties.Height;
+        canvas.InkPresenter.StrokeContainer.Clear();
     }
 
 

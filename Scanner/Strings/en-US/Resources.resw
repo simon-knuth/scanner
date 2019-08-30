@@ -254,7 +254,7 @@
     <comment>The body for the error message that appears when renaming the scan failed, probably due to this name already being in use.</comment>
   </data>
   <data name="ErrorMessageRenameHeader" xml:space="preserve">
-    <value>Renaming unsuccessful</value>
+    <value>Rename unsuccessful</value>
     <comment>The header for the error message that appears when renaming the scan failed.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">

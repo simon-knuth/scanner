@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Graphics.Canvas;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel.Resources;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
@@ -14,12 +14,12 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Input.Inking;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
-
 using static Globals;
 using static ScannerOperation;
 using static Utilities;
@@ -43,6 +43,7 @@ namespace Scanner
         private bool inForeground = true;
         CancellationTokenSource cancellationToken = null;
         private bool canceledScan = false;
+        ImageProperties imageProperties;
 
 
         public MainPage()
@@ -61,6 +62,9 @@ namespace Scanner
 
             // populate the scanner list
             refreshScannerList();
+
+            InkCanvasScan.InkPresenter.UnprocessedInput.PointerEntered += InkCanvasScan_PointerEntered;
+            InkCanvasScan.InkPresenter.UnprocessedInput.PointerExited += InkCanvasScan_PointerExited;
 
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
 
@@ -292,7 +296,7 @@ namespace Scanner
             {
                 // small ////////////////////////////////////////////////////////
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
-                if (flowState == FlowState.result || flowState == FlowState.crop)
+                if (flowState == FlowState.result || flowState == FlowState.crop || flowState == FlowState.draw)
                 {
                     // small and result visible
                     if (uiState != UIstate.small_result)
@@ -302,7 +306,18 @@ namespace Scanner
                         ColumnRight.MaxWidth = Double.PositiveInfinity;
 
                         DropShadowPanelRight.Visibility = Visibility.Visible;
-                        if (flowState == FlowState.result) ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+                        switch (flowState)
+                        {
+                            case FlowState.result:
+                                ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+                                break;
+                            case FlowState.crop:
+                                ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
+                                break;
+                            case FlowState.draw:
+                                ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
+                                break;
+                        }
                     }
                     uiState = UIstate.small_result;
                 }
@@ -332,8 +347,18 @@ namespace Scanner
 
                     DropShadowPanelRight.Visibility = Visibility.Visible;
 
-                    if (flowState == FlowState.crop) ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
-                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                    switch (flowState)
+                    {
+                        case FlowState.crop:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
+                            break;
+                        case FlowState.draw:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
+                            break;
+                        default:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                            break;
+                    }
                 }
 
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
@@ -351,8 +376,18 @@ namespace Scanner
                     DropShadowPanelRight.Visibility = Visibility.Visible;
                     ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
-                    if (flowState == FlowState.crop) CommandBarSecondary.Visibility = Visibility.Visible;
-                    else CommandBarSecondary.Visibility = Visibility.Collapsed;
+                    switch (flowState)
+                    {
+                        case FlowState.crop:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
+                            break;
+                        case FlowState.draw:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
+                            break;
+                        default:
+                            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                            break;
+                    }
                 }
 
                 if (selectedScanner == null)
@@ -409,6 +444,7 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
+            AppBarButtonDiscard_Click(null, null);
             ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
             canceledScan = false;
@@ -604,6 +640,7 @@ namespace Scanner
             }
 
             cancellationToken = null;
+            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
 
             // show result
             ButtonCancel.Visibility = Visibility.Collapsed;
@@ -777,7 +814,7 @@ namespace Scanner
 
         private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
-            // deactivate other buttons
+            // deactivate all buttons
             LockCommandBar(CommandBarScan, null);
 
             flowState = FlowState.crop;
@@ -890,6 +927,9 @@ namespace Scanner
             // fix image, might otherwise slip outside the window's boundaries
             ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
             ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight;
+
+            ViewBoxScan.Width = ImageScanViewer.ActualWidth;
+            ViewBoxScan.Height = ImageScanViewer.ActualHeight;
         }
 
         private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1006,7 +1046,15 @@ namespace Scanner
                     else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
                     break;
                 case FlowState.draw:
-                    // TODO implement
+                    // return UI to normal
+                    InkCanvasScan.Visibility = Visibility.Collapsed;
+                    InkCanvasScan.InkPresenter.StrokeContainer.Clear();
+                    flowState = FlowState.result;
+                    AppBarButtonDraw.IsChecked = false;
+                    UnlockCommandBar(CommandBarScan, null);
+
+                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
                     break;
             }
         }
@@ -1033,8 +1081,9 @@ namespace Scanner
                     
                     stream.Dispose();
 
-                    // refresh preview
+                    // refresh preview and properties
                     DisplayImageAsync(scannedFile, ImageScanViewer);
+                    imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
 
                     // return UI to normal
                     if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
@@ -1047,7 +1096,43 @@ namespace Scanner
 
                     break;
                 case FlowState.draw:
-                    // TODO implement
+                    // save file
+                    try
+                    {
+                        CanvasDevice device = CanvasDevice.GetSharedDevice();
+                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 96);
+                        stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+                        CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
+
+                        using (var ds = renderTarget.CreateDrawingSession())
+                        {
+                            ds.Clear(Windows.UI.Colors.White);
+
+                            ds.DrawImage(canvasBitmap);
+                            ds.DrawInk(InkCanvasScan.InkPresenter.StrokeContainer.GetStrokes());
+                        }
+
+                        await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(scannedFile), 1f);
+                    } catch (Exception)
+                    {
+                        // TODO process exception
+                        throw;
+                    }
+
+                    stream.Dispose();
+
+                    // refresh preview
+                    DisplayImageAsync(scannedFile, ImageScanViewer);
+
+                    // return UI to normal
+                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+
+                    flowState = FlowState.result;
+                    AppBarButtonDraw.IsChecked = false;
+                    InkCanvasScan.Visibility = Visibility.Collapsed;
+                    UnlockCommandBar(CommandBarScan, null);
+
                     break;
             }
 
@@ -1080,7 +1165,38 @@ namespace Scanner
 
                     break;
                 case FlowState.draw:
-                    // TODO implement
+                    // save as new file
+                    try
+                    {
+                        CanvasDevice device = CanvasDevice.GetSharedDevice();
+                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 96);
+
+                        StorageFolder folder = await scannedFile.GetParentAsync();
+                        StorageFile file = await folder.CreateFileAsync(scannedFile.Name, CreationCollisionOption.GenerateUniqueName);
+
+                        stream = await scannedFile.OpenAsync(FileAccessMode.Read);
+                        CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
+
+                        using (var ds = renderTarget.CreateDrawingSession())
+                        {
+                            ds.Clear(Windows.UI.Colors.White);
+
+                            ds.DrawImage(canvasBitmap);
+                            ds.DrawInk(InkCanvasScan.InkPresenter.StrokeContainer.GetStrokes());
+                        }
+
+                        stream.Dispose();
+
+                        stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                        await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(file), 1f);
+                        stream.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                        // TODO process exception
+                        throw;
+                    }
+
                     break;
             }
 
@@ -1100,6 +1216,7 @@ namespace Scanner
 
                     ToolbarSeparatorSecondary.Visibility = Visibility.Collapsed;
 
+                    InkToolbarScan.Visibility = Visibility.Collapsed;
                     AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
                     AppBarButtonSave.Visibility = Visibility.Collapsed;
                     AppBarButtonSaveCopy.Visibility = Visibility.Collapsed;
@@ -1112,6 +1229,7 @@ namespace Scanner
 
                     ToolbarSeparatorSecondary.Visibility = Visibility.Visible;
 
+                    InkToolbarScan.Visibility = Visibility.Collapsed;
                     AppBarButtonAspectRatio.Visibility = Visibility.Visible;
                     AppBarButtonSave.Visibility = Visibility.Visible;
                     AppBarButtonSaveCopy.Visibility = Visibility.Visible;
@@ -1120,7 +1238,17 @@ namespace Scanner
                     CommandBarSecondary.Visibility = Visibility.Visible;
                     break;
                 case SecondaryMenuConfig.draw:
-                    // TODO
+                    AppBarButtonDone.Visibility = Visibility.Collapsed;
+
+                    ToolbarSeparatorSecondary.Visibility = Visibility.Visible;
+
+                    InkToolbarScan.Visibility = Visibility.Visible;
+                    AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
+                    AppBarButtonSave.Visibility = Visibility.Visible;
+                    AppBarButtonSaveCopy.Visibility = Visibility.Visible;
+                    AppBarButtonDiscard.Visibility = Visibility.Visible;
+
+                    CommandBarSecondary.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -1128,6 +1256,37 @@ namespace Scanner
         private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {   
             ImageCropper.AspectRatio = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
+        }
+
+        private void AppBarButtonDraw_Checked(object sender, RoutedEventArgs e)
+        {
+            // deactivate all buttons
+            LockCommandBar(CommandBarScan, null);
+
+            flowState = FlowState.draw;
+
+            // show InkCanvas and secondary commands
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
+            InitializeInkCanvas(InkCanvasScan, imageProperties);
+            InkCanvasScan.Visibility = Visibility.Visible;
+        }
+
+        private void InkCanvasScan_PointerEntered(InkUnprocessedInput input, PointerEventArgs e)
+        {
+            if (flowState == FlowState.draw && e.CurrentPoint.PointerDevice.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            {
+                CommandBarSecondary.Visibility = Visibility.Collapsed;
+                CommandBarScan.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void InkCanvasScan_PointerExited(InkUnprocessedInput input, PointerEventArgs e)
+        {
+            if (flowState == FlowState.draw)
+            {
+                CommandBarSecondary.Visibility = Visibility.Visible;
+                CommandBarScan.Visibility = Visibility.Visible;
+            }
         }
     }
 }

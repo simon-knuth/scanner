@@ -16,6 +16,9 @@
         <Style x:Name="MenuFlyoutPresenterStyleRound" TargetType="MenuFlyoutPresenter">
             <Setter Property="CornerRadius" Value="3"/>
         </Style>
+        <Style x:Name="ImageCropperThumbStyleAcrylic" TargetType="controls:ImageCropperThumb">
+            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        </Style>
     </Page.Resources>
     
     
@@ -79,7 +82,6 @@
                         <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonCancel_Click" Visibility="Collapsed">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;"/>
                         </Button>
-
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -95,7 +97,13 @@
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <Grid Name="GridPanelRight" CornerRadius="0,0,0,0" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
-                            <Image x:Name="ImageScanViewer" MaxWidth="{Binding ActualWidth, ElementName=ScrollViewerScan}" MaxHeight="{Binding ActualHeight, ElementName=ScrollViewerScan}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <Grid>
+                                <Image x:Name="ImageScanViewer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
+                                </Viewbox>
+                            </Grid>    
+
                         </ScrollViewer>
 
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0">
@@ -105,11 +113,16 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <controls:ImageCropper x:Name="ImageCropper" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
+                        <controls:ImageCropper x:Name="ImageCropper" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
 
                         <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame CornerRadius="3">
                                 <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
+                                    <CommandBar.Content>
+                                        <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" CornerRadius="3" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
+                                            <InkToolbarEraserButton/>
+                                        </InkToolbar>
+                                    </CommandBar.Content>
                                     <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;"/>
                                         <AppBarButton.Flyout>
@@ -152,9 +165,9 @@
                                 <CommandBar x:Name="CommandBarScan" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked"/>
                                     <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed">
+                                    <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonDraw_Checked">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                                    </AppBarButton>
+                                    </AppBarToggleButton>
                                     <Custom:ToolbarSeparator/>
                                     <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
