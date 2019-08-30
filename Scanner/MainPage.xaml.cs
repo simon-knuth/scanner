@@ -641,7 +641,7 @@ namespace Scanner
 
             cancellationToken = null;
             imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
-
+            
             // show result
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
