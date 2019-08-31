@@ -106,10 +106,8 @@ static class Utilities
                 return BitmapEncoder.PngEncoderId;
             case "bmp":
                 return BitmapEncoder.BmpEncoderId;
-            case "tif":
-                return BitmapEncoder.TiffEncoderId;
             default:
-                throw new Exception();          // TODO throw meaningful exception
+                return BitmapEncoder.TiffEncoderId;
         }
     }
 
@@ -137,11 +135,9 @@ static class Utilities
                 return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Png;
             case "bmp":
                 return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Bmp;
-            case "tif":
+            default:
                 return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Tiff;
         }
-
-        throw new Exception();      // TODO add meaningful exception
     }
 
 
@@ -168,11 +164,9 @@ static class Utilities
                 return CanvasBitmapFileFormat.Png;
             case "bmp":
                 return CanvasBitmapFileFormat.Bmp;
-            case "tif":
+            default:
                 return CanvasBitmapFileFormat.Tiff;
         }
-
-        throw new Exception();      // TODO add meaningful exception
     }
 
 

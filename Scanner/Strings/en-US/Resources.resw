@@ -249,6 +249,18 @@
     <value>default</value>
     <comment>The text that appears behind the default scanner in the scanner list. It is automatically encapsulated by brackets.</comment>
   </data>
+  <data name="ErrorMessageConversionBodyAfterExtension" xml:space="preserve">
+    <value> instead. You can disable conversion for unsupported formats in the settings.</value>
+    <comment>[begins with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is behind the supported base format.</comment>
+  </data>
+  <data name="ErrorMessageConversionBodyBeforeExtension" xml:space="preserve">
+    <value>A file format was selected that is not supported by the scanner, but converting to it from a supported format failed. The scan has been saved as </value>
+    <comment>[ends with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is in front of the supported base format.</comment>
+  </data>
+  <data name="ErrorMessageConversionHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved.</comment>
+  </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
     <value>The scan could not be deleted.</value>
     <comment>The body for the error message that appears when deleting the scan fails.</comment>
@@ -264,6 +276,30 @@
   <data name="ErrorMessageFeedbackHubHeader" xml:space="preserve">
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when launching the feedback hub fails.</comment>
+  </data>
+  <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
+    <value>Please select a color mode.</value>
+    <comment>The body for the error message that appears when no color mode was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoColorModeHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when no color mode was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatBody" xml:space="preserve">
+    <value>Please select a file format.</value>
+    <comment>The body for the error message that appears when no format was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when no format was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoResolutionBody" xml:space="preserve">
+    <value>Please select a resolution.</value>
+    <comment>The body for the error message that appears when no resolution was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoResolutionHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when no resolution was selected.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
     <value>Perhaps a file with that name already exists.</value>
@@ -305,6 +341,22 @@
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when scanning failed due to an unknown error.</comment>
   </data>
+  <data name="ErrorMessageScanFolderBody" xml:space="preserve">
+    <value>Please select a folder to scan to in the settings.</value>
+    <comment>The body for the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>The text inside the button that allows the user to close the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderSettings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>The text inside the button that allows the user to open the settings if no scan folder was selected.</comment>
+  </data>
   <data name="ErrorMessageScannerInformationBody" xml:space="preserve">
     <value>No data about the selected scanner could be retrieved. The scanner list will be reinitialized. The error description is:</value>
     <comment>[ends with a colon] The body for the error message that appears when no information related to the selected scanner could be retrieved and the scanner can not be used.</comment>
@@ -320,6 +372,22 @@
   <data name="ErrorMessageScanScannerErrorHeader" xml:space="preserve">
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when scanning failed due to a scanner error.</comment>
+  </data>
+  <data name="ErrorMessageShowResultBody" xml:space="preserve">
+    <value>Unable to display the result of the scan.</value>
+    <comment>The body for the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>The text inside the button that allows the user to close the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultOpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+    <comment>The text inside the button that allows the user to open the scan folder if displaying the scan result failed.</comment>
   </data>
   <data name="FoundScannersHintAfterNumber" xml:space="preserve">
     <value>found</value>

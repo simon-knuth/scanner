@@ -213,10 +213,7 @@ class ScannerOperation
             return await scanner.ScanFilesToFolderAsync(
             ImageScannerScanSource.Feeder, folder).AsTask(cancellationToken.Token, progress);
         }
-        else
-        {
-            throw new Exception();          // TODO throw meaningful exception
-        }
+        else throw (new Exception());
     }
 
 

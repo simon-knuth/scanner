@@ -15,6 +15,7 @@ using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Input.Inking;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -400,7 +401,13 @@ namespace Scanner
 
         private async void ButtonRecents_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchFolderAsync(scanFolder);
+            try { await Launcher.LaunchFolderAsync(scanFolder); }
+            catch (Exception) { }
+        }
+
+        private void ButtonRecents_Click(IUICommand command)
+        {
+            ButtonRecents_Click(null, null);
         }
 
 
@@ -438,92 +445,105 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
-            AppBarButtonDiscard_Click(null, null);
+            AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
             ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
             canceledScan = false;
 
             if (scanFolder == null)
             {
-                // TODO no scan folder selected yet
+                MessageDialog dialog = new MessageDialog(LocalizedString("ErrorMessageScanFolderHeader"), LocalizedString("ErrorMessageScanFolderBody"));
+                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderSettings"), new UICommandInvokedHandler(this.ButtonSettings_Click)));
+                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderClose"), (x) => { }));
+                dialog.DefaultCommandIndex = 0;
+                dialog.CancelCommandIndex = 1;
+                ScanCanceled();
+                await dialog.ShowAsync();
+                return;
             }
 
             // gather options
             Tuple<ImageScannerFormat, string> formatFlow = GetDesiredImageScannerFormat(ComboBoxFormat, formats);
 
-            if (RadioButtonSourceAutomatic.IsChecked.Value)
+            if (RadioButtonSourceAutomatic.IsChecked.Value)             // auto configuration ///////////////
             {
-                // user asked for automatic configuration
-
-                if (ComboBoxFormat.SelectedIndex == -1)
+                // format
+                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
+                if (selectedFormat == null)
                 {
-                    // TODO no format selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                    ScanCanceled();
+                    return;
                 }
-                selectedScanner.AutoConfiguration.Format = formatFlow.Item1;
-
+                selectedScanner.AutoConfiguration.Format = (ImageScannerFormat) selectedFormat;
             }
-            else if (RadioButtonSourceFlatbed.IsChecked.Value)
+            else if (RadioButtonSourceFlatbed.IsChecked.Value)          // flatbed configuration ////////////
             {
-                // user asked for flatbed configuration
-                if (RadioButtonColorModeColor.IsChecked.Value == false
-                    && RadioButtonColorModeGrayscale.IsChecked.Value == false
-                    && RadioButtonColorModeMonochrome.IsChecked.Value == false)
+                // color mode
+                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                if (selectedColorMode == null)
                 {
-                    // TODO no color mode selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ScanCanceled();
+                    return;
                 }
-                selectedScanner.FlatbedConfiguration.ColorMode = GetDesiredColorMode();
+                else selectedScanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
 
-                if (ComboBoxResolution.SelectedIndex == -1)
+                // resolution
+                ImageScannerResolution? selectedResolution = GetDesiredResolution();
+                if (selectedResolution == null)
                 {
-                    // TODO no resolution selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ScanCanceled();
+                    return;
                 }
-                ImageScannerResolution res = new ImageScannerResolution
-                {
-                    DpiX = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
-                    DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
-                };
-                selectedScanner.FlatbedConfiguration.DesiredResolution = res;
+                selectedScanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution) selectedResolution;
 
-                if (ComboBoxFormat.SelectedIndex == -1)
+                // format
+                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
+                if (selectedFormat == null)
                 {
-                    // TODO no format selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                    ScanCanceled();
+                    return;
                 }
-                selectedScanner.FlatbedConfiguration.Format = formatFlow.Item1;
-
+                selectedScanner.FlatbedConfiguration.Format = (ImageScannerFormat) selectedFormat;
             }
-            else if (RadioButtonSourceFeeder.IsChecked.Value)
+            else if (RadioButtonSourceFeeder.IsChecked.Value)           // feeder configuration /////////////
             {
-                // user asked for feeder configuration
-
-                if (RadioButtonColorModeColor.IsChecked.Value == false
-                    && RadioButtonColorModeGrayscale.IsChecked.Value == false
-                    && RadioButtonColorModeMonochrome.IsChecked.Value == false)
+                // color mode
+                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                if (selectedColorMode == null)
                 {
-                    // TODO no color mode selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ScanCanceled();
+                    return;
                 }
-                selectedScanner.FeederConfiguration.ColorMode = GetDesiredColorMode();
+                else selectedScanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
 
-                if (ComboBoxResolution.SelectedIndex == -1)
+                // resolution
+                ImageScannerResolution? selectedResolution = GetDesiredResolution();
+                if (selectedResolution == null)
                 {
-                    // TODO no resolution selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ScanCanceled();
+                    return;
                 }
-                ImageScannerResolution res = new ImageScannerResolution
-                {
-                    DpiX = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
-                    DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
-                };
-                selectedScanner.FeederConfiguration.DesiredResolution = res;
+                selectedScanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
 
-                if (ComboBoxFormat.SelectedIndex == -1)
+                // format
+                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
+                if (selectedFormat == null)
                 {
-                    // TODO no format selected
+                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                    ScanCanceled();
+                    return;
                 }
-                selectedScanner.FeederConfiguration.Format = formatFlow.Item1;
-
+                selectedScanner.FeederConfiguration.Format = (ImageScannerFormat)selectedFormat;
             }
             else
             {
-                // TODO no configuration selected
+                ShowMessageDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
             }
 
             // start scan and show progress and cancel button
@@ -571,7 +591,9 @@ namespace Scanner
                 try { await encoder.FlushAsync(); }
                 catch (Exception)
                 {
-                    // TODO notify user that conversion has failed
+                    ShowMessageDialog(LocalizedString("ErrorMessageConversionHeader"),
+                        LocalizedString("ErrorMessageConversionBodyBeforeExtension") + result.ScannedFiles[0].FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                    ScanCanceled();
                     return;
                 }
                 stream.Dispose();
@@ -643,9 +665,23 @@ namespace Scanner
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;
-            DisplayImageAsync(scannedFile, ImageScanViewer);
+            try
+            {
+                DisplayImageAsync(scannedFile, ImageScanViewer);
+                await ImageCropper.LoadImageFromFile(scannedFile);
+            }
+            catch (Exception)
+            {
+                MessageDialog dialog = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
+                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), new UICommandInvokedHandler(this.ButtonRecents_Click)));
+                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
+                dialog.DefaultCommandIndex = 0;
+                dialog.CancelCommandIndex = 1;
+                await dialog.ShowAsync();
+                ScanCanceled();
+                return;
+            }
             SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
-            await ImageCropper.LoadImageFromFile(scannedFile);
             flowState = FlowState.result;
 
             // send toast if the app isn't in the foreground
@@ -667,25 +703,42 @@ namespace Scanner
         /// <returns>
         ///     The corresponding ImageScannerColorMode.
         /// </returns>
-        private ImageScannerColorMode GetDesiredColorMode()
+        private ImageScannerColorMode? GetDesiredColorMode()
         {
             if (RadioButtonColorModeColor.IsChecked.Value) return ImageScannerColorMode.Color;
             if (RadioButtonColorModeGrayscale.IsChecked.Value) return ImageScannerColorMode.Grayscale;
-            return ImageScannerColorMode.Monochrome;
+            if (RadioButtonColorModeMonochrome.IsChecked.Value) return ImageScannerColorMode.Monochrome;
+            return null;
+        }
+
+        private ImageScannerResolution? GetDesiredResolution()
+        {
+            if (ComboBoxResolution.SelectedIndex == -1) return null;
+            else return new ImageScannerResolution
+                            {
+                                DpiX = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
+                                DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
+                            };
+        }
+
+        private ImageScannerFormat? GetDesiredFormat(Tuple<ImageScannerFormat, string> formatFlow)
+        {
+            if (ComboBoxFormat.SelectedIndex == -1) return null;
+            else return formatFlow.Item1;
         }
 
 
         private void ScanCanceled()
         {
-            CommandBarScan.Visibility = Visibility.Visible;
-            ImageScanViewer.Visibility = Visibility.Visible;
+            CommandBarScan.Visibility = Visibility.Collapsed;
+            ImageScanViewer.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Collapsed;
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
-            flowState = FlowState.result;
+            flowState = FlowState.initial;
             scannedFile = null;
+            imageProperties = null;
 
-            CommandBarScan.Visibility = Visibility.Collapsed;
             Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
 
@@ -775,6 +828,11 @@ namespace Scanner
             Frame.Navigate(typeof(SettingsPage), null, new EntranceNavigationTransitionInfo());
         }
 
+        private void ButtonSettings_Click(IUICommand command)
+        {
+            ButtonSettings_Click(null, null);
+        }
+
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
@@ -811,7 +869,7 @@ namespace Scanner
                 return;
             }
             FlyoutAppBarButtonRename.Hide();
-        }
+        }        
 
         private void FlyoutAppBarButtonRename_Opening(object sender, object e)
         {
