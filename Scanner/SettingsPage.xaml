@@ -2,7 +2,7 @@
     x:Class="Scanner.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Scanner"
+    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -22,8 +22,8 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
-            <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" CornerRadius="3" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
+            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
+            <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" contract7Present:CornerRadius="3" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
         </Grid>
         <controls:DropShadowPanel x:Name="DropShadowPanelBottom" Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" HorizontalContentAlignment="Stretch" Height="50" VerticalAlignment="Bottom">
             <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="{Binding Path=Height,ElementName=DropShadowPanelBottom}"/>
@@ -44,10 +44,10 @@
                             <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,0,0" IsTextSelectionEnabled="True"/>
                         </RelativePanel>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
-                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" CornerRadius="3" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
-                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" CornerRadius="3" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
+                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" contract7Present:CornerRadius="3" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
+                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" contract7Present:CornerRadius="3" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
                         </StackPanel>
-                        <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" CornerRadius="3" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged">
+                        <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" contract7Present:CornerRadius="3" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged">
                             <ComboBox.Items>
                                 <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeSystem" Content="Use system setting" Tag="0"/>
                                 <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeLight" Content="Light" Tag="1"/>

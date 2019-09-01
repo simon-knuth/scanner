@@ -1,7 +1,7 @@
 ﻿<Page
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Scanner"
+    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -13,15 +13,15 @@
     NavigationCacheMode="Required" Loaded="Page_Loaded">
 
     <Page.Resources>
-        <Style x:Name="MenuFlyoutPresenterStyleRound" TargetType="MenuFlyoutPresenter">
+        <contract7Present:Style x:Name="MenuFlyoutPresenterStyleRound" TargetType="MenuFlyoutPresenter">
             <Setter Property="CornerRadius" Value="3"/>
-        </Style>
+        </contract7Present:Style>
         <Style x:Name="ImageCropperThumbStyleAcrylic" TargetType="controls:ImageCropperThumb">
             <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
         </Style>
-        <Style x:Name="RoundedButtonStyle" TargetType="Button">
+        <contract7Present:Style x:Name="RoundedButtonStyle" TargetType="Button">
             <Setter Property="CornerRadius" Value="3"/>
-        </Style>
+        </contract7Present:Style>
     </Page.Resources>
 
 
@@ -45,7 +45,7 @@
                             <TextBlock Name="TextBlockFoundScannersHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
                             <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed"/>
                         </StackPanel>
-                        <ComboBox IsEnabled="False" Name="ComboBoxScanners" CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
+                        <ComboBox IsEnabled="False" Name="ComboBoxScanners" contract7Present:CornerRadius="3" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
                             <RadioButton x:Uid="RadioButtonSourceAutomatic" Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                             <RadioButton x:Uid="RadioButtonSourceFlatbed" Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
@@ -62,10 +62,10 @@
                                 <TextBlock x:Uid="TextBlockResolution" Text="Resolution in DPI" Style="{StaticResource BaseTextBlockStyle}"/>
                                 <TextBlock x:Uid="TextBlockResolutionFileSizeHint" Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
                             </StackPanel>
-                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
+                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" contract7Present:CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
                         <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
+                        <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" contract7Present:CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
@@ -74,7 +74,7 @@
                             <AddDeleteThemeTransition/>
                         </TransitionCollection>
                     </Grid.ChildrenTransitions>
-                    <Button Name="ButtonScan" CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="ButtonScan_Click">
+                    <Button Name="ButtonScan" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="ButtonScan_Click">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
                             <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
@@ -128,15 +128,15 @@
 
                         <controls:ImageCropper x:Name="ImageCropper" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <Frame CornerRadius="3">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
+                            <Frame contract7Present:CornerRadius="3">
                                 <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <CommandBar.Content>
-                                        <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" CornerRadius="3" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
+                                        <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" contract7Present:CornerRadius="3" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
                                         </InkToolbar>
                                     </CommandBar.Content>
-                                    <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
+                                    <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;"/>
                                         <AppBarButton.Flyout>
                                             <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="TopEdgeAlignedRight" MenuFlyoutPresenterStyle="{StaticResource MenuFlyoutPresenterStyleRound}">
@@ -163,60 +163,60 @@
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator x:Name="ToolbarSeparatorSecondary"/>
-                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonSave" x:Name="AppBarButtonSave" Icon="Save" Label="Save" ToolTipService.ToolTip="Save" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSave_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonSaveCopy" x:Name="AppBarButtonSaveCopy" Label="Save copy" ToolTipService.ToolTip="Save copy" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSaveCopy_Click">
+                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDone_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonSave" x:Name="AppBarButtonSave" Icon="Save" Label="Save" ToolTipService.ToolTip="Save" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSave_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonSaveCopy" x:Name="AppBarButtonSaveCopy" Label="Save copy" ToolTipService.ToolTip="Save copy" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonSaveCopy_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;"/>
                                     </AppBarButton>
-                                    <AppBarButton x:Uid="AppBarButtonDiscard" x:Name="AppBarButtonDiscard" Icon="Cancel" Label="Discard" ToolTipService.ToolTip="Discard" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDiscard_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonDiscard" x:Name="AppBarButtonDiscard" Icon="Cancel" Label="Discard" ToolTipService.ToolTip="Discard" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonDiscard_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBar" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" CornerRadius="3" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                            <Frame CornerRadius="3">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBar" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <Frame contract7Present:CornerRadius="3">
                                 <CommandBar x:Name="CommandBarScan" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked"/>
-                                    <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonDraw_Checked">
+                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonCrop_Checked"/>
+                                    <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonRotate_Click"/>
+                                    <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Checked="AppBarButtonDraw_Checked">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
                                     </AppBarToggleButton>
                                     <Custom:ToolbarSeparator/>
-                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
+                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
                                             <Flyout x:Name="FlyoutAppBarButtonRename" LightDismissOverlayMode="On" Opening="FlyoutAppBarButtonRename_Opening">
                                                 <StackPanel Orientation="Vertical">
                                                     <TextBlock x:Uid="TextBlockRenameHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Rename"/>
-                                                    <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
-                                                    <Button x:Uid="ButtonRename" x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
+                                                    <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." contract7Present:CornerRadius="3" Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
+                                                    <Button x:Uid="ButtonRename" x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" contract7Present:CornerRadius="3" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
                                                 </StackPanel>
                                                 <Flyout.FlyoutPresenterStyle>
-                                                    <Style TargetType="FlyoutPresenter">
+                                                    <contract7Present:Style TargetType="FlyoutPresenter">
                                                         <Setter Property="CornerRadius" Value="3"/>
-                                                    </Style>
+                                                    </contract7Present:Style>
                                                 </Flyout.FlyoutPresenterStyle>
                                             </Flyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
-                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" CornerRadius="3" BorderThickness="1,1,1.5,1">
+                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1">
                                         <AppBarButton.Flyout>
                                             <Flyout x:Name="FlyoutAppBarButtonDelete" LightDismissOverlayMode="On">
                                                 <StackPanel Orientation="Vertical">
                                                     <TextBlock x:Uid="TextBlockDeleteHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Are you sure?"/>
                                                     <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
-                                                    <Button x:Uid="ButtonDelete" x:Name="ButtonDelete" CornerRadius="3" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
+                                                    <Button x:Uid="ButtonDelete" x:Name="ButtonDelete" contract7Present:CornerRadius="3" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
                                                 </StackPanel>
-                                                <Flyout.FlyoutPresenterStyle>
+                                                <contract7Present:Flyout.FlyoutPresenterStyle>
                                                     <Style TargetType="FlyoutPresenter">
                                                         <Setter Property="CornerRadius" Value="3"/>
                                                     </Style>
-                                                </Flyout.FlyoutPresenterStyle>
+                                                </contract7Present:Flyout.FlyoutPresenterStyle>
                                             </Flyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator/>
-                                    <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonCopy_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Click="AppBarButtonShare_Click"/>
                                 </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
@@ -225,7 +225,7 @@
             </controls:DropShadowPanel>
         </RelativePanel>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Title="Are you enjoying the app?" CloseButtonText="Close" DefaultButton="None" CornerRadius="3" 
+        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Title="Are you enjoying the app?" CloseButtonText="Close" DefaultButton="None" contract7Present:CornerRadius="3" 
                        PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
