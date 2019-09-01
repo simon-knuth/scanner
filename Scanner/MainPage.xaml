@@ -69,11 +69,6 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                    <Grid.ChildrenTransitions>
-                        <TransitionCollection>
-                            <AddDeleteThemeTransition/>
-                        </TransitionCollection>
-                    </Grid.ChildrenTransitions>
                     <Button Name="ButtonScan" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="ButtonScan_Click">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
@@ -81,11 +76,6 @@
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                        <StackPanel.ChildrenTransitions>
-                            <TransitionCollection>
-                                <AddDeleteThemeTransition/>
-                            </TransitionCollection>
-                        </StackPanel.ChildrenTransitions>
                         <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting"/>
                         </Button>

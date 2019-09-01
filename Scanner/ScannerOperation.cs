@@ -137,7 +137,8 @@ class ScannerOperation
 
     /// <summary>
     ///     Gets the formats supported by the given scanner's configuration. If the corresponding option is enabled and a base image
-    ///     format is supported, also add unsupported formats which can be reached through conversion.
+    ///     format is supported, also add unsupported formats which can be reached through conversion. The formats are added in this order:
+    ///         JPG -> PNG -> PDF -> XPS -> OpenXPS -> TIF -> BMP
     /// </summary>
     /// <param name="config">
     ///     The configuration that determines whether to check the auto, flatbed or feeder mode.
@@ -151,45 +152,61 @@ class ScannerOperation
     public static void GetSupportedFormats(IImageScannerFormatConfiguration config, ObservableCollection<ComboBoxItem> formats,
         ImageScanner selectedScanner, ComboBox comboBoxFormats)
     {
+        comboBoxFormats.IsEnabled = false;
+
         string currentlySelected = "";
+        LinkedList<string> newNativeFormats = new LinkedList<string>();
+        bool canConvert = false;
+
+        // save currently selected format to hoepfully reselect it after the update
         if ((ComboBoxItem) comboBoxFormats.SelectedItem != null) currentlySelected = ((ComboBoxItem) comboBoxFormats.SelectedItem).Tag.ToString().Split(",")[0];
         formats.Clear();
-        LinkedList<string> determinedImageFormats = new LinkedList<string>();
 
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
+        // see which formats are supported and whether conversion is possible
+        if (config.IsFormatSupported(ImageScannerFormat.Jpeg))
         {
-            formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
-            determinedImageFormats.AddLast("jpg");
+            newNativeFormats.AddLast("jpg");
+            canConvert = true;
         }
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png)) {
-            formats.Add(CreateComboBoxItem("PNG", "png,native"));
-            determinedImageFormats.AddLast("png");
-        }
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf)) formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps)) formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps)) formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff)) {
-            formats.Add(CreateComboBoxItem("TIF", "tif,native"));
-            determinedImageFormats.AddLast("tif");
-        }
-        if (selectedScanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap)) {
-            formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
-            determinedImageFormats.AddLast("bmp");
-        }
-
-        if (determinedImageFormats.Count > 0 && settingUnsupportedFileFormat)
+        if (config.IsFormatSupported(ImageScannerFormat.Png))
         {
-            // can convert and user wants it too ~> add missing formats
-            if (!determinedImageFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG (Recommended)", "jpg,converted"));
-            if (!determinedImageFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
-            if (!determinedImageFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
-            if (!determinedImageFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+            newNativeFormats.AddLast("png");
+            canConvert = true;
+        }
+        if (config.IsFormatSupported(ImageScannerFormat.Pdf)) newNativeFormats.AddLast("pdf");
+        if (config.IsFormatSupported(ImageScannerFormat.Xps)) newNativeFormats.AddLast("xps");
+        if (config.IsFormatSupported(ImageScannerFormat.OpenXps)) newNativeFormats.AddLast("openxps");
+        if (config.IsFormatSupported(ImageScannerFormat.Tiff))
+        {
+            newNativeFormats.AddLast("tif");
+            canConvert = true;
+        }
+        if (config.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
+        {
+            newNativeFormats.AddLast("bmp");
+            canConvert = true;
         }
 
+        // list available formats in correct order
+        if (newNativeFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
+        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
+        if (newNativeFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,native"));
+        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
+        if (newNativeFormats.Contains("pdf")) formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
+        if (newNativeFormats.Contains("xps")) formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
+        if (newNativeFormats.Contains("openxps")) formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
+        if (newNativeFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,native"));
+        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
+        if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
+        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+
+        // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)
         {
             if (((ComboBoxItem) formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
-        } 
+        }
+
+        comboBoxFormats.IsEnabled = true;
     }
 
 
