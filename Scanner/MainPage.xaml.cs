@@ -21,6 +21,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using static Globals;
@@ -852,9 +853,18 @@ namespace Scanner
             ButtonSettings_Click(null, null);
         }
 
+        /// <summary>
+        ///     Opens up the Windows 10 share menu next to AppBarButtonShare and shares the current <see cref="scannedFile"/>.
+        /// </summary>
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            DataTransferManager.ShowShareUI();
+            GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
+            Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
+            
+            ShareUIOptions shareUIOptions = new ShareUIOptions();
+            shareUIOptions.SelectionRect = rectangle;
+
+            DataTransferManager.ShowShareUI(shareUIOptions);
         }
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
