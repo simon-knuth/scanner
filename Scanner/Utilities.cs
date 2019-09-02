@@ -42,6 +42,12 @@ static class Utilities
         draw = 3                    // there is a result visible and drawing in progress
     }
 
+    public enum PrimaryMenuConfig
+    {
+        hidden = 0,                 // the primary CommandBar is hidden
+        image = 1,                  // the primary CommandBar shows the image commands
+        pdf = 2                     // the primaryCommandBar shows the pdf commands
+    }
 
     public enum SecondaryMenuConfig
     {
@@ -81,20 +87,27 @@ static class Utilities
     /// <param name="file">
     ///     The image file.
     /// </param>
-    /// <param name="image">
+    /// <param name="imageControl">
     ///     The Image object.
     /// </param>
-    public static async void DisplayImageAsync(StorageFile file, Image image)
+    public static async void DisplayImageAsync(StorageFile file, Image imageControl)
     {
         IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
         BitmapImage bmp = new BitmapImage();
         await bmp.SetSourceAsync(stream);
-        image.Source = bmp;
-        image.Visibility = Visibility.Visible;
+        imageControl.Source = bmp;
+        imageControl.Visibility = Visibility.Visible;
     }
 
 
-    public static Guid GetBitmapEncoderId(string formatString)
+    public static async void DisplayImage(BitmapImage bitmapImage, Image imageControl)
+    {
+        imageControl.Source = bitmapImage;
+        imageControl.Visibility = Visibility.Visible;
+    }
+
+
+        public static Guid GetBitmapEncoderId(string formatString)
     {
         switch (formatString)
         {

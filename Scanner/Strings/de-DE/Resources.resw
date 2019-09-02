@@ -421,6 +421,22 @@
     <value>Flip aspect ratio</value>
     <comment>The text inside the MenuItem that allows to flip the orientation of the fixed aspect ratio while cropping.</comment>
   </data>
+  <data name="MessageFileSavedBody" xml:space="preserve">
+    <value>Das Ergebnis wurde im ausgewählten Ordner gespeichert.</value>
+    <comment>The body for the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type.</comment>
+  </data>
+  <data name="MessageFileSavedClose" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>The text inside the button of the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type, that closes the popup.</comment>
+  </data>
+  <data name="MessageFileSavedHeader" xml:space="preserve">
+    <value>Scan vollständig</value>
+    <comment>The header for the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type.</comment>
+  </data>
+  <data name="MessageFileSavedOpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+    <comment>The text inside the button of the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type, that allows the user to open the scan result's folder.</comment>
+  </data>
   <data name="NotificationScanCompleteBody" xml:space="preserve">
     <value>Kehren Sie zum Bearbeiten sowie für weitere Optionen zur App zurück.</value>
     <comment>The text for the notification that appears when a scan is completed in the background.</comment>

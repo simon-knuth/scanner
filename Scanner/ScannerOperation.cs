@@ -76,19 +76,29 @@ class ScannerOperation
 
 
     /// <summary>
-    ///     Returns the ImageScannerFormat to the corresponding ComboBox entry selected by the user.
+    ///     Returns the tuple fitting to the corresponding ComboBox entry selected by the user.
     /// </summary>
     /// <remarks>
-    ///     Returns ImageScannerFormat.bitmap if no other option could be matched.
+    ///     Returns ImageScannerFormat.bitmap as base format if no other match was found.
     /// </remarks>
     /// <returns>
-    ///     The corresponding ImageScannerFormat.
+    ///     The corresponding format tuple consisting of:
+    ///         (1) ImageScannerFormat  baseFormat
+    ///         (2) string              formatToConvertTo
+    ///     If no conversion is necessary, the string will be null.
+    ///     
+    ///     Returns null if no format has been selected by the user.
     /// </returns>
-    public static Tuple<ImageScannerFormat, string> GetDesiredImageScannerFormat(ComboBox comboBox, ObservableCollection<ComboBoxItem> formats)
+    public static Tuple<ImageScannerFormat, string> GetDesiredFormat(ComboBox comboBoxFormat, ObservableCollection<ComboBoxItem> formats)
     {
-        ComboBoxItem selectedItem = ((ComboBoxItem) comboBox.SelectedItem);
-        ImageScannerFormat desiredFormat = ImageScannerFormat.DeviceIndependentBitmap;          // initialize with most supported type
-        string secondFormat = "";
+        if (comboBoxFormat.SelectedIndex == -1)
+        {
+            return null;
+        }
+
+        ComboBoxItem selectedItem = ((ComboBoxItem) comboBoxFormat.SelectedItem);
+        ImageScannerFormat baseFormat = ImageScannerFormat.DeviceIndependentBitmap;          // initialize with most supported type
+        string secondFormat = null;
 
         if (selectedItem.Tag.ToString().Split(",")[1] == "converted")
         {
@@ -101,37 +111,33 @@ class ScannerOperation
                     string tmp = item.Tag.ToString().Split(",")[0];
                     if (tmp == "jpg")
                     {
-                        desiredFormat = ImageScannerFormat.Jpeg;
-                        break;
+                        baseFormat = ImageScannerFormat.Jpeg; break;
                     }
                     else if (tmp == "png")
                     {
-                        desiredFormat = ImageScannerFormat.Png;
-                        break;
+                        baseFormat = ImageScannerFormat.Png; break;
                     }
                     else if (tmp == "tif")
                     {
-                        desiredFormat = ImageScannerFormat.Tiff;
-                        break;
+                        baseFormat = ImageScannerFormat.Tiff; break;
                     }
                     else if (tmp == "bmp")
                     {
-                        desiredFormat = ImageScannerFormat.DeviceIndependentBitmap;
-                        break;
+                        baseFormat = ImageScannerFormat.DeviceIndependentBitmap; break;
                     }
                 }
             }
         } else
         {
-            if (selectedItem.Tag.ToString().Split(",")[0] == "jpg") desiredFormat = ImageScannerFormat.Jpeg;
-            else if (selectedItem.Tag.ToString().Split(",")[0] == "png") desiredFormat = ImageScannerFormat.Png;
-            else if (selectedItem.Tag.ToString().Split(",")[0] == "pdf") desiredFormat = ImageScannerFormat.Pdf;
-            else if (selectedItem.Tag.ToString().Split(",")[0] == "xps") desiredFormat = ImageScannerFormat.Xps;
-            else if (selectedItem.Tag.ToString().Split(",")[0] == "openxps") desiredFormat = ImageScannerFormat.OpenXps;
-            else if (selectedItem.Tag.ToString().Split(",")[0] == "tif") desiredFormat = ImageScannerFormat.Tiff;
+            if (selectedItem.Tag.ToString().Split(",")[0] == "jpg") baseFormat = ImageScannerFormat.Jpeg;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "png") baseFormat = ImageScannerFormat.Png;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "pdf") baseFormat = ImageScannerFormat.Pdf;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "xps") baseFormat = ImageScannerFormat.Xps;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "openxps") baseFormat = ImageScannerFormat.OpenXps;
+            else if (selectedItem.Tag.ToString().Split(",")[0] == "tif") baseFormat = ImageScannerFormat.Tiff;
         }
 
-        return new Tuple<ImageScannerFormat, string>(desiredFormat, secondFormat);
+        return new Tuple<ImageScannerFormat, string>(baseFormat, secondFormat);
     }
 
 
@@ -188,17 +194,17 @@ class ScannerOperation
         }
 
         // list available formats in correct order
-        if (newNativeFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
-        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
-        if (newNativeFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,native"));
-        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
-        if (newNativeFormats.Contains("pdf")) formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
-        if (newNativeFormats.Contains("xps")) formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
-        if (newNativeFormats.Contains("openxps")) formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
-        if (newNativeFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,native"));
-        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
-        if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
-        else if (canConvert && settingUnsupportedFileFormat) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+        if (newNativeFormats.Contains("jpg"))                   formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
+        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
+        if (newNativeFormats.Contains("png"))                   formats.Add(CreateComboBoxItem("PNG", "png,native"));
+        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("PNG", "png,converted"));
+        if (newNativeFormats.Contains("pdf"))                   formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
+        if (newNativeFormats.Contains("xps"))                   formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
+        if (newNativeFormats.Contains("openxps"))               formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
+        if (newNativeFormats.Contains("tif"))                   formats.Add(CreateComboBoxItem("TIF", "tif,native"));
+        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
+        if (newNativeFormats.Contains("bmp"))                   formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
+        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
 
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)

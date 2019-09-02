@@ -6,6 +6,7 @@ using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Data.Pdf;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
@@ -21,6 +22,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using static Globals;
 using static ScannerOperation;
 using static Utilities;
@@ -398,18 +400,37 @@ namespace Scanner
             }
         }
 
-
+        /// <summary>
+        ///     Opens the currently selected scan folder and selects the currently visible result if possible.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ButtonRecents_Click(object sender, RoutedEventArgs e)
         {
-            try { await Launcher.LaunchFolderAsync(scanFolder); }
-            catch (Exception) { }
-        }
+            if (flowState != FlowState.result)
+            {
+                // simply open folder
+                try { await Launcher.LaunchFolderAsync(scanFolder); }
+                catch (Exception) { }
+            } else
+            {
+                // open folder and select result in it
+                FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
+                launcherOptions.ItemsToSelect.Add(scannedFile);
 
-        private void ButtonRecents_Click(IUICommand command)
-        {
-            ButtonRecents_Click(null, null);
+                try
+                {
+                    await scanFolder.GetFileAsync(scannedFile.Name);        // used to detect whether opening the file explorer with a selection will fail
+                    await Launcher.LaunchFolderAsync(scanFolder, launcherOptions);
+                }
+                catch (Exception)
+                {
+                    try { await Launcher.LaunchFolderAsync(scanFolder); }
+                    catch (Exception) { }
+                }
+            }
+            
         }
-
 
         private async void UI_enabled(bool comboBoxScannerSource, bool radioButtonRadioButtonSourceAutomatic, bool radioButtonSourceFlatbed,
             bool radioButtonSourceFeeder, bool radioButtonColorModeColor, bool radioButtonColorModeGrayscale, bool radioButtonColorModeMonochrome,
@@ -440,13 +461,13 @@ namespace Scanner
         {
             // lock (almost) entire left panel and clean up right side
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
-            CommandBarScan.Visibility = Visibility.Collapsed;
+            ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
             AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
-            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
 
             canceledScan = false;
 
@@ -463,19 +484,18 @@ namespace Scanner
             }
 
             // gather options
-            Tuple<ImageScannerFormat, string> formatFlow = GetDesiredImageScannerFormat(ComboBoxFormat, formats);
+            Tuple<ImageScannerFormat, string> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
+            if (formatFlow == null)
+            {
+                ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                ScanCanceled();
+                return;
+            }
 
             if (RadioButtonSourceAutomatic.IsChecked.Value)             // auto configuration ///////////////
             {
                 // format
-                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
-                if (selectedFormat == null)
-                {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
-                    ScanCanceled();
-                    return;
-                }
-                selectedScanner.AutoConfiguration.Format = (ImageScannerFormat) selectedFormat;
+                selectedScanner.AutoConfiguration.Format = formatFlow.Item1;
             }
             else if (RadioButtonSourceFlatbed.IsChecked.Value)          // flatbed configuration ////////////
             {
@@ -500,14 +520,7 @@ namespace Scanner
                 selectedScanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution) selectedResolution;
 
                 // format
-                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
-                if (selectedFormat == null)
-                {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
-                    ScanCanceled();
-                    return;
-                }
-                selectedScanner.FlatbedConfiguration.Format = (ImageScannerFormat) selectedFormat;
+                selectedScanner.FlatbedConfiguration.Format = formatFlow.Item1;
             }
             else if (RadioButtonSourceFeeder.IsChecked.Value)           // feeder configuration /////////////
             {
@@ -532,14 +545,7 @@ namespace Scanner
                 selectedScanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
 
                 // format
-                ImageScannerFormat? selectedFormat = GetDesiredFormat(formatFlow);
-                if (selectedFormat == null)
-                {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
-                    ScanCanceled();
-                    return;
-                }
-                selectedScanner.FeederConfiguration.Format = (ImageScannerFormat)selectedFormat;
+                selectedScanner.FeederConfiguration.Format = formatFlow.Item1;
             }
             else
             {
@@ -552,33 +558,32 @@ namespace Scanner
 
             ImageScannerScanResult result = null;
 
-            if (formatFlow.Item2 != "")
+            try
             {
-                // save file in base format to later convert it
-                try
-                {
-                    ButtonCancel.Visibility = Visibility.Visible;
-                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                    RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
-                    if (!ScanResultValid(result)) throw new Exception();
-                }
-                catch (System.Runtime.InteropServices.COMException exc)
-                {
-                    if (!canceledScan) ScannerError(exc);
-                    return;
-                }
-                catch (Exception)
-                {
-                    if (!canceledScan) ScannerError();
-                    return;
-                }
+                ButtonCancel.Visibility = Visibility.Visible;
+                result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+            }
+            catch (System.Runtime.InteropServices.COMException exc)
+            {
+                if (!canceledScan) ScannerError(exc);
+                return;
+            }
+            catch (Exception)
+            {
+                if (!canceledScan) ScannerError();
+                return;
+            }
 
-                if (!ScanResultValid(result))
-                {
-                    if (!canceledScan) ScannerError();
-                    return;
-                }
+            if (!ScanResultValid(result))
+            {
+                if (!canceledScan) ScannerError();
+                return;
+            }
 
+            if (formatFlow.Item2 != null)
+            {
+                // convert file
                 IRandomAccessStream stream = await result.ScannedFiles[0].OpenAsync(FileAccessMode.ReadWrite);
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                 SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
@@ -628,30 +633,6 @@ namespace Scanner
             else
             {
                 // no need to convert
-                ButtonCancel.Visibility = Visibility.Visible;
-                try
-                {
-                    ButtonCancel.Visibility = Visibility.Visible;
-                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                    RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
-                }
-                catch (System.Runtime.InteropServices.COMException exc)
-                {
-                    if (!canceledScan) ScannerError(exc);
-                    return;
-                }
-                catch (Exception)
-                {
-                    if (!canceledScan) ScannerError();
-                    return;
-                }
-
-                if (!ScanResultValid(result))
-                {
-                    if (!canceledScan) ScannerError();
-                    return;
-                }
-
                 scannedFile = result.ScannedFiles[0];
             }
 
@@ -665,31 +646,75 @@ namespace Scanner
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;
-            try
-            {
-                DisplayImageAsync(scannedFile, ImageScanViewer);
-                await ImageCropper.LoadImageFromFile(scannedFile);
-            }
-            catch (Exception)
-            {
-                MessageDialog dialog = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
-                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), new UICommandInvokedHandler(this.ButtonRecents_Click)));
-                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
-                dialog.DefaultCommandIndex = 0;
-                dialog.CancelCommandIndex = 1;
-                await dialog.ShowAsync();
-                ScanCanceled();
-                return;
-            }
-            SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
             flowState = FlowState.result;
+
+            // react differently to different formats
+            switch (scannedFile.FileType)
+            {
+                case "pdf":     // result is a PDF file
+                    try
+                    {
+                        PdfDocument doc = await PdfDocument.LoadFromFileAsync(scannedFile);
+                        PdfPage page = doc.GetPage(0);
+                        BitmapImage imageOfPdf = new BitmapImage();
+
+                        using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                        {
+                            await page.RenderToStreamAsync(stream);
+                            await imageOfPdf.SetSourceAsync(stream);
+                        }
+
+                        DisplayImage(imageOfPdf, ImageScanViewer);
+                    }
+                    catch (Exception)
+                    {
+                        MessageDialog errorDialog1 = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
+                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
+                        errorDialog1.DefaultCommandIndex = 0;
+                        errorDialog1.CancelCommandIndex = 1;
+                        await errorDialog1.ShowAsync();
+                        ScanCanceled();
+                        return;
+                    }
+                    ShowPrimaryMenuConfig(PrimaryMenuConfig.pdf);
+                    break;
+                case "xps":     // result is an XPS file
+                case "oxps":    // result is an OXPS file
+                    MessageDialog dialog = new MessageDialog(LocalizedString("MessageFileSavedBody"), LocalizedString("MessageFileSavedHeader"));
+                    dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                    dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedClose"), (x) => { }));
+                    dialog.DefaultCommandIndex = 0;
+                    dialog.CancelCommandIndex = 1;
+                    await dialog.ShowAsync();
+                    flowState = FlowState.initial;
+                    break;
+                default:        // result is an image file (JPG/PNG/TIF/BMP)
+                    try
+                    {
+                        DisplayImageAsync(scannedFile, ImageScanViewer);
+                        await ImageCropper.LoadImageFromFile(scannedFile);
+                    }
+                    catch (Exception)
+                    {
+                        MessageDialog errorDialog2 = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
+                        errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                        errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
+                        errorDialog2.DefaultCommandIndex = 0;
+                        errorDialog2.CancelCommandIndex = 1;
+                        await errorDialog2.ShowAsync();
+                        ScanCanceled();
+                        return;
+                    }
+                    SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
+                    ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                    break;
+            }
 
             // send toast if the app isn't in the foreground
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
             // modify UI
-            CommandBarScan.Visibility = Visibility.Visible;
-            Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
@@ -721,16 +746,10 @@ namespace Scanner
                             };
         }
 
-        private ImageScannerFormat? GetDesiredFormat(Tuple<ImageScannerFormat, string> formatFlow)
-        {
-            if (ComboBoxFormat.SelectedIndex == -1) return null;
-            else return formatFlow.Item1;
-        }
-
-
         private void ScanCanceled()
         {
-            CommandBarScan.Visibility = Visibility.Collapsed;
+            ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
             ProgressRingScan.Visibility = Visibility.Collapsed;
             ButtonCancel.Visibility = Visibility.Collapsed;
@@ -840,7 +859,8 @@ namespace Scanner
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            ButtonDelete.IsEnabled = false;
+            LockCommandBar(CommandBarPrimary, null);
+            LockCommandBar(CommandBarSecondary, null);
             try
             {
                 await scannedFile.DeleteAsync(StorageDeleteOption.Default);
@@ -848,13 +868,17 @@ namespace Scanner
             catch (Exception)
             {
                 ShowMessageDialog(LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
+                UnlockCommandBar(CommandBarPrimary, null);
+                UnlockCommandBar(CommandBarSecondary, null);
                 return;
             }
             FlyoutAppBarButtonDelete.Hide();
-            CommandBarScan.Visibility = Visibility.Collapsed;
+            ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
+            UnlockCommandBar(CommandBarPrimary, null);
+            UnlockCommandBar(CommandBarSecondary, null);
             flowState = FlowState.initial;
-            ButtonDelete.IsEnabled = true;
         }
 
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
@@ -879,15 +903,15 @@ namespace Scanner
         private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
-            LockCommandBar(CommandBarScan, null);
+            LockCommandBar(CommandBarPrimary, null);
 
             flowState = FlowState.crop;
 
             // make sure that the ImageCropper won't be obstructed
             ImageCropper.Padding = new Thickness(24,
                 24 + CoreApplication.GetCurrentView().TitleBar.Height + CommandBarSecondary.ActualHeight +
-                DropShadowPanelCommandBarSecondary.Margin.Top, 24, 24 + CommandBarScan.ActualHeight +
-                DropShadowPanelCommandBar.Margin.Bottom);
+                DropShadowPanelCommandBarSecondary.Margin.Top, 24, 24 + CommandBarPrimary.ActualHeight +
+                DropShadowPanelCommandBarPrimary.Margin.Bottom);
 
             // show ImageCropper and secondary commands
             ImageCropper.Visibility = Visibility.Visible;
@@ -907,7 +931,8 @@ namespace Scanner
 
         private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarScan, null);
+            LockCommandBar(CommandBarPrimary, null);
+            LockCommandBar(CommandBarSecondary, null);
             IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
@@ -928,7 +953,8 @@ namespace Scanner
             stream.Dispose();
             await ImageCropper.LoadImageFromFile(scannedFile);
 
-            UnlockCommandBar(CommandBarScan, null);
+            UnlockCommandBar(CommandBarPrimary, null);
+            UnlockCommandBar(CommandBarSecondary, null);
         }
 
         private void Page_ActualThemeChanged(FrameworkElement sender, object args)
@@ -974,7 +1000,8 @@ namespace Scanner
         private void AppBarButtonDone_Click(object sender, RoutedEventArgs e)
         {
             flowState = FlowState.initial;
-            CommandBarScan.Visibility = Visibility.Collapsed;
+            ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
             Page_SizeChanged(null, null);
         }
@@ -1097,7 +1124,7 @@ namespace Scanner
                     ImageCropper.Visibility = Visibility.Collapsed;
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
-                    UnlockCommandBar(CommandBarScan, null);
+                    UnlockCommandBar(CommandBarPrimary, null);
 
                     if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
                     else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
@@ -1108,7 +1135,7 @@ namespace Scanner
                     InkCanvasScan.InkPresenter.StrokeContainer.Clear();
                     flowState = FlowState.result;
                     AppBarButtonDraw.IsChecked = false;
-                    UnlockCommandBar(CommandBarScan, null);
+                    UnlockCommandBar(CommandBarPrimary, null);
 
                     if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
                     else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
@@ -1118,6 +1145,7 @@ namespace Scanner
 
         private async void AppBarButtonSave_Click(object sender, RoutedEventArgs e)
         {
+            LockCommandBar(CommandBarPrimary, null);
             LockCommandBar(CommandBarSecondary, null);
 
             switch (flowState)
@@ -1150,8 +1178,6 @@ namespace Scanner
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
                     ImageCropper.Visibility = Visibility.Collapsed;
-                    UnlockCommandBar(CommandBarScan, null);
-
                     break;
                 case FlowState.draw:
                     // save file
@@ -1191,11 +1217,10 @@ namespace Scanner
                     flowState = FlowState.result;
                     AppBarButtonDraw.IsChecked = false;
                     InkCanvasScan.Visibility = Visibility.Collapsed;
-                    UnlockCommandBar(CommandBarScan, null);
-
                     break;
             }
 
+            UnlockCommandBar(CommandBarPrimary, null);
             UnlockCommandBar(CommandBarSecondary, null);
         }
 
@@ -1266,6 +1291,51 @@ namespace Scanner
             UnlockCommandBar(CommandBarSecondary, null);
         }
 
+        private void ShowPrimaryMenuConfig(PrimaryMenuConfig config)
+        {
+            switch (config)
+            {
+                case PrimaryMenuConfig.hidden:
+                    CommandBarPrimary.Visibility = Visibility.Collapsed;
+                    break;
+                case PrimaryMenuConfig.image:
+                    AppBarButtonCrop.Visibility = Visibility.Visible;
+                    AppBarButtonRotate.Visibility = Visibility.Visible;
+                    AppBarButtonDraw.Visibility = Visibility.Visible;
+
+                    ToolbarSeparatorPrimaryOne.Visibility = Visibility.Visible;
+
+                    AppBarButtonRename.Visibility = Visibility.Visible;
+                    AppBarButtonDelete.Visibility = Visibility.Visible;
+
+                    ToolbarSeparatorPrimaryTwo.Visibility = Visibility.Visible;
+
+                    AppBarButtonCopy.Visibility = Visibility.Visible;
+                    AppBarButtonShare.Visibility = Visibility.Visible;
+
+                    CommandBarPrimary.Visibility = Visibility.Visible;
+                    break;
+                case PrimaryMenuConfig.pdf:
+                    AppBarButtonCrop.Visibility = Visibility.Collapsed;
+                    AppBarButtonRotate.Visibility = Visibility.Collapsed;
+                    AppBarButtonDraw.Visibility = Visibility.Collapsed;
+
+                    ToolbarSeparatorPrimaryOne.Visibility = Visibility.Collapsed;
+
+                    AppBarButtonRename.Visibility = Visibility.Visible;
+                    AppBarButtonDelete.Visibility = Visibility.Visible;
+
+                    ToolbarSeparatorPrimaryTwo.Visibility = Visibility.Visible;
+
+                    AppBarButtonCopy.Visibility = Visibility.Visible;
+                    AppBarButtonShare.Visibility = Visibility.Visible;
+
+                    CommandBarPrimary.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void ShowSecondaryMenuConfig(SecondaryMenuConfig config)
         {
@@ -1324,7 +1394,7 @@ namespace Scanner
         private void AppBarButtonDraw_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
-            LockCommandBar(CommandBarScan, null);
+            LockCommandBar(CommandBarPrimary, null);
 
             flowState = FlowState.draw;
 
@@ -1338,8 +1408,8 @@ namespace Scanner
         {
             if (flowState == FlowState.draw && e.CurrentPoint.PointerDevice.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
             {
-                CommandBarSecondary.Visibility = Visibility.Collapsed;
-                CommandBarScan.Visibility = Visibility.Collapsed;
+                ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+                ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             }
         }
 
@@ -1347,8 +1417,8 @@ namespace Scanner
         {
             if (flowState == FlowState.draw)
             {
-                CommandBarSecondary.Visibility = Visibility.Visible;
-                CommandBarScan.Visibility = Visibility.Visible;
+                ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
             }
         }
 
