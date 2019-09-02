@@ -124,6 +124,7 @@
                                     <CommandBar.Content>
                                         <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" contract7Present:CornerRadius="3" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
+                                            <InkToolbarStencilButton/>
                                         </InkToolbar>
                                     </CommandBar.Content>
                                     <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
