@@ -497,10 +497,6 @@
     <value>Nutzen Sie den</value>
     <comment>The text that is in front of the settings Feedback Hub link.</comment>
   </data>
-  <data name="RunSettingsDevelopedBy.Text" xml:space="preserve">
-    <value>Entwickelt von Simon Knuth</value>
-    <comment>The text stating who developed the app.</comment>
-  </data>
   <data name="RunSettingsRestartHintAfterLink.Text" xml:space="preserve">
     <value> um die Änderungen zu übernehmen.</value>
     <comment>[begins with a whitespace] The text that is behind the save-and-restart link.</comment>
