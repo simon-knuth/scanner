@@ -475,7 +475,7 @@ namespace Scanner
             if (scanFolder == null)
             {
                 MessageDialog dialog = new MessageDialog(LocalizedString("ErrorMessageScanFolderHeader"), LocalizedString("ErrorMessageScanFolderBody"));
-                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderSettings"), new UICommandInvokedHandler(this.ButtonSettings_Click)));
+                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderSettings"), (x) => ButtonSettings_Click(null, null)));
                 dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderClose"), (x) => { }));
                 dialog.DefaultCommandIndex = 0;
                 dialog.CancelCommandIndex = 1;
@@ -670,7 +670,7 @@ namespace Scanner
                     catch (Exception)
                     {
                         MessageDialog errorDialog1 = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
-                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => ButtonRecents_Click(null, null)));
                         errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
                         errorDialog1.DefaultCommandIndex = 0;
                         errorDialog1.CancelCommandIndex = 1;
@@ -683,7 +683,7 @@ namespace Scanner
                 case "xps":     // result is an XPS file
                 case "oxps":    // result is an OXPS file
                     MessageDialog dialog = new MessageDialog(LocalizedString("MessageFileSavedBody"), LocalizedString("MessageFileSavedHeader"));
-                    dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                    dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedOpenFolder"), (x) => ButtonRecents_Click(null, null)));
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedClose"), (x) => { }));
                     dialog.DefaultCommandIndex = 0;
                     dialog.CancelCommandIndex = 1;
@@ -699,7 +699,7 @@ namespace Scanner
                     catch (Exception)
                     {
                         MessageDialog errorDialog2 = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
-                        errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => { ButtonRecents_Click(null, null); }));
+                        errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => ButtonRecents_Click(null, null)));
                         errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
                         errorDialog2.DefaultCommandIndex = 0;
                         errorDialog2.CancelCommandIndex = 1;

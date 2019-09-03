@@ -38,15 +38,15 @@ class ScannerOperation
         float actualX = config.ActualResolution.DpiX;
         float actualY = config.ActualResolution.DpiY;
 
-        Debug.WriteLine("minX: " + minX + " | minY: " + minY);
-
         resolutions.Clear();
         int lowerBound = -1;
-        for (int i = 0; actualX - (i * 100) >= minX && actualY * (actualX - (i * 100)) / actualX >= minY; i++)
+
+        for (int i = 0; actualX - (i * 100) > minX && actualY * (actualX - (i * 100)) / actualX > minY; i++)
         {
             lowerBound++;
         }
 
+        resolutions.Add(CreateComboBoxItem(minX.ToString() + " x " + minY.ToString(), minX.ToString() + "," + minY.ToString()));
         for (int i = lowerBound; i >= 0; i--)
         {
             float x = actualX - (i * 100);
@@ -62,14 +62,15 @@ class ScannerOperation
 
         }
 
-        comboBox.SelectedIndex = lowerBound;
+        comboBox.SelectedIndex = lowerBound + 1;
 
-        for (int i = 1; actualX + (i * 100) <= maxX && actualY * (actualX + (i * 100)) / actualX <= maxY; i++)
+        for (int i = 1; actualX + (i * 200) < maxX && actualY * (actualX + (i * 200)) / actualX < maxY; i++)
         {
-            float x = actualX + (i * 100);
+            float x = actualX + (i * 200);
             float y = actualY * x / actualX;
             resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
         }
+        resolutions.Add(CreateComboBoxItem(maxX.ToString() + " x " + maxY.ToString(), maxX.ToString() + "," + maxY.ToString()));
 
         comboBox.IsEnabled = true;
     }
