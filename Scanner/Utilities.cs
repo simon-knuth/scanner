@@ -1,29 +1,29 @@
-﻿using System;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
+using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel;
+using Windows.Graphics.Imaging;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Imaging;
-using Windows.UI.Notifications;
-using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 using static Globals;
-using System.IO;
-using Windows.ApplicationModel;
-using Windows.UI.Core;
-using Windows.System;
-using Windows.ApplicationModel.Resources;
-using Windows.Storage.FileProperties;
-using Microsoft.Graphics.Canvas;
+
 
 static class Utilities
 {
     /// <summary>
-    ///     Accomodates the responsiveness of the UI.
+    ///     Represents the possible states of the app's UI.
     /// </summary>
     public enum UIstate
     {
@@ -33,7 +33,9 @@ static class Utilities
         small_result = 2            // only the result of a scan is visible
     }
 
-
+    /// <summary>
+    ///     Represents the possible states of the app itself.
+    /// </summary>
     public enum FlowState
     {
         initial = 0,                // there is no result visible
@@ -42,6 +44,9 @@ static class Utilities
         draw = 3                    // there is a result visible and drawing in progress
     }
 
+    /// <summary>
+    ///     Represents the possible states of the primary <see cref="CommandBar"/>.
+    /// </summary>
     public enum PrimaryMenuConfig
     {
         hidden = 0,                 // the primary CommandBar is hidden
@@ -49,6 +54,9 @@ static class Utilities
         pdf = 2                     // the primaryCommandBar shows the pdf commands
     }
 
+    /// <summary>
+    ///     Represents the possible states of the secondary <see cref="CommandBar"/>.
+    /// </summary>
     public enum SecondaryMenuConfig
     {
         hidden = 0,                 // the secondary CommandBar is hidden
@@ -82,14 +90,10 @@ static class Utilities
 
 
     /// <summary>
-    ///     Display an image file inside an Image object.
+    ///     Display an image file inside an <see cref="Image"/> control.
     /// </summary>
-    /// <param name="file">
-    ///     The image file.
-    /// </param>
-    /// <param name="imageControl">
-    ///     The Image object.
-    /// </param>
+    /// <param name="file">The <see cref="StorageFile"/> containing the image.</param>
+    /// <param name="imageControl">The <see cref="Image"/> control.</param>
     public static async void DisplayImageAsync(StorageFile file, Image imageControl)
     {
         IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
@@ -100,14 +104,24 @@ static class Utilities
     }
 
 
-    public static async void DisplayImage(BitmapImage bitmapImage, Image imageControl)
+    /// <summary>
+    ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control.
+    /// </summary>
+    /// <param name="bitmapImage">The <see cref="BitmapImage"/> file.</param>
+    /// <param name="imageControl">The <see cref="Image"/> control.</param>
+    public static void DisplayImage(BitmapImage bitmapImage, Image imageControl)
     {
         imageControl.Source = bitmapImage;
         imageControl.Visibility = Visibility.Visible;
     }
 
 
-        public static Guid GetBitmapEncoderId(string formatString)
+    /// <summary>
+    ///     Converts a <paramref name="formatString"/> into the corresponding BitmapEncoderId.
+    /// </summary>
+    /// <param name="formatString">"jpg", "jpeg", "png", "bmp" or "tiff"/"tif".</param>
+    /// <returns>The corresponding BitmapEncoderId.</returns>
+    public static Guid GetBitmapEncoderId(string formatString)
     {
         switch (formatString)
         {
@@ -183,7 +197,10 @@ static class Utilities
     }
 
 
-
+    /// <summary>
+    ///     Checks whether the ctrl key is currently pressed.
+    /// </summary>
+    /// <returns>True if the ctrl key is currently pressed.</returns>
     public static bool IsCtrlKeyPressed()
     {
         var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
@@ -191,6 +208,11 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Empty the <paramref name="canvas"/> and make sure that it has the correct dimensions to cover the image.
+    /// </summary>
+    /// <param name="canvas">The <see cref="InkCanvas"/> that is to be cleared and resized.</param>
+    /// <param name="properties">The <see cref="ImageProperties"/> that include the dimensions.</param>
     public static void InitializeInkCanvas(InkCanvas canvas, ImageProperties properties)
     {
         canvas.Width = properties.Width;
@@ -199,6 +221,9 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Loads all settings/data from the app's data container and initializes default data if necessary.
+    /// </summary>
     public async static void LoadSettings()
     {
         localSettingsContainer = ApplicationData.Current.LocalSettings;
@@ -315,12 +340,22 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Searches the app resources for a localized version of a string.
+    /// </summary>
+    /// <param name="resource">The resource name.</param>
+    /// <returns>The localized string.</returns>
     public static string LocalizedString(string resource)
     {
         return ResourceLoader.GetForCurrentView().GetString(resource);
     }
 
 
+    /// <summary>
+    ///     Locks/disables all items of the given CommandBar, except for one.
+    /// </summary>
+    /// <param name="commandBar">The CommandBar of which the items shall be disabled.</param>
+    /// <param name="except">The control that shall not be disabled.</param>
     public static void LockCommandBar(CommandBar commandBar, Control except)
     {
         if (except == null)
@@ -347,7 +382,16 @@ static class Utilities
     }
 
 
-    public static string RemoveNumbering(string input)
+    /// <summary>
+    ///     Locks/disables all items of the given <paramref name="commandBar"/>.
+    /// </summary>
+    /// <param name="commandBar">The <see cref="CommandBar"/> of which the items shall be disabled.</param>
+    public static void LockCommandBar(CommandBar commandBar)
+    {
+        LockCommandBar(commandBar, null);
+    }
+
+        public static string RemoveNumbering(string input)
     {
         // expect string like "abc (def).xyz" and deliver "abc.xyz"
         string name = input.Substring(0, input.LastIndexOf("."));       // get name without file extension
@@ -364,6 +408,14 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/>,
+    ///     an <paramref name="expirationTime"/> (in seconds) and an image.
+    /// </summary>
+    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
+    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
+    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
+    /// <param name="imageURI">The URI pointing to the image that is displayed as part of the <see cref="ToastNotification"/>.</param>
     public static void SendToastNotification(string title, string content, int expirationTime, string imageURI)
     {
         // Construct the visuals of the toast
@@ -404,6 +456,14 @@ static class Utilities
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
+
+    /// <summary>
+    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/> and
+    ///     an <paramref name="expirationTime"/> (in seconds).
+    /// </summary>
+    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
+    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
+    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
     public static void SendToastNotification(string title, string content, int expirationTime)
     {
         // Construct the visuals of the toast
@@ -440,7 +500,11 @@ static class Utilities
     }
 
 
-
+    /// <summary>
+    ///     Displays a MessageDialog consisting of a title and message.
+    /// </summary>
+    /// <param name="title">The title of the <see cref="MessageDialog"/>.</param>
+    /// <param name="message">The body of the <see cref="MessageDialog"/>.</param>
     public async static void ShowMessageDialog(string title, string message)
     {
         MessageDialog messageDialog = new MessageDialog(message, title);
@@ -448,6 +512,11 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Unlocks/enables all items of the given <paramref name="commandBar"/>, <paramref name="except"/> for one.
+    /// </summary>
+    /// <param name="commandBar">The <see cref="CommandBar"/> of which the items shall be enabled.</param>
+    /// <param name="except">The control that shall not be enabled.</param>
     public static void UnlockCommandBar(CommandBar commandBar, Control except)
     {
         if (except == null)
@@ -463,7 +532,19 @@ static class Utilities
     }
 
 
-    // TODO add documentation
+    /// <summary>
+    ///     Unlocks/enables all items of the given CommandBar.
+    /// </summary>
+    /// <param name="commandBar">The CommandBar of which the items shall be enabled.</param>
+    public static void UnlockCommandBar(CommandBar commandBar)
+    {
+        UnlockCommandBar(commandBar, null);
+    }
+
+
+    /// <summary>
+    ///     Adapts the titlebar buttons to the current theme.
+    /// </summary>
     public static void UpdateTheme(UISettings uISettings, object theObject)
     {
         if (settingAppTheme == Theme.system)
@@ -486,6 +567,9 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Saves all settings to the app's data container.
+    /// </summary>
     public static void SaveSettings()
     {
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
