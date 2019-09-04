@@ -1,14 +1,14 @@
-<table width='100%'>
+<table width="100%">
   <tr>
-    <td width='15%'> &nbsp; &nbsp; <image src='https://i.imgur.com/4fMgKKY.png'/> &nbsp; &nbsp; </td>
-    <td width='85%'><h1>Scanner for Windows 10</h1>
-<i>A scanner app built for the Universal Windows Platform</i><br><br></td>
+    <td width="15%"> &nbsp; &nbsp; <image src='https://i.imgur.com/4fMgKKY.png'/> &nbsp; &nbsp; </td>
+    <td width="85%"><h1>Scanner for Windows 10</h1>
+                    <i>A scanner app built for the Universal Windows Platform</i><br><br>
+    </td>
   </tr>
 </table>
-
 <br><h2>Features</h2>
 <ul>
-  <li>Preview after scan*</li>
+  <li>Preview after scan</li>
   <li>Built-in image editing
     <ul>
       <li>Crop</li>
@@ -27,6 +27,6 @@
 
 <br><h2>Download</h2>
 The stable version of the app is available in the Microsoft Store: <br>
-<img src='https://i.imgur.com/aAWYhvm.png' width=150rem/>
+<a href="https://www.microsoft.com/store/apps/9N438MZHD3ZF"><img src="https://i.imgur.com/aAWYhvm.png" width=150rem/></a>
 <br>
 You can view the source code on GitHub or download/clone it using the green button in the top-right corner.
