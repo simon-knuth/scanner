@@ -869,8 +869,8 @@ namespace Scanner
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarPrimary, null);
-            LockCommandBar(CommandBarSecondary, null);
+            LockCommandBar(CommandBarPrimary);
+            LockCommandBar(CommandBarSecondary);
             try
             {
                 await scannedFile.DeleteAsync(StorageDeleteOption.Default);
@@ -913,7 +913,7 @@ namespace Scanner
         private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
-            LockCommandBar(CommandBarPrimary, null);
+            LockCommandBar(CommandBarPrimary);
 
             flowState = FlowState.crop;
 
@@ -941,8 +941,8 @@ namespace Scanner
 
         private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarPrimary, null);
-            LockCommandBar(CommandBarSecondary, null);
+            LockCommandBar(CommandBarPrimary);
+            LockCommandBar(CommandBarSecondary);
             IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
             BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
@@ -1155,8 +1155,8 @@ namespace Scanner
 
         private async void AppBarButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarPrimary, null);
-            LockCommandBar(CommandBarSecondary, null);
+            LockCommandBar(CommandBarPrimary);
+            LockCommandBar(CommandBarSecondary);
 
             switch (flowState)
             {
@@ -1236,7 +1236,7 @@ namespace Scanner
 
         private async void AppBarButtonSaveCopy_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarSecondary, null);
+            LockCommandBar(CommandBarSecondary);
 
             switch (flowState)
             {
@@ -1404,7 +1404,7 @@ namespace Scanner
         private void AppBarButtonDraw_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
-            LockCommandBar(CommandBarPrimary, null);
+            LockCommandBar(CommandBarPrimary);
 
             flowState = FlowState.draw;
 
