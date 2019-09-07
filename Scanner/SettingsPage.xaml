@@ -33,11 +33,11 @@
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
                 </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,24,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold" Margin="24,0,0,12" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="24,0,0,8" VerticalAlignment="Top" Padding="0,0,0,0"/>
                 </Grid>
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="GridSettingsHeader" RelativePanel.AlignBottomWithPanel="True">
-                    <StackPanel Padding="24,12,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left" Margin="0,0,0,0">
+                    <StackPanel Padding="24,8,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="TextBlockSettingsSaveLocationHeader" Text="Save location" Style="{ThemeResource BodyTextBlockStyle}"/>
                         <RelativePanel Margin="0,6,0,0">
                             <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>

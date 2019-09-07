@@ -37,10 +37,10 @@
                     <RowDefinition/>
                     <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,24,0,0">
+                <ScrollViewer x:Name="ScrollViewerLeftPanel" VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                     <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
-                        <TextBlock x:Name="TextBlockHeader" Text="Scanner" Style="{ThemeResource SubheaderTextBlockStyle}" FontWeight="Bold"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                        <TextBlock x:Name="TextBlockHeader" Text="Scanner" FontWeight="Bold" FontSize="32"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                             <TextBlock x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock Name="TextBlockFoundScannersHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
                             <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed"/>
@@ -98,9 +98,10 @@
                                         RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                                         RelativePanel.AlignBottomWithPanel="True">
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                    <Grid Name="GridPanelRight" CornerRadius="0,0,0,0" VerticalAlignment="Stretch">
-                        <ScrollViewer x:Name="ScrollViewerScan" HorizontalSnapPointsAlignment="Center" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
-                            <Grid>
+                    <Grid Name="GridPanelRight" VerticalAlignment="Stretch">
+                        <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Grid Margin="0,32,0,0">
                                 <Image x:Name="ImageScanViewer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
@@ -215,8 +216,9 @@
             </controls:DropShadowPanel>
         </RelativePanel>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Title="Are you enjoying the app?" CloseButtonText="Close" DefaultButton="None" contract7Present:CornerRadius="3" 
-                       PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Title="Are you enjoying the app?" CloseButtonText="Close" DefaultButton="None"
+                       contract7Present:CornerRadius="3" PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" SecondaryButtonStyle="{StaticResource RoundedButtonStyle}"
+                       CloseButtonStyle="{StaticResource RoundedButtonStyle}" Visibility="Collapsed">
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
                     <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>

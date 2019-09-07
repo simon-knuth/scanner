@@ -213,10 +213,10 @@ static class Utilities
     /// </summary>
     /// <param name="canvas">The <see cref="InkCanvas"/> that is to be cleared and resized.</param>
     /// <param name="properties">The <see cref="ImageProperties"/> that include the dimensions.</param>
-    public static void InitializeInkCanvas(InkCanvas canvas, ImageProperties properties)
+    public static void InitializeInkCanvas(InkCanvas canvas, double width, double height)
     {
-        canvas.Width = properties.Width;
-        canvas.Height = properties.Height;
+        canvas.Width = width;
+        canvas.Height = height;
         canvas.InkPresenter.StrokeContainer.Clear();
     }
 
@@ -577,5 +577,21 @@ static class Utilities
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
+    }
+
+
+    // TODO documentation
+    public async static System.Threading.Tasks.Task<Tuple<double, double>> RefreshImageMeasurementsAsync(StorageFile image)
+    {
+        ImageProperties imageProperties = await image.Properties.GetImagePropertiesAsync();
+
+        return new Tuple<double, double>(imageProperties.Width, imageProperties.Height);
+    }
+
+
+    // TODO documentation
+    public static Tuple<double, double> RefreshImageMeasurements(BitmapImage image)
+    {
+        return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
     }
 }

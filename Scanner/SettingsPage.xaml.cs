@@ -22,10 +22,16 @@ namespace Scanner
         {
             this.InitializeComponent();
 
+            // localize hyperlinks
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
+
+            // register event listener
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
+                GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
+            };
         }
 
 

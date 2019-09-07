@@ -11,7 +11,6 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
@@ -40,7 +39,7 @@ namespace Scanner
 
         private ImageScanner selectedScanner = null;
         private StorageFile scannedFile;
-        ImageProperties imageProperties;
+        private Tuple<double, double> imageMeasurements;
 
         private double ColumnLeftDefaultMaxWidth;
         private double ColumnLeftDefaultMinWidth;
@@ -85,6 +84,9 @@ namespace Scanner
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
             CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
+                ScrollViewerLeftPanel.Margin = new Thickness(0, titleBar.Height, 0, 0);
+            };
         }
 
 
@@ -729,6 +731,7 @@ namespace Scanner
                             await imageOfPdf.SetSourceAsync(stream);
                         }
 
+                        imageMeasurements = RefreshImageMeasurements(imageOfPdf);
                         DisplayImage(imageOfPdf, ImageScanViewer);
                     }
                     catch (Exception)
@@ -744,6 +747,7 @@ namespace Scanner
                     }
                     ShowPrimaryMenuConfig(PrimaryMenuConfig.pdf);
                     flowState = FlowState.result;
+                    FixResultPositioning();
                     break;
                 case ".xps":     // result is an XPS file
                 case ".oxps":    // result is an OXPS file
@@ -774,14 +778,17 @@ namespace Scanner
                     SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
                     ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
                     flowState = FlowState.result;
-                    imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
+
+                    await RefreshImageMeasurementsAsync(scannedFile);
+
+                    FixResultPositioning();
                     break;
             }
 
             // send toast if the app isn't in the foreground
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
-            // modify UI
+            // update UI
             Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
@@ -818,7 +825,6 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Visible;
             flowState = FlowState.initial;
             scannedFile = null;
-            imageProperties = null;
 
             Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
@@ -1089,7 +1095,7 @@ namespace Scanner
             UnlockCommandBar(CommandBarSecondary, null);
 
             // refresh image properties
-            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
+            await RefreshImageMeasurementsAsync(scannedFile);
         }
 
 
@@ -1150,18 +1156,18 @@ namespace Scanner
         }
 
 
-        /// <summary>
-        ///     The event listener for when the layout of the <see cref="ScrollViewerScan"/> changes.
-        ///     Makes sure that the image doesn't slip outside the window boundaries.
-        /// </summary>
-        private void ScrollViewerScan_LayoutUpdated(object sender, object e)
+        // TODO documentation
+        private void FixResultPositioning()
         {
-            // fix image, might otherwise slip outside the window's boundaries
+            // fix image
             ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
-            ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight;
+            try { ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight - CoreApplication.GetCurrentView().TitleBar.Height; }
+            catch (Exception) { ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
 
+            // fix viewbox containing Image and InkCanvas
             ViewBoxScan.Width = ImageScanViewer.ActualWidth;
-            ViewBoxScan.Height = ImageScanViewer.ActualHeight;
+            try { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - CoreApplication.GetCurrentView().TitleBar.Height; }
+            catch (Exception) { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
         }
 
 
@@ -1358,8 +1364,8 @@ namespace Scanner
 
                     // refresh preview and properties
                     DisplayImageAsync(scannedFile, ImageScanViewer);
-                    imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
-                    
+                    await RefreshImageMeasurementsAsync(scannedFile);
+
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
                     ImageCropper.Visibility = Visibility.Collapsed;
@@ -1406,7 +1412,7 @@ namespace Scanner
             else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
 
             // reload file with new properties
-            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
+            await RefreshImageMeasurementsAsync(scannedFile);
 
             UnlockCommandBar(CommandBarSecondary);
             UnlockCommandBar(CommandBarPrimary);
@@ -1610,7 +1616,7 @@ namespace Scanner
 
             // show InkCanvas and secondary commands
             ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
-            InitializeInkCanvas(InkCanvasScan, imageProperties);
+            InitializeInkCanvas(InkCanvasScan, imageMeasurements.Item1, imageMeasurements.Item2);
             InkCanvasScan.Visibility = Visibility.Visible;
         }
 
