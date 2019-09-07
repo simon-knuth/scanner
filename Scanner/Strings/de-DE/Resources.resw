@@ -437,6 +437,10 @@
     <value>Ordner öffnen</value>
     <comment>The text inside the button of the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type, that allows the user to open the scan result's folder.</comment>
   </data>
+  <data name="NotificationCopyHeader" xml:space="preserve">
+    <value>Scan in die Zwischenablage kopiert</value>
+    <comment>The header for the notification that appears when copying the result to the clipboard.</comment>
+  </data>
   <data name="NotificationScanCompleteBody" xml:space="preserve">
     <value>Kehren Sie zum Bearbeiten sowie für weitere Optionen zur App zurück.</value>
     <comment>The text for the notification that appears when a scan is completed in the background.</comment>
@@ -530,7 +534,7 @@
     <comment>The header for the the rename flyout.</comment>
   </data>
   <data name="TextBlockResolution.Text" xml:space="preserve">
-    <value>Auflösung in DPI</value>
+    <value>Auflösung</value>
     <comment>The header for the resolution ComboBox.</comment>
   </data>
   <data name="TextBlockResolutionFileSizeHint.Text" xml:space="preserve">

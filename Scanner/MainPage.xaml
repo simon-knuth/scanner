@@ -59,7 +59,7 @@
                         </StackPanel>
                         <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Uid="TextBlockResolution" Text="Resolution in DPI" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
                                 <TextBlock x:Uid="TextBlockResolutionFileSizeHint" Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
                             </StackPanel>
                             <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" contract7Present:CornerRadius="3" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
@@ -69,7 +69,7 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                    <Button Name="ButtonScan" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="ButtonScan_Click">
+                    <Button Name="ButtonScan" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="Scan" IsEnabledChanged="ButtonScan_IsEnabledChanged">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
                             <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
@@ -124,7 +124,6 @@
                                     <CommandBar.Content>
                                         <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" contract7Present:CornerRadius="3" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
-                                            <InkToolbarStencilButton/>
                                         </InkToolbar>
                                     </CommandBar.Content>
                                     <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" contract7Present:CornerRadius="3" BorderThickness="1,1,1.5,1" Visibility="Collapsed" >
@@ -135,7 +134,7 @@
                                                 <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioSquare" Text="Square" Tag="1" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="3:2" Tag="0.6666" Click="SetFixedAspectRatio"/>
                                                 <ToggleMenuFlyoutItem Text="4:3" Tag="0.7500" Click="SetFixedAspectRatio"/>
-                                                <MenuFlyoutItem x:Uid="MenuFlyoutItemFlipAspectRatio" Text="Flip aspect ratio" Icon="Orientation" Click="ToggleMenuFlyoutItem_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="MenuFlyoutItemFlipAspectRatio" Text="Flip aspect ratio" Icon="Orientation" Click="FlipAspectRatio"/>
                                                 <MenuFlyoutSeparator/>
                                                 <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderInternational" Text="International" IsEnabled="False" FontWeight="Medium"/>
                                                 <ToggleMenuFlyoutItem Text="DIN A" Tag="1.4142" Click="SetFixedAspectRatio"/>
@@ -221,7 +220,7 @@
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
                     <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
-                    <Hyperlink x:Name="HyperlinkFeedbackHub" Click="HyperlinkFeedbackHub_Click" UnderlineStyle="None">Feedback Hub</Hyperlink>
+                    <Hyperlink x:Name="HyperlinkFeedbackHub" Click="LaunchFeedbackHub" UnderlineStyle="None">Feedback Hub</Hyperlink>
                     <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
                     <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="ms-windows-store://review/?productid=9N438MZHD3ZF">rate Scanner in the Microsoft Store</Hyperlink>
                     <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>

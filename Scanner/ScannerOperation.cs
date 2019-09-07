@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -12,25 +11,21 @@ using Windows.UI.Xaml.Controls;
 using static Globals;
 using static Utilities;
 
+
 class ScannerOperation
 {
     /// <summary>
-    ///     Updates resolutions according to given configuration (flatbed or feeder) and protects the ComboBox while running.
+    ///     Updates resolutions according to given <paramref name="config"/> (flatbed or feeder).
+    ///     Resolutions added are:
+    ///         MinResolution -> ActualResolution -> MaxResolution
+    ///     The ActualResolution is marked with the DefaultResolutionIndicator resource and automatically selected by the <paramref name="comboBox"/>.
     /// </summary>
-    /// <param name="config">
-    ///     The configuration that resolutions shall be generated for.
-    /// </param>
-    /// <param name="comboBox">
-    ///     The ComboBox that will contain the resolutions.
-    /// </param>
-    /// <param name="resolutions">
-    ///     The ObservableCollection that will contain the ComboBoxItems.
-    /// </param>
+    /// <param name="config">The configuration that resolutions shall be generated for.</param>
+    /// <param name="comboBox">The <see cref="ComboBox"/> that will contain the resolutions.</param>
+    /// <param name="resolutions">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s.</param>
     public static void GenerateResolutions(IImageScannerSourceConfiguration config, ComboBox comboBox, 
         ObservableCollection<ComboBoxItem> resolutions)
     {
-        comboBox.IsEnabled = false;
-
         float minX = config.MinResolution.DpiX;
         float minY = config.MinResolution.DpiY;
         float maxX = config.MaxResolution.DpiX;
@@ -39,57 +34,32 @@ class ScannerOperation
         float actualY = config.ActualResolution.DpiY;
 
         resolutions.Clear();
-        int lowerBound = -1;
 
-        for (int i = 0; actualX - (i * 100) > minX && actualY * (actualX - (i * 100)) / actualX > minY; i++)
-        {
-            lowerBound++;
-        }
+        resolutions.Add(CreateComboBoxItem(minX + " DPI", minX + "," + minY));
 
-        resolutions.Add(CreateComboBoxItem(minX.ToString() + " x " + minY.ToString(), minX.ToString() + "," + minY.ToString()));
-        for (int i = lowerBound; i >= 0; i--)
-        {
-            float x = actualX - (i * 100);
-            float y = actualY * x / actualX;
-            if (i == 0)
-            {
-                resolutions.Add(CreateComboBoxItem(x + " x " + y + " (" + ResourceLoader.GetForCurrentView().GetString("DefaultResolutionIndicator") + ")", x + "," + y));
-            }
-            else
-            {
-                resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
-            }
+        resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("DefaultResolutionIndicator") + ")",
+            actualX + "," + actualY));
+        comboBox.SelectedIndex = resolutions.Count - 1;
 
-        }
-
-        comboBox.SelectedIndex = lowerBound + 1;
-
-        for (int i = 1; actualX + (i * 200) < maxX && actualY * (actualX + (i * 200)) / actualX < maxY; i++)
-        {
-            float x = actualX + (i * 200);
-            float y = actualY * x / actualX;
-            resolutions.Add(CreateComboBoxItem(x + " x " + y, x + "," + y));
-        }
-        resolutions.Add(CreateComboBoxItem(maxX.ToString() + " x " + maxY.ToString(), maxX.ToString() + "," + maxY.ToString()));
-
-        comboBox.IsEnabled = true;
+        resolutions.Add(CreateComboBoxItem(maxX + " DPI", maxX + "," + maxY));
     }
 
 
     /// <summary>
-    ///     Returns the tuple fitting to the corresponding ComboBox entry selected by the user.
+    ///     Returns the tuple fitting to the corresponding <paramref name="comboBoxFormat"/> entry selected by the user.
     /// </summary>
-    /// <remarks>
-    ///     Returns ImageScannerFormat.bitmap as base format if no other match was found.
-    /// </remarks>
     /// <returns>
     ///     The corresponding format tuple consisting of:
-    ///         (1) ImageScannerFormat  baseFormat
-    ///         (2) string              formatToConvertTo
+    ///         (1) <see cref="ImageScannerFormat"/>    baseFormat
+    ///         (2) <see cref="string"/>                formatToConvertTo
     ///     If no conversion is necessary, the string will be null.
     ///     
+    ///     Returns <see cref="ImageScannerFormat.bitmap"/> as base format if no other match was found.
+    /// 
     ///     Returns null if no format has been selected by the user.
     /// </returns>
+    /// <param name="comboBoxFormat">The <see cref="ComboBox"/> that contains the format list.</param>
+    /// <param name="formats">The <see cref="ObservableCollection{ComboBoxItem}"/> that contains the selected <see cref="ComboBoxItem"/>.</param>
     public static Tuple<ImageScannerFormat, string> GetDesiredFormat(ComboBox comboBoxFormat, ObservableCollection<ComboBoxItem> formats)
     {
         if (comboBoxFormat.SelectedIndex == -1)
@@ -143,29 +113,39 @@ class ScannerOperation
 
 
     /// <summary>
-    ///     Gets the formats supported by the given scanner's configuration. If the corresponding option is enabled and a base image
+    ///     Extracts the selected <see cref="ImageScannerResolution?"/> from the <paramref name="comboBoxResolution"/>.
+    /// </summary>
+    /// <param name="comboBoxResolution">The <see cref="ComboBox"/> that holds the resolutions.</param>
+    /// <returns>null if no resolution has been selected.</returns>
+    public static ImageScannerResolution? GetDesiredResolution(ComboBox comboBoxResolution)
+    {
+        if (comboBoxResolution.SelectedIndex == -1) return null;
+        else return new ImageScannerResolution
+        {
+            DpiX = float.Parse(((ComboBoxItem) comboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
+            DpiY = float.Parse(((ComboBoxItem) comboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
+        };
+    }
+
+
+    /// <summary>
+    ///     Gets the formats supported by <paramref name="config"/>. If <see cref="settingUnsupportedFileFormat"/> is true and a base image
     ///     format is supported, also add unsupported formats which can be reached through conversion. The formats are added in this order:
     ///         JPG -> PNG -> PDF -> XPS -> OpenXPS -> TIF -> BMP
+    ///     All available formats are added to <paramref name="formats"/>.
     /// </summary>
-    /// <param name="config">
-    ///     The configuration that determines whether to check the auto, flatbed or feeder mode.
-    /// </param>
-    /// <param name="formats">
-    ///     The ObservableCollection that will contain the ComboBoxItems for the formats.
-    /// </param>
-    /// <param name="selectedScanner">
-    ///     The scanner that the configuration belongs to.
-    /// </param>
+    /// <param name="config">The configuration that determines whether to check the auto, flatbed or feeder mode.</param>
+    /// <param name="formats">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s for the formats.</param>
+    /// <param name="selectedScanner">The <see cref="ImageScanner"/> that the <paramref name="config"/> belongs to.</param>
+    /// <param name="comboBoxFormats">The <see cref="ComboBox"/> that contains the formats.</param>
     public static void GetSupportedFormats(IImageScannerFormatConfiguration config, ObservableCollection<ComboBoxItem> formats,
         ImageScanner selectedScanner, ComboBox comboBoxFormats)
     {
-        comboBoxFormats.IsEnabled = false;
-
         string currentlySelected = "";
         LinkedList<string> newNativeFormats = new LinkedList<string>();
         bool canConvert = false;
 
-        // save currently selected format to hoepfully reselect it after the update
+        // save currently selected format to hopefully reselect it after the update
         if ((ComboBoxItem) comboBoxFormats.SelectedItem != null) currentlySelected = ((ComboBoxItem) comboBoxFormats.SelectedItem).Tag.ToString().Split(",")[0];
         formats.Clear();
 
@@ -212,12 +192,22 @@ class ScannerOperation
         {
             if (((ComboBoxItem) formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
         }
-
-        comboBoxFormats.IsEnabled = true;
     }
 
 
-    // TODO add documentation
+    /// <summary>
+    ///     Scans in correct mode by looking at the three <see cref="RadioButton"/>s that represent each mode.
+    ///     The file is saved to the <paramref name="folder"/>.
+    /// </summary>
+    /// <exception cref="Exception()">No <see cref="RadioButton"/> is checked.</exception>
+    /// <param name="radioButtonAuto">The <see cref="RadioButton"/> representing the auto mode.</param>
+    /// <param name="radioButtonFlatbed">The <see cref="RadioButton"/> representing the flatbed mode.</param>
+    /// <param name="radioButtonFeeder">The <see cref="RadioButton"/> representing the feeder mode.</param>
+    /// <param name="folder">The <see cref="StorageFolder"/> that the scan is saved to.</param>
+    /// <param name="cancellationToken">The token that can be used to cancel the scan.</param>
+    /// <param name="progress">The progress of the scan.</param>
+    /// <param name="scanner">The <see cref="ImageScanner"/> that will perform the scan.</param>
+    /// <returns></returns>
     public async static Task<ImageScannerScanResult> ScanInCorrectMode(RadioButton radioButtonAuto, RadioButton radioButtonFlatbed, 
         RadioButton radioButtonFeeder, StorageFolder folder, CancellationTokenSource cancellationToken, Progress<UInt32> progress,
         ImageScanner scanner)
@@ -241,9 +231,22 @@ class ScannerOperation
     }
 
 
+    /// <summary>
+    ///     Checks whether the scan result is valid.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
     public static bool ScanResultValid(ImageScannerScanResult result)
     {
-        try { return (result != null && result.ScannedFiles != null && result.ScannedFiles[0] != null && result.ScannedFiles.Count != 0); }
-        catch (Exception) { return false; }
+        try {
+            return (result != null 
+                    && result.ScannedFiles != null 
+                    && result.ScannedFiles[0] != null 
+                    && result.ScannedFiles.Count != 0);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

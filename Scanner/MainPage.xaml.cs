@@ -1,4 +1,4 @@
-﻿using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+
 using static Globals;
 using static ScannerOperation;
 using static Utilities;
@@ -33,21 +34,26 @@ namespace Scanner
     public sealed partial class MainPage : Page
     {
         private DeviceWatcher scannerWatcher;
-        private double ColumnLeftDefaultMaxWidth;
-        private double ColumnLeftDefaultMinWidth;
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
         private List<DeviceInformation> deviceInformations = new List<DeviceInformation>();
+        CancellationTokenSource cancellationToken = null;
+
         private ImageScanner selectedScanner = null;
+        private StorageFile scannedFile;
+        ImageProperties imageProperties;
+
+        private double ColumnLeftDefaultMaxWidth;
+        private double ColumnLeftDefaultMinWidth;
+        private bool inForeground = true;
+
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
-        private StorageFile scannedFile;
+        
         private UIstate uiState = UIstate.unset;
         private FlowState flowState = FlowState.initial;
-        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-        private bool inForeground = true;
-        CancellationTokenSource cancellationToken = null;
         private bool canceledScan = false;
-        ImageProperties imageProperties;
+
+        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
 
         public MainPage()
@@ -56,6 +62,7 @@ namespace Scanner
 
             TextBlockHeader.Text = Package.Current.DisplayName.ToString();
 
+            // localize hyperlink
             ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = LocalizedString("HyperlinkScannerSelectionHintBodyLink");
 
             Page_ActualThemeChanged(null, null);
@@ -65,17 +72,25 @@ namespace Scanner
             ColumnLeftDefaultMinWidth = ColumnLeft.MinWidth;
 
             // populate the scanner list
-            refreshScannerList();
+            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
+            scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
+            scannerWatcher.Added += OnScannerAdded;
+            scannerWatcher.Removed += OnScannerRemoved;
+            scannerWatcher.EnumerationCompleted += OnScannerEnumerationComplete;
+            scannerWatcher.Start();
 
+            // register event listeners ////////////////////////////////////////////////////////////////
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerEntered += InkCanvasScan_PointerEntered;
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerExited += InkCanvasScan_PointerExited;
-
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-
             CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
             CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
         }
 
+
+        /// <summary>
+        ///     Open the Windows 10 sharing panel.
+        /// </summary>
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
@@ -83,20 +98,15 @@ namespace Scanner
         }
 
 
-        public void refreshScannerList()
-        {
-            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
-            // Create a Device Watcher class for type Image Scanner for enumerating scanners
-            scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
-
-            scannerWatcher.Added += OnScannerAdded;
-            scannerWatcher.Removed += OnScannerRemoved;
-            scannerWatcher.EnumerationCompleted += OnScannerEnumerationComplete;
-
-            scannerWatcher.Start();
-        }
-
-
+        /// <summary>
+        ///     Refreshes the left panel according to the currently selected item of <see cref="ComboBoxScanners"/>.
+        ///     If necessary, it loads the correct <see cref="ImageScanner"/> into <see cref="selectedScanner"/>.
+        ///     Enables all scanning mode <see cref="RadioButton"/>s according to the supported modes of the selected
+        ///     scanner.
+        ///     If an error occurs while attempting to retrieve the new scanner, an error message is displayed, the
+        ///     scanner list is emptied and automatic scanner selection is disabled through <see cref="possiblyDeadScanner"/>
+        ///     until a scanner's information could be successfully retrieved again.
+        /// </summary>
         public async void refreshLeftPanel()
         {
             if (ComboBoxScanners.SelectedIndex == -1)
@@ -127,9 +137,9 @@ namespace Scanner
                 // hide text on the right side
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
 
-                if (selectedScanner == null)
+                if (selectedScanner == null || selectedScanner.DeviceId != ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag.ToString())
                 {
-                    // previously no scanner selected ////////////////////////////////////////////////////
+                    // previously different/no scanner selected ////////////////////////////////////////////////////
                     // get scanner's DeviceInformation
                     foreach (DeviceInformation check in deviceInformations)
                     {
@@ -169,6 +179,10 @@ namespace Scanner
                 bool flatbedAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
                 bool feederAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Feeder);
 
+                RadioButtonSourceAutomatic.IsEnabled = autoAllowed;
+                RadioButtonSourceFlatbed.IsEnabled = flatbedAllowed;
+                RadioButtonSourceFeeder.IsEnabled = feederAllowed;
+
                 // select first available source mode if none was selected previously
                 if (RadioButtonSourceAutomatic.IsChecked != true 
                     && RadioButtonSourceFlatbed.IsChecked != true 
@@ -202,6 +216,15 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     The event listener for when the <see cref="scannerWatcher"/> finds a new scanner. Adds the scanner to
+        ///     <see cref="scannerList"/> (as <see cref="ComboBoxItem"/>) and its <paramref name="deviceInfo"/> 
+        ///     to <see cref="deviceInformations"/> if it isn't identified as duplicate.
+        /// </summary>
+        /// <remarks>
+        ///     The <see cref="ComboBoxItem"/>s added to <see cref="scannerList"/> contain the scanner's name as
+        ///     content and its ID as tag. 
+        /// </remarks>
         private async void OnScannerAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -237,6 +260,7 @@ namespace Scanner
                     }
                     else return;
 
+                    // auto select first added scanner (if some requirements are met)
                     if (!possiblyDeadScanner && !ComboBoxScanners.IsDropDownOpen && settingAutomaticScannerSelection
                         && selectedScanner == null && deviceInformations.Count == 1)
                     {
@@ -249,6 +273,11 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     The event listener for when the <see cref="scannerWatcher"/> removes a previously found scanner. The
+        ///     <see cref="scannerList"/> is searched by ID (added to the <see cref="ComboBoxItem"/>s as tag and
+        ///     if a matching item is found, it is removed.
+        /// </summary>
         private async void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -281,17 +310,28 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     The event listener for when the <see cref="scannerWatcher"/> has finished adding all initially
+        ///     available scanners.
+        /// </summary>
         private async void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
                 {
                     TextBlockFoundScannersHint.Visibility = Visibility.Visible;
-                    UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);                }
+                    if (ComboBoxScanners.SelectedIndex == -1)
+                    {
+                        UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
+                    }
+                }
             );
         }
 
 
+        /// <summary>
+        ///     The event listener for when the page's size has changed. Responsible for the responsive design.
+        /// </summary>
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // responsive behavior
@@ -401,11 +441,10 @@ namespace Scanner
             }
         }
 
+
         /// <summary>
         ///     Opens the currently selected scan folder and selects the currently visible result if possible.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void ButtonRecents_Click(object sender, RoutedEventArgs e)
         {
             if (flowState != FlowState.result)
@@ -433,6 +472,10 @@ namespace Scanner
             
         }
 
+
+        /// <summary>
+        ///     Enables and disables controls in the left panel.
+        /// </summary>
         private async void UI_enabled(bool comboBoxScannerSource, bool radioButtonRadioButtonSourceAutomatic, bool radioButtonSourceFlatbed,
             bool radioButtonSourceFeeder, bool radioButtonColorModeColor, bool radioButtonColorModeGrayscale, bool radioButtonColorModeMonochrome,
             bool comboBoxResolution, bool comboBoxType, bool buttonScan, bool buttonSettings, bool buttonRecents)
@@ -450,7 +493,6 @@ namespace Scanner
                 ComboBoxResolution.IsEnabled = comboBoxResolution;
                 ComboBoxFormat.IsEnabled = comboBoxType;
                 ButtonScan.IsEnabled = buttonScan;
-                if (buttonScan) TextBlockButtonScan.Opacity = 1; else TextBlockButtonScan.Opacity = 0.5;
                 ButtonSettings.IsEnabled = buttonSettings;
                 ButtonRecents.IsEnabled = buttonRecents;
             }
@@ -458,7 +500,31 @@ namespace Scanner
         }
 
 
-        private async void ButtonScan_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        ///     Gathers all options, runs multiple checks and then conducts a scan using <see cref="selectedScanner"/>. The result
+        ///     is saved to <see cref="scanFolder"/> and afterwards available as <see cref="scannedFile"/>. 
+        /// </summary>
+        /// <remarks>
+        ///     Returns the app to its initial state and disables/hides all buttons apart from the <see cref="ButtonRecents"/>.
+        ///     If <see cref="scanFolder"/> is null, an error is shown and the scan doesn't commence.
+        ///     If gathering the options (configuration, color mode, resolution, file format) fails, an error message
+        ///     is shown and the scan doesn't commence.
+        ///     Catches exceptions that may occur while scanning, displays an error message and returns to the initial
+        ///     state - the same happens if the result is deemed invalid by <see cref="ScanResultValid(ImageScannerScanResult)"/>.
+        ///     If the target format is only supported through conversion, the method converts the base file and replaces it with
+        ///     the new one. In case the conversion fails, an error message is shown and the base file left intact.
+        ///     Shows the result in the right pane if it's an image or pdf file, otherwise a <see cref="MessageDialog"/> is
+        ///     shown that allows the user to show the file in its folder. Pdf files are displaying by converting the first page
+        ///     to a bitmap file.
+        ///     Triggers the transition to the <see cref="FlowState.result"/> (if a preview is available) and updates the UI
+        ///     accordingly with <see cref="CommandBar"/>s and all of the other fancy stuff.
+        ///     If the scan is completed while <see cref="inForeground"/> is false, a ToastNotification is sent.
+        ///     As the final step the buttons in the left panel are reenabled.
+        ///     Simple, right?
+        /// 
+        ///     Only supports a single-page scan, otherwise the behavior is undefined.
+        /// </remarks>
+        private async void Scan(object sender, RoutedEventArgs e)
         {
             // lock (almost) entire left panel and clean up right side
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
@@ -511,7 +577,7 @@ namespace Scanner
                 else selectedScanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
 
                 // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution();
+                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
                     ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
@@ -536,7 +602,7 @@ namespace Scanner
                 else selectedScanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
 
                 // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution();
+                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
                     ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
@@ -553,15 +619,15 @@ namespace Scanner
                 ShowMessageDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
             }
 
-            // start scan and show progress and cancel button
+            // start scan, send progress and show cancel button
             cancellationToken = new CancellationTokenSource();
             var progress = new Progress<UInt32>(scanProgress);
 
             ImageScannerScanResult result = null;
+            ButtonCancel.Visibility = Visibility.Visible;
 
             try
             {
-                ButtonCancel.Visibility = Visibility.Visible;
                 result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
                 RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
             }
@@ -638,21 +704,19 @@ namespace Scanner
             }
 
             cancellationToken = null;
-            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
 
             if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
             localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
-            // show result
+            // show result /////////////////////////////////
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;
-            flowState = FlowState.result;
 
             // react differently to different formats
             switch (scannedFile.FileType)
             {
-                case "pdf":     // result is a PDF file
+                case ".pdf":     // result is a PDF file
                     try
                     {
                         PdfDocument doc = await PdfDocument.LoadFromFileAsync(scannedFile);
@@ -679,9 +743,10 @@ namespace Scanner
                         return;
                     }
                     ShowPrimaryMenuConfig(PrimaryMenuConfig.pdf);
+                    flowState = FlowState.result;
                     break;
-                case "xps":     // result is an XPS file
-                case "oxps":    // result is an OXPS file
+                case ".xps":     // result is an XPS file
+                case ".oxps":    // result is an OXPS file
                     MessageDialog dialog = new MessageDialog(LocalizedString("MessageFileSavedBody"), LocalizedString("MessageFileSavedHeader"));
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedOpenFolder"), (x) => ButtonRecents_Click(null, null)));
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedClose"), (x) => { }));
@@ -694,7 +759,6 @@ namespace Scanner
                     try
                     {
                         DisplayImageAsync(scannedFile, ImageScanViewer);
-                        await ImageCropper.LoadImageFromFile(scannedFile);
                     }
                     catch (Exception)
                     {
@@ -709,6 +773,8 @@ namespace Scanner
                     }
                     SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
                     ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                    flowState = FlowState.result;
+                    imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
                     break;
             }
 
@@ -716,6 +782,7 @@ namespace Scanner
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
             // modify UI
+            Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
@@ -737,16 +804,10 @@ namespace Scanner
             return null;
         }
 
-        private ImageScannerResolution? GetDesiredResolution()
-        {
-            if (ComboBoxResolution.SelectedIndex == -1) return null;
-            else return new ImageScannerResolution
-                            {
-                                DpiX = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
-                                DpiY = float.Parse(((ComboBoxItem)ComboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
-                            };
-        }
 
+        /// <summary>
+        ///     Reverts UI and variable changes that were made by commencing a scan.
+        /// </summary>
         private void ScanCanceled()
         {
             ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
@@ -761,7 +822,6 @@ namespace Scanner
 
             Page_SizeChanged(null, null);
             UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
-
         }
 
 
@@ -775,16 +835,11 @@ namespace Scanner
         ///     Is called if another source mode was selected. Hides/shows available options in the left panel and updates the available file formats. 
         ///     The first available color mode and format are automatically selected.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void RadioButtonSourceChanged(object sender, RoutedEventArgs e)
         {
             if (RadioButtonSourceAutomatic.IsChecked == true)
             {
                 refreshLeftPanel();
-
-                // detect available file formats and update UI accordingly
-                GetSupportedFormats(selectedScanner.AutoConfiguration, formats, selectedScanner, ComboBoxFormat);
 
                 RadioButtonColorModeColor.IsEnabled = false;
                 RadioButtonColorModeGrayscale.IsEnabled = false;
@@ -793,16 +848,14 @@ namespace Scanner
                 RadioButtonColorModeColor.IsChecked = false;
                 RadioButtonColorModeGrayscale.IsChecked = false;
                 RadioButtonColorModeMonochrome.IsChecked = false;
+
+                // detect available file formats and update UI accordingly
+                GetSupportedFormats(selectedScanner.AutoConfiguration, formats, selectedScanner, ComboBoxFormat);
+                ComboBoxFormat.IsEnabled = true;
             }
             else if (RadioButtonSourceFlatbed.IsChecked == true)
             {
                 refreshLeftPanel();
-
-                // detect available file formats and update UI accordingly
-                GetSupportedFormats(selectedScanner.FlatbedConfiguration, formats, selectedScanner, ComboBoxFormat);
-
-                // detect available resolutions and update UI accordingly
-                GenerateResolutions(selectedScanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
 
                 // detect available color modes and update UI accordingly
                 RadioButtonColorModeColor.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
@@ -812,17 +865,23 @@ namespace Scanner
                 if (RadioButtonColorModeColor.IsEnabled) RadioButtonColorModeColor.IsChecked = true;
                 else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
                 else if (RadioButtonColorModeMonochrome.IsEnabled) RadioButtonColorModeMonochrome.IsChecked = true;
+
+                // detect available resolutions and update UI accordingly
+                GenerateResolutions(selectedScanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
+                ComboBoxResolution.IsEnabled = true;
+
+                // show flatbed/feeder-specific options
+                StackPanelColor.Visibility = Visibility.Visible;
+                StackPanelResolution.Visibility = Visibility.Visible;
+
+                // detect available file formats and update UI accordingly
+                GetSupportedFormats(selectedScanner.FlatbedConfiguration, formats, selectedScanner, ComboBoxFormat);
+                ComboBoxFormat.IsEnabled = true;
             }
             else if (RadioButtonSourceFeeder.IsChecked == true)
             {
                 refreshLeftPanel();
 
-                // detect available file formats and update UI accordingly
-                GetSupportedFormats(selectedScanner.FeederConfiguration, formats, selectedScanner, ComboBoxFormat);
-
-                // detect available resolutions and update UI accordingly
-                GenerateResolutions(selectedScanner.FeederConfiguration, ComboBoxResolution, resolutions);
-                    
                 // detect available color modes and update UI accordingly
                 RadioButtonColorModeColor.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
                 RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
@@ -831,30 +890,67 @@ namespace Scanner
                 if (RadioButtonColorModeColor.IsEnabled) RadioButtonColorModeColor.IsChecked = true;
                 else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
                 else if (RadioButtonColorModeMonochrome.IsEnabled) RadioButtonColorModeMonochrome.IsChecked = true;
+
+                // detect available resolutions and update UI accordingly
+                GenerateResolutions(selectedScanner.FeederConfiguration, ComboBoxResolution, resolutions);
+                ComboBoxResolution.IsEnabled = true;
+
+                // show flatbed/feeder-specific options
+                StackPanelColor.Visibility = Visibility.Visible;
+                StackPanelResolution.Visibility = Visibility.Visible;
+
+                // detect available file formats and update UI accordingly
+                GetSupportedFormats(selectedScanner.FeederConfiguration, formats, selectedScanner, ComboBoxFormat);
+                ComboBoxFormat.IsEnabled = true;
             }
         }
 
+
+        /// <summary>
+        ///     The event listener for when <see cref="AppBarButtonCopy"/> is clicked. Copies the currently visible
+        ///     result file to the clipboard. And sends a toast notification as confirmation.
+        /// </summary>
         private void AppBarButtonCopy_Click(object sender, RoutedEventArgs e)
         {
+            // create DataPackage for clipboard
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
-            Clipboard.SetContent(dataPackage);
-            SendToastNotification("Copied scan to the clipboard", "", 5, scannedFile.Path);
+
+            // cet contents according to file type and copy to clipboard
+            string fileExtension = scannedFile.FileType;
+            switch (fileExtension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".tif":
+                case ".bmp":
+                    dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
+                    Clipboard.SetContent(dataPackage);
+                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5, scannedFile.Path);
+                    break;
+                default:
+                    List<StorageFile> list = new List<StorageFile>();
+                    list.Add(scannedFile);
+                    dataPackage.SetStorageItems(list);
+                    Clipboard.SetContent(dataPackage);
+                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5);
+                    break;
+            }
         }
 
+
+        /// <summary>
+        ///     The event listener for when the settings button is clicked. Transitions to the settings page.
+        /// </summary>
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SettingsPage), null, new EntranceNavigationTransitionInfo());
         }
 
-        private void ButtonSettings_Click(IUICommand command)
-        {
-            ButtonSettings_Click(null, null);
-        }
 
         /// <summary>
-        ///     Opens up the Windows 10 share menu next to AppBarButtonShare and shares the current <see cref="scannedFile"/>.
+        ///     Opens up the Windows 10 share menu next to <see cref="AppBarButtonShare"/> using the <see cref="dataTransferManager"/>.
         /// </summary>
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
         {
@@ -867,6 +963,12 @@ namespace Scanner
             DataTransferManager.ShowShareUI(shareUIOptions);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonDelete"/> is clicked.
+        ///     Disables both CommandBars while working and attempts to delete the <see cref="scannedFile"/>.
+        ///     If it fails, an error message is shown.
+        /// </summary>
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             LockCommandBar(CommandBarPrimary);
@@ -889,10 +991,17 @@ namespace Scanner
             UnlockCommandBar(CommandBarPrimary, null);
             UnlockCommandBar(CommandBarSecondary, null);
             flowState = FlowState.initial;
+            Page_SizeChanged(null, null);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
+        ///     Shows an error message if it fails (e.g. if the file name is already occupied).
+        /// </summary>
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
         {
+            if (TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1] == scannedFile.Name) return;
             try
             {
                 await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);
@@ -905,16 +1014,26 @@ namespace Scanner
             FlyoutAppBarButtonRename.Hide();
         }        
 
+
+        /// <summary>
+        ///     The event listener for when the rename flyout is opened. Fills in the current file name.
+        /// </summary>
         private void FlyoutAppBarButtonRename_Opening(object sender, object e)
         {
             TextBoxRename.Text = scannedFile.Name.Split(".")[0];
         }
 
-        private void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonCrop"/> is clicked/checked. Transitions
+        ///     to the crop state and disables the <see cref="CommandBarPrimary"/>.
+        /// </summary>
+        private async void AppBarButtonCrop_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
             LockCommandBar(CommandBarPrimary);
 
+            await ImageCropper.LoadImageFromFile(scannedFile);
             flowState = FlowState.crop;
 
             // make sure that the ImageCropper won't be obstructed
@@ -930,15 +1049,18 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Reacts to the enter key while TextBoxRename is focused.
+        ///     Reacts to the enter key while <see cref="TextBoxRename"/> is focused, which acts as a confirmation.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void TextBoxRename_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter) ButtonRename_Click(sender, null);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonRotate"/> is clicked.
+        ///     Disables all CommandBars while working and rotates the current result 90° clockwise.
+        /// </summary>
         private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
         {
             LockCommandBar(CommandBarPrimary);
@@ -957,16 +1079,24 @@ namespace Scanner
             catch (Exception)
             {
                 ShowMessageDialog(LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                return;
             }
 
             DisplayImageAsync(scannedFile, ImageScanViewer);
             stream.Dispose();
-            await ImageCropper.LoadImageFromFile(scannedFile);
 
             UnlockCommandBar(CommandBarPrimary, null);
             UnlockCommandBar(CommandBarSecondary, null);
+
+            // refresh image properties
+            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
         }
 
+
+        /// <summary>
+        ///     The event listener for when the app theme changed. Makes sure that the shadows are correctly
+        ///     displayed while in dark or light mode.
+        /// </summary>
         private void Page_ActualThemeChanged(FrameworkElement sender, object args)
         {
             if (settingAppTheme == Theme.system)
@@ -991,10 +1121,8 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Page was loaded (possibly through navigation).
+        ///     Page was loaded (possibly through navigation). Reacts to settings changes if necessary.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (formatSettingChanged)
@@ -1007,6 +1135,11 @@ namespace Scanner
             else ProgressBarRefresh.Visibility = Visibility.Collapsed;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonDone"/> is clicked.
+        ///     Hides the result and returns the app to its initial state.
+        /// </summary>
         private void AppBarButtonDone_Click(object sender, RoutedEventArgs e)
         {
             flowState = FlowState.initial;
@@ -1016,6 +1149,11 @@ namespace Scanner
             Page_SizeChanged(null, null);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the layout of the <see cref="ScrollViewerScan"/> changes.
+        ///     Makes sure that the image doesn't slip outside the window boundaries.
+        /// </summary>
         private void ScrollViewerScan_LayoutUpdated(object sender, object e)
         {
             // fix image, might otherwise slip outside the window's boundaries
@@ -1026,6 +1164,11 @@ namespace Scanner
             ViewBoxScan.Height = ImageScanViewer.ActualHeight;
         }
 
+
+        /// <summary>
+        ///     The event listener for when a new scanner has been selected from the <see cref="ComboBoxScanners"/>.
+        ///     Disabled the <see cref="ComboBox"/> to let <see cref="refreshLeftPanel"/> deal with this safely.
+        /// </summary>
         private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxScanners.IsEnabled = false;
@@ -1033,6 +1176,9 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     The event listener for when a key is pressed on the MainPage. Used to process shortcuts.
+        /// </summary>
         private void GridMainPage_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (IsCtrlKeyPressed())
@@ -1051,6 +1197,11 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="ButtonCancel"/> is pressed during a scan.
+        ///     Attempts to cancel the currently running scan and displays an error if it failed.
+        /// </summary>
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             if (cancellationToken != null)
@@ -1068,6 +1219,10 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     Informs the user that an error occured during the scan. Sends a toast if <see cref="inForeground"/> == false.
+        /// </summary>
+        /// <param name="exc">The exception of wich the HResult shall be printed as well.</param>
         private void ScannerError(System.Runtime.InteropServices.COMException exc)
         {
             // scanner error while scanning
@@ -1083,6 +1238,9 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     Informs the user that an error occured during the scan. Sends a toast if <see cref="inForeground"/> == false.
+        /// </summary>
         private void ScannerError()
         {
             // unknown error while scanning
@@ -1097,6 +1255,11 @@ namespace Scanner
             return;
         }
 
+
+        /// <summary>
+        ///     Sets the aspect Ratio of the <see cref="ImageCropper"/> to a fixed value according to which
+        ///     <see cref="ToggleMenuFlyoutItem"/> triggered the method.
+        /// </summary>
         private void SetFixedAspectRatio(object sender, RoutedEventArgs e)
         {
             // only check selected item
@@ -1111,6 +1274,10 @@ namespace Scanner
             ImageCropper.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString());
         }
 
+
+        /// <summary>
+        ///     Resets the aspect ratio of <see cref="ImageCropper"/> to allow for free cropping.
+        /// </summary>
         private void SetCustomAspectRatio(object sender, RoutedEventArgs e)
         {
             // only check selected item
@@ -1125,6 +1292,12 @@ namespace Scanner
             ImageCropper.AspectRatio = null;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonDiscard"/> is clicked.
+        ///     Discards the changes of the currently active crop/drawing and returns the UI
+        ///     to a neutral state.
+        /// </summary>
         private void AppBarButtonDiscard_Click(object sender, RoutedEventArgs e)
         {
             switch (flowState)
@@ -1153,9 +1326,15 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonSave"/> is clicked. Saves the changes of
+        ///     the current crop/drawing to the <see cref="scannedFile"/> and shows an error message if it fails.
+        ///     Afterwards refreshes the <see cref="ImageScanViewer"/> and returns the UI to normal.
+        ///     The CommandBars are disabled while the method is working.
+        /// </summary>
         private async void AppBarButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            LockCommandBar(CommandBarPrimary);
             LockCommandBar(CommandBarSecondary);
 
             switch (flowState)
@@ -1180,10 +1359,6 @@ namespace Scanner
                     // refresh preview and properties
                     DisplayImageAsync(scannedFile, ImageScanViewer);
                     imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
-
-                    // return UI to normal
-                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
-                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
                     
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
@@ -1220,20 +1395,30 @@ namespace Scanner
                     // refresh preview
                     DisplayImageAsync(scannedFile, ImageScanViewer);
 
-                    // return UI to normal
-                    if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
-                    else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
-
                     flowState = FlowState.result;
                     AppBarButtonDraw.IsChecked = false;
                     InkCanvasScan.Visibility = Visibility.Collapsed;
                     break;
             }
 
-            UnlockCommandBar(CommandBarPrimary, null);
-            UnlockCommandBar(CommandBarSecondary, null);
+            // return UI to normal
+            if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+            else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
+
+            // reload file with new properties
+            imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
+
+            UnlockCommandBar(CommandBarSecondary);
+            UnlockCommandBar(CommandBarPrimary);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonSaveCopy"/> is clicked. Saves the changes of
+        ///     the current crop/drawing to a new file in the same folder as the <see cref="scannedFile"/> and 
+        ///     shows an error message if it fails.
+        ///     The <see cref="CommandBarSecondary"/> is disabled while the method is working.
+        /// </summary>
         private async void AppBarButtonSaveCopy_Click(object sender, RoutedEventArgs e)
         {
             LockCommandBar(CommandBarSecondary);
@@ -1256,9 +1441,7 @@ namespace Scanner
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
-
                     stream.Dispose();
-
                     break;
                 case FlowState.draw:
                     // save as new file
@@ -1294,13 +1477,17 @@ namespace Scanner
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
-
                     break;
             }
 
             UnlockCommandBar(CommandBarSecondary, null);
         }
 
+
+        /// <summary>
+        ///     Shows a pre-defined configuration of the <see cref="CommandBarPrimary"/>.
+        /// </summary>
+        /// <param name="config">The <see cref="PrimaryMenuConfig"/> that shall be shown.</param>
         private void ShowPrimaryMenuConfig(PrimaryMenuConfig config)
         {
             switch (config)
@@ -1347,6 +1534,11 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     Shows a pre-defined configuration of the <see cref="CommandBarSecondary"/>.
+        /// </summary>
+        /// <param name="config">The <see cref="SecondaryMenuConfig"/> that shall be shown.</param>
         private void ShowSecondaryMenuConfig(SecondaryMenuConfig config)
         {
             switch (config)
@@ -1396,11 +1588,19 @@ namespace Scanner
             }
         }
 
-        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        ///     Flips the aspect ratio of the <see cref="ImageCropper"/>.
+        /// </summary>
+        private void FlipAspectRatio(object sender, RoutedEventArgs e)
         {   
             ImageCropper.AspectRatio = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonDraw"/> is clicked/checked.
+        /// </summary>
         private void AppBarButtonDraw_Checked(object sender, RoutedEventArgs e)
         {
             // deactivate all buttons
@@ -1414,6 +1614,12 @@ namespace Scanner
             InkCanvasScan.Visibility = Visibility.Visible;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the pointer entered the <see cref="InkCanvasScan"/>. If the pointer
+        ///     belongs to a pen and the app is in drawing mode, the <see cref="CommandBarPrimary"/>
+        ///     and <see cref="CommandBarSecondary"/> are hidden.
+        /// </summary>
         private void InkCanvasScan_PointerEntered(InkUnprocessedInput input, PointerEventArgs e)
         {
             if (flowState == FlowState.draw && e.CurrentPoint.PointerDevice.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
@@ -1423,6 +1629,12 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     The event listener for when the pointer exited the <see cref="InkCanvasScan"/>. If the app is
+        ///     in drawing mode, the corresponding <see cref="PrimaryMenuConfig"/> and <see cref="SecondaryMenuConfig"/>
+        ///     are loaded.
+        /// </summary>
         private void InkCanvasScan_PointerExited(InkUnprocessedInput input, PointerEventArgs e)
         {
             if (flowState == FlowState.draw)
@@ -1432,7 +1644,11 @@ namespace Scanner
             }
         }
 
-        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+
+        /// <summary>
+        ///     Launches the Feedback Hub and navigates it to the app's category.
+        /// </summary>
+        private async void LaunchFeedbackHub(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             try
             {
@@ -1447,5 +1663,15 @@ namespace Scanner
 
         }
 
+
+        /// <summary>
+        ///     The veent listener for when <see cref="ButtonScan"/> is enabled or disabled. Adapts the button's
+        ///     label opacity accordingly.
+        /// </summary>
+        private void ButtonScan_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool) e.NewValue == true) TextBlockButtonScan.Opacity = 1;
+            else TextBlockButtonScan.Opacity = 0.5;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
-        private string websiteUrl = "http://simon-knuth.github.io/scanner";
+        private string websiteUrl = "https://github.com/simon-knuth/scanner";
         private StorageFolder newScanFolder = null;
 
         public SettingsPage()
