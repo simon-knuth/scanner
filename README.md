@@ -23,6 +23,7 @@
   <li>Resolutions</li>
   <li>Fluent design</li>
   <li>Light and dark mode</li>
+  <li>WinUI 2.2</li>
 </ul>
 
 <br><h2>💾 Download</h2>
