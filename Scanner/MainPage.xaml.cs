@@ -1043,7 +1043,7 @@ namespace Scanner
 
             // make sure that the ImageCropper won't be obstructed
             ImageCropper.Padding = new Thickness(24,
-                24 + CoreApplication.GetCurrentView().TitleBar.Height + CommandBarSecondary.ActualHeight +
+                24 + CommandBarPrimary.ActualHeight +           // use CommandBarPrimary for top padding because the other one is not rendered yet
                 DropShadowPanelCommandBarSecondary.Margin.Top, 24, 24 + CommandBarPrimary.ActualHeight +
                 DropShadowPanelCommandBarPrimary.Margin.Bottom);
 
