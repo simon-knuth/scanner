@@ -215,9 +215,9 @@ static class Utilities
     /// <param name="properties">The <see cref="ImageProperties"/> that include the dimensions.</param>
     public static void InitializeInkCanvas(InkCanvas canvas, double width, double height)
     {
+        canvas.InkPresenter.StrokeContainer.Clear();
         canvas.Width = width;
         canvas.Height = height;
-        canvas.InkPresenter.StrokeContainer.Clear();
     }
 
 

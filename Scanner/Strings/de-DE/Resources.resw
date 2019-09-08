@@ -217,6 +217,22 @@
     <value>Zurücksetzen</value>
     <comment>The text inside the button that resets the save location.</comment>
   </data>
+  <data name="CheckBoxSettingsAutomaticScannerSelection.Content" xml:space="preserve">
+    <value>Automatisch ersten verfügbaren Scanner wählen</value>
+    <comment>The header for the automatic scanner selection setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsBackgroundNotification.Content" xml:space="preserve">
+    <value>Benachrichtigung senden, wenn ein Scan im Hintergrund endet</value>
+    <comment>The header for the background notification setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsSearchIndicator.Content" xml:space="preserve">
+    <value>Scanner-Such-Indikator anzeigen</value>
+    <comment>The header for the search indicator setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
+    <value>Nicht-unterstützte Dateiformate mittels Konvertierung verfügbar machen</value>
+    <comment>The header for the unsupported formats setting toggle.</comment>
+  </data>
   <data name="ComboBoxItemSettingsThemeDark.Content" xml:space="preserve">
     <value>Dunkel</value>
     <comment>The ComboBoxItem text that for the dark theme.</comment>
@@ -588,21 +604,5 @@
   <data name="ToggleMenuFlyoutItemAspectRatioSquare.Text" xml:space="preserve">
     <value>Quadrat</value>
     <comment>The text that appears inside the menu item that sets the aspect ratio of the crop to square.</comment>
-  </data>
-  <data name="ToggleSwitchSettingsAutomaticScannerSelection.Header" xml:space="preserve">
-    <value>Automatisch ersten verfügbaren Scanner wählen</value>
-    <comment>The header for the automatic scanner selection setting toggle.</comment>
-  </data>
-  <data name="ToggleSwitchSettingsBackgroundNotification.Header" xml:space="preserve">
-    <value>Benachrichtigung senden, wenn ein Scan im Hintergrund endet</value>
-    <comment>The header for the background notification setting toggle.</comment>
-  </data>
-  <data name="ToggleSwitchSettingsSearchIndicator.Header" xml:space="preserve">
-    <value>Scanner-Such-Indikator anzeigen</value>
-    <comment>The header for the search indicator setting toggle.</comment>
-  </data>
-  <data name="ToggleSwitchSettingsUnsupportedFormat.Header" xml:space="preserve">
-    <value>Nicht-unterstützte Dateiformate mittels Konvertierung verfügbar machen</value>
-    <comment>The header for the unsupported formats setting toggle.</comment>
   </data>
 </root>

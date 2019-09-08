@@ -2,7 +2,6 @@
     x:Class="Scanner.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -22,8 +21,8 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" contract7Present:CornerRadius="3" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
-            <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" contract7Present:CornerRadius="3" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
+            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
+            <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
         </Grid>
         <controls:DropShadowPanel x:Name="DropShadowPanelBottom" Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" HorizontalContentAlignment="Stretch" Height="50" VerticalAlignment="Bottom">
             <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="{Binding Path=Height,ElementName=DropShadowPanelBottom}"/>
@@ -44,10 +43,10 @@
                             <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,0,0" IsTextSelectionEnabled="True"/>
                         </RelativePanel>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
-                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" contract7Present:CornerRadius="3" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
-                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" contract7Present:CornerRadius="3" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
+                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
+                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
                         </StackPanel>
-                        <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" contract7Present:CornerRadius="3" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged">
+                        <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
                                 <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeSystem" Content="Use system setting" Tag="0"/>
                                 <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeLight" Content="Light" Tag="1"/>
@@ -58,10 +57,10 @@
                         <Span><Run x:Uid="RunSettingsRestartHintBeforeLink" xml:space="preserve">Please </Run><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click">save and restart the app</Hyperlink><Run x:Uid="RunSettingsRestartHintAfterLink" xml:space="preserve"> for changes to take effect.</Run></Span>
                         </TextBlock>
 
-                        <ToggleSwitch x:Uid="ToggleSwitchSettingsSearchIndicator" x:Name="ToggleSwitchSearchIndicator" Header="Show scanner search indicator" Margin="0,24,0,0"/>
-                        <ToggleSwitch x:Uid="ToggleSwitchSettingsAutomaticScannerSelection" x:Name="ToggleSwitchAutomaticScannerSelection" Header="Automatically select first available scanner" Margin="0,24,0,0"/>
-                        <ToggleSwitch x:Uid="ToggleSwitchSettingsBackgroundNotification" x:Name="ToggleSwitchNotificationScanComplete" Header="Send a notification when scanning ends in the background" Margin="0,24,0,0"/>
-                        <ToggleSwitch x:Uid="ToggleSwitchSettingsUnsupportedFormat" x:Name="ToggleSwitchUnsupportedFileFormat" Header="Allow unsupported file formats by converting to them from a supported one" Margin="0,24,0,0" Toggled="ToggleSwitchUnsupportedFileFormat_Toggled"/>
+                        <CheckBox x:Uid="CheckBoxSettingsSearchIndicator" x:Name="CheckBoxSearchIndicator" Content="Show scanner search indicator" Margin="0,24,0,0"/>
+                        <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,12,0,0"/>
+                        <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0"/>
+                        <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="ToggleSwitchUnsupportedFileFormat_Toggled"/>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsFeedbackHeader" Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>

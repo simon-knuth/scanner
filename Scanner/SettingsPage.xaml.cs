@@ -76,10 +76,10 @@ namespace Scanner
                     break;
             }
             TextBlockRestart.Visibility = Visibility.Collapsed;
-            ToggleSwitchSearchIndicator.IsOn = settingSearchIndicator;
-            ToggleSwitchAutomaticScannerSelection.IsOn = settingAutomaticScannerSelection;
-            ToggleSwitchNotificationScanComplete.IsOn = settingNotificationScanComplete;
-            ToggleSwitchUnsupportedFileFormat.IsOn = settingUnsupportedFileFormat;
+            CheckBoxSearchIndicator.IsChecked = settingSearchIndicator;
+            CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
+            CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
+            CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
 
             PackageVersion version = Package.Current.Id.Version;
             TextBlockVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
@@ -97,10 +97,10 @@ namespace Scanner
             
 
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
-            settingSearchIndicator = ToggleSwitchSearchIndicator.IsOn;
-            settingAutomaticScannerSelection = ToggleSwitchAutomaticScannerSelection.IsOn;
-            settingNotificationScanComplete = ToggleSwitchNotificationScanComplete.IsOn;
-            settingUnsupportedFileFormat = ToggleSwitchUnsupportedFileFormat.IsOn;
+            settingSearchIndicator = (bool) CheckBoxSearchIndicator.IsChecked;
+            settingAutomaticScannerSelection = (bool) CheckBoxAutomaticScannerSelection.IsChecked;
+            settingNotificationScanComplete = (bool) CheckBoxNotificationScanComplete.IsChecked;
+            settingUnsupportedFileFormat = (bool) CheckBoxUnsupportedFileFormat.IsChecked;
 
             SaveSettings();
 

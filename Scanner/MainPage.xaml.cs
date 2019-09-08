@@ -91,7 +91,7 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Open the Windows 10 sharing panel.
+        ///     Opens the Windows 10 sharing panel with <see cref="scannedFile.Name"/> as title.
         /// </summary>
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
@@ -449,7 +449,7 @@ namespace Scanner
         /// </summary>
         private async void ButtonRecents_Click(object sender, RoutedEventArgs e)
         {
-            if (flowState != FlowState.result)
+            if (flowState != FlowState.result && flowState != FlowState.crop && flowState != FlowState.draw)
             {
                 // simply open folder
                 try { await Launcher.LaunchFolderAsync(scanFolder); }
@@ -471,7 +471,6 @@ namespace Scanner
                     catch (Exception) { }
                 }
             }
-            
         }
 
 
@@ -779,7 +778,7 @@ namespace Scanner
                     ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
                     flowState = FlowState.result;
 
-                    await RefreshImageMeasurementsAsync(scannedFile);
+                    imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
 
                     FixResultPositioning();
                     break;
@@ -1095,7 +1094,7 @@ namespace Scanner
             UnlockCommandBar(CommandBarSecondary, null);
 
             // refresh image properties
-            await RefreshImageMeasurementsAsync(scannedFile);
+            imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
         }
 
 
@@ -1364,7 +1363,7 @@ namespace Scanner
 
                     // refresh preview and properties
                     DisplayImageAsync(scannedFile, ImageScanViewer);
-                    await RefreshImageMeasurementsAsync(scannedFile);
+                    imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
 
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
@@ -1412,7 +1411,7 @@ namespace Scanner
             else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
 
             // reload file with new properties
-            await RefreshImageMeasurementsAsync(scannedFile);
+            imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
 
             UnlockCommandBar(CommandBarSecondary);
             UnlockCommandBar(CommandBarPrimary);
@@ -1617,6 +1616,7 @@ namespace Scanner
             // show InkCanvas and secondary commands
             ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
             InitializeInkCanvas(InkCanvasScan, imageMeasurements.Item1, imageMeasurements.Item2);
+            FixResultPositioning();
             InkCanvasScan.Visibility = Visibility.Visible;
         }
 
@@ -1671,13 +1671,18 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The veent listener for when <see cref="ButtonScan"/> is enabled or disabled. Adapts the button's
+        ///     The event listener for when <see cref="ButtonScan"/> is enabled or disabled. Adapts the button's
         ///     label opacity accordingly.
         /// </summary>
         private void ButtonScan_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool) e.NewValue == true) TextBlockButtonScan.Opacity = 1;
             else TextBlockButtonScan.Opacity = 0.5;
+        }
+
+        private void ScrollViewerScan_LayoutUpdated(object sender, object e)
+        {
+            FixResultPositioning();
         }
     }
 }
