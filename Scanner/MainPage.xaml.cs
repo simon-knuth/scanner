@@ -1155,18 +1155,28 @@ namespace Scanner
         }
 
 
-        // TODO documentation
+        /// <summary>
+        ///     Ensures that the <see cref="Image"/> and <see cref="InkCanvas"/> are sized correctly.
+        /// </summary>
         private void FixResultPositioning()
         {
             // fix image
             ImageScanViewer.MaxWidth = ScrollViewerScan.ActualWidth;
             try { ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight - CoreApplication.GetCurrentView().TitleBar.Height; }
-            catch (Exception) { ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
+            catch (Exception)
+            {
+                try { ImageScanViewer.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
+                catch (Exception) { ; }
+            }
 
             // fix viewbox containing Image and InkCanvas
             ViewBoxScan.Width = ImageScanViewer.ActualWidth;
             try { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - CoreApplication.GetCurrentView().TitleBar.Height; }
-            catch (Exception) { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
+            catch (Exception)
+            {
+                try { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
+                catch (Exception) {; }
+            }
         }
 
 
@@ -1680,6 +1690,10 @@ namespace Scanner
             else TextBlockButtonScan.Opacity = 0.5;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the layout of <see cref="ScrollViewerScan"/> changed.
+        /// </summary>
         private void ScrollViewerScan_LayoutUpdated(object sender, object e)
         {
             FixResultPositioning();
