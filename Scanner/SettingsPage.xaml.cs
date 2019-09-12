@@ -132,7 +132,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowMessageDialog("Error", "Something went wrong while picking a folder. The error message is:" + "\n" + exc.Message);
+                ShowContentDialog("Error", "Something went wrong while picking a folder. The error message is:" + "\n" + exc.Message);
                 return;
             }
 
@@ -162,12 +162,12 @@ namespace Scanner
             }
             catch (UnauthorizedAccessException)
             {
-                ShowMessageDialog("Access denied", "Access to the pictures library has been denied.");
+                ShowContentDialog("Access denied", "Access to the pictures library has been denied.");
                 return;
             }
             catch (Exception exc)
             {
-                ShowMessageDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
+                ShowContentDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
                 return;
             }
 
@@ -184,10 +184,28 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageFeedbackHubHeader"), 
+                ShowContentDialog(LocalizedString("ErrorMessageFeedbackHubHeader"), 
                     LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
             }
-            
+        }
+
+
+        /// <summary>
+        ///     Displays a <see cref="ContentDialog"/> consisting of a <paramref name="title"/>, <paramref name="message"/>
+        ///     and a button that allows the user to close the <see cref="ContentDialog"/>.
+        /// </summary>
+        /// <param name="title">The title of the <see cref="ContentDialog"/>.</param>
+        /// <param name="message">The body of the <see cref="ContentDialog"/>.</param>
+        public async void ShowContentDialog(string title, string message)
+        {
+            ContentDialogBlank.Title = title;
+            ContentDialogBlank.Content = message;
+
+            ContentDialogBlank.CloseButtonText = LocalizedString("CloseButtonText");
+            ContentDialogBlank.PrimaryButtonText = "";
+            ContentDialogBlank.SecondaryButtonText = "";
+
+            await ContentDialogBlank.ShowAsync();
         }
     }
 }

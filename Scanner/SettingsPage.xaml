@@ -11,6 +11,22 @@
     NavigationCacheMode="Disabled" 
     KeyDown="Page_KeyDown" Loading="Page_Loading">
 
+    <Page.Resources>
+        <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="CornerRadius" Value="2"/>
+        </v1809:Style>
+        <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        </v1809:Style>
+        <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="2"/>
+        </v1809:Style>
+    </Page.Resources>
+    
+    
     <Grid Name="GridSettingsPage">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -26,7 +42,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
+            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource RoundedButtonAccentStyle}" Margin="0,0,16,0" Click="ButtonSave_Click"/>
             <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
         </Grid>
         <controls:DropShadowPanel x:Name="DropShadowPanelBottom" Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" HorizontalContentAlignment="Stretch" Height="50" VerticalAlignment="Bottom">
@@ -100,5 +116,9 @@
                 </ScrollViewer>
             </RelativePanel>
         </Grid>
+
+        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        </ContentDialog>
     </Grid>
 </Page>

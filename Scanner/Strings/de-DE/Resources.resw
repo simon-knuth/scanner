@@ -225,6 +225,10 @@
     <value>Nicht-unterstützte Dateiformate mittels Konvertierung verfügbar machen</value>
     <comment>The header for the unsupported formats setting toggle.</comment>
   </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>The text inside the button that allows the user to close a message popup.</comment>
+  </data>
   <data name="ComboBoxItemSettingsThemeDark.Content" xml:space="preserve">
     <value>Dunkel</value>
     <comment>The ComboBoxItem text that for the dark theme.</comment>

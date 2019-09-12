@@ -19,6 +19,10 @@
         <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
+        <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        </v1809:Style>
         <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
             <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
             <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
@@ -193,8 +197,8 @@
             </controls:DropShadowPanel>
         </RelativePanel>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Padding="1" Title="Are you enjoying the app?" CloseButtonText="Close"
-                       DefaultButton="None" v1809:CornerRadius="3" PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
+        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Style="{StaticResource RoundedContentDialog}" Title="Are you enjoying the app?"
+                       CloseButtonText="Close" DefaultButton="Primary" PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
                        SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
@@ -207,20 +211,20 @@
             </TextBlock>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" v1809:CornerRadius="3" DefaultButton="Primary"
+        <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
                        PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
                        CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened">
-            <StackPanel Orientation="Vertical">
-                <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
-            </StackPanel>
+            <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." KeyDown="TextBoxRename_KeyDown"/>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" v1809:CornerRadius="3" DefaultButton="Primary"
+        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
                        PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
                        CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
-            <StackPanel Orientation="Vertical">
-                <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
-            </StackPanel>
+            <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin."/>
+        </ContentDialog>
+
+        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
     </Grid>

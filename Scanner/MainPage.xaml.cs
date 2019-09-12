@@ -155,7 +155,7 @@ namespace Scanner
                             catch (Exception exc)
                             {
                                 // notify user that something went wrong
-                                ShowMessageDialog(LocalizedString("ErrorMessageScannerInformationHeader"),
+                                ShowContentDialog(LocalizedString("ErrorMessageScannerInformationHeader"),
                                     LocalizedString("ErrorMessageScannerInformationBody") + "\n" + exc.Message);
 
                                 // (almost) start from scratch to hopefully get rid of dead scanners
@@ -464,6 +464,7 @@ namespace Scanner
                     catch (Exception) { }
                 }
             }
+            ShowContentDialog("Title", "This is a message.");
         }
 
 
@@ -548,7 +549,7 @@ namespace Scanner
             Tuple<ImageScannerFormat, string> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
             if (formatFlow == null)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                ShowContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
                 ScanCanceled();
                 return;
             }
@@ -564,7 +565,7 @@ namespace Scanner
                 ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
                 if (selectedColorMode == null)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ShowContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
                     ScanCanceled();
                     return;
                 }
@@ -574,7 +575,7 @@ namespace Scanner
                 ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ShowContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
                     ScanCanceled();
                     return;
                 }
@@ -589,7 +590,7 @@ namespace Scanner
                 ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
                 if (selectedColorMode == null)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ShowContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
                     ScanCanceled();
                     return;
                 }
@@ -599,7 +600,7 @@ namespace Scanner
                 ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ShowContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
                     ScanCanceled();
                     return;
                 }
@@ -610,7 +611,7 @@ namespace Scanner
             }
             else
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
+                ShowContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
             }
 
             // start scan, send progress and show cancel button
@@ -657,7 +658,7 @@ namespace Scanner
                 try { await encoder.FlushAsync(); }
                 catch (Exception)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageConversionHeader"),
+                    ShowContentDialog(LocalizedString("ErrorMessageConversionHeader"),
                         LocalizedString("ErrorMessageConversionBodyBeforeExtension") + result.ScannedFiles[0].FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
                     ScanCanceled();
                     return;
@@ -977,7 +978,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
+                ShowContentDialog(LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
                 UnlockCommandBar(CommandBarPrimary, null);
                 UnlockCommandBar(CommandBarSecondary, null);
                 return;
@@ -1006,7 +1007,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
+                ShowContentDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
                 return;
             }
             ContentDialogRename.Hide();
@@ -1067,7 +1068,7 @@ namespace Scanner
             try { await encoder.FlushAsync(); }
             catch (Exception)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                ShowContentDialog(LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
                 return;
             }
 
@@ -1209,7 +1210,7 @@ namespace Scanner
                 try { cancellationToken.Cancel(); }
                 catch (Exception)
                 {
-                    ShowMessageDialog(LocalizedString("ErrorMessageScanCancelHeader"), LocalizedString("ErrorMessageScanCancelBody"));
+                    ShowContentDialog(LocalizedString("ErrorMessageScanCancelHeader"), LocalizedString("ErrorMessageScanCancelBody"));
                     return;
                 }
             }
@@ -1230,7 +1231,7 @@ namespace Scanner
                 SendToastNotification(LocalizedString("NotificationScanErrorHeader"),
                     LocalizedString("NotificationScanErrorBody"), 5);
             }
-            ShowMessageDialog(LocalizedString("ErrorMessageScanScannerErrorHeader"),
+            ShowContentDialog(LocalizedString("ErrorMessageScanScannerErrorHeader"),
                     LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
             ScanCanceled();
             return;
@@ -1248,7 +1249,7 @@ namespace Scanner
                 SendToastNotification(LocalizedString("NotificationScanErrorHeader"),
                     LocalizedString("NotificationScanErrorBody"), 5);
             }
-            ShowMessageDialog(LocalizedString("ErrorMessageScanErrorHeader"),
+            ShowContentDialog(LocalizedString("ErrorMessageScanErrorHeader"),
                     LocalizedString("ErrorMessageScanErrorBody"));
             ScanCanceled();
             return;
@@ -1348,7 +1349,7 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
@@ -1384,7 +1385,7 @@ namespace Scanner
                         await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(scannedFile), 1f);
                     } catch (Exception)
                     {
-                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
@@ -1451,7 +1452,7 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
@@ -1487,7 +1488,7 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        ShowMessageDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                        ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
@@ -1672,7 +1673,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageFeedbackHubHeader"),
+                ShowContentDialog(LocalizedString("ErrorMessageFeedbackHubHeader"),
                     LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
             }
 
@@ -1724,6 +1725,25 @@ namespace Scanner
         private async void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             await ContentDialogDelete.ShowAsync();
+        }
+
+
+        /// <summary>
+        ///     Displays a <see cref="ContentDialog"/> consisting of a <paramref name="title"/>, <paramref name="message"/>
+        ///     and a button that allows the user to close the <see cref="ContentDialog"/>.
+        /// </summary>
+        /// <param name="title">The title of the <see cref="ContentDialog"/>.</param>
+        /// <param name="message">The body of the <see cref="ContentDialog"/>.</param>
+        public async void ShowContentDialog(string title, string message)
+        {
+            ContentDialogBlank.Title = title;
+            ContentDialogBlank.Content = message;
+
+            ContentDialogBlank.CloseButtonText = LocalizedString("CloseButtonText");
+            ContentDialogBlank.PrimaryButtonText = "";
+            ContentDialogBlank.SecondaryButtonText = "";
+
+            await ContentDialogBlank.ShowAsync();
         }
     }
 }
