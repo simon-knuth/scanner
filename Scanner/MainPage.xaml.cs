@@ -1356,12 +1356,12 @@ namespace Scanner
                     stream.Dispose();
 
                     // refresh preview and properties
+                    ImageScanViewer.SizeChanged += FinishSaving;
                     DisplayImageAsync(scannedFile, ImageScanViewer);
                     imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
 
                     flowState = FlowState.result;
                     AppBarButtonCrop.IsChecked = false;
-                    ImageCropper.Visibility = Visibility.Collapsed;
                     break;
                 case FlowState.draw:
                     // save file
@@ -1392,11 +1392,11 @@ namespace Scanner
                     stream.Dispose();
 
                     // refresh preview
+                    ImageScanViewer.SizeChanged += FinishSaving;
                     DisplayImageAsync(scannedFile, ImageScanViewer);
 
                     flowState = FlowState.result;
                     AppBarButtonDraw.IsChecked = false;
-                    InkCanvasScan.Visibility = Visibility.Collapsed;
                     break;
             }
 
@@ -1411,6 +1411,21 @@ namespace Scanner
             UnlockCommandBar(CommandBarPrimary);
         }
 
+
+        /// <summary>
+        ///     The part of <see cref="AppBarButtonSave_Click(object, RoutedEventArgs)"/>
+        ///     responsible for making the <see cref="Image"/> the transition to the changed file smooth.
+        /// </summary>
+        private void FinishSaving(object sender, SizeChangedEventArgs args)
+        {
+            if (!(imageLoading && ((Image)sender).Source == null))
+            {
+                ImageScanViewer.SizeChanged -= FinishSaving;
+                ImageCropper.Visibility = Visibility.Collapsed;
+                InkCanvasScan.Visibility = Visibility.Collapsed;
+            }
+        }
+        
 
         /// <summary>
         ///     The event listener for when the <see cref="AppBarButtonSaveCopy"/> is clicked. Saves the changes of

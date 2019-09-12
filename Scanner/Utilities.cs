@@ -116,8 +116,9 @@ static class Utilities
     {
         if (imageLoading && ((Image)sender).Source == null)
         {
-            ((Image)sender).Source = (Windows.UI.Xaml.Media.ImageSource) ((Image)sender).Tag;
-        } else
+            ((Image)sender).Source = (Windows.UI.Xaml.Media.ImageSource)((Image)sender).Tag;
+        }
+        else
         {
             imageLoading = false;
             ((Image)sender).Visibility = Visibility.Visible;
