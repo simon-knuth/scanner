@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
     NavigationCacheMode="Disabled" 
@@ -17,6 +18,10 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <v1809:Grid.BackgroundTransition>
+                <BrushTransition/>
+            </v1809:Grid.BackgroundTransition>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -28,11 +33,19 @@
             <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="{Binding Path=Height,ElementName=DropShadowPanelBottom}"/>
         </controls:DropShadowPanel>
         <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <v1809:Grid.BackgroundTransition>
+                <BrushTransition/>
+            </v1809:Grid.BackgroundTransition>
+            
             <RelativePanel x:Name="StackPanelSettings">
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
                 </controls:DropShadowPanel>
                 <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <v1809:Grid.BackgroundTransition>
+                        <BrushTransition/>
+                    </v1809:Grid.BackgroundTransition>
+
                     <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="24,0,0,8" VerticalAlignment="Top" Padding="0,0,0,0"/>
                 </Grid>
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="GridSettingsHeader" RelativePanel.AlignBottomWithPanel="True">
