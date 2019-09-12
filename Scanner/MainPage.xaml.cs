@@ -247,15 +247,7 @@ namespace Scanner
                     if (!duplicate)
                     {
                         ComboBoxItem item = new ComboBoxItem();
-
-                        if (deviceInfo.IsDefault)
-                        {
-                            item.Content = deviceInfo.Name + " (" + LocalizedString("DefaultScannerIndicator") + ")";
-                        }
-                        else
-                        {
-                            item.Content = deviceInfo.Name;
-                        }
+                        item.Content = deviceInfo.Name;
                         item.Tag = deviceInfo.Id;
 
                         deviceInformations.Add(deviceInfo);

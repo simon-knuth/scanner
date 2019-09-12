@@ -261,10 +261,6 @@
     <value>Default</value>
     <comment>The text that appears behind the default resolution in the resolutions list. It is automatically encapsulated by brackets.</comment>
   </data>
-  <data name="DefaultScannerIndicator" xml:space="preserve">
-    <value>default</value>
-    <comment>The text that appears behind the default scanner in the scanner list. It is automatically encapsulated by brackets.</comment>
-  </data>
   <data name="ErrorMessageConversionBodyAfterExtension" xml:space="preserve">
     <value> instead. You can disable conversion for unsupported formats in the settings.</value>
     <comment>[begins with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is behind the supported base format.</comment>
