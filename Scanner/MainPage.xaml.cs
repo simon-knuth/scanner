@@ -967,7 +967,7 @@ namespace Scanner
         ///     Disables both CommandBars while working and attempts to delete the <see cref="scannedFile"/>.
         ///     If it fails, an error message is shown.
         /// </summary>
-        private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        private async void ButtonDelete_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             LockCommandBar(CommandBarPrimary);
             LockCommandBar(CommandBarSecondary);
@@ -982,7 +982,7 @@ namespace Scanner
                 UnlockCommandBar(CommandBarSecondary, null);
                 return;
             }
-            FlyoutAppBarButtonDelete.Hide();
+            ContentDialogDelete.Hide();
             ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
             ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
@@ -997,7 +997,7 @@ namespace Scanner
         ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
         ///     Shows an error message if it fails (e.g. if the file name is already occupied).
         /// </summary>
-        private async void ButtonRename_Click(object sender, RoutedEventArgs e)
+        private async void ButtonRename_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             if (TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1] == scannedFile.Name) return;
             try
@@ -1009,17 +1009,8 @@ namespace Scanner
                 ShowMessageDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
                 return;
             }
-            FlyoutAppBarButtonRename.Hide();
+            ContentDialogRename.Hide();
         }        
-
-
-        /// <summary>
-        ///     The event listener for when the rename flyout is opened. Fills in the current file name.
-        /// </summary>
-        private void FlyoutAppBarButtonRename_Opening(object sender, object e)
-        {
-            TextBoxRename.Text = scannedFile.Name.Split(".")[0];
-        }
 
 
         /// <summary>
@@ -1051,7 +1042,7 @@ namespace Scanner
         /// </summary>
         private void TextBoxRename_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter) ButtonRename_Click(sender, null);
+            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter) ButtonRename_Click(ContentDialogRename, null);
         }
 
 
@@ -1690,6 +1681,34 @@ namespace Scanner
         private void ScrollViewerScan_LayoutUpdated(object sender, object e)
         {
             FixResultPositioning();
+        }
+
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
+        /// </summary>
+        private async void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogRename.ShowAsync();
+        }
+
+
+        /// <summary>
+        ///     The event listener for when the <see cref="ContentDialogRename"/> is opened. Fills in
+        ///     the current file name.
+        /// </summary>
+        private void ContentDialogRename_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+            TextBoxRename.Text = scannedFile.Name.Split(".")[0];
+        }
+
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonDelete"/> is clicked.
+        /// </summary>
+        private async void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await ContentDialogDelete.ShowAsync();
         }
     }
 }

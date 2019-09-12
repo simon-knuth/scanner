@@ -193,17 +193,9 @@
     <value>Cancel</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
   </data>
-  <data name="ButtonDelete.Content" xml:space="preserve">
-    <value>Confirm</value>
-    <comment>The text inside the delete button confirming the process.</comment>
-  </data>
   <data name="ButtonRecents.ToolTipService.ToolTip" xml:space="preserve">
     <value>Previous scans</value>
     <comment>The tooltip text that appears while hovering the recents button.</comment>
-  </data>
-  <data name="ButtonRename.Content" xml:space="preserve">
-    <value>Confirm</value>
-    <comment>The text inside the button that allows the user to confirm the newly chosen name for the result.</comment>
   </data>
   <data name="ButtonSettings.ToolTipService.ToolTip" xml:space="preserve">
     <value>Settings</value>
@@ -249,6 +241,18 @@
     <value>Theme</value>
     <comment>The header for the theme settings.</comment>
   </data>
+  <data name="ContentDialogDelete.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>The text inside the button that allows the user to cancel deleting the result file.</comment>
+  </data>
+  <data name="ContentDialogDelete.PrimaryButtonText" xml:space="preserve">
+    <value>Confirm</value>
+    <comment>The text inside the delete button confirming the process.</comment>
+  </data>
+  <data name="ContentDialogDelete.Title" xml:space="preserve">
+    <value>Are you sure?</value>
+    <comment>The header for the delete flyout.</comment>
+  </data>
   <data name="ContentDialogFeedback.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The text inside the button that allows the user to close the ContentDialog that asks the user to send feedback.</comment>
@@ -256,6 +260,18 @@
   <data name="ContentDialogFeedback.Title" xml:space="preserve">
     <value>Are you enjoying the app?</value>
     <comment>The header for the ContentDialog that asks the user to send feedback.</comment>
+  </data>
+  <data name="ContentDialogRename.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>The text inside the button that allows the user to cancel renaming the result file.</comment>
+  </data>
+  <data name="ContentDialogRename.PrimaryButtonText" xml:space="preserve">
+    <value>Confirm</value>
+    <comment>The text inside the button that allows the user to confirm the newly chosen name for the result.</comment>
+  </data>
+  <data name="ContentDialogRename.Title" xml:space="preserve">
+    <value>Rename</value>
+    <comment>The header for the the rename flyout.</comment>
   </data>
   <data name="DefaultResolutionIndicator" xml:space="preserve">
     <value>Default</value>
@@ -533,17 +549,9 @@
     <value>The file will be moved to the recycle bin.</value>
     <comment>The text inside the delete flyout.</comment>
   </data>
-  <data name="TextBlockDeleteHeader.Text" xml:space="preserve">
-    <value>Are you sure?</value>
-    <comment>The header for the delete flyout.</comment>
-  </data>
   <data name="TextBlockFormatHeader.Text" xml:space="preserve">
     <value>Save as</value>
     <comment>The header for the ComboBox where users select the desired file format.</comment>
-  </data>
-  <data name="TextBlockRenameHeader.Text" xml:space="preserve">
-    <value>Rename</value>
-    <comment>The header for the the rename flyout.</comment>
   </data>
   <data name="TextBlockResolution.Text" xml:space="preserve">
     <value>Resolution</value>

@@ -19,6 +19,11 @@
         <contract7Present:Style x:Name="RoundedButtonStyle" TargetType="Button">
             <Setter Property="CornerRadius" Value="2"/>
         </contract7Present:Style>
+        <contract7Present:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="2"/>
+        </contract7Present:Style>
     </Page.Resources>
 
     
@@ -170,27 +175,8 @@
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
                                     </AppBarToggleButton>
                                     <Custom:ToolbarSeparator Name="ToolbarSeparatorPrimaryOne"/>
-                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" contract7Present:CornerRadius="2" BorderThickness="1,1,1.5,1">
-                                        <AppBarButton.Flyout>
-                                            <Flyout x:Name="FlyoutAppBarButtonRename" LightDismissOverlayMode="On" Opening="FlyoutAppBarButtonRename_Opening">
-                                                <StackPanel Orientation="Vertical">
-                                                    <TextBlock x:Uid="TextBlockRenameHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Rename"/>
-                                                    <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
-                                                    <Button x:Uid="ButtonRename" x:Name="ButtonRename" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonRename_Click"/>
-                                                </StackPanel>
-                                            </Flyout>
-                                        </AppBarButton.Flyout>
-                                    </AppBarButton>
-                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" contract7Present:CornerRadius="2">
-                                        <AppBarButton.Flyout>
-                                            <Flyout x:Name="FlyoutAppBarButtonDelete" LightDismissOverlayMode="On">
-                                                <StackPanel Orientation="Vertical">
-                                                    <TextBlock x:Uid="TextBlockDeleteHeader" Style="{StaticResource BaseTextBlockStyle}" Text="Are you sure?"/>
-                                                    <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
-                                                    <Button x:Uid="ButtonDelete" x:Name="ButtonDelete" Content="Confirm" Margin="0,24,0,0" HorizontalAlignment="Left" Click="ButtonDelete_Click"/>
-                                                </StackPanel>
-                                            </Flyout>
-                                        </AppBarButton.Flyout>
+                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" contract7Present:CornerRadius="2" BorderThickness="1,1,1.5,1" Click="AppBarButtonRename_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" contract7Present:CornerRadius="2" Click="AppBarButtonDelete_Click">
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator Name="ToolbarSeparatorPrimaryTwo"/>
                                     <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" contract7Present:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
@@ -203,7 +189,7 @@
             </controls:DropShadowPanel>
         </RelativePanel>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Title="Are you enjoying the app?" CloseButtonText="Close"
+        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Padding="1" Title="Are you enjoying the app?" CloseButtonText="Close"
                        DefaultButton="None" contract7Present:CornerRadius="3" PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
                        SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
@@ -216,5 +202,22 @@
                 </Span>
             </TextBlock>
         </ContentDialog>
+
+        <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" contract7Present:CornerRadius="3" DefaultButton="Primary"
+                       PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
+                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened">
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." Margin="0,12,0,0" MinWidth="300" KeyDown="TextBoxRename_KeyDown"/>
+            </StackPanel>
+        </ContentDialog>
+
+        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" contract7Present:CornerRadius="3" DefaultButton="Primary"
+                       PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
+                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin." Margin="0,12,0,0"/>
+            </StackPanel>
+        </ContentDialog>
+
     </Grid>
 </Page>
