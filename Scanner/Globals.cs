@@ -2,6 +2,8 @@
 using Windows.Storage.AccessCache;
 using Windows.UI.ViewManagement;
 
+using static Enums;
+
 public static class Globals
 {
     public static Theme settingAppTheme;                            // user theme setting
@@ -17,15 +19,8 @@ public static class Globals
 
     public static bool formatSettingChanged = false;
     public static bool possiblyDeadScanner = false;
+    public static bool imageLoading = false;
 
     public static bool? firstAppLaunchWithThisVersion;
     public static int scanNumber;
-
-
-
-    public enum Theme {
-        system = 0,
-        light = 1,
-        dark = 2
-    }
 }

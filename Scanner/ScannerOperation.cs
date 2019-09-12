@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -27,21 +26,18 @@ class ScannerOperation
         ObservableCollection<ComboBoxItem> resolutions)
     {
         float minX = config.MinResolution.DpiX;
-        float minY = config.MinResolution.DpiY;
         float maxX = config.MaxResolution.DpiX;
-        float maxY = config.MaxResolution.DpiY;
         float actualX = config.ActualResolution.DpiX;
-        float actualY = config.ActualResolution.DpiY;
 
         resolutions.Clear();
 
-        resolutions.Add(CreateComboBoxItem(minX + " DPI", minX + "," + minY));
+        resolutions.Add(CreateComboBoxItem(minX + " DPI", config.MinResolution));
 
         resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("DefaultResolutionIndicator") + ")",
-            actualX + "," + actualY));
+            config.ActualResolution));
         comboBox.SelectedIndex = resolutions.Count - 1;
 
-        resolutions.Add(CreateComboBoxItem(maxX + " DPI", maxX + "," + maxY));
+        resolutions.Add(CreateComboBoxItem(maxX + " DPI", config.MaxResolution));
     }
 
 
@@ -120,11 +116,7 @@ class ScannerOperation
     public static ImageScannerResolution? GetDesiredResolution(ComboBox comboBoxResolution)
     {
         if (comboBoxResolution.SelectedIndex == -1) return null;
-        else return new ImageScannerResolution
-        {
-            DpiX = float.Parse(((ComboBoxItem) comboBoxResolution.SelectedItem).Tag.ToString().Split(",")[0]),
-            DpiY = float.Parse(((ComboBoxItem) comboBoxResolution.SelectedItem).Tag.ToString().Split(",")[1])
-        };
+        else return (ImageScannerResolution) ((ComboBoxItem)comboBoxResolution.SelectedItem).Tag;
     }
 
 

@@ -17,55 +17,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml;
 
+using static Enums;
 using static Globals;
 
 
 static class Utilities
 {
-    /// <summary>
-    ///     Represents the possible states of the app's UI.
-    /// </summary>
-    public enum UIstate
-    {
-        unset = -1,
-        full = 0,                   // the whole UI is visible
-        small_initial = 1,          // only the options pane is visible
-        small_result = 2            // only the result of a scan is visible
-    }
-
-    /// <summary>
-    ///     Represents the possible states of the app itself.
-    /// </summary>
-    public enum FlowState
-    {
-        initial = 0,                // there is no result visible
-        result = 1,                 // there is a result visible but no crop in progress
-        crop = 2,                   // there is a result visible and a crop in progress
-        draw = 3                    // there is a result visible and drawing in progress
-    }
-
-    /// <summary>
-    ///     Represents the possible states of the primary <see cref="CommandBar"/>.
-    /// </summary>
-    public enum PrimaryMenuConfig
-    {
-        hidden = 0,                 // the primary CommandBar is hidden
-        image = 1,                  // the primary CommandBar shows the image commands
-        pdf = 2                     // the primaryCommandBar shows the pdf commands
-    }
-
-    /// <summary>
-    ///     Represents the possible states of the secondary <see cref="CommandBar"/>.
-    /// </summary>
-    public enum SecondaryMenuConfig
-    {
-        hidden = 0,                 // the secondary CommandBar is hidden
-        done = 1,                   // the secondary CommandBar shows the "done" button
-        crop = 2,                   // the secondary CommandBar shows the crop commands
-        draw = 3                    // the secondary CommandBar shows the draw commands
-    }
-
-
     /// <summary>
     ///     Creates a ComboBoxItem with the specified content string and tag string.
     /// </summary>
@@ -78,7 +35,7 @@ static class Utilities
     /// <returns>
     ///     The ComboBoxItem.
     /// </returns>
-    public static ComboBoxItem CreateComboBoxItem(string content, string tag)
+    public static ComboBoxItem CreateComboBoxItem(string content, object tag)
     {
         ComboBoxItem item = new ComboBoxItem();
 
@@ -90,8 +47,15 @@ static class Utilities
 
 
     /// <summary>
-    ///     Display an image file inside an <see cref="Image"/> control.
+    ///     Display an image file inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
+    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> 
+    ///     is used to make the control visible once the image has been loaded.
     /// </summary>
+    /// <remarks>
+    ///     If <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> is used, the
+    ///     <paramref name="imageControl"/> will be empty for a brief moment in order to detect when the
+    ///     new image has been loaded.
+    /// </remarks>
     /// <param name="file">The <see cref="StorageFile"/> containing the image.</param>
     /// <param name="imageControl">The <see cref="Image"/> control.</param>
     public static async void DisplayImageAsync(StorageFile file, Image imageControl)
@@ -99,20 +63,66 @@ static class Utilities
         IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
         BitmapImage bmp = new BitmapImage();
         await bmp.SetSourceAsync(stream);
-        imageControl.Source = bmp;
-        imageControl.Visibility = Visibility.Visible;
+
+        if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
+        {
+            imageControl.Source = bmp;
+            imageControl.Visibility = Visibility.Visible;
+        } else
+        {
+            imageControl.SizeChanged += FinishDisplayImage;
+            imageLoading = true;
+            imageControl.Source = null;
+            imageControl.Tag = bmp;
+        }
     }
 
 
     /// <summary>
-    ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control.
+    ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
+    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> 
+    ///     is used to make the control visible once the image has been loaded.
     /// </summary>
-    /// <param name="bitmapImage">The <see cref="BitmapImage"/> file.</param>
+    /// <remarks>
+    ///     If <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> is used, the
+    ///     <paramref name="imageControl"/> will be empty for a brief moment in order to detect when the
+    ///     new image has been loaded.
+    /// </remarks>
+    /// <param name="bitmapImage">The <see cref="BitmapImage"/> that shall be displayed.</param>
     /// <param name="imageControl">The <see cref="Image"/> control.</param>
     public static void DisplayImage(BitmapImage bitmapImage, Image imageControl)
     {
-        imageControl.Source = bitmapImage;
-        imageControl.Visibility = Visibility.Visible;
+        if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
+        {
+            imageControl.Source = bitmapImage;
+            imageControl.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            imageControl.SizeChanged += FinishDisplayImage;
+            imageLoading = true;
+            imageControl.Source = null;
+            imageControl.Tag = bitmapImage;
+        }
+    }
+
+
+    /// <summary>
+    ///     The part of <see cref="DisplayImageAsync(StorageFile, Image)"/> and 
+    ///     <see cref="DisplayImage(BitmapImage, Image)"/> responsible for making the <see cref="Image"/>
+    ///     visible when its source has been loaded.
+    /// </summary>
+    private static void FinishDisplayImage(object sender, SizeChangedEventArgs args)
+    {
+        if (imageLoading && ((Image)sender).Source == null)
+        {
+            ((Image)sender).Source = (Windows.UI.Xaml.Media.ImageSource) ((Image)sender).Tag;
+        } else
+        {
+            imageLoading = false;
+            ((Image)sender).Visibility = Visibility.Visible;
+            ((Image)sender).SizeChanged -= FinishDisplayImage;
+        }
     }
 
 

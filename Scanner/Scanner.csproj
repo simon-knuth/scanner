@@ -118,6 +118,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ScannerOperation.cs" />
     <Compile Include="MainPage.xaml.cs">

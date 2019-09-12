@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 
+using static Enums;
 using static Globals;
 using static ScannerOperation;
 using static Utilities;
