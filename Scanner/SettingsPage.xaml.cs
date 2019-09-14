@@ -36,12 +36,18 @@ namespace Scanner
         }
 
 
+        /// <summary>
+        ///     The event listener for when <see cref="ButtonCancel"/> is clicked. Closes the settings page.
+        /// </summary>
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
         }
 
 
+        /// <summary>
+        ///     The event listener for when a button is pressed. Allows to discard changes using the escape key.
+        /// </summary>
         private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.GoBack || e.Key == Windows.System.VirtualKey.Escape)
@@ -50,6 +56,11 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     The event listener for when the page is loading. Loads all current settings and updates
+        ///     the version indicator at the bottom.
+        /// </summary>
         private void Page_Loading(FrameworkElement sender, object args)
         {
             if (scanFolder != null)
@@ -57,15 +68,12 @@ namespace Scanner
                 TextBlockSaveLocation.Text = scanFolder.Path;
             } else
             {
-                // TODO do something if no scan folder has been selected due to an error
+                ButtonResetLocation_Click(null, null);
             }
             
 
             switch (settingAppTheme)
             {
-                case Theme.system:
-                    ComboBoxTheme.SelectedIndex = 0;
-                    break;
                 case Theme.light:
                     ComboBoxTheme.SelectedIndex = 1;
                     break;
@@ -73,7 +81,7 @@ namespace Scanner
                     ComboBoxTheme.SelectedIndex = 2;
                     break;
                 default:
-                    // TODO do something
+                    ComboBoxTheme.SelectedIndex = 0;
                     break;
             }
             TextBlockRestart.Visibility = Visibility.Collapsed;
@@ -86,6 +94,11 @@ namespace Scanner
             TextBlockVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="ButtonSave"/> is clicked. Updates all setting variables and
+        ///     then calls for <see cref="SaveSettings"/>.
+        /// </summary>
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
             if (newScanFolder != null)
@@ -94,8 +107,6 @@ namespace Scanner
                     FutureAccessList.AddOrReplace("scanFolder", newScanFolder);
                 scanFolder = newScanFolder;
             }
-
-            
 
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
             settingSearchIndicator = (bool) CheckBoxSearchIndicator.IsChecked;
@@ -108,17 +119,31 @@ namespace Scanner
             Frame.GoBack();
         }
 
+
+        /// <summary>
+        ///     The event listener for when another <see cref="Theme"/> is selected from <see cref="ComboBoxTheme"/>.
+        /// </summary>
         private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TextBlockRestart.Visibility = Visibility.Visible;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="HyperlinkRestart"/>, which saves the settings and restarts
+        ///     the app after a theme change, is clicked.
+        /// </summary>
         private async void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             ButtonSave_Click(null, null);
             await CoreApplication.RequestRestartAsync("");
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="ButtonBrowse"/>, which allows the user to select a new
+        ///     <see cref="scanFolder"/>, is clicked.
+        /// </summary>
         private async void ButtonBrowse_Click(object sender, RoutedEventArgs e)
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
@@ -143,16 +168,30 @@ namespace Scanner
             }
         }
 
-        private void ToggleSwitchUnsupportedFileFormat_Toggled(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        ///     The event listener for when the <see cref="CheckBoxUnsupportedFileFormat"/> that changes
+        ///     <see cref="settingUnsupportedFileFormat"/> is checked/unchecked.
+        /// </summary>
+        private void CheckBoxUnsupportedFileFormat_Toggled(object sender, RoutedEventArgs e)
         {
             formatSettingChanged = true;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
+        /// </summary>
         private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri(websiteUrl));
         }
 
+
+        /// <summary>
+        ///     The event listener for when the button that resets the current <see cref="scanFolder"/> to ..\Pictures\Scans
+        ///     is clicked.
+        /// </summary>
         private async void ButtonResetLocation_Click(object sender, RoutedEventArgs e)
         {
             StorageFolder folder;
@@ -175,6 +214,10 @@ namespace Scanner
             TextBlockSaveLocation.Text = newScanFolder.Path;
         }
 
+
+        /// <summary>
+        ///     The event listener for when <see cref="HyperlinkFeedbackHub"/>, which opens the app's Feedback Hub section, is clicked.
+        /// </summary>
         private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             try
