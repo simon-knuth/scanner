@@ -557,6 +557,10 @@
     <value>Speichern als</value>
     <comment>The header for the ComboBox where users select the desired file format.</comment>
   </data>
+  <data name="TextBlockRenameBody.Text" xml:space="preserve">
+    <value>Geben Sie einen neuen Namen für die Datei ein.</value>
+    <comment>The text inside the rename flyout.</comment>
+  </data>
   <data name="TextBlockResolution.Text" xml:space="preserve">
     <value>Auflösung</value>
     <comment>The header for the resolution ComboBox.</comment>
@@ -588,10 +592,6 @@
   <data name="TextBlockSource.Text" xml:space="preserve">
     <value>Quelle</value>
     <comment>The header for the ComboBox where users select the source scanner.</comment>
-  </data>
-  <data name="TextBoxRename.Header" xml:space="preserve">
-    <value>Geben Sie einen neuen Namen für die Datei ein.</value>
-    <comment>The text inside the rename flyout.</comment>
   </data>
   <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
     <value>Manuell</value>

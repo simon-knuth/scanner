@@ -213,13 +213,24 @@
 
         <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
                        PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
-                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened">
-            <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file."/>
+                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened" MinWidth="350">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="TextBlockRenameBody" Text="Enter a new name for the file." Grid.Row="0"/>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Grid.Row="1">
+                    <TextBox x:Name="TextBoxRename" MinWidth="300" VerticalAlignment="Bottom"/>
+                    <TextBlock x:Name="TextBlockRenameExtension" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            
         </ContentDialog>
 
         <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
                        PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
-                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" MinWidth="400">
             <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin."/>
         </ContentDialog>
 

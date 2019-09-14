@@ -1709,7 +1709,8 @@ namespace Scanner
         /// </summary>
         private void ContentDialogRename_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
-            TextBoxRename.Text = scannedFile.Name.Split(".")[0];
+            TextBoxRename.Text = scannedFile.DisplayName;
+            TextBlockRenameExtension.Text = "." + scannedFile.Name.Split(".")[1];
             TextBoxRename.SelectAll();
         }
 
