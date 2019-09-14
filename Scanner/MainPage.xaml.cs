@@ -161,6 +161,7 @@ namespace Scanner
                                 // (almost) start from scratch to hopefully get rid of dead scanners
                                 possiblyDeadScanner = true;
                                 scannerList.Clear();
+                                Page_SizeChanged(null, null);
                                 scannerWatcher.Stop();
                                 ComboBoxScanners.SelectedIndex = -1;
                                 selectedScanner = null;
@@ -464,7 +465,6 @@ namespace Scanner
                     catch (Exception) { }
                 }
             }
-            ShowContentDialog("Title", "This is a message.");
         }
 
 
@@ -838,6 +838,9 @@ namespace Scanner
         {
             if (RadioButtonSourceAutomatic.IsChecked == true)
             {
+                StackPanelColor.Visibility = Visibility.Collapsed;
+                StackPanelResolution.Visibility = Visibility.Collapsed;
+
                 refreshLeftPanel();
 
                 RadioButtonColorModeColor.IsEnabled = false;
@@ -1035,15 +1038,6 @@ namespace Scanner
             // show ImageCropper and secondary commands
             ImageCropper.Visibility = Visibility.Visible;
             ShowSecondaryMenuConfig(SecondaryMenuConfig.crop);
-        }
-
-
-        /// <summary>
-        ///     Reacts to the enter key while <see cref="TextBoxRename"/> is focused, which acts as a confirmation.
-        /// </summary>
-        private void TextBoxRename_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter) ButtonRename_Click(ContentDialogRename, null);
         }
 
 
@@ -1716,6 +1710,7 @@ namespace Scanner
         private void ContentDialogRename_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
             TextBoxRename.Text = scannedFile.Name.Split(".")[0];
+            TextBoxRename.SelectAll();
         }
 
 

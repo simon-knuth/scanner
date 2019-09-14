@@ -86,7 +86,7 @@
                             <SymbolIcon Symbol="Setting"/>
                         </Button>
                         <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonRecents_Click">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
                         </Button>
                         <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonCancel_Click" Visibility="Collapsed">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;"/>
@@ -214,7 +214,7 @@
         <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
                        PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
                        CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened">
-            <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file." KeyDown="TextBoxRename_KeyDown"/>
+            <TextBox x:Name="TextBoxRename" Header="Enter a new name for the file."/>
         </ContentDialog>
 
         <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
