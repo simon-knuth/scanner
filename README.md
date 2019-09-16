@@ -1,3 +1,4 @@
+<image src='https://i.imgur.com/ghnN0UV.png'/>
 <table width="100%">
   <tr>
     <td width="15%"><image src='https://i.imgur.com/4fMgKKY.png'/></td>
@@ -6,7 +7,7 @@
     </td>
   </tr>
 </table>
-<br><h2>✔ Features</h2>
+<br><h2>Features</h2>
 <ul>
   <li>Preview after scan</li>
   <li>Built-in image editing
@@ -26,7 +27,7 @@
   <li>WinUI 2.2</li>
 </ul>
 
-<br><h2>💾 Download</h2>
+<br><h2>Download</h2>
 <table width="100%">
   <tr>
     <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>You can also view the source code of both stable and WIP versions on GitHub. Download/clone the code using the green button in the top-right corner.</td>
