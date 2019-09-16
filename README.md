@@ -37,5 +37,5 @@
 </table>
 
 <br><h2>Credit</h2>
-Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert)
+Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert)  
 Banner (laptop wallpaper): [Aleksandar Pasaric](https://www.pexels.com/@apasaric)
