@@ -954,15 +954,24 @@ namespace Scanner
         /// <summary>
         ///     Opens up the Windows 10 share menu next to <see cref="AppBarButtonShare"/> using the <see cref="dataTransferManager"/>.
         /// </summary>
+        /// <remarks>
+        ///     If the <see cref="AppBarButtonShare"/> is in the overflow menu, the share menu will not be placed next to it.
+        /// </remarks>
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
-            Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
+            if (((AppBarButton) sender).IsInOverflow)
+            {
+                DataTransferManager.ShowShareUI();
+            } else
+            {
+                GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
+                Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
             
-            ShareUIOptions shareUIOptions = new ShareUIOptions();
-            shareUIOptions.SelectionRect = rectangle;
+                ShareUIOptions shareUIOptions = new ShareUIOptions();
+                shareUIOptions.SelectionRect = rectangle;
 
-            DataTransferManager.ShowShareUI(shareUIOptions);
+                DataTransferManager.ShowShareUI(shareUIOptions);
+            }
         }
 
 
