@@ -309,6 +309,14 @@
     <value>Etwas ist schiefgelaufen</value>
     <comment>The header for the error message that appears when launching the feedback hub fails.</comment>
   </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Der zuletzt gewählte Speicherort konnte nicht geladen werden und auch das Zurücksetzen schlug fehl. Bitte versuchen Sie, einen neuen Speicherort in den Einstellungen zu wählen.</value>
+    <comment>The body for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
   <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
     <value>Bitte wählen Sie einen Farbmodus.</value>
     <comment>The body for the error message that appears when no color mode was selected.</comment>
@@ -333,6 +341,14 @@
     <value>Etwas ist schiefgelaufen</value>
     <comment>The header for the error message that appears when no resolution was selected.</comment>
   </data>
+  <data name="ErrorMessagePickFolderBody" xml:space="preserve">
+    <value>Das Auswählen eines neuen Ordners schlug fehl. Die Fehlermeldung lautet:</value>
+    <comment>[ends with a colon] The body for the error message that appears when picking a folder fails.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when picking a folder fails.</comment>
+  </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
     <value>Möglicherweise existiert eine Datei mit diesem Namen bereits.</value>
     <comment>The body for the error message that appears when renaming the scan failed, probably due to this name already being in use.</comment>
@@ -340,6 +356,22 @@
   <data name="ErrorMessageRenameHeader" xml:space="preserve">
     <value>Umbenennen fehlgeschlagen</value>
     <comment>The header for the error message that appears when renaming the scan failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>Das Zurücksetzen des Speicherorts ist fehlgeschlagen. Die Fehlermeldung lautet:</value>
+    <comment>[ends with a colon] The body for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderHeader" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
+    <value>Der Zugriff auf die Fotobibliothek wurde verweigert.</value>
+    <comment>The body for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedHeader" xml:space="preserve">
+    <value>Zugriff verweigert</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
     <value>Der Scan konnte nicht gedreht werden.</value>

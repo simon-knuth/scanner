@@ -309,6 +309,14 @@
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when launching the feedback hub fails.</comment>
   </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Unable to access the last selected scan folder or the default scan folder. Please try to select a new folder in the settings menu.</value>
+    <comment>The body for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
   <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
     <value>Please select a color mode.</value>
     <comment>The body for the error message that appears when no color mode was selected.</comment>
@@ -333,6 +341,14 @@
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when no resolution was selected.</comment>
   </data>
+  <data name="ErrorMessagePickFolderBody" xml:space="preserve">
+    <value>Picking a new folder failed. The error message is:</value>
+    <comment>[ends with a colon] The body for the error message that appears when picking a folder fails.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when picking a folder fails.</comment>
+  </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
     <value>Perhaps a file with that name already exists.</value>
     <comment>The body for the error message that appears when renaming the scan failed, probably due to this name already being in use.</comment>
@@ -340,6 +356,22 @@
   <data name="ErrorMessageRenameHeader" xml:space="preserve">
     <value>Rename unsuccessful</value>
     <comment>The header for the error message that appears when renaming the scan failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>Resetting the folder location failed. The error message is:</value>
+    <comment>[ends with a colon] The body for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
+    <value>Access to the Pictures Library has been denied.</value>
+    <comment>The body for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedHeader" xml:space="preserve">
+    <value>Access denied</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
     <value>The scan could not be rotated.</value>

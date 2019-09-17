@@ -167,15 +167,15 @@ static class Utilities
         switch (formatString)
         {
             case "jpg":
-                return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
+                return BitmapFileFormat.Jpeg;
             case "jpeg":
-                return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Jpeg;
+                return BitmapFileFormat.Jpeg;
             case "png":
-                return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Png;
+                return BitmapFileFormat.Png;
             case "bmp":
-                return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Bmp;
+                return BitmapFileFormat.Bmp;
             default:
-                return Microsoft.Toolkit.Uwp.UI.Controls.BitmapFileFormat.Tiff;
+                return BitmapFileFormat.Tiff;
         }
     }
 
@@ -248,8 +248,7 @@ static class Utilities
                 try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists); }
                 catch (Exception)
                 {
-                    // tell the user that something went wrong and they should try setting a folder manually
-                    ShowMessageDialog("Something went wrong", "Unable to access the last selected scan folder or the default scan folder. Please try to select a new folder in the settings menu.");
+                    ShowMessageDialog(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
                 }
                 futureAccessList.AddOrReplace("scanFolder", scanFolder);
             }
@@ -263,12 +262,12 @@ static class Utilities
             }
             catch (UnauthorizedAccessException)
             {
-                ShowMessageDialog("Access denied", "Access to the pictures library has been denied.");
+                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                 return;
             }
             catch (Exception exc)
             {
-                ShowMessageDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
+                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderHeader"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                 return;
             }
             futureAccessList.AddOrReplace("scanFolder", scanFolder);

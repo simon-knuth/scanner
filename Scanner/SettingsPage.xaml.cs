@@ -157,7 +157,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowContentDialog("Error", "Something went wrong while picking a folder. The error message is:" + "\n" + exc.Message);
+                ShowContentDialog(LocalizedString("ErrorMessagePickFolderHeader"), LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message);
                 return;
             }
 
@@ -201,12 +201,12 @@ namespace Scanner
             }
             catch (UnauthorizedAccessException)
             {
-                ShowContentDialog("Access denied", "Access to the pictures library has been denied.");
+                ShowContentDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                 return;
             }
             catch (Exception exc)
             {
-                ShowContentDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
+                ShowContentDialog(LocalizedString("ErrorMessageResetFolderHeader"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                 return;
             }
 
