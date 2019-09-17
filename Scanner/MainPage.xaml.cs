@@ -19,7 +19,6 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
@@ -28,6 +27,7 @@ using static Enums;
 using static Globals;
 using static ScannerOperation;
 using static Utilities;
+
 
 namespace Scanner
 {
@@ -88,6 +88,9 @@ namespace Scanner
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
                 ScrollViewerLeftPanel.Margin = new Thickness(0, titleBar.Height, 0, 0);
             };
+            Window.Current.CoreWindow.KeyDown += MainPage_KeyDown;
+
+            LoadScanFolder();
         }
 
 
@@ -430,7 +433,7 @@ namespace Scanner
                     }
                 }
 
-                if (selectedScanner == null) StackPanelTextRight.Visibility = Visibility.Visible;
+                if (selectedScanner == null && flowState == FlowState.initial) StackPanelTextRight.Visibility = Visibility.Visible;
                 else StackPanelTextRight.Visibility = Visibility.Collapsed;
 
                 uiState = UIstate.full;
@@ -1182,19 +1185,19 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when a key is pressed on the MainPage. Used to process shortcuts.
         /// </summary>
-        private void GridMainPage_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
             if (IsCtrlKeyPressed())
             {
-                switch (e.Key)
+                switch (args.VirtualKey)
                 {
                     case VirtualKey.C:
                         // shortcut Copy
-                        if (flowState == FlowState.result) AppBarButtonCopy_Click(null, null);
+                        if (flowState == FlowState.result) AppBarButtonCopy_Click(AppBarButtonCopy, null);
                         break;
                     case VirtualKey.S:
                         // shortcut share
-                        if (flowState == FlowState.result) AppBarButtonShare_Click(null, null);
+                        if (flowState == FlowState.result) AppBarButtonShare_Click(AppBarButtonShare, null);
                         break;
                 }
             }

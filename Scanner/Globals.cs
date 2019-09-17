@@ -1,5 +1,4 @@
 ﻿using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.UI.ViewManagement;
 
 using static Enums;
@@ -15,7 +14,6 @@ public static class Globals
     public static StorageFolder scanFolder = null;
     public static ApplicationDataContainer localSettingsContainer;
     public static ApplicationViewTitleBar applicationViewTitlebar;
-    public static StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
 
     public static bool formatSettingChanged = false;
     public static bool possiblyDeadScanner = false;

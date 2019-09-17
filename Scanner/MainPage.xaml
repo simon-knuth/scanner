@@ -29,9 +29,9 @@
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
     </Page.Resources>
-
     
-    <Grid x:Name="GridMainPage" KeyDown="GridMainPage_KeyDown">
+    
+    <Grid x:Name="GridMainPage">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
             <ColumnDefinition x:Name="ColumnRight" Width="7*"/>

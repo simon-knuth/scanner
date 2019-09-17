@@ -5,6 +5,7 @@ using System;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
+using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.Storage;
@@ -233,12 +234,12 @@ static class Utilities
 
 
     /// <summary>
-    ///     Loads all settings/data from the app's data container and initializes default data if necessary.
+    ///     Loads the <see cref="scanFolder"/> from the <see cref="futureAccessList"/>.
     /// </summary>
-    public async static void LoadSettings()
+    public static async void LoadScanFolder()
     {
-        localSettingsContainer = ApplicationData.Current.LocalSettings;
-        
+        StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
+
         if (futureAccessList.Entries.Count != 0)
         {
             try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
@@ -252,10 +253,35 @@ static class Utilities
                 }
                 futureAccessList.AddOrReplace("scanFolder", scanFolder);
             }
-        } else
-        {
-            ShowMessageDialog("Something went wrong", "Unable to access the default scan folder. Please try to select a new folder in the settings menu.");
         }
+        else
+        {
+            // Either first app launch ever or the futureAccessList is unavailable ~> Reset it
+            try
+            {
+                scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                ShowMessageDialog("Access denied", "Access to the pictures library has been denied.");
+                return;
+            }
+            catch (Exception exc)
+            {
+                ShowMessageDialog("Something went wrong", "Resetting the folder location failed. The error message is:" + "\n" + exc.Message);
+                return;
+            }
+            futureAccessList.AddOrReplace("scanFolder", scanFolder);
+        }
+    }
+
+
+    /// <summary>
+    ///     Loads all settings/data from the app's data container and initializes default data if necessary.
+    /// </summary>
+    public static void LoadSettings()
+    {
+        localSettingsContainer = ApplicationData.Current.LocalSettings;
 
         if (localSettingsContainer.Values["settingAppTheme"] != null)
         {
@@ -402,7 +428,12 @@ static class Utilities
         LockCommandBar(commandBar, null);
     }
 
-        public static string RemoveNumbering(string input)
+
+    /// <summary>
+    ///     Removes brackets, their content and the leading whitespace from <paramref name="input"/>.
+    /// </summary>
+    /// <param name="input">A string like "abc (def).xyz", of which " (def)" shall be removed.</param>
+    public static string RemoveNumbering(string input)
     {
         // expect string like "abc (def).xyz" and deliver "abc.xyz"
         string name = input.Substring(0, input.LastIndexOf("."));       // get name without file extension
@@ -416,6 +447,34 @@ static class Utilities
         {
             return input;
         }
+    }
+
+
+    /// <summary>
+    ///     Resets the <see cref="scanFolder"/> to "Scans" in the Pictures Library.
+    /// </summary>
+    /// <remarks>
+    ///     The folder is created if necessary.
+    /// </remarks>
+    /// <exception cref="UnauthorizedAccessException">Access to the Pictures Library has been denied.</exception>
+    /// <exception cref="Exception">Remaining errors</exception>
+    public static async void ResetScanFolder()
+    {
+        StorageFolder folder;
+        try
+        {
+            folder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+        }
+        catch (UnauthorizedAccessException exc)
+        {
+            throw exc;
+        }
+        catch (Exception exc)
+        {
+            throw exc;
+        }
+
+        scanFolder = folder;
     }
 
 
