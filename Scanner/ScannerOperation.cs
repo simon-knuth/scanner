@@ -31,13 +31,13 @@ class ScannerOperation
 
         resolutions.Clear();
 
-        resolutions.Add(CreateComboBoxItem(minX + " DPI", config.MinResolution));
+        if (minX != actualX) resolutions.Add(CreateComboBoxItem(minX + " DPI", config.MinResolution));
 
         resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("DefaultResolutionIndicator") + ")",
             config.ActualResolution));
         comboBox.SelectedIndex = resolutions.Count - 1;
 
-        resolutions.Add(CreateComboBoxItem(maxX + " DPI", config.MaxResolution));
+        if (maxX != actualX) resolutions.Add(CreateComboBoxItem(maxX + " DPI", config.MaxResolution));
     }
 
 

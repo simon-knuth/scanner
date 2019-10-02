@@ -3,6 +3,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,21 +26,22 @@ namespace Scanner
         /// </summary>
         public App()
         {
-            // Load settings from local app data
-            LoadSettings();
-
-            switch (settingAppTheme)
+            // quickly load theme
+            if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {
-                case Theme.system:
-                    break;
-                case Theme.light:
-                    this.RequestedTheme = ApplicationTheme.Light;
-                    break;
-                case Theme.dark:
-                    this.RequestedTheme = ApplicationTheme.Dark;
-                    break;
+                switch ((int) ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        this.RequestedTheme = ApplicationTheme.Light;
+                        break;
+                    case 2:
+                        this.RequestedTheme = ApplicationTheme.Dark;
+                        break;
+                }
             }
-
+            
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
@@ -71,6 +73,24 @@ namespace Scanner
                 Window.Current.Content = rootFrame;
             }
 
+            // Hide default title bar.
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            applicationViewTitlebar = ApplicationView.GetForCurrentView().TitleBar;
+
+            applicationViewTitlebar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            applicationViewTitlebar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+
+            UISettings uISettings = new UISettings();
+            uISettings.ColorValuesChanged += UpdateTheme;
+
+            // Load settings from local app data
+            LoadSettings();
+
+            // Update theme once to ensure that the titlebar buttons are correct
+            UpdateTheme(null, null);
+
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
@@ -86,21 +106,6 @@ namespace Scanner
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-
-            // Hide default title bar.
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            applicationViewTitlebar = ApplicationView.GetForCurrentView().TitleBar;
-
-            applicationViewTitlebar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-            applicationViewTitlebar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-
-            UISettings uISettings = new UISettings();
-            uISettings.ColorValuesChanged += UpdateTheme;
-
-            // Update theme once to ensure that the titlebar buttons are correct
-            UpdateTheme(null, null);
         }
 
 

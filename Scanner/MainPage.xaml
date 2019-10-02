@@ -45,6 +45,11 @@
                 </Grid.RowDefinitions>
                 <ScrollViewer x:Name="ScrollViewerLeftPanel" VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                     <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
+                        <StackPanel.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition FromVerticalOffset="100"/>
+                            </TransitionCollection>
+                        </StackPanel.ChildrenTransitions>
                         <TextBlock x:Name="TextBlockHeader" Text="Scanner" FontWeight="Bold" FontSize="32"/>
                         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                             <TextBlock x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
@@ -117,7 +122,6 @@
                                     <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
                                 </Viewbox>
                             </Grid>
-
                         </ScrollViewer>
 
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,12,0">

@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="0,0,16,0" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Click="ButtonSave_Click"/>
+            <Button Name="ButtonSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="0,0,16,0" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Click="ButtonSave_Click"/>
             <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" MinWidth="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
         </Grid>
         <controls:DropShadowPanel x:Name="DropShadowPanelBottom" Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" HorizontalContentAlignment="Stretch" Height="50" VerticalAlignment="Bottom">
@@ -111,7 +111,7 @@
                         <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2019 Simon Knuth</Run><LineBreak/>
                         <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink><LineBreak/></Span>
                         </TextBlock>
-                        <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,18"/>
                     </StackPanel>
                 </ScrollViewer>
             </RelativePanel>

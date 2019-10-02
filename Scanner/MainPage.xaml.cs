@@ -90,7 +90,7 @@ namespace Scanner
             };
             Window.Current.CoreWindow.KeyDown += MainPage_KeyDown;
 
-            LoadScanFolder();
+            _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => LoadScanFolder());
         }
 
 
@@ -143,10 +143,14 @@ namespace Scanner
                 // hide text on the right side
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
 
-                if (selectedScanner == null || selectedScanner.DeviceId != ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag.ToString())
+                if (selectedScanner == null || selectedScanner.DeviceId.ToLower() != ((string) ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag).ToLower())
                 {
                     // previously different/no scanner selected ////////////////////////////////////////////////////
                     // get scanner's DeviceInformation
+                    RadioButtonSourceAutomatic.IsChecked = false;
+                    RadioButtonSourceFlatbed.IsChecked = false;
+                    RadioButtonSourceFeeder.IsChecked = false;
+
                     foreach (DeviceInformation check in deviceInformations)
                     {
                         if (check.Id == ((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag.ToString())
@@ -185,10 +189,6 @@ namespace Scanner
                 bool autoAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured);
                 bool flatbedAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
                 bool feederAllowed = selectedScanner.IsScanSourceSupported(ImageScannerScanSource.Feeder);
-
-                RadioButtonSourceAutomatic.IsEnabled = autoAllowed;
-                RadioButtonSourceFlatbed.IsEnabled = flatbedAllowed;
-                RadioButtonSourceFeeder.IsEnabled = feederAllowed;
 
                 // select first available source mode if none was selected previously
                 if (RadioButtonSourceAutomatic.IsChecked != true 
@@ -241,7 +241,7 @@ namespace Scanner
 
                     foreach (var check in scannerList)
                     {
-                        if (check.Tag.ToString() == deviceInfo.Id)
+                        if ((string) check.Tag == deviceInfo.Id)
                         {
                             duplicate = true;
                             break;
@@ -288,8 +288,7 @@ namespace Scanner
                     if (item.Tag.ToString() == deviceInfoUpdate.Id)
                     {
                         ComboBoxScanners.IsDropDownOpen = false;
-                        if (item.IsSelected) refreshLeftPanel();
-
+                        ComboBoxScanners.SelectedIndex = -1;
                         scannerList.Remove(item);
 
                         foreach (DeviceInformation check in deviceInformations)
@@ -786,7 +785,7 @@ namespace Scanner
 
             // update UI
             Page_SizeChanged(null, null);
-            UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
+            refreshLeftPanel();
         }
 
 
