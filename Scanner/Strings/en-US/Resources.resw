@@ -293,6 +293,22 @@
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved.</comment>
   </data>
+  <data name="ErrorMessageCopyBody" xml:space="preserve">
+    <value>The scan could not be copied to the clipboard.</value>
+    <comment>The body for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCopyHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCropBody" xml:space="preserve">
+    <value>The result could not be prepared for cropping.</value>
+    <comment>The body for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCropHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for the error message that appears when copying the result fails.</comment>
+  </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
     <value>The scan could not be deleted.</value>
     <comment>The body for the error message that appears when deleting the scan fails.</comment>
@@ -596,10 +612,6 @@
   <data name="TextBlockResolution.Text" xml:space="preserve">
     <value>Resolution</value>
     <comment>The header for the resolution ComboBox.</comment>
-  </data>
-  <data name="TextBlockResolutionFileSizeHint.Text" xml:space="preserve">
-    <value> (affects file size)</value>
-    <comment>[begins with a whitespace] The short reminder that the selected resolution affects the file size.</comment>
   </data>
   <data name="TextBlockScannerSelectionHintHeader.Text" xml:space="preserve">
     <value>Select a scanner</value>

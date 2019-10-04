@@ -922,24 +922,32 @@ namespace Scanner
 
             // cet contents according to file type and copy to clipboard
             string fileExtension = scannedFile.FileType;
-            switch (fileExtension)
+            try
             {
-                case ".jpg":
-                case ".jpeg":
-                case ".png":
-                case ".tif":
-                case ".bmp":
-                    dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
-                    Clipboard.SetContent(dataPackage);
-                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5, scannedFile.Path);
-                    break;
-                default:
-                    List<StorageFile> list = new List<StorageFile>();
-                    list.Add(scannedFile);
-                    dataPackage.SetStorageItems(list);
-                    Clipboard.SetContent(dataPackage);
-                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5);
-                    break;
+                switch (fileExtension)
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".png":
+                    case ".tif":
+                    case ".bmp":
+                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
+                        Clipboard.SetContent(dataPackage);
+                        SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5, scannedFile.Path);
+                        break;
+                    default:
+                        List<StorageFile> list = new List<StorageFile>();
+                        list.Add(scannedFile);
+                        dataPackage.SetStorageItems(list);
+                        Clipboard.SetContent(dataPackage);
+                        SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5);
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                ShowContentDialog(LocalizedString("ErrorMessageCopyHeader"), LocalizedString("ErrorMessageCopyBody"));
+                return;
             }
         }
 
@@ -961,19 +969,27 @@ namespace Scanner
         /// </remarks>
         private void AppBarButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            if (((AppBarButton) sender).IsInOverflow)
+            try
             {
-                DataTransferManager.ShowShareUI();
-            } else
-            {
-                GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
-                Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
+                if (((AppBarButton) sender).IsInOverflow)
+                {
+                    DataTransferManager.ShowShareUI();
+                } else
+                {
+                    GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
+                    Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
             
-                ShareUIOptions shareUIOptions = new ShareUIOptions();
-                shareUIOptions.SelectionRect = rectangle;
+                    ShareUIOptions shareUIOptions = new ShareUIOptions();
+                    shareUIOptions.SelectionRect = rectangle;
 
-                DataTransferManager.ShowShareUI(shareUIOptions);
+                    DataTransferManager.ShowShareUI(shareUIOptions);
+                }
             }
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
 
 
@@ -1037,7 +1053,17 @@ namespace Scanner
             // deactivate all buttons
             LockCommandBar(CommandBarPrimary);
 
-            await ImageCropper.LoadImageFromFile(scannedFile);
+            try
+            {
+                await ImageCropper.LoadImageFromFile(scannedFile);
+            }
+            catch (Exception)
+            {
+                ShowContentDialog(LocalizedString("ErrorMessageCropHeader"), LocalizedString("ErrorMessageCropBody"));
+                UnlockCommandBar(CommandBarPrimary);
+                return;
+            }
+            
             flowState = FlowState.crop;
 
             // make sure that the ImageCropper won't be obstructed
@@ -1059,21 +1085,26 @@ namespace Scanner
         private async void AppBarButtonRotate_Click(object sender, RoutedEventArgs e)
         {
             LockCommandBar(CommandBarPrimary);
-            LockCommandBar(CommandBarSecondary);
-            IRandomAccessStream stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-            SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-            Guid encoderId = GetBitmapEncoderId(scannedFile.Name.Split(".")[1]);
+            IRandomAccessStream stream = null;
 
-            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-            encoder.SetSoftwareBitmap(softwareBitmap);
-            encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+            try
+            {
+                stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-            try { await encoder.FlushAsync(); }
+                Guid encoderId = GetBitmapEncoderId(scannedFile.Name.Split(".")[1]);
+
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                encoder.SetSoftwareBitmap(softwareBitmap);
+                encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                await encoder.FlushAsync();
+            }
             catch (Exception)
             {
                 ShowContentDialog(LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                UnlockCommandBar(CommandBarPrimary);
                 return;
             }
 
@@ -1081,7 +1112,6 @@ namespace Scanner
             stream.Dispose();
 
             UnlockCommandBar(CommandBarPrimary, null);
-            UnlockCommandBar(CommandBarSecondary, null);
 
             // refresh image properties
             imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);

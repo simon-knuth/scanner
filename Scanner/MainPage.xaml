@@ -69,10 +69,7 @@
                             <RadioButton x:Uid="RadioButtonColorModeMonochrome" Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
                         <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
-                                <TextBlock x:Uid="TextBlockResolutionFileSizeHint" Text=" (affects file size)" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5"/>
-                            </StackPanel>
+                            <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
                             <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
                         <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
