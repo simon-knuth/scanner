@@ -97,8 +97,17 @@ namespace Scanner
         /// <summary>
         ///     Opens the Windows 10 sharing panel with <see cref="scannedFile.Name"/> as title.
         /// </summary>
-        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        private async void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
+            try
+            {
+                await scannedFile.OpenAsync(FileAccessMode.Read);           // check whether file still available
+            }
+            catch (Exception)
+            {
+                return;
+            }
+                        
             args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
             args.Request.Data.Properties.Title = scannedFile.Name;
         }
@@ -914,16 +923,18 @@ namespace Scanner
         ///     The event listener for when <see cref="AppBarButtonCopy"/> is clicked. Copies the currently visible
         ///     result file to the clipboard. And sends a toast notification as confirmation.
         /// </summary>
-        private void AppBarButtonCopy_Click(object sender, RoutedEventArgs e)
+        private async void AppBarButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             // create DataPackage for clipboard
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
-            // cet contents according to file type and copy to clipboard
+            // set contents according to file type and copy to clipboard
             string fileExtension = scannedFile.FileType;
             try
             {
+                await scannedFile.OpenAsync(FileAccessMode.Read);           // check whether file still available
+
                 switch (fileExtension)
                 {
                     case ".jpg":
@@ -1060,6 +1071,7 @@ namespace Scanner
             catch (Exception)
             {
                 ShowContentDialog(LocalizedString("ErrorMessageCropHeader"), LocalizedString("ErrorMessageCropBody"));
+                AppBarButtonCrop.IsChecked = false;
                 UnlockCommandBar(CommandBarPrimary);
                 return;
             }
@@ -1386,6 +1398,7 @@ namespace Scanner
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
+                        UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
                     
@@ -1422,6 +1435,7 @@ namespace Scanner
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
+                        UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
 
@@ -1476,7 +1490,7 @@ namespace Scanner
             switch (flowState)
             {
                 case FlowState.crop:
-                    // save as new file
+                    // save crop as new file
                     IRandomAccessStream stream = null;
                     try
                     {
@@ -1494,7 +1508,7 @@ namespace Scanner
                     stream.Dispose();
                     break;
                 case FlowState.draw:
-                    // save as new file
+                    // save drawing as new file
                     stream = null;
                     try
                     {
@@ -1525,6 +1539,7 @@ namespace Scanner
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
                         try { stream.Dispose(); } catch (Exception) { }
+                        UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
                     break;
@@ -1586,7 +1601,7 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Shows a pre-defined configuration of the <see cref="CommandBarSecondary"/>.
+        ///     Shows a pre-defined configuration of the <see cref="CommandBarSecondary"/> without unlocking it.
         /// </summary>
         /// <param name="config">The <see cref="SecondaryMenuConfig"/> that shall be shown.</param>
         private void ShowSecondaryMenuConfig(SecondaryMenuConfig config)
@@ -1659,10 +1674,11 @@ namespace Scanner
             flowState = FlowState.draw;
 
             // show InkCanvas and secondary commands
-            ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
             InitializeInkCanvas(InkCanvasScan, imageMeasurements.Item1, imageMeasurements.Item2);
             FixResultPositioning();
             InkCanvasScan.Visibility = Visibility.Visible;
+            ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
+            UnlockCommandBar(CommandBarSecondary);
         }
 
 
