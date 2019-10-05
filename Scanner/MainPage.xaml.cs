@@ -547,7 +547,7 @@ namespace Scanner
                 return;
             }
 
-            // gather options
+            // gather options ///////////////////////////////////////////////////////////////////////////////
             Tuple<ImageScannerFormat, string> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
             if (formatFlow == null)
             {
@@ -616,7 +616,7 @@ namespace Scanner
                 ShowContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
             }
 
-            // start scan, send progress and show cancel button
+            // start scan ///////////////////////////////////////////////////////////////////////////////////
             cancellationToken = new CancellationTokenSource();
             var progress = new Progress<UInt32>(scanProgress);
 
@@ -705,7 +705,7 @@ namespace Scanner
             if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
             localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
-            // show result /////////////////////////////////
+            // show result //////////////////////////////////////////////////////////////////////////////////
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             ProgressRingScan.Visibility = Visibility.Collapsed;

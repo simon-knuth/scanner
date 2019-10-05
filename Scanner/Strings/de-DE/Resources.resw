@@ -265,6 +265,10 @@
     <value>Gefällt Ihnen die App?</value>
     <comment>The header for the ContentDialog that asks the user to send feedback.</comment>
   </data>
+  <data name="ContentDialogLicenses.Title" xml:space="preserve">
+    <value>Drittanbieterlizenzen</value>
+    <comment>The header for the third-party licenses popup.</comment>
+  </data>
   <data name="ContentDialogRename.CloseButtonText" xml:space="preserve">
     <value>Abbrechen</value>
     <comment>The text inside the button that allows the user to cancel renaming the result file.</comment>
@@ -484,6 +488,10 @@
   <data name="HyperlinkSettingsFeedbackLink" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The settings Feedback Hub link.</comment>
+  </data>
+  <data name="HyperlinkSettingsLicensesLink" xml:space="preserve">
+    <value>Drittanbieterlizenzen</value>
+    <comment>The hyperlink that shows the third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsRateLink" xml:space="preserve">
     <value>bewerten Sie Scanner im Microsoft Store,</value>

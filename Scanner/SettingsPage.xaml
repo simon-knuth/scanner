@@ -108,10 +108,12 @@
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2019 Simon Knuth</Run><LineBreak/>
-                        <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink><LineBreak/></Span>
+                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2019 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
+                        <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink></Span>
                         </TextBlock>
-                        <TextBlock x:Name="TextBlockVersion" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,18"/>
+                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,24">
+                            <Hyperlink x:Name="HyperlinkLicenses" UnderlineStyle="None" Click="HyperlinkLicenses_Click">Third-party licenses</Hyperlink>
+                        </TextBlock>
                     </StackPanel>
                 </ScrollViewer>
             </RelativePanel>
@@ -119,6 +121,19 @@
 
         <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
                        CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        </ContentDialog>
+
+        <ContentDialog x:Name="ContentDialogLicenses" x:Uid="ContentDialogLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+            <TextBlock>
+                <Hyperlink x:Name="HyperlinkLicenseUniversalWindowsPlatform" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.NETCore.UniversalWindowsPlatform</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseStoreEngagement" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Services.Store.Engagement</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUwpNotifications" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.Notifications</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUwpUiControls" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.UI.Controls</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUiXaml" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.UI.XAML</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseQueryStringNet" Click="NavigateToLicenseWebsite" UnderlineStyle="None">QueryString.NET</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp</Hyperlink>
+            </TextBlock>
         </ContentDialog>
     </Grid>
 </Page>

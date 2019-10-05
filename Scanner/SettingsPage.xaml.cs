@@ -28,6 +28,8 @@ namespace Scanner
             ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkLicenses.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsLicensesLink");
+
 
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
@@ -91,7 +93,7 @@ namespace Scanner
             CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
 
             PackageVersion version = Package.Current.Id.Version;
-            TextBlockVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
 
 
@@ -249,6 +251,39 @@ namespace Scanner
             ContentDialogBlank.SecondaryButtonText = "";
 
             await ContentDialogBlank.ShowAsync();
+        }
+
+
+        /// <summary>
+        ///     The event listener for when <see cref="HyperlinkLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
+        /// </summary>
+        private async void HyperlinkLicenses_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
+            ContentDialogLicenses.PrimaryButtonText = "";
+            ContentDialogLicenses.SecondaryButtonText = "";
+
+            await ContentDialogLicenses.ShowAsync();
+        }
+
+
+        /// <summary>
+        ///     The event listener for when a license hyperlink is clicked.
+        /// </summary>
+        private async void NavigateToLicenseWebsite(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            string url = null;
+
+            if (sender == HyperlinkLicenseUniversalWindowsPlatform) url = "https://github.com/Microsoft/dotnet/blob/master/releases/UWP/LICENSE.TXT";
+            else if (sender == HyperlinkLicenseStoreEngagement) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
+            else if (sender == HyperlinkLicenseUwpNotifications) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
+            else if (sender == HyperlinkLicenseUwpUiControls) url = "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md";
+            else if (sender == HyperlinkLicenseUiXaml) url = "https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license";
+            else if (sender == HyperlinkLicenseQueryStringNet) url = "https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE";
+            else if (sender == HyperlinkLicenseWin2dUwp) url = "https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm";
+
+            try { await Windows.System.Launcher.LaunchUriAsync(new Uri(url)); }
+            catch (Exception) { }
         }
     }
 }
