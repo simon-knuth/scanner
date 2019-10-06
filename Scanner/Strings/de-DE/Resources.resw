@@ -181,6 +181,22 @@
     <value>Drehen</value>
     <comment>The tooltip text that appears while hovering the rotate button in the CommandBar.</comment>
   </data>
+  <data name="AppBarButtonSave.Label" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>The text inside the button that allows the user to save the edited result.</comment>
+  </data>
+  <data name="AppBarButtonSave.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>The tooltip text that appears while hovering the save button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonSaveCopy.Label" xml:space="preserve">
+    <value>Kopie speichern</value>
+    <comment>The text inside the button that allows the user to save the edited result as a copy.</comment>
+  </data>
+  <data name="AppBarButtonSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopie speichern</value>
+    <comment>The tooltip text that appears while hovering the save copy button in the CommandBar.</comment>
+  </data>
   <data name="AppBarButtonShare.Label" xml:space="preserve">
     <value>Teilen</value>
     <comment>The text inside the button that allows the user to share the result.</comment>
@@ -201,6 +217,10 @@
     <value>Einstellungen</value>
     <comment>The tooltip text that appears while hovering the settings button.</comment>
   </data>
+  <data name="ButtonSettingsCancel.Content" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>The text inside the button that allows the user to cancel changing the settings.</comment>
+  </data>
   <data name="ButtonSettingsChooseFolder.Content" xml:space="preserve">
     <value>Ordner wählen</value>
     <comment>The text inside the button that allows the user to choose a folder to save to.</comment>
@@ -208,6 +228,10 @@
   <data name="ButtonSettingsResetSaveLocation.Content" xml:space="preserve">
     <value>Zurücksetzen</value>
     <comment>The text inside the button that resets the save location.</comment>
+  </data>
+  <data name="ButtonSettingsSave.Content" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>The text inside the button that allows the user to save settings.</comment>
   </data>
   <data name="CheckBoxSettingsAutomaticScannerSelection.Content" xml:space="preserve">
     <value>Automatisch ersten verfügbaren Scanner wählen</value>
@@ -218,7 +242,7 @@
     <comment>The header for the background notification setting toggle.</comment>
   </data>
   <data name="CheckBoxSettingsSearchIndicator.Content" xml:space="preserve">
-    <value>Scanner-Such-Indikator anzeigen</value>
+    <value>Indikator für die Scannersuche anzeigen</value>
     <comment>The header for the search indicator setting toggle.</comment>
   </data>
   <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
@@ -505,8 +529,8 @@
     <value>Website</value>
     <comment>The hyperlink that opens the app's website.</comment>
   </data>
-  <data name="MenuFlyoutItemFlipAspectRatio" xml:space="preserve">
-    <value>Flip aspect ratio</value>
+  <data name="MenuFlyoutItemFlipAspectRatio.Text" xml:space="preserve">
+    <value>Seitenverhältnis wechseln</value>
     <comment>The text inside the MenuItem that allows to flip the orientation of the fixed aspect ratio while cropping.</comment>
   </data>
   <data name="MessageFileSavedBody" xml:space="preserve">
@@ -614,7 +638,7 @@
     <comment>The header for the ComboBox where users select the desired file format.</comment>
   </data>
   <data name="TextBlockRenameBody.Text" xml:space="preserve">
-    <value>Geben Sie einen neuen Namen für die Datei ein.</value>
+    <value>Geben Sie einen neuen Namen für die Datei ein</value>
     <comment>The text inside the rename flyout.</comment>
   </data>
   <data name="TextBlockResolution.Text" xml:space="preserve">

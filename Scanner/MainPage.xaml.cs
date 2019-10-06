@@ -64,6 +64,8 @@ namespace Scanner
 
             // localize hyperlink
             ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = LocalizedString("HyperlinkScannerSelectionHintBodyLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = LocalizedString("HyperlinkSettingsFeedbackLink");
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = LocalizedString("HyperlinkSettingsRateLink");
 
             Page_ActualThemeChanged(null, null);
 
@@ -97,17 +99,8 @@ namespace Scanner
         /// <summary>
         ///     Opens the Windows 10 sharing panel with <see cref="scannedFile.Name"/> as title.
         /// </summary>
-        private async void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
-            try
-            {
-                await scannedFile.OpenAsync(FileAccessMode.Read);           // check whether file still available
-            }
-            catch (Exception)
-            {
-                return;
-            }
-                        
             args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
             args.Request.Data.Properties.Title = scannedFile.Name;
         }
@@ -1318,7 +1311,7 @@ namespace Scanner
             ((ToggleMenuFlyoutItem)sender).IsChecked = true;
 
             // set aspect ratio according to tag
-            ImageCropper.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString());
+            ImageCropper.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString(), new System.Globalization.CultureInfo("en-EN"));
         }
 
 

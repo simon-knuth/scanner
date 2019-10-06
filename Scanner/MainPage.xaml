@@ -220,7 +220,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="TextBlockRenameBody" Text="Enter a new name for the file." Grid.Row="0"/>
+                <TextBlock x:Name="TextBlockRenameBody" x:Uid="TextBlockRenameBody" Text="Enter a new name for the file" Grid.Row="0"/>
                 <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Grid.Row="1">
                     <TextBox x:Name="TextBoxRename" MinWidth="300" VerticalAlignment="Bottom"/>
                     <TextBlock x:Name="TextBlockRenameExtension" Margin="6,0,0,0" VerticalAlignment="Center"/>
