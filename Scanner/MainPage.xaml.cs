@@ -87,7 +87,11 @@ namespace Scanner
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerExited += InkCanvasScan_PointerExited;
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
-            CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
+            CoreApplication.LeavingBackground += (x, y) => 
+            {
+                inForeground = true;
+                Page_ActualThemeChanged(null, null);
+            };
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
                 ScrollViewerLeftPanel.Margin = new Thickness(0, titleBar.Height, 0, 0);
             };
