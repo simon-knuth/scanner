@@ -554,7 +554,7 @@ namespace Scanner
             Tuple<ImageScannerFormat, string> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
             if (formatFlow == null)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
+                ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
                 ScanCanceled();
                 return;
             }
@@ -570,7 +570,7 @@ namespace Scanner
                 ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
                 if (selectedColorMode == null)
                 {
-                    ShowContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
                     ScanCanceled();
                     return;
                 }
@@ -580,7 +580,7 @@ namespace Scanner
                 ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
-                    ShowContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
                     ScanCanceled();
                     return;
                 }
@@ -595,7 +595,7 @@ namespace Scanner
                 ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
                 if (selectedColorMode == null)
                 {
-                    ShowContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
                     ScanCanceled();
                     return;
                 }
@@ -605,7 +605,7 @@ namespace Scanner
                 ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedResolution == null)
                 {
-                    ShowContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
                     ScanCanceled();
                     return;
                 }
@@ -616,7 +616,7 @@ namespace Scanner
             }
             else
             {
-                ShowContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
+                ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
             }
 
             // start scan ///////////////////////////////////////////////////////////////////////////////////
@@ -671,7 +671,7 @@ namespace Scanner
                     try { await encoder.FlushAsync(); }
                     catch (Exception)
                     {
-                        ShowContentDialog(LocalizedString("ErrorMessageConversionHeader"),
+                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
                             LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
                         ScanCanceled();
                         return;
