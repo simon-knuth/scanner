@@ -361,6 +361,15 @@
     <value>Etwas ist schiefgelaufen</value>
     <comment>The header for the error message that appears when loading the scan folder and even resetting it failed.</comment>
   </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedBody" xml:space="preserve">
+    <value>Das Scannen mehrerer Dokumente wird nicht vollständig unterstützt, weshalb lediglich die erste Seite für die weitere Bearbeitung verfügbar ist. Nichtsdestotrotz werden alle eingescannten Seiten abgespeichert.
+Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbessert werden soll.</value>
+    <comment>The body for the error message that appears when multiple documents were scanned.</comment>
+  </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedHeader" xml:space="preserve">
+    <value>Nicht unterstützt</value>
+    <comment>The header for the error message that appears when multiple documents were scanned.</comment>
+  </data>
   <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
     <value>Bitte wählen Sie einen Farbmodus.</value>
     <comment>The body for the error message that appears when no color mode was selected.</comment>
@@ -496,6 +505,10 @@
   <data name="ErrorMessageShowResultOpenFolder" xml:space="preserve">
     <value>Ordner öffnen</value>
     <comment>The text inside the button that allows the user to open the scan folder if displaying the scan result failed.</comment>
+  </data>
+  <data name="FeedbackContentDialogButtonSendFeedback" xml:space="preserve">
+    <value>Feedback senden</value>
+    <comment>The text that appears inside the button that launches the Feedback Hub from a feedback message.</comment>
   </data>
   <data name="FoundScannersHintAfterNumber" xml:space="preserve">
     <value>gefunden</value>

@@ -361,6 +361,15 @@
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when loading the scan folder and even resetting it failed.</comment>
   </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedBody" xml:space="preserve">
+    <value>Scanning multiple documents is not fully supported and only the first page is available for editing. Nevertheless all scanned pages have been saved.
+Please use the Feedback Hub, if this something you would like to see addressed in a future update.</value>
+    <comment>The body for the error message that appears when multiple documents were scanned.</comment>
+  </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedHeader" xml:space="preserve">
+    <value>Not supported</value>
+    <comment>The header for the error message that appears when multiple documents were scanned.</comment>
+  </data>
   <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
     <value>Please select a color mode.</value>
     <comment>The body for the error message that appears when no color mode was selected.</comment>
@@ -496,6 +505,10 @@
   <data name="ErrorMessageShowResultOpenFolder" xml:space="preserve">
     <value>Open folder</value>
     <comment>The text inside the button that allows the user to open the scan folder if displaying the scan result failed.</comment>
+  </data>
+  <data name="FeedbackContentDialogButtonSendFeedback" xml:space="preserve">
+    <value>Send Feedback</value>
+    <comment>The text that appears inside the button that launches the Feedback Hub from a feedback message.</comment>
   </data>
   <data name="FoundScannersHintAfterNumber" xml:space="preserve">
     <value>found</value>

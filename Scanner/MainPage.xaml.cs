@@ -9,6 +9,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -647,54 +648,68 @@ namespace Scanner
                 return;
             }
 
+            if (result.ScannedFiles.Count > 1)
+            {
+                ShowFeedbackContentDialog(LocalizedString("ErrorMessageMultipleDocumentsUnsupportedHeader"), LocalizedString("ErrorMessageMultipleDocumentsUnsupportedBody"));
+            }
+
             if (formatFlow.Item2 != null)
             {
-                // convert file
-                IRandomAccessStream stream = await result.ScannedFiles[0].OpenAsync(FileAccessMode.ReadWrite);
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-                Guid encoderId = GetBitmapEncoderId(formatFlow.Item2);
-
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                encoder.SetSoftwareBitmap(softwareBitmap);
-
-                try { await encoder.FlushAsync(); }
-                catch (Exception)
+                // files need to be converted
+                bool firstFile = true;
+                foreach (StorageFile scan in result.ScannedFiles)
                 {
-                    ShowContentDialog(LocalizedString("ErrorMessageConversionHeader"),
-                        LocalizedString("ErrorMessageConversionBodyBeforeExtension") + result.ScannedFiles[0].FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
-                    ScanCanceled();
-                    return;
-                }
-                stream.Dispose();
+                    // open file, decode it and prepare an encoder with the target format
+                    IRandomAccessStream stream = await scan.OpenAsync(FileAccessMode.ReadWrite);
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    Guid encoderId = GetBitmapEncoderId(formatFlow.Item2);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
 
-                string newNameWithoutNumbering = RemoveNumbering(result.ScannedFiles[0].Name
-                    .Replace("." + result.ScannedFiles[0].Name.Split(".")[1], "." + formatFlow.Item2));
-                string newName = newNameWithoutNumbering;
-
-                try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
-                catch (Exception)
-                {
-                    // cycle through file numberings until one is not occupied
-                    for (int i = 1; true; i++)
+                    // save/encode the file in the target format
+                    try { await encoder.FlushAsync(); }
+                    catch (Exception)
                     {
-                        try
+                        ShowContentDialog(LocalizedString("ErrorMessageConversionHeader"),
+                            LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                        ScanCanceled();
+                        return;
+                    }
+                    stream.Dispose();
+
+                    // rename file to make the extension match the new format and watch out for name collisions
+                    string newNameWithoutNumbering = RemoveNumbering(scan.Name
+                        .Replace("." + scan.Name.Split(".")[1], "." + formatFlow.Item2));
+                    string newName = newNameWithoutNumbering;
+
+                    try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
+                    catch (Exception)
+                    {
+                        // cycle through file numberings until one is not occupied
+                        for (int i = 1; true; i++)
                         {
-                            await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() 
-                                + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
+                            try
+                            {
+                                await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
+                                    + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
+                            }
+                            catch (Exception)
+                            {
+                                continue;
+                            }
+                            newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
+                            break;
                         }
-                        catch (Exception)
-                        {
-                            continue;
-                        }
-                        newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                        break;
+                    }
+
+                    if (firstFile)
+                    {
+                        // make first file the one that can be edited
+                        scannedFile = await StorageFile.GetFileFromPathAsync(scan.Path.Replace(scan.Name, newName));
+                        firstFile = false;
                     }
                 }
-
-                scannedFile = await StorageFile
-                    .GetFileFromPathAsync(result.ScannedFiles[0].Path.Replace(result.ScannedFiles[0].Name, newName));
             }
             else
             {
@@ -1791,5 +1806,30 @@ namespace Scanner
 
             await ContentDialogBlank.ShowAsync();
         }
+
+
+        /// <summary>
+        ///     Displays a <see cref="ContentDialog"/> consisting of a <paramref name="title"/>, <paramref name="message"/>,
+        ///     a button that opens the Feedback Hub and a button that allows the user to close the <see cref="ContentDialog"/>.
+        /// </summary>
+        /// <param name="title">The title of the <see cref="ContentDialog"/>.</param>
+        /// <param name="message">The body of the <see cref="ContentDialog"/>.</param>
+        public async void ShowFeedbackContentDialog(string title, string message)
+        {
+            ContentDialogBlank.Title = title;
+            ContentDialogBlank.Content = message;
+
+            ContentDialogBlank.CloseButtonText = LocalizedString("CloseButtonText");
+            ContentDialogBlank.PrimaryButtonText = LocalizedString("FeedbackContentDialogButtonSendFeedback");
+            TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> typedEventHandler 
+                = new TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs>((a, b) => LaunchFeedbackHub(null, null));
+            ContentDialogBlank.PrimaryButtonClick += typedEventHandler;
+            ContentDialogBlank.SecondaryButtonText = "";
+            ContentDialogBlank.DefaultButton = ContentDialogButton.Close;
+
+            await ContentDialogBlank.ShowAsync();
+            ContentDialogBlank.PrimaryButtonClick -= typedEventHandler;
+        }
+
     }
 }

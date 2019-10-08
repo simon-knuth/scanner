@@ -236,7 +236,7 @@
         </ContentDialog>
 
         <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
-                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+                       PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
     </Grid>
