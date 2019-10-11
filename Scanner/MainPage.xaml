@@ -44,7 +44,7 @@
                     <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
                 <ScrollViewer x:Name="ScrollViewerLeftPanel" VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
-                    <StackPanel Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
+                    <StackPanel x:Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
                         <StackPanel.ChildrenTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="100"/>
@@ -53,34 +53,34 @@
                         <TextBlock x:Name="TextBlockHeader" Text="Scanner" FontWeight="Bold" FontSize="32"/>
                         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                             <TextBlock x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock Name="TextBlockFoundScannersHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
+                            <TextBlock x:Name="TextBlockFoundScannersHint" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.5" Visibility="Collapsed"/>
                             <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed"/>
                         </StackPanel>
-                        <ComboBox IsEnabled="False" Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
+                        <ComboBox IsEnabled="False" x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                            <RadioButton x:Uid="RadioButtonSourceAutomatic" Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton x:Uid="RadioButtonSourceFlatbed" Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton x:Uid="RadioButtonSourceFeeder" Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceAutomatic" x:Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceFlatbed" x:Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
+                            <RadioButton x:Uid="RadioButtonSourceFeeder" x:Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                         </StackPanel>
-                        <StackPanel Name="StackPanelColor" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
+                        <StackPanel x:Name="StackPanelColor" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
                             <TextBlock x:Uid="TextBlockColorMode" Text="Color mode" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <RadioButton x:Uid="RadioButtonColorModeColor" Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Uid="RadioButtonColorModeGrayscale" Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Uid="RadioButtonColorModeMonochrome" Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Uid="RadioButtonColorModeColor" x:Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Uid="RadioButtonColorModeGrayscale" x:Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                            <RadioButton x:Uid="RadioButtonColorModeMonochrome" x:Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
                         </StackPanel>
-                        <StackPanel Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
+                        <StackPanel x:Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
                             <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <ComboBox Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
+                            <ComboBox x:Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
                         <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox Name="ComboBoxFormat" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
+                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                    <Button Name="ButtonScan" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="Scan" IsEnabledChanged="ButtonScan_IsEnabledChanged">
+                    <Button x:Name="ButtonScan" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="Scan" IsEnabledChanged="ButtonScan_IsEnabledChanged">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
-                            <ProgressRing Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
+                            <ProgressRing x:Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
@@ -98,19 +98,19 @@
             </Grid>
         </Frame>
 
-        <RelativePanel Grid.Column="1" Name="RelativePanelRight">
+        <RelativePanel Grid.Column="1" x:Name="RelativePanelRight">
             <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.2" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
                                         OffsetY="{Binding Path=Margin.Top, ElementName=GridPanelRight}"
                                         Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                        HorizontalContentAlignment="Stretch" Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
+                                        HorizontalContentAlignment="Stretch" x:Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
                                         RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                                         RelativePanel.AlignBottomWithPanel="True">
                 <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <v1809:Grid.BackgroundTransition>
-                        <BrushTransition/>
+                        <v1809:BrushTransition/>
                     </v1809:Grid.BackgroundTransition>
 
-                    <Grid Name="GridPanelRight" VerticalAlignment="Stretch">
+                    <Grid x:Name="GridPanelRight" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Grid Margin="0,32,0,0">
@@ -183,11 +183,11 @@
                                     <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonDraw_Checked">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
                                     </AppBarToggleButton>
-                                    <Custom:ToolbarSeparator Name="ToolbarSeparatorPrimaryOne"/>
+                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryOne"/>
                                     <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" v1809:CornerRadius="2" BorderThickness="1,1,1.5,1" Click="AppBarButtonRename_Click"/>
                                     <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDelete_Click">
                                     </AppBarButton>
-                                    <Custom:ToolbarSeparator Name="ToolbarSeparatorPrimaryTwo"/>
+                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryTwo"/>
                                     <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
                                     <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>
                                 </CommandBar>

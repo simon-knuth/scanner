@@ -27,7 +27,7 @@
     </Page.Resources>
     
     
-    <Grid Name="GridSettingsPage">
+    <Grid x:Name="GridSettingsPage">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="75"/>
@@ -35,7 +35,7 @@
 
         <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <v1809:Grid.BackgroundTransition>
-                <BrushTransition/>
+                <v1809:BrushTransition/>
             </v1809:Grid.BackgroundTransition>
 
             <Grid.ColumnDefinitions>
@@ -50,7 +50,7 @@
         </controls:DropShadowPanel>
         <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <v1809:Grid.BackgroundTransition>
-                <BrushTransition/>
+                <v1809:BrushTransition/>
             </v1809:Grid.BackgroundTransition>
             
             <RelativePanel x:Name="StackPanelSettings">
@@ -59,7 +59,7 @@
                 </controls:DropShadowPanel>
                 <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <v1809:Grid.BackgroundTransition>
-                        <BrushTransition/>
+                        <v1809:BrushTransition/>
                     </v1809:Grid.BackgroundTransition>
 
                     <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="24,0,0,8" VerticalAlignment="Top" Padding="0,0,0,0"/>

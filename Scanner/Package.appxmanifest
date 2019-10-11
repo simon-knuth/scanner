@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="584d67fc-bc8c-485b-bac0-4cbbf6609860" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Scanner</DisplayName>
+    <DisplayName>Scanner for Windows 10</DisplayName>
     <PublisherDisplayName>Simon Knuth</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

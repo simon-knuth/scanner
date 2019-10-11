@@ -61,8 +61,6 @@ namespace Scanner
         {
             this.InitializeComponent();
 
-            TextBlockHeader.Text = Package.Current.DisplayName.ToString();
-
             // localize hyperlink
             ((Windows.UI.Xaml.Documents.Run)HyperlinkSettings.Inlines[0]).Text = LocalizedString("HyperlinkScannerSelectionHintBodyLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = LocalizedString("HyperlinkSettingsFeedbackLink");

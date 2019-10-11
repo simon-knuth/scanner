@@ -41,7 +41,7 @@ namespace Scanner
                         break;
                 }
             }
-            
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
