@@ -27,6 +27,18 @@
   <li>WinUI 2.2</li>
 </ul>
 
+<br><h2>Screenshots</h2>
+<table width="100%">
+  <tr>
+    <td width="50%"><image src='https://i.imgur.com/zsU3aEHh.png'/></td>
+    <td width="50%"><image src='https://i.imgur.com/A65r0oJh.png'/></td>
+  </tr>
+  <tr>
+    <td width="50%"><image src='https://i.imgur.com/GxDbtoph.png'/></td>
+    <td width="50%"><image src='https://i.imgur.com/JR4wOcih.png'/></td>
+  </tr>
+</table>
+
 <br><h2>Download</h2>
 <table width="100%">
   <tr>
@@ -36,6 +48,7 @@
   </tr>
 </table>
 
-<br><h2>Credit</h2>
-Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert)  
-Banner (laptop wallpaper): [Aleksandar Pasaric](https://www.pexels.com/@apasaric)
+<br><h2>Credits</h2>
+Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert) 
+Banner (laptop wallpaper): [Aleksandar Pasaric](https://www.pexels.com/@apasaric) 
+Screenshots (background wallpaper): [Artem Beliaikin](https://www.pexels.com/@belart84) 
