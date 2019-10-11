@@ -49,6 +49,6 @@
 </table>
 
 <br><h2>Credits</h2>
-Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert) 
-Banner (laptop wallpaper): [Aleksandar Pasaric](https://www.pexels.com/@apasaric) 
-Screenshots (background wallpaper): [Artem Beliaikin](https://www.pexels.com/@belart84) 
+Banner (base picture): [Christian Lambert](https://unsplash.com/@_christianlambert)  
+Banner (laptop wallpaper): [Aleksandar Pasaric](https://www.pexels.com/@apasaric)  
+Screenshots (background wallpaper): [Artem Beliaikin](https://www.pexels.com/@belart84)  
