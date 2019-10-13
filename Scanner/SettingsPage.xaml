@@ -111,8 +111,11 @@
                         <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2019 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
                         <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink></Span>
                         </TextBlock>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,24">
+                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,0">
                             <Hyperlink x:Name="HyperlinkLicenses" UnderlineStyle="None" Click="HyperlinkLicenses_Click">Third-party licenses</Hyperlink>
+                        </TextBlock>
+                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,24">
+                            <Hyperlink x:Name="HyperlinkPrivacyPolicy" UnderlineStyle="None" Click="HyperlinkPrivacyPolicy_Click">Privacy policy</Hyperlink>
                         </TextBlock>
                     </StackPanel>
                 </ScrollViewer>

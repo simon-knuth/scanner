@@ -530,6 +530,10 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <value>Third-party licenses</value>
     <comment>The hyperlink that shows the third-party licenses.</comment>
   </data>
+  <data name="HyperlinkSettingsPrivacyPolicyLink" xml:space="preserve">
+    <value>Privacy policy</value>
+    <comment>The hyperlink that opens the privacy policy website.</comment>
+  </data>
   <data name="HyperlinkSettingsRateLink" xml:space="preserve">
     <value>rate Scanner in the Microsoft Store</value>
     <comment>The settings link that allows the user to rate the app.</comment>

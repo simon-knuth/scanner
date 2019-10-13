@@ -530,6 +530,10 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <value>Drittanbieterlizenzen</value>
     <comment>The hyperlink that shows the third-party licenses.</comment>
   </data>
+  <data name="HyperlinkSettingsPrivacyPolicyLink" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+    <comment>The hyperlink that opens the privacy policy website.</comment>
+  </data>
   <data name="HyperlinkSettingsRateLink" xml:space="preserve">
     <value>bewerten Sie Scanner im Microsoft Store,</value>
     <comment>The settings link that allows the user to rate the app.</comment>

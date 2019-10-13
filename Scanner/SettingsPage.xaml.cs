@@ -16,7 +16,8 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
-        private string websiteUrl = "https://github.com/simon-knuth/scanner";
+        private string websiteUrl = "https://simon-knuth.github.io/scanner";
+        private string privacyPolicyUrl = "https://simon-knuth.github.io/scanner/privacy-policy";
         private StorageFolder newScanFolder = null;
 
         public SettingsPage()
@@ -29,7 +30,7 @@ namespace Scanner
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkLicenses.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsLicensesLink");
-
+            ((Windows.UI.Xaml.Documents.Run)HyperlinkPrivacyPolicy.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsPrivacyPolicyLink");
 
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
@@ -187,6 +188,15 @@ namespace Scanner
         private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri(websiteUrl));
+        }
+
+
+        /// <summary>
+        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
+        /// </summary>
+        private async void HyperlinkPrivacyPolicy_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(privacyPolicyUrl));
         }
 
 
