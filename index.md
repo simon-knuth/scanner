@@ -8,8 +8,9 @@
   </tr>
 </table>
 
-  
-<h2>Features</h2>
+
+&nbsp;
+## Features
 <ul>
   <li>Preview after scan</li>
   <li>Built-in image editing
@@ -28,8 +29,9 @@
   <li>Light and dark mode</li>
 </ul>
 
-  
-<h2>Screenshots</h2>
+
+&nbsp;
+## Screenshots
 <table width="100%">
   <tr>
     <td width="50%"><image src='https://i.imgur.com/zsU3aEHh.png'/></td>
@@ -41,8 +43,9 @@
   </tr>
 </table>
 
-  
-<h2>Download</h2>
+
+&nbsp;
+## Download
 <table width="100%">
   <tr>
     <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>You can also view the source code of both stable and WIP versions on GitHub. Download/clone the code using the green button in the top-right corner.</td>
@@ -53,16 +56,18 @@
   </tr>
 </table>
 
-  
-<h2>Credits</h2>  
+
+&nbsp;
+## Credits
 Banner (base picture): <a href="https://unsplash.com/@_christianlambert">Christian Lambert</a>  
 
 Banner (laptop wallpaper): <a href="https://www.pexels.com/@apasaric">Aleksandar Pasaric</a>  
 
 Screenshots (background wallpaper): <a href="https://www.pexels.com/@belart84">Artem Beliaikin</a>  
 
-  
-<h2>Translations</h2>
+
+&nbsp;
+## Translations
 The currently supported languages are:
 <ul>
   <li>English (EN)</li>
@@ -71,7 +76,8 @@ The currently supported languages are:
 
 See [this page](help-translate.md), if you'd like to help improve existing translations or add new ones.
 
-  
-<h2>Privacy policy</h2>
+
+&nbsp;
+## Privacy policy
 
 You can find the privacy policy [here](privacy-policy.md).
