@@ -56,9 +56,11 @@
 
 <br>
 <h2>Credits</h2>  
-Banner (base picture): <a href="https://unsplash.com/@_christianlambert">Christian Lambert</a>
-Banner (laptop wallpaper): <a href="https://www.pexels.com/@apasaric">Aleksandar Pasaric</a>
-Screenshots (background wallpaper): <a href="https://www.pexels.com/@belart84">Artem Beliaikin</a>
+Banner (base picture): <a href="https://unsplash.com/@_christianlambert">Christian Lambert</a>  
+
+Banner (laptop wallpaper): <a href="https://www.pexels.com/@apasaric">Aleksandar Pasaric</a>  
+
+Screenshots (background wallpaper): <a href="https://www.pexels.com/@belart84">Artem Beliaikin</a>  
 
 <br>
 <h2>Translations</h2>
