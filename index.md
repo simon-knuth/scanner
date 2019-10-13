@@ -8,7 +8,7 @@
   </tr>
 </table>
 
-<br>
+  
 <h2>Features</h2>
 <ul>
   <li>Preview after scan</li>
@@ -28,7 +28,7 @@
   <li>Light and dark mode</li>
 </ul>
 
-<br>
+  
 <h2>Screenshots</h2>
 <table width="100%">
   <tr>
@@ -41,7 +41,7 @@
   </tr>
 </table>
 
-<br>
+  
 <h2>Download</h2>
 <table width="100%">
   <tr>
@@ -53,7 +53,7 @@
   </tr>
 </table>
 
-<br>
+  
 <h2>Credits</h2>  
 Banner (base picture): <a href="https://unsplash.com/@_christianlambert">Christian Lambert</a>  
 
@@ -61,7 +61,7 @@ Banner (laptop wallpaper): <a href="https://www.pexels.com/@apasaric">Aleksandar
 
 Screenshots (background wallpaper): <a href="https://www.pexels.com/@belart84">Artem Beliaikin</a>  
 
-<br>
+  
 <h2>Translations</h2>
 The currently supported languages are:
 <ul>
@@ -71,6 +71,7 @@ The currently supported languages are:
 
 See [this page](help-translate.md), if you'd like to help improve existing translations or add new ones.
 
-<br>
+  
 <h2>Privacy policy</h2>
+
 You can find the privacy policy [here](privacy-policy.md).
