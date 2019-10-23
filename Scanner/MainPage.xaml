@@ -73,7 +73,7 @@
                             <ComboBox x:Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
                         </StackPanel>
                         <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}" SelectedIndex="0"/>
+                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
@@ -198,9 +198,9 @@
             </controls:DropShadowPanel>
         </RelativePanel>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" Style="{StaticResource RoundedContentDialog}" Title="Are you enjoying the app?"
-                       CloseButtonText="Close" DefaultButton="Primary" PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
-                       SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" v1809:Style="{StaticResource RoundedContentDialog}" Title="Are you enjoying the app?"
+                       CloseButtonText="Close" DefaultButton="Primary" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
+                       v1809:SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
                     <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
@@ -212,9 +212,9 @@
             </TextBlock>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
-                       PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
-                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened" MinWidth="350">
+        <ContentDialog x:Name="ContentDialogRename" x:Uid="ContentDialogRename" Title="Rename" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
+                       PrimaryButtonText="Confirm" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonRename_Click"
+                       CloseButtonText="Cancel" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}" Opened="ContentDialogRename_Opened" MinWidth="350">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -229,14 +229,14 @@
             
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
-                       PrimaryButtonText="Confirm" PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
-                       CloseButtonText="Cancel" CloseButtonStyle="{StaticResource RoundedButtonStyle}" MinWidth="400">
+        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
+                       PrimaryButtonText="Confirm" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
+                       CloseButtonText="Cancel" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}" MinWidth="400">
             <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin."/>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
-                       PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
     </Grid>
