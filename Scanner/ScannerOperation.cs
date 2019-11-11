@@ -125,6 +125,7 @@ class ScannerOperation
     ///     format is supported, also add unsupported formats which can be reached through conversion. The formats are added in this order:
     ///         JPG -> PNG -> PDF -> XPS -> OpenXPS -> TIF -> BMP
     ///     All available formats are added to <paramref name="formats"/>.
+    ///     If possible, the previously selected format will be reselected. Otherwise the first one in the list is selected.
     /// </summary>
     /// <param name="config">The configuration that determines whether to check the auto, flatbed or feeder mode.</param>
     /// <param name="formats">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s for the formats.</param>
@@ -182,8 +183,9 @@ class ScannerOperation
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)
         {
-            if (((ComboBoxItem) formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
+            if (((ComboBoxItem)formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
         }
+        if (comboBoxFormats.SelectedIndex == -1 && comboBoxFormats.Items.Count > 0) comboBoxFormats.SelectedIndex = 0;
     }
 
 
