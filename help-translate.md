@@ -11,6 +11,6 @@ Submit completed translations to scanner-win10@outlook.com with a meaningful sub
 - [x] a link to e.g. your social media presence that shall be mentioned on the project's GitHub page (optional)
 - [x] whether you would mind being contacted if new/changed strings need to be translated in the future
 
-I will contact you as soon as possible and supply you with Microsoft Store strings and meta data that is needed to finish the translation.
+I will contact you as soon as possible and supply you with Microsoft Store strings and meta data that might be needed to finish the translation.
 
 Thank you ♥
