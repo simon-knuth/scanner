@@ -1,13 +1,4 @@
 <image src='https://i.imgur.com/ghnN0UV.png'/>
-<table width="100%">
-  <tr>
-    <td width="15%"><image src='https://i.imgur.com/4fMgKKY.png'/></td>
-    <td width="75%"><h1>Scanner for Windows 10</h1>
-                    <i>A scanner app built for the Universal Windows Platform</i><br><br>
-    </td>
-  </tr>
-</table>
-
 
 &nbsp;
 ## Features
