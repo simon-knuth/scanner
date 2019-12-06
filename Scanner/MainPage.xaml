@@ -241,7 +241,7 @@
         </ContentDialog>
 
         <controlsxaml:TeachingTip
-            Name="TeachingTipError"
+            x:Name="TeachingTipError"
             ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
             CloseButtonStyle="{StaticResource RoundedButtonStyle}"
             ActionButtonContent="Settings"
@@ -250,7 +250,7 @@
             Padding="8"/>
 
         <controlsxaml:TeachingTip
-            Name="TeachingTipSaveLocation"
+            x:Name="TeachingTipSaveLocation"
             x:Uid="TeachingTipSaveLocation"
             Target="{x:Bind ButtonRecents}"
             PlacementMargin="8"
@@ -258,7 +258,7 @@
             Subtitle="Your scans are currently being saved to the default folder. You can change this behavior in the settings."
             ActionButtonContent="Go to settings"
             ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
-            IsLightDismissEnabled="True"
+            IsLightDismissEnabled="False"
             Padding="8"/>
     </Grid>
 </Page>
