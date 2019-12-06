@@ -242,7 +242,22 @@ namespace Scanner
                     }
                 }
 
-                UI_enabled(true, autoAllowed, flatbedAllowed, feederAllowed, true, true, true, true, true, true, true, true);
+                // refresh color modes
+                bool colorAllowed = false, grayscaleAllowed = false, monochromeAllowed = false;
+
+                if (RadioButtonSourceFlatbed.IsChecked == true)
+                {
+                    colorAllowed = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                    grayscaleAllowed = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                    monochromeAllowed = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                } else if (RadioButtonSourceFeeder.IsChecked == true)
+                {
+                    colorAllowed = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                    grayscaleAllowed = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                    monochromeAllowed = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                }
+
+                UI_enabled(true, autoAllowed, flatbedAllowed, feederAllowed, colorAllowed, grayscaleAllowed, monochromeAllowed, true, true, true, true, true);
             }
         }
 
@@ -1878,6 +1893,17 @@ namespace Scanner
                 await Launcher.LaunchFileAsync(scannedFile, options);
             }
             catch (Exception) { };
+        }
+
+        private void ImageScanViewer_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            args.AllowedOperations = DataPackageOperation.Copy;
+
+            List<StorageFile> list = new List<StorageFile>();
+            list.Add(scannedFile);
+            args.Data.SetStorageItems(list);
+
+            args.DragUI.SetContentFromDataPackage();
         }
     }
 }
