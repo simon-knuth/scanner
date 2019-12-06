@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
+    xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     x:Class="Scanner.MainPage"
     mc:Ignorable="d" 
     SizeChanged="Page_SizeChanged" 
@@ -189,8 +190,8 @@
                                     </AppBarButton>
                                     <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryTwo"/>
                                     <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>
-                                </CommandBar>
+                                    <AppBarButton x:Uid="AppBarButtonOpenWith" x:Name="AppBarButtonOpenWith" Icon="OpenWith" Label="Open with" ToolTipService.ToolTip="Open with" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonOpenWith_Click"/>
+                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>                                </CommandBar>
                             </Frame>
                         </controls:DropShadowPanel>
                     </Grid>
@@ -239,5 +240,25 @@
                        v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
+        <controlsxaml:TeachingTip
+            Name="TeachingTipError"
+            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
+            CloseButtonStyle="{StaticResource RoundedButtonStyle}"
+            ActionButtonContent="Settings"
+            PlacementMargin="8"
+            IsLightDismissEnabled="True"
+            Padding="8"/>
+
+        <controlsxaml:TeachingTip
+            Name="TeachingTipSaveLocation"
+            x:Uid="TeachingTipSaveLocation"
+            Target="{x:Bind ButtonRecents}"
+            PlacementMargin="8"
+            Title="Save Location"
+            Subtitle="Your scans are currently being saved to the default folder. You can change this behavior in the settings."
+            ActionButtonContent="Go to settings"
+            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
+            IsLightDismissEnabled="True"
+            Padding="8"/>
     </Grid>
 </Page>

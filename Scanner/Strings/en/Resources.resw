@@ -165,6 +165,14 @@
     <value>Draw</value>
     <comment>The tooltip text that appears while hovering the draw button in the CommandBar.</comment>
   </data>
+  <data name="AppBarButtonOpenWith.Label" xml:space="preserve">
+    <value>Open with</value>
+    <comment>The text inside the button that allows the user to pick an app to open the file with.</comment>
+  </data>
+  <data name="AppBarButtonOpenWith.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open with</value>
+    <comment>The tooltip text that appears while hovering the open with button.</comment>
+  </data>
   <data name="AppBarButtonRename.Label" xml:space="preserve">
     <value>Rename</value>
     <comment>The text inside the button that allows the user to rename the result.</comment>
@@ -459,7 +467,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The header for the error message that appears when scanning failed due to an unknown error.</comment>
   </data>
   <data name="ErrorMessageScanFolderBody" xml:space="preserve">
-    <value>Please select a folder to scan to in the settings.</value>
+    <value>The selected save location is invalid. You can change and reset it in the settings.</value>
     <comment>The body for the error message that appears when no scan folder was selected.</comment>
   </data>
   <data name="ErrorMessageScanFolderClose" xml:space="preserve">
@@ -637,6 +645,18 @@ Please use the Feedback Hub, if this something you would like to see addressed i
   <data name="RunSettingsRestartHintBeforeLink.Text" xml:space="preserve">
     <value>Please </value>
     <comment>[ends with a whitespace] The text that is in front of the save-and-restart link.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.ActionButtonContent" xml:space="preserve">
+    <value>Go to settings</value>
+    <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.Subtitle" xml:space="preserve">
+    <value>Your scans are currently being saved to the default folder. You can change this behavior in the settings.</value>
+    <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.Title" xml:space="preserve">
+    <value>Save location</value>
+    <comment>The title that appears in the popup which notifies the user about the save location.</comment>
   </data>
   <data name="TextBlockButtonScan.Text" xml:space="preserve">
     <value>Scan</value>

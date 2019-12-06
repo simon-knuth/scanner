@@ -80,6 +80,25 @@ namespace Scanner
             scannerWatcher.EnumerationCompleted += OnScannerEnumerationComplete;
             scannerWatcher.Start();
 
+            // allow for mouse input on the InkCanvas
+            InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+
+            // setup TeachingTips
+            if (firstAppLaunchWithThisVersion == null)
+            {
+                TeachingTipSaveLocation.ActionButtonClick += (x, y) =>
+                {
+                    TeachingTipSaveLocation.IsOpen = false;
+                    ButtonSettings_Click(null, null);
+                };
+                TeachingTipSaveLocation.IsOpen = true;
+            }
+            TeachingTipError.ActionButtonClick += (x, y) =>
+            {
+                TeachingTipError.IsOpen = false;
+                ButtonSettings_Click(null, null);
+            };
+
             // register event listeners ////////////////////////////////////////////////////////////////
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerEntered += InkCanvasScan_PointerEntered;
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerExited += InkCanvasScan_PointerExited;
@@ -542,13 +561,12 @@ namespace Scanner
 
             if (scanFolder == null)
             {
-                MessageDialog dialog = new MessageDialog(LocalizedString("ErrorMessageScanFolderHeader"), LocalizedString("ErrorMessageScanFolderBody"));
-                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderSettings"), (x) => ButtonSettings_Click(null, null)));
-                dialog.Commands.Add(new UICommand(LocalizedString("ErrorMessageScanFolderClose"), (x) => { }));
-                dialog.DefaultCommandIndex = 0;
-                dialog.CancelCommandIndex = 1;
+                TeachingTipError.Target = ButtonScan;
+                TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
+                TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
+                TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
                 ScanCanceled();
-                await dialog.ShowAsync();
+                TeachingTipError.IsOpen = true;
                 return;
             }
 
@@ -630,6 +648,22 @@ namespace Scanner
 
             try
             {
+                StorageFolder parent = await scanFolder.GetParentAsync();
+                await parent.GetFolderAsync(scanFolder.Name);
+            }
+            catch (Exception)
+            {
+                TeachingTipError.Target = ButtonScan;
+                TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
+                TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
+                TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
+                ScanCanceled();
+                TeachingTipError.IsOpen = true;
+                return;
+            }
+
+            try
+            {
                 result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
                 RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
             }
@@ -638,7 +672,7 @@ namespace Scanner
                 if (!canceledScan) ScannerError(exc);
                 return;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 if (!canceledScan) ScannerError();
                 return;
@@ -841,7 +875,8 @@ namespace Scanner
             scannedFile = null;
 
             Page_SizeChanged(null, null);
-            UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
+            refreshLeftPanel();
+            //UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
 
@@ -1833,5 +1868,16 @@ namespace Scanner
             ContentDialogBlank.PrimaryButtonClick -= typedEventHandler;
         }
 
+        private async void AppBarButtonOpenWith_Click(object sender, RoutedEventArgs e)
+        {
+            LauncherOptions options = new LauncherOptions();
+            options.DisplayApplicationPicker = true;
+
+            try
+            {
+                await Launcher.LaunchFileAsync(scannedFile, options);
+            }
+            catch (Exception) { };
+        }
     }
 }
