@@ -217,6 +217,10 @@
     <value>Abbrechen</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
   </data>
+  <data name="ButtonDevices.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scanner verwalten</value>
+    <comment>The tooltip text that appears while hovering the devices button.</comment>
+  </data>
   <data name="ButtonRecents.ToolTipService.ToolTip" xml:space="preserve">
     <value>Vorherige Scans</value>
     <comment>The tooltip text that appears while hovering the recents button.</comment>
@@ -645,6 +649,18 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
   <data name="RunSettingsRestartHintBeforeLink.Text" xml:space="preserve">
     <value>Bitte </value>
     <comment>[ends with a whitespace] The text that is in front of the save-and-restart link.</comment>
+  </data>
+  <data name="TeachingTipDevices.ActionButtonContent" xml:space="preserve">
+    <value>Einstellungen öffnen</value>
+    <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
+  </data>
+  <data name="TeachingTipDevices.Subtitle" xml:space="preserve">
+    <value>Wenn der Scanner nicht innerhalb von drei Minuten gefunden wird, muss er möglicherweise zuerst in den Einstellungen hinzugefügt werden.</value>
+    <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipDevices.Title" xml:space="preserve">
+    <value>Wählen Sie einen Scanner</value>
+    <comment>The title that appears in the popup which notifies the user about the save location.</comment>
   </data>
   <data name="TeachingTipSaveLocation.ActionButtonContent" xml:space="preserve">
     <value>Gehe zu Einstellungen</value>

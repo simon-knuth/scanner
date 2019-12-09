@@ -217,6 +217,10 @@
     <value>Cancel</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
   </data>
+  <data name="ButtonDevices.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage scanners</value>
+    <comment>The tooltip text that appears while hovering the devices button.</comment>
+  </data>
   <data name="ButtonRecents.ToolTipService.ToolTip" xml:space="preserve">
     <value>Previous scans</value>
     <comment>The tooltip text that appears while hovering the recents button.</comment>
@@ -645,6 +649,18 @@ Please use the Feedback Hub, if this something you would like to see addressed i
   <data name="RunSettingsRestartHintBeforeLink.Text" xml:space="preserve">
     <value>Please </value>
     <comment>[ends with a whitespace] The text that is in front of the save-and-restart link.</comment>
+  </data>
+  <data name="TeachingTipDevices.ActionButtonContent" xml:space="preserve">
+    <value>Launch settings</value>
+    <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
+  </data>
+  <data name="TeachingTipDevices.Subtitle" xml:space="preserve">
+    <value>If your scanner doesn't show up within three minutes, you might need to add it in the settings app first.</value>
+    <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipDevices.Title" xml:space="preserve">
+    <value>Select a scanner</value>
+    <comment>The title that appears in the popup which notifies the user about the save location.</comment>
   </data>
   <data name="TeachingTipSaveLocation.ActionButtonContent" xml:space="preserve">
     <value>Go to settings</value>

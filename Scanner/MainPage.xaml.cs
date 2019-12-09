@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
@@ -83,6 +82,12 @@ namespace Scanner
             // allow for mouse input on the InkCanvas
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
 
+            // setup hyperlinks
+            HyperlinkSettings.Click += async (x, y) =>
+            {
+                await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
+            };
+
             // setup TeachingTips
             if (firstAppLaunchWithThisVersion == null)
             {
@@ -97,6 +102,10 @@ namespace Scanner
             {
                 TeachingTipError.IsOpen = false;
                 ButtonSettings_Click(null, null);
+            };
+            TeachingTipDevices.ActionButtonClick += async (x, y) =>
+            {
+                await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
             };
 
             // register event listeners ////////////////////////////////////////////////////////////////
@@ -377,6 +386,7 @@ namespace Scanner
             {
                 // small ////////////////////////////////////////////////////////
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
+                ButtonDevices.Visibility = Visibility.Visible;
                 if (flowState == FlowState.result || flowState == FlowState.crop || flowState == FlowState.draw)
                 {
                     // small and result visible
@@ -443,6 +453,7 @@ namespace Scanner
                 }
 
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
+                ButtonDevices.Visibility = Visibility.Visible;
                 uiState = UIstate.full;
             }
             else if (900 < width)
@@ -471,8 +482,16 @@ namespace Scanner
                     }
                 }
 
-                if (selectedScanner == null && flowState == FlowState.initial) StackPanelTextRight.Visibility = Visibility.Visible;
-                else StackPanelTextRight.Visibility = Visibility.Collapsed;
+                if (selectedScanner == null && flowState == FlowState.initial)
+                {
+                    StackPanelTextRight.Visibility = Visibility.Visible;
+                    ButtonDevices.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    StackPanelTextRight.Visibility = Visibility.Collapsed;
+                    ButtonDevices.Visibility = Visibility.Visible;
+                }
 
                 uiState = UIstate.full;
             }
@@ -687,7 +706,7 @@ namespace Scanner
                 if (!canceledScan) ScannerError(exc);
                 return;
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 if (!canceledScan) ScannerError();
                 return;
@@ -891,7 +910,6 @@ namespace Scanner
 
             Page_SizeChanged(null, null);
             refreshLeftPanel();
-            //UI_enabled(true, true, true, true, true, true, true, true, true, true, true, true);
         }
 
 
@@ -1904,6 +1922,12 @@ namespace Scanner
             args.Data.SetStorageItems(list);
 
             args.DragUI.SetContentFromDataPackage();
+        }
+
+        private void ButtonDevices_Click(object sender, RoutedEventArgs e)
+        {
+            if (TeachingTipDevices.IsOpen == true) TeachingTipDevices.IsOpen = false;
+            TeachingTipDevices.IsOpen = true;
         }
     }
 }
