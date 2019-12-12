@@ -317,6 +317,14 @@
     <value>Rename</value>
     <comment>The header for the the rename flyout.</comment>
   </data>
+  <data name="ContentDialogUpdate.PrimaryButtonText" xml:space="preserve">
+    <value>Okay</value>
+    <comment>The text inside the confirmation button of the changelog.</comment>
+  </data>
+  <data name="ContentDialogUpdate.Title" xml:space="preserve">
+    <value>What's New</value>
+    <comment>The header for the changelog.</comment>
+  </data>
   <data name="DefaultResolutionIndicator" xml:space="preserve">
     <value>Default</value>
     <comment>The text that appears behind the default resolution in the resolutions list. It is automatically encapsulated by brackets.</comment>
@@ -721,6 +729,42 @@ Please use the Feedback Hub, if this something you would like to see addressed i
   <data name="TextBlockSource.Text" xml:space="preserve">
     <value>Source</value>
     <comment>The header for the ComboBox where users select the source scanner.</comment>
+  </data>
+  <data name="TextBlockUpdateEnd.Text" xml:space="preserve">
+    <value>~ Thank you for your support! ~</value>
+    <comment>The end of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
+    <value>Send your scans directly to another app.</value>
+    <comment>The body for the first section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
+    <value>Open With</value>
+    <comment>The header for the first section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
+    <value>Grab a scan, drag it to an app or folder and safely drop it there.</value>
+    <comment>The body for the second section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">
+    <value>Drag &amp; Drop</value>
+    <comment>The header for the second section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection3Body.Text" xml:space="preserve">
+    <value>Use a mouse to draw, if you don't have your pen handy (or your device doesn't support inking with a pen).</value>
+    <comment>The body for the third section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection3Header.Text" xml:space="preserve">
+    <value>Drawing for Everyone</value>
+    <comment>The header for the third section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection4Body.Text" xml:space="preserve">
+    <value>Fixed many issues that impacted users running Windows 10 version 1803.</value>
+    <comment>The body for the fourth section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection4Header.Text" xml:space="preserve">
+    <value>Improved compatibility</value>
+    <comment>The header for the fourth section of the changelog.</comment>
   </data>
   <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
     <value>Custom</value>

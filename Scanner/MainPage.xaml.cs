@@ -9,6 +9,7 @@ using Windows.Data.Pdf;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -52,6 +53,7 @@ namespace Scanner
         private UIstate uiState = UIstate.unset;
         private FlowState flowState = FlowState.initial;
         private bool canceledScan = false;
+        private bool firstLoaded = true;
 
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
@@ -107,6 +109,18 @@ namespace Scanner
             {
                 await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
             };
+
+            // compatibility stuff /////////////////////////////////////////////////////////////////////
+            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+            {
+                // v1809+
+                TeachingTipError.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipError.CloseButtonStyle = RoundedButtonStyle;
+
+                TeachingTipSaveLocation.ActionButtonStyle = RoundedButtonAccentStyle;
+
+                TeachingTipDevices.ActionButtonStyle = RoundedButtonAccentStyle;
+            }
 
             // register event listeners ////////////////////////////////////////////////////////////////
             InkCanvasScan.InkPresenter.UnprocessedInput.PointerEntered += InkCanvasScan_PointerEntered;
@@ -175,6 +189,7 @@ namespace Scanner
                 // scanner selected ///////////////////////////////////////////////////////////////////////
                 // hide text on the right side
                 StackPanelTextRight.Visibility = Visibility.Collapsed;
+                ButtonDevices.Visibility = Visibility.Visible;
 
                 if (selectedScanner == null || selectedScanner.DeviceId.ToLower() != ((string) ((ComboBoxItem) ComboBoxScanners.SelectedItem).Tag).ToLower())
                 {
@@ -313,8 +328,6 @@ namespace Scanner
                     {
                         ComboBoxScanners.SelectedIndex = 0;
                     }
-
-                    TextBlockFoundScannersHint.Text = " (" + LocalizedString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + LocalizedString("FoundScannersHintAfterNumber") + ")";
                 }
             );
         }
@@ -351,7 +364,6 @@ namespace Scanner
                     }
                 }
 
-                TextBlockFoundScannersHint.Text = " (" + LocalizedString("FoundScannersHintBeforeNumber") + scannerList.Count.ToString() + " " + LocalizedString("FoundScannersHintAfterNumber") + ")";
             });
         }
 
@@ -365,7 +377,6 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
                 {
-                    TextBlockFoundScannersHint.Visibility = Visibility.Visible;
                     if (ComboBoxScanners.SelectedIndex == -1)
                     {
                         UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
@@ -590,6 +601,8 @@ namespace Scanner
             ProgressRingScan.Visibility = Visibility.Visible;
             ScrollViewerScan.ChangeView(0, 0, 1);
             AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
+            TeachingTipDevices.IsOpen = false;
+            ButtonDevices.IsEnabled = false;
 
             canceledScan = false;
 
@@ -873,6 +886,7 @@ namespace Scanner
             // update UI
             Page_SizeChanged(null, null);
             refreshLeftPanel();
+            ButtonDevices.IsEnabled = true;
         }
 
 
@@ -907,6 +921,7 @@ namespace Scanner
             TextBlockButtonScan.Visibility = Visibility.Visible;
             flowState = FlowState.initial;
             scannedFile = null;
+            ButtonDevices.IsEnabled = true;
 
             Page_SizeChanged(null, null);
             refreshLeftPanel();
@@ -1248,6 +1263,14 @@ namespace Scanner
 
             if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
             else ProgressBarRefresh.Visibility = Visibility.Collapsed;
+
+            if (firstLoaded)
+            {
+                // page visible for the first time this session
+                if (firstAppLaunchWithThisVersion == true) ShowUpdateMessage();
+            }
+
+            firstLoaded = false;
         }
 
 
@@ -1901,6 +1924,10 @@ namespace Scanner
             ContentDialogBlank.PrimaryButtonClick -= typedEventHandler;
         }
 
+
+        /// <summary>
+        ///     The event listener for when the <see cref="AppBarButtonOpenWith"/> is clicked.
+        /// </summary>
         private async void AppBarButtonOpenWith_Click(object sender, RoutedEventArgs e)
         {
             LauncherOptions options = new LauncherOptions();
@@ -1913,21 +1940,44 @@ namespace Scanner
             catch (Exception) { };
         }
 
+
+        /// <summary>
+        ///     The event listener for when the user starts dragging a scan.
+        /// </summary>
         private void ImageScanViewer_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
-            args.AllowedOperations = DataPackageOperation.Copy;
+            try
+            {
+                args.AllowedOperations = DataPackageOperation.Copy;
 
-            List<StorageFile> list = new List<StorageFile>();
-            list.Add(scannedFile);
-            args.Data.SetStorageItems(list);
+                List<StorageFile> list = new List<StorageFile>();
+                list.Add(scannedFile);
+                args.Data.SetStorageItems(list);
 
-            args.DragUI.SetContentFromDataPackage();
+                args.DragUI.SetContentFromDataPackage();
+            }
+            catch (Exception) { }
         }
 
+
+        /// <summary>
+        ///     The event listener for when <see cref="ButtonDevices"/> is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonDevices_Click(object sender, RoutedEventArgs e)
         {
             if (TeachingTipDevices.IsOpen == true) TeachingTipDevices.IsOpen = false;
             TeachingTipDevices.IsOpen = true;
+        }
+
+
+        /// <summary>
+        ///     Displays the <see cref="ContentDialogUpdate"/>.
+        /// </summary>
+        private async void ShowUpdateMessage()
+        {
+            await ContentDialogUpdate.ShowAsync();
         }
     }
 }

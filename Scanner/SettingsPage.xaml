@@ -122,12 +122,12 @@
             </RelativePanel>
         </Grid>
 
-        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
-                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogLicenses" x:Uid="ContentDialogLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
-                       CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogLicenses" x:Uid="ContentDialogLicenses" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
+                       v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock>
                 <Hyperlink x:Name="HyperlinkLicenseUniversalWindowsPlatform" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.NETCore.UniversalWindowsPlatform</Hyperlink><LineBreak/>
                 <Hyperlink x:Name="HyperlinkLicenseStoreEngagement" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Services.Store.Engagement</Hyperlink><LineBreak/>
