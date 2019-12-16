@@ -92,6 +92,7 @@ namespace Scanner
             CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
             CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
             CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
+            CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
 
             PackageVersion version = Package.Current.Id.Version;
             RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
@@ -116,6 +117,7 @@ namespace Scanner
             settingAutomaticScannerSelection = (bool) CheckBoxAutomaticScannerSelection.IsChecked;
             settingNotificationScanComplete = (bool) CheckBoxNotificationScanComplete.IsChecked;
             settingUnsupportedFileFormat = (bool) CheckBoxUnsupportedFileFormat.IsChecked;
+            settingDrawPenDetected = (bool) CheckBoxSettingsDrawPenDetected.IsChecked;
 
             SaveSettings();
 

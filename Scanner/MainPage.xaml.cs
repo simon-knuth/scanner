@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Input;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -1718,6 +1719,7 @@ namespace Scanner
                     ToolbarSeparatorSecondary.Visibility = Visibility.Collapsed;
 
                     InkToolbarScan.Visibility = Visibility.Collapsed;
+                    AppBarButtonTouchDraw.Visibility = Visibility.Collapsed;
                     AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
                     AppBarButtonSave.Visibility = Visibility.Collapsed;
                     AppBarButtonSaveCopy.Visibility = Visibility.Collapsed;
@@ -1731,6 +1733,7 @@ namespace Scanner
                     ToolbarSeparatorSecondary.Visibility = Visibility.Visible;
 
                     InkToolbarScan.Visibility = Visibility.Collapsed;
+                    AppBarButtonTouchDraw.Visibility = Visibility.Collapsed;
                     AppBarButtonAspectRatio.Visibility = Visibility.Visible;
                     AppBarButtonSave.Visibility = Visibility.Visible;
                     AppBarButtonSaveCopy.Visibility = Visibility.Visible;
@@ -1744,6 +1747,19 @@ namespace Scanner
                     ToolbarSeparatorSecondary.Visibility = Visibility.Visible;
 
                     InkToolbarScan.Visibility = Visibility.Visible;
+                    try
+                    {
+                        IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
+                        foreach (var device in pointerDevices)
+                        {
+                            if (device.PointerDeviceType == PointerDeviceType.Touch)
+                            {
+                                AppBarButtonTouchDraw.Visibility = Visibility.Visible;
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception) { }
                     AppBarButtonAspectRatio.Visibility = Visibility.Collapsed;
                     AppBarButtonSave.Visibility = Visibility.Visible;
                     AppBarButtonSaveCopy.Visibility = Visibility.Visible;
@@ -1785,12 +1801,15 @@ namespace Scanner
 
         /// <summary>
         ///     The event listener for when the pointer entered the <see cref="InkCanvasScan"/>. If the pointer
-        ///     belongs to a pen and the app is in drawing mode, the <see cref="CommandBarPrimary"/>
-        ///     and <see cref="CommandBarSecondary"/> are hidden.
+        ///     belongs to a pen and the app is in drawing mode or the pointer belongs to a touch and drawing with 
+        ///     touch is enabled, the <see cref="CommandBarPrimary"/> and <see cref="CommandBarSecondary"/> are hidden.
         /// </summary>
         private void InkCanvasScan_PointerEntered(InkUnprocessedInput input, PointerEventArgs e)
         {
-            if (flowState == FlowState.draw && e.CurrentPoint.PointerDevice.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            if (flowState == FlowState.draw 
+                && (e.CurrentPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Pen
+                    || (e.CurrentPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Touch
+                        && AppBarButtonTouchDraw.IsChecked == true)))
             {
                 ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
                 ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
@@ -1978,6 +1997,35 @@ namespace Scanner
         private async void ShowUpdateMessage()
         {
             await ContentDialogUpdate.ShowAsync();
+        }
+
+
+        /// <summary>
+        ///     The event listener for when the pointer entered the <see cref="ImageScanViewer"/>. If the pointer
+        ///     belongs to a pen and drawing is available, the app will switch to drawing mode.
+        /// </summary>
+        private void ImageScanViewer_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen
+                && AppBarButtonDraw.Visibility == Visibility.Visible
+                && AppBarButtonDraw.IsEnabled
+                && flowState == FlowState.result
+                && settingDrawPenDetected)
+            {
+                AppBarButtonDraw.IsChecked = true;
+            } 
+        }
+
+        private void AppBarButtonTouchDraw_Checked(object sender, RoutedEventArgs e)
+        {
+            // enable touch drawing
+            InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch;
+        }
+
+        private void AppBarButtonTouchDraw_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // disable touch drawing
+            InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
         }
     }
 }

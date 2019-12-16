@@ -10,6 +10,7 @@ public static class Globals
     public static bool settingAutomaticScannerSelection;            // automatically select first available scanner
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
     public static bool settingUnsupportedFileFormat;                // allow unsupported file formats through conversion
+    public static bool settingDrawPenDetected;                      // automatically start drawing when a pen is detected
 
     public static StorageFolder scanFolder = null;
     public static ApplicationDataContainer localSettingsContainer;

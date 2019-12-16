@@ -253,6 +253,10 @@
     <value>Send a notification when scanning ends in the background</value>
     <comment>The header for the background notification setting toggle.</comment>
   </data>
+  <data name="CheckBoxSettingsDrawPenDetected.Content" xml:space="preserve">
+    <value>Start drawing when a pen is detected</value>
+    <comment>The header for the automatic drawing on pen detection setting toggle.</comment>
+  </data>
   <data name="CheckBoxSettingsSearchIndicator.Content" xml:space="preserve">
     <value>Show scanner search indicator</value>
     <comment>The header for the search indicator setting toggle.</comment>
@@ -735,19 +739,19 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Send your scans directly to another app.</value>
+    <value>The app automatically detects when you want to start drawing - one less button to press. This can be disabled in the settings.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>Open With</value>
+    <value>Start drawing immediately</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
-    <value>Grab a scan, drag it to an app or folder and safely drop it there.</value>
+    <value>Draw with your finger(s) on devices with touch capabilities.</value>
     <comment>The body for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">
-    <value>Drag &amp; Drop</value>
+    <value>Touch the Screen</value>
     <comment>The header for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection3Body.Text" xml:space="preserve">

@@ -90,6 +90,9 @@
                         <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,12,0,0"/>
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0"/>
                         <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="CheckBoxUnsupportedFileFormat_Toggled"/>
+
+                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,24,0,0"/>
+
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsFeedbackHeader" Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>

@@ -118,7 +118,7 @@
                         <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Grid Margin="0,32,0,0">
-                                <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting"/>
+                                <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting" PointerEntered="ImageScanViewer_PointerEntered"/>
                                 <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
                                 </Viewbox>
@@ -142,6 +142,9 @@
                                             <InkToolbarEraserButton/>
                                         </InkToolbar>
                                     </CommandBar.Content>
+                                    <AppBarToggleButton x:Uid="AppBarButtonTouchDraw" x:Name="AppBarButtonTouchDraw" LabelPosition="Collapsed" ToolTipService.ToolTip="Draw with touch" BorderThickness="1,1,1.5,1" Visibility="Collapsed" v1809:CornerRadius="2" Checked="AppBarButtonTouchDraw_Checked" Unchecked="AppBarButtonTouchDraw_Unchecked" Style="{ThemeResource AppBarToggleButtonRevealStyle}">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;"/>
+                                    </AppBarToggleButton>
                                     <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" BorderThickness="1,1,1.5,1" Visibility="Collapsed" v1809:CornerRadius="2">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;"/>
                                         <AppBarButton.Flyout>
@@ -283,7 +286,7 @@
             </ContentDialog.Transitions>
             <ScrollViewer VerticalScrollMode="Auto">
                 <StackPanel Orientation="Vertical">
-                    <Grid x:Name="GridContentDialogUpdate" Margin="0,16,0,0">
+                    <Grid x:Name="GridContentDialogUpdate" Margin="0,12,0,0">
                         <Grid.ChildrenTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition IsStaggeringEnabled="True"/>
@@ -300,16 +303,16 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Open With" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Send your scans directly to another app." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Start drawing immediately" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="The app automatically detects when you want to start drawing - one less button to press. This can be disabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA4E;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Drag &amp; Drop" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Grab a scan, drag it to an app or folder and safely drop it there." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Touch the Screen" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Draw with your finger(s) on devices with touch capabilities." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
                         <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="32" Margin="0,0,0,24"/>

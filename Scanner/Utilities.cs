@@ -346,6 +346,16 @@ static class Utilities
             localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
         }
 
+        if (localSettingsContainer.Values["settingDrawPenDetected"] != null)
+        {
+            settingDrawPenDetected = (bool)localSettingsContainer.Values["settingDrawPenDetected"];
+        }
+        else
+        {
+            settingDrawPenDetected = true;
+            localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;
+        }
+
         PackageVersion version = Package.Current.Id.Version;
         string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         if (localSettingsContainer.Values["lastKnownVersion"] != null)
@@ -646,6 +656,7 @@ static class Utilities
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
+        localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;
     }
 
 
