@@ -739,35 +739,35 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Die App erkennt, wenn Sie mit dem Zeichnen beginnen - kein Knopfdruck nötig. Dies kann in den Einstellungen deaktiviert werden.</value>
+    <value>Nutzen Sie Ihren Finger zum Zeichnen auf unterstützten Geräten. Außerdem erkennt die App, wenn Sie mit einem Stift etwas zeichnen wollen - kein Knopfdruck nötig. Dies kann in den Einstellungen deaktiviert werden.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>Sofort mit dem Zeichnen beginnen</value>
+    <value>Zeichnen Sie mehr, schneller und besser</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
-    <value>Nutzen Sie Ihre FInger zum Zeichnen auf Geräten mit Touch-Unterstützung.</value>
+    <value>Für die meisten unsichtbar, aber dennoch hilfreich: Kleine Buttons sind jetzt leichter zu treffen und die Navigation mit der Tastatur startet an den richtigen Stellen.</value>
     <comment>The body for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">
-    <value>Berühren Sie Ihren Bildschirm</value>
+    <value>Verbesserte Barrierefreiheit</value>
     <comment>The header for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection3Body.Text" xml:space="preserve">
-    <value>Nutzen Sie eine Maus zum Zeichnen, falls Sie Ihren Stift nicht griffbereit haben (oder Ihr Gerät keinen Stift unterstützt).</value>
+    <value>Der Ordnerbutton zeigt jetzt an, ob ein anderer Speicherort ausgewählt wurde.</value>
     <comment>The body for the third section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection3Header.Text" xml:space="preserve">
-    <value>Zeichnen für Jedermann</value>
+    <value>Wissen, wo die Dateien liegen</value>
     <comment>The header for the third section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection4Body.Text" xml:space="preserve">
-    <value>Es wurden viele Fehler behoben, die Nutzer von Windows 10 Version 1803 betrafen.</value>
+    <value>Es wurden Fehler behoben, die unter anderem Speicherorte betrafen, welche sich nicht in der Fotobibliothek befanden.</value>
     <comment>The body for the fourth section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection4Header.Text" xml:space="preserve">
-    <value>Verbesserte Kompatibilität</value>
+    <value>Fehler behoben</value>
     <comment>The header for the fourth section of the changelog.</comment>
   </data>
   <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">

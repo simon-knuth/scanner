@@ -21,7 +21,6 @@ using Windows.UI.Xaml;
 using static Enums;
 using static Globals;
 
-
 static class Utilities
 {
     /// <summary>
@@ -673,5 +672,32 @@ static class Utilities
     public static Tuple<double, double> RefreshImageMeasurements(BitmapImage image)
     {
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
+    }
+
+
+    /// <summary>
+    ///     Checks whether <see cref="scanFolder"/> is set to its default value (..\Pictures\Scans).
+    /// </summary>
+    /// <returns>
+    ///     null  - <see cref="scanFolder"/> is null
+    ///     true  - <see cref="scanFolder"/> is set to its default value
+    ///     false - <see cref="scanFolder"/> is not set to its default value or null
+    /// </returns>
+    public static async System.Threading.Tasks.Task<bool?> IsDefaultScanFolderSet()
+    {
+        if (scanFolder == null) return null;
+
+        StorageFolder folder;
+        try
+        {
+            folder = await KnownFolders.PicturesLibrary.GetFolderAsync("Scans");
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+        if (folder.Path == scanFolder.Path) return true;
+        else return false;
     }
 }

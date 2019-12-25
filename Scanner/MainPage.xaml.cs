@@ -13,6 +13,7 @@ using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
@@ -37,7 +38,7 @@ namespace Scanner
     {
         private DeviceWatcher scannerWatcher;
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
-        private List<DeviceInformation> deviceInformations = new List<DeviceInformation>();
+        private List<DeviceInformation> deviceInformation = new List<DeviceInformation>();
         CancellationTokenSource cancellationToken = null;
 
         private ImageScanner selectedScanner = null;
@@ -92,15 +93,6 @@ namespace Scanner
             };
 
             // setup TeachingTips
-            if (firstAppLaunchWithThisVersion == null)
-            {
-                TeachingTipSaveLocation.ActionButtonClick += (x, y) =>
-                {
-                    TeachingTipSaveLocation.IsOpen = false;
-                    ButtonSettings_Click(null, null);
-                };
-                TeachingTipSaveLocation.IsOpen = true;
-            }
             TeachingTipError.ActionButtonClick += (x, y) =>
             {
                 TeachingTipError.IsOpen = false;
@@ -138,7 +130,7 @@ namespace Scanner
             };
             Window.Current.CoreWindow.KeyDown += MainPage_KeyDown;
 
-            _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => LoadScanFolder());
+            LoadScanFolder();
         }
 
 
@@ -200,7 +192,7 @@ namespace Scanner
                     RadioButtonSourceFlatbed.IsChecked = false;
                     RadioButtonSourceFeeder.IsChecked = false;
 
-                    foreach (DeviceInformation check in deviceInformations)
+                    foreach (DeviceInformation check in deviceInformation)
                     {
                         if (check.Id == ((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag.ToString())
                         {
@@ -221,7 +213,7 @@ namespace Scanner
                                 scannerWatcher.Stop();
                                 ComboBoxScanners.SelectedIndex = -1;
                                 selectedScanner = null;
-                                deviceInformations.Clear();
+                                deviceInformation.Clear();
                                 refreshLeftPanel();
                                 scannerWatcher.Start();
                                 ComboBoxScanners.IsEnabled = true;
@@ -318,14 +310,14 @@ namespace Scanner
                         item.Content = deviceInfo.Name;
                         item.Tag = deviceInfo.Id;
 
-                        deviceInformations.Add(deviceInfo);
+                        deviceInformation.Add(deviceInfo);
                         scannerList.Add(item);
                     }
                     else return;
 
                     // auto select first added scanner (if some requirements are met)
                     if (!possiblyDeadScanner && !ComboBoxScanners.IsDropDownOpen && settingAutomaticScannerSelection
-                        && selectedScanner == null && deviceInformations.Count == 1)
+                        && selectedScanner == null && deviceInformation.Count == 1)
                     {
                         ComboBoxScanners.SelectedIndex = 0;
                     }
@@ -353,11 +345,11 @@ namespace Scanner
                         ComboBoxScanners.SelectedIndex = -1;
                         scannerList.Remove(item);
 
-                        foreach (DeviceInformation check in deviceInformations)
+                        foreach (DeviceInformation check in deviceInformation)
                         {
                             if (check.Id == deviceInfoUpdate.Id)
                             {
-                                deviceInformations.Remove(check);
+                                deviceInformation.Remove(check);
                                 break;
                             }
                         }
@@ -694,12 +686,9 @@ namespace Scanner
             ImageScannerScanResult result = null;
             ButtonCancel.Visibility = Visibility.Visible;
 
-            try
-            {
-                StorageFolder parent = await scanFolder.GetParentAsync();
-                await parent.GetFolderAsync(scanFolder.Name);
-            }
-            catch (Exception)
+            StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
+            try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
+            catch (Exception) 
             {
                 TeachingTipError.Target = ButtonScan;
                 TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
@@ -803,9 +792,6 @@ namespace Scanner
 
             cancellationToken = null;
 
-            if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
-            localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
-
             // show result //////////////////////////////////////////////////////////////////////////////////
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
@@ -883,6 +869,10 @@ namespace Scanner
 
             // send toast if the app isn't in the foreground
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
+
+            scanNumber++;
+            if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
+            localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
             // update UI
             Page_SizeChanged(null, null);
@@ -1254,7 +1244,7 @@ namespace Scanner
         /// <summary>
         ///     Page was loaded (possibly through navigation). Reacts to settings changes if necessary.
         /// </summary>
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (formatSettingChanged)
             {
@@ -1265,13 +1255,28 @@ namespace Scanner
             if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
             else ProgressBarRefresh.Visibility = Visibility.Collapsed;
 
+            bool? defaultFolder = await IsDefaultScanFolderSet();
             if (firstLoaded)
             {
                 // page visible for the first time this session
                 if (firstAppLaunchWithThisVersion == true) ShowUpdateMessage();
-            }
+                if (firstAppLaunchWithThisVersion == true)  ShowUpdateMessage();
 
-            firstLoaded = false;
+                if (firstAppLaunchWithThisVersion == null && defaultFolder == true)
+                {
+                    TeachingTipSaveLocation.ActionButtonClick += (x, y) =>
+                    {
+                        TeachingTipSaveLocation.IsOpen = false;
+                        ButtonSettings_Click(null, null);
+                    };
+                    TeachingTipSaveLocation.IsOpen = true;
+                }
+
+                firstLoaded = false;
+            }
+            
+            if (defaultFolder == true || defaultFolder == null) FontIconButtonRecents.Glyph = glyphButtonRecentsDefault;
+            else FontIconButtonRecents.Glyph = glyphButtonRecentsCustom;
         }
 
 
@@ -1520,7 +1525,8 @@ namespace Scanner
                     try
                     {
                         CanvasDevice device = CanvasDevice.GetSharedDevice();
-                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 96);
+                        Windows.Storage.FileProperties.ImageProperties imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
+                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, imageProperties.Width, imageProperties.Height, 192);
                         stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
                         CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
 

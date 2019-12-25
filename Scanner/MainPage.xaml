@@ -60,7 +60,7 @@
                             </Button>
                             <ProgressBar x:Name="ProgressBarRefresh" Opacity="0.5" HorizontalAlignment="Left" IsIndeterminate="True" Height="{ThemeResource ProgressBarThemeMinHeight}" Width="100" Margin="24,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <ComboBox IsEnabled="False" x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged"/>
+                        <ComboBox IsEnabled="False" x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged" TabIndex="0"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
                             <RadioButton x:Uid="RadioButtonSourceAutomatic" x:Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                             <RadioButton x:Uid="RadioButtonSourceFlatbed" x:Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
@@ -88,14 +88,14 @@
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonSettings_Click">
-                            <SymbolIcon Symbol="Setting"/>
+                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonSettings_Click">
+                            <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
                         </Button>
-                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Margin="0,0,12,0" Click="ButtonRecents_Click">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;"/>
+                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonRecents_Click">
+                            <FontIcon x:Name="FontIconButtonRecents" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
                         </Button>
-                        <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="8,8,8,8" Click="ButtonCancel_Click" Visibility="Collapsed">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;"/>
+                        <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Click="ButtonCancel_Click" Visibility="Collapsed">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -305,26 +305,26 @@
 
                         <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Start drawing immediately" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="The app automatically detects when you want to start drawing - one less button to press. This can be disabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Draw more, faster, better" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Draw with your finger(s) on devices with touch capabilities. The app now also detects when you want to start drawing with a pen - one less button to press. This can be disabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE776;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Touch the Screen" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Draw with your finger(s) on devices with touch capabilities." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved accessibility" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Invisible to most, but important nonetheless: Smaller buttons are now easier to hit and keyboard navigation starts right where it should." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection3Header" Text="Drawing for Everyone" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection3Body" Text="Use a mouse to draw, if you don't have your pen handy (or your device doesn't support inking with a pen)." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection3Header" Text="Know where your files go" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection3Body" Text="The folder button now indicates whether a custom save location has been chosen." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
                         <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE90F;" FontSize="32" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,8">
-                            <TextBlock x:Uid="TextBlockUpdateSection4Header" Text="Improved compatibility" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection4Body" Text="Fixed many issues that impacted users running Windows 10 version 1803." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection4Header" Text="Fixes" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection4Body" Text="Fixed many issues that e.g. impacted users trying to scan to folders outside the Pictures library." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
                     </Grid>
                     <TextBlock x:Uid="TextBlockUpdateEnd" Text="~ Thank you for your support! ~" Style="{StaticResource BaseTextBlockStyle}" HorizontalAlignment="Center" Margin="0,24,0,16"/>

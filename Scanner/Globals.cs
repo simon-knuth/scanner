@@ -22,4 +22,9 @@ public static class Globals
 
     public static bool? firstAppLaunchWithThisVersion;
     public static int scanNumber;
+
+
+
+    public static string glyphButtonRecentsDefault = "\uE838";
+    public static string glyphButtonRecentsCustom = "\uEC25";
 }

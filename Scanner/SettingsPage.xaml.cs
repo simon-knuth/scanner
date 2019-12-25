@@ -297,5 +297,14 @@ namespace Scanner
             try { await Windows.System.Launcher.LaunchUriAsync(new Uri(url)); }
             catch (Exception) { }
         }
+
+
+        /// <summary>
+        ///     Page was loaded (possibly through navigation).
+        /// </summary>
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ButtonBrowse.Focus(FocusState.Programmatic);
+        }
     }
 }

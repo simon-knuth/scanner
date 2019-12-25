@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
     NavigationCacheMode="Disabled" 
-    KeyDown="Page_KeyDown" Loading="Page_Loading">
+    KeyDown="Page_KeyDown" Loading="Page_Loading" Loaded="Page_Loaded">
 
     <Page.Resources>
         <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
@@ -72,7 +72,7 @@
                             <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,0,0" IsTextSelectionEnabled="True"/>
                         </RelativePanel>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
-                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click"/>
+                            <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click" TabIndex="0"/>
                             <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
                         </StackPanel>
                         <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
