@@ -409,21 +409,14 @@ static class Utilities
             {
                 item.IsEnabled = false;
             }
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                item.IsEnabled = false;
-            }
         } else
         {
             foreach (Control item in commandBar.PrimaryCommands)
             {
                 if (item != except) item.IsEnabled = false;
             }
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                if (item != except) item.IsEnabled = false;
-            }
         }
+        if (commandBar.Content != null) ((Control)commandBar.Content).IsEnabled = false;
     }
 
 
@@ -600,13 +593,12 @@ static class Utilities
         if (except == null)
         {
             foreach (Control item in commandBar.PrimaryCommands) item.IsEnabled = true;
-            foreach (Control item in commandBar.PrimaryCommands) item.IsEnabled = true;
         }
         else
         {
             foreach (Control item in commandBar.PrimaryCommands) if (item != except) item.IsEnabled = true;
-            foreach (Control item in commandBar.PrimaryCommands) if (item != except) item.IsEnabled = true;
         }
+        if (commandBar.Content != null) ((Control)commandBar.Content).IsEnabled = true;
     }
 
 

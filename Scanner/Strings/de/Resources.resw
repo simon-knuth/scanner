@@ -213,6 +213,10 @@
     <value>Teilen (Strg+S)</value>
     <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
   </data>
+  <data name="AppBarButtonTouchDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mit Finger zeichnen</value>
+    <comment>The tooltip text that appears while hovering the button that allows for drawing with a finger in the CommandBar.</comment>
+  </data>
   <data name="ButtonCancel.ToolTipService.ToolTip" xml:space="preserve">
     <value>Abbrechen</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
@@ -675,7 +679,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The title that appears in the popup which notifies the user about the save location.</comment>
   </data>
   <data name="TeachingTipSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>Gehe zu Einstellungen</value>
+    <value>Einstellungen</value>
     <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
   </data>
   <data name="TeachingTipSaveLocation.Subtitle" xml:space="preserve">
@@ -747,7 +751,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
-    <value>Für die meisten unsichtbar, aber dennoch hilfreich: Kleine Buttons sind jetzt leichter zu treffen und die Navigation mit der Tastatur startet an den richtigen Stellen.</value>
+    <value>Für die meisten unsichtbar, aber dennoch hilfreich: Kleine Buttons sind jetzt leichter zu treffen und die Navigation mit der Tastatur ist verlässlicher.</value>
     <comment>The body for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">

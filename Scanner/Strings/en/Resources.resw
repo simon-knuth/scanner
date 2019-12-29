@@ -213,6 +213,10 @@
     <value>Share (Ctrl+S)</value>
     <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
   </data>
+  <data name="AppBarButtonTouchDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Draw with touch</value>
+    <comment>The tooltip text that appears while hovering the button that allows for drawing with a finger in the CommandBar.</comment>
+  </data>
   <data name="ButtonCancel.ToolTipService.ToolTip" xml:space="preserve">
     <value>Cancel</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
@@ -747,7 +751,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
-    <value>Invisible to most, but important nonetheless: Smaller buttons are now easier to hit and keyboard navigation starts right where it should.</value>
+    <value>Invisible to most, but important nonetheless: Smaller buttons are now easier to hit and keyboard navigation is more reliable.</value>
     <comment>The body for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">

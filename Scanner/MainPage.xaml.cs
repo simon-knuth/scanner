@@ -595,6 +595,7 @@ namespace Scanner
             ScrollViewerScan.ChangeView(0, 0, 1);
             AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
             TeachingTipDevices.IsOpen = false;
+            TeachingTipSaveLocation.IsOpen = false;
             ButtonDevices.IsEnabled = false;
 
             canceledScan = false;
@@ -1260,9 +1261,8 @@ namespace Scanner
             {
                 // page visible for the first time this session
                 if (firstAppLaunchWithThisVersion == true) ShowUpdateMessage();
-                if (firstAppLaunchWithThisVersion == true)  ShowUpdateMessage();
 
-                if (firstAppLaunchWithThisVersion == null && defaultFolder == true)
+                if (firstAppLaunchWithThisVersion == null)
                 {
                     TeachingTipSaveLocation.ActionButtonClick += (x, y) =>
                     {
@@ -1525,9 +1525,7 @@ namespace Scanner
                     try
                     {
                         CanvasDevice device = CanvasDevice.GetSharedDevice();
-                        Windows.Storage.FileProperties.ImageProperties imageProperties = await scannedFile.Properties.GetImagePropertiesAsync();
-                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, imageProperties.Width, imageProperties.Height, 192);
-                        stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
+                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 192); stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
                         CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
 
                         using (var ds = renderTarget.CreateDrawingSession())
