@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
@@ -702,8 +703,17 @@ namespace Scanner
 
             try
             {
-                result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                if (formatFlow.Item2 == "PDF")
+                {
+                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                        RadioButtonSourceFeeder, ApplicationData.Current.TemporaryFolder, cancellationToken, 
+                        progress, selectedScanner);
+                } 
+                else
+                {
+                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                        RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                }
             }
             catch (System.Runtime.InteropServices.COMException exc)
             {
@@ -733,54 +743,21 @@ namespace Scanner
                 bool firstFile = true;
                 foreach (StorageFile scan in result.ScannedFiles)
                 {
-                    // open file, decode it and prepare an encoder with the target format
-                    IRandomAccessStream stream = await scan.OpenAsync(FileAccessMode.ReadWrite);
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                    Guid encoderId = GetBitmapEncoderId(formatFlow.Item2);
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    string newName;
 
-                    // save/encode the file in the target format
-                    try { await encoder.FlushAsync(); }
+                    try { newName = await ConvertScannedFile(scan, formatFlow, result); }
                     catch (Exception)
                     {
                         ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
-                            LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                        LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
                         ScanCanceled();
                         return;
-                    }
-                    stream.Dispose();
-
-                    // rename file to make the extension match the new format and watch out for name collisions
-                    string newNameWithoutNumbering = RemoveNumbering(scan.Name
-                        .Replace("." + scan.Name.Split(".")[1], "." + formatFlow.Item2));
-                    string newName = newNameWithoutNumbering;
-
-                    try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
-                    catch (Exception)
-                    {
-                        // cycle through file numberings until one is not occupied
-                        for (int i = 1; true; i++)
-                        {
-                            try
-                            {
-                                await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
-                                    + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                            break;
-                        }
                     }
 
                     if (firstFile)
                     {
                         // make first file the one that can be edited
-                        scannedFile = await StorageFile.GetFileFromPathAsync(scan.Path.Replace(scan.Name, newName));
+                        scannedFile = await scanFolder.GetFileAsync(newName);
                         firstFile = false;
                     }
                 }

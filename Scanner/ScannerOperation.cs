@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
@@ -173,6 +174,10 @@ class ScannerOperation
         if (newNativeFormats.Contains("png"))                   formats.Add(CreateComboBoxItem("PNG", "png,native"));
         else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("PNG", "png,converted"));
         if (newNativeFormats.Contains("pdf"))                   formats.Add(CreateComboBoxItem("PDF", "PDF,native"));
+        else if (canConvert 
+            && settingUnsupportedFileFormat 
+            && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) 
+                formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
         if (newNativeFormats.Contains("xps"))                   formats.Add(CreateComboBoxItem("XPS", "XPS,native"));
         if (newNativeFormats.Contains("openxps"))               formats.Add(CreateComboBoxItem("OpenXPS", "OPENXPS,native"));
         if (newNativeFormats.Contains("tif"))                   formats.Add(CreateComboBoxItem("TIF", "tif,native"));

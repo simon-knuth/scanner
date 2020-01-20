@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 
 using static Enums;
 using static Globals;
+using Windows.Devices.Scanners;
 
 static class Utilities
 {
@@ -691,5 +692,87 @@ static class Utilities
 
         if (folder.Path == scanFolder.Path) return true;
         else return false;
+    }
+
+
+    public static async System.Threading.Tasks.Task<string> ConvertScannedFile(StorageFile file, Tuple<ImageScannerFormat, string> formatFlow, ImageScannerScanResult result)
+    {
+        string newName;
+        switch (formatFlow.Item2)
+        {
+            case "PDF":
+                // convert to PDF
+                try
+                {
+                    // save the source and target name
+                    ApplicationData.Current.LocalSettings.Values["sourceFileName"] = file.Name;
+                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = file.DisplayName + ".pdf";
+
+                    // save measurements, which determine PDF file size
+                    var imageProperties = await file.Properties.GetImagePropertiesAsync();
+                    ApplicationData.Current.LocalSettings.Values["sourceFileWidth"] = imageProperties.Width;
+                    ApplicationData.Current.LocalSettings.Values["sourceFileHeight"] = imageProperties.Height;
+
+                    // call win32 app
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+
+                    // get result file and move it to its correct folder
+                    StorageFile convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
+                    await convertedFile.MoveAsync(scanFolder, convertedFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                    newName = convertedFile.Name;
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                catch (Exception) 
+                {
+                    throw;
+                }                
+                break;
+
+            default:
+                // open image file, decode it and prepare an encoder with the target format
+                IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                Guid encoderId = GetBitmapEncoderId(formatFlow.Item2);
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                encoder.SetSoftwareBitmap(softwareBitmap);
+
+                // save/encode the file in the target format
+                try { await encoder.FlushAsync(); }
+                catch (Exception)
+                {
+                    throw;
+                }
+                stream.Dispose();
+
+                // rename file to make the extension match the new format and watch out for name collisions
+                string newNameWithoutNumbering = RemoveNumbering(file.Name
+                    .Replace("." + file.Name.Split(".")[1], "." + formatFlow.Item2));
+                newName = newNameWithoutNumbering;
+
+                try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
+                catch (Exception)
+                {
+                    // cycle through file numberings until one is not occupied
+                    for (int i = 1; true; i++)
+                    {
+                        try
+                        {
+                            await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
+                                + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                        newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
+                        break;
+                    }
+                }
+                break;
+        }
+        
+        return newName;
     }
 }

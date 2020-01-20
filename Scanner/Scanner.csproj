@@ -196,8 +196,72 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <None Include="Package.StoreAssociation.xml" />
+    <Content Include="de\PdfSharp.Charting.resources.dll" />
+    <Content Include="de\PdfSharp.resources.dll" />
+    <Content Include="win32\ImageToPDF\de\PdfSharp.Charting.resources.dll" />
+    <Content Include="win32\ImageToPDF\de\PdfSharp.resources.dll" />
+    <Content Include="win32\ImageToPDF\ImageToPDF.exe" />
+    <Content Include="win32\ImageToPDF\ImageToPDF.pdb" />
+    <Content Include="win32\ImageToPDF\Microsoft.Win32.Registry.AccessControl.dll" />
+    <Content Include="win32\ImageToPDF\Microsoft.Win32.Registry.dll" />
+    <Content Include="win32\ImageToPDF\Microsoft.Win32.SystemEvents.dll" />
+    <Content Include="win32\ImageToPDF\PdfSharp.Charting.dll" />
+    <Content Include="win32\ImageToPDF\PdfSharp.dll" />
+    <Content Include="win32\ImageToPDF\System.CodeDom.dll" />
+    <Content Include="win32\ImageToPDF\System.Collections.NonGeneric.dll" />
+    <Content Include="win32\ImageToPDF\System.Collections.NonGeneric.xml" />
+    <Content Include="win32\ImageToPDF\System.Collections.Specialized.dll" />
+    <Content Include="win32\ImageToPDF\System.Collections.Specialized.xml" />
+    <Content Include="win32\ImageToPDF\System.ComponentModel.dll" />
+    <Content Include="win32\ImageToPDF\System.ComponentModel.Primitives.dll" />
+    <Content Include="win32\ImageToPDF\System.ComponentModel.Primitives.xml" />
+    <Content Include="win32\ImageToPDF\System.ComponentModel.xml" />
+    <Content Include="win32\ImageToPDF\System.Configuration.ConfigurationManager.dll" />
+    <Content Include="win32\ImageToPDF\System.Data.Odbc.dll" />
+    <Content Include="win32\ImageToPDF\System.Data.OleDb.dll" />
+    <Content Include="win32\ImageToPDF\System.Data.SqlClient.dll" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.EventLog.dll" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.FileVersionInfo.dll" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.FileVersionInfo.xml" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.PerformanceCounter.dll" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.Process.dll" />
+    <Content Include="win32\ImageToPDF\System.Diagnostics.Process.xml" />
+    <Content Include="win32\ImageToPDF\System.Drawing.Common.dll" />
+    <Content Include="win32\ImageToPDF\System.IO.FileSystem.AccessControl.dll" />
+    <Content Include="win32\ImageToPDF\System.IO.Packaging.dll" />
+    <Content Include="win32\ImageToPDF\System.IO.Pipes.AccessControl.dll" />
+    <Content Include="win32\ImageToPDF\System.IO.Ports.dll" />
+    <Content Include="win32\ImageToPDF\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Content Include="win32\ImageToPDF\System.Runtime.Extensions.dll" />
+    <Content Include="win32\ImageToPDF\System.Runtime.Extensions.xml" />
+    <Content Include="win32\ImageToPDF\System.Runtime.InteropServices.dll" />
+    <Content Include="win32\ImageToPDF\System.Runtime.InteropServices.WindowsRuntime.dll" />
+    <Content Include="win32\ImageToPDF\System.Runtime.InteropServices.xml" />
+    <Content Include="win32\ImageToPDF\System.Security.AccessControl.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Cryptography.Cng.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Cryptography.Pkcs.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Cryptography.ProtectedData.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Cryptography.Xml.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Permissions.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Principal.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Principal.Windows.dll" />
+    <Content Include="win32\ImageToPDF\System.Security.Principal.xml" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Duplex.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Duplex.pdb" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Http.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Http.pdb" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.NetTcp.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.NetTcp.pdb" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Primitives.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Primitives.pdb" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Security.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Security.pdb" />
+    <Content Include="win32\ImageToPDF\System.ServiceModel.Syndication.dll" />
+    <Content Include="win32\ImageToPDF\System.ServiceProcess.ServiceController.dll" />
+    <Content Include="win32\ImageToPDF\System.Text.Encoding.CodePages.dll" />
+    <Content Include="win32\ImageToPDF\System.Threading.AccessControl.dll" />
     <Content Include="Properties\Default.rd.xml" />
+    <None Include="win32\ImageToPDF\ImageToPDF.exe.config" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -250,6 +314,7 @@
   <ItemGroup>
     <PRIResource Include="Strings\de\Resources.resw" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
