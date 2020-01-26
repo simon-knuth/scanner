@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
@@ -49,6 +48,7 @@ namespace Scanner
         private double ColumnLeftDefaultMaxWidth;
         private double ColumnLeftDefaultMinWidth;
         private bool inForeground = true;
+        private bool debugShortcutActive = false;
 
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
@@ -130,6 +130,7 @@ namespace Scanner
                 ScrollViewerLeftPanel.Margin = new Thickness(0, titleBar.Height, 0, 0);
             };
             Window.Current.CoreWindow.KeyDown += MainPage_KeyDown;
+            Window.Current.CoreWindow.KeyUp += MainPage_KeyUp;
 
             LoadScanFolder();
         }
@@ -582,10 +583,32 @@ namespace Scanner
         ///     As the final step the buttons in the left panel are reenabled.
         ///     Simple, right?
         /// 
-        ///     Only supports a single-page scan, otherwise the behavior is undefined.
+        ///     Should support multi-page scans, but this is more of an experimental feature.
         /// </remarks>
         private async void Scan(object sender, RoutedEventArgs e)
         {
+            // DEBUG EXIT
+            if (debugShortcutActive)
+            {
+                var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".tif");
+                picker.FileTypeFilter.Add(".bmp");
+                scannedFile = await picker.PickSingleFileAsync();
+                DisplayImageAsync(scannedFile, ImageScanViewer);
+                SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
+                ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                flowState = FlowState.result;
+                imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
+                FixResultPositioning();
+                Page_SizeChanged(null, null);
+                refreshLeftPanel();
+                ButtonDevices.IsEnabled = true;
+                return;
+            }
+
             // lock (almost) entire left panel and clean up right side
             UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
             ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
@@ -613,7 +636,7 @@ namespace Scanner
             }
 
             // gather options ///////////////////////////////////////////////////////////////////////////////
-            Tuple<ImageScannerFormat, string> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
+            Tuple<ImageScannerFormat, SupportedFormat?> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
             if (formatFlow == null)
             {
                 ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
@@ -690,7 +713,7 @@ namespace Scanner
 
             StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
             try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
-            catch (Exception) 
+            catch (Exception)
             {
                 TeachingTipError.Target = ButtonScan;
                 TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
@@ -703,14 +726,16 @@ namespace Scanner
 
             try
             {
-                if (formatFlow.Item2 == "PDF")
+                if (formatFlow.Item2 == SupportedFormat.PDF)
                 {
+                    // conversion to PDF: save result to temporary files for win32 component
                     result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
                         RadioButtonSourceFeeder, ApplicationData.Current.TemporaryFolder, cancellationToken, 
                         progress, selectedScanner);
                 } 
                 else
                 {
+                    // save result to target folder right away
                     result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
                         RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
                 }
@@ -740,12 +765,11 @@ namespace Scanner
             if (formatFlow.Item2 != null)
             {
                 // files need to be converted
+                StorageFile convertedFile;
                 bool firstFile = true;
                 foreach (StorageFile scan in result.ScannedFiles)
                 {
-                    string newName;
-
-                    try { newName = await ConvertScannedFile(scan, formatFlow, result); }
+                    try { convertedFile = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder); }
                     catch (Exception)
                     {
                         ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
@@ -756,8 +780,8 @@ namespace Scanner
 
                     if (firstFile)
                     {
-                        // make first file the one that can be edited
-                        scannedFile = await scanFolder.GetFileAsync(newName);
+                        // make first file of possible batch the one that can be edited
+                        scannedFile = convertedFile;
                         firstFile = false;
                     }
                 }
@@ -768,17 +792,14 @@ namespace Scanner
                 scannedFile = result.ScannedFiles[0];
             }
 
-            cancellationToken = null;
-
             // show result //////////////////////////////////////////////////////////////////////////////////
             ButtonCancel.Visibility = Visibility.Collapsed;
-            TextBlockButtonScan.Visibility = Visibility.Visible;
-            ProgressRingScan.Visibility = Visibility.Collapsed;
+            cancellationToken = null;
 
             // react differently to different formats
-            switch (scannedFile.FileType)
+            switch (ConvertFormatStringToSupportedFormat(scannedFile.FileType))
             {
-                case ".pdf":     // result is a PDF file
+                case SupportedFormat.PDF:     // result is a PDF file
                     try
                     {
                         PdfDocument doc = await PdfDocument.LoadFromFileAsync(scannedFile);
@@ -809,8 +830,8 @@ namespace Scanner
                     flowState = FlowState.result;
                     FixResultPositioning();
                     break;
-                case ".xps":     // result is an XPS file
-                case ".oxps":    // result is an OXPS file
+                case SupportedFormat.XPS:     // result is an XPS file
+                case SupportedFormat.OpenXPS:    // result is an OXPS file
                     MessageDialog dialog = new MessageDialog(LocalizedString("MessageFileSavedBody"), LocalizedString("MessageFileSavedHeader"));
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedOpenFolder"), (x) => ButtonRecents_Click(null, null)));
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedClose"), (x) => { }));
@@ -845,7 +866,10 @@ namespace Scanner
                     break;
             }
 
-            // send toast if the app isn't in the foreground
+            TextBlockButtonScan.Visibility = Visibility.Visible;
+            ProgressRingScan.Visibility = Visibility.Collapsed;
+
+            // send toast if the app is minimized
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
             scanNumber++;
@@ -1324,7 +1348,25 @@ namespace Scanner
                         // shortcut share
                         if (flowState == FlowState.result) AppBarButtonShare_Click(AppBarButtonShare, null);
                         break;
+                    case VirtualKey.D:
+                        // shortcut debug
+                        debugShortcutActive = true;
+                        ButtonScan.IsEnabled = true;
+                        break;
                 }
+            }
+        }
+
+
+        /// <summary>
+        ///     The event listener for when a key is lifted on the MainPage. Used to process shortcuts.
+        /// </summary>
+        private void MainPage_KeyUp(CoreWindow sender, KeyEventArgs args)
+        {
+            if (!IsCtrlKeyPressed() || args.VirtualKey == VirtualKey.D)
+            {
+                debugShortcutActive = false;
+                ButtonScan.IsEnabled = false;
             }
         }
 
@@ -1403,6 +1445,7 @@ namespace Scanner
 
             // set aspect ratio according to tag
             ImageCropper.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString(), new System.Globalization.CultureInfo("en-EN"));
+            AppBarButtonAspectRatio.Label = ((ToggleMenuFlyoutItem)sender).Text;
         }
 
 
@@ -1421,6 +1464,7 @@ namespace Scanner
 
             // set aspect ratio to custom
             ImageCropper.AspectRatio = null;
+            AppBarButtonAspectRatio.Label = ((ToggleMenuFlyoutItem)sender).Text;
         }
 
 

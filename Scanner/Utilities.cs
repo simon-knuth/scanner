@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
@@ -129,7 +130,7 @@ static class Utilities
 
 
     /// <summary>
-    ///     Converts a <paramref name="formatString"/> into the corresponding BitmapEncoderId.
+    ///     Converts the <paramref name="formatString"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
     /// <param name="formatString">"jpg", "jpeg", "png", "bmp" or "tiff"/"tif".</param>
     /// <returns>The corresponding BitmapEncoderId.</returns>
@@ -147,6 +148,27 @@ static class Utilities
                 return BitmapEncoder.BmpEncoderId;
             default:
                 return BitmapEncoder.TiffEncoderId;
+        }
+    }
+
+
+    /// <summary>
+    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    /// </summary>
+    /// <param name="format">An image format.</param>
+    /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
+    public static Guid GetBitmapEncoderId(SupportedFormat? format)
+    {
+        switch (format)
+        {
+            case SupportedFormat.JPG:
+                return BitmapEncoder.JpegEncoderId;
+            case SupportedFormat.PNG:
+                return BitmapEncoder.PngEncoderId;
+            case SupportedFormat.TIF:
+                return BitmapEncoder.TiffEncoderId;
+            default:
+                return BitmapEncoder.BmpEncoderId;
         }
     }
 
@@ -653,7 +675,7 @@ static class Utilities
 
 
     // TODO documentation
-    public async static System.Threading.Tasks.Task<Tuple<double, double>> RefreshImageMeasurementsAsync(StorageFile image)
+    public async static Task<Tuple<double, double>> RefreshImageMeasurementsAsync(StorageFile image)
     {
         ImageProperties imageProperties = await image.Properties.GetImagePropertiesAsync();
 
@@ -676,7 +698,7 @@ static class Utilities
     ///     true  - <see cref="scanFolder"/> is set to its default value
     ///     false - <see cref="scanFolder"/> is not set to its default value or null
     /// </returns>
-    public static async System.Threading.Tasks.Task<bool?> IsDefaultScanFolderSet()
+    public static async Task<bool?> IsDefaultScanFolderSet()
     {
         if (scanFolder == null) return null;
 
@@ -695,12 +717,28 @@ static class Utilities
     }
 
 
-    public static async System.Threading.Tasks.Task<string> ConvertScannedFile(StorageFile file, Tuple<ImageScannerFormat, string> formatFlow, ImageScannerScanResult result)
+    /// <summary>
+    ///     Converts the <paramref name="file"/> to the next format, according to <paramref name="formatFlow"/>, and
+    ///     saves the result to the <paramref name="targetFolder"/> (see remarks). If the name is already in use, the
+    ///     function will automatically append the next available number "(xx)" at the end.
+    ///     The supported source formats are JPG, PNG, TIF and BMP.
+    ///     The supported target formats are JPG, PNG, TIF, BMP and PDF.
+    /// </summary>
+    /// <remarks>
+    ///     If the target format is JPG, PNG, TIF or BMP, the function ignores the <paramref name="targetFolder"/>
+    ///     and expects the <paramref name="file"/> to already be in the right place.
+    /// </remarks>
+    /// <param name="file">The image file that shall be converted.</param>
+    /// <param name="targetFormat">The <see cref="SupportedFormat"/> that indicates the desired format of the file.</param>
+    /// <param name="targetFolder">The folder that the converted file shall be saved to.</param>
+    /// <returns>The converted file.</returns>
+    public static async Task<StorageFile> ConvertScannedFile(StorageFile file, SupportedFormat? targetFormat, StorageFolder targetFolder)
     {
-        string newName;
-        switch (formatFlow.Item2)
+        string newName = "";
+        string newNameWithoutNumbering;
+        switch (targetFormat)
         {
-            case "PDF":
+            case SupportedFormat.PDF:
                 // convert to PDF
                 try
                 {
@@ -717,24 +755,74 @@ static class Utilities
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
 
                     // get result file and move it to its correct folder
-                    StorageFile convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
-                    await convertedFile.MoveAsync(scanFolder, convertedFile.Name, NameCollisionOption.GenerateUniqueName);
+                    StorageFile convertedFile = null;
+                    int attempt = 1;
+                    while (convertedFile == null && attempt <= 12)
+                    {
+                        try
+                        {
+                            convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
+                        }
+                        catch (Exception)
+                        {
+                            // wait a little until PDF file is hopefully available
+                            await Task.Delay(250);
+                            attempt++;
+                        }
+                    }
 
-                    newName = convertedFile.Name;
+                    if (convertedFile == null)
+                    {
+                        // couldn't get PDF
+                        throw new Exception();
+                    }
+
+                    try 
+                    { 
+                        await convertedFile.MoveAsync(targetFolder, convertedFile.Name, NameCollisionOption.FailIfExists);
+                        newName = convertedFile.Name;
+                    }
+                    catch (Exception)
+                    {
+                        if (convertedFile.DisplayName[convertedFile.DisplayName.Length - 1] == ')')
+                        {
+                            newNameWithoutNumbering = RemoveNumbering(convertedFile.Name);
+                        } else
+                        {
+                            newNameWithoutNumbering = convertedFile.Name;
+                        }
+                        
+                        // cycle through file numberings until one is not occupied
+                        for (int i = 1; true; i++)
+                        {
+                            try
+                            {
+                                await convertedFile.MoveAsync(targetFolder, newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
+                                    + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
+                            }
+                            catch (Exception)
+                            {
+                                continue;
+                            }
+                            newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
+                            break;
+                        }
+                    }
+
                     await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    return convertedFile;
                 }
                 catch (Exception) 
                 {
                     throw;
                 }                
-                break;
 
             default:
-                // open image file, decode it and prepare an encoder with the target format
+                // open image file, decode it and prepare an encoder with the target image format
                 IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite);
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                 SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                Guid encoderId = GetBitmapEncoderId(formatFlow.Item2);
+                Guid encoderId = GetBitmapEncoderId(targetFormat);
                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
                 encoder.SetSoftwareBitmap(softwareBitmap);
 
@@ -747,11 +835,11 @@ static class Utilities
                 stream.Dispose();
 
                 // rename file to make the extension match the new format and watch out for name collisions
-                string newNameWithoutNumbering = RemoveNumbering(file.Name
-                    .Replace("." + file.Name.Split(".")[1], "." + formatFlow.Item2));
+                newNameWithoutNumbering = RemoveNumbering(file.Name
+                    .Replace("." + file.Name.Split(".")[1], "." + targetFormat));
                 newName = newNameWithoutNumbering;
 
-                try { await result.ScannedFiles[0].RenameAsync(newName, NameCollisionOption.FailIfExists); }
+                try { await file.RenameAsync(newName, NameCollisionOption.FailIfExists); }
                 catch (Exception)
                 {
                     // cycle through file numberings until one is not occupied
@@ -759,7 +847,7 @@ static class Utilities
                     {
                         try
                         {
-                            await result.ScannedFiles[0].RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
+                            await file.RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
                                 + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
                         }
                         catch (Exception)
@@ -767,12 +855,73 @@ static class Utilities
                             continue;
                         }
                         newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                        break;
-                    }
+                        return file;                    }
                 }
-                break;
+                return file;
         }
-        
-        return newName;
+    }
+
+
+    /// <summary>
+    ///     Converts a string to to a <see cref="SupportedFormat"/>.
+    /// </summary>
+    /// <param name="formatString">
+    ///     The source format string, case-insensitive and with or without dot.
+    ///     E.g. "png" / "PNG" / ".png" / ".PNG"
+    /// </param>
+    /// <returns>The corresponding <see cref="SupportedFormat"/>.</returns>
+    public static SupportedFormat? ConvertFormatStringToSupportedFormat(string formatString)
+    {
+        switch (formatString)
+        {
+            case "jpg":
+            case "jpeg":
+            case ".jpg":
+            case "JPG":
+            case "JPEG":
+            case ".JPG":
+                return SupportedFormat.JPG;
+
+            case "png":
+            case ".png":
+            case "PNG":
+            case ".PNG":
+                return SupportedFormat.PNG;
+
+            case "tif":
+            case ".tif":
+            case "TIF":
+            case ".TIF":
+            case "tiff":
+            case "TIFF":
+                return SupportedFormat.TIF;
+
+            case "bmp":
+            case ".bmp":
+            case "BMP":
+            case ".BMP":
+                return SupportedFormat.PNG;
+
+            case "pdf":
+            case ".pdf":
+            case "PDF":
+            case ".PDF":
+                return SupportedFormat.PDF;
+
+            case "xps":
+            case ".xps":
+            case "XPS":
+            case ".XPS":
+                return SupportedFormat.XPS;
+
+            case "oxps":
+            case ".oxps":
+            case "OXPS":
+            case ".OXPS":
+                return SupportedFormat.OpenXPS;
+
+            default: 
+                return null;
+        }
     }
 }

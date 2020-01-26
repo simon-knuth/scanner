@@ -743,11 +743,11 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Draw with your finger(s) on devices with touch capabilities. The app now also detects when you want to start drawing with a pen - one less button to press. This can be disabled in the settings.</value>
+    <value>Scanning to PDF is now available with every scanner, regardless of its capabilites. The conversion feature needs to be enabled in the settings.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>Draw more, faster, better</value>
+    <value>PDF for Everyone</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">

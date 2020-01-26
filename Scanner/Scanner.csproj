@@ -196,8 +196,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="de\PdfSharp.Charting.resources.dll" />
-    <Content Include="de\PdfSharp.resources.dll" />
     <Content Include="win32\ImageToPDF\de\PdfSharp.Charting.resources.dll" />
     <Content Include="win32\ImageToPDF\de\PdfSharp.resources.dll" />
     <Content Include="win32\ImageToPDF\ImageToPDF.exe" />

@@ -134,7 +134,7 @@
 
                         <controls:ImageCropper x:Name="ImageCropper" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="24,48,24,24" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,40,12,12" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame v1809:CornerRadius="2">
                                 <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <CommandBar.Content>
@@ -182,7 +182,7 @@
                             </Frame>
                         </controls:DropShadowPanel>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="24,0,24,24" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                             <Frame v1809:CornerRadius="2">
                                 <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonCrop_Checked"/>
@@ -303,13 +303,13 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA90;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Draw more, faster, better" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Draw with your finger(s) on devices with touch capabilities. The app now also detects when you want to start drawing with a pen - one less button to press. This can be disabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="PDF for Everyone" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Scanning to PDF is now available with every scanner, regardless of its capabilites. The conversion feature needs to be enabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE776;" FontSize="32" Margin="0,0,0,24"/>
+                        <!--<FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE776;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
                             <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved accessibility" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Invisible to most, but important nonetheless: Smaller buttons are now easier to hit and keyboard navigation starts right where it should." Style="{StaticResource BodyTextBlockStyle}"/>
@@ -325,7 +325,7 @@
                         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,8">
                             <TextBlock x:Uid="TextBlockUpdateSection4Header" Text="Fixes" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock x:Uid="TextBlockUpdateSection4Body" Text="Fixed many issues that e.g. impacted users trying to scan to folders outside the Pictures library." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>
+                        </StackPanel>-->
                     </Grid>
                     <TextBlock x:Uid="TextBlockUpdateEnd" Text="~ Thank you for your support! ~" Style="{StaticResource BaseTextBlockStyle}" HorizontalAlignment="Center" Margin="0,24,0,16"/>
                 </StackPanel>

@@ -46,6 +46,7 @@
         draw = 3                    // the secondary CommandBar shows the draw commands
     }
 
+
     /// <summary>
     ///     Represents the possible themes.
     /// </summary>
@@ -54,5 +55,20 @@
         system = 0,
         light = 1,
         dark = 2
+    }
+
+
+    /// <summary>
+    ///     Represents the supported formats for various tasks.
+    /// </summary>
+    public enum SupportedFormat
+    {
+        JPG = 0,
+        PNG = 1,
+        TIF = 2,
+        BMP = 3,
+        PDF = 4,
+        XPS = 5,
+        OpenXPS = 6,
     }
 }

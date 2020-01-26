@@ -138,7 +138,8 @@
                 <Hyperlink x:Name="HyperlinkLicenseUwpUiControls" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.UI.Controls</Hyperlink><LineBreak/>
                 <Hyperlink x:Name="HyperlinkLicenseUiXaml" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.UI.XAML</Hyperlink><LineBreak/>
                 <Hyperlink x:Name="HyperlinkLicenseQueryStringNet" Click="NavigateToLicenseWebsite" UnderlineStyle="None">QueryString.NET</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp</Hyperlink>
+                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicensePDFsharp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">PDFsharp</Hyperlink><LineBreak/>
             </TextBlock>
         </ContentDialog>
     </Grid>

@@ -743,11 +743,11 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Nutzen Sie Ihren Finger zum Zeichnen auf unterstützten Geräten. Außerdem erkennt die App, wenn Sie mit einem Stift etwas zeichnen wollen - kein Knopfdruck nötig. Dies kann in den Einstellungen deaktiviert werden.</value>
+    <value>Das Speichern als PDF wird jetzt in Kombination mit jedem Scanner möglich, selbst wenn er es eigentlich nicht unterstützt. Stellen Sie sicher, dass die Konvertierung in den Einstellungen aktiv ist.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>Zeichnen Sie mehr, schneller und besser</value>
+    <value>PDF für Alle</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">

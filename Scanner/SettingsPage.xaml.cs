@@ -293,6 +293,7 @@ namespace Scanner
             else if (sender == HyperlinkLicenseUiXaml) url = "https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license";
             else if (sender == HyperlinkLicenseQueryStringNet) url = "https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE";
             else if (sender == HyperlinkLicenseWin2dUwp) url = "https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm";
+            else if (sender == HyperlinkLicensePDFsharp) url = "http://www.pdfsharp.net/PDFsharp_License.ashx";
 
             try { await Windows.System.Launcher.LaunchUriAsync(new Uri(url)); }
             catch (Exception) { }
