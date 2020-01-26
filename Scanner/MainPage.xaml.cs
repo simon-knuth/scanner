@@ -42,7 +42,18 @@ namespace Scanner
         CancellationTokenSource cancellationToken = null;
 
         private ImageScanner selectedScanner = null;
-        private StorageFile scannedFile;
+        private StorageFile scannedFile {
+            get { return _scannedFile; }
+            set { 
+                _scannedFile = value;
+                if (value != null && _scannedFile.DisplayName != null)
+                {
+                    TextBlockCommandBarPrimaryFileName.Text = _scannedFile.DisplayName;
+                    TextBlockCommandBarPrimaryFileExtension.Text = _scannedFile.FileType;
+                }
+            }
+        }
+        private StorageFile _scannedFile;
         private Tuple<double, double> imageMeasurements;
 
         private double ColumnLeftDefaultMaxWidth;
@@ -1138,6 +1149,7 @@ namespace Scanner
                 return;
             }
             ContentDialogRename.Hide();
+            TextBlockCommandBarPrimaryFileName.Text = scannedFile.DisplayName;
         }        
 
 

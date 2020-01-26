@@ -182,24 +182,39 @@
                             </Frame>
                         </controls:DropShadowPanel>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                            <Frame v1809:CornerRadius="2">
-                                <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonCrop_Checked"/>
-                                    <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonRotate_Click"/>
-                                    <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonDraw_Checked">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                                    </AppBarToggleButton>
-                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryOne"/>
-                                    <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" v1809:CornerRadius="2" BorderThickness="1,1,1.5,1" Click="AppBarButtonRename_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDelete_Click">
-                                    </AppBarButton>
-                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryTwo"/>
-                                    <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonOpenWith" x:Name="AppBarButtonOpenWith" Icon="OpenWith" Label="Open with" ToolTipService.ToolTip="Open with" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonOpenWith_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>                                </CommandBar>
-                            </Frame>
-                        </controls:DropShadowPanel>
+                        <Grid VerticalAlignment="Bottom">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <controls:DropShadowPanel Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,12,0">
+                                <StackPanel x:Name="FrameTextBlockCommandBarPrimaryFileName" Orientation="Horizontal" v1809:CornerRadius="2,2,0,0"  Padding="12,3,12,3" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" HorizontalAlignment="Right">
+                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}" Text="G Man"/>
+                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
+                                </StackPanel>
+                            </controls:DropShadowPanel>
+                            <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" Grid.Row="1" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                                <Frame x:Name="FrameCommandBarPrimary" v1809:CornerRadius="0,0,2,2">
+                                    <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" HorizontalAlignment="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
+                                        <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonCrop_Checked"/>
+                                        <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonRotate_Click"/>
+                                        <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonDraw_Checked">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
+                                        </AppBarToggleButton>
+                                        <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryOne"/>
+                                        <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" v1809:CornerRadius="2" BorderThickness="1,1,1.5,1" Click="AppBarButtonRename_Click"/>
+                                        <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDelete_Click">
+                                        </AppBarButton>
+                                        <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryTwo"/>
+                                        <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
+                                        <AppBarButton x:Uid="AppBarButtonOpenWith" x:Name="AppBarButtonOpenWith" Icon="OpenWith" Label="Open with" ToolTipService.ToolTip="Open with" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonOpenWith_Click"/>
+                                        <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>
+                                    </CommandBar>
+                                </Frame>
+                            </controls:DropShadowPanel>
+                        </Grid>
+                            
                     </Grid>
                 </Grid>
             </controls:DropShadowPanel>
