@@ -2064,5 +2064,32 @@ namespace Scanner
             // disable touch drawing
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
         }
+
+        private void CommandBarPrimary_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            try
+            {
+                if (FrameCommandBarPrimary.ActualWidth <= ScrollViewerTextBlockCommandBarPrimaryFile.ActualWidth)
+                {
+                    // remove round corner to close gap to file name
+                    CornerRadius cornerRadius = FrameCommandBarPrimary.CornerRadius;
+                    cornerRadius.TopLeft = 0;
+                    FrameCommandBarPrimary.CornerRadius = cornerRadius;
+                }
+                else
+                {
+                    // reset to round corners
+                    CornerRadius cornerRadius = FrameCommandBarPrimary.CornerRadius;
+                    cornerRadius.TopLeft = cornerRadius.BottomLeft;
+                    FrameCommandBarPrimary.CornerRadius = cornerRadius;
+                }
+                ScrollViewerTextBlockCommandBarPrimaryFile.MaxWidth = CommandBarPrimary.ActualWidth;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

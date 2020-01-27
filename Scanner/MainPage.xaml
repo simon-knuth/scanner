@@ -31,8 +31,8 @@
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
     </Page.Resources>
-    
-    
+
+
     <Grid x:Name="GridMainPage">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
@@ -189,14 +189,18 @@
                             </Grid.RowDefinitions>
 
                             <controls:DropShadowPanel Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,12,0">
-                                <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal" v1809:CornerRadius="2,2,0,0" Padding="12,3,12,3" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" HorizontalAlignment="Right">
-                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
-                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
-                                </StackPanel>
+                                <ScrollViewer x:Name="ScrollViewerTextBlockCommandBarPrimaryFile" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" SizeChanged="CommandBarPrimary_SizeChanged" 
+                                              v1809:CornerRadius="2,2,0,0" MaxWidth="{Binding ElementName=CommandBarPrimary, Path=ActualWidth}" 
+                                              VerticalScrollMode="Disabled" HorizontalScrollMode="Auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                    <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal" Padding="12,3,12,3" HorizontalAlignment="Right">
+                                        <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
+                                        <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
+                                    </StackPanel>
+                                </ScrollViewer>
                             </controls:DropShadowPanel>
                             <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" Grid.Row="1" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                                <Frame x:Name="FrameCommandBarPrimary" v1809:CornerRadius="0,0,2,2">
-                                    <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" HorizontalAlignment="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed">
+                                <Frame x:Name="FrameCommandBarPrimary" v1809:CornerRadius="2,0,2,2">
+                                    <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" HorizontalAlignment="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed" SizeChanged="CommandBarPrimary_SizeChanged">
                                         <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonCrop_Checked"/>
                                         <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonRotate_Click"/>
                                         <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonDraw_Checked">
@@ -214,7 +218,7 @@
                                 </Frame>
                             </controls:DropShadowPanel>
                         </Grid>
-                            
+
                     </Grid>
                 </Grid>
             </controls:DropShadowPanel>
@@ -248,7 +252,7 @@
                     <TextBlock x:Name="TextBlockRenameExtension" Margin="6,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Grid>
-            
+
         </ContentDialog>
 
         <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
