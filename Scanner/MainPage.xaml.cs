@@ -1177,10 +1177,10 @@ namespace Scanner
             flowState = FlowState.crop;
 
             // make sure that the ImageCropper won't be obstructed
-            ImageCropper.Padding = new Thickness(24,
-                24 + CommandBarPrimary.ActualHeight +           // use CommandBarPrimary for top padding because the other one is not rendered yet
-                DropShadowPanelCommandBarSecondary.Margin.Top, 24, 24 + CommandBarPrimary.ActualHeight +
-                DropShadowPanelCommandBarPrimary.Margin.Bottom);
+            ImageCropper.Padding = new Thickness(18,
+                18 + CommandBarPrimary.ActualHeight +           // use CommandBarPrimary for top padding because the other one is not rendered yet
+                DropShadowPanelCommandBarSecondary.Margin.Top, 18, 18 + CommandBarPrimary.ActualHeight +
+                StackPanelTextBlockCommandBarPrimaryFile.ActualHeight + DropShadowPanelCommandBarPrimary.Margin.Bottom);
 
             // show ImageCropper and secondary commands
             ImageCropper.Visibility = Visibility.Visible;

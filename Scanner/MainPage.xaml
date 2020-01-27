@@ -189,8 +189,8 @@
                             </Grid.RowDefinitions>
 
                             <controls:DropShadowPanel Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,12,0">
-                                <StackPanel x:Name="FrameTextBlockCommandBarPrimaryFileName" Orientation="Horizontal" v1809:CornerRadius="2,2,0,0"  Padding="12,3,12,3" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" HorizontalAlignment="Right">
-                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}" Text="G Man"/>
+                                <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal" v1809:CornerRadius="2,2,0,0" Padding="12,3,12,3" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" HorizontalAlignment="Right">
+                                    <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
                                     <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
                                 </StackPanel>
                             </controls:DropShadowPanel>
