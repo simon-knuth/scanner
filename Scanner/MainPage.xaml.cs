@@ -2059,11 +2059,13 @@ namespace Scanner
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch;
         }
 
+
         private void AppBarButtonTouchDraw_Unchecked(object sender, RoutedEventArgs e)
         {
             // disable touch drawing
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
         }
+
 
         private void CommandBarPrimary_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -2090,6 +2092,20 @@ namespace Scanner
 
                 throw;
             }
+        }
+
+        private async void ButtonCommandBarPrimaryFileName_Click(object sender, RoutedEventArgs e)
+        {
+            // open folder and select result in it
+            FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
+            launcherOptions.ItemsToSelect.Add(scannedFile);
+
+            try
+            {
+                StorageFolder folder = await scannedFile.GetParentAsync();
+                await Launcher.LaunchFolderAsync(folder, launcherOptions);
+            }
+            catch (Exception) { }
         }
     }
 }

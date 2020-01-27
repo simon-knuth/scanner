@@ -192,10 +192,12 @@
                                 <ScrollViewer x:Name="ScrollViewerTextBlockCommandBarPrimaryFile" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}" SizeChanged="CommandBarPrimary_SizeChanged" 
                                               v1809:CornerRadius="2,2,0,0" MaxWidth="{Binding ElementName=CommandBarPrimary, Path=ActualWidth}" 
                                               VerticalScrollMode="Disabled" HorizontalScrollMode="Auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                                    <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal" Padding="12,3,12,3" HorizontalAlignment="Right">
-                                        <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
-                                        <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
-                                    </StackPanel>
+                                    <Button x:Name="ButtonCommandBarPrimaryFileName" x:Uid="ButtonCommandBarPrimaryFileName" Style="{ThemeResource TextBlockButtonStyle}" Padding="3,1,3,1" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="ButtonCommandBarPrimaryFileName_Click">
+                                        <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal"  Margin="9,4,9,4" HorizontalAlignment="Right">
+                                            <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
+                                        </StackPanel>
+                                    </Button>
                                 </ScrollViewer>
                             </controls:DropShadowPanel>
                             <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" Grid.Row="1" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">

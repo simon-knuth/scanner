@@ -221,6 +221,10 @@
     <value>Abbrechen</value>
     <comment>The tooltip text that appears while hovering the cancel button.</comment>
   </data>
+  <data name="ButtonCommandBarPrimaryFileName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Im Datei-Explorer anzeigen</value>
+    <comment>The tooltip text that appears while hovering the file name button.</comment>
+  </data>
   <data name="ButtonDevices.ToolTipService.ToolTip" xml:space="preserve">
     <value>Scanner verwalten</value>
     <comment>The tooltip text that appears while hovering the devices button.</comment>
