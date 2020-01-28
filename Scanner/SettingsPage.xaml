@@ -111,7 +111,7 @@
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2019 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
+                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2020 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
                         <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink></Span>
                         </TextBlock>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,0">

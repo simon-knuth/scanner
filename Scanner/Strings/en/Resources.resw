@@ -349,6 +349,10 @@
     <value>A file format was selected that is not supported by the scanner, but converting to it from a supported format failed. The scan has been saved as </value>
     <comment>[ends with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is in front of the supported base format.</comment>
   </data>
+  <data name="ErrorMessageConversionBodyPDF" xml:space="preserve">
+    <value>An error occured while converting the scan to PDF.</value>
+    <comment>The body for the error message that appears when converting to PDF from a supported format failed.</comment>
+  </data>
   <data name="ErrorMessageConversionHeader" xml:space="preserve">
     <value>Something went wrong</value>
     <comment>The header for the error message that appears when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved.</comment>

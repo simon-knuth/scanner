@@ -183,7 +183,7 @@ class ScannerOperation
         if (newNativeFormats.Contains("openxps"))               formats.Add(CreateComboBoxItem("OpenXPS", "oxps,native"));
         if (newNativeFormats.Contains("tif"))                   formats.Add(CreateComboBoxItem("TIF", "tif,native"));
         else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
-        if (newNativeFormats.Contains("bmp"))                   formats.Add(CreateComboBoxItem("BMP", "tif,native"));
+        if (newNativeFormats.Contains("bmp"))                   formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
         else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
 
         // select last selected format again (if possible)

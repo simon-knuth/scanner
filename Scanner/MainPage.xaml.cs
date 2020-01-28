@@ -608,6 +608,7 @@ namespace Scanner
                 picker.FileTypeFilter.Add(".tif");
                 picker.FileTypeFilter.Add(".bmp");
                 scannedFile = await picker.PickSingleFileAsync();
+                if (scannedFile == null) return;
                 DisplayImageAsync(scannedFile, ImageScanViewer);
                 SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
                 ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
@@ -776,24 +777,34 @@ namespace Scanner
             if (formatFlow.Item2 != null)
             {
                 // files need to be converted
-                StorageFile convertedFile;
+                string convertedFileName;
                 bool firstFile = true;
                 foreach (StorageFile scan in result.ScannedFiles)
                 {
-                    try { convertedFile = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder); }
+                    try 
+                    { 
+                        convertedFileName = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder);
+                        
+                        if (firstFile)
+                        {
+                            // make first file of possible batch the one that can be edited
+                            scannedFile = await scanFolder.GetFileAsync(convertedFileName);
+                            firstFile = false;
+                        }
+                    }
                     catch (Exception)
                     {
-                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
-                        LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                        if (formatFlow.Item2 == SupportedFormat.PDF)
+                        {
+                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"), LocalizedString("ErrorMessageConversionBodyPDF"));
+                        } 
+                        else
+                        {
+                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
+                                LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                        }
                         ScanCanceled();
                         return;
-                    }
-
-                    if (firstFile)
-                    {
-                        // make first file of possible batch the one that can be edited
-                        scannedFile = convertedFile;
-                        firstFile = false;
                     }
                 }
             }
@@ -813,18 +824,22 @@ namespace Scanner
                 case SupportedFormat.PDF:     // result is a PDF file
                     try
                     {
-                        PdfDocument doc = await PdfDocument.LoadFromFileAsync(scannedFile);
-                        PdfPage page = doc.GetPage(0);
-                        BitmapImage imageOfPdf = new BitmapImage();
-
-                        using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                        // convert PDF to image for preview
+                        using (var sourceStream = await scannedFile.OpenReadAsync())
                         {
-                            await page.RenderToStreamAsync(stream);
-                            await imageOfPdf.SetSourceAsync(stream);
-                        }
+                            PdfDocument doc = await PdfDocument.LoadFromStreamAsync(sourceStream);
+                            PdfPage page = doc.GetPage(0);
+                            BitmapImage imageOfPdf = new BitmapImage();
 
-                        imageMeasurements = RefreshImageMeasurements(imageOfPdf);
-                        DisplayImage(imageOfPdf, ImageScanViewer);
+                            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                            {
+                                await page.RenderToStreamAsync(stream);
+                                await imageOfPdf.SetSourceAsync(stream);
+                            }
+
+                            imageMeasurements = RefreshImageMeasurements(imageOfPdf);
+                            DisplayImage(imageOfPdf, ImageScanViewer);
+                        }
                     }
                     catch (Exception)
                     {
@@ -1375,10 +1390,11 @@ namespace Scanner
         /// </summary>
         private void MainPage_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
-            if (!IsCtrlKeyPressed() || args.VirtualKey == VirtualKey.D)
+            if ((!IsCtrlKeyPressed() || args.VirtualKey == VirtualKey.D) && debugShortcutActive)
             {
                 debugShortcutActive = false;
                 ButtonScan.IsEnabled = false;
+                refreshLeftPanel();
             }
         }
 

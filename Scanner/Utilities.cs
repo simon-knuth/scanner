@@ -732,9 +732,9 @@ static class Utilities
     /// <param name="targetFormat">The <see cref="SupportedFormat"/> that indicates the desired format of the file.</param>
     /// <param name="targetFolder">The folder that the converted file shall be saved to.</param>
     /// <returns>The converted file.</returns>
-    public static async Task<StorageFile> ConvertScannedFile(StorageFile file, SupportedFormat? targetFormat, StorageFolder targetFolder)
+    public static async Task<string> ConvertScannedFile(StorageFile file, SupportedFormat? targetFormat, StorageFolder targetFolder)
     {
-        string newName = "";
+        string newName;
         string newNameWithoutNumbering;
         switch (targetFormat)
         {
@@ -810,7 +810,7 @@ static class Utilities
                     }
 
                     await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    return convertedFile;
+                    return newName;
                 }
                 catch (Exception) 
                 {
@@ -855,9 +855,9 @@ static class Utilities
                             continue;
                         }
                         newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                        return file;                    }
+                        return newName;                  }
                 }
-                return file;
+                return newName;
         }
     }
 

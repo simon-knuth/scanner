@@ -349,6 +349,10 @@
     <value>Ein Dateiformat wurde gewählt, welches der Scanner nicht nativ unterstützt. Die Konvertierung von einem unterstützten Format schlug fehl, jedoch wurde die Originaldatei im </value>
     <comment>[ends with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is in front of the supported base format.</comment>
   </data>
+  <data name="ErrorMessageConversionBodyPDF" xml:space="preserve">
+    <value>Ein Fehler ist während der Konvertierung des Scans ins PDF-Format aufgetreten.</value>
+    <comment>The body for the error message that appears when converting to PDF from a supported format failed.</comment>
+  </data>
   <data name="ErrorMessageConversionHeader" xml:space="preserve">
     <value>Etwas ist schiefgelaufen</value>
     <comment>The header for the error message that appears when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved.</comment>
