@@ -54,19 +54,10 @@
           <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
 
-      <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="win32\ImageToPDF\ImageToPDF.exe">
-          <desktop:FullTrustProcess>
-            <desktop:ParameterGroup GroupId="SyncGroup" Parameters="/Sync"/>
-            <desktop:ParameterGroup GroupId="OtherGroup" Parameters="/Other"/>
-          </desktop:FullTrustProcess>
-        </desktop:Extension>
-      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <uap:Capability Name="picturesLibrary"/>
-    <rescap:Capability Name="runFullTrust"/>
   </Capabilities>
 </Package>

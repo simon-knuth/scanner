@@ -1,6 +1,8 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
@@ -131,6 +133,32 @@ namespace Scanner
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            // app service launched
+            base.OnBackgroundActivated(args);
+
+            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details 
+                && details.CallerPackageFamilyName == Package.Current.Id.FamilyName) 
+            {
+                // fulltrust win32 process is calling
+                BackgroundTaskDeferral backgroundTaskDeferral = args.TaskInstance.GetDeferral();
+                appServiceConnection = details.AppServiceConnection;
+                appServiceConnection.RequestReceived += AppServiceConnection_RequestReceived;
+            }
+        }
+
+        private void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            // win32 component finished
+            object result;
+            args.Request.Message.TryGetValue("RESULT", out result);
+            if ((string) result == "SUCCESS") taskCompletionSource.TrySetResult(true);
+            else taskCompletionSource.TrySetResult(false);
         }
     }
 }

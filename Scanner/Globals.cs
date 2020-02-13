@@ -1,4 +1,6 @@
-﻿using Windows.Storage;
+﻿using System.Threading.Tasks;
+using Windows.ApplicationModel.AppService;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 
 using static Enums;
@@ -22,6 +24,9 @@ public static class Globals
 
     public static bool? firstAppLaunchWithThisVersion;
     public static int scanNumber;
+
+    public static AppServiceConnection appServiceConnection;
+    public static TaskCompletionSource<bool> taskCompletionSource = null;
 
 
 

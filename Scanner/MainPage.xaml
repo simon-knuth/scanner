@@ -116,7 +116,7 @@
 
                     <Grid x:Name="GridPanelRight" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
+                                      VerticalScrollBarVisibility="Hidden" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Grid Margin="0,32,0,0">
                                 <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting" PointerEntered="ImageScanViewer_PointerEntered"/>
                                 <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">

@@ -22,6 +22,10 @@ using Windows.UI.Xaml;
 using static Enums;
 using static Globals;
 using Windows.Devices.Scanners;
+using Windows.System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Windows.Foundation.Collections;
 
 static class Utilities
 {
@@ -742,8 +746,11 @@ static class Utilities
                 // convert to PDF
                 try
                 {
+                    taskCompletionSource = new TaskCompletionSource<bool>();
+                    var win32ResultAsync = taskCompletionSource.Task;
+
                     // save the source and target name
-                    ApplicationData.Current.LocalSettings.Values["sourceFileName"] = file.Name;
+                    ApplicationData.Current.LocalSettings.Values["pdfSourceFileName"] = file.Name;
                     ApplicationData.Current.LocalSettings.Values["targetFileName"] = file.DisplayName + ".pdf";
 
                     // save measurements, which determine PDF file size
@@ -751,32 +758,15 @@ static class Utilities
                     ApplicationData.Current.LocalSettings.Values["sourceFileWidth"] = imageProperties.Width;
                     ApplicationData.Current.LocalSettings.Values["sourceFileHeight"] = imageProperties.Height;
 
-                    // call win32 app
+                    // call win32 app and wait for result
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    await Task.WhenAny(win32ResultAsync, Task.Delay(10000));
 
                     // get result file and move it to its correct folder
                     StorageFile convertedFile = null;
-                    int attempt = 1;
-                    while (convertedFile == null && attempt <= 12)
-                    {
-                        try
-                        {
-                            convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
-                        }
-                        catch (Exception)
-                        {
-                            // wait a little until PDF file is hopefully available
-                            await Task.Delay(250);
-                            attempt++;
-                        }
-                    }
-
-                    if (convertedFile == null)
-                    {
-                        // couldn't get PDF
-                        throw new Exception();
-                    }
-
+                    convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
+                    
+                    // move PDF file to target folder
                     try 
                     { 
                         await convertedFile.MoveAsync(targetFolder, convertedFile.Name, NameCollisionOption.FailIfExists);
@@ -809,6 +799,7 @@ static class Utilities
                         }
                     }
 
+                    // delete the source image
                     await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     return newName;
                 }

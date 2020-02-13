@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
@@ -69,6 +70,8 @@ namespace Scanner
         private bool canceledScan = false;
         private bool firstLoaded = true;
 
+        private event TypedEventHandler<DeviceWatcher, object> eventHandlerScannerWatcherStopped;
+
         DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
 
 
@@ -93,6 +96,20 @@ namespace Scanner
             scannerWatcher.Added += OnScannerAdded;
             scannerWatcher.Removed += OnScannerRemoved;
             scannerWatcher.EnumerationCompleted += OnScannerEnumerationComplete;
+            eventHandlerScannerWatcherStopped = async (x, y) =>
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                     ComboBoxScanners.SelectedIndex = -1;
+                });
+                selectedScanner = null;
+                deviceInformation.Clear();
+                refreshLeftPanel();
+                scannerWatcher.Start();
+                ComboBoxScanners.IsEnabled = true;
+                scannerWatcher.Stopped -= eventHandlerScannerWatcherStopped;
+            };
+            scannerWatcher.Stopped += eventHandlerScannerWatcherStopped;
             scannerWatcher.Start();
 
             // allow for mouse input on the InkCanvas
@@ -224,12 +241,6 @@ namespace Scanner
                                 scannerList.Clear();
                                 Page_SizeChanged(null, null);
                                 scannerWatcher.Stop();
-                                ComboBoxScanners.SelectedIndex = -1;
-                                selectedScanner = null;
-                                deviceInformation.Clear();
-                                refreshLeftPanel();
-                                scannerWatcher.Start();
-                                ComboBoxScanners.IsEnabled = true;
                                 return;
                             }
                             possiblyDeadScanner = false;
@@ -575,6 +586,8 @@ namespace Scanner
         /// <summary>
         ///     Gathers all options, runs multiple checks and then conducts a scan using <see cref="selectedScanner"/>. The result
         ///     is saved to <see cref="scanFolder"/> and afterwards available as <see cref="scannedFile"/>. 
+        ///     Includes a debugging exit, which opens a file picker instead of scanning, if <see cref="debugShortcutActive"/>
+        ///     is true.
         /// </summary>
         /// <remarks>
         ///     Returns the app to its initial state and disables/hides all buttons apart from the <see cref="ButtonRecents"/>.
@@ -598,7 +611,7 @@ namespace Scanner
         /// </remarks>
         private async void Scan(object sender, RoutedEventArgs e)
         {
-            // DEBUG EXIT
+            // DEBUGGING EXIT
             if (debugShortcutActive)
             {
                 var picker = new Windows.Storage.Pickers.FileOpenPicker();
@@ -607,211 +620,204 @@ namespace Scanner
                 picker.FileTypeFilter.Add(".png");
                 picker.FileTypeFilter.Add(".tif");
                 picker.FileTypeFilter.Add(".bmp");
+                picker.FileTypeFilter.Add(".pdf");
+                picker.FileTypeFilter.Add(".xps");
+                picker.FileTypeFilter.Add(".oxps");
                 scannedFile = await picker.PickSingleFileAsync();
                 if (scannedFile == null) return;
-                DisplayImageAsync(scannedFile, ImageScanViewer);
-                SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
-                ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
-                flowState = FlowState.result;
-                imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
-                FixResultPositioning();
-                Page_SizeChanged(null, null);
-                refreshLeftPanel();
-                ButtonDevices.IsEnabled = true;
-                return;
-            }
+            } else {
+                // lock (almost) entire left panel and clean up right side
+                UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
+                ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
+                ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
+                ImageScanViewer.Visibility = Visibility.Collapsed;
+                TextBlockButtonScan.Visibility = Visibility.Collapsed;
+                ProgressRingScan.Visibility = Visibility.Visible;
+                ScrollViewerScan.ChangeView(0, 0, 1);
+                AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
+                TeachingTipDevices.IsOpen = false;
+                TeachingTipSaveLocation.IsOpen = false;
+                ButtonDevices.IsEnabled = false;
 
-            // lock (almost) entire left panel and clean up right side
-            UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
-            ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
-            ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
-            ImageScanViewer.Visibility = Visibility.Collapsed;
-            TextBlockButtonScan.Visibility = Visibility.Collapsed;
-            ProgressRingScan.Visibility = Visibility.Visible;
-            ScrollViewerScan.ChangeView(0, 0, 1);
-            AppBarButtonDiscard_Click(null, null);                              // cancel crop/drawing mode if necessary
-            TeachingTipDevices.IsOpen = false;
-            TeachingTipSaveLocation.IsOpen = false;
-            ButtonDevices.IsEnabled = false;
+                canceledScan = false;
 
-            canceledScan = false;
-
-            if (scanFolder == null)
-            {
-                TeachingTipError.Target = ButtonScan;
-                TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
-                TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
-                TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
-                ScanCanceled();
-                TeachingTipError.IsOpen = true;
-                return;
-            }
-
-            // gather options ///////////////////////////////////////////////////////////////////////////////
-            Tuple<ImageScannerFormat, SupportedFormat?> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
-            if (formatFlow == null)
-            {
-                ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
-                ScanCanceled();
-                return;
-            }
-
-            if (RadioButtonSourceAutomatic.IsChecked.Value)             // auto configuration ///////////////
-            {
-                // format
-                selectedScanner.AutoConfiguration.Format = formatFlow.Item1;
-            }
-            else if (RadioButtonSourceFlatbed.IsChecked.Value)          // flatbed configuration ////////////
-            {
-                // color mode
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                if (selectedColorMode == null)
+                if (scanFolder == null)
                 {
-                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                    TeachingTipError.Target = ButtonScan;
+                    TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
+                    TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
+                    TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
+                    ScanCanceled();
+                    TeachingTipError.IsOpen = true;
+                    return;
+                }
+
+                // gather options ///////////////////////////////////////////////////////////////////////////////
+                Tuple<ImageScannerFormat, SupportedFormat?> formatFlow = GetDesiredFormat(ComboBoxFormat, formats);
+                if (formatFlow == null)
+                {
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoFormatHeader"), LocalizedString("ErrorMessageNoFormatBody"));
                     ScanCanceled();
                     return;
                 }
-                else selectedScanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
 
-                // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                if (selectedResolution == null)
+                if (RadioButtonSourceAutomatic.IsChecked.Value)             // auto configuration ///////////////
                 {
-                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
-                    ScanCanceled();
-                    return;
+                    // format
+                    selectedScanner.AutoConfiguration.Format = formatFlow.Item1;
                 }
-                selectedScanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution) selectedResolution;
-
-                // format
-                selectedScanner.FlatbedConfiguration.Format = formatFlow.Item1;
-            }
-            else if (RadioButtonSourceFeeder.IsChecked.Value)           // feeder configuration /////////////
-            {
-                // color mode
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                if (selectedColorMode == null)
+                else if (RadioButtonSourceFlatbed.IsChecked.Value)          // flatbed configuration ////////////
                 {
-                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
-                    ScanCanceled();
-                    return;
-                }
-                else selectedScanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
-
-                // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                if (selectedResolution == null)
-                {
-                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
-                    ScanCanceled();
-                    return;
-                }
-                selectedScanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
-
-                // format
-                selectedScanner.FeederConfiguration.Format = formatFlow.Item1;
-            }
-            else
-            {
-                ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
-            }
-
-            // start scan ///////////////////////////////////////////////////////////////////////////////////
-            cancellationToken = new CancellationTokenSource();
-            var progress = new Progress<UInt32>(scanProgress);
-
-            ImageScannerScanResult result = null;
-            ButtonCancel.Visibility = Visibility.Visible;
-
-            StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
-            try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
-            catch (Exception)
-            {
-                TeachingTipError.Target = ButtonScan;
-                TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
-                TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
-                TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
-                ScanCanceled();
-                TeachingTipError.IsOpen = true;
-                return;
-            }
-
-            try
-            {
-                if (formatFlow.Item2 == SupportedFormat.PDF)
-                {
-                    // conversion to PDF: save result to temporary files for win32 component
-                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                        RadioButtonSourceFeeder, ApplicationData.Current.TemporaryFolder, cancellationToken, 
-                        progress, selectedScanner);
-                } 
-                else
-                {
-                    // save result to target folder right away
-                    result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
-                        RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
-                }
-            }
-            catch (System.Runtime.InteropServices.COMException exc)
-            {
-                if (!canceledScan) ScannerError(exc);
-                return;
-            }
-            catch (Exception)
-            {
-                if (!canceledScan) ScannerError();
-                return;
-            }
-
-            if (!ScanResultValid(result))
-            {
-                if (!canceledScan) ScannerError();
-                return;
-            }
-
-            if (result.ScannedFiles.Count > 1)
-            {
-                ShowFeedbackContentDialog(LocalizedString("ErrorMessageMultipleDocumentsUnsupportedHeader"), LocalizedString("ErrorMessageMultipleDocumentsUnsupportedBody"));
-            }
-
-            if (formatFlow.Item2 != null)
-            {
-                // files need to be converted
-                string convertedFileName;
-                bool firstFile = true;
-                foreach (StorageFile scan in result.ScannedFiles)
-                {
-                    try 
-                    { 
-                        convertedFileName = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder);
-                        
-                        if (firstFile)
-                        {
-                            // make first file of possible batch the one that can be edited
-                            scannedFile = await scanFolder.GetFileAsync(convertedFileName);
-                            firstFile = false;
-                        }
-                    }
-                    catch (Exception)
+                    // color mode
+                    ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                    if (selectedColorMode == null)
                     {
-                        if (formatFlow.Item2 == SupportedFormat.PDF)
-                        {
-                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"), LocalizedString("ErrorMessageConversionBodyPDF"));
-                        } 
-                        else
-                        {
-                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
-                                LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
-                        }
+                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
                         ScanCanceled();
                         return;
                     }
+                    else selectedScanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+
+                    // resolution
+                    ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                    if (selectedResolution == null)
+                    {
+                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                        ScanCanceled();
+                        return;
+                    }
+                    selectedScanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+
+                    // format
+                    selectedScanner.FlatbedConfiguration.Format = formatFlow.Item1;
                 }
-            }
-            else
-            {
-                // no need to convert
-                scannedFile = result.ScannedFiles[0];
+                else if (RadioButtonSourceFeeder.IsChecked.Value)           // feeder configuration /////////////
+                {
+                    // color mode
+                    ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                    if (selectedColorMode == null)
+                    {
+                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoColorModeHeader"), LocalizedString("ErrorMessageNoColorModeBody"));
+                        ScanCanceled();
+                        return;
+                    }
+                    else selectedScanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+
+                    // resolution
+                    ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                    if (selectedResolution == null)
+                    {
+                        ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoResolutionHeader"), LocalizedString("ErrorMessageNoResolutionBody"));
+                        ScanCanceled();
+                        return;
+                    }
+                    selectedScanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+
+                    // format
+                    selectedScanner.FeederConfiguration.Format = formatFlow.Item1;
+                }
+                else
+                {
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageNoConfigurationHeader"), LocalizedString("ErrorMessageNoConfigurationBody"));
+                }
+
+                // start scan ///////////////////////////////////////////////////////////////////////////////////
+                cancellationToken = new CancellationTokenSource();
+                var progress = new Progress<UInt32>(scanProgress);
+
+                ImageScannerScanResult result = null;
+                ButtonCancel.Visibility = Visibility.Visible;
+
+                StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
+                try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
+                catch (Exception)
+                {
+                    TeachingTipError.Target = ButtonScan;
+                    TeachingTipError.Title = LocalizedString("ErrorMessageScanFolderHeader");
+                    TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
+                    TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
+                    ScanCanceled();
+                    TeachingTipError.IsOpen = true;
+                    return;
+                }
+
+                try
+                {
+                    if (formatFlow.Item2 == SupportedFormat.PDF)
+                    {
+                        // conversion to PDF: save result to temporary files for win32 component
+                        result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                            RadioButtonSourceFeeder, ApplicationData.Current.TemporaryFolder, cancellationToken,
+                            progress, selectedScanner);
+                    }
+                    else
+                    {
+                        // save result to target folder right away
+                        result = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed,
+                            RadioButtonSourceFeeder, scanFolder, cancellationToken, progress, selectedScanner);
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException exc)
+                {
+                    if (!canceledScan) ScannerError(exc);
+                    return;
+                }
+                catch (Exception)
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
+
+                if (!ScanResultValid(result))
+                {
+                    if (!canceledScan) ScannerError();
+                    return;
+                }
+
+                if (result.ScannedFiles.Count > 1)
+                {
+                    ShowFeedbackContentDialog(LocalizedString("ErrorMessageMultipleDocumentsUnsupportedHeader"), LocalizedString("ErrorMessageMultipleDocumentsUnsupportedBody"));
+                }
+
+                if (formatFlow.Item2 != null)
+                {
+                    // files need to be converted
+                    string convertedFileName;
+                    bool firstFile = true;
+                    foreach (StorageFile scan in result.ScannedFiles)
+                    {
+                        try
+                        {
+                            convertedFileName = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder);
+
+                            if (firstFile)
+                            {
+                                // make first file of possible batch the one that can be edited
+                                scannedFile = await scanFolder.GetFileAsync(convertedFileName);
+                                firstFile = false;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            if (formatFlow.Item2 == SupportedFormat.PDF)
+                            {
+                                ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"), LocalizedString("ErrorMessageConversionBodyPDF"));
+                            }
+                            else
+                            {
+                                ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
+                                    LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
+                            }
+                            ScanCanceled();
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    // no need to convert
+                    scannedFile = result.ScannedFiles[0];
+                }
             }
 
             // show result //////////////////////////////////////////////////////////////////////////////////
@@ -2087,6 +2093,7 @@ namespace Scanner
         {
             try
             {
+                ScrollViewerTextBlockCommandBarPrimaryFile.MaxWidth = FrameCommandBarPrimary.ActualWidth;
                 if (FrameCommandBarPrimary.ActualWidth <= ScrollViewerTextBlockCommandBarPrimaryFile.ActualWidth)
                 {
                     // remove round corner to close gap to file name
@@ -2103,12 +2110,9 @@ namespace Scanner
                 }
                 ScrollViewerTextBlockCommandBarPrimaryFile.MaxWidth = CommandBarPrimary.ActualWidth;
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception) { }
         }
+
 
         private async void ButtonCommandBarPrimaryFileName_Click(object sender, RoutedEventArgs e)
         {
@@ -2118,8 +2122,8 @@ namespace Scanner
 
             try
             {
-                StorageFolder folder = await scannedFile.GetParentAsync();
-                await Launcher.LaunchFolderAsync(folder, launcherOptions);
+                string folder = scannedFile.Path.Remove(scannedFile.Path.LastIndexOf(System.IO.Path.DirectorySeparatorChar));
+                await Launcher.LaunchFolderPathAsync(folder, launcherOptions);
             }
             catch (Exception) { }
         }
