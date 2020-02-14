@@ -265,10 +265,6 @@
     <value>Start drawing when a pen is detected</value>
     <comment>The header for the automatic drawing on pen detection setting toggle.</comment>
   </data>
-  <data name="CheckBoxSettingsSearchIndicator.Content" xml:space="preserve">
-    <value>Show scanner search indicator</value>
-    <comment>The header for the search indicator setting toggle.</comment>
-  </data>
   <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
     <value>Allow unsupported file formats by converting to them from a supported one</value>
     <comment>The header for the unsupported formats setting toggle.</comment>
@@ -721,6 +717,10 @@ Please use the Feedback Hub, if this something you would like to see addressed i
   <data name="TextBlockResolution.Text" xml:space="preserve">
     <value>Resolution</value>
     <comment>The header for the resolution ComboBox.</comment>
+  </data>
+  <data name="TextBlockScannerIndicatorText" xml:space="preserve">
+    <value>Always searching for new devices...</value>
+    <comment>The text inside the scanner list, that indicates that the search for new devices always continues.</comment>
   </data>
   <data name="TextBlockScannerSelectionHintHeader.Text" xml:space="preserve">
     <value>Select a scanner</value>

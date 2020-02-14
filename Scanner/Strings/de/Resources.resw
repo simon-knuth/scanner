@@ -265,10 +265,6 @@
     <value>Mit dem Zeichnen beginnen, wenn ein Stift erkannt wird</value>
     <comment>The header for the automatic drawing on pen detection setting toggle.</comment>
   </data>
-  <data name="CheckBoxSettingsSearchIndicator.Content" xml:space="preserve">
-    <value>Indikator für die Scannersuche anzeigen</value>
-    <comment>The header for the search indicator setting toggle.</comment>
-  </data>
   <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
     <value>Nicht-unterstützte Dateiformate mittels Konvertierung verfügbar machen</value>
     <comment>The header for the unsupported formats setting toggle.</comment>
@@ -721,6 +717,10 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
   <data name="TextBlockResolution.Text" xml:space="preserve">
     <value>Auflösung</value>
     <comment>The header for the resolution ComboBox.</comment>
+  </data>
+  <data name="TextBlockScannerIndicatorText" xml:space="preserve">
+    <value>Immer auf der Suche nach neuen Geräten...</value>
+    <comment>The text inside the scanner list, that indicates that the search for new devices always continues.</comment>
   </data>
   <data name="TextBlockScannerSelectionHintHeader.Text" xml:space="preserve">
     <value>Wählen Sie einen Scanner</value>

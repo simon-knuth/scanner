@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
@@ -21,11 +22,7 @@ using Windows.UI.Xaml;
 
 using static Enums;
 using static Globals;
-using Windows.Devices.Scanners;
-using Windows.System.Diagnostics;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.Foundation.Collections;
+
 
 static class Utilities
 {
@@ -330,16 +327,6 @@ static class Utilities
         {
             settingAppTheme = Theme.system;
             localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
-        }
-
-        if (localSettingsContainer.Values["settingSearchIndicator"] != null)
-        {
-            settingSearchIndicator = (bool)localSettingsContainer.Values["settingSearchIndicator"];
-        }
-        else
-        {
-            settingSearchIndicator = true;
-            localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
         }
 
         if (localSettingsContainer.Values["settingAutomaticScannerSelection"] != null)
@@ -670,7 +657,6 @@ static class Utilities
     public static void SaveSettings()
     {
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
-        localSettingsContainer.Values["settingSearchIndicator"] = settingSearchIndicator;
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
@@ -914,5 +900,30 @@ static class Utilities
             default: 
                 return null;
         }
+    }
+
+
+    public static void AddIndicatorComboBoxItem(ObservableCollection<ComboBoxItem> itemList)
+    {
+        ComboBoxItem item = new ComboBoxItem();
+        item.IsEnabled = false;
+        item.VerticalContentAlignment = VerticalAlignment.Bottom;
+
+        StackPanel stackPanel = new StackPanel();
+        stackPanel.Orientation = Orientation.Vertical;
+        item.Content = stackPanel;
+
+        TextBlock textBlock = new TextBlock();
+        textBlock.Text = LocalizedString("TextBlockScannerIndicatorText");
+        textBlock.Style = Application.Current.Resources["CaptionTextBlockStyle"] as Style;
+        textBlock.Margin = new Thickness(0, 0, 0, 1);
+        stackPanel.Children.Add(textBlock);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.IsIndeterminate = true;
+        progressBar.Opacity = 0.75;
+        stackPanel.Children.Add(progressBar);
+
+        itemList.Add(item);
     }
 }

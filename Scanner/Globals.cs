@@ -8,7 +8,6 @@ using static Enums;
 public static class Globals
 {
     public static Theme settingAppTheme;                            // user theme setting
-    public static bool settingSearchIndicator;                      // whether the permanent search indicator should be visible
     public static bool settingAutomaticScannerSelection;            // automatically select first available scanner
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
     public static bool settingUnsupportedFileFormat;                // allow unsupported file formats through conversion

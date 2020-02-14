@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
@@ -91,7 +90,7 @@ namespace Scanner
             ColumnLeftDefaultMinWidth = ColumnLeft.MinWidth;
 
             // populate the scanner list
-            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
+            AddIndicatorComboBoxItem(scannerList);
             scannerWatcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
             scannerWatcher.Added += OnScannerAdded;
             scannerWatcher.Removed += OnScannerRemoved;
@@ -202,6 +201,7 @@ namespace Scanner
                 RadioButtonColorModeGrayscale.IsChecked = false;
                 RadioButtonColorModeMonochrome.IsChecked = false;
                 ComboBoxResolution.SelectedIndex = -1;
+                ComboBoxFormat.SelectedIndex = -1;
 
                 // hide flatbed/feeder-specific options
                 StackPanelColor.Visibility = Visibility.Collapsed;
@@ -239,6 +239,7 @@ namespace Scanner
                                 // (almost) start from scratch to hopefully get rid of dead scanners
                                 possiblyDeadScanner = true;
                                 scannerList.Clear();
+                                AddIndicatorComboBoxItem(scannerList);
                                 Page_SizeChanged(null, null);
                                 scannerWatcher.Stop();
                                 return;
@@ -335,7 +336,7 @@ namespace Scanner
                         item.Tag = deviceInfo.Id;
 
                         deviceInformation.Add(deviceInfo);
-                        scannerList.Add(item);
+                        scannerList.Insert(0, item);
                     }
                     else return;
 
@@ -1286,9 +1287,6 @@ namespace Scanner
                 formatSettingChanged = false;
                 RadioButtonSourceChanged(null, null);
             }
-
-            if (settingSearchIndicator) ProgressBarRefresh.Visibility = Visibility.Visible;
-            else ProgressBarRefresh.Visibility = Visibility.Collapsed;
 
             bool? defaultFolder = await IsDefaultScanFolderSet();
             if (firstLoaded)

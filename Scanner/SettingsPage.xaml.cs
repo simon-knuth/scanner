@@ -88,7 +88,6 @@ namespace Scanner
                     break;
             }
             TextBlockRestart.Visibility = Visibility.Collapsed;
-            CheckBoxSearchIndicator.IsChecked = settingSearchIndicator;
             CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
             CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
             CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
@@ -113,7 +112,6 @@ namespace Scanner
             }
 
             settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
-            settingSearchIndicator = (bool) CheckBoxSearchIndicator.IsChecked;
             settingAutomaticScannerSelection = (bool) CheckBoxAutomaticScannerSelection.IsChecked;
             settingNotificationScanComplete = (bool) CheckBoxNotificationScanComplete.IsChecked;
             settingUnsupportedFileFormat = (bool) CheckBoxUnsupportedFileFormat.IsChecked;

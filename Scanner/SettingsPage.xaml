@@ -86,8 +86,7 @@
                         <Span><Run x:Uid="RunSettingsRestartHintBeforeLink" xml:space="preserve">Please </Run><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click">save and restart the app</Hyperlink><Run x:Uid="RunSettingsRestartHintAfterLink" xml:space="preserve"> for changes to take effect.</Run></Span>
                         </TextBlock>
 
-                        <CheckBox x:Uid="CheckBoxSettingsSearchIndicator" x:Name="CheckBoxSearchIndicator" Content="Show scanner search indicator" Margin="0,24,0,0"/>
-                        <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,12,0,0"/>
+                        <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0"/>
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0"/>
                         <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="CheckBoxUnsupportedFileFormat_Toggled"/>
 
