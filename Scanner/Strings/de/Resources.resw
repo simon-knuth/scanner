@@ -759,11 +759,11 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
-    <value>Für die meisten unsichtbar, aber dennoch hilfreich: Kleine Buttons sind jetzt leichter zu treffen und die Navigation mit der Tastatur ist verlässlicher.</value>
+    <value>Die Oberfläche ist nun nützlicher und kompakter als zuvor.</value>
     <comment>The body for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">
-    <value>Verbesserte Barrierefreiheit</value>
+    <value>Verbesserte Darstellung</value>
     <comment>The header for the second section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection3Body.Text" xml:space="preserve">

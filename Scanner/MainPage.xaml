@@ -329,13 +329,13 @@
                             <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Scanning to PDF is now available with every scanner, regardless of its capabilites. The conversion feature needs to be enabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <!--<FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE776;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved accessibility" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="Invisible to most, but important nonetheless: Smaller buttons are now easier to hit and keyboard navigation starts right where it should." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved appearance" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="The interface is now more useful, informative and compact." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;" FontSize="32" Margin="0,0,0,24"/>
+                        <!--<FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
                             <TextBlock x:Uid="TextBlockUpdateSection3Header" Text="Know where your files go" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock x:Uid="TextBlockUpdateSection3Body" Text="The folder button now indicates whether a custom save location has been chosen." Style="{StaticResource BodyTextBlockStyle}"/>
