@@ -305,5 +305,12 @@ namespace Scanner
         {
             ButtonBrowse.Focus(FocusState.Programmatic);
         }
+
+
+
+        private void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            ShowRatingDialog();
+        }
     }
 }

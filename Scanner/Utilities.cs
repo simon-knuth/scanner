@@ -23,6 +23,7 @@ using Windows.UI.Xaml;
 using static Enums;
 using static Globals;
 using Windows.Foundation.Collections;
+using Windows.Services.Store;
 
 static class Utilities
 {
@@ -911,6 +912,10 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Appends the indicator ComboBoxItem to the provided itemList.
+    /// </summary>
+    /// <param name="itemList">The list to which the indicaator icon shall be appended.</param>
     public static void AddIndicatorComboBoxItem(ObservableCollection<ComboBoxItem> itemList)
     {
         ComboBoxItem item = new ComboBoxItem();
@@ -933,5 +938,13 @@ static class Utilities
         stackPanel.Children.Add(progressBar);
 
         itemList.Add(item);
+    }
+
+
+    public async static void ShowRatingDialog()
+    {
+        StoreContext storeContext = StoreContext.GetDefault();
+
+        await storeContext.RequestRateAndReviewAppAsync();
     }
 }

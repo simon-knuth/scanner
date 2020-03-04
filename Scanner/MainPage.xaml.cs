@@ -1285,6 +1285,8 @@ namespace Scanner
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            await ContentDialogFeedback.ShowAsync();
+            
             if (formatSettingChanged)
             {
                 formatSettingChanged = false;
@@ -2132,6 +2134,14 @@ namespace Scanner
                 await Launcher.LaunchFolderPathAsync(folder, launcherOptions);
             }
             catch (Exception) { }
+        }
+
+
+
+        private void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            ShowRatingDialog();
+            ContentDialogFeedback.Hide();
         }
     }
 }

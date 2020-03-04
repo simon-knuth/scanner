@@ -101,7 +101,7 @@
                                 <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
                                 <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click">Feedback Hub</Hyperlink>
                                 <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
-                                <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="ms-windows-store://review/?productid=9N438MZHD3ZF">rate Scanner in the Microsoft Store</Hyperlink>
+                                <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click">rate Scanner in the Microsoft Store</Hyperlink>
                                 <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
                             </Span>
                         </TextBlock>
