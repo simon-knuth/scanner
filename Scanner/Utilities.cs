@@ -22,7 +22,7 @@ using Windows.UI.Xaml;
 
 using static Enums;
 using static Globals;
-
+using Windows.Foundation.Collections;
 
 static class Utilities
 {
@@ -745,8 +745,16 @@ static class Utilities
                     ApplicationData.Current.LocalSettings.Values["sourceFileHeight"] = imageProperties.Height;
 
                     // call win32 app and wait for result
-                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                    await Task.WhenAny(win32ResultAsync, Task.Delay(10000));
+                    if (appServiceConnection == null)
+                    {
+                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    } else
+                    {
+                        ValueSet message = new ValueSet();
+                        message.Add("REQUEST", "CONVERT");
+                        var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
+                    }
+                    await Task.WhenAny(win32ResultAsync, Task.Delay(15000));
 
                     // get result file and move it to its correct folder
                     StorageFile convertedFile = null;

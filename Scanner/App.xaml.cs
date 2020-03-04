@@ -5,6 +5,7 @@ using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -47,6 +48,7 @@ namespace Scanner
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -142,14 +144,26 @@ namespace Scanner
             // app service launched
             base.OnBackgroundActivated(args);
 
-            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details 
-                && details.CallerPackageFamilyName == Package.Current.Id.FamilyName) 
-            {
-                // fulltrust win32 process is calling
-                BackgroundTaskDeferral backgroundTaskDeferral = args.TaskInstance.GetDeferral();
-                appServiceConnection = details.AppServiceConnection;
-                appServiceConnection.RequestReceived += AppServiceConnection_RequestReceived;
-            }
+            IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            AppServiceTriggerDetails appService = taskInstance.TriggerDetails as AppServiceTriggerDetails;
+            appServiceDeferral = taskInstance.GetDeferral();
+            taskInstance.Canceled += AppService_Canceled;
+
+            appServiceConnection = appService.AppServiceConnection;
+            appServiceConnection.RequestReceived += AppServiceConnection_RequestReceived;
+            appServiceConnection.ServiceClosed += AppServiceConnection_Closed;
+        }
+
+        private void AppService_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            appServiceConnection = null;
+            appServiceDeferral.Complete();
+        }
+
+        private void AppServiceConnection_Closed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        {
+            appServiceConnection = null;
+            appServiceDeferral.Complete();
         }
 
         private void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
@@ -157,7 +171,7 @@ namespace Scanner
             // win32 component finished
             object result;
             args.Request.Message.TryGetValue("RESULT", out result);
-            if ((string) result == "SUCCESS") taskCompletionSource.TrySetResult(true);
+            if ((string)result == "SUCCESS") taskCompletionSource.TrySetResult(true);
             else taskCompletionSource.TrySetResult(false);
         }
     }

@@ -855,7 +855,8 @@ namespace Scanner
                         errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
                         errorDialog1.DefaultCommandIndex = 0;
                         errorDialog1.CancelCommandIndex = 1;
-                        await errorDialog1.ShowAsync();
+                        try { await errorDialog1.ShowAsync(); }
+                        catch (Exception) { }
                         ScanCanceled();
                         return;
                     }
@@ -870,7 +871,8 @@ namespace Scanner
                     dialog.Commands.Add(new UICommand(LocalizedString("MessageFileSavedClose"), (x) => { }));
                     dialog.DefaultCommandIndex = 0;
                     dialog.CancelCommandIndex = 1;
-                    await dialog.ShowAsync();
+                    try { await dialog.ShowAsync(); }
+                    catch (Exception) { }
                     flowState = FlowState.initial;
                     break;
                 default:        // result is an image file (JPG/PNG/TIF/BMP)
@@ -885,7 +887,8 @@ namespace Scanner
                         errorDialog2.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
                         errorDialog2.DefaultCommandIndex = 0;
                         errorDialog2.CancelCommandIndex = 1;
-                        await errorDialog2.ShowAsync();
+                        try { await errorDialog2.ShowAsync(); }
+                        catch (Exception) { }
                         ScanCanceled();
                         return;
                     }
@@ -906,7 +909,7 @@ namespace Scanner
             if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
 
             scanNumber++;
-            if (scanNumber == 10) await ContentDialogFeedback.ShowAsync();
+            if (scanNumber == 10) try { await ContentDialogFeedback.ShowAsync(); } catch (Exception) { }
             localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
             // update UI
@@ -1933,7 +1936,8 @@ namespace Scanner
         /// </summary>
         private async void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
         {
-            await ContentDialogRename.ShowAsync();
+            try { await ContentDialogRename.ShowAsync(); }
+            catch (Exception) { }
         }
 
 
@@ -1954,7 +1958,8 @@ namespace Scanner
         /// </summary>
         private async void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            await ContentDialogDelete.ShowAsync();
+            try { await ContentDialogDelete.ShowAsync(); }
+            catch (Exception) { }
         }
 
 
@@ -1973,7 +1978,8 @@ namespace Scanner
             ContentDialogBlank.PrimaryButtonText = "";
             ContentDialogBlank.SecondaryButtonText = "";
 
-            await ContentDialogBlank.ShowAsync();
+            try { await ContentDialogBlank.ShowAsync(); }
+            catch (Exception) { }
         }
 
 
@@ -1996,7 +2002,8 @@ namespace Scanner
             ContentDialogBlank.SecondaryButtonText = "";
             ContentDialogBlank.DefaultButton = ContentDialogButton.Close;
 
-            await ContentDialogBlank.ShowAsync();
+            try { await ContentDialogBlank.ShowAsync(); }
+            catch (Exception) { }
             ContentDialogBlank.PrimaryButtonClick -= typedEventHandler;
         }
 
@@ -2053,7 +2060,8 @@ namespace Scanner
         /// </summary>
         private async void ShowUpdateMessage()
         {
-            await ContentDialogUpdate.ShowAsync();
+            try { await ContentDialogUpdate.ShowAsync(); }
+            catch (Exception) { }
         }
 
 

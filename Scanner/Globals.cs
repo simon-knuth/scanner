@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 
@@ -25,6 +26,7 @@ public static class Globals
     public static int scanNumber;
 
     public static AppServiceConnection appServiceConnection;
+    public static BackgroundTaskDeferral appServiceDeferral;
     public static TaskCompletionSource<bool> taskCompletionSource = null;
 
 

@@ -2,11 +2,13 @@
 using PdfSharp.Pdf;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+
 
 namespace ImageToPDF
 {
@@ -14,14 +16,26 @@ namespace ImageToPDF
     {
         public const string appServiceName = "pdfConversionService";
         public static AppServiceConnection appServiceConnection;
+        public static ManualResetEvent serviceCallEvent = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
             ConnectToService();
 
             Conversion();
+
+            while (true)
+            {
+                serviceCallEvent.WaitOne();
+
+                serviceCallEvent = new ManualResetEvent(false);
+
+                ConnectToService();
+
+                Conversion();
+            }
         }
-            
+
 
 
         /// <summary>
@@ -32,6 +46,16 @@ namespace ImageToPDF
             appServiceConnection = new AppServiceConnection();
             appServiceConnection.AppServiceName = appServiceName;
             appServiceConnection.PackageFamilyName = Package.Current.Id.FamilyName;
+            appServiceConnection.RequestReceived += (x, y) =>
+            {
+                switch (y.Request.Message["REQUEST"])
+                {
+                    case "CONVERT":
+                        serviceCallEvent.Set();
+                        break;
+                }
+            };
+            appServiceConnection.ServiceClosed += (x, y) => Environment.Exit(1);
 
             AppServiceConnectionStatus status = await appServiceConnection.OpenAsync();
         }
