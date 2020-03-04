@@ -298,7 +298,8 @@
 
         <ContentDialog
             x:Name="ContentDialogUpdate" x:Uid="ContentDialogUpdate" v1809:Style="{StaticResource RoundedContentDialog}"
-            PrimaryButtonText="Okay" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" Title="What's New">
+            PrimaryButtonText="Okay" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" Title="What's New"
+            SecondaryButtonText="Rate the app" v1809:SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" SecondaryButtonClick="ContentDialogUpdate_SecondaryButtonClick">
             <ContentDialog.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition FromVerticalOffset="64"/>
@@ -347,7 +348,8 @@
                             <TextBlock x:Uid="TextBlockUpdateSection4Body" Text="Fixed many issues that e.g. impacted users trying to scan to folders outside the Pictures library." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>-->
                     </Grid>
-                    <TextBlock x:Uid="TextBlockUpdateEnd" Text="~ Thank you for your support! ~" Style="{StaticResource BaseTextBlockStyle}" HorizontalAlignment="Center" Margin="0,24,0,16"/>
+                    <TextBlock x:Uid="TextBlockUpdateEnd" Text="~ Thank you for your support! ~" Style="{StaticResource BaseTextBlockStyle}" HorizontalAlignment="Center" Margin="0,12,0,16"/>
+                    <TextBlock x:Uid="TextBlockUpdateWarning" Text="Some features may not be available on older versions of Windows 10." HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,12,0,0" Opacity="0.5" TextWrapping="WrapWholeWords"/>
                 </StackPanel>
             </ScrollViewer>
         </ContentDialog>

@@ -149,6 +149,14 @@
     <value>Löschen</value>
     <comment>The tooltip text that appears while hovering the delete button in the CommandBar.</comment>
   </data>
+  <data name="AppBarButtonDiscard.Label" xml:space="preserve">
+    <value>Verwerfen</value>
+    <comment>The text inside the button that allows the user to discard changes.</comment>
+  </data>
+  <data name="AppBarButtonDiscard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verwerfen</value>
+    <comment>The tooltip text that appears while hovering the discard button in the CommandBar.</comment>
+  </data>
   <data name="AppBarButtonDone.Label" xml:space="preserve">
     <value>Fertig</value>
     <comment>The text inside the button that allows the user to confirm the crop or dismiss the result.</comment>
@@ -328,6 +336,10 @@
   <data name="ContentDialogUpdate.PrimaryButtonText" xml:space="preserve">
     <value>Okay</value>
     <comment>The text inside the confirmation button of the changelog.</comment>
+  </data>
+  <data name="ContentDialogUpdate.SecondaryButtonText" xml:space="preserve">
+    <value>App bewerten</value>
+    <comment>The text that appears inisde the button that allows the user to rate the app from the changelog.</comment>
   </data>
   <data name="ContentDialogUpdate.Title" xml:space="preserve">
     <value>Neuigkeiten</value>
@@ -781,6 +793,10 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
   <data name="TextBlockUpdateSection4Header.Text" xml:space="preserve">
     <value>Fehler behoben</value>
     <comment>The header for the fourth section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateWarning.Text" xml:space="preserve">
+    <value>Einige Funktionen sind möglicherweise nicht mit älteren Windows 10-Versionen kompatibel.</value>
+    <comment>The warning that appears in the changelog.</comment>
   </data>
   <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
     <value>Manuell</value>

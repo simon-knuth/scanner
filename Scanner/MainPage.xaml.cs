@@ -1285,8 +1285,6 @@ namespace Scanner
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            await ContentDialogFeedback.ShowAsync();
-            
             if (formatSettingChanged)
             {
                 formatSettingChanged = false;
@@ -2142,6 +2140,13 @@ namespace Scanner
         {
             ShowRatingDialog();
             ContentDialogFeedback.Hide();
+        }
+
+
+
+        private void ContentDialogUpdate_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            ShowRatingDialog();
         }
     }
 }
