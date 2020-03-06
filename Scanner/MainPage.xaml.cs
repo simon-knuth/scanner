@@ -99,14 +99,14 @@ namespace Scanner
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                     ComboBoxScanners.SelectedIndex = -1;
+                    ComboBoxScanners.SelectedIndex = -1;
+                    selectedScanner = null;
+                    deviceInformation.Clear();
+                    refreshLeftPanel();
+                    scannerWatcher.Start();
+                    ComboBoxScanners.IsEnabled = true;
+                    scannerWatcher.Stopped -= eventHandlerScannerWatcherStopped;
                 });
-                selectedScanner = null;
-                deviceInformation.Clear();
-                refreshLeftPanel();
-                scannerWatcher.Start();
-                ComboBoxScanners.IsEnabled = true;
-                scannerWatcher.Stopped -= eventHandlerScannerWatcherStopped;
             };
             scannerWatcher.Stopped += eventHandlerScannerWatcherStopped;
             scannerWatcher.Start();
