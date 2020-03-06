@@ -122,7 +122,7 @@
     <comment>The text inside the button that allows the user to set an aspect ratio while cropping the result.</comment>
   </data>
   <data name="AppBarButtonAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Seitenverhältnis</value>
+    <value>Seitenverhältnis wählen</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button.</comment>
   </data>
   <data name="AppBarButtonCopy.Label" xml:space="preserve">
@@ -130,7 +130,7 @@
     <comment>The text inside the button that allows the user to copy the result.</comment>
   </data>
   <data name="AppBarButtonCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Kopieren (Strg+C)</value>
+    <value>In Zwischenablage kopieren (Strg+C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonCrop.Label" xml:space="preserve">
@@ -138,7 +138,7 @@
     <comment>The text inside the button that allows the user to crop the result.</comment>
   </data>
   <data name="AppBarButtonCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zuschneiden</value>
+    <value>Scan zuschneiden</value>
     <comment>The tooltip text that appears while hovering the crop button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonDelete.Label" xml:space="preserve">
@@ -146,7 +146,7 @@
     <comment>The text inside the button that allows the user to delete the result.</comment>
   </data>
   <data name="AppBarButtonDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Löschen</value>
+    <value>Scan löschen</value>
     <comment>The tooltip text that appears while hovering the delete button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonDiscard.Label" xml:space="preserve">
@@ -154,7 +154,7 @@
     <comment>The text inside the button that allows the user to discard changes.</comment>
   </data>
   <data name="AppBarButtonDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Verwerfen</value>
+    <value>Änderungen verwerfen</value>
     <comment>The tooltip text that appears while hovering the discard button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonDone.Label" xml:space="preserve">
@@ -162,7 +162,7 @@
     <comment>The text inside the button that allows the user to confirm the crop or dismiss the result.</comment>
   </data>
   <data name="AppBarButtonDone.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Fertig</value>
+    <value>Bearbeiten beenden</value>
     <comment>The tooltip text that appears while hovering the done button.</comment>
   </data>
   <data name="AppBarButtonDraw.Label" xml:space="preserve">
@@ -170,7 +170,7 @@
     <comment>The text inside the button that allows the user to draw on the result.</comment>
   </data>
   <data name="AppBarButtonDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zeichnen</value>
+    <value>Zeichnen und markieren mit Windows Ink</value>
     <comment>The tooltip text that appears while hovering the draw button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonOpenWith.Label" xml:space="preserve">
@@ -178,7 +178,7 @@
     <comment>The text inside the button that allows the user to pick an app to open the file with.</comment>
   </data>
   <data name="AppBarButtonOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Öffnen mit</value>
+    <value>Scan in anderer App öffnen</value>
     <comment>The tooltip text that appears while hovering the open with button.</comment>
   </data>
   <data name="AppBarButtonRename.Label" xml:space="preserve">
@@ -186,7 +186,7 @@
     <comment>The text inside the button that allows the user to rename the result.</comment>
   </data>
   <data name="AppBarButtonRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Umbenennen</value>
+    <value>Scan umbenennen</value>
     <comment>The tooltip text that appears while hovering the rename button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonRotate.Label" xml:space="preserve">
@@ -194,7 +194,7 @@
     <comment>The text inside the button that allows the user to rotate the result.</comment>
   </data>
   <data name="AppBarButtonRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Drehen</value>
+    <value>Scan 90° im Uhrzeigersinn drehen</value>
     <comment>The tooltip text that appears while hovering the rotate button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonSave.Label" xml:space="preserve">
@@ -202,7 +202,7 @@
     <comment>The text inside the button that allows the user to save the edited result.</comment>
   </data>
   <data name="AppBarButtonSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Speichern</value>
+    <value>Änderungen in originaler Datei speichern</value>
     <comment>The tooltip text that appears while hovering the save button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonSaveCopy.Label" xml:space="preserve">
@@ -210,7 +210,7 @@
     <comment>The text inside the button that allows the user to save the edited result as a copy.</comment>
   </data>
   <data name="AppBarButtonSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Kopie speichern</value>
+    <value>Änderungen in neuer Datei speichern</value>
     <comment>The tooltip text that appears while hovering the save copy button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonShare.Label" xml:space="preserve">
@@ -218,7 +218,7 @@
     <comment>The text inside the button that allows the user to share the result.</comment>
   </data>
   <data name="AppBarButtonShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Teilen (Strg+S)</value>
+    <value>Scan teilen (Strg+S)</value>
     <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
   </data>
   <data name="AppBarButtonTouchDraw.ToolTipService.ToolTip" xml:space="preserve">
@@ -238,11 +238,11 @@
     <comment>The tooltip text that appears while hovering the devices button.</comment>
   </data>
   <data name="ButtonRecents.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Vorherige Scans</value>
+    <value>Scanordner im Datei-Explorer anzeigen</value>
     <comment>The tooltip text that appears while hovering the recents button.</comment>
   </data>
   <data name="ButtonSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Einstellungen</value>
+    <value>App-Einstellungen öffnen</value>
     <comment>The tooltip text that appears while hovering the settings button.</comment>
   </data>
   <data name="ButtonSettingsCancel.Content" xml:space="preserve">

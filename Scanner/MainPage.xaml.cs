@@ -914,7 +914,7 @@ namespace Scanner
 
             // update UI
             Page_SizeChanged(null, null);
-            refreshLeftPanel();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
             ButtonDevices.IsEnabled = true;
         }
 
@@ -940,7 +940,7 @@ namespace Scanner
         /// <summary>
         ///     Reverts UI and variable changes that were made by commencing a scan.
         /// </summary>
-        private void ScanCanceled()
+        private async void ScanCanceled()
         {
             ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
             ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
@@ -953,7 +953,7 @@ namespace Scanner
             ButtonDevices.IsEnabled = true;
 
             Page_SizeChanged(null, null);
-            refreshLeftPanel();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
         }
 
 
@@ -967,14 +967,16 @@ namespace Scanner
         ///     Is called if another source mode was selected. Hides/shows available options in the left panel and updates the available file formats. 
         ///     The first available color mode and format are automatically selected.
         /// </summary>
-        private void RadioButtonSourceChanged(object sender, RoutedEventArgs e)
+        private async void RadioButtonSourceChanged(object sender, RoutedEventArgs e)
         {
+            IAsyncAction leftPanelRefresh;
+
             if (RadioButtonSourceAutomatic.IsChecked == true)
             {
                 StackPanelColor.Visibility = Visibility.Collapsed;
                 StackPanelResolution.Visibility = Visibility.Collapsed;
 
-                refreshLeftPanel();
+                leftPanelRefresh = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
 
                 RadioButtonColorModeColor.IsEnabled = false;
                 RadioButtonColorModeGrayscale.IsEnabled = false;
@@ -984,18 +986,22 @@ namespace Scanner
                 RadioButtonColorModeGrayscale.IsChecked = false;
                 RadioButtonColorModeMonochrome.IsChecked = false;
 
+                await leftPanelRefresh;
+
                 // detect available file formats and update UI accordingly
                 GetSupportedFormats(selectedScanner.AutoConfiguration, formats, selectedScanner, ComboBoxFormat);
                 ComboBoxFormat.IsEnabled = true;
             }
             else if (RadioButtonSourceFlatbed.IsChecked == true)
             {
-                refreshLeftPanel();
+                leftPanelRefresh = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
 
                 // detect available color modes and update UI accordingly
                 RadioButtonColorModeColor.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
                 RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                 RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+
+                await leftPanelRefresh;
 
                 if (RadioButtonColorModeColor.IsEnabled) RadioButtonColorModeColor.IsChecked = true;
                 else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
@@ -1015,12 +1021,14 @@ namespace Scanner
             }
             else if (RadioButtonSourceFeeder.IsChecked == true)
             {
-                refreshLeftPanel();
+                leftPanelRefresh = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
 
                 // detect available color modes and update UI accordingly
                 RadioButtonColorModeColor.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
                 RadioButtonColorModeGrayscale.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                 RadioButtonColorModeMonochrome.IsEnabled = selectedScanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+
+                await leftPanelRefresh;
 
                 if (RadioButtonColorModeColor.IsEnabled) RadioButtonColorModeColor.IsChecked = true;
                 else if (RadioButtonColorModeGrayscale.IsEnabled) RadioButtonColorModeGrayscale.IsChecked = true;
@@ -1358,10 +1366,10 @@ namespace Scanner
         ///     The event listener for when a new scanner has been selected from the <see cref="ComboBoxScanners"/>.
         ///     Disabled the <see cref="ComboBox"/> to let <see cref="refreshLeftPanel"/> deal with this safely.
         /// </summary>
-        private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxScanners.IsEnabled = false;
-            refreshLeftPanel();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
         }
 
 
@@ -1395,13 +1403,13 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when a key is lifted on the MainPage. Used to process shortcuts.
         /// </summary>
-        private void MainPage_KeyUp(CoreWindow sender, KeyEventArgs args)
+        private async void MainPage_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
             if ((!IsCtrlKeyPressed() || args.VirtualKey == VirtualKey.D) && debugShortcutActive)
             {
                 debugShortcutActive = false;
                 ButtonScan.IsEnabled = false;
-                refreshLeftPanel();
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => refreshLeftPanel());
             }
         }
 

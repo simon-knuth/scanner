@@ -943,8 +943,11 @@ static class Utilities
 
     public async static void ShowRatingDialog()
     {
-        StoreContext storeContext = StoreContext.GetDefault();
-
-        await storeContext.RequestRateAndReviewAppAsync();
+        try
+        {
+            StoreContext storeContext = StoreContext.GetDefault();
+            await storeContext.RequestRateAndReviewAppAsync();
+        }
+        catch (Exception) { }
     }
 }
