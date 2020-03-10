@@ -30,6 +30,7 @@ public static class Globals
     public static TaskCompletionSource<bool> taskCompletionSource = null;
 
 
+    public static string storeRateUri = "ms-windows-store://review/?productid=9N438MZHD3ZF";
 
     public static string glyphButtonRecentsDefault = "\uE838";
     public static string glyphButtonRecentsCustom = "\uEC25";

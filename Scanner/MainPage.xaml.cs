@@ -335,17 +335,27 @@ namespace Scanner
                         item.Content = deviceInfo.Name;
                         item.Tag = deviceInfo.Id;
 
-                        deviceInformation.Add(deviceInfo);
-                        scannerList.Insert(0, item);
+                        try
+                        {
+                            deviceInformation.Add(deviceInfo);
+                            scannerList.Insert(0, item);
+                        }
+                        catch (Exception)
+                        {
+                            deviceInformation.Remove(deviceInfo);
+                        }
                     }
                     else return;
 
                     // auto select first added scanner (if some requirements are met)
-                    if (!possiblyDeadScanner && !ComboBoxScanners.IsDropDownOpen && settingAutomaticScannerSelection
-                        && selectedScanner == null && deviceInformation.Count == 1)
+                    try
                     {
-                        ComboBoxScanners.SelectedIndex = 0;
-                    }
+                        if (!possiblyDeadScanner && !ComboBoxScanners.IsDropDownOpen && settingAutomaticScannerSelection
+                            && selectedScanner == null && deviceInformation.Count == 1)
+                        {
+                            ComboBoxScanners.SelectedIndex = 0;
+                        }
+                    } catch (Exception) { };
                 }
             );
         }

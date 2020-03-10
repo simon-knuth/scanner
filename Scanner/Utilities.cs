@@ -798,7 +798,7 @@ static class Utilities
                     await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     return newName;
                 }
-                catch (Exception) 
+                catch (Exception e) 
                 {
                     throw;
                 }                
@@ -948,6 +948,9 @@ static class Utilities
             StoreContext storeContext = StoreContext.GetDefault();
             await storeContext.RequestRateAndReviewAppAsync();
         }
-        catch (Exception) { }
+        catch (Exception) 
+        {
+            try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
+        }
     }
 }
