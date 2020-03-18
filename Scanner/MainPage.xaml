@@ -47,11 +47,6 @@
                 </Grid.RowDefinitions>
                 <ScrollViewer x:Name="ScrollViewerLeftPanel" VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
                     <StackPanel x:Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
-                        <StackPanel.ChildrenTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromVerticalOffset="100"/>
-                            </TransitionCollection>
-                        </StackPanel.ChildrenTransitions>
                         <TextBlock x:Name="TextBlockHeader" Text="Scanner" FontWeight="Bold" FontSize="32"/>
                         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                             <TextBlock x:Name="TextBlockSource" x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Bottom"/>
@@ -80,6 +75,12 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
+                	<Grid.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
+                        </TransitionCollection>
+                    </Grid.Transitions>
+
                     <Button x:Name="ButtonScan" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{ThemeResource ButtonRevealStyle}" Padding="16,8,16,8" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" MinWidth="80" IsEnabled="False" Click="Scan" IsEnabledChanged="ButtonScan_IsEnabledChanged">
                         <Grid>
                             <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
@@ -87,6 +88,12 @@
                         </Grid>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                    	<StackPanel.Transitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
+                            </TransitionCollection>
+                        </StackPanel.Transitions>
+
                         <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonSettings_Click">
                             <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
                         </Button>
@@ -324,17 +331,17 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA90;" FontSize="32" Margin="0,0,0,24"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="PDF for Everyone" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="Scanning to PDF is now available with every scanner, regardless of its capabilites. The conversion feature needs to be enabled in the settings." Style="{StaticResource BodyTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Redesigned Settings" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="The settings are now clearer with more room for what matters." Style="{StaticResource BodyTextBlockStyle}"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24"/>
+                        <!--<FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
                             <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved appearance" Style="{StaticResource BaseTextBlockStyle}"/>
                             <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="The interface is now more useful, informative and compact." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>
+                        </StackPanel>-->
 
                         <!--<FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;" FontSize="32" Margin="0,0,0,24"/>
                         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">

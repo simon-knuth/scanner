@@ -583,7 +583,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The settings link that allows the user to rate the app.</comment>
   </data>
   <data name="HyperlinkSettingsRestartHintLink" xml:space="preserve">
-    <value>Einstellungen speichern und die App neu starten</value>
+    <value>App neu starten</value>
     <comment>The hyperlink text that allows the user to save and restart the app after a theme change.</comment>
   </data>
   <data name="HyperlinkSettingsWebsiteLink" xml:space="preserve">
@@ -763,11 +763,11 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Das Speichern als PDF wird jetzt in Kombination mit jedem Scanner möglich, selbst wenn er es eigentlich nicht unterstützt. Stellen Sie sicher, dass die Konvertierung in den Einstellungen aktiv ist.</value>
+    <value>Die Einstellungen sind nun übersichtlicher und bieten mehr Platz für den Inhalt.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>PDF für Alle</value>
+    <value>Einstellungen im neuen Gewand</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">

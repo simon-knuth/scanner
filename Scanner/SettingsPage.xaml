@@ -25,47 +25,21 @@
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
     </Page.Resources>
-    
-    
+
+
     <Grid x:Name="GridSettingsPage">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <v1809:Grid.BackgroundTransition>
-                <v1809:BrushTransition/>
-            </v1809:Grid.BackgroundTransition>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="ButtonSave" x:Uid="ButtonSettingsSave" Grid.Column="0" Content="Save" MinWidth="100" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="0,0,16,0" Background="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Click="ButtonSave_Click"/>
-            <Button x:Name="ButtonCancel" x:Uid="ButtonSettingsCancel" Grid.Column="1" Content="Cancel" MinWidth="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{ThemeResource ButtonRevealStyle}" Margin="16,0,0,0" Click="ButtonCancel_Click"/>
-        </Grid>
-        <controls:DropShadowPanel x:Name="DropShadowPanelBottom" Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" HorizontalContentAlignment="Stretch" Height="50" VerticalAlignment="Bottom">
-            <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="{Binding Path=Height,ElementName=DropShadowPanelBottom}"/>
-        </controls:DropShadowPanel>
         <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <v1809:Grid.BackgroundTransition>
                 <v1809:BrushTransition/>
             </v1809:Grid.BackgroundTransition>
-            
-            <RelativePanel x:Name="StackPanelSettings">
-                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
-                    <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
-                </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <v1809:Grid.BackgroundTransition>
-                        <v1809:BrushTransition/>
-                    </v1809:Grid.BackgroundTransition>
 
-                    <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="24,0,0,8" VerticalAlignment="Top" Padding="0,0,0,0"/>
-                </Grid>
-                <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="GridSettingsHeader" RelativePanel.AlignBottomWithPanel="True">
-                    <StackPanel Padding="24,8,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
+            <RelativePanel x:Name="StackPanelSettings">
+                <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <StackPanel Padding="24,100,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="TextBlockSettingsSaveLocationHeader" Text="Save location" Style="{ThemeResource BodyTextBlockStyle}"/>
                         <RelativePanel Margin="0,6,0,0">
                             <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
@@ -83,14 +57,14 @@
                             </ComboBox.Items>
                         </ComboBox>
                         <TextBlock x:Name="TextBlockRestart" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Visibility="Collapsed" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run x:Uid="RunSettingsRestartHintBeforeLink" xml:space="preserve">Please </Run><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click">save and restart the app</Hyperlink><Run x:Uid="RunSettingsRestartHintAfterLink" xml:space="preserve"> for changes to take effect.</Run></Span>
+                        <Span><Run x:Uid="RunSettingsRestartHintBeforeLink" xml:space="preserve">Please </Run><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click">restart the app</Hyperlink><Run x:Uid="RunSettingsRestartHintAfterLink" xml:space="preserve"> for changes to take effect.</Run></Span>
                         </TextBlock>
 
-                        <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0"/>
-                        <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0"/>
-                        <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="CheckBoxUnsupportedFileFormat_Toggled"/>
+                        <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
+                        <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
+                        <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
-                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,24,0,0"/>
+                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
@@ -110,7 +84,7 @@
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run>Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2020 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
+                        <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2020 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
                         <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink></Span>
                         </TextBlock>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,0">
@@ -121,6 +95,21 @@
                         </TextBlock>
                     </StackPanel>
                 </ScrollViewer>
+                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
+                    <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
+                </controls:DropShadowPanel>
+                <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
+                    <v1809:Grid.BackgroundTransition>
+                        <v1809:BrushTransition/>
+                    </v1809:Grid.BackgroundTransition>
+
+                    <StackPanel Orientation="Horizontal" Padding="0,0,0,8">
+                        <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
+                            <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
+                        </Button>
+                        <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                    </StackPanel>
+                </Grid>
             </RelativePanel>
         </Grid>
 

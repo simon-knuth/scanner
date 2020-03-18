@@ -1108,7 +1108,7 @@ namespace Scanner
         /// </summary>
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SettingsPage), null, new EntranceNavigationTransitionInfo());
+            Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());
         }
 
 

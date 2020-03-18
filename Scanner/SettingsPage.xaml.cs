@@ -18,7 +18,8 @@ namespace Scanner
     {
         private string websiteUrl = "https://simon-knuth.github.io/scanner";
         private string privacyPolicyUrl = "https://simon-knuth.github.io/scanner/privacy-policy";
-        private StorageFolder newScanFolder = null;
+        private bool allSettingsLoaded = false;
+
 
         public SettingsPage()
         {
@@ -39,14 +40,6 @@ namespace Scanner
         }
 
 
-        /// <summary>
-        ///     The event listener for when <see cref="ButtonCancel"/> is clicked. Closes the settings page.
-        /// </summary>
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.GoBack();
-        }
-
 
         /// <summary>
         ///     The event listener for when a button is pressed. Allows to discard changes using the escape key.
@@ -55,7 +48,7 @@ namespace Scanner
         {
             if (e.Key == Windows.System.VirtualKey.GoBack || e.Key == Windows.System.VirtualKey.Escape)
             {
-                ButtonCancel_Click(null, null);
+                ButtonBack_Click(null, null);
             }
         }
 
@@ -93,34 +86,12 @@ namespace Scanner
             CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
             CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
 
+            allSettingsLoaded = true;
+
             PackageVersion version = Package.Current.Id.Version;
             RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
 
-
-        /// <summary>
-        ///     The event listener for when the <see cref="ButtonSave"/> is clicked. Updates all setting variables and
-        ///     then calls for <see cref="SaveSettings"/>.
-        /// </summary>
-        private void ButtonSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (newScanFolder != null)
-            {
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.AddOrReplace("scanFolder", newScanFolder);
-                scanFolder = newScanFolder;
-            }
-
-            settingAppTheme = (Theme) int.Parse(((ComboBoxItem) ComboBoxTheme.SelectedItem).Tag.ToString());
-            settingAutomaticScannerSelection = (bool) CheckBoxAutomaticScannerSelection.IsChecked;
-            settingNotificationScanComplete = (bool) CheckBoxNotificationScanComplete.IsChecked;
-            settingUnsupportedFileFormat = (bool) CheckBoxUnsupportedFileFormat.IsChecked;
-            settingDrawPenDetected = (bool) CheckBoxSettingsDrawPenDetected.IsChecked;
-
-            SaveSettings();
-
-            Frame.GoBack();
-        }
 
 
         /// <summary>
@@ -128,7 +99,13 @@ namespace Scanner
         /// </summary>
         private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TextBlockRestart.Visibility = Visibility.Visible;
+            if (allSettingsLoaded)
+            {
+                TextBlockRestart.Visibility = Visibility.Visible;
+
+                settingAppTheme = (Theme)int.Parse(((ComboBoxItem)ComboBoxTheme.SelectedItem).Tag.ToString());
+                SaveSettings();
+            }
         }
 
 
@@ -138,7 +115,6 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            ButtonSave_Click(null, null);
             await CoreApplication.RequestRestartAsync("");
         }
 
@@ -164,10 +140,12 @@ namespace Scanner
                 return;
             }
 
-            if (folder != null)
+            if (folder != null && folder.Path != scanFolder.Path)
             {
-                newScanFolder = folder;
-                TextBlockSaveLocation.Text = newScanFolder.Path;
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace("scanFolder", folder);
+                scanFolder = folder;
+                TextBlockSaveLocation.Text = scanFolder.Path;
             }
         }
 
@@ -178,7 +156,7 @@ namespace Scanner
         /// </summary>
         private void CheckBoxUnsupportedFileFormat_Toggled(object sender, RoutedEventArgs e)
         {
-            formatSettingChanged = true;
+            
         }
 
 
@@ -222,8 +200,8 @@ namespace Scanner
                 return;
             }
 
-            newScanFolder = folder;
-            TextBlockSaveLocation.Text = newScanFolder.Path;
+            scanFolder = folder;
+            TextBlockSaveLocation.Text = scanFolder.Path;
         }
 
 
@@ -304,6 +282,9 @@ namespace Scanner
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ButtonBrowse.Focus(FocusState.Programmatic);
+
+            ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
+            ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
         }
 
 
@@ -311,6 +292,30 @@ namespace Scanner
         private void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             ShowRatingDialog();
+        }
+
+
+
+        private void ButtonBack_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.GoBack();
+        }
+
+
+
+        private void SettingCheckboxChanged(object sender, RoutedEventArgs e)
+        {
+            if (allSettingsLoaded)
+            {
+                settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
+                settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
+                settingUnsupportedFileFormat = (bool)CheckBoxUnsupportedFileFormat.IsChecked;
+                settingDrawPenDetected = (bool)CheckBoxSettingsDrawPenDetected.IsChecked;
+
+                SaveSettings();
+
+                if (sender == CheckBoxUnsupportedFileFormat) formatSettingChanged = true;
+            }
         }
     }
 }

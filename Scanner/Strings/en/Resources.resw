@@ -583,7 +583,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The settings link that allows the user to rate the app.</comment>
   </data>
   <data name="HyperlinkSettingsRestartHintLink" xml:space="preserve">
-    <value>save and restart the app</value>
+    <value>restart the app</value>
     <comment>The hyperlink text that allows the user to save and restart the app after a theme change.</comment>
   </data>
   <data name="HyperlinkSettingsWebsiteLink" xml:space="preserve">
@@ -763,11 +763,11 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The end of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
-    <value>Scanning to PDF is now available with every scanner, regardless of its capabilites. The conversion feature needs to be enabled in the settings.</value>
+    <value>The settings are now clearer with more room for what matters.</value>
     <comment>The body for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
-    <value>PDF for Everyone</value>
+    <value>Redesigned Settings</value>
     <comment>The header for the first section of the changelog.</comment>
   </data>
   <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
