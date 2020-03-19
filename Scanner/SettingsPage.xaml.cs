@@ -151,16 +151,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when the <see cref="CheckBoxUnsupportedFileFormat"/> that changes
-        ///     <see cref="settingUnsupportedFileFormat"/> is checked/unchecked.
-        /// </summary>
-        private void CheckBoxUnsupportedFileFormat_Toggled(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-
-        /// <summary>
         ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
         /// </summary>
         private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
@@ -201,6 +191,8 @@ namespace Scanner
             }
 
             scanFolder = folder;
+            Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace("scanFolder", scanFolder);
             TextBlockSaveLocation.Text = scanFolder.Path;
         }
 
