@@ -655,11 +655,11 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The text next to the Radio Button for flatbed scanning.</comment>
   </data>
   <data name="RunScannerSelectionHintBodyAfterLink.Text" xml:space="preserve">
-    <value> hinzugefügt werden.</value>
+    <value> hinzugefügt wurde und als online angezeigt wird.</value>
     <comment>[begins with a whitespace] The text that is behind the settings app link.</comment>
   </data>
   <data name="RunScannerSelectionHintBodyBeforeLink.Text" xml:space="preserve">
-    <value>Wenn der Scanner nicht innerhalb von drei Minuten gefunden wird, muss er möglicherweise zuerst in den </value>
+    <value>Falls der Scanner nicht innerhalb von drei Minuten gefunden wird, stellen Sie sicher, dass er in den </value>
     <comment>[ends with a whitespace] The text that is in front of the settings app link.</comment>
   </data>
   <data name="RunSettingsAfterFeedbackLink.Text" xml:space="preserve">
@@ -687,7 +687,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
   </data>
   <data name="TeachingTipDevices.Subtitle" xml:space="preserve">
-    <value>Wenn der Scanner nicht innerhalb von drei Minuten gefunden wird, muss er möglicherweise zuerst in den Einstellungen hinzugefügt werden.</value>
+    <value>Falls der Scanner nicht innerhalb von drei Minuten gefunden wird, stellen Sie sicher, dass er in den Einstellungen hinzugefügt wurde und als online angezeigt wird.</value>
     <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
   </data>
   <data name="TeachingTipDevices.Title" xml:space="preserve">

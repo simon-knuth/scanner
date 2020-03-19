@@ -798,7 +798,7 @@ static class Utilities
                     await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     return newName;
                 }
-                catch (Exception e) 
+                catch (Exception) 
                 {
                     throw;
                 }                

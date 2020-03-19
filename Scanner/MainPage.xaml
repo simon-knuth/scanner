@@ -134,7 +134,7 @@
                         <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
                             <TextBlock x:Uid="TextBlockScannerSelectionHintHeader" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                             <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                                <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, you might need to add it in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> first.</Run></Span>
+                                <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> and appears as online there.</Run></Span>
                             </TextBlock>
                         </StackPanel>
 
