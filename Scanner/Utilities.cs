@@ -397,6 +397,15 @@ static class Utilities
             localSettingsContainer.Values["scanNumber"] = 1;
             scanNumber = 1;
         }
+
+        if (localSettingsContainer.Values["lastTouchDrawState"] != null)
+        {
+            lastTouchDrawState = (bool)localSettingsContainer.Values["lastTouchDrawState"];
+        }
+        else
+        {
+            lastTouchDrawState = false;
+        }
     }
 
 

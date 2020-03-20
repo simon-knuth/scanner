@@ -1868,10 +1868,26 @@ namespace Scanner
 
             flowState = FlowState.draw;
 
-            // show InkCanvas and secondary commands
+            // show InkCanvas + secondary commands and restore touch drawing state
             InitializeInkCanvas(InkCanvasScan, imageMeasurements.Item1, imageMeasurements.Item2);
             FixResultPositioning();
             InkCanvasScan.Visibility = Visibility.Visible;
+            if (lastTouchDrawState == true)
+            {
+                try
+                {
+                    IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
+                    foreach (var device in pointerDevices)
+                    {
+                        if (device.PointerDeviceType == PointerDeviceType.Touch)
+                        {
+                            AppBarButtonTouchDraw.IsChecked = true;
+                            break;
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
             ShowSecondaryMenuConfig(SecondaryMenuConfig.draw);
             UnlockCommandBar(CommandBarSecondary);
         }
@@ -2103,6 +2119,8 @@ namespace Scanner
         {
             // enable touch drawing
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch;
+            lastTouchDrawState = true;
+            localSettingsContainer.Values["lastTouchDrawState"] = lastTouchDrawState;
         }
 
 
@@ -2110,6 +2128,8 @@ namespace Scanner
         {
             // disable touch drawing
             InkCanvasScan.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
+            lastTouchDrawState = false;
+            localSettingsContainer.Values["lastTouchDrawState"] = lastTouchDrawState;
         }
 
 
