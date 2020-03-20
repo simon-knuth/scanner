@@ -297,15 +297,15 @@
     <value>Design</value>
     <comment>The header for the theme settings.</comment>
   </data>
-  <data name="ContentDialogDelete.CloseButtonText" xml:space="preserve">
+  <data name="TeachingTipDelete.CloseButtonContent" xml:space="preserve">
     <value>Abbrechen</value>
     <comment>The text inside the button that allows the user to cancel deleting the result file.</comment>
   </data>
-  <data name="ContentDialogDelete.PrimaryButtonText" xml:space="preserve">
+  <data name="TeachingTipDelete.ActionButtonContent" xml:space="preserve">
     <value>Bestätigen</value>
     <comment>The text inside the delete button confirming the process.</comment>
   </data>
-  <data name="ContentDialogDelete.Title" xml:space="preserve">
+  <data name="TeachingTipDelete.Title" xml:space="preserve">
     <value>Sind Sie sicher?</value>
     <comment>The header for the delete flyout.</comment>
   </data>
@@ -714,7 +714,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <value>Farbmodus</value>
     <comment>The header for the color mode RadioButton group.</comment>
   </data>
-  <data name="TextBlockDeleteBody.Text" xml:space="preserve">
+  <data name="TeachingTipDelete.Subtitle" xml:space="preserve">
     <value>Die Datei wird in den Papierkorb verschoben.</value>
     <comment>The text inside the delete flyout.</comment>
   </data>

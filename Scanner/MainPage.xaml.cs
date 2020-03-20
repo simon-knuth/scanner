@@ -135,6 +135,9 @@ namespace Scanner
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
             {
                 // v1809+
+                TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipDelete.CloseButtonStyle = RoundedButtonStyle;
+
                 TeachingTipError.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipError.CloseButtonStyle = RoundedButtonStyle;
 
@@ -659,7 +662,7 @@ namespace Scanner
                     TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
                     TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
                     ScanCanceled();
-                    TeachingTipError.IsOpen = true;
+                    ReliablyOpenTeachingTip(TeachingTipError);
                     return;
                 }
 
@@ -748,7 +751,7 @@ namespace Scanner
                     TeachingTipError.Subtitle = LocalizedString("ErrorMessageScanFolderBody");
                     TeachingTipError.ActionButtonContent = LocalizedString("ErrorMessageScanFolderSettings");
                     ScanCanceled();
-                    TeachingTipError.IsOpen = true;
+                    ReliablyOpenTeachingTip(TeachingTipError);
                     return;
                 }
 
@@ -1149,10 +1152,11 @@ namespace Scanner
         ///     Disables both CommandBars while working and attempts to delete the <see cref="scannedFile"/>.
         ///     If it fails, an error message is shown.
         /// </summary>
-        private async void ButtonDelete_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void ButtonDelete_Click(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             LockCommandBar(CommandBarPrimary);
             LockCommandBar(CommandBarSecondary);
+            TeachingTipDelete.IsOpen = false;
             try
             {
                 await scannedFile.DeleteAsync(StorageDeleteOption.Default);
@@ -1164,7 +1168,6 @@ namespace Scanner
                 UnlockCommandBar(CommandBarSecondary, null);
                 return;
             }
-            ContentDialogDelete.Hide();
             ShowPrimaryMenuConfig(PrimaryMenuConfig.hidden);
             ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             ImageScanViewer.Visibility = Visibility.Collapsed;
@@ -1322,7 +1325,7 @@ namespace Scanner
                         TeachingTipSaveLocation.IsOpen = false;
                         ButtonSettings_Click(null, null);
                     };
-                    TeachingTipSaveLocation.IsOpen = true;
+                    ReliablyOpenTeachingTip(TeachingTipSaveLocation);
                 }
 
                 firstLoaded = false;
@@ -1990,10 +1993,18 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when the <see cref="AppBarButtonDelete"/> is clicked.
         /// </summary>
-        private async void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
+        private void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            try { await ContentDialogDelete.ShowAsync(); }
-            catch (Exception) { }
+            if (AppBarButtonDelete.IsInOverflow)
+            {
+                TeachingTipDelete.Target = ScrollViewerTextBlockCommandBarPrimaryFile;
+            }
+            else
+            {
+                TeachingTipDelete.Target = AppBarButtonDelete;
+            }
+
+            ReliablyOpenTeachingTip(TeachingTipDelete);
         }
 
 
@@ -2084,8 +2095,7 @@ namespace Scanner
         /// <param name="e"></param>
         private void ButtonDevices_Click(object sender, RoutedEventArgs e)
         {
-            if (TeachingTipDevices.IsOpen == true) TeachingTipDevices.IsOpen = false;
-            TeachingTipDevices.IsOpen = true;
+            ReliablyOpenTeachingTip(TeachingTipDevices);
         }
 
 

@@ -962,4 +962,19 @@ static class Utilities
             try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
         }
     }
+
+
+    /// <summary>
+    ///     Opens a teaching tip and takes care of usual pitfalls.
+    /// </summary>
+    /// <param name="teachingTip"></param>
+    public static void ReliablyOpenTeachingTip(Microsoft.UI.Xaml.Controls.TeachingTip teachingTip)
+    {
+        if (teachingTip.IsOpen == false) teachingTip.IsOpen = true;
+        else
+        {
+            teachingTip.IsOpen = false;
+            teachingTip.IsOpen = true;
+        }
+    }
 }

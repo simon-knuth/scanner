@@ -263,22 +263,27 @@
 
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogDelete" x:Uid="ContentDialogDelete" Title="Are you sure?" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="Primary"
-                       PrimaryButtonText="Confirm" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" PrimaryButtonClick="ButtonDelete_Click"
-                       CloseButtonText="Cancel" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}" MinWidth="400">
-            <TextBlock x:Uid="TextBlockDeleteBody" Style="{StaticResource BodyTextBlockStyle}" Text="The file will be moved to the recycle bin."/>
-        </ContentDialog>
-
         <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
                        v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
         </ContentDialog>
 
         <controlsxaml:TeachingTip
+            x:Name="TeachingTipDelete"
+            x:Uid="TeachingTipDelete"
+            PlacementMargin="8"
+            Title="Are you sure?"
+            Subtitle="The file will be moved to the recycle bin."
+            ActionButtonContent="Confirm"
+            ActionButtonClick="ButtonDelete_Click"
+            CloseButtonContent="Cancel"
+            IsLightDismissEnabled="True"
+            PreferredPlacement="TopLeft"/>
+
+        <controlsxaml:TeachingTip
             x:Name="TeachingTipError"
             ActionButtonContent="Settings"
             PlacementMargin="8"
-            IsLightDismissEnabled="True"
-            Padding="8"/>
+            IsLightDismissEnabled="True"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipSaveLocation"
@@ -288,8 +293,7 @@
             Title="Save Location"
             Subtitle="Your scans are currently being saved to the default folder. You can change this behavior in the settings."
             ActionButtonContent="Go to settings"
-            IsLightDismissEnabled="False"
-            Padding="8"/>
+            IsLightDismissEnabled="False"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipDevices"
@@ -300,8 +304,7 @@
             Subtitle="If your scanner doesn't show up within three minutes, you might need to add it in the settings app first."
             ActionButtonContent="Launch settings"
             IsLightDismissEnabled="True"
-            PreferredPlacement="BottomRight"
-            Padding="8"/>
+            PreferredPlacement="BottomRight"/>
 
         <ContentDialog
             x:Name="ContentDialogUpdate" x:Uid="ContentDialogUpdate" v1809:Style="{StaticResource RoundedContentDialog}"
