@@ -130,11 +130,16 @@ namespace Scanner
             {
                 await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
             };
+            TeachingTipSaveLocation.Target = ButtonRecents;             // see https://github.com/microsoft/microsoft-ui-xaml/issues/1372
+            TeachingTipDevices.Target = ButtonDevices;                  // see https://github.com/microsoft/microsoft-ui-xaml/issues/1372
 
             // compatibility stuff /////////////////////////////////////////////////////////////////////
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
             {
                 // v1809+
+                TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipRename.CloseButtonStyle = RoundedButtonStyle;
+
                 TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipDelete.CloseButtonStyle = RoundedButtonStyle;
 
@@ -1182,7 +1187,7 @@ namespace Scanner
         ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
         ///     Shows an error message if it fails (e.g. if the file name is already occupied).
         /// </summary>
-        private async void ButtonRename_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void ButtonRename_Click(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             if (TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1] == scannedFile.Name) return;
             try
@@ -1192,9 +1197,10 @@ namespace Scanner
             catch (Exception)
             {
                 ShowContentDialog(LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
+                ReliablyOpenTeachingTip(TeachingTipRename);
                 return;
             }
-            ContentDialogRename.Hide();
+            TeachingTipRename.IsOpen = false;
             TextBlockCommandBarPrimaryFileName.Text = scannedFile.DisplayName;
         }        
 
@@ -1971,22 +1977,20 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
         /// </summary>
-        private async void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
+        private void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
         {
-            try { await ContentDialogRename.ShowAsync(); }
-            catch (Exception) { }
-        }
+            if (AppBarButtonRename.IsInOverflow)
+            {
+                TeachingTipRename.Target = ScrollViewerTextBlockCommandBarPrimaryFile;
+            }
+            else
+            {
+                TeachingTipRename.Target = AppBarButtonRename;
+            }
 
-
-        /// <summary>
-        ///     The event listener for when the <see cref="ContentDialogRename"/> is opened. Fills in
-        ///     the current file name.
-        /// </summary>
-        private void ContentDialogRename_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            TextBoxRename.Text = scannedFile.DisplayName;
-            TextBlockRenameExtension.Text = "." + scannedFile.Name.Split(".")[1];
-            TextBoxRename.SelectAll();
+            TeachingTipRename.Tag = false;
+            TextBoxRename.Text = "";
+            ReliablyOpenTeachingTip(TeachingTipRename);
         }
 
 
@@ -2115,7 +2119,7 @@ namespace Scanner
         /// </summary>
         private void ImageScanViewer_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Pen
                 && AppBarButtonDraw.Visibility == Visibility.Visible
                 && AppBarButtonDraw.IsEnabled
                 && flowState == FlowState.result
@@ -2195,6 +2199,23 @@ namespace Scanner
         private void ContentDialogUpdate_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             ShowRatingDialog();
+        }
+
+        private void TeachingTipRename_LayoutUpdated(object sender, object e)
+        {
+            if (TeachingTipRename.Tag != null && (bool) TeachingTipRename.Tag != true)
+            {
+                TextBoxRename.Focus(FocusState.Programmatic);
+                TeachingTipRename.Tag = true;
+            }
+        }
+
+        private void TextBoxRename_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter)
+            {
+                ButtonRename_Click(null, null);
+            }
         }
     }
 }

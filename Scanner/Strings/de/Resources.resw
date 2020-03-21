@@ -321,15 +321,15 @@
     <value>Drittanbieterlizenzen</value>
     <comment>The header for the third-party licenses popup.</comment>
   </data>
-  <data name="ContentDialogRename.CloseButtonText" xml:space="preserve">
+  <data name="TeachingTipRename.CloseButtonContent" xml:space="preserve">
     <value>Abbrechen</value>
     <comment>The text inside the button that allows the user to cancel renaming the result file.</comment>
   </data>
-  <data name="ContentDialogRename.PrimaryButtonText" xml:space="preserve">
+  <data name="TeachingTipRename.ActionButtonContent" xml:space="preserve">
     <value>Bestätigen</value>
     <comment>The text inside the button that allows the user to confirm the newly chosen name for the result.</comment>
   </data>
-  <data name="ContentDialogRename.Title" xml:space="preserve">
+  <data name="TeachingTipRename.Title" xml:space="preserve">
     <value>Umbenennen</value>
     <comment>The header for the the rename flyout.</comment>
   </data>
@@ -722,8 +722,8 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <value>Speichern als</value>
     <comment>The header for the ComboBox where users select the desired file format.</comment>
   </data>
-  <data name="TextBlockRenameBody.Text" xml:space="preserve">
-    <value>Geben Sie einen neuen Namen für die Datei ein</value>
+  <data name="TeachingTipRename.Subtitle" xml:space="preserve">
+    <value>Geben Sie einen neuen Namen für die Datei ein:</value>
     <comment>The text inside the rename flyout.</comment>
   </data>
   <data name="TextBlockResolution.Text" xml:space="preserve">
