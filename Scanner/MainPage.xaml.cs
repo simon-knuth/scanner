@@ -1985,7 +1985,7 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when the <see cref="AppBarButtonRename"/> is clicked.
         /// </summary>
-        private void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
+        private async void AppBarButtonRename_Click(object sender, RoutedEventArgs e)
         {
             if (AppBarButtonRename.IsInOverflow)
             {
@@ -1996,9 +1996,12 @@ namespace Scanner
                 TeachingTipRename.Target = AppBarButtonRename;
             }
 
-            TeachingTipRename.Tag = false;
+            TeachingTipRename.Tag = 0;
             TextBoxRename.Text = "";
-            ReliablyOpenTeachingTip(TeachingTipRename);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipRename);
+            });
         }
 
 
@@ -2209,12 +2212,19 @@ namespace Scanner
             ShowRatingDialog();
         }
 
-        private void TeachingTipRename_LayoutUpdated(object sender, object e)
+        private async void TeachingTipRename_LayoutUpdated(object sender, object e)
         {
-            if (TeachingTipRename.Tag != null && (bool) TeachingTipRename.Tag != true)
+            if (TeachingTipRename.Tag != null)
             {
-                TextBoxRename.Focus(FocusState.Programmatic);
-                TeachingTipRename.Tag = true;
+                if ((int) TeachingTipRename.Tag == 0) TeachingTipRename.Tag = 1;
+                else if((int) TeachingTipRename.Tag == 1)
+                {
+                    TeachingTipRename.Tag = 2;
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        TextBoxRename.Focus(FocusState.Programmatic);
+                    });
+                }
             }
         }
 
