@@ -1960,8 +1960,16 @@ namespace Scanner
         /// </summary>
         private void ButtonScan_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool) e.NewValue == true) TextBlockButtonScan.Opacity = 1;
-            else TextBlockButtonScan.Opacity = 0.5;
+            if ((bool)e.NewValue == true)
+            {
+                TextBlockButtonScan.Opacity = 1;
+                DropShadowPanelButtonScan.ShadowOpacity = 0.2;
+            }
+            else
+            {
+                TextBlockButtonScan.Opacity = 0.5;
+                DropShadowPanelButtonScan.ShadowOpacity = 0;
+            }
         }
 
 
