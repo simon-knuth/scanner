@@ -410,15 +410,7 @@ namespace Scanner
         /// </summary>
         private async void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-                {
-                    if (ComboBoxScanners.SelectedIndex == -1)
-                    {
-                        UI_enabled(true, false, false, false, false, false, false, false, false, false, true, true);
-                    }
-                }
-            );
+            
         }
 
 

@@ -61,7 +61,7 @@
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,0,8,0" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
                             </Button>
                         </StackPanel>
-                        <ComboBox IsEnabled="False" x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged" TabIndex="0"/>
+                        <ComboBox x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged" TabIndex="0"/>
                         <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
                             <RadioButton x:Uid="RadioButtonSourceAutomatic" x:Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
                             <RadioButton x:Uid="RadioButtonSourceFlatbed" x:Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
