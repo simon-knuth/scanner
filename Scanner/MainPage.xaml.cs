@@ -1389,23 +1389,32 @@ namespace Scanner
         /// </summary>
         private void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (IsCtrlKeyPressed())
+            var frame = Window.Current.Content as Frame;
+
+            if (frame != null)
             {
-                switch (args.VirtualKey)
+                Type currentPage = frame.SourcePageType;
+
+                if (currentPage != typeof(MainPage)) return;
+
+                if (IsCtrlKeyPressed())
                 {
-                    case VirtualKey.C:
-                        // shortcut Copy
-                        if (flowState == FlowState.result) AppBarButtonCopy_Click(AppBarButtonCopy, null);
-                        break;
-                    case VirtualKey.S:
-                        // shortcut share
-                        if (flowState == FlowState.result) AppBarButtonShare_Click(AppBarButtonShare, null);
-                        break;
-                    case VirtualKey.D:
-                        // shortcut debug
-                        debugShortcutActive = true;
-                        ButtonScan.IsEnabled = true;
-                        break;
+                    switch (args.VirtualKey)
+                    {
+                        case VirtualKey.C:
+                            // shortcut Copy
+                            if (flowState == FlowState.result) AppBarButtonCopy_Click(AppBarButtonCopy, null);
+                            break;
+                        case VirtualKey.S:
+                            // shortcut share
+                            if (flowState == FlowState.result) AppBarButtonShare_Click(AppBarButtonShare, null);
+                            break;
+                        case VirtualKey.D:
+                            // shortcut debug
+                            debugShortcutActive = true;
+                            ButtonScan.IsEnabled = true;
+                            break;
+                    }
                 }
             }
         }
