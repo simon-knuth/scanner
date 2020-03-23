@@ -64,9 +64,29 @@ static class Utilities
     /// <param name="imageControl">The <see cref="Image"/> control.</param>
     public static async void DisplayImageAsync(StorageFile file, Image imageControl)
     {
-        IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
-        BitmapImage bmp = new BitmapImage();
-        await bmp.SetSourceAsync(stream);
+        int attempt = 0;
+        BitmapImage bmp = null;
+        IRandomAccessStream stream = null;
+
+        while (attempt != -1)
+        {
+            try
+            {
+                stream = await file.OpenAsync(FileAccessMode.Read);
+                bmp = new BitmapImage();
+                await bmp.SetSourceAsync(stream);
+                attempt = -1;
+                stream.Dispose();
+            }
+            catch (Exception)
+            {
+                if (attempt >= 4) throw;
+
+                await Task.Delay(500);
+                attempt++;
+            }
+        }
+        
 
         if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
         {
