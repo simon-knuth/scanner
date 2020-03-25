@@ -683,7 +683,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>[ends with a whitespace] The text that is in front of the save-and-restart link.</comment>
   </data>
   <data name="TeachingTipDevices.ActionButtonContent" xml:space="preserve">
-    <value>Einstellungen öffnen</value>
+    <value>Einstellungen</value>
     <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
   </data>
   <data name="TeachingTipDevices.Subtitle" xml:space="preserve">

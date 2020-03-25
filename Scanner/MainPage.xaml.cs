@@ -408,7 +408,7 @@ namespace Scanner
         ///     The event listener for when the <see cref="scannerWatcher"/> has finished adding all initially
         ///     available scanners.
         /// </summary>
-        private async void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
+        private void OnScannerEnumerationComplete(DeviceWatcher sender, Object theObject)
         {
             
         }
