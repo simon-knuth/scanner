@@ -23,6 +23,8 @@ namespace Scanner
     /// </summary>
     sealed partial class App : Application
     {
+        private UISettings uISettings;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -86,7 +88,7 @@ namespace Scanner
             applicationViewTitlebar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             applicationViewTitlebar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 
-            UISettings uISettings = new UISettings();
+            uISettings = new UISettings();
             uISettings.ColorValuesChanged += UpdateTheme;
 
             // Load settings from local app data
