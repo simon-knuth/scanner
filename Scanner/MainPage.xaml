@@ -133,7 +133,7 @@
                     <Grid x:Name="GridPanelRight" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
-                            <Grid Margin="0,32,0,0">
+                            <Grid x:Name="GridScrollViewerScan">
                                 <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting" PointerEntered="ImageScanViewer_PointerEntered"/>
                                 <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
@@ -150,7 +150,7 @@
 
                         <controls:ImageCropper x:Name="ImageCropper" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
 
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,40,12,12" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,44,12,12" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <Frame v1809:CornerRadius="2">
                                 <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
                                     <CommandBar.Content>
@@ -237,6 +237,11 @@
                             </controls:DropShadowPanel>
                         </Grid>
 
+                        <Frame x:Name="FrameGridPanelRightTitleBar" Opacity="0" Background="{ThemeResource SystemControlAcrylicElementBrush}" VerticalAlignment="Top">
+                            <v1809:Frame.OpacityTransition>
+                                <ScalarTransition Duration="00:00:00.25"/>
+                            </v1809:Frame.OpacityTransition>
+                        </Frame>
                     </Grid>
                 </Grid>
             </controls:DropShadowPanel>

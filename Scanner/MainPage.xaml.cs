@@ -162,7 +162,11 @@ namespace Scanner
                 Page_ActualThemeChanged(null, null);
             };
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
-                ScrollViewerLeftPanel.Margin = new Thickness(0, titleBar.Height, 0, 0);
+                GridScrollViewerScan.Margin = new Thickness(0, titleBar.Height, 0, 0);
+                FrameGridPanelRightTitleBar.Height = titleBar.Height;
+
+                Thickness margin = DropShadowPanelCommandBarSecondary.Margin;
+                DropShadowPanelCommandBarSecondary.Margin = new Thickness(margin.Left, titleBar.Height + 12, margin.Right, margin.Bottom);
             };
             Window.Current.CoreWindow.KeyDown += MainPage_KeyDown;
             Window.Current.CoreWindow.KeyUp += MainPage_KeyUp;
@@ -1362,13 +1366,13 @@ namespace Scanner
                 catch (Exception) { ; }
             }
 
-            // fix viewbox containing Image and InkCanvas
+            // fix viewbox containing InkCanvas
             ViewBoxScan.Width = ImageScanViewer.ActualWidth;
             try { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - CoreApplication.GetCurrentView().TitleBar.Height; }
             catch (Exception)
             {
                 try { ViewBoxScan.MaxHeight = ScrollViewerScan.ActualHeight - 32; }
-                catch (Exception) {; }
+                catch (Exception) { ; }
             }
         }
 
@@ -1980,6 +1984,15 @@ namespace Scanner
         private void ScrollViewerScan_LayoutUpdated(object sender, object e)
         {
             FixResultPositioning();
+
+            if (ScrollViewerScan.ZoomFactor == 1)
+            {
+                FrameGridPanelRightTitleBar.Opacity = 0.0;
+            } 
+            else
+            {
+                FrameGridPanelRightTitleBar.Opacity = 1.0;
+            }
         }
 
 
