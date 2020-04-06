@@ -1,11 +1,9 @@
-using Microsoft.Graphics.Canvas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Data.Pdf;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Input;
 using Windows.Devices.Scanners;
@@ -24,7 +22,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
 
 using static Enums;
 using static Globals;
@@ -42,18 +39,8 @@ namespace Scanner
         CancellationTokenSource cancellationToken = null;
 
         private ImageScanner selectedScanner = null;
-        private StorageFile scannedFile {
-            get { return _scannedFile; }
-            set { 
-                _scannedFile = value;
-                if (value != null && _scannedFile.DisplayName != null)
-                {
-                    TextBlockCommandBarPrimaryFileName.Text = _scannedFile.DisplayName;
-                    TextBlockCommandBarPrimaryFileExtension.Text = _scannedFile.FileType;
-                }
-            }
-        }
-        private StorageFile _scannedFile;
+        private ScanResult scanResult;
+        private int scanResultIndex;
         private Tuple<double, double> imageMeasurements;
 
         private double ColumnLeftDefaultMaxWidth;
@@ -176,12 +163,13 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Opens the Windows 10 sharing panel with <see cref="scannedFile.Name"/> as title.
+        ///     Opens the Windows 10 sharing panel with the name of the current file as title.
         /// </summary>
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
-            args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
-            args.Request.Data.Properties.Title = scannedFile.Name;
+            StorageFile file = scanResult.GetFile(scanResultIndex);
+            args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
+            args.Request.Data.Properties.Title = file.Name;
         }
 
 
@@ -555,11 +543,12 @@ namespace Scanner
             {
                 // open folder and select result in it
                 FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
-                launcherOptions.ItemsToSelect.Add(scannedFile);
+                StorageFile file = scanResult.GetFile(scanResultIndex);
+                launcherOptions.ItemsToSelect.Add(file);
 
                 try
                 {
-                    await scanFolder.GetFileAsync(scannedFile.Name);        // used to detect whether opening the file explorer with a selection will fail
+                    await scanFolder.GetFileAsync(file.Name);        // used to detect whether opening the file explorer with a selection will fail
                     await Launcher.LaunchFolderAsync(scanFolder, launcherOptions);
                 }
                 catch (Exception)
@@ -638,8 +627,9 @@ namespace Scanner
                 picker.FileTypeFilter.Add(".pdf");
                 picker.FileTypeFilter.Add(".xps");
                 picker.FileTypeFilter.Add(".oxps");
-                scannedFile = await picker.PickSingleFileAsync();
-                if (scannedFile == null) return;
+                IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+                if (files == null || files.Count == 0) return;
+                scanResult = await ScanResult.Create(files);
             } else {
                 // lock (almost) entire left panel and clean up right side
                 UI_enabled(false, false, false, false, false, false, false, false, false, false, false, true);
@@ -797,87 +787,40 @@ namespace Scanner
                 if (formatFlow.Item2 != null)
                 {
                     // files need to be converted
-                    string convertedFileName;
-                    bool firstFile = true;
-                    foreach (StorageFile scan in result.ScannedFiles)
+                    try
                     {
-                        try
+                        scanResult = await ScanResult.Create(result.ScannedFiles, (SupportedFormat) formatFlow.Item2, scanFolder);
+                    }
+                    catch (Exception)
+                    {
+                        if (formatFlow.Item2 == SupportedFormat.PDF)
                         {
-                            convertedFileName = await ConvertScannedFile(scan, formatFlow.Item2, scanFolder);
-
-                            if (firstFile)
-                            {
-                                // make first file of possible batch the one that can be edited
-                                scannedFile = await scanFolder.GetFileAsync(convertedFileName);
-                                firstFile = false;
-                            }
+                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"), LocalizedString("ErrorMessageConversionBodyPDF"));
                         }
-                        catch (Exception)
+                        else
                         {
-                            if (formatFlow.Item2 == SupportedFormat.PDF)
-                            {
-                                ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"), LocalizedString("ErrorMessageConversionBodyPDF"));
-                            }
-                            else
-                            {
-                                ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
-                                    LocalizedString("ErrorMessageConversionBodyBeforeExtension") + scan.FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
-                            }
-                            ScanCanceled();
-                            return;
+                            ShowFeedbackContentDialog(LocalizedString("ErrorMessageConversionHeader"),
+                                LocalizedString("ErrorMessageConversionBodyBeforeExtension") + result.ScannedFiles[0].FileType + LocalizedString("ErrorMessageConversionBodyAfterExtension"));
                         }
+                        ScanCanceled();
+                        return;
                     }
                 }
                 else
                 {
                     // no need to convert
-                    scannedFile = result.ScannedFiles[0];
+                    scanResult = await ScanResult.Create(result.ScannedFiles);
                 }
             }
 
             // show result //////////////////////////////////////////////////////////////////////////////////
+            scanResultIndex = 0;
             ButtonCancel.Visibility = Visibility.Collapsed;
             cancellationToken = null;
 
             // react differently to different formats
-            switch (ConvertFormatStringToSupportedFormat(scannedFile.FileType))
+            switch (ConvertFormatStringToSupportedFormat(scanResult.GetFile(scanResultIndex).FileType))
             {
-                case SupportedFormat.PDF:     // result is a PDF file
-                    try
-                    {
-                        // convert PDF to image for preview
-                        using (var sourceStream = await scannedFile.OpenReadAsync())
-                        {
-                            PdfDocument doc = await PdfDocument.LoadFromStreamAsync(sourceStream);
-                            PdfPage page = doc.GetPage(0);
-                            BitmapImage imageOfPdf = new BitmapImage();
-
-                            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-                            {
-                                await page.RenderToStreamAsync(stream);
-                                await imageOfPdf.SetSourceAsync(stream);
-                            }
-
-                            imageMeasurements = RefreshImageMeasurements(imageOfPdf);
-                            DisplayImage(imageOfPdf, ImageScanViewer);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        MessageDialog errorDialog1 = new MessageDialog(LocalizedString("ErrorMessageShowResultBody"), LocalizedString("ErrorMessageShowResultHeader"));
-                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultOpenFolder"), (x) => ButtonRecents_Click(null, null)));
-                        errorDialog1.Commands.Add(new UICommand(LocalizedString("ErrorMessageShowResultClose"), (x) => { }));
-                        errorDialog1.DefaultCommandIndex = 0;
-                        errorDialog1.CancelCommandIndex = 1;
-                        try { await errorDialog1.ShowAsync(); }
-                        catch (Exception) { }
-                        ScanCanceled();
-                        return;
-                    }
-                    ShowPrimaryMenuConfig(PrimaryMenuConfig.pdf);
-                    flowState = FlowState.result;
-                    FixResultPositioning();
-                    break;
                 case SupportedFormat.XPS:     // result is an XPS file
                 case SupportedFormat.OpenXPS:    // result is an OXPS file
                     MessageDialog dialog = new MessageDialog(LocalizedString("MessageFileSavedBody"), LocalizedString("MessageFileSavedHeader"));
@@ -889,10 +832,11 @@ namespace Scanner
                     catch (Exception) { }
                     flowState = FlowState.initial;
                     break;
+                case SupportedFormat.PDF:     // result is a PDF file
                 default:        // result is an image file (JPG/PNG/TIF/BMP)
                     try
                     {
-                        DisplayImageAsync(scannedFile, ImageScanViewer);
+                        DisplayImage(await scanResult.GetImageAsync(scanResultIndex), ImageScanViewer);
                     }
                     catch (Exception)
                     {
@@ -907,10 +851,11 @@ namespace Scanner
                         return;
                     }
                     SetCustomAspectRatio(ToggleMenuFlyoutItemAspectRatioCustom, null);
-                    ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                    if (scanResult.IsImage(scanResultIndex)) ShowPrimaryMenuConfig(PrimaryMenuConfig.image);
+                    else ShowPrimaryMenuConfig(PrimaryMenuConfig.pdf);
                     flowState = FlowState.result;
 
-                    imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
+                    imageMeasurements = RefreshImageMeasurements(await scanResult.GetImagePropertiesAsync(scanResultIndex));
 
                     FixResultPositioning();
                     break;
@@ -963,7 +908,7 @@ namespace Scanner
             ButtonCancel.Visibility = Visibility.Collapsed;
             TextBlockButtonScan.Visibility = Visibility.Visible;
             flowState = FlowState.initial;
-            scannedFile = null;
+            scanResult = null;
             ButtonDevices.IsEnabled = true;
 
             Page_SizeChanged(null, null);
@@ -1069,34 +1014,19 @@ namespace Scanner
         /// </summary>
         private async void AppBarButtonCopy_Click(object sender, RoutedEventArgs e)
         {
-            // create DataPackage for clipboard
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            if (scanResult == null) return;
 
-            // set contents according to file type and copy to clipboard
-            string fileExtension = scannedFile.FileType;
             try
             {
-                await scannedFile.OpenAsync(FileAccessMode.Read);           // check whether file still available
+                await scanResult.CopyScanAsync(scanResultIndex);
 
-                switch (fileExtension)
+                if (scanResult.IsImage(scanResultIndex))
                 {
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".png":
-                    case ".tif":
-                    case ".bmp":
-                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scannedFile));
-                        Clipboard.SetContent(dataPackage);
-                        SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5, scannedFile.Path);
-                        break;
-                    default:
-                        List<StorageFile> list = new List<StorageFile>();
-                        list.Add(scannedFile);
-                        dataPackage.SetStorageItems(list);
-                        Clipboard.SetContent(dataPackage);
-                        SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5);
-                        break;
+                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5, scanResult.GetFile(scanResultIndex).Path);
+                }
+                else
+                {
+                    SendToastNotification(LocalizedString("NotificationCopyHeader"), "", 5);
                 }
             }
             catch (Exception)
@@ -1132,7 +1062,7 @@ namespace Scanner
                 } else
                 {
                     GeneralTransform transform = AppBarButtonShare.TransformToVisual(null);
-                    Windows.Foundation.Rect rectangle = transform.TransformBounds(new Windows.Foundation.Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
+                    Rect rectangle = transform.TransformBounds(new Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
             
                     ShareUIOptions shareUIOptions = new ShareUIOptions();
                     shareUIOptions.SelectionRect = rectangle;
@@ -1160,7 +1090,7 @@ namespace Scanner
             TeachingTipDelete.IsOpen = false;
             try
             {
-                await scannedFile.DeleteAsync(StorageDeleteOption.Default);
+                await scanResult.DeleteScan(scanResultIndex);
             }
             catch (Exception)
             {
@@ -1185,10 +1115,9 @@ namespace Scanner
         /// </summary>
         private async void ButtonRename_Click(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
-            if (TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1] == scannedFile.Name) return;
             try
             {
-                await scannedFile.RenameAsync(TextBoxRename.Text + "." + scannedFile.Name.Split(".")[1], NameCollisionOption.FailIfExists);
+                await scanResult.RenameScanAsync(scanResultIndex, TextBoxRename.Text + "." + scanResult.GetFile(scanResultIndex).Name.Split(".")[1]);
             }
             catch (Exception)
             {
@@ -1197,7 +1126,7 @@ namespace Scanner
                 return;
             }
             TeachingTipRename.IsOpen = false;
-            TextBlockCommandBarPrimaryFileName.Text = scannedFile.DisplayName;
+            TextBlockCommandBarPrimaryFileName.Text = scanResult.GetFile(scanResultIndex).DisplayName;
         }        
 
 
@@ -1212,7 +1141,7 @@ namespace Scanner
 
             try
             {
-                await ImageCropper.LoadImageFromFile(scannedFile);
+                await ImageCropper.LoadImageFromFile(scanResult.GetFile(scanResultIndex));
             }
             catch (Exception)
             {
@@ -1244,20 +1173,9 @@ namespace Scanner
         {
             LockCommandBar(CommandBarPrimary);
 
-            IRandomAccessStream stream = null;
-
             try
             {
-                stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-                Guid encoderId = GetBitmapEncoderId(scannedFile.Name.Split(".")[1]);
-
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                encoder.SetSoftwareBitmap(softwareBitmap);
-                encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
-                await encoder.FlushAsync();
+                await scanResult.RotateScanAsync(scanResultIndex, BitmapRotation.Clockwise90Degrees);
             }
             catch (Exception)
             {
@@ -1266,13 +1184,11 @@ namespace Scanner
                 return;
             }
 
-            DisplayImageAsync(scannedFile, ImageScanViewer);
-            stream.Dispose();
-
+            DisplayImage(await scanResult.GetImageAsync(scanResultIndex), ImageScanViewer);
             UnlockCommandBar(CommandBarPrimary, null);
 
             // refresh image properties
-            imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
+            imageMeasurements = RefreshImageMeasurements(await scanResult.GetImagePropertiesAsync(scanResultIndex));
         }
 
 
@@ -1583,73 +1499,49 @@ namespace Scanner
             {
                 case FlowState.crop:
                     // save file
-                    IRandomAccessStream stream = null;
                     try
                     {
-                        stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
-                        await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
+                        await scanResult.CropScanAsync(scanResultIndex, ImageCropper);
                     }
                     catch (Exception)
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
-                        try { stream.Dispose(); } catch (Exception) { }
                         UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
                     
-                    stream.Dispose();
-
                     // refresh preview and properties
-                    ImageScanViewer.SizeChanged += FinishSaving;
-                    DisplayImageAsync(scannedFile, ImageScanViewer);
-                    imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
-
-                    flowState = FlowState.result;
-                    AppBarButtonCrop.IsChecked = false;
+                    imageMeasurements = RefreshImageMeasurements(await scanResult.GetImagePropertiesAsync(scanResultIndex));
                     break;
+
                 case FlowState.draw:
                     // save file
-                    stream = null;
                     try
                     {
-                        CanvasDevice device = CanvasDevice.GetSharedDevice();
-                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 192); stream = await scannedFile.OpenAsync(FileAccessMode.ReadWrite);
-                        CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
-
-                        using (var ds = renderTarget.CreateDrawingSession())
-                        {
-                            ds.Clear(Windows.UI.Colors.White);
-
-                            ds.DrawImage(canvasBitmap);
-                            ds.DrawInk(InkCanvasScan.InkPresenter.StrokeContainer.GetStrokes());
-                        }
-
-                        await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(scannedFile), 1f);
-                    } catch (Exception)
+                        await scanResult.DrawOnScanAsync(scanResultIndex, InkCanvasScan);
+                    } 
+                    catch (Exception)
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
-                        try { stream.Dispose(); } catch (Exception) { }
                         UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
-
-                    stream.Dispose();
-
-                    // refresh preview
-                    ImageScanViewer.SizeChanged += FinishSaving;
-                    DisplayImageAsync(scannedFile, ImageScanViewer);
-
-                    flowState = FlowState.result;
-                    AppBarButtonDraw.IsChecked = false;
                     break;
             }
 
+            // refresh preview
+            ImageScanViewer.SizeChanged += FinishSaving;
+            DisplayImage(await scanResult.GetImageAsync(scanResultIndex), ImageScanViewer);
+
             // return UI to normal
+            flowState = FlowState.result;
+            AppBarButtonCrop.IsChecked = false;
+            AppBarButtonDraw.IsChecked = false;
             if (uiState != UIstate.small_result) ShowSecondaryMenuConfig(SecondaryMenuConfig.hidden);
             else ShowSecondaryMenuConfig(SecondaryMenuConfig.done);
 
             // reload file with new properties
-            imageMeasurements = await RefreshImageMeasurementsAsync(scannedFile);
+            imageMeasurements = RefreshImageMeasurements(await scanResult.GetImagePropertiesAsync(scanResultIndex));
 
             UnlockCommandBar(CommandBarSecondary);
             UnlockCommandBar(CommandBarPrimary);
@@ -1685,54 +1577,26 @@ namespace Scanner
             {
                 case FlowState.crop:
                     // save crop as new file
-                    IRandomAccessStream stream = null;
                     try
                     {
-                        StorageFolder folder = await scannedFile.GetParentAsync();
-                        StorageFile file = await folder.CreateFileAsync(scannedFile.Name, CreationCollisionOption.GenerateUniqueName);
-                        stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                        await ImageCropper.SaveAsync(stream, GetBitmapFileFormat(scannedFile), true);
+                        await scanResult.CropScanAsCopyAsync(scanResultIndex, ImageCropper);
                     }
                     catch (Exception)
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
-                        try { stream.Dispose(); } catch (Exception) { }
                         return;
                     }
-                    stream.Dispose();
                     break;
+
                 case FlowState.draw:
                     // save drawing as new file
-                    stream = null;
                     try
                     {
-                        CanvasDevice device = CanvasDevice.GetSharedDevice();
-                        CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)InkCanvasScan.ActualWidth, (int)InkCanvasScan.ActualHeight, 96);
-
-                        StorageFolder folder = await scannedFile.GetParentAsync();
-                        StorageFile file = await folder.CreateFileAsync(scannedFile.Name, CreationCollisionOption.GenerateUniqueName);
-
-                        stream = await scannedFile.OpenAsync(FileAccessMode.Read);
-                        CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, stream);
-
-                        using (var ds = renderTarget.CreateDrawingSession())
-                        {
-                            ds.Clear(Windows.UI.Colors.White);
-
-                            ds.DrawImage(canvasBitmap);
-                            ds.DrawInk(InkCanvasScan.InkPresenter.StrokeContainer.GetStrokes());
-                        }
-
-                        stream.Dispose();
-
-                        stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                        await renderTarget.SaveAsync(stream, GetCanvasBitmapFileFormat(file), 1f);
-                        stream.Dispose();
+                        await scanResult.DrawOnScanAsCopyAsync(scanResultIndex, InkCanvasScan);
                     }
                     catch (Exception)
                     {
                         ShowContentDialog(LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
-                        try { stream.Dispose(); } catch (Exception) { }
                         UnlockCommandBar(CommandBarSecondary);
                         return;
                     }
@@ -2087,12 +1951,9 @@ namespace Scanner
         /// </summary>
         private async void AppBarButtonOpenWith_Click(object sender, RoutedEventArgs e)
         {
-            LauncherOptions options = new LauncherOptions();
-            options.DisplayApplicationPicker = true;
-
             try
             {
-                await Launcher.LaunchFileAsync(scannedFile, options);
+                await scanResult.OpenScanWithAsync(scanResultIndex);
             }
             catch (Exception) { };
         }
@@ -2108,7 +1969,7 @@ namespace Scanner
                 args.AllowedOperations = DataPackageOperation.Copy;
 
                 List<StorageFile> list = new List<StorageFile>();
-                list.Add(scannedFile);
+                list.Add(scanResult.GetFile(scanResultIndex));
                 args.Data.SetStorageItems(list);
 
                 args.DragUI.SetContentFromDataPackage();
@@ -2201,11 +2062,12 @@ namespace Scanner
         {
             // open folder and select result in it
             FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
-            launcherOptions.ItemsToSelect.Add(scannedFile);
+            StorageFile file = scanResult.GetFile(scanResultIndex);
+            launcherOptions.ItemsToSelect.Add(file);
 
             try
             {
-                string folder = scannedFile.Path.Remove(scannedFile.Path.LastIndexOf(System.IO.Path.DirectorySeparatorChar));
+                string folder = file.Path.Remove(file.Path.LastIndexOf(System.IO.Path.DirectorySeparatorChar));
                 await Launcher.LaunchFolderPathAsync(folder, launcherOptions);
             }
             catch (Exception) { }
@@ -2249,5 +2111,6 @@ namespace Scanner
                 ButtonRename_Click(null, null);
             }
         }
+
     }
 }

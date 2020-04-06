@@ -24,6 +24,7 @@ using static Enums;
 using static Globals;
 using Windows.Foundation.Collections;
 using Windows.Services.Store;
+using System.Collections.Generic;
 
 static class Utilities
 {
@@ -47,58 +48,6 @@ static class Utilities
         item.Tag = tag;
 
         return item;
-    }
-
-
-    /// <summary>
-    ///     Display an image file inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
-    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> 
-    ///     is used to make the control visible once the image has been loaded.
-    /// </summary>
-    /// <remarks>
-    ///     If <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> is used, the
-    ///     <paramref name="imageControl"/> will be empty for a brief moment in order to detect when the
-    ///     new image has been loaded.
-    /// </remarks>
-    /// <param name="file">The <see cref="StorageFile"/> containing the image.</param>
-    /// <param name="imageControl">The <see cref="Image"/> control.</param>
-    public static async void DisplayImageAsync(StorageFile file, Image imageControl)
-    {
-        int attempt = 0;
-        BitmapImage bmp = null;
-        IRandomAccessStream stream = null;
-
-        while (attempt != -1)
-        {
-            try
-            {
-                stream = await file.OpenAsync(FileAccessMode.Read);
-                bmp = new BitmapImage();
-                await bmp.SetSourceAsync(stream);
-                attempt = -1;
-                stream.Dispose();
-            }
-            catch (Exception)
-            {
-                if (attempt >= 4) throw;
-
-                await Task.Delay(500);
-                attempt++;
-            }
-        }
-        
-
-        if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
-        {
-            imageControl.Source = bmp;
-            imageControl.Visibility = Visibility.Visible;
-        } else
-        {
-            imageControl.SizeChanged += FinishDisplayImage;
-            imageLoading = true;
-            imageControl.Source = null;
-            imageControl.Tag = bmp;
-        }
     }
 
 
@@ -695,11 +644,9 @@ static class Utilities
 
 
     // TODO documentation
-    public async static Task<Tuple<double, double>> RefreshImageMeasurementsAsync(StorageFile image)
+    public static Tuple<double, double> RefreshImageMeasurements(ImageProperties properties)
     {
-        ImageProperties imageProperties = await image.Properties.GetImagePropertiesAsync();
-
-        return new Tuple<double, double>(imageProperties.Width, imageProperties.Height);
+        return new Tuple<double, double>(properties.Width, properties.Height);
     }
 
 
@@ -995,6 +942,19 @@ static class Utilities
         {
             teachingTip.IsOpen = false;
             teachingTip.IsOpen = true;
+        }
+    }
+
+
+    /// <summary>
+    ///     Deletes all files from the root of the temporary folder.
+    /// </summary>
+    public static async Task ClearTempFolder()
+    {
+        IReadOnlyList<StorageFile> files = await ApplicationData.Current.TemporaryFolder.GetFilesAsync();
+        foreach (StorageFile file in files)
+        {
+            await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 }

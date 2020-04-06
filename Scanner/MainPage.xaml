@@ -132,7 +132,7 @@
 
                     <Grid x:Name="GridPanelRight" VerticalAlignment="Stretch">
                         <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollBarVisibility="Hidden" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
+                                VerticalScrollBarVisibility="Hidden" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
                             <Grid x:Name="GridScrollViewerScan">
                                 <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting" PointerEntered="ImageScanViewer_PointerEntered"/>
                                 <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -239,7 +239,7 @@
 
                         <Frame x:Name="FrameGridPanelRightTitleBar" Opacity="0" Background="{ThemeResource SystemControlAcrylicElementBrush}" VerticalAlignment="Top">
                             <v1809:Frame.OpacityTransition>
-                                <ScalarTransition Duration="00:00:00.25"/>
+                                <v1809:ScalarTransition  Duration="00:00:00.25"/>
                             </v1809:Frame.OpacityTransition>
                         </Frame>
                     </Grid>
