@@ -125,27 +125,15 @@
     <value>Set the aspect ratio</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button.</comment>
   </data>
-  <data name="AppBarButtonCopy.Label" xml:space="preserve">
-    <value>Copy</value>
-    <comment>The text inside the button that allows the user to copy the result.</comment>
-  </data>
-  <data name="AppBarButtonCopy.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Copy scan to clipboard (Ctrl+C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the CommandBar.</comment>
   </data>
-  <data name="AppBarButtonCrop.Label" xml:space="preserve">
-    <value>Crop</value>
-    <comment>The text inside the button that allows the user to crop the result.</comment>
-  </data>
-  <data name="AppBarButtonCrop.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonCrop.ToolTipService.ToolTip" xml:space="preserve">
     <value>Crop scan</value>
     <comment>The tooltip text that appears while hovering the crop button in the CommandBar.</comment>
   </data>
-  <data name="AppBarButtonDelete.Label" xml:space="preserve">
-    <value>Delete</value>
-    <comment>The text inside the button that allows the user to delete the result.</comment>
-  </data>
-  <data name="AppBarButtonDelete.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonDelete.ToolTipService.ToolTip" xml:space="preserve">
     <value>Move scan to the Recycle Bin</value>
     <comment>The tooltip text that appears while hovering the delete button in the CommandBar.</comment>
   </data>
@@ -165,35 +153,19 @@
     <value>Finish editing</value>
     <comment>The tooltip text that appears while hovering the done button.</comment>
   </data>
-  <data name="AppBarButtonDraw.Label" xml:space="preserve">
-    <value>Draw</value>
-    <comment>The text inside the button that allows the user to draw on the result.</comment>
-  </data>
-  <data name="AppBarButtonDraw.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonDraw.ToolTipService.ToolTip" xml:space="preserve">
     <value>Draw and highlight using Windows Ink</value>
     <comment>The tooltip text that appears while hovering the draw button in the CommandBar.</comment>
   </data>
-  <data name="AppBarButtonOpenWith.Label" xml:space="preserve">
-    <value>Open with</value>
-    <comment>The text inside the button that allows the user to pick an app to open the file with.</comment>
-  </data>
-  <data name="AppBarButtonOpenWith.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonOpenWith.ToolTipService.ToolTip" xml:space="preserve">
     <value>Open scan in another app</value>
     <comment>The tooltip text that appears while hovering the open with button.</comment>
   </data>
-  <data name="AppBarButtonRename.Label" xml:space="preserve">
-    <value>Rename</value>
-    <comment>The text inside the button that allows the user to rename the result.</comment>
-  </data>
-  <data name="AppBarButtonRename.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonRename.ToolTipService.ToolTip" xml:space="preserve">
     <value>Rename scan</value>
     <comment>The tooltip text that appears while hovering the rename button in the CommandBar.</comment>
   </data>
-  <data name="AppBarButtonRotate.Label" xml:space="preserve">
-    <value>Rotate</value>
-    <comment>The text inside the button that allows the user to rotate the result.</comment>
-  </data>
-  <data name="AppBarButtonRotate.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonRotate.ToolTipService.ToolTip" xml:space="preserve">
     <value>Rotate scan 90° clockwise</value>
     <comment>The tooltip text that appears while hovering the rotate button in the CommandBar.</comment>
   </data>
@@ -213,11 +185,7 @@
     <value>Save changes to new file</value>
     <comment>The tooltip text that appears while hovering the save copy button in the CommandBar.</comment>
   </data>
-  <data name="AppBarButtonShare.Label" xml:space="preserve">
-    <value>Share</value>
-    <comment>The text inside the button that allows the user to share the result.</comment>
-  </data>
-  <data name="AppBarButtonShare.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Share scan (Ctrl+S)</value>
     <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
   </data>
@@ -272,10 +240,6 @@
   <data name="CheckBoxSettingsDrawPenDetected.Content" xml:space="preserve">
     <value>Start drawing when a pen is detected</value>
     <comment>The header for the automatic drawing on pen detection setting toggle.</comment>
-  </data>
-  <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
-    <value>Allow unsupported file formats by converting to them from a supported one</value>
-    <comment>The header for the unsupported formats setting toggle.</comment>
   </data>
   <data name="CloseButtonText" xml:space="preserve">
     <value>Close</value>
@@ -350,7 +314,7 @@
     <comment>The text that appears behind the default resolution in the resolutions list. It is automatically encapsulated by brackets.</comment>
   </data>
   <data name="ErrorMessageConversionBodyAfterExtension" xml:space="preserve">
-    <value> instead. You can disable conversion for unsupported formats in the settings.</value>
+    <value> instead.</value>
     <comment>[begins with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is behind the supported base format.</comment>
   </data>
   <data name="ErrorMessageConversionBodyBeforeExtension" xml:space="preserve">
@@ -730,7 +694,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <value>Resolution</value>
     <comment>The header for the resolution ComboBox.</comment>
   </data>
-  <data name="TextBlockScannerIndicatorText" xml:space="preserve">
+  <data name="TextBlockScannerIndicator.Text" xml:space="preserve">
     <value>Always searching for new devices...</value>
     <comment>The text inside the scanner list, that indicates that the search for new devices always continues.</comment>
   </data>
@@ -817,5 +781,13 @@ Please use the Feedback Hub, if this something you would like to see addressed i
   <data name="ToggleMenuFlyoutItemAspectRatioSquare.Text" xml:space="preserve">
     <value>Square</value>
     <comment>The text that appears inside the menu item that sets the aspect ratio of the crop to square.</comment>
+  </data>
+  <data name="ErrorMessageHeader" xml:space="preserve">
+    <value>Something went wrong</value>
+    <comment>The header for a generic error message.</comment>
+  </data>
+  <data name="ErrorMessageBody" xml:space="preserve">
+    <value>Please try again.</value>
+    <comment>The body for a generic error message.</comment>
   </data>
 </root>

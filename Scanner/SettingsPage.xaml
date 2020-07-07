@@ -6,24 +6,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    xmlns:local="using:Scanner"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
     NavigationCacheMode="Disabled" 
     KeyDown="Page_KeyDown" Loading="Page_Loading" Loaded="Page_Loaded">
 
     <Page.Resources>
-        <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
-            <Setter Property="CornerRadius" Value="2"/>
-        </v1809:Style>
-        <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-            <Setter Property="CornerRadius" Value="3"/>
-            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-        </v1809:Style>
-        <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
-            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
-            <Setter Property="CornerRadius" Value="2"/>
-        </v1809:Style>
+        <ResourceDictionary>
+            <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="2"/>
+            </v1809:Style>
+            <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+            </v1809:Style>
+            <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
+                <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
+                <Setter Property="CornerRadius" Value="2"/>
+            </v1809:Style>
+            
+            <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
+        </ResourceDictionary>
     </Page.Resources>
 
 
@@ -47,7 +52,7 @@
                         </RelativePanel>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
                             <Button x:Uid="ButtonSettingsChooseFolder" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click" TabIndex="0"/>
-                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click"/>
+                            <Button x:Uid="ButtonSettingsResetSaveLocation" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click" IsEnabled="False"/>
                         </StackPanel>
                         <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
@@ -62,9 +67,7 @@
 
                         <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
-                        <CheckBox x:Uid="CheckBoxSettingsUnsupportedFormat" x:Name="CheckBoxUnsupportedFileFormat" Content="Allow unsupported file formats by converting to them from a supported one" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
-
-                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
+                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
@@ -96,7 +99,7 @@
                     </StackPanel>
                 </ScrollViewer>
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
-                    <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25"/>
+                    <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Bottom" Height="25" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}"/>
                 </controls:DropShadowPanel>
                 <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
                     <v1809:Grid.BackgroundTransition>

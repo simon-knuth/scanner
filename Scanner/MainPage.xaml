@@ -10,10 +10,9 @@
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     x:Class="Scanner.MainPage"
+    xmlns:local="using:Scanner"
     mc:Ignorable="d" 
-    SizeChanged="Page_SizeChanged" 
-    ActualThemeChanged="Page_ActualThemeChanged" 
-    NavigationCacheMode="Required" Loaded="Page_Loaded">
+    NavigationCacheMode="Required" Loaded="Page_Loaded" SizeChanged="Page_SizeChanged">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -36,276 +35,425 @@
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
+
+            <Storyboard x:Name="StoryboardChangeButtonsBeginScan">
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="-48.0">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                Storyboard.TargetName="ButtonLeftPaneSettings"
+                Storyboard.TargetProperty="Opacity"
+                To="0.0"
+                Duration="0:0:0.25">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                Storyboard.TargetName="ButtonLeftPaneCancel"
+                Storyboard.TargetProperty="Opacity"
+                To="1.0"
+                Duration="0:0:0.25">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardChangeButtonsEndScan">
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="0.0">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                Storyboard.TargetName="ButtonLeftPaneSettings"
+                Storyboard.TargetProperty="Opacity"
+                To="1.0"
+                Duration="0:0:0.25">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                Storyboard.TargetName="ButtonLeftPaneCancel"
+                Storyboard.TargetProperty="Opacity"
+                To="0.0"
+                Duration="0:0:0.25">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
+            <local:ButtonShadowConverter x:Key="ButtonShadowConverter"/>
+            <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
+            <local:NegativeTopThicknessConverter x:Key="NegativeTopThicknessConverter"/>
+            <local:ButtonTextOpacityConverter x:Key="ButtonTextOpacityConverter"/>
+            <local:NegativeVisibilityConverter x:Key="NegativeVisibilityConverter"/>
+            <local:IsItemSelectedConverter x:Key="IsItemSelectedConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
-
-    <Grid x:Name="GridMainPage">
+    <Grid x:Name="GridRoot">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="ColumnLeft" Width="3*" MinWidth="300" MaxWidth="400"/>
-            <ColumnDefinition x:Name="ColumnRight" Width="7*"/>
+            <ColumnDefinition x:Name="ColumnLeftPane" Width="3*" MinWidth="{x:Bind ColumnSidePaneMinWidth, Mode=OneTime}" MaxWidth="{x:Bind ColumnSidePaneMaxWidth, Mode=OneTime}"/>
+            <ColumnDefinition x:Name="ColumnContentPane" Width="7*"/>
+            <ColumnDefinition x:Name="ColumnRightPane" MaxWidth="0"/>
         </Grid.ColumnDefinitions>
 
-        <Frame Grid.Column="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="75"/>
-                </Grid.RowDefinitions>
-                <ScrollViewer x:Name="ScrollViewerLeftPanel" VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,32,0,0">
-                    <StackPanel x:Name="StackPanelLeft" Orientation="Vertical" Padding="24,0,24,12" HorizontalAlignment="Stretch">
-                        <TextBlock x:Name="TextBlockHeader" Text="Scanner" FontWeight="Bold" FontSize="32"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                            <TextBlock x:Name="TextBlockSource" x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Bottom"/>
-                            <Button x:Uid="ButtonDevices" x:Name="ButtonDevices" VerticalAlignment="Stretch" Padding="0" ToolTipService.ToolTip="Manage scanners" Style="{ThemeResource TextBlockButtonStyle}" Click="ButtonDevices_Click" Height="{Binding ElementName=ComboBoxScanners, Path=Height}" Visibility="Collapsed">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,0,8,0" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
-                            </Button>
-                        </StackPanel>
-                        <ComboBox x:Name="ComboBoxScanners" ItemsSource="{x:Bind scannerList}" HorizontalAlignment="Stretch" Margin="0,6,0,0" SelectionChanged="ComboBoxScanners_SelectionChanged" TabIndex="0"/>
-                        <StackPanel x:Name="StackPanelSource" Orientation="Vertical" Margin="0,12,0,0">
-                            <RadioButton x:Uid="RadioButtonSourceAutomatic" x:Name="RadioButtonSourceAutomatic" GroupName="RadioButtonGroupSource" Content="Automatic configuration" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton x:Uid="RadioButtonSourceFlatbed" x:Name="RadioButtonSourceFlatbed" GroupName="RadioButtonGroupSource" Content="Flatbed" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                            <RadioButton x:Uid="RadioButtonSourceFeeder" x:Name="RadioButtonSourceFeeder" GroupName="RadioButtonGroupSource" Content="Feeder" IsEnabled="False" HorizontalAlignment="Stretch" Checked="RadioButtonSourceChanged"/>
-                        </StackPanel>
-                        <StackPanel x:Name="StackPanelColor" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
-                            <TextBlock x:Uid="TextBlockColorMode" Text="Color mode" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <RadioButton x:Uid="RadioButtonColorModeColor" x:Name="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Uid="RadioButtonColorModeGrayscale" x:Name="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                            <RadioButton x:Uid="RadioButtonColorModeMonochrome" x:Name="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                        </StackPanel>
-                        <StackPanel x:Name="StackPanelResolution" Orientation="Vertical" Margin="0,48,0,0" Visibility="Collapsed">
-                            <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <ComboBox x:Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind resolutions}"/>
-                        </StackPanel>
-                        <TextBlock x:Uid="TextBlockFormatHeader" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,48,0,0"/>
-                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" HorizontalAlignment="Stretch" IsEnabled="False" ItemsSource="{x:Bind formats}"/>
-                    </StackPanel>
-                </ScrollViewer>
-                <Grid x:Name="GridLeftPanelBottom" Grid.Row="1" VerticalAlignment="Stretch" Padding="24,0,24,24">
-                	<Grid.Transitions>
-                        <TransitionCollection>
-                            <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
-                        </TransitionCollection>
-                    </Grid.Transitions>
+        <Grid x:Name="LeftPane" Grid.Column="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <v1809:Grid.BackgroundTransition>
+                <v1803:BrushTransition/>
+            </v1809:Grid.BackgroundTransition>
 
-                    <controls:DropShadowPanel x:Name="DropShadowPanelButtonScan" Grid.Row="1" BlurRadius="10" ShadowOpacity="0" OffsetY="5" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                        <Button x:Name="ButtonScan" v1809:CornerRadius="2" v1803:Style="{ThemeResource ButtonAccentRevealStyle1803}" v1809:Style="{ThemeResource ButtonAccentRevealStyle1809}" Padding="16,8,16,8" MinWidth="80" IsEnabled="False" Click="Scan" IsEnabledChanged="ButtonScan_IsEnabledChanged">
-                            <Grid>
-                                <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="0.5"/>
-                                <ProgressRing x:Name="ProgressRingScan" IsActive="True" Visibility="Collapsed" Background="Transparent"/>
-                            </Grid>
-                        </Button>
-                    </controls:DropShadowPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                    	<StackPanel.Transitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
-                            </TransitionCollection>
-                        </StackPanel.Transitions>
+            <FlipView x:Name="FlipViewLeftPane" Style="{StaticResource FlipViewStyleNoButtons}" v1809:CornerRadius="0" Background="Transparent" IsTabStop="False" SelectionChanged="FlipViewLeftPane_SelectionChanged">
+                <Grid x:Name="LeftPaneScanOptions">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="75"/>
+                    </Grid.RowDefinitions>
 
-
-                        <Button x:Uid="ButtonSettings" x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonSettings_Click">
-                            <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
-                        </Button>
-                        <Button x:Uid="ButtonRecents" x:Name="ButtonRecents" ToolTipService.ToolTip="Previous scans" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonRecents_Click">
-                            <FontIcon x:Name="FontIconButtonRecents" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
-                        </Button>
-                        <Button x:Uid="ButtonCancel" x:Name="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Click="ButtonCancel_Click" Visibility="Collapsed">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </Frame>
-
-        <RelativePanel Grid.Column="1" x:Name="RelativePanelRight">
-            <controls:DropShadowPanel   BlurRadius="30" ShadowOpacity="0.2" OffsetX="{Binding Path=Margin.Left, ElementName=GridPanelRight}"
-                                        OffsetY="{Binding Path=Margin.Top, ElementName=GridPanelRight}"
-                                        Color="Black" Padding="0,2,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                        HorizontalContentAlignment="Stretch" x:Name="DropShadowPanelRight" RelativePanel.AlignTopWithPanel="True"
-                                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
-                                        RelativePanel.AlignBottomWithPanel="True">
-                <Grid x:Name="GridPanelRightBackground" Margin="{Binding Path=Margin,ElementName=GridPanelRight}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                    <v1809:Grid.BackgroundTransition>
-                        <v1809:BrushTransition/>
-                    </v1809:Grid.BackgroundTransition>
-
-                    <Grid x:Name="GridPanelRight" VerticalAlignment="Stretch">
-                        <ScrollViewer x:Name="ScrollViewerScan" MaxZoomFactor="3" MinZoomFactor="1" ZoomMode="Enabled" HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility="Hidden" LayoutUpdated="ScrollViewerScan_LayoutUpdated">
-                            <Grid x:Name="GridScrollViewerScan">
-                                <Image x:Name="ImageScanViewer" CanDrag="True" HorizontalAlignment="Center" VerticalAlignment="Center" DragStarting="ImageScanViewer_DragStarting" PointerEntered="ImageScanViewer_PointerEntered"/>
-                                <Viewbox x:Name="ViewBoxScan" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <InkCanvas x:Name="InkCanvasScan" Visibility="Collapsed"/>
-                                </Viewbox>
-                            </Grid>
-                        </ScrollViewer>
-
-                        <StackPanel x:Name="StackPanelTextRight" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
-                            <TextBlock x:Uid="TextBlockScannerSelectionHintHeader" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75">
-                                <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> and appears as online there.</Run></Span>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <controls:ImageCropper x:Name="ImageCropper" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="24,24,24,24"/>
-
-                        <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarSecondary" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,44,12,12" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <Frame v1809:CornerRadius="2">
-                                <CommandBar x:Name="CommandBarSecondary" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Right" Padding="-1.5,0,-0.5,0" HorizontalContentAlignment="Left" Visibility="Collapsed">
-                                    <CommandBar.Content>
-                                        <InkToolbar x:Name="InkToolbarScan" TargetInkCanvas="{Binding ElementName=InkCanvasScan}" HorizontalAlignment="Right" Visibility="Collapsed" InitialControls="PensOnly">
-                                            <InkToolbarEraserButton/>
-                                        </InkToolbar>
-                                    </CommandBar.Content>
-                                    <AppBarToggleButton x:Uid="AppBarButtonTouchDraw" x:Name="AppBarButtonTouchDraw" LabelPosition="Collapsed" ToolTipService.ToolTip="Draw with touch" BorderThickness="1,1,1.5,1" Visibility="Collapsed" v1809:CornerRadius="2" Checked="AppBarButtonTouchDraw_Checked" Unchecked="AppBarButtonTouchDraw_Unchecked" Style="{ThemeResource AppBarToggleButtonRevealStyle}">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;"/>
-                                    </AppBarToggleButton>
-                                    <AppBarButton x:Uid="AppBarButtonAspectRatio" x:Name="AppBarButtonAspectRatio" Label="Aspect Ratio" ToolTipService.ToolTip="Aspect Ratio" BorderThickness="1,1,1.5,1" Visibility="Collapsed" v1809:CornerRadius="2">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;"/>
-                                        <AppBarButton.Flyout>
-                                            <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="TopEdgeAlignedRight">
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" Text="Custom" IsChecked="True" FontWeight="Medium" Click="SetCustomAspectRatio"/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioSquare" Text="Square" Tag="1" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="3:2" Tag="0.6666" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="4:3" Tag="0.7500" Click="SetFixedAspectRatio"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="MenuFlyoutItemFlipAspectRatio" Text="Flip aspect ratio" Icon="Orientation" Click="FlipAspectRatio"/>
-                                                <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderInternational" Text="International" IsEnabled="False" FontWeight="Medium"/>
-                                                <ToggleMenuFlyoutItem Text="DIN A" Tag="1.4142" Click="SetFixedAspectRatio"/>
-                                                <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderNA" Text="North American" IsEnabled="False" FontWeight="Medium"/>
-                                                <ToggleMenuFlyoutItem Text="ANSI A - Letter" Tag="1.2941" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="ANSI B - Ledger/Tabloid" Tag="1.5455" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="ANSI C - Broadsheet" Tag="1.2941" Click="SetFixedAspectRatio"/>
-                                                <MenuFlyoutSeparator/>
-                                                <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderChinese" Text="Chinese" IsEnabled="False" FontWeight="Medium"/>
-                                                <ToggleMenuFlyoutItem Text="Kai 4" Tag="1.3894" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="Kai 8" Tag="1.4230" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="Kai 16" Tag="1.4054" Click="SetFixedAspectRatio"/>
-                                                <ToggleMenuFlyoutItem Text="Kai 32" Tag="1.4230" Click="SetFixedAspectRatio"/>
-                                            </MenuFlyout>
-                                        </AppBarButton.Flyout>
-                                    </AppBarButton>
-                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparatorSecondary"/>
-                                    <AppBarButton x:Uid="AppBarButtonDone" x:Name="AppBarButtonDone" Icon="Accept" Label="Done" ToolTipService.ToolTip="Rotate" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDone_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonSave" x:Name="AppBarButtonSave" Icon="Save" Label="Save" ToolTipService.ToolTip="Save" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonSave_Click"/>
-                                    <AppBarButton x:Uid="AppBarButtonSaveCopy" x:Name="AppBarButtonSaveCopy" Label="Save copy" ToolTipService.ToolTip="Save copy" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonSaveCopy_Click">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;"/>
-                                    </AppBarButton>
-                                    <AppBarButton x:Uid="AppBarButtonDiscard" x:Name="AppBarButtonDiscard" Icon="Cancel" Label="Discard" ToolTipService.ToolTip="Discard" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDiscard_Click"/>
-                                </CommandBar>
+                    <RelativePanel x:Name="RelativePanelLeftPaneScan" Grid.Row="0" VerticalAlignment="Stretch" PointerWheelChanged="IgnorePointerWheel">
+                        <Grid x:Name="GridLeftPaneScanHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                            <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneScanHeader" Opacity="{Binding ElementName=ScrollViewerLeftPaneScan, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
+                                <Rectangle x:Name="RectangleGridLeftPaneScanOptions" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=FrameLeftPaneScanHeader, Path=ActualHeight}"/>
+                            </controls:DropShadowPanel>
+                            <Frame x:Name="FrameLeftPaneScanHeader" Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Top" Padding="0,32,0,0">
+                                <TextBlock Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
                             </Frame>
-                        </controls:DropShadowPanel>
-
-                        <Grid VerticalAlignment="Bottom">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <controls:DropShadowPanel Grid.Row="0" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,12,0" Visibility="{Binding ElementName=CommandBarPrimary, Path=Visibility}">
-                                <ScrollViewer x:Name="ScrollViewerTextBlockCommandBarPrimaryFile" SizeChanged="CommandBarPrimary_SizeChanged" 
-                                              v1809:CornerRadius="2,2,0,0" MaxWidth="{Binding ElementName=CommandBarPrimary, Path=ActualWidth}" 
-                                              VerticalScrollMode="Disabled" HorizontalScrollMode="Auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                                    <Button x:Name="ButtonCommandBarPrimaryFileName" x:Uid="ButtonCommandBarPrimaryFileName" Style="{ThemeResource TextBlockButtonStyle}" Padding="3,1,3,1" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="ButtonCommandBarPrimaryFileName_Click">
-                                        <StackPanel x:Name="StackPanelTextBlockCommandBarPrimaryFile" Orientation="Horizontal"  Margin="9,4,9,4" HorizontalAlignment="Right" FlowDirection="RightToLeft">
-                                            <TextBlock x:Name="TextBlockCommandBarPrimaryFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.75"/>
-                                            <TextBlock x:Name="TextBlockCommandBarPrimaryFileName" Style="{StaticResource BaseTextBlockStyle}"/>
-                                        </StackPanel>
-                                    </Button>
-                                </ScrollViewer>
-                            </controls:DropShadowPanel>
-                            <controls:DropShadowPanel x:Name="DropShadowPanelCommandBarPrimary" Grid.Row="1" BlurRadius="20" ShadowOpacity="0.2" OffsetY="5" Margin="12,0,12,12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                                <Frame x:Name="FrameCommandBarPrimary" v1809:CornerRadius="2,0,2,2">
-                                    <CommandBar x:Name="CommandBarPrimary" DefaultLabelPosition="Right" HorizontalAlignment="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}" Padding="-1.5,0,-0.5,0" Clip="{Binding ElementName=DropShadowPanelCommandBar}" HorizontalContentAlignment="Left" Visibility="Collapsed" SizeChanged="CommandBarPrimary_SizeChanged">
-                                        <AppBarToggleButton x:Uid="AppBarButtonCrop" x:Name="AppBarButtonCrop" Icon="Crop" Label="Crop" ToolTipService.ToolTip="Crop" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonCrop_Checked"/>
-                                        <AppBarButton x:Uid="AppBarButtonRotate" x:Name="AppBarButtonRotate" Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonRotate_Click"/>
-                                        <AppBarToggleButton x:Uid="AppBarButtonDraw" x:Name="AppBarButtonDraw" Label="Draw" ToolTipService.ToolTip="Draw" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Checked="AppBarButtonDraw_Checked">
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;"/>
-                                        </AppBarToggleButton>
-                                        <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryOne"/>
-                                        <AppBarButton x:Uid="AppBarButtonRename" x:Name="AppBarButtonRename" Icon="Rename" Label="Rename" ToolTipService.ToolTip="Rename" AllowFocusOnInteraction="True" v1809:CornerRadius="2" BorderThickness="1,1,1.5,1" Click="AppBarButtonRename_Click"/>
-                                        <AppBarButton x:Uid="AppBarButtonDelete" x:Name="AppBarButtonDelete" Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" AllowFocusOnInteraction="True" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonDelete_Click">
-                                        </AppBarButton>
-                                        <Custom:ToolbarSeparator x:Name="ToolbarSeparatorPrimaryTwo"/>
-                                        <AppBarButton x:Uid="AppBarButtonCopy" x:Name="AppBarButtonCopy" Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy (Ctrl+C)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonCopy_Click"/>
-                                        <AppBarButton x:Uid="AppBarButtonOpenWith" x:Name="AppBarButtonOpenWith" Icon="OpenWith" Label="Open with" ToolTipService.ToolTip="Open with" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonOpenWith_Click"/>
-                                        <AppBarButton x:Uid="AppBarButtonShare" x:Name="AppBarButtonShare" Icon="Share" Label="Share" ToolTipService.ToolTip="Share (Ctrl+S)" BorderThickness="1,1,1.5,1" v1809:CornerRadius="2" Click="AppBarButtonShare_Click"/>
-                                    </CommandBar>
-                                </Frame>
-                            </controls:DropShadowPanel>
                         </Grid>
 
-                        <Frame x:Name="FrameGridPanelRightTitleBar" Opacity="0" Background="{ThemeResource SystemControlAcrylicElementBrush}" VerticalAlignment="Top">
-                            <v1809:Frame.OpacityTransition>
-                                <v1809:ScalarTransition  Duration="00:00:00.25"/>
-                            </v1809:Frame.OpacityTransition>
-                        </Frame>
+                        <ScrollViewer x:Name="ScrollViewerLeftPaneScan" Background="Transparent" VerticalScrollBarVisibility="Auto" RelativePanel.Below="GridLeftPaneScanHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                            <StackPanel Orientation="Vertical" Padding="24,0,24,12" SizeChanged="StackPanel_SizeChanged">
+                                <Frame x:Name="FrameLeftPaneScanSource" Margin="0,8,0,0">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock x:Name="TextBlockSource" x:Uid="TextBlockSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}" Margin="0,8,0,3"/>
+                                            <Button x:Name="ButtonDevices" x:Uid="ButtonDevices" VerticalAlignment="Stretch" Padding="0" ToolTipService.ToolTip="Manage scanners" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Height="{Binding ElementName=ComboBoxScanners, Path=Height}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}">
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,3" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
+                                            </Button>
+                                        </StackPanel>
+                                        <ComboBox x:Name="ComboBoxScanners" HorizontalAlignment="Stretch" Margin="0,3,0,0" TabIndex="0" ItemsSource="{x:Bind scannerList}" SelectionChanged="ComboBoxScanners_SelectionChanged">
+                                            <ComboBoxItem x:Name="ComboBoxItemScannerIndicator" IsEnabled="False" VerticalContentAlignment="Bottom" Visibility="Collapsed">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock x:Uid="TextBlockScannerIndicator" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,3"/>
+                                                    <controlsxaml:ProgressBar IsIndeterminate="True" Opacity="0.6"/>
+                                                </StackPanel>
+                                            </ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Frame>
+
+                                <Frame x:Name="FrameLeftPaneScanSourceMode" Margin="0,12,0,0">
+                                    <StackPanel Orientation="Vertical">
+                                        <Grid>
+                                            <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="RadioButtonSourceAutomatic" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Automatic configuration" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconAutoPreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                        </Grid>
+                                        <Grid>
+                                            <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="RadioButtonSourceFlatbed" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Flatbed" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                        </Grid>
+                                        <Grid>
+                                            <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="RadioButtonSourceFeeder" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Feeder" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconFeederPreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Frame>
+
+                                <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed">
+                                    <StackPanel x:Name="StackPanelColor" Orientation="Vertical">
+                                        <TextBlock x:Uid="TextBlockColorMode" Text="Color mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="RadioButtonColorModeColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="RadioButtonColorModeGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="RadioButtonColorModeMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </Frame>
+
+                                <Frame x:Name="FrameLeftPaneResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed">
+                                    <StackPanel x:Name="StackPanelResolution" Orientation="Vertical">
+                                        <TextBlock x:Uid="TextBlockResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind resolutions}" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </Frame>
+
+                                <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="{Binding ElementName=RadioButtonSourceFeeder, Path=IsChecked}">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock x:Uid="TextBlockMoreOptions" Text="More Options" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <CheckBox x:Name="CheckBoxAllPages" x:Uid="CheckBoxAllPages" Content="Scan every page in feeder" IsChecked="True" IsEnabled="True"/>
+                                        <CheckBox x:Name="CheckBoxDuplex" x:Uid="CheckBoxDuplex" Content="Duplex (front &amp; back)" IsChecked="False" IsEnabled="False"/>
+                                    </StackPanel>
+                                </Frame>
+
+                                <Frame x:Name="FrameLeftPaneScanFormat" Margin="0,48,0,0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock x:Uid="TextBlockFormat" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
+                                    </StackPanel>
+                                </Frame>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </RelativePanel>
+                    <Grid x:Name="GridLeftPaneFooter" Grid.Row="1">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneFooter" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
+                            <Rectangle x:Name="RectangleGridLeftPaneFooter" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=GridLeftPaneFooter, Path=ActualHeight}"/>
+                        </controls:DropShadowPanel>
+                        <Grid x:Name="GridLeftPaneFooterContent" Padding="24,0,24,0" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <controls:DropShadowPanel x:Name="DropShadowPanelLeftPaneScanButton" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=ButtonLeftPaneScan, Path=IsEnabled, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Center" BlurRadius="10" OffsetY="5" HorizontalAlignment="Right">
+                                <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{ThemeResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
+                                            <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
+                                            <TextBlock x:Name="TextBlockButtonScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <controlsxaml:SplitButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" Text="Scan" FontWeight="Bold" IsEnabled="True" v1809:CornerRadius="2" Click="ButtonLeftPaneScan_Click"/>
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" Text="Scan and start fresh" FontWeight="Normal" v1809:CornerRadius="2" Click="ButtonScanFresh_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" Text="Preview" IsEnabled="False" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScanPreview_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </controlsxaml:SplitButton.Flyout>
+                                </controlsxaml:SplitButton>
+                            </controls:DropShadowPanel>
+                            <StackPanel x:Name="LeftPaneStackPanelButtons" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <StackPanel.RenderTransform>
+                                    <CompositeTransform/>
+                                </StackPanel.RenderTransform>
+                                <Button x:Name="ButtonLeftPaneSettings" x:Uid="ButtonSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneSettings_Click">
+                                    <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
+                                </Button>
+                                <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanFolder" ToolTipService.ToolTip="Open current save location" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">
+                                    <FontIcon x:Name="FontIconButtonScanFolder" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
+                                </Button>
+                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </controls:DropShadowPanel>
-        </RelativePanel>
+                
+                <RelativePanel x:Name="LeftPaneOrganize" PointerWheelChanged="IgnorePointerWheel">
+                    <Grid x:Name="GridLeftPaneOrganizeHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ActualHeight, ElementName=GridLeftPaneScanHeader}">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneOrganize" Opacity="{Binding ElementName=ScrollViewerLeftPaneOrganize, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
+                            <Rectangle x:Name="RectangleGridLeftPaneOrganize" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=GridLeftPaneOrganizeHeader, Path=ActualHeight}"/>
+                        </controls:DropShadowPanel>
+                        <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Stretch">
+                            <ScrollViewer HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled">
+                                <CommandBar VerticalAlignment="Bottom" DefaultLabelPosition="Right" Background="Transparent" IsDynamicOverflowEnabled="False" HorizontalAlignment="Center" OverflowButtonVisibility="Collapsed">
+                                    <AppBarToggleButton Label="Select" IsEnabled="False" Style="{StaticResource AppBarToggleButtonRevealStyle}" v1809:CornerRadius="2">
+                                        <AppBarToggleButton.Icon>
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE762;"/>
+                                        </AppBarToggleButton.Icon>
+                                    </AppBarToggleButton>
+                                    <AppBarSeparator/>
+                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeRotate" ToolTipService.ToolTip="Rotate selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Rotate" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeRotate, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeShare, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeCopy, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeDelete" ToolTipService.ToolTip="Delete selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Delete" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeDelete, Path=ActualHeight}"/>
+                                </CommandBar>
+                            </ScrollViewer>
+                        </Grid>
+                    </Grid>
 
-        <ContentDialog x:Name="ContentDialogFeedback" x:Uid="ContentDialogFeedback" v1809:Style="{StaticResource RoundedContentDialog}" Title="Are you enjoying the app?"
-                       CloseButtonText="Close" DefaultButton="Primary" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" 
-                       v1809:SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
-            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                <Span>
-                    <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
-                    <Hyperlink x:Name="HyperlinkFeedbackHub" Click="LaunchFeedbackHub" UnderlineStyle="None">Feedback Hub</Hyperlink>
-                    <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
-                    <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click">rate Scanner in the Microsoft Store</Hyperlink>
-                    <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
-                </Span>
-            </TextBlock>
-        </ContentDialog>
+                    <ScrollViewer x:Name="ScrollViewerLeftPaneOrganize" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneOrganizeHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                        <ListView x:Name="LeftPaneListViewOrganize" SelectionMode="Single" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneListViewOrganize_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:ScanResultElement">
+                                    <ListViewItem x:Name="LeftPaneListViewOrganizeItem">
+                                        <Grid Padding="6,6,6,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*"/>
+                                                <ColumnDefinition Width="7*"/>
+                                            </Grid.ColumnDefinitions>
 
-        <ContentDialog x:Name="ContentDialogBlank" x:Uid="ContentDialogDelete" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
-                       v1809:PrimaryButtonStyle="{StaticResource RoundedButtonStyle}" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
-        </ContentDialog>
+                                            <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewOrganizeItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Stretch" BlurRadius="10" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                                <Image Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="60" MaxWidth="60"/>
+                                            </controls:DropShadowPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                <TextBlock Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </ListViewItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
 
-        <controlsxaml:TeachingTip
-            x:Name="TeachingTipRename"
-            x:Uid="TeachingTipRename"
-            PlacementMargin="8"
-            Title="Rename"
-            Subtitle="Enter a new name for the file:"
-            ActionButtonContent="Confirm"
-            ActionButtonClick="ButtonRename_Click"
-            CloseButtonContent="Cancel"
-            IsLightDismissEnabled="True"
-            PreferredPlacement="Top" LayoutUpdated="TeachingTipRename_LayoutUpdated">
+                            <ListView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <AddDeleteThemeTransition/>
+                                    <ReorderThemeTransition/>
+                                    <RepositionThemeTransition x:Name="LeftPaneListViewOrganizeRepositionThemeTransition"/>
+                                </TransitionCollection>
+                            </ListView.ItemContainerTransitions>
+                        </ListView>
+                    </ScrollViewer>
+                    <StackPanel x:Name="LeftPaneOrganizeInitialText" Orientation="Vertical" Opacity="0.75" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
+                        <TextBlock Text="Scanned pages will appear here" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    </StackPanel>
+                </RelativePanel>
+            </FlipView>
+            
+        </Grid>
 
-            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
-        </controlsxaml:TeachingTip>
+        <Grid x:Name="RightPane" Grid.Column="2" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <v1809:Grid.BackgroundTransition>
+                <v1803:BrushTransition/>
+            </v1809:Grid.BackgroundTransition>
 
-        <controlsxaml:TeachingTip
-            x:Name="TeachingTipDelete"
-            x:Uid="TeachingTipDelete"
-            PlacementMargin="8"
-            Title="Are you sure?"
-            Subtitle="The file will be moved to the recycle bin."
-            ActionButtonContent="Confirm"
-            ActionButtonClick="ButtonDelete_Click"
-            CloseButtonContent="Cancel"
-            IsLightDismissEnabled="True"
-            PreferredPlacement="TopLeft"/>
+        </Grid>
 
-        <controlsxaml:TeachingTip
-            x:Name="TeachingTipError"
-            ActionButtonContent="Settings"
-            PlacementMargin="8"
-            IsLightDismissEnabled="True"/>
+        <controls:DropShadowPanel x:Name="ContentPaneDropShadowPanel" HorizontalContentAlignment="Stretch" Grid.Column="1" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20">
+            <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <v1809:Grid.BackgroundTransition>
+                    <v1803:BrushTransition/>
+                </v1809:Grid.BackgroundTransition>
 
-        <controlsxaml:TeachingTip
-            x:Name="TeachingTipSaveLocation"
-            x:Uid="TeachingTipSaveLocation"
-            PlacementMargin="8"
-            Title="Save Location"
-            Subtitle="Your scans are currently being saved to the default folder. You can change this behavior in the settings."
-            ActionButtonContent="Go to settings"
-            IsLightDismissEnabled="False"/>
+                <ScrollViewer x:Name="ScrollViewerContentPaneContentDummy" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}" IsEnabled="False">
+                    <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                </ScrollViewer>
+
+                <StackPanel x:Name="StackPanelContentPaneText" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
+                    <TextBlock x:Uid="TextBlockScannerSelectionHintHeader" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75" TextAlignment="Center">
+                            <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" Click="HyperlinkSettings_Click">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> and appears as online there.</Run></Span>
+                    </TextBlock>
+                </StackPanel>
+
+                <FlipView x:Name="FlipViewScan" Style="{StaticResource FlipViewStyleNoButtons}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" v1809:CornerRadius="0" Visibility="Collapsed" SelectionChanged="FlipViewScan_SelectionChanged">
+                    <FlipView.ItemTemplate>
+                        <DataTemplate x:DataType="local:ScanResultElement">
+                            <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate" 
+                                          ZoomMode="Enabled" 
+                                          MinZoomFactor="1" 
+                                          MaxZoomFactor="3"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
+                                          Padding="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource NegativeTopThicknessConverter}}">
+                                <Image Source="{Binding CachedImage}" 
+                                       MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                                       MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
+                                       Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"/>
+                            </ScrollViewer>
+                        </DataTemplate>
+                    </FlipView.ItemTemplate>
+                    <!--<ScrollViewer ZoomMode="Enabled" 
+                                MinZoomFactor="1" 
+                                MaxZoomFactor="3"
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Auto"
+                                Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}"
+                                Padding="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource NegativeTopThicknessConverter}}">
+                        <Image Source="/Assets/rainbow-wallpapers-hd1.jpg" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
+                                MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                                MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"/>
+                    </ScrollViewer>-->
+                    <!--<ScrollViewer ZoomMode="Enabled" 
+                                MinZoomFactor="1" 
+                                MaxZoomFactor="3"
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Auto"
+                                Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}"
+                                Padding="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource NegativeTopThicknessConverter}}">
+                        <Image Source="/Assets/rainbow-wallpapers-hd1.jpg" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
+                                MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                                MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"/>
+                    </ScrollViewer>-->
+                </FlipView>
+
+                <Frame x:Name="ContentPaneFrameProgressBarScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Visibility="Collapsed">
+                    <controlsxaml:ProgressBar IsIndeterminate="True" ShowError="False" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Frame>
+
+                <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}" PaneClosed="SplitViewLeftPane_PaneClosed">
+                    <SplitView.Pane>
+                        <Grid x:Name="SplitViewLeftPaneContent" Background="Transparent"/>
+                    </SplitView.Pane>
+                </SplitView>
+
+                <SplitView x:Name="SplitViewContentPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}" PaneClosed="SplitViewContentPane_PaneClosed">
+                    <SplitView.Pane>
+                        <Grid x:Name="SplitViewContentPaneContent" Background="Transparent"/>
+                    </SplitView.Pane>
+                </SplitView>
+
+                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
+                    <v1809:Grid.BackgroundTransition>
+                        <v1803:BrushTransition/>
+                    </v1809:Grid.BackgroundTransition>
+
+                    <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,12,0" Height="32" HorizontalAlignment="Center">
+                        <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <RelativePanel VerticalAlignment="Bottom">
+                        <RelativePanel.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition FromVerticalOffset="-50"/>
+                            </TransitionCollection>
+                        </RelativePanel.ChildrenTransitions>
+                        <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                        </InkToolbarCustomPenButton>
+                        <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                            <StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition FromVerticalOffset="-30" IsStaggeringEnabled="True"/>
+                                </TransitionCollection>
+                            </StackPanel.ChildrenTransitions>
+
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Crop">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Rotate">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Draw">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <Custom:ToolbarSeparator/>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Rename">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Delete">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <Custom:ToolbarSeparator/>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Open with">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
+                            </InkToolbarCustomPenButton>
+                        </StackPanel>
+                        <InkToolbarCustomPenButton x:Name="ButtonOrganize" x:Uid="ButtonOrganize" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Organize" RelativePanel.AlignRightWithPanel="True" Click="ButtonOrganize_Click">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
+                        </InkToolbarCustomPenButton>
+                    </RelativePanel>
+                </Grid>
+            </Grid>
+        </controls:DropShadowPanel>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipDevices"
@@ -315,64 +463,59 @@
             Subtitle="If your scanner doesn't show up within three minutes, you might need to add it in the settings app first."
             ActionButtonContent="Launch settings"
             IsLightDismissEnabled="True"
-            PreferredPlacement="BottomRight"/>
+            Target="{Binding ElementName=ButtonDevices}"
+            PreferredPlacement="BottomRight" 
+            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
+            ActionButtonClick="TeachingTipDevices_ActionButtonClick"/>
 
-        <ContentDialog
-            x:Name="ContentDialogUpdate" x:Uid="ContentDialogUpdate" v1809:Style="{StaticResource RoundedContentDialog}"
-            PrimaryButtonText="Okay" v1809:PrimaryButtonStyle="{StaticResource RoundedButtonAccentStyle}" Title="What's New"
-            SecondaryButtonText="Rate the app" v1809:SecondaryButtonStyle="{StaticResource RoundedButtonStyle}" SecondaryButtonClick="ContentDialogUpdate_SecondaryButtonClick">
-            <ContentDialog.Transitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition FromVerticalOffset="64"/>
-                </TransitionCollection>
-            </ContentDialog.Transitions>
-            <ScrollViewer VerticalScrollMode="Auto">
-                <StackPanel Orientation="Vertical">
-                    <Grid x:Name="GridContentDialogUpdate" Margin="0,12,0,0">
-                        <Grid.ChildrenTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition IsStaggeringEnabled="True"/>
-                            </TransitionCollection>
-                        </Grid.ChildrenTransitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="4*"/>
-                        </Grid.ColumnDefinitions>
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipEmpty"
+            PlacementMargin="8"
+            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;" FontSize="32" Margin="0,0,0,24"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection1Header" Text="Redesigned Settings" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection1Body" Text="The settings are now clearer with more room for what matters." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>
-
-                        <!--<FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection2Header" Text="Improved appearance" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection2Body" Text="The interface is now more useful, informative and compact." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>-->
-
-                        <!--<FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC25;" FontSize="32" Margin="0,0,0,24"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="TextBlockUpdateSection3Header" Text="Know where your files go" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection3Body" Text="The folder button now indicates whether a custom save location has been chosen." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE90F;" FontSize="32" Margin="0,0,0,8"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,8">
-                            <TextBlock x:Uid="TextBlockUpdateSection4Header" Text="Fixes" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock x:Uid="TextBlockUpdateSection4Body" Text="Fixed many issues that e.g. impacted users trying to scan to folders outside the Pictures library." Style="{StaticResource BodyTextBlockStyle}"/>
-                        </StackPanel>-->
-                    </Grid>
-                    <TextBlock x:Uid="TextBlockUpdateEnd" Text="~ Thank you for your support! ~" Style="{StaticResource BaseTextBlockStyle}" HorizontalAlignment="Center" Margin="0,12,0,16"/>
-                    <TextBlock x:Uid="TextBlockUpdateWarning" Text="Some features may not be available on older versions of Windows 10." HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,12,0,0" Opacity="0.5" TextWrapping="WrapWholeWords"/>
+        <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEBE8;" FontSize="32" Margin="0,0,8,0"/>
+                    <TextBlock Text="Debug Menu" FontWeight="Bold" FontSize="32"/>
                 </StackPanel>
-            </ScrollViewer>
+                <ScrollViewer VerticalScrollMode="Auto" MaxHeight="300">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Scan from files" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <Button x:Name="ButtonDebugSelectFiles" Content="Select files"/>
+
+                        <TextBlock Text="Test error message" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <TextBox x:Name="TextBoxDebugShowErrorTitle" PlaceholderText="Title"/>
+                        <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle"/>
+                        <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click"/>
+
+                        <TextBlock Text="Fake scanner" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,0,0,16"/>
+                        <TextBox x:Name="TextBoxDebugFakeScannerName" PlaceholderText="Some scanner"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAutoPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerAuto}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbedPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedColor" Content="Color" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedGrayscale" Content="Grayscale" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedMonochrome" Content="Monochrome" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeederPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederGrayscale" Content="Grayscale" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederMonochrome" Content="Monochrome" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederDuplex" Content="Duplex" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <Button x:Name="ButtonDebugAddScanner" Content="Add to scanner list" Click="ButtonDebugAddScanner_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </StackPanel>
         </ContentDialog>
     </Grid>
 </Page>

@@ -2,6 +2,8 @@
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -28,10 +30,8 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private List<StorageFile> scanFiles = new List<StorageFile>();              // all files generated with a single scan
-        private List<BitmapImage> imageCache = new List<BitmapImage>();             // images of files
-        private List<StorageFile> imagesWithoutRotation = new List<StorageFile>();  // images of files before they were rotated
-        private List<BitmapRotation> currentRotations = new List<BitmapRotation>(); // current rotation per file
+        public ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
+        public StorageFile pdf = null;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,11 +42,8 @@ namespace Scanner
             foreach (StorageFile file in fileList)
             {
                 if (file == null) continue;
-                
-                scanFiles.Add(file);
-                imageCache.Add(null);
-                imagesWithoutRotation.Add(null);
-                currentRotations.Add(BitmapRotation.None);
+
+                elements.Add(new ScanResultElement(file));
             }
         }
 
@@ -57,17 +54,14 @@ namespace Scanner
             {
                 if (file == null) continue;
 
-                scanFiles.Add(file);
-                imageCache.Add(null);
-                imagesWithoutRotation.Add(null);
-                currentRotations.Add(BitmapRotation.None);
+                elements.Add(new ScanResultElement(file));
             }
 
-            for (int i = 0; i < scanFiles.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
-                if (scanFiles[i] == null) continue;
+                if (elements[i] == null) continue;
 
-                SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(scanFiles[i].FileType);
+                SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(elements[i].ScanFile.FileType);
                 if (sourceFormat == null) throw new ApplicationException("Could not determine source format of file for intial conversion.");
                 if (sourceFormat == targetFormat) continue;
 
@@ -80,13 +74,17 @@ namespace Scanner
         public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList)
         {
             await ClearTempFolder();
-            return new ScanResult(fileList);
+            ScanResult result = new ScanResult(fileList);
+            await result.GetImagesAsync();
+            return result;
         }
 
         public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, SupportedFormat targetFormat, StorageFolder targetFolder)
         {
             await ClearTempFolder();
-            return new ScanResult(fileList, targetFormat, targetFolder);
+            ScanResult result = new ScanResult(fileList, targetFormat, targetFolder);
+            await result.GetImagesAsync();
+            return result;
         }
 
 
@@ -98,7 +96,7 @@ namespace Scanner
         /// </summary>
         public int GetTotalNumberOfScans()
         {
-            return scanFiles.Count;
+            return elements.Count;
         }
 
 
@@ -107,7 +105,11 @@ namespace Scanner
         /// </summary>
         public List<StorageFile> GetFiles()
         {
-            List<StorageFile> files = new List<StorageFile>(scanFiles);
+            List<StorageFile> files = new List<StorageFile>();
+            foreach (ScanResultElement element in elements)
+            {
+                files.Add(element.ScanFile);
+            }
             return files;
         }
 
@@ -120,7 +122,7 @@ namespace Scanner
         public StorageFile GetFile(int index)
         {
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for getting file.");
-            else return scanFiles.ElementAt(index);
+            else return elements.ElementAt(index).ScanFile;
         }
 
 
@@ -136,7 +138,7 @@ namespace Scanner
             List<Task<BitmapImage>> tasks = new List<Task<BitmapImage>>();
 
             // kick off conversion for all files
-            for (int i = 0; i < scanFiles.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 tasks.Add(GetImageAsync(i));
             }
@@ -164,49 +166,45 @@ namespace Scanner
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for preview.");
 
             // use cached image if possible
-            if (imageCache[index] != null)
+            if (elements[index].CachedImage != null)
             {
-                return imageCache[index];
+                return elements[index].CachedImage;
             }
 
-            // create new preview
-            StorageFile sourceFile = scanFiles[index];
+            // create new bitmap
+            StorageFile sourceFile = elements[index].ScanFile;
             BitmapImage bmp = null;
             int attempt = 0;
-            IRandomAccessStream sourceStream;
-            switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
+            using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
             {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
-                    while (attempt != -1)
-                    {
-                        try
+                switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
+                {
+                    case SupportedFormat.JPG:
+                    case SupportedFormat.PNG:
+                    case SupportedFormat.TIF:
+                    case SupportedFormat.BMP:
+                        while (attempt != -1)
                         {
-                            using (sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
+                            try
                             {
                                 bmp = new BitmapImage();
                                 await bmp.SetSourceAsync(sourceStream);
                                 attempt = -1;
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating preview of image.", e);
+                            catch (Exception e)
+                            {
+                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
 
-                            await Task.Delay(500);
-                            attempt++;
+                                await Task.Delay(500);
+                                attempt++;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case SupportedFormat.PDF:
-                    while (attempt != -1)
-                    {
-                        try
+                    case SupportedFormat.PDF:
+                        while (attempt != -1)
                         {
-                            using (sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
+                            try
                             {
                                 PdfDocument doc = await PdfDocument.LoadFromStreamAsync(sourceStream);
                                 PdfPage page = doc.GetPage(0);
@@ -218,27 +216,41 @@ namespace Scanner
                                     await imageOfPdf.SetSourceAsync(stream);
                                 }
                             }
+                            catch (Exception e)
+                            {
+                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF.", e);
+
+                                await Task.Delay(500);
+                                attempt++;
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating preview of PDF.", e);
+                        break;
 
-                            await Task.Delay(500);
-                            attempt++;
-                        }
-                    }
-                    break;
+                    case SupportedFormat.XPS:
+                    case SupportedFormat.OpenXPS:
+                        throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
 
-                case SupportedFormat.XPS:
-                case SupportedFormat.OpenXPS:
-                    throw new NotImplementedException("Can not generate preview from (O)XPS.");
+                    default:
+                        throw new ApplicationException("Could not determine file type for generating a bitmap.");
+                }
 
-                default:
-                    throw new ApplicationException("Could not determine file type for generating a preview.");
+                // save image to cache
+                elements[index].CachedImage = bmp;
+
+                // generate thumbnail
+                BitmapImage thumbnail = new BitmapImage();
+                BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(sourceStream);
+                SoftwareBitmap softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                Guid encoderId = GetBitmapEncoderId(sourceFile.FileType);
+                var imageStream = new InMemoryRandomAccessStream();
+                BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
+                bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
+                bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 5;                   // reduce quality to 20%
+                bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 5;                 //
+                await bitmapEncoder.FlushAsync();
+                await thumbnail.SetSourceAsync(imageStream);
+                elements[index].Thumbnail = thumbnail;
             }
-
-            // save image to cache
-            imageCache[index] = bmp;
 
             return bmp;
         }
@@ -260,7 +272,7 @@ namespace Scanner
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for conversion.");
 
             // convert
-            StorageFile sourceFile = scanFiles[index];
+            StorageFile sourceFile = elements[index].ScanFile;
             string newName, newNameWithoutNumbering;
             switch (targetFormat)
             {
@@ -391,7 +403,7 @@ namespace Scanner
             }
 
             // refresh file
-            scanFiles[index] = await targetFolder.GetFileAsync(newName);
+            elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
         }
 
 
@@ -412,7 +424,7 @@ namespace Scanner
             if (rotation == BitmapRotation.None) return;
 
             // rotate and make sure that consecutive rotations are lossless
-            switch (ConvertFormatStringToSupportedFormat(scanFiles[index].FileType))
+            switch (ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType))
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
@@ -420,18 +432,18 @@ namespace Scanner
                 case SupportedFormat.BMP:
                     try
                     {
-                        using (IRandomAccessStream fileStream = await scanFiles[index].OpenAsync(FileAccessMode.ReadWrite))
+                        using (IRandomAccessStream fileStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                         {
                             BitmapDecoder decoder;
-                            if (imagesWithoutRotation[index] == null)
+                            if (elements[index].ImageWithoutRotation == null)
                             {
-                                imagesWithoutRotation[index] = await GetFile(index)
+                                elements[index].ImageWithoutRotation = await GetFile(index)
                                     .CopyAsync(ApplicationData.Current.TemporaryFolder, GetFile(index).Name, NameCollisionOption.ReplaceExisting);
                                 decoder = await BitmapDecoder.CreateAsync(fileStream);
                             }
                             else
                             {
-                                using (IRandomAccessStream bitmapStream = await imagesWithoutRotation[index].OpenReadAsync())
+                                using (IRandomAccessStream bitmapStream = await elements[index].ImageWithoutRotation.OpenReadAsync())
                                 {
                                     decoder = await BitmapDecoder.CreateAsync(bitmapStream);
                                 }
@@ -439,15 +451,15 @@ namespace Scanner
 
                             SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                            Guid encoderId = GetBitmapEncoderId(scanFiles[index].Name.Split(".")[1]);
+                            Guid encoderId = GetBitmapEncoderId(elements[index].ScanFile.Name.Split(".")[1]);
 
                             BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
                             encoder.SetSoftwareBitmap(softwareBitmap);
 
-                            encoder.BitmapTransform.Rotation = CombineRotations(rotation, currentRotations[index]);
+                            encoder.BitmapTransform.Rotation = CombineRotations(rotation, elements[index].CurrentRotation);
 
                             await encoder.FlushAsync();
-                            currentRotations[index] = encoder.BitmapTransform.Rotation;
+                            elements[index].CurrentRotation = encoder.BitmapTransform.Rotation;
      
                         }
                     }
@@ -465,7 +477,7 @@ namespace Scanner
             }
 
             // delete image from cache
-            imageCache[index] = null;
+            elements[index].CachedImage = null;
         }
 
 
@@ -538,10 +550,10 @@ namespace Scanner
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for rename.");
 
             // check name is different
-            if (scanFiles[index].Name == newName) return;
+            if (elements[index].ScanFile.Name == newName) return;
 
             // rename
-            await scanFiles[index].RenameAsync(newName, NameCollisionOption.FailIfExists);
+            await elements[index].ScanFile.RenameAsync(newName, NameCollisionOption.FailIfExists);
         }
 
 
@@ -561,8 +573,8 @@ namespace Scanner
             IRandomAccessStream stream = null;
             try
             {
-                stream = await scanFiles[index].OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(scanFiles[index]), true);
+                stream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite);
+                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
             }
             catch (Exception)
             {
@@ -573,13 +585,13 @@ namespace Scanner
             stream.Dispose();
 
             // delete cached image, delete image without rotation and reset rotation
-            imageCache[index] = null;
-            if (imagesWithoutRotation[index] != null)
+            elements[index].CachedImage = null;
+            if (elements[index].ImageWithoutRotation != null)
             {
-                await imagesWithoutRotation[index].DeleteAsync();
-                imagesWithoutRotation[index] = null;
+                await elements[index].ImageWithoutRotation.DeleteAsync();
+                elements[index].ImageWithoutRotation = null;
             }
-            currentRotations[index] = BitmapRotation.None;
+            elements[index].CurrentRotation = BitmapRotation.None;
         }
 
 
@@ -600,10 +612,10 @@ namespace Scanner
             IRandomAccessStream stream = null;
             try
             {
-                StorageFolder folder = await scanFiles[index].GetParentAsync();
-                file = await folder.CreateFileAsync(scanFiles[index].Name, CreationCollisionOption.GenerateUniqueName);
+                StorageFolder folder = await elements[index].ScanFile.GetParentAsync();
+                file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(scanFiles[index]), true);
+                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
             }
             catch (Exception)
             {
@@ -612,10 +624,7 @@ namespace Scanner
             }
             stream.Dispose();
 
-            scanFiles.Insert(index, file);
-            imageCache.Insert(index, null);
-            imagesWithoutRotation.Insert(index, null);
-            currentRotations.Insert(index, BitmapRotation.None);
+            elements.Insert(index, new ScanResultElement(file));
         }
 
 
@@ -625,7 +634,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while deleting the scans.</exception>
         public async Task DeleteScansAsync(StorageDeleteOption deleteOption)
         {
-            for (int i = 0; i < scanFiles.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 await DeleteScanAsync(i, deleteOption);
             }
@@ -642,16 +651,9 @@ namespace Scanner
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for deletion.");
 
-            await scanFiles[index].DeleteAsync(StorageDeleteOption.Default);
+            await elements[index].ScanFile.DeleteAsync(StorageDeleteOption.Default);
 
-            scanFiles.RemoveAt(index);
-            imageCache.RemoveAt(index);
-            if (imagesWithoutRotation[index] != null)
-            {
-                await imagesWithoutRotation[index].DeleteAsync();
-            }
-            imagesWithoutRotation.RemoveAt(index);
-            currentRotations.RemoveAt(index);
+            elements.RemoveAt(index);
         }
 
 
@@ -683,7 +685,7 @@ namespace Scanner
             {
                 CanvasDevice device = CanvasDevice.GetSharedDevice();
                 CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight, 96);
-                using (fileStream = await scanFiles[index].OpenAsync(FileAccessMode.ReadWrite))
+                using (fileStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, fileStream);
 
@@ -694,7 +696,7 @@ namespace Scanner
                         ds.DrawImage(canvasBitmap);
                         ds.DrawInk(inkCanvas.InkPresenter.StrokeContainer.GetStrokes());
                     }
-                    await renderTarget.SaveAsync(fileStream, GetCanvasBitmapFileFormat(scanFiles[index]), 1f);
+                    await renderTarget.SaveAsync(fileStream, GetCanvasBitmapFileFormat(elements[index].ScanFile), 1f);
                 }
             }
             catch (Exception)
@@ -703,14 +705,14 @@ namespace Scanner
             }
 
             // delete cached image, delete image without rotation and reset rotation
-            imageCache[index] = null;
-            if (imagesWithoutRotation[index] != null)
+            elements[index].CachedImage = null;
+            if (elements[index].ImageWithoutRotation != null)
             {
-                await imagesWithoutRotation[index].DeleteAsync();
-                imagesWithoutRotation[index] = null;
+                await elements[index].ImageWithoutRotation.DeleteAsync();
+                elements[index].ImageWithoutRotation = null;
             }
-            imagesWithoutRotation[index] = null;
-            currentRotations[index] = BitmapRotation.None;
+            elements[index].ImageWithoutRotation = null;
+            elements[index].CurrentRotation = BitmapRotation.None;
         }
 
 
@@ -732,7 +734,7 @@ namespace Scanner
             {
                 CanvasDevice device = CanvasDevice.GetSharedDevice();
                 CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight, Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi);
-                using (sourceStream = await scanFiles[index].OpenAsync(FileAccessMode.ReadWrite))
+                using (sourceStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
                     using (var ds = renderTarget.CreateDrawingSession())
@@ -744,11 +746,11 @@ namespace Scanner
                     }
                 }
 
-                StorageFolder folder = await scanFiles[index].GetParentAsync();
-                file = await folder.CreateFileAsync(scanFiles[index].Name, CreationCollisionOption.GenerateUniqueName);
+                StorageFolder folder = await elements[index].ScanFile.GetParentAsync();
+                file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    await renderTarget.SaveAsync(targetStream, GetCanvasBitmapFileFormat(scanFiles[index]), 1f);
+                    await renderTarget.SaveAsync(targetStream, GetCanvasBitmapFileFormat(elements[index].ScanFile), 1f);
                 }
             }
             catch (Exception)
@@ -756,16 +758,13 @@ namespace Scanner
                 throw;
             }
 
-            scanFiles.Insert(index, file);
-            imageCache.Insert(index, null);
-            imagesWithoutRotation.Insert(index, null);
-            currentRotations.Insert(index, BitmapRotation.None);
+            elements.Insert(index, new ScanResultElement(file));
         }
 
 
         private bool IsValidIndex(int index)
         {
-            if (0 <= index && index < scanFiles.Count)
+            if (0 <= index && index < elements.Count)
             {
                 return true;
             } else
@@ -785,14 +784,14 @@ namespace Scanner
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for getting properties.");
 
-            SupportedFormat? format = ConvertFormatStringToSupportedFormat(scanFiles[index].FileType);
+            SupportedFormat? format = ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType);
             switch (format)
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
                 case SupportedFormat.TIF:
                 case SupportedFormat.BMP:
-                    return (await scanFiles[index].Properties.GetImagePropertiesAsync());
+                    return (await elements[index].ScanFile.Properties.GetImagePropertiesAsync());
                 default:
                     throw new ArgumentException("Invalid file format for getting image properties.");
             }
@@ -817,16 +816,20 @@ namespace Scanner
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
             // check whether the files are still available
-            foreach (StorageFile file in scanFiles)
+            foreach (ScanResultElement element in elements)
             {
-                try { await file.OpenAsync(FileAccessMode.Read); }
+                try { await element.ScanFile.OpenAsync(FileAccessMode.Read); }
                 catch (Exception e) { throw new ApplicationException("At least one scan file is not available anymore.", e); }
             }
 
             // copy all to clipboard
             try
             {
-                List<StorageFile> list = new List<StorageFile>(scanFiles);
+                List<StorageFile> list = new List<StorageFile>();
+                foreach (ScanResultElement element in elements)
+                {
+                    list.Add(element.ScanFile);
+                }
                 dataPackage.SetStorageItems(list);
                 Clipboard.SetContent(dataPackage);
             }
@@ -853,11 +856,11 @@ namespace Scanner
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
             // check whether the file is still available
-            try { await scanFiles[index].OpenAsync(FileAccessMode.Read); }
+            try { await elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
             catch (Exception e) { throw new ApplicationException("Selected scan file is not available anymore.", e); }
 
             // set contents according to file type and copy to clipboard
-            SupportedFormat? format = ConvertFormatStringToSupportedFormat(scanFiles[index].FileType);
+            SupportedFormat? format = ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType);
             
             try
             {
@@ -867,12 +870,12 @@ namespace Scanner
                     case SupportedFormat.PNG:
                     case SupportedFormat.TIF:
                     case SupportedFormat.BMP:
-                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(scanFiles[index]));
+                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(elements[index].ScanFile));
                         Clipboard.SetContent(dataPackage);
                         break;
                     default:
                         List<StorageFile> list = new List<StorageFile>();
-                        list.Add(scanFiles[index]);
+                        list.Add(elements[index].ScanFile);
                         dataPackage.SetStorageItems(list);
                         Clipboard.SetContent(dataPackage);
                         break;
@@ -886,6 +889,23 @@ namespace Scanner
 
 
         /// <summary>
+        ///     Adds the specified files to this instance.
+        /// </summary>
+        /// <exception cref="Exception">Something went wrong while adding the files.</exception>
+        public async Task AddFiles(IReadOnlyList<StorageFile> files)
+        {
+            foreach (StorageFile file in files)
+            {
+                if (file == null) continue;
+
+                elements.Add(new ScanResultElement(file));
+
+                await GetImageAsync(elements.Count - 1);
+            }
+        }
+
+
+        /// <summary>
         ///     Checks whether the selected scan is an image file (JPG/PNG/TIF/BMP).
         /// </summary>
         public bool IsImage(int index)
@@ -893,7 +913,7 @@ namespace Scanner
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index.");
 
-            switch (ConvertFormatStringToSupportedFormat(scanFiles[index].FileType))
+            switch (ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType))
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
@@ -919,7 +939,22 @@ namespace Scanner
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
 
-            await Launcher.LaunchFileAsync(scanFiles[index], options);
+            await Launcher.LaunchFileAsync(elements[index].ScanFile, options);
+        }
+
+
+        /// <summary>
+        ///     Returns the file format of the scan result (assumes that there can't be a mix).
+        /// </summary>
+        public SupportedFormat? GetFileFormat()
+        {
+            if (pdf != null)
+            {
+                return SupportedFormat.PDF;
+            } else
+            {
+                return ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
+            }
         }
     }
 }

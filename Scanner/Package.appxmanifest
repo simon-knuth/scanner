@@ -11,7 +11,7 @@
   <Identity
     Name="9390SimonKnuth.ScannerforWindows10"
     Publisher="CN=757034B5-C251-4A1E-BCA4-C0C9D29C0508"
-    Version="1.2.0.0" />
+    Version="2.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="584d67fc-bc8c-485b-bac0-4cbbf6609860" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -36,7 +36,7 @@
       <uap:VisualElements
         DisplayName="Scanner"
         Description="A scanner app for the Universal Windows Platform"
-        BackgroundColor="transparent"
+        BackgroundColor="#404040"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile  ShortName="Scanner" Square71x71Logo="Assets\SmallTile.png" Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png">

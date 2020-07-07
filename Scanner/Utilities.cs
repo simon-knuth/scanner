@@ -25,6 +25,7 @@ using static Globals;
 using Windows.Foundation.Collections;
 using Windows.Services.Store;
 using System.Collections.Generic;
+using Windows.Devices.Scanners;
 
 static class Utilities
 {
@@ -46,6 +47,11 @@ static class Utilities
 
         item.Content = content;
         item.Tag = tag;
+
+        if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+        {
+            item.CornerRadius = new CornerRadius(2);
+        }
 
         return item;
     }
@@ -72,30 +78,8 @@ static class Utilities
         }
         else
         {
-            imageControl.SizeChanged += FinishDisplayImage;
-            imageLoading = true;
             imageControl.Source = null;
             imageControl.Tag = bitmapImage;
-        }
-    }
-
-
-    /// <summary>
-    ///     The part of <see cref="DisplayImageAsync(StorageFile, Image)"/> and 
-    ///     <see cref="DisplayImage(BitmapImage, Image)"/> responsible for making the <see cref="Image"/>
-    ///     visible when its source has been loaded.
-    /// </summary>
-    private static void FinishDisplayImage(object sender, SizeChangedEventArgs args)
-    {
-        if (imageLoading && ((Image)sender).Source == null)
-        {
-            ((Image)sender).Source = (Windows.UI.Xaml.Media.ImageSource)((Image)sender).Tag;
-        }
-        else
-        {
-            imageLoading = false;
-            ((Image)sender).Visibility = Visibility.Visible;
-            ((Image)sender).SizeChanged -= FinishDisplayImage;
         }
     }
 
@@ -141,6 +125,34 @@ static class Utilities
             default:
                 return BitmapEncoder.BmpEncoderId;
         }
+    }
+
+
+    /// <summary>
+    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    /// </summary>
+    /// <param name="format">An image format.</param>
+    /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
+    public static SupportedFormat ConvertImageScannerFormatToSupportedFormat(ImageScannerFormat format)
+    {
+        switch (format)
+        {
+            case ImageScannerFormat.Jpeg:
+                return SupportedFormat.JPG;
+            case ImageScannerFormat.Png:
+                return SupportedFormat.PNG;
+            case ImageScannerFormat.DeviceIndependentBitmap:
+                return SupportedFormat.BMP;
+            case ImageScannerFormat.Tiff:
+                return SupportedFormat.TIF;
+            case ImageScannerFormat.Xps:
+                return SupportedFormat.XPS;
+            case ImageScannerFormat.OpenXps:
+                return SupportedFormat.OpenXPS;
+            case ImageScannerFormat.Pdf:
+                return SupportedFormat.PDF;
+        }
+        throw new Exception("Invalid ImageScannerFormat for conversion.");
     }
 
 
@@ -229,7 +241,7 @@ static class Utilities
     /// <summary>
     ///     Loads the <see cref="scanFolder"/> from the <see cref="futureAccessList"/>.
     /// </summary>
-    public static async void LoadScanFolder()
+    public static async Task LoadScanFolder()
     {
         StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
 
@@ -317,16 +329,6 @@ static class Utilities
         {
             settingNotificationScanComplete = true;
             localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        }
-
-        if (localSettingsContainer.Values["settingUnsupportedFileFormat"] != null)
-        {
-            settingUnsupportedFileFormat = (bool)localSettingsContainer.Values["settingUnsupportedFileFormat"];
-        }
-        else
-        {
-            settingUnsupportedFileFormat = true;
-            localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
         }
 
         if (localSettingsContainer.Values["settingDrawPenDetected"] != null)
@@ -638,7 +640,6 @@ static class Utilities
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        localSettingsContainer.Values["settingUnsupportedFileFormat"] = settingUnsupportedFileFormat;
         localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;
     }
 

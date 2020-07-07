@@ -155,7 +155,7 @@ class ScannerOperation
             newNativeFormats.AddLast("png");
             canConvert = true;
         }
-        if (config.IsFormatSupported(ImageScannerFormat.Pdf)) newNativeFormats.AddLast("pdf");
+        //if (config.IsFormatSupported(ImageScannerFormat.Pdf)) newNativeFormats.AddLast("pdf");        // always use own PDF conversion
         if (config.IsFormatSupported(ImageScannerFormat.Xps)) newNativeFormats.AddLast("xps");
         if (config.IsFormatSupported(ImageScannerFormat.OpenXps)) newNativeFormats.AddLast("openxps");
         if (config.IsFormatSupported(ImageScannerFormat.Tiff))
@@ -171,20 +171,19 @@ class ScannerOperation
 
         // list available formats in correct order
         if (newNativeFormats.Contains("jpg"))                   formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
-        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
+        else if (canConvert)                                        formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
         if (newNativeFormats.Contains("png"))                   formats.Add(CreateComboBoxItem("PNG", "png,native"));
-        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("PNG", "png,converted"));
+        else if (canConvert)                                        formats.Add(CreateComboBoxItem("PNG", "png,converted"));
         if (newNativeFormats.Contains("pdf"))                   formats.Add(CreateComboBoxItem("PDF", "pdf,native"));
         else if (canConvert 
-            && settingUnsupportedFileFormat 
             && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) 
-                formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
+                                                                    formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
         if (newNativeFormats.Contains("xps"))                   formats.Add(CreateComboBoxItem("XPS", "xps,native"));
         if (newNativeFormats.Contains("openxps"))               formats.Add(CreateComboBoxItem("OpenXPS", "oxps,native"));
         if (newNativeFormats.Contains("tif"))                   formats.Add(CreateComboBoxItem("TIF", "tif,native"));
-        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
+        else if (canConvert)                                        formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
         if (newNativeFormats.Contains("bmp"))                   formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
-        else if (canConvert && settingUnsupportedFileFormat)        formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+        else if (canConvert)                                        formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
 
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)

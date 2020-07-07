@@ -57,7 +57,7 @@ namespace Scanner
         ///     The event listener for when the page is loading. Loads all current settings and updates
         ///     the version indicator at the bottom.
         /// </summary>
-        private void Page_Loading(FrameworkElement sender, object args)
+        private async void Page_Loading(FrameworkElement sender, object args)
         {
             if (scanFolder != null)
             {
@@ -83,8 +83,9 @@ namespace Scanner
             TextBlockRestart.Visibility = Visibility.Collapsed;
             CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
             CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
-            CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
             CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
+
+            if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
 
             allSettingsLoaded = true;
 
@@ -147,6 +148,8 @@ namespace Scanner
                 scanFolder = folder;
                 TextBlockSaveLocation.Text = scanFolder.Path;
             }
+
+            if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
         }
 
 
@@ -194,6 +197,7 @@ namespace Scanner
             Windows.Storage.AccessCache.StorageApplicationPermissions.
                     FutureAccessList.AddOrReplace("scanFolder", scanFolder);
             TextBlockSaveLocation.Text = scanFolder.Path;
+            ButtonResetLocation.IsEnabled = false;
         }
 
 
@@ -301,12 +305,9 @@ namespace Scanner
             {
                 settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
-                settingUnsupportedFileFormat = (bool)CheckBoxUnsupportedFileFormat.IsChecked;
                 settingDrawPenDetected = (bool)CheckBoxSettingsDrawPenDetected.IsChecked;
 
                 SaveSettings();
-
-                if (sender == CheckBoxUnsupportedFileFormat) formatSettingChanged = true;
             }
         }
     }

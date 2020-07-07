@@ -6,9 +6,9 @@
     public enum UIstate
     {
         unset = -1,
-        full = 0,                   // the whole UI is visible
-        small_initial = 1,          // only the options pane is visible
-        small_result = 2            // only the result of a scan is visible
+        small = 0,                  // the whole UI is visible
+        full = 1,                   // the small UI is visible
+        wide = 2                    // the wide UI is visible
     }
 
 
@@ -17,8 +17,8 @@
     /// </summary>
     public enum FlowState
     {
-        initial = 0,                // there is no result visible
-        result = 1,                 // there is a result visible but no crop in progress
+        initial = 0,                // there is nothing out of the ordinary happening
+        scanning = 1,               // there is a scan in progress
         crop = 2,                   // there is a result visible and a crop in progress
         draw = 3                    // there is a result visible and drawing in progress
     }
