@@ -194,7 +194,7 @@
                                 <Frame x:Name="FrameLeftPaneScanFormat" Margin="0,48,0,0">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock x:Uid="TextBlockFormat" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
+                                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
                                     </StackPanel>
                                 </Frame>
                             </StackPanel>
@@ -217,7 +217,7 @@
 
                                     <controlsxaml:SplitButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" Text="Scan" FontWeight="Bold" IsEnabled="True" v1809:CornerRadius="2" Click="ButtonLeftPaneScan_Click"/>
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" Text="Scan" FontWeight="Bold" IsEnabled="True" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScan_Click"/>
                                             <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" Text="Scan and start fresh" FontWeight="Normal" v1809:CornerRadius="2" Click="ButtonScanFresh_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;"/>
@@ -405,11 +405,6 @@
                         <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                     </StackPanel>
                     <RelativePanel VerticalAlignment="Bottom">
-                        <RelativePanel.ChildrenTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromVerticalOffset="-50"/>
-                            </TransitionCollection>
-                        </RelativePanel.ChildrenTransitions>
                         <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                         </InkToolbarCustomPenButton>

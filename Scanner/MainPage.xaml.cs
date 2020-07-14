@@ -639,9 +639,57 @@ namespace Scanner
                     ContentPaneFrameProgressBarScan.Visibility = Visibility.Visible;
                 });
 
-                // get scan options
+                // get selected format
                 Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat = await PrepareScanConfig();
                 if (selectedFormat == null) return false;
+
+                // get selected color mode
+                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                if (selectedColorMode == null)
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                    await CancelScan();
+                    return false;
+                }
+
+                // get selected resolution
+                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                if (selectedResolution == null)
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                    await CancelScan();
+                    return false;
+                }
+
+                // prepare scan config
+                if (RadioButtonSourceAutomatic.IsChecked == true)
+                {
+                    selectedScanner.scanner.AutoConfiguration.Format = selectedFormat.Item1;
+                }
+                else if (RadioButtonSourceFlatbed.IsChecked == true)
+                {
+                    selectedScanner.scanner.FlatbedConfiguration.Format = selectedFormat.Item1;
+                    selectedScanner.scanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode) selectedColorMode;
+                    selectedScanner.scanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution) selectedResolution;
+                }
+                else if (RadioButtonSourceFeeder.IsChecked == true)
+                {
+                    selectedScanner.scanner.FeederConfiguration.Format = selectedFormat.Item1;
+                    selectedScanner.scanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+                    selectedScanner.scanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+                    
+                    if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 0;
+                    else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
+
+                    if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
+                    else selectedScanner.scanner.FeederConfiguration.Duplex = false;
+                }
+                else
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                    await CancelScan();
+                    return false;
+                }
 
                 // get scan
                 scanProgress = new Progress<uint>();
@@ -986,6 +1034,11 @@ namespace Scanner
         private async void ComboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             await RefreshScanButton();
+        }
+
+        private void MenuFlyoutItemButtonScan_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

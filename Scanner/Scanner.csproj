@@ -154,8 +154,6 @@
     <Compile Include="XAML Converters\TopThicknessConverter.cs" />
     <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverter.cs" />
     <Compile Include="XAML Converters\NegativeTopThicknessConverter.cs" />
-    <Compile Include="XAML Converters\TitlebarMarginConverter.cs" />
-    <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverterNegative.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
