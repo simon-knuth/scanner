@@ -44,7 +44,7 @@
 
             <RelativePanel x:Name="StackPanelSettings">
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <StackPanel Padding="24,100,24,0" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
+                    <StackPanel Padding="24,100,24,24" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="TextBlockSettingsSaveLocationHeader" Text="Save location" Style="{ThemeResource BodyTextBlockStyle}"/>
                         <RelativePanel Margin="0,6,0,0">
                             <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
@@ -69,6 +69,23 @@
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                            <TextBlock x:Uid="TextBlockSettingsHelpHeader" Text="Help &amp; Setup" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                        </StackPanel>
+                        <HyperlinkButton NavigateUri="https://support.microsoft.com/help/14088">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TextBlockSettingsHelpInstallScanner" Text="Learn how to install and use a scanner in Windows 10"/>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsHelpInstallScanner, Path=FontSize}"/>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <HyperlinkButton x:Name="HyperlinkButtonSettingsHelpScannerSettings" Click="HyperlinkButtonSettingsHelpScannerSettings_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TextBlockSettingsHelpScannerSettings" Text="Go to scanner settings"/>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AD;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="12"/>
+                            </StackPanel>
+                        </HyperlinkButton>
+
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsFeedbackHeader" Text="Give Feedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
@@ -76,26 +93,35 @@
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                             <Span>
                                 <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
-                                <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click">Feedback Hub</Hyperlink>
+                                <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click">Feedback Hub<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink>
                                 <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
                                 <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click">rate Scanner in the Microsoft Store</Hyperlink>
                                 <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
                             </Span>
                         </TextBlock>
+                        
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2020 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run><LineBreak/>
-                        <LineBreak/><Hyperlink x:Name="HyperlinkWebsite" UnderlineStyle="None" Click="HyperlinkWebsite_Click">Website</Hyperlink></Span>
+                        <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2020 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run></Span>
                         </TextBlock>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,0">
-                            <Hyperlink x:Name="HyperlinkLicenses" UnderlineStyle="None" Click="HyperlinkLicenses_Click">Third-party licenses</Hyperlink>
-                        </TextBlock>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,18,0,24">
-                            <Hyperlink x:Name="HyperlinkPrivacyPolicy" UnderlineStyle="None" Click="HyperlinkPrivacyPolicy_Click">Privacy policy</Hyperlink>
-                        </TextBlock>
+                        <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" Margin="0,18,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TextBlockSettingsAboutWebsite" Text="Website"/>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutWebsite, Path=FontSize}"/>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" Click="HyperlinkButtonSettingsAboutLicenses_Click">
+                            <TextBlock x:Name="TextBlockSettingsAboutLicenses" Text="Third-party licenses"/>
+                        </HyperlinkButton>
+                        <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" Text="Privacy Policy"/>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
+                            </StackPanel>
+                        </HyperlinkButton>
                     </StackPanel>
                 </ScrollViewer>
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="20" ShadowOpacity="0.1" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
@@ -123,14 +149,14 @@
         <ContentDialog x:Name="ContentDialogLicenses" x:Uid="ContentDialogLicenses" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None"
                        v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <TextBlock>
-                <Hyperlink x:Name="HyperlinkLicenseUniversalWindowsPlatform" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.NETCore.UniversalWindowsPlatform</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseStoreEngagement" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Services.Store.Engagement</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUwpNotifications" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.Notifications</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUwpUiControls" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.UI.Controls</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUiXaml" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.UI.XAML</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicensePDFsharp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">PDFsharp</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseQueryStringNet" Click="NavigateToLicenseWebsite" UnderlineStyle="None">QueryString.NET</Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp</Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUniversalWindowsPlatform" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.NETCore.UniversalWindowsPlatform<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseStoreEngagement" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Services.Store.Engagement<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUwpNotifications" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.Notifications<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUwpUiControls" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.UI.Controls<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseUiXaml" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.UI.XAML<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicensePDFsharp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">PDFsharp<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseQueryStringNet" Click="NavigateToLicenseWebsite" UnderlineStyle="None">QueryString.NET<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
+                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
             </TextBlock>
         </ContentDialog>
     </Grid>

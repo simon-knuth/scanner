@@ -16,8 +16,6 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
-        private string websiteUrl = "https://simon-knuth.github.io/scanner";
-        private string privacyPolicyUrl = "https://simon-knuth.github.io/scanner/privacy-policy";
         private bool allSettingsLoaded = false;
 
 
@@ -29,9 +27,6 @@ namespace Scanner
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
             ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkLicenses.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsLicensesLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkPrivacyPolicy.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsPrivacyPolicyLink");
 
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
@@ -154,24 +149,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
-        /// </summary>
-        private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(websiteUrl));
-        }
-
-
-        /// <summary>
-        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
-        /// </summary>
-        private async void HyperlinkPrivacyPolicy_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(privacyPolicyUrl));
-        }
-
-
-        /// <summary>
         ///     The event listener for when the button that resets the current <see cref="scanFolder"/> to ..\Pictures\Scans
         ///     is clicked.
         /// </summary>
@@ -239,19 +216,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when <see cref="HyperlinkLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
-        /// </summary>
-        private async void HyperlinkLicenses_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
-            ContentDialogLicenses.PrimaryButtonText = "";
-            ContentDialogLicenses.SecondaryButtonText = "";
-
-            await ContentDialogLicenses.ShowAsync();
-        }
-
-
-        /// <summary>
         ///     The event listener for when a license hyperlink is clicked.
         /// </summary>
         private async void NavigateToLicenseWebsite(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
@@ -309,6 +273,24 @@ namespace Scanner
 
                 SaveSettings();
             }
+        }
+
+
+        /// <summary>
+        ///     The event listener for when <see cref="HyperlinkButtonSettingsAboutLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
+        /// </summary>
+        private async void HyperlinkButtonSettingsAboutLicenses_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
+            ContentDialogLicenses.PrimaryButtonText = "";
+            ContentDialogLicenses.SecondaryButtonText = "";
+
+            await ContentDialogLicenses.ShowAsync();
+        }
+
+        private async void HyperlinkButtonSettingsHelpScannerSettings_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
         }
     }
 }
