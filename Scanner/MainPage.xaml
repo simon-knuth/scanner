@@ -90,6 +90,26 @@
                 </DoubleAnimation>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardProgressBarScanBegin">
+                <DoubleAnimation Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Opacity" To="1.0"
+                                 Duration="0:0:0.5"/>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardProgressBarScanEnd">
+                <DoubleAnimation Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Opacity" To="0.0"
+                                 Duration="0:0:0.5"/>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
             <local:ButtonShadowConverter x:Key="ButtonShadowConverter"/>
             <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
@@ -97,14 +117,15 @@
             <local:ButtonTextOpacityConverter x:Key="ButtonTextOpacityConverter"/>
             <local:NegativeVisibilityConverter x:Key="NegativeVisibilityConverter"/>
             <local:IsItemSelectedConverter x:Key="IsItemSelectedConverter"/>
+            <local:NegativeThicknessConverter x:Key="NegativeThicknessConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid x:Name="GridRoot">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="ColumnLeftPane" Width="3*" MinWidth="{x:Bind ColumnSidePaneMinWidth, Mode=OneTime}" MaxWidth="{x:Bind ColumnSidePaneMaxWidth, Mode=OneTime}"/>
+            <ColumnDefinition x:Name="ColumnLeftPane" Width="3*" MinWidth="300" MaxWidth="350"/>
             <ColumnDefinition x:Name="ColumnContentPane" Width="7*"/>
-            <ColumnDefinition x:Name="ColumnRightPane" MaxWidth="0"/>
+            <ColumnDefinition x:Name="ColumnRightPane" Width="3*" MinWidth="0" MaxWidth="0"/>
         </Grid.ColumnDefinitions>
 
         <Grid x:Name="LeftPane" Grid.Column="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
@@ -186,7 +207,7 @@
                                 <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="{Binding ElementName=RadioButtonSourceFeeder, Path=IsChecked}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock x:Uid="TextBlockMoreOptions" Text="More Options" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <CheckBox x:Name="CheckBoxAllPages" x:Uid="CheckBoxAllPages" Content="Scan every page in feeder" IsChecked="True" IsEnabled="True"/>
+                                        <CheckBox x:Name="CheckBoxAllPages" x:Uid="CheckBoxAllPages" Content="Scan up to 10 pages consecutively" IsChecked="True" IsEnabled="True"/>
                                         <CheckBox x:Name="CheckBoxDuplex" x:Uid="CheckBoxDuplex" Content="Duplex (front &amp; back)" IsChecked="False" IsEnabled="False"/>
                                     </StackPanel>
                                 </Frame>
@@ -251,12 +272,21 @@
                 </Grid>
                 
                 <RelativePanel x:Name="LeftPaneOrganize" PointerWheelChanged="IgnorePointerWheel">
-                    <Grid x:Name="GridLeftPaneOrganizeHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ActualHeight, ElementName=GridLeftPaneScanHeader}">
-                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneOrganize" Opacity="{Binding ElementName=ScrollViewerLeftPaneOrganize, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
-                            <Rectangle x:Name="RectangleGridLeftPaneOrganize" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=GridLeftPaneOrganizeHeader, Path=ActualHeight}"/>
+                    <Grid x:Name="GridLeftPaneOrganizeHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneOrganize" VerticalAlignment="Stretch" Opacity="{Binding ElementName=ScrollViewerLeftPaneOrganize, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" Margin="16,0,16,0">
+                            <Rectangle x:Name="RectangleGridLeftPaneOrganize" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=LeftPaneOrganize, Path=ActualWidth}" VerticalAlignment="Bottom" Height="{Binding ElementName=GridLeftPaneOrganizeHeader, Path=Height}"/>
                         </controls:DropShadowPanel>
-                        <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Stretch">
-                            <ScrollViewer HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled">
+                        <Grid x:Name="GridLeftPaneOrganizeHeaderControls" Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Frame x:Name="FrameLeftPaneOrganizeHeader" Height="32" VerticalAlignment="Top" Grid.Row="0">
+                                <TextBlock x:Name="TextBlockLeftPaneOrganizeHeader" HorizontalAlignment="Center" VerticalAlignment="Center" Text="PDF - 6 pages (dummy text)" Opacity="0.6"/>
+                            </Frame>
+
+                            <ScrollViewer Grid.Row="1"  HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
                                 <CommandBar VerticalAlignment="Bottom" DefaultLabelPosition="Right" Background="Transparent" IsDynamicOverflowEnabled="False" HorizontalAlignment="Center" OverflowButtonVisibility="Collapsed">
                                     <AppBarToggleButton Label="Select" IsEnabled="False" Style="{StaticResource AppBarToggleButtonRevealStyle}" v1809:CornerRadius="2">
                                         <AppBarToggleButton.Icon>
@@ -277,17 +307,17 @@
                         <ListView x:Name="LeftPaneListViewOrganize" SelectionMode="Single" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneListViewOrganize_SelectionChanged">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:ScanResultElement">
-                                    <ListViewItem x:Name="LeftPaneListViewOrganizeItem">
-                                        <Grid Padding="6,6,6,6">
+                                    <ListViewItem x:Name="LeftPaneListViewOrganizeItem" Padding="0" HorizontalContentAlignment="Stretch">
+                                        <Grid Padding="24,6,24,6" HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="3*"/>
-                                                <ColumnDefinition Width="7*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="8*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewOrganizeItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Stretch" BlurRadius="10" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                                <Image Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="60" MaxWidth="60"/>
+                                            <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewOrganizeItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Stretch" BlurRadius="10" OffsetY="5" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                                <Image Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="70"/>
                                             </controls:DropShadowPanel>
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
                                                 <TextBlock Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
                                             </StackPanel>
                                         </Grid>
@@ -320,20 +350,20 @@
 
         </Grid>
 
-        <controls:DropShadowPanel x:Name="ContentPaneDropShadowPanel" HorizontalContentAlignment="Stretch" Grid.Column="1" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20">
+        <controls:DropShadowPanel x:Name="ContentPaneDropShadowPanel" HorizontalContentAlignment="Stretch" Grid.Column="1" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="30">
             <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <v1809:Grid.BackgroundTransition>
                     <v1803:BrushTransition/>
                 </v1809:Grid.BackgroundTransition>
 
-                <ScrollViewer x:Name="ScrollViewerContentPaneContentDummy" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}" IsEnabled="False">
+                <ScrollViewer x:Name="ScrollViewerContentPaneContentDummy" IsEnabled="False">
                     <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                 </ScrollViewer>
 
                 <StackPanel x:Name="StackPanelContentPaneText" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
                     <TextBlock x:Uid="TextBlockScannerSelectionHintHeader" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                     <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75" TextAlignment="Center">
-                            <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" Click="HyperlinkSettings_Click">settings app</Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> and appears as online there.</Run></Span>
+                            <Span xml:space="preserve"><Run x:Uid="RunScannerSelectionHintBodyBeforeLink">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" Click="HyperlinkSettings_Click">settings app <Run FontFamily="Segoe MDL2 Assets" Text="&#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="RunScannerSelectionHintBodyAfterLink"> and appears as online there.</Run></Span>
                     </TextBlock>
                 </StackPanel>
 
@@ -346,12 +376,12 @@
                                           MaxZoomFactor="3"
                                           HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto"
-                                          Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
-                                          Padding="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource NegativeTopThicknessConverter}}">
+                                          Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                                          Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
                                 <Image Source="{Binding CachedImage}" 
                                        MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
                                        MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
-                                       Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"/>
+                                       Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"/>
                             </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
@@ -379,74 +409,79 @@
                     </ScrollViewer>-->
                 </FlipView>
 
-                <Frame x:Name="ContentPaneFrameProgressBarScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Visibility="Collapsed">
-                    <controlsxaml:ProgressBar IsIndeterminate="True" ShowError="False" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Frame x:Name="ContentPaneFrameProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Visibility="Collapsed" Opacity="0">
+                    <controlsxaml:ProgressRing Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Frame>
 
-                <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}" PaneClosed="SplitViewLeftPane_PaneClosed">
+                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top">
+                    <v1809:Grid.BackgroundTransition>
+                        <v1803:BrushTransition/>
+                    </v1809:Grid.BackgroundTransition>
+
+                    <StackPanel Orientation="Vertical">
+                        <Grid Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
+                            <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,12,0" Height="32" HorizontalAlignment="Center">
+                                <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <RelativePanel VerticalAlignment="Bottom">
+                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                                </InkToolbarCustomPenButton>
+                                <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                    <StackPanel.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <EntranceThemeTransition FromVerticalOffset="-30" IsStaggeringEnabled="True"/>
+                                        </TransitionCollection>
+                                    </StackPanel.ChildrenTransitions>
+
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Crop">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Rotate">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Draw">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <Custom:ToolbarSeparator/>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Rename">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Delete">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <Custom:ToolbarSeparator/>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)" Click="ButtonCopy_Click">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Open with" Click="ButtonOpenWith_Click">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" Click="ButtonShare_Click">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
+                                    </InkToolbarCustomPenButton>
+                                </StackPanel>
+                                <InkToolbarCustomPenButton x:Name="ButtonOrganize" x:Uid="ButtonOrganize" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Organize" RelativePanel.AlignRightWithPanel="True" Click="ButtonOrganize_Click">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
+                                </InkToolbarCustomPenButton>
+                            </RelativePanel>
+                        </Grid>
+                        
+                    </StackPanel>
+                </Grid>
+
+                <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewLeftPane_PaneClosed">
                     <SplitView.Pane>
                         <Grid x:Name="SplitViewLeftPaneContent" Background="Transparent"/>
                     </SplitView.Pane>
                 </SplitView>
 
-                <SplitView x:Name="SplitViewContentPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}" PaneClosed="SplitViewContentPane_PaneClosed">
+                <SplitView x:Name="SplitViewContentPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewContentPane_PaneClosed">
                     <SplitView.Pane>
                         <Grid x:Name="SplitViewContentPaneContent" Background="Transparent"/>
                     </SplitView.Pane>
                 </SplitView>
-
-                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
-                    <v1809:Grid.BackgroundTransition>
-                        <v1803:BrushTransition/>
-                    </v1809:Grid.BackgroundTransition>
-
-                    <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,12,0" Height="32" HorizontalAlignment="Center">
-                        <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.9" FontWeight="Bold" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <RelativePanel VerticalAlignment="Bottom">
-                        <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
-                        </InkToolbarCustomPenButton>
-                        <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
-                            <StackPanel.ChildrenTransitions>
-                                <TransitionCollection>
-                                    <EntranceThemeTransition FromVerticalOffset="-30" IsStaggeringEnabled="True"/>
-                                </TransitionCollection>
-                            </StackPanel.ChildrenTransitions>
-
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Crop">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Rotate">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Draw">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <Custom:ToolbarSeparator/>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Rename">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Delete">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <Custom:ToolbarSeparator/>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Open with">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
-                            </InkToolbarCustomPenButton>
-                            <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
-                            </InkToolbarCustomPenButton>
-                        </StackPanel>
-                        <InkToolbarCustomPenButton x:Name="ButtonOrganize" x:Uid="ButtonOrganize" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Organize" RelativePanel.AlignRightWithPanel="True" Click="ButtonOrganize_Click">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
-                        </InkToolbarCustomPenButton>
-                    </RelativePanel>
-                </Grid>
             </Grid>
         </controls:DropShadowPanel>
 
@@ -460,48 +495,59 @@
             IsLightDismissEnabled="True"
             Target="{Binding ElementName=ButtonDevices}"
             PreferredPlacement="BottomRight" 
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"
             ActionButtonClick="TeachingTipDevices_ActionButtonClick"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipEmpty"
+            PlacementMargin="8"/>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipScope"
+            x:Uid="TeachingTipScope"
             PlacementMargin="8"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            IsLightDismissEnabled="True"
+            ActionButtonContent="Entire document"
+            CloseButtonContent="Just this image"
+            ActionButtonClick="TeachingTipScope_ActionButtonClick"/>
 
         <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEBE8;" FontSize="32" Margin="0,0,8,0"/>
-                    <TextBlock Text="Debug Menu" FontWeight="Bold" FontSize="32"/>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEBE8;" FontSize="24" Margin="0,0,8,0"/>
+                    <TextBlock Text="Debug Menu" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
                 <ScrollViewer VerticalScrollMode="Auto" MaxHeight="300">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                         <TextBlock Text="Scan from files" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
-                        <Button x:Name="ButtonDebugSelectFiles" Content="Select files"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="ComboBoxDebugFormat" Width="150"/>
+                            <CheckBox x:Name="CheckBoxDebugStartFresh" Content="Start fresh" Margin="24,0,0,0"/>
+                        </StackPanel>
+                        <Button x:Name="ButtonDebugSelectFiles" Content="Select files" Click="ButtonDebugSelectFiles_Click" Margin="0,6,0,0"/>
 
                         <TextBlock Text="Test error message" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <TextBox x:Name="TextBoxDebugShowErrorTitle" PlaceholderText="Title"/>
                         <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle"/>
                         <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click"/>
 
-                        <TextBlock Text="Fake scanner" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,0,0,16"/>
-                        <TextBox x:Name="TextBoxDebugFakeScannerName" PlaceholderText="Some scanner"/>
+                        <TextBlock Text="Fake scanner" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <TextBox x:Name="TextBoxDebugFakeScannerName" Text="Some scanner"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                             <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
-                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAutoPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerAuto}"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
-                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbedPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedColor" Content="Color" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedColor" Content="Color" IsChecked="True" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedGrayscale" Content="Grayscale" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedMonochrome" Content="Monochrome" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
-                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder"/>
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeederPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsChecked="True" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFeederGrayscale" Content="Grayscale" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFeederMonochrome" Content="Monochrome" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFeederDuplex" Content="Duplex" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>

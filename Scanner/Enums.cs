@@ -19,8 +19,8 @@
     {
         initial = 0,                // there is nothing out of the ordinary happening
         scanning = 1,               // there is a scan in progress
-        crop = 2,                   // there is a result visible and a crop in progress
-        draw = 3                    // there is a result visible and drawing in progress
+        edit = 2,                   // there is a result visible and being edited
+        select = 3                  // there is a result visible and scans being selected
     }
 
 
@@ -70,5 +70,28 @@
         PDF = 4,
         XPS = 5,
         OpenXPS = 6,
+    }
+
+
+    /// <summary>
+    ///     Represents the different modes for the editing toolbar.
+    /// </summary>
+    public enum SummonToolbar
+    {
+        Hidden = 0,
+        Crop = 1,
+        Draw = 2,
+    }
+
+
+    /// <summary>
+    ///     Represents the different actions that can request a scope selection.
+    /// </summary>
+    public enum ScopeActions
+    {
+        Delete = 0,
+        Copy = 1,
+        OpenWith = 2,
+        Share = 3,
     }
 }

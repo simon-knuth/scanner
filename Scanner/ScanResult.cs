@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
 using Windows.Foundation.Collections;
@@ -15,6 +16,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -31,7 +33,11 @@ namespace Scanner
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
+        public SupportedFormat scanResultFormat;
         public StorageFile pdf = null;
+        private StorageFolder originalTargetFolder;
+
+        private static StorageFolder conversionFolder;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +51,7 @@ namespace Scanner
 
                 elements.Add(new ScanResultElement(file));
             }
+            scanResultFormat = (SupportedFormat) ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
         }
 
 
@@ -57,33 +64,67 @@ namespace Scanner
                 elements.Add(new ScanResultElement(file));
             }
 
-            for (int i = 0; i < elements.Count; i++)
+            if (targetFormat == SupportedFormat.PDF)
             {
-                if (elements[i] == null) continue;
+                string pdfName = fileList[0].DisplayName + ".pdf";
+                Task[] moveTasks = new Task[elements.Count];
 
-                SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(elements[i].ScanFile.FileType);
-                if (sourceFormat == null) throw new ApplicationException("Could not determine source format of file for intial conversion.");
-                if (sourceFormat == targetFormat) continue;
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    if (elements[i] == null) continue;
 
-                
-                ConvertScanAsync(i, targetFormat, targetFolder).Wait();
+                    moveTasks[i] = MoveFileToFolderAsync(elements[i].ScanFile, conversionFolder, i + elements[i].ScanFile.FileType);
+                    Task.WaitAll(moveTasks);
+                    
+                    Task.WaitAll(GeneratePDF(pdfName));
+                }
+            } 
+            else
+            {
+                Task[] convertTasks = new Task[elements.Count];
+
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    if (elements[i] == null) continue;
+
+                    SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(elements[i].ScanFile.FileType);
+                    if (sourceFormat == null) throw new ApplicationException("Could not determine source format of file for intial conversion.");
+                    if (sourceFormat == targetFormat) continue;
+
+
+                    convertTasks[i] = ConvertScanAsync(i, targetFormat, targetFolder);
+                }
+
+                originalTargetFolder = targetFolder;
+
+                Task.WaitAll(convertTasks);
             }
+            scanResultFormat = targetFormat;
         }
 
 
-        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList)
+        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
         {
-            await ClearTempFolder();
+            conversionFolder = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
+            Task[] moveTasks = new Task[fileList.Count];
+            for (int i = 0; i < fileList.Count; i++)
+            {
+                moveTasks[i] = MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name));
+            }
+            await Task.WhenAll(moveTasks);
+
             ScanResult result = new ScanResult(fileList);
             await result.GetImagesAsync();
+            await InitializeTempFolder();
             return result;
         }
 
-        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, SupportedFormat targetFormat, StorageFolder targetFolder)
+        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat)
         {
-            await ClearTempFolder();
+            conversionFolder = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
             ScanResult result = new ScanResult(fileList, targetFormat, targetFolder);
             await result.GetImagesAsync();
+            await InitializeTempFolder();
             return result;
         }
 
@@ -103,7 +144,7 @@ namespace Scanner
         /// <summary>
         ///     Gets all files of the individual scans in this instance.
         /// </summary>
-        public List<StorageFile> GetFiles()
+        public List<StorageFile> GetImageFiles()
         {
             List<StorageFile> files = new List<StorageFile>();
             foreach (ScanResultElement element in elements)
@@ -119,7 +160,7 @@ namespace Scanner
         /// </summary>
         /// <param name="index">The desired scan's index.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        public StorageFile GetFile(int index)
+        public StorageFile GetImageFile(int index)
         {
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for getting file.");
             else return elements.ElementAt(index).ScanFile;
@@ -175,96 +216,96 @@ namespace Scanner
             StorageFile sourceFile = elements[index].ScanFile;
             BitmapImage bmp = null;
             int attempt = 0;
-            using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
-            {
-                switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () => {
+                using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
                 {
-                    case SupportedFormat.JPG:
-                    case SupportedFormat.PNG:
-                    case SupportedFormat.TIF:
-                    case SupportedFormat.BMP:
-                        while (attempt != -1)
-                        {
-                            try
+                    switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
+                    {
+                        case SupportedFormat.JPG:
+                        case SupportedFormat.PNG:
+                        case SupportedFormat.TIF:
+                        case SupportedFormat.BMP:
+                            while (attempt != -1)
                             {
-                                bmp = new BitmapImage();
-                                await bmp.SetSourceAsync(sourceStream);
-                                attempt = -1;
-                            }
-                            catch (Exception e)
-                            {
-                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
-
-                                await Task.Delay(500);
-                                attempt++;
-                            }
-                        }
-                        break;
-
-                    case SupportedFormat.PDF:
-                        while (attempt != -1)
-                        {
-                            try
-                            {
-                                PdfDocument doc = await PdfDocument.LoadFromStreamAsync(sourceStream);
-                                PdfPage page = doc.GetPage(0);
-                                BitmapImage imageOfPdf = new BitmapImage();
-
-                                using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                                try
+                                {   
+                                        bmp = new BitmapImage();
+                                        await bmp.SetSourceAsync(sourceStream);
+                                    attempt = -1;
+                                }
+                                catch (Exception e)
                                 {
-                                    await page.RenderToStreamAsync(stream);
-                                    await imageOfPdf.SetSourceAsync(stream);
+                                    if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
+
+                                    await Task.Delay(500);
+                                    attempt++;
                                 }
                             }
-                            catch (Exception e)
+                            break;
+
+                        case SupportedFormat.PDF:
+                            while (attempt != -1)
                             {
-                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF.", e);
+                                try
+                                {
+                                    PdfDocument doc = await PdfDocument.LoadFromStreamAsync(sourceStream);
+                                    PdfPage page = doc.GetPage((uint) index);
+                                    BitmapImage imageOfPdf = new BitmapImage();
 
-                                await Task.Delay(500);
-                                attempt++;
+                                    using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                                    {
+                                        await page.RenderToStreamAsync(stream);
+                                        await imageOfPdf.SetSourceAsync(stream);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF.", e);
+
+                                    await Task.Delay(500);
+                                    attempt++;
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    case SupportedFormat.XPS:
-                    case SupportedFormat.OpenXPS:
-                        throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
+                        case SupportedFormat.XPS:
+                        case SupportedFormat.OpenXPS:
+                            throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
 
-                    default:
-                        throw new ApplicationException("Could not determine file type for generating a bitmap.");
+                        default:
+                            throw new ApplicationException("Could not determine file type for generating a bitmap.");
+                    }
+
+                    // save image to cache
+                    elements[index].CachedImage = bmp;
+
+                    // generate thumbnail
+                    BitmapImage thumbnail = new BitmapImage();
+                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(sourceStream);
+                    SoftwareBitmap softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                    Guid encoderId = GetBitmapEncoderId(sourceFile.FileType);
+                    var imageStream = new InMemoryRandomAccessStream();
+                    BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
+                    bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
+                    bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 10;                   // reduce quality by 90%
+                    bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 10;                 //
+                    await bitmapEncoder.FlushAsync();
+                    await thumbnail.SetSourceAsync(imageStream);
+                    elements[index].Thumbnail = thumbnail;
                 }
-
-                // save image to cache
-                elements[index].CachedImage = bmp;
-
-                // generate thumbnail
-                BitmapImage thumbnail = new BitmapImage();
-                BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(sourceStream);
-                SoftwareBitmap softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
-                Guid encoderId = GetBitmapEncoderId(sourceFile.FileType);
-                var imageStream = new InMemoryRandomAccessStream();
-                BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
-                bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
-                bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 5;                   // reduce quality to 20%
-                bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 5;                 //
-                await bitmapEncoder.FlushAsync();
-                await thumbnail.SetSourceAsync(imageStream);
-                elements[index].Thumbnail = thumbnail;
-            }
-
+            });
             return bmp;
         }
 
 
         /// <summary>
-        ///     Converts a scan to the <paramref name="targetFormat"/>. Also moves it to the <paramref name="targetFolder"/>
-        ///     if converted to PDF.
+        ///     Converts a scan to the <paramref name="targetFormat"/>. Also moves it to the <paramref name="targetFolder"/>.
         /// </summary>
         /// <param name="index">The index of the scan that's to be converted.</param>
         /// <param name="targetFormat">The format that the scan shall be converted to.</param>
-        /// <param name="targetFolder">The folder that the conversion result shall be moved to. Only applied when converting to PDF.</param>
+        /// <param name="targetFolder">The folder that the conversion result shall be moved to.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        /// <exception cref="NotImplementedException">Attempted to convert from (O)XPS.</exception>  
+        /// <exception cref="NotImplementedException">Attempted to convert to PDF or (O)XPS.</exception>  
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
         public async Task ConvertScanAsync(int index, SupportedFormat targetFormat, StorageFolder targetFolder)
         {
@@ -296,114 +337,51 @@ namespace Scanner
                     }
                     stream.Dispose();
 
-                    // rename file to make the extension match the new format and watch out for name collisions
+                    // get new file name with updated extension
                     newNameWithoutNumbering = RemoveNumbering(sourceFile.Name
                         .Replace("." + sourceFile.Name.Split(".")[1], "." + targetFormat));
                     newName = newNameWithoutNumbering;
 
-                    try { await sourceFile.RenameAsync(newName, NameCollisionOption.FailIfExists); }
-                    catch (Exception)
-                    {
-                        // cycle through file numberings until one is not occupied
-                        for (int i = 1; true; i++)
-                        {
-                            try
-                            {
-                                await sourceFile.RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
-                                    + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                        }
-                    }
+                    // move file to the correct folder
+                    await MoveFileToFolderAsync(sourceFile, targetFolder, newName);
+
                     break;
 
                 case SupportedFormat.PDF:
-                    // convert to PDF
-                    try
-                    {
-                        taskCompletionSource = new TaskCompletionSource<bool>();
-                        var win32ResultAsync = taskCompletionSource.Task;
-
-                        // save the source and target name
-                        ApplicationData.Current.LocalSettings.Values["pdfSourceFileName"] = sourceFile.Name;
-                        ApplicationData.Current.LocalSettings.Values["targetFileName"] = sourceFile.DisplayName + ".pdf";
-
-                        // save measurements, which determine PDF file size
-                        var imageProperties = await GetImagePropertiesAsync(index);
-                        ApplicationData.Current.LocalSettings.Values["sourceFileWidth"] = imageProperties.Width;
-                        ApplicationData.Current.LocalSettings.Values["sourceFileHeight"] = imageProperties.Height;
-
-                        // call win32 app and wait for result
-                        if (appServiceConnection == null)
-                        {
-                            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                        }
-                        else
-                        {
-                            ValueSet message = new ValueSet();
-                            message.Add("REQUEST", "CONVERT");
-                            var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
-                        }
-                        await Task.WhenAny(win32ResultAsync, Task.Delay(15000));
-
-                        // get result file and move it to its correct folder
-                        StorageFile convertedFile = null;
-                        convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(sourceFile.DisplayName + ".pdf");
-
-                        // move PDF file to target folder
-                        try
-                        {
-                            await convertedFile.MoveAsync(targetFolder, convertedFile.Name, NameCollisionOption.FailIfExists);
-                            newName = convertedFile.Name;
-                        }
-                        catch (Exception)
-                        {
-                            if (convertedFile.DisplayName[convertedFile.DisplayName.Length - 1] == ')')
-                            {
-                                newNameWithoutNumbering = RemoveNumbering(convertedFile.Name);
-                            }
-                            else
-                            {
-                                newNameWithoutNumbering = convertedFile.Name;
-                            }
-
-                            // cycle through file numberings until one is not occupied
-                            for (int i = 1; true; i++)
-                            {
-                                try
-                                {
-                                    await convertedFile.MoveAsync(targetFolder, newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
-                                        + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
-                                }
-                                catch (Exception)
-                                {
-                                    continue;
-                                }
-                                newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                                break;
-                            }
-                        }
-
-                        // delete the source image
-                        await sourceFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    }
-                    catch (Exception) { throw; }
-                    break;
-
                 case SupportedFormat.XPS:
                 case SupportedFormat.OpenXPS:
-                    throw new NotImplementedException("Can not convert from (O)XPS.");
+                    throw new NotImplementedException("Can not convert to (O)XPS.");
 
                 default:
-                    throw new ApplicationException("Could not determine source file type for conversion.");
+                    throw new ApplicationException("Could not determine target file type for conversion.");
             }
 
             // refresh file
             elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
+        }
+
+
+        /// <summary>
+        ///     Moves the <paramref name="file"/> to the <paramref name="targetFolder"/>. Attempts to name
+        ///     it <paramref name="desiredName"/>, adding a number if there is any collision.
+        /// </summary>
+        /// <param name="file">The file that's to be moved.</param>
+        /// <param name="targetFolder">The folder that the file shall be moved to.</param>
+        /// <param name="desiredName">The name that the file should ideally have when finished.</param>
+        /// <returns>The final name of the file.</returns>
+        private static async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName)
+        {
+            try
+            {
+                await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.FailIfExists);
+            }
+            catch (Exception)
+            {
+                try { await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.GenerateUniqueName); }
+                catch (Exception) { throw; }
+            }
+
+            return file.Name;
         }
 
 
@@ -424,12 +402,13 @@ namespace Scanner
             if (rotation == BitmapRotation.None) return;
 
             // rotate and make sure that consecutive rotations are lossless
-            switch (ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType))
+            switch (scanResultFormat)
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
                 case SupportedFormat.TIF:
                 case SupportedFormat.BMP:
+                case SupportedFormat.PDF:
                     try
                     {
                         using (IRandomAccessStream fileStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
@@ -437,8 +416,8 @@ namespace Scanner
                             BitmapDecoder decoder;
                             if (elements[index].ImageWithoutRotation == null)
                             {
-                                elements[index].ImageWithoutRotation = await GetFile(index)
-                                    .CopyAsync(ApplicationData.Current.TemporaryFolder, GetFile(index).Name, NameCollisionOption.ReplaceExisting);
+                                elements[index].ImageWithoutRotation = await GetImageFile(index)
+                                    .CopyAsync(ApplicationData.Current.TemporaryFolder, GetImageFile(index).Name, NameCollisionOption.ReplaceExisting);
                                 decoder = await BitmapDecoder.CreateAsync(fileStream);
                             }
                             else
@@ -467,11 +446,14 @@ namespace Scanner
                     {
                         throw new ApplicationException("Rotation failed.", e);
                     }
+
+                    if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
                     break;
-                case SupportedFormat.PDF:
+
                 case SupportedFormat.XPS:
                 case SupportedFormat.OpenXPS:
                     throw new ArgumentException("Rotation not supported for PDF, XPS or OXPS.");
+
                 default:
                     throw new ApplicationException("Could not determine source file type for rotation.");
             }
@@ -558,6 +540,25 @@ namespace Scanner
 
 
         /// <summary>
+        ///     Renames the scan. Only for scans that are combined into a single document (e.g. PDF).
+        /// </summary>
+        /// <param name="index">The index of the scan that's to be renamed.</param>
+        /// <param name="newName">The desired full file name for the scan.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task RenameScanAsync(string newName)
+        {
+            // check type
+            if (scanResultFormat != SupportedFormat.PDF) throw new ApplicationException("ScanResult represents more than one file.");
+
+            // check name is different
+            if (pdf.Name == newName) return;
+
+            // rename
+            await pdf.RenameAsync(newName, NameCollisionOption.FailIfExists);
+        }
+
+
+        /// <summary>
         ///     Crops the selected scan.
         /// </summary>
         /// <param name="index">The index of the scan that the crop is to be applied to.</param>
@@ -592,6 +593,9 @@ namespace Scanner
                 elements[index].ImageWithoutRotation = null;
             }
             elements[index].CurrentRotation = BitmapRotation.None;
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -625,6 +629,9 @@ namespace Scanner
             stream.Dispose();
 
             elements.Insert(index, new ScanResultElement(file));
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -634,10 +641,17 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while deleting the scans.</exception>
         public async Task DeleteScansAsync(StorageDeleteOption deleteOption)
         {
-            for (int i = 0; i < elements.Count; i++)
+            if (scanResultFormat == SupportedFormat.PDF)
             {
-                await DeleteScanAsync(i, deleteOption);
+                await pdf.DeleteAsync(deleteOption);
             }
+            else
+            {
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    await DeleteScanAsync(i, deleteOption);
+                }
+            }           
         }
 
 
@@ -651,9 +665,12 @@ namespace Scanner
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for deletion.");
 
-            await elements[index].ScanFile.DeleteAsync(StorageDeleteOption.Default);
+            await elements[index].ScanFile.DeleteAsync(deleteOption);
 
             elements.RemoveAt(index);
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -713,6 +730,9 @@ namespace Scanner
             }
             elements[index].ImageWithoutRotation = null;
             elements[index].CurrentRotation = BitmapRotation.None;
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -759,6 +779,9 @@ namespace Scanner
             }
 
             elements.Insert(index, new ScanResultElement(file));
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -767,7 +790,8 @@ namespace Scanner
             if (0 <= index && index < elements.Count)
             {
                 return true;
-            } else
+            } 
+            else
             {
                 return false;
             }
@@ -791,6 +815,7 @@ namespace Scanner
                 case SupportedFormat.PNG:
                 case SupportedFormat.TIF:
                 case SupportedFormat.BMP:
+                case SupportedFormat.PDF:
                     return (await elements[index].ScanFile.Properties.GetImagePropertiesAsync());
                 default:
                     throw new ArgumentException("Invalid file format for getting image properties.");
@@ -799,15 +824,15 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Copies all scan files in this instance to the clipboard.
+        ///     Copies all image files in this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyScansAsync()
+        public async Task CopyImagesAsync()
         {
             if (GetTotalNumberOfScans() == 0) throw new ApplicationException("No scans left to copy."); 
             if (GetTotalNumberOfScans() == 1)
             {
-                await CopyScanAsync(0);
+                await CopyImageAsync(0);
                 return;
             }
             
@@ -841,12 +866,12 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Copies the selected scan file to the clipboard.
+        ///     Copies the selected image file to the clipboard.
         /// </summary>
         /// <param name="index">The index of the scan that shall be copied.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyScanAsync(int index)
+        public async Task CopyImageAsync(int index)
         {
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for copying file.");
@@ -860,7 +885,7 @@ namespace Scanner
             catch (Exception e) { throw new ApplicationException("Selected scan file is not available anymore.", e); }
 
             // set contents according to file type and copy to clipboard
-            SupportedFormat? format = ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType);
+            SupportedFormat format = scanResultFormat;
             
             try
             {
@@ -889,6 +914,34 @@ namespace Scanner
 
 
         /// <summary>
+        ///     Copies the file represented by this scanResult to the clipboard.
+        /// </summary>
+        /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
+        public async Task CopyAsync()
+        {
+            // create DataPackage for clipboard
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+
+            // check whether the file is still available
+            try { await pdf.OpenAsync(FileAccessMode.Read); }
+            catch (Exception e) { throw new ApplicationException("File is not available anymore.", e); }
+
+            try
+            {
+                List<StorageFile> list = new List<StorageFile>();
+                list.Add(pdf);
+                dataPackage.SetStorageItems(list);
+                Clipboard.SetContent(dataPackage);
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Something went wrong while copying the scan.", e);
+            }
+        }
+
+
+        /// <summary>
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
@@ -898,22 +951,24 @@ namespace Scanner
             {
                 if (file == null) continue;
 
-                elements.Add(new ScanResultElement(file));
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    elements.Add(new ScanResultElement(file)); 
+                });
 
                 await GetImageAsync(elements.Count - 1);
             }
+
+            // if necessary, generate PDF
+            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
         /// <summary>
-        ///     Checks whether the selected scan is an image file (JPG/PNG/TIF/BMP).
+        ///     Checks whether this instance represents an image file (JPG/PNG/TIF/BMP).
         /// </summary>
-        public bool IsImage(int index)
+        public bool IsImage()
         {
-            // check index
-            if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index.");
-
-            switch (ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType))
+            switch (scanResultFormat)
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
@@ -931,7 +986,7 @@ namespace Scanner
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="Exception">Something went wrong.</exception>
-        public async Task OpenScanWithAsync(int index)
+        public async Task OpenImageWithAsync(int index)
         {
             // check index
             if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for copying file.");
@@ -944,17 +999,86 @@ namespace Scanner
 
 
         /// <summary>
+        ///     Launches the "Open with" dialog for the represented file.
+        /// </summary>
+        /// <exception cref="Exception">Something went wrong.</exception>
+        public async Task OpenWithAsync()
+        {
+            LauncherOptions options = new LauncherOptions();
+            options.DisplayApplicationPicker = true;
+
+            await Launcher.LaunchFileAsync(pdf, options);
+        }
+
+
+        /// <summary>
         ///     Returns the file format of the scan result (assumes that there can't be a mix).
         /// </summary>
         public SupportedFormat? GetFileFormat()
         {
-            if (pdf != null)
+            return scanResultFormat;
+        }
+
+
+        /// <summary>
+        ///     Generates the PDF file in the temp folder and then moves it to the <see cref="originalTargetFolder"/> of
+        ///     this scanResult. The pages are constructed using all images found in the temp folder's subfolder "conversion".
+        /// </summary>
+        /// <param name="fileName"></param>
+        private async Task GeneratePDF(string fileName)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
             {
-                return SupportedFormat.PDF;
-            } else
-            {
-                return ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
-            }
+                string newNameWithoutNumbering;
+
+                if (pdf == null)
+                {
+                    pdf = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                }
+
+                try
+                {
+                    taskCompletionSource = new TaskCompletionSource<bool>();
+                    var win32ResultAsync = taskCompletionSource.Task;
+
+                    // save the source and target name
+                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = fileName;
+
+                    // call win32 app and wait for result
+                    if (appServiceConnection == null)
+                    {
+                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    }
+                    else
+                    {
+                        ValueSet message = new ValueSet();
+                        message.Add("REQUEST", "CONVERT");
+                        var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
+                    }
+                    await win32ResultAsync;
+
+                    // get result file and move it to its correct folder
+                    pdf = null;
+                    pdf = await ApplicationData.Current.TemporaryFolder.GetFileAsync(fileName);
+
+                    // move PDF file to target folder
+                    if (pdf.DisplayName[pdf.DisplayName.Length - 1] == ')')
+                    {
+                        newNameWithoutNumbering = RemoveNumbering(pdf.Name);
+                    }
+                    else
+                    {
+                        newNameWithoutNumbering = pdf.Name;
+                    }
+                    await MoveFileToFolderAsync(pdf, originalTargetFolder, newNameWithoutNumbering);
+                }
+                catch (Exception) { throw; }
+            });
+        }
+
+        private Task GeneratePDF()
+        {
+            return GeneratePDF(pdf.Name);
         }
     }
 }

@@ -195,42 +195,6 @@ class ScannerOperation
 
 
     /// <summary>
-    ///     Scans in correct mode by looking at the three <see cref="RadioButton"/>s that represent each mode.
-    ///     The file is saved to the <paramref name="folder"/>.
-    /// </summary>
-    /// <exception cref="Exception()">No <see cref="RadioButton"/> is checked.</exception>
-    /// <param name="radioButtonAuto">The <see cref="RadioButton"/> representing the auto mode.</param>
-    /// <param name="radioButtonFlatbed">The <see cref="RadioButton"/> representing the flatbed mode.</param>
-    /// <param name="radioButtonFeeder">The <see cref="RadioButton"/> representing the feeder mode.</param>
-    /// <param name="folder">The <see cref="StorageFolder"/> that the scan is saved to.</param>
-    /// <param name="cancellationToken">The token that can be used to cancel the scan.</param>
-    /// <param name="progress">The progress of the scan.</param>
-    /// <param name="scanner">The <see cref="ImageScanner"/> that will perform the scan.</param>
-    /// <returns></returns>
-    public async static Task<ImageScannerScanResult> ScanInCorrectMode(RadioButton radioButtonAuto, RadioButton radioButtonFlatbed, 
-        RadioButton radioButtonFeeder, StorageFolder folder, CancellationTokenSource cancellationToken, Progress<UInt32> progress,
-        ImageScanner scanner)
-    {
-        if (radioButtonAuto.IsChecked.Value)
-        {
-            return await scanner.ScanFilesToFolderAsync(
-            ImageScannerScanSource.AutoConfigured, folder).AsTask(cancellationToken.Token, progress);
-        }
-        else if (radioButtonFlatbed.IsChecked.Value)
-        {
-            return await scanner.ScanFilesToFolderAsync(
-            ImageScannerScanSource.Flatbed, folder).AsTask(cancellationToken.Token, progress);
-        }
-        else if (radioButtonFeeder.IsChecked.Value)
-        {
-            return await scanner.ScanFilesToFolderAsync(
-            ImageScannerScanSource.Feeder, folder).AsTask(cancellationToken.Token, progress);
-        }
-        else throw (new Exception());
-    }
-
-
-    /// <summary>
     ///     Checks whether the scan result is valid.
     /// </summary>
     /// <param name="result"></param>

@@ -1,5 +1,3 @@
-using Microsoft.Toolkit.Extensions;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,26 +6,19 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
-using Windows.Devices.Input;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Input.Inking;
-using Windows.UI.Popups;
 using Windows.UI.Text;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
 using static Enums;
 using static Globals;
 using static ScannerOperation;
@@ -40,6 +31,7 @@ namespace Scanner
     {
         private double ColumnSidePaneMinWidth = 300;
         private double ColumnSidePaneMaxWidth = 350;
+        private bool makeNextScanAFreshOne = false;
         private bool firstLoaded = true;
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
         private DeviceWatcher scannerWatcher;
@@ -52,6 +44,9 @@ namespace Scanner
         private Progress<uint> scanProgress;
         private ScanResult scanResult = null;
         private double currentTitleBarButtonWidth = 0;
+        private DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+        private int[] shareIndexes;
+        private ScopeActions scopeAction;
 
 
         public MainPage()
@@ -62,6 +57,7 @@ namespace Scanner
             {
                 FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                 StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
+                FrameLeftPaneOrganizeHeader.Height = titleBar.Height;
                 currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
             };
 
@@ -74,6 +70,34 @@ namespace Scanner
             scannerWatcher.Added += OnScannerAdded;
             scannerWatcher.Removed += OnScannerRemoved;
             scannerWatcher.Start();
+
+            // register event listeners
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+        }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            if (shareIndexes == null && scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                List<StorageFile> files = new List<StorageFile>();
+                files.Add(scanResult.pdf);
+                args.Request.Data.SetStorageItems(files);
+            }
+            else if (shareIndexes.Length == 1)
+            {
+                StorageFile file = scanResult.GetImageFile(shareIndexes[0]);
+                args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
+                args.Request.Data.Properties.Title = file.Name;
+            } 
+            else
+            {
+                List<StorageFile> files = new List<StorageFile>();
+                foreach (int index in shareIndexes)
+                {
+                    files.Add(scanResult.GetImageFile(index));
+                }
+                args.Request.Data.SetStorageItems(files);
+            }
         }
 
         private async void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
@@ -150,6 +174,23 @@ namespace Scanner
                 firstLoaded = false;
 
                 await LoadScanFolder();
+
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    SplitViewLeftPane.Margin = new Thickness(0, GridContentPaneTopToolbar.ActualHeight, 0, 0);
+                    SplitViewContentPane.Margin = SplitViewLeftPane.Margin;
+                    ScrollViewerContentPaneContentDummy.Margin = SplitViewLeftPane.Margin;
+                });
+
+                ComboBoxScanners.Focus(FocusState.Programmatic);
+
+                // initialize debug menu
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.TIF);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.BMP);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PDF);
+                ComboBoxDebugFormat.SelectedIndex = 0;
             }
 
             // refresh scan folder icon
@@ -424,6 +465,8 @@ namespace Scanner
             {
                 // v1809+
                 TeachingTipDevices.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
             }
         }
 
@@ -451,6 +494,7 @@ namespace Scanner
                     RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
                     RectangleGridLeftPaneFooter.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
                     RectangleGridLeftPaneOrganize.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    GridLeftPaneOrganizeHeaderControls.Background = new SolidColorBrush(Colors.Transparent);
                     FrameLeftPaneScanHeader.Background = new SolidColorBrush(Colors.Transparent);
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(0);
@@ -478,6 +522,7 @@ namespace Scanner
                     RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                     RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                     RectangleGridLeftPaneOrganize.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    GridLeftPaneOrganizeHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16,0,16,0);
@@ -551,16 +596,6 @@ namespace Scanner
             });
         }
 
-        private async void ButtonOrganize_Checked(object sender, RoutedEventArgs e)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                if (uiState == UIstate.small) SplitViewContentPane.IsPaneOpen = true;
-                else FlipViewLeftPane.SelectedIndex = 1;
-            });
-        }
-
         private async void ButtonScanOptions_Checked(object sender, RoutedEventArgs e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -571,37 +606,30 @@ namespace Scanner
             });
         }
 
-        private async void SplitViewLeftPane_PaneClosed(SplitView sender, object args)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                if (uiState == UIstate.small) ButtonScanOptions.IsChecked = false;
-            });
-        }
-
-        private async void SplitViewContentPane_PaneClosed(SplitView sender, object args)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                if (uiState == UIstate.small) ButtonOrganize.IsChecked = false;
-            });
-        }
-
         private async void ButtonOrganize_Click(object sender, RoutedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                if (uiState == UIstate.small)
+                if (ButtonOrganize.IsChecked == true)
                 {
-                    SplitViewContentPane.IsPaneOpen = true;
-                } 
-                else if (uiState == UIstate.full)
+                    if (uiState == UIstate.small)
+                    {
+                        SplitViewContentPane.IsPaneOpen = true;
+                    }
+                    else if (uiState == UIstate.full)
+                    {
+                        if (FlipViewLeftPane.SelectedIndex == 1) FlipViewLeftPane.SelectedIndex = 0;
+                        else FlipViewLeftPane.SelectedIndex = 1;
+                    }
+                }
+                else
                 {
-                    if (FlipViewLeftPane.SelectedIndex == 1) FlipViewLeftPane.SelectedIndex = 0;
-                    else FlipViewLeftPane.SelectedIndex = 1;
+                    if (uiState == UIstate.small)
+                    {
+                        SplitViewContentPane.IsPaneOpen = false;
+                    }
+                    ButtonOrganize.IsChecked = false;
                 }
             });
         }
@@ -615,13 +643,16 @@ namespace Scanner
         }
 
 
-        private async Task<bool> Scan(bool startFresh)
+        private async Task<bool> Scan(bool startFresh, IReadOnlyList<StorageFile> debugFiles)
         {
             try
             {
+                await InitializeTempFolder();
+                
                 flowState = FlowState.scanning;
                 bool scanSuccessful = false;
                 if (startFresh) scanResult = null;
+                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
 
                 // disable controls and show progress bar
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
@@ -636,101 +667,165 @@ namespace Scanner
                     FrameLeftPaneScanFeeder.IsEnabled = false;
                     FrameLeftPaneScanFormat.IsEnabled = false;
                     ScrollViewerLeftPaneOrganize.IsEnabled = false;
-                    ContentPaneFrameProgressBarScan.Visibility = Visibility.Visible;
+                    await LockToolbar();
+                    StoryboardProgressBarScanBegin.Begin();
                 });
 
-                // get selected format
-                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat = await PrepareScanConfig();
-                if (selectedFormat == null) return false;
+                ImageScannerScanSource scanSource;
 
-                // get selected color mode
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                if (selectedColorMode == null)
+                if (debugFiles == null)
                 {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
-                    await CancelScan();
-                    return false;
-                }
+                    // no debug files provided, commence actual scan
+                    // get selected format
+                    selectedFormat = await PrepareScanConfig();
+                    if (selectedFormat == null) return false;
 
-                // get selected resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                if (selectedResolution == null)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
-                    await CancelScan();
-                    return false;
-                }
-
-                // prepare scan config
-                if (RadioButtonSourceAutomatic.IsChecked == true)
-                {
-                    selectedScanner.scanner.AutoConfiguration.Format = selectedFormat.Item1;
-                }
-                else if (RadioButtonSourceFlatbed.IsChecked == true)
-                {
-                    selectedScanner.scanner.FlatbedConfiguration.Format = selectedFormat.Item1;
-                    selectedScanner.scanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode) selectedColorMode;
-                    selectedScanner.scanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution) selectedResolution;
-                }
-                else if (RadioButtonSourceFeeder.IsChecked == true)
-                {
-                    selectedScanner.scanner.FeederConfiguration.Format = selectedFormat.Item1;
-                    selectedScanner.scanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
-                    selectedScanner.scanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
-                    
-                    if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 0;
-                    else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
-
-                    if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
-                    else selectedScanner.scanner.FeederConfiguration.Duplex = false;
-                }
-                else
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
-                    await CancelScan();
-                    return false;
-                }
-
-                // get scan
-                scanProgress = new Progress<uint>();
-                scanCancellationToken = new CancellationTokenSource();
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = true);
-                ImageScannerScanResult scannerScanResult;
-                try
-                {
-                    scannerScanResult = await ScanInCorrectMode(RadioButtonSourceAutomatic, RadioButtonSourceFlatbed, RadioButtonSourceFeeder, scanFolder,
-                    scanCancellationToken, scanProgress, selectedScanner.scanner);
-                }
-                catch (Exception exc)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanScannerErrorHeader"), LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
-                    await CancelScan();
-                    return false;
-                }
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = false);
-
-                int priorNumberOfScans = scanResult != null ? scanResult.GetTotalNumberOfScans() : 0;
-
-                if (ScanResultValid(scannerScanResult))
-                {
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => LeftPaneOrganizeInitialText.Visibility = Visibility.Collapsed);
-                    if (scanResult == null)
+                    // get selected color mode
+                    ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                    if (selectedColorMode == null && (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true))
                     {
-                        scanResult = await ScanResult.Create(scannerScanResult.ScannedFiles);
-                        FlipViewScan.ItemsSource = scanResult.elements;
-                        LeftPaneListViewOrganize.ItemsSource = scanResult.elements;
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                        await CancelScan();
+                        return false;
+                    }
+
+                    // get selected resolution
+                    ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                    if (selectedResolution == null && (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true))
+                    {
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                        await CancelScan();
+                        return false;
+                    }
+
+                    // prepare scan config
+                    if (RadioButtonSourceAutomatic.IsChecked == true)
+                    {
+                        selectedScanner.scanner.AutoConfiguration.Format = selectedFormat.Item1;
+
+                        scanSource = ImageScannerScanSource.AutoConfigured;
+                    }
+                    else if (RadioButtonSourceFlatbed.IsChecked == true)
+                    {
+                        selectedScanner.scanner.FlatbedConfiguration.Format = selectedFormat.Item1;
+                        selectedScanner.scanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+                        selectedScanner.scanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+
+                        scanSource = ImageScannerScanSource.Flatbed;
+                    }
+                    else if (RadioButtonSourceFeeder.IsChecked == true)
+                    {
+                        selectedScanner.scanner.FeederConfiguration.Format = selectedFormat.Item1;
+                        selectedScanner.scanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+                        selectedScanner.scanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+
+                        if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 10;
+                        else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
+
+                        if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
+                        else selectedScanner.scanner.FeederConfiguration.Duplex = false;
+
+                        scanSource = ImageScannerScanSource.Feeder;
                     }
                     else
                     {
-                        await scanResult.AddFiles(scannerScanResult.ScannedFiles);
-                        FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
+                        await CancelScan();
+                        return false;
+                    }
+
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = true);
+
+                    // get scan
+                    ImageScannerScanResult scannerScanResult = null;
+                    scanProgress = new Progress<uint>();
+                    scanCancellationToken = new CancellationTokenSource();
+
+                    StorageFolder folderToScanTo = selectedFormat.Item2 == null ? scanFolder : ApplicationData.Current.TemporaryFolder;
+                    try
+                    {
+                        scannerScanResult = await selectedScanner.scanner.ScanFilesToFolderAsync(scanSource, folderToScanTo).AsTask(scanCancellationToken.Token, scanProgress);
+                    }
+                    catch (Exception exc)
+                    {
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanScannerErrorHeader"), LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
+                        await CancelScan();
+                        return false;
+                    }
+
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = false);
+
+                    if (ScanResultValid(scannerScanResult))
+                    {
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => LeftPaneOrganizeInitialText.Visibility = Visibility.Collapsed);
+                        if (scanResult == null)
+                        {
+                            if (selectedFormat.Item2 == null)
+                            {
+                                // no conversion
+                                scanResult = await ScanResult.Create(scannerScanResult.ScannedFiles, scanFolder);
+                            }
+                            else
+                            {
+                                // conversion necessary
+                                scanResult = await ScanResult.Create(scannerScanResult.ScannedFiles, scanFolder, (SupportedFormat)selectedFormat.Item2);
+                            }
+
+                            FlipViewScan.ItemsSource = scanResult.elements;
+                            LeftPaneListViewOrganize.ItemsSource = scanResult.elements;
+                        }
+                        else
+                        {
+                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                                await scanResult.AddFiles(scannerScanResult.ScannedFiles);
+                                FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    SupportedFormat selectedDebugFormat = (SupportedFormat)ComboBoxDebugFormat.SelectedItem;
+                        
+                    // debug files provided, create scanResult from these
+                    List<StorageFile> copiedDebugFiles = new List<StorageFile>();
+                    foreach (StorageFile file in debugFiles)
+                    {
+                        copiedDebugFiles.Add(await file.CopyAsync(ApplicationData.Current.TemporaryFolder));
+                    }
+
+                    if (scanResult == null || startFresh)
+                    {
+                        if (ConvertFormatStringToSupportedFormat(copiedDebugFiles[0].FileType) != selectedDebugFormat)
+                        {
+                            scanResult = await ScanResult.Create(copiedDebugFiles, scanFolder, selectedDebugFormat);
+                        }
+                        else
+                        {
+                            scanResult = await ScanResult.Create(copiedDebugFiles, scanFolder);
+                        }
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                            FlipViewScan.ItemsSource = scanResult.elements;
+                            LeftPaneListViewOrganize.ItemsSource = scanResult.elements;
+                        });
+                    }
+                    else
+                    {
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                            foreach (StorageFile file in copiedDebugFiles)
+                            {
+                                await file.MoveAsync(scanFolder, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                            } 
+                            await scanResult.AddFiles(copiedDebugFiles);
+                            FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
+                        });
                     }
                 }
 
                 flowState = FlowState.initial;
                 scanSuccessful = true;
 
-                // reenable controls and hide progress bar
+                // reenable controls and change UI
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
                 async () =>
                 {
@@ -743,14 +838,17 @@ namespace Scanner
                     FrameLeftPaneScanFeeder.IsEnabled = true;
                     FrameLeftPaneScanFormat.IsEnabled = true;
                     ScrollViewerLeftPaneOrganize.IsEnabled = true;
-                    ContentPaneFrameProgressBarScan.Visibility = Visibility.Collapsed;
+                    await UnlockToolbar();
+                    StoryboardProgressBarScanEnd.Begin();
+                    FlipViewScan.Visibility = Visibility.Visible;
+                    LeftPaneOrganizeInitialText.Visibility = Visibility.Collapsed;
                 });
 
                 await RefreshScanButton();
 
                 return scanSuccessful;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeader"), LocalizedString("ErrorMessageScanErrorBody"));
                 await CancelScan();
@@ -824,7 +922,7 @@ namespace Scanner
                 // additional options
                 if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
                 else selectedScanner.scanner.FeederConfiguration.Duplex = false;
-                if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 0;
+                if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 10;
                 else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
             } 
             else
@@ -843,7 +941,7 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                ContentPaneFrameProgressBarScan.Visibility = Visibility.Collapsed;
+                
             });
         }
 
@@ -859,14 +957,12 @@ namespace Scanner
 
         private async void ButtonLeftPaneScan_Click(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
         {
-            await Scan(false);
-            FlipViewScan.Visibility = Visibility.Visible;
+            await Scan(makeNextScanAFreshOne, null);
         }
 
         private async void ButtonScanFresh_Click(object sender, RoutedEventArgs e)
         {
-            await Scan(true);
-            FlipViewScan.Visibility = Visibility.Visible;
+            await Scan(true, null);
         }
 
         private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -900,7 +996,7 @@ namespace Scanner
             catch (Exception) { }
         }
 
-        private async void LockToolbar()
+        private async Task LockToolbar()
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
@@ -916,7 +1012,7 @@ namespace Scanner
             });
         }
 
-        private async void UnlockToolbar()
+        private async Task UnlockToolbar()
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
@@ -950,9 +1046,24 @@ namespace Scanner
             });
         }
 
-        private void LeftPaneListViewOrganize_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void LeftPaneListViewOrganize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (LeftPaneListViewOrganize.SelectionMode == ListViewSelectionMode.Single) FlipViewScan.SelectedIndex = LeftPaneListViewOrganize.SelectedIndex;
+            switch (flowState)
+            {
+                case FlowState.initial:
+                    FlipViewScan.SelectedIndex = LeftPaneListViewOrganize.SelectedIndex;
+                    await UnlockToolbar();
+                    break;
+                case FlowState.scanning:
+                    FlipViewScan.SelectedIndex = LeftPaneListViewOrganize.SelectedIndex;
+                    break;
+                case FlowState.edit:
+                    break;
+                case FlowState.select:
+                    break;
+                default:
+                    break;
+            }
         }
 
         private async void ButtonDebugAddScanner_Click(object sender, RoutedEventArgs e)
@@ -987,6 +1098,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
+                    makeNextScanAFreshOne = false;
                     MenuFlyoutItemButtonScan.IsEnabled = true;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
                     MenuFlyoutItemButtonScan.Icon = null;
@@ -997,6 +1109,7 @@ namespace Scanner
 
                 // get currently selected format
                 var selectedFormatTuple = GetDesiredFormat(ComboBoxFormat, formats);
+                if (selectedFormatTuple == null) return;
                 SupportedFormat selectedFormat;
                 if (selectedFormatTuple.Item2 != null)
                 {
@@ -1012,6 +1125,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Visible;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
+                    makeNextScanAFreshOne = false;
                     MenuFlyoutItemButtonScan.IsEnabled = true;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
                     MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
@@ -1022,6 +1136,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Visible;
+                    makeNextScanAFreshOne = true;
                     MenuFlyoutItemButtonScan.IsEnabled = false;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                     MenuFlyoutItemButtonScan.Icon = null;
@@ -1038,7 +1153,148 @@ namespace Scanner
 
         private void MenuFlyoutItemButtonScan_Click(object sender, RoutedEventArgs e)
         {
+            ButtonLeftPaneScan_Click(null, null);
+        }
 
+        private async void ButtonDebugSelectFiles_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add("." + ComboBoxDebugFormat.SelectedItem.ToString().ToLower());
+
+            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+            if (files.Count == 0) return;
+
+            ContentDialogDebug.Hide();
+
+            await Scan((bool) CheckBoxDebugStartFresh.IsChecked, files);
+        }
+
+        private async void TransitionToEditingMode(SummonToolbar summonToolbar)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            async () =>
+            {
+                FlipViewLeftPane.IsEnabled = false;
+                ScrollViewerLeftPaneOrganize.IsEnabled = false;
+                ButtonLeftPaneScan.IsEnabled = false;
+                FrameLeftPaneScanSource.IsEnabled = false;
+                FrameLeftPaneScanSourceMode.IsEnabled = false;
+                FrameLeftPaneScanColor.IsEnabled = false;
+                FrameLeftPaneResolution.IsEnabled = false;
+                FrameLeftPaneScanFeeder.IsEnabled = false;
+                FrameLeftPaneScanFormat.IsEnabled = false;
+                await LockToolbar();
+            });
+        }
+
+        private async void TransitionFromEditingMode()
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                FlipViewLeftPane.IsEnabled = true;
+                ScrollViewerLeftPaneOrganize.IsEnabled = true;
+                //ButtonLeftPaneScan.IsEnabled = false;
+                //FrameLeftPaneScanSource.IsEnabled = false;
+                //FrameLeftPaneScanSourceMode.IsEnabled = false;
+                //FrameLeftPaneScanColor.IsEnabled = false;
+                //FrameLeftPaneResolution.IsEnabled = false;
+                //FrameLeftPaneScanFeeder.IsEnabled = false;
+                //FrameLeftPaneScanFormat.IsEnabled = false;
+            });
+        }
+
+        private void Share()
+        {
+            GeneralTransform transform = ButtonShare.TransformToVisual(null);
+            Rect rectangle = transform.TransformBounds(new Rect(0, 0, ButtonShare.ActualWidth, ButtonShare.ActualHeight));
+
+            ShareUIOptions shareUIOptions = new ShareUIOptions();
+            shareUIOptions.SelectionRect = rectangle;
+
+            DataTransferManager.ShowShareUI(shareUIOptions);
+        }
+
+        private void ButtonShare_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                scopeAction = ScopeActions.Share;
+                ReliablyOpenTeachingTip(TeachingTipScope);
+                return;
+            }
+
+            shareIndexes = new int[1];
+            shareIndexes[0] = FlipViewScan.SelectedIndex;
+
+            Share();
+        }
+
+        private async void TeachingTipScope_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            // user wants to apply action for entire document
+            switch (scopeAction)
+            {
+                case ScopeActions.Delete:
+                    // TODO
+                    break;
+                case ScopeActions.Copy:
+                    await scanResult.CopyAsync();
+                    break;
+                case ScopeActions.OpenWith:
+                    await scanResult.OpenWithAsync();
+                    break;
+                case ScopeActions.Share:
+                    shareIndexes = null;
+                    Share();
+                    break;
+                default:
+                    break;
+            }            
+        }
+
+        private async void SplitViewLeftPane_PaneClosed(SplitView sender, object args)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () => { ButtonScanOptions.IsChecked = false; });
+        }
+
+        private async void SplitViewContentPane_PaneClosed(SplitView sender, object args)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () => { ButtonOrganize.IsChecked = false; });
+        }
+
+        private async void ButtonCopy_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                scopeAction = ScopeActions.Copy;
+                ReliablyOpenTeachingTip(TeachingTipScope);
+                return;
+            }
+
+            await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
+        }
+
+        private async void ButtonOpenWith_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                scopeAction = ScopeActions.OpenWith;
+                ReliablyOpenTeachingTip(TeachingTipScope);
+                return;
+            }
+
+            await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
         }
     }
 }
