@@ -46,6 +46,8 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            TextBlockPreviewHeaderConfig.Text = intent.scanSourceDescription;
+            
             ScrollViewerPreview.Margin = new Thickness(0, GridPreviewHeader.ActualHeight, 0, 0);
             ScrollViewerPreview.Padding = new Thickness(0, -GridPreviewHeader.ActualHeight, 0, 0);
 
