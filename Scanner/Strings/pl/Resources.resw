@@ -1,0 +1,821 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppBarButtonAspectRatio.Label" xml:space="preserve">
+    <value>Współczynnik proporcji</value>
+    <comment>The text inside the button that allows the user to set an aspect ratio while cropping the result.</comment>
+  </data>
+  <data name="AppBarButtonAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ustaw współczynnik proporcji</value>
+    <comment>The tooltip text that appears while hovering the aspect ratio button.</comment>
+  </data>
+  <data name="AppBarButtonCopy.Label" xml:space="preserve">
+    <value>Kopiuj</value>
+    <comment>The text inside the button that allows the user to copy the result.</comment>
+  </data>
+  <data name="AppBarButtonCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skopiuj skan do schowka (Ctrl+C)</value>
+    <comment>The tooltip text that appears while hovering the copy button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonCrop.Label" xml:space="preserve">
+    <value>Przytnij</value>
+    <comment>The text inside the button that allows the user to crop the result.</comment>
+  </data>
+  <data name="AppBarButtonCrop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przytnij skan</value>
+    <comment>The tooltip text that appears while hovering the crop button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonDelete.Label" xml:space="preserve">
+    <value>Usuń</value>
+    <comment>The text inside the button that allows the user to delete the result.</comment>
+  </data>
+  <data name="AppBarButtonDelete.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przenieś skan do Kosza</value>
+    <comment>The tooltip text that appears while hovering the delete button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonDiscard.Label" xml:space="preserve">
+    <value>Odrzuć</value>
+    <comment>The text inside the button that allows the user to discard changes.</comment>
+  </data>
+  <data name="AppBarButtonDiscard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odrzuć zmiany</value>
+    <comment>The tooltip text that appears while hovering the discard button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonDone.Label" xml:space="preserve">
+    <value>OK</value>
+    <comment>The text inside the button that allows the user to confirm the crop or dismiss the result.</comment>
+  </data>
+  <data name="AppBarButtonDone.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zakończ edytowanie</value>
+    <comment>The tooltip text that appears while hovering the done button.</comment>
+  </data>
+  <data name="AppBarButtonDraw.Label" xml:space="preserve">
+    <value>Rysuj</value>
+    <comment>The text inside the button that allows the user to draw on the result.</comment>
+  </data>
+  <data name="AppBarButtonDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rysuj i zaznaczaj za pomocą Windows Ink</value>
+    <comment>The tooltip text that appears while hovering the draw button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonOpenWith.Label" xml:space="preserve">
+    <value>Otwórz za pomocą</value>
+    <comment>The text inside the button that allows the user to pick an app to open the file with.</comment>
+  </data>
+  <data name="AppBarButtonOpenWith.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz skan w innej aplikacji</value>
+    <comment>The tooltip text that appears while hovering the open with button.</comment>
+  </data>
+  <data name="AppBarButtonRename.Label" xml:space="preserve">
+    <value>Zmień nazwę</value>
+    <comment>The text inside the button that allows the user to rename the result.</comment>
+  </data>
+  <data name="AppBarButtonRename.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zmień nazwę skanu</value>
+    <comment>The tooltip text that appears while hovering the rename button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonRotate.Label" xml:space="preserve">
+    <value>Obróć</value>
+    <comment>The text inside the button that allows the user to rotate the result.</comment>
+  </data>
+  <data name="AppBarButtonRotate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Obróć skan o 90° w prawo</value>
+    <comment>The tooltip text that appears while hovering the rotate button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonSave.Label" xml:space="preserve">
+    <value>Zapisz</value>
+    <comment>The text inside the button that allows the user to save the edited result.</comment>
+  </data>
+  <data name="AppBarButtonSave.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz zmiany do oryginalnego pliku</value>
+    <comment>The tooltip text that appears while hovering the save button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonSaveCopy.Label" xml:space="preserve">
+    <value>Zapisz kopię</value>
+    <comment>The text inside the button that allows the user to save the edited result as a copy.</comment>
+  </data>
+  <data name="AppBarButtonSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz zmiany do nowego pliku</value>
+    <comment>The tooltip text that appears while hovering the save copy button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonShare.Label" xml:space="preserve">
+    <value>Udostępnij</value>
+    <comment>The text inside the button that allows the user to share the result.</comment>
+  </data>
+  <data name="AppBarButtonShare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Udostępnij skan (Ctrl+S)</value>
+    <comment>The tooltip text that appears while hovering the share button in the CommandBar.</comment>
+  </data>
+  <data name="AppBarButtonTouchDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rysuj za pomocą ekranu dotykowego</value>
+    <comment>The tooltip text that appears while hovering the button that allows for drawing with a finger in the CommandBar.</comment>
+  </data>
+  <data name="ButtonCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odrzuć skan</value>
+    <comment>The tooltip text that appears while hovering the cancel button.</comment>
+  </data>
+  <data name="ButtonCommandBarPrimaryFileName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pokaż w Eksploratorze plików</value>
+    <comment>The tooltip text that appears while hovering the file name button.</comment>
+  </data>
+  <data name="ButtonDevices.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj skanerami</value>
+    <comment>The tooltip text that appears while hovering the devices button.</comment>
+  </data>
+  <data name="ButtonRecents.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pokaż folder skanowania w Eksploratorze plików</value>
+    <comment>The tooltip text that appears while hovering the recents button.</comment>
+  </data>
+  <data name="ButtonSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz ustawienia aplikacji</value>
+    <comment>The tooltip text that appears while hovering the settings button.</comment>
+  </data>
+  <data name="ButtonSettingsCancel.Content" xml:space="preserve">
+    <value>Anuluj</value>
+    <comment>The text inside the button that allows the user to cancel changing the settings.</comment>
+  </data>
+  <data name="ButtonSettingsChooseFolder.Content" xml:space="preserve">
+    <value>Wybierz folder</value>
+    <comment>The text inside the button that allows the user to choose a folder to save to.</comment>
+  </data>
+  <data name="ButtonSettingsResetSaveLocation.Content" xml:space="preserve">
+    <value>Przywróć folder domyślny</value>
+    <comment>The text inside the button that resets the save location.</comment>
+  </data>
+  <data name="ButtonSettingsSave.Content" xml:space="preserve">
+    <value>Zapisz</value>
+    <comment>The text inside the button that allows the user to save settings.</comment>
+  </data>
+  <data name="CheckBoxSettingsAutomaticScannerSelection.Content" xml:space="preserve">
+    <value>Automatycznie wybieraj pierwszy dostępny skaner</value>
+    <comment>The header for the automatic scanner selection setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsBackgroundNotification.Content" xml:space="preserve">
+    <value>Pokazuj powiadomienie, gdy skanowanie zakończy się w tle</value>
+    <comment>The header for the background notification setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsDrawPenDetected.Content" xml:space="preserve">
+    <value>Rozpocznij rysowanie, gdy pióro zostanie wykryte</value>
+    <comment>The header for the automatic drawing on pen detection setting toggle.</comment>
+  </data>
+  <data name="CheckBoxSettingsUnsupportedFormat.Content" xml:space="preserve">
+    <value>Zezwól na niewspierane formaty plików Konwertujhąc do nich z wspieranego formatu</value>
+    <comment>The header for the unsupported formats setting toggle.</comment>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text inside the button that allows the user to close a message popup.</comment>
+  </data>
+  <data name="ComboBoxItemSettingsThemeDark.Content" xml:space="preserve">
+    <value>Ciemny</value>
+    <comment>The ComboBoxItem text that for the dark theme.</comment>
+  </data>
+  <data name="ComboBoxItemSettingsThemeLight.Content" xml:space="preserve">
+    <value>Jasny</value>
+    <comment>The ComboBoxItem text that for the light theme.</comment>
+  </data>
+  <data name="ComboBoxItemSettingsThemeSystem.Content" xml:space="preserve">
+    <value>Użyj motywu systemu Windows</value>
+    <comment>The ComboBoxItem text that for the system theme.</comment>
+  </data>
+  <data name="ComboBoxSettingsTheme.Header" xml:space="preserve">
+    <value>Motyw</value>
+    <comment>The header for the theme settings.</comment>
+  </data>
+  <data name="TeachingTipDelete.CloseButtonContent" xml:space="preserve">
+    <value>Anuluj</value>
+    <comment>The text inside the button that allows the user to cancel deleting the result file.</comment>
+  </data>
+  <data name="TeachingTipDelete.ActionButtonContent" xml:space="preserve">
+    <value>Zatwierdź</value>
+    <comment>The text inside the delete button confirming the process.</comment>
+  </data>
+  <data name="TeachingTipDelete.Title" xml:space="preserve">
+    <value>Usunąć?</value>
+    <comment>The header for the delete flyout.</comment>
+  </data>
+  <data name="ContentDialogFeedback.CloseButtonText" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text inside the button that allows the user to close the ContentDialog that asks the user to send feedback.</comment>
+  </data>
+  <data name="ContentDialogFeedback.Title" xml:space="preserve">
+    <value>Podoba Ci się aplikacja?</value>
+    <comment>The header for the ContentDialog that asks the user to send feedback.</comment>
+  </data>
+  <data name="ContentDialogLicenses.Title" xml:space="preserve">
+    <value>Licencje firm trzecich</value>
+    <comment>The header for the third-party licenses popup.</comment>
+  </data>
+  <data name="TeachingTipRename.CloseButtonContent" xml:space="preserve">
+    <value>Anuluj</value>
+    <comment>The text inside the button that allows the user to cancel renaming the result file.</comment>
+  </data>
+  <data name="TeachingTipRename.ActionButtonContent" xml:space="preserve">
+    <value>Zatwierdź</value>
+    <comment>The text inside the button that allows the user to confirm the newly chosen name for the result.</comment>
+  </data>
+  <data name="TeachingTipRename.Title" xml:space="preserve">
+    <value>Zmień nazwę</value>
+    <comment>The header for the the rename flyout.</comment>
+  </data>
+  <data name="ContentDialogUpdate.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+    <comment>The text inside the confirmation button of the changelog.</comment>
+  </data>
+  <data name="ContentDialogUpdate.SecondaryButtonText" xml:space="preserve">
+    <value>Oceń aplikację</value>
+    <comment>The text that appears inisde the button that allows the user to rate the app from the changelog.</comment>
+  </data>
+  <data name="ContentDialogUpdate.Title" xml:space="preserve">
+    <value>Co nowego</value>
+    <comment>The header for the changelog.</comment>
+  </data>
+  <data name="DefaultResolutionIndicator" xml:space="preserve">
+    <value>Domyślna</value>
+    <comment>The text that appears behind the default resolution in the resolutions list. It is automatically encapsulated by brackets.</comment>
+  </data>
+  <data name="ErrorMessageConversionBodyAfterExtension" xml:space="preserve">
+    <value> zamiast. Możesz wyłączyć konwersję dla niewspieranych formatów w ustawieniach.</value>
+    <comment>[begins with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is behind the supported base format.</comment>
+  </data>
+  <data name="ErrorMessageConversionBodyBeforeExtension" xml:space="preserve">
+    <value>Został wybrany format pliku, który jest nieobsługiwany przez skaner, a konwersja do wspieranego formatu zakończyła się niepowodzeniem. Skan został zapisany jako </value>
+    <comment>[ends with a whitespace] The body for the error message that appears in front of the file extension when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved. This string is in front of the supported base format.</comment>
+  </data>
+  <data name="ErrorMessageConversionBodyPDF" xml:space="preserve">
+    <value>Wystąpił błąd podczas konwersji skanu do pliku PDF.</value>
+    <comment>The body for the error message that appears when converting to PDF from a supported format failed.</comment>
+  </data>
+  <data name="ErrorMessageConversionHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when converting to an unsupported file format from a supported one failed, but at least the unsupported one has been saved.</comment>
+  </data>
+  <data name="ErrorMessageCopyBody" xml:space="preserve">
+    <value>Nie można skopiować skanu do schowka.</value>
+    <comment>The body for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCopyHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCropBody" xml:space="preserve">
+    <value>Nie można przygotować wyniku do przycięcia.</value>
+    <comment>The body for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageCropHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when copying the result fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteBody" xml:space="preserve">
+    <value>Nie można usunąć skanu.</value>
+    <comment>The body for the error message that appears when deleting the scan fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when deleting the scan fails.</comment>
+  </data>
+  <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
+    <value>Nie można otworzyć Centrum opinii. Treść błędu:</value>
+    <comment>The body for the error message that appears when launching the Feedback Hub fails.</comment>
+  </data>
+  <data name="ErrorMessageFeedbackHubHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when launching the feedback hub fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Nie można uzyskać dostępu do ostatnio wybranego folderu skanowania lub domyślnego folderu skanowania. Spróbuj wybrać nowy folder w ustawieniach.</value>
+    <comment>The body for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when loading the scan folder and even resetting it failed.</comment>
+  </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedBody" xml:space="preserve">
+    <value>Skanowanie wielu dokumentów nie jest w pełni obsługiwane i tylko pierwsza strona jest dostępna do edycji. Niemniej jednak wszystkie zeskanowane strony zostały zapisane.
+Skorzystaj z Centrum opinii, jeśli to coś, co chciałbyś, aby zostało rozwiązane w przyszłej aktualizacji.</value>
+    <comment>The body for the error message that appears when multiple documents were scanned.</comment>
+  </data>
+  <data name="ErrorMessageMultipleDocumentsUnsupportedHeader" xml:space="preserve">
+    <value>Brak wsparcia</value>
+    <comment>The header for the error message that appears when multiple documents were scanned.</comment>
+  </data>
+  <data name="ErrorMessageNoColorModeBody" xml:space="preserve">
+    <value>Wybierz tryb koloru.</value>
+    <comment>The body for the error message that appears when no color mode was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoColorModeHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when no color mode was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatBody" xml:space="preserve">
+    <value>Wybierz format pliku.</value>
+    <comment>The body for the error message that appears when no format was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when no format was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoResolutionBody" xml:space="preserve">
+    <value>Wybierz rozdzielczość.</value>
+    <comment>The body for the error message that appears when no resolution was selected.</comment>
+  </data>
+  <data name="ErrorMessageNoResolutionHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when no resolution was selected.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderBody" xml:space="preserve">
+    <value>Nie udało się wybrać nowego folderu. Treść błędu:</value>
+    <comment>[ends with a colon] The body for the error message that appears when picking a folder fails.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when picking a folder fails.</comment>
+  </data>
+  <data name="ErrorMessageRenameBody" xml:space="preserve">
+    <value>Być może plik o tej nazwie już istnieje.</value>
+    <comment>The body for the error message that appears when renaming the scan failed, probably due to this name already being in use.</comment>
+  </data>
+  <data name="ErrorMessageRenameHeader" xml:space="preserve">
+    <value>Zmiana nazwy nie powiodła się</value>
+    <comment>The header for the error message that appears when renaming the scan failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>Resetowanie lokalizacji folderu nie powiodło się. Treść błędu:</value>
+    <comment>[ends with a colon] The body for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
+    <value>Odmówiono dostępu do Biblioteki Obrazów.</value>
+    <comment>The body for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedHeader" xml:space="preserve">
+    <value>Odmowa dostępu</value>
+    <comment>The header for the error message that appears when resetting the scan folder fails due to the access to the Pictures Library being denied.</comment>
+  </data>
+  <data name="ErrorMessageRotateBody" xml:space="preserve">
+    <value>Nie można obrócić skanu.</value>
+    <comment>The body for the error message that appears when rotating the scan fails.</comment>
+  </data>
+  <data name="ErrorMessageRotateHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when rotating the scan fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveBody" xml:space="preserve">
+    <value>Nie udało się zapisać zmian.</value>
+    <comment>The body for the error message that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelBody" xml:space="preserve">
+    <value>Nie można anulować skanu.</value>
+    <comment>The body for the error message that appears when cancelling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when cancelling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorBody" xml:space="preserve">
+    <value>Wystąpił nieznany błąd podczas skanowania.</value>
+    <comment>The body for the error message that appears when scanning failed due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when scanning failed due to an unknown error.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderBody" xml:space="preserve">
+    <value>Wybrana lokalizacja zapisu jest nieprawidłowa. Możesz ją zmienić i zresetować w ustawieniach.</value>
+    <comment>The body for the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderClose" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text inside the button that allows the user to close the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScanFolderSettings" xml:space="preserve">
+    <value>Ustawienia</value>
+    <comment>The text inside the button that allows the user to open the settings if no scan folder was selected.</comment>
+  </data>
+  <data name="ErrorMessageScannerInformationBody" xml:space="preserve">
+    <value>Nie można pobrać żadnych danych o wybranym skanerze. Lista skanerów zostanie ponownie zainicjowana. Opis błędu:</value>
+    <comment>[ends with a colon] The body for the error message that appears when no information related to the selected scanner could be retrieved and the scanner can not be used.</comment>
+  </data>
+  <data name="ErrorMessageScannerInformationHeader" xml:space="preserve">
+    <value>Nie można użyć skanera</value>
+    <comment>The header for the error message that appears when no information related to the selected scanner could be retrieved and the scanner can not be used.</comment>
+  </data>
+  <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
+    <value>Skaner zwrócił komunikat o błędzie:</value>
+    <comment>The body for the error message that appears when scanning failed due to a scanner error.</comment>
+  </data>
+  <data name="ErrorMessageScanScannerErrorHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when scanning failed due to a scanner error.</comment>
+  </data>
+  <data name="ErrorMessageShowResultBody" xml:space="preserve">
+    <value>Nie można wyświetlić wyniku skanowania.</value>
+    <comment>The body for the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultClose" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text inside the button that allows the user to close the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultHeader" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+    <comment>The header for the error message that appears when showing the scan result failed.</comment>
+  </data>
+  <data name="ErrorMessageShowResultOpenFolder" xml:space="preserve">
+    <value>Otwórz folder</value>
+    <comment>The text inside the button that allows the user to open the scan folder if displaying the scan result failed.</comment>
+  </data>
+  <data name="FeedbackContentDialogButtonSendFeedback" xml:space="preserve">
+    <value>Wyślij opinię</value>
+    <comment>The text that appears inside the button that launches the Feedback Hub from a feedback message.</comment>
+  </data>
+  <data name="FoundScannersHintAfterNumber" xml:space="preserve">
+    <value>znaleziono</value>
+    <comment>The text that appears above the scanner behind the number that indicates how many scanners have been found.</comment>
+  </data>
+  <data name="FoundScannersHintBeforeNumber" xml:space="preserve">
+    <value />
+    <comment>[ends with a whitespace if not empty] The text that appears above the scanner in front of the number that indicates how many scanners have been found.</comment>
+  </data>
+  <data name="HyperlinkScannerSelectionHintBodyLink" xml:space="preserve">
+    <value>Ustawienia systemu Windows</value>
+    <comment>The Link redirecting the user to the device settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackLink" xml:space="preserve">
+    <value>Centrum opinii</value>
+    <comment>The settings Feedback Hub link.</comment>
+  </data>
+  <data name="HyperlinkSettingsLicensesLink" xml:space="preserve">
+    <value>Licencje firm trzecich</value>
+    <comment>The hyperlink that shows the third-party licenses.</comment>
+  </data>
+  <data name="HyperlinkSettingsPrivacyPolicyLink" xml:space="preserve">
+    <value>Polityka prywatności</value>
+    <comment>The hyperlink that opens the privacy policy website.</comment>
+  </data>
+  <data name="HyperlinkSettingsRateLink" xml:space="preserve">
+    <value>oceń aplikację Skaner w Microsoft Store</value>
+    <comment>The settings link that allows the user to rate the app.</comment>
+  </data>
+  <data name="HyperlinkSettingsRestartHintLink" xml:space="preserve">
+    <value>Uruchom ponownie aplikację</value>
+    <comment>The hyperlink text that allows the user to save and restart the app after a theme change.</comment>
+  </data>
+  <data name="HyperlinkSettingsWebsiteLink" xml:space="preserve">
+    <value>Strona</value>
+    <comment>The hyperlink that opens the app's website.</comment>
+  </data>
+  <data name="MenuFlyoutItemFlipAspectRatio.Text" xml:space="preserve">
+    <value>Odwróć współczynnik proporcji</value>
+    <comment>The text inside the MenuItem that allows to flip the orientation of the fixed aspect ratio while cropping.</comment>
+  </data>
+  <data name="MessageFileSavedBody" xml:space="preserve">
+    <value>Wynik został zapisany w wybranym folderze.</value>
+    <comment>The body for the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type.</comment>
+  </data>
+  <data name="MessageFileSavedClose" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text inside the button of the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type, that closes the popup.</comment>
+  </data>
+  <data name="MessageFileSavedHeader" xml:space="preserve">
+    <value>Skan zakończony</value>
+    <comment>The header for the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type.</comment>
+  </data>
+  <data name="MessageFileSavedOpenFolder" xml:space="preserve">
+    <value>Otwórz folder</value>
+    <comment>The text inside the button of the MessageDialog that appears when the scan has been completed but there is no preview available for the selected file type, that allows the user to open the scan result's folder.</comment>
+  </data>
+  <data name="NotificationCopyHeader" xml:space="preserve">
+    <value>Skopiowano do schowka</value>
+    <comment>The header for the notification that appears when copying the result to the clipboard.</comment>
+  </data>
+  <data name="NotificationScanCompleteBody" xml:space="preserve">
+    <value>Wróć do aplikacji w celu edycji i nie tylko.</value>
+    <comment>The text for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="NotificationScanCompleteHeader" xml:space="preserve">
+    <value>Skan zakończony</value>
+    <comment>The header for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="NotificationScanErrorBody" xml:space="preserve">
+    <value>Wróć do aplikacji, aby uzyskać więcej informacji.</value>
+    <comment>The body for the notification that appears when an error occurs while scanning and the app is in the background.</comment>
+  </data>
+  <data name="NotificationScanErrorHeader" xml:space="preserve">
+    <value>Skan zakończony niepowodzeniem</value>
+    <comment>The header for the notification that appears when an error occurs while scanning and the app is in the background.</comment>
+  </data>
+  <data name="RadioButtonColorModeColor.Content" xml:space="preserve">
+    <value>Kolor</value>
+    <comment>The text next to the Radio Button for color scanning.</comment>
+  </data>
+  <data name="RadioButtonColorModeGrayscale.Content" xml:space="preserve">
+    <value>Skala szarości</value>
+    <comment>The text next to the Radio Button for grayscale scanning.</comment>
+  </data>
+  <data name="RadioButtonColorModeMonochrome.Content" xml:space="preserve">
+    <value>Monochromia</value>
+    <comment>The text next to the Radio Button for monochrome scanning.</comment>
+  </data>
+  <data name="RadioButtonSourceAutomatic.Content" xml:space="preserve">
+    <value>Konfiguracja automatyczna</value>
+    <comment>The text next to the Radio Button for automatically configured scanning.</comment>
+  </data>
+  <data name="RadioButtonSourceFeeder.Content" xml:space="preserve">
+    <value>Podajnik</value>
+    <comment>The text next to the Radio Button for feeder scanning.</comment>
+  </data>
+  <data name="RadioButtonSourceFlatbed.Content" xml:space="preserve">
+    <value>Płaski</value>
+    <comment>The text next to the Radio Button for flatbed scanning.</comment>
+  </data>
+  <data name="RunScannerSelectionHintBodyAfterLink.Text" xml:space="preserve">
+    <value> i pojawia się tam jako gotowy.</value>
+    <comment>[begins with a whitespace] The text that is behind the settings app link.</comment>
+  </data>
+  <data name="RunScannerSelectionHintBodyBeforeLink.Text" xml:space="preserve">
+    <value>Jeśli skaner nie pojawi się w ciągu trzech minut, upewnij się, że został dodany w </value>
+    <comment>[begins with a whitespace] The text that is in front of the settings app link.</comment>
+  </data>
+  <data name="RunSettingsAfterFeedbackLink.Text" xml:space="preserve">
+    <value>aby zasugerować nową funkcje, zgłosić błąd i głosować na sugestie lub</value>
+    <comment>The text that is in between the settings Feedback Hub link and rate link.</comment>
+  </data>
+  <data name="RunSettingsAfterRateLink.Text" xml:space="preserve">
+    <value>aby pomóc innym zdecydować, czy jest to odpowiednia aplikacja dla nich.</value>
+    <comment>The text that is behind the settings rate link.</comment>
+  </data>
+  <data name="RunSettingsBeforeFeedbackLink.Text" xml:space="preserve">
+    <value>Użyj</value>
+    <comment>The text that is in front of the settings Feedback Hub link.</comment>
+  </data>
+  <data name="RunSettingsRestartHintAfterLink.Text" xml:space="preserve">
+    <value> aby zmiany odniosły skutek.</value>
+    <comment>[begins with a whitespace] The text that is behind the save-and-restart link.</comment>
+  </data>
+  <data name="RunSettingsRestartHintBeforeLink.Text" xml:space="preserve">
+    <value></value>
+    <comment>[ends with a whitespace] The text that is in front of the save-and-restart link.</comment>
+  </data>
+  <data name="TeachingTipDevices.ActionButtonContent" xml:space="preserve">
+    <value>Otwórz Ustawienia</value>
+    <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
+  </data>
+  <data name="TeachingTipDevices.Subtitle" xml:space="preserve">
+    <value>Jeśli skaner nie pojawi się w ciągu trzech minut, upewnij się, że został dodany w Ustawieniach systemu Windows i jest tam widoczny jako gotowy.</value>
+    <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipDevices.Title" xml:space="preserve">
+    <value>Wybierz skaner</value>
+    <comment>The title that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.ActionButtonContent" xml:space="preserve">
+    <value>Idź do ustawień</value>
+    <comment>The text that appears in the button which allows the user to go to the settings from the save location popup.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.Subtitle" xml:space="preserve">
+    <value>Twoje skany są obecnie zapisywane w folderze domyślnym. Możesz zmienić to zachowanie w ustawieniach.</value>
+    <comment>The subtitle that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TeachingTipSaveLocation.Title" xml:space="preserve">
+    <value>Lokalizacja zapisu</value>
+    <comment>The title that appears in the popup which notifies the user about the save location.</comment>
+  </data>
+  <data name="TextBlockButtonScan.Text" xml:space="preserve">
+    <value>Skanuj</value>
+    <comment>The text inside the button that starts scanning.</comment>
+  </data>
+  <data name="TextBlockColorMode.Text" xml:space="preserve">
+    <value>Tryb kolorów</value>
+    <comment>The header for the color mode RadioButton group.</comment>
+  </data>
+  <data name="TeachingTipDelete.Subtitle" xml:space="preserve">
+    <value>Plik zostanie przeniesiony do Kosza.</value>
+    <comment>The text inside the delete flyout.</comment>
+  </data>
+  <data name="TextBlockFormatHeader.Text" xml:space="preserve">
+    <value>Zapisz jako</value>
+    <comment>The header for the ComboBox where users select the desired file format.</comment>
+  </data>
+  <data name="TeachingTipRename.Subtitle" xml:space="preserve">
+    <value>Wprowadź nową nazwę pliku:</value>
+    <comment>The text inside the rename flyout.</comment>
+  </data>
+  <data name="TextBlockResolution.Text" xml:space="preserve">
+    <value>Rozdzielczość</value>
+    <comment>The header for the resolution ComboBox.</comment>
+  </data>
+  <data name="TextBlockScannerIndicatorText" xml:space="preserve">
+    <value>Zawsze szukam nowych urządzeń...</value>
+    <comment>The text inside the scanner list, that indicates that the search for new devices always continues.</comment>
+  </data>
+  <data name="TextBlockScannerSelectionHintHeader.Text" xml:space="preserve">
+    <value>Wybierz skaner</value>
+    <comment>The header for the hint appearing when no scanner has been selected yet.</comment>
+  </data>
+  <data name="TextBlockSettingsAboutHeader.Text" xml:space="preserve">
+    <value>O programie</value>
+    <comment>The header for the about section in settings.</comment>
+  </data>
+  <data name="TextBlockSettingsFeedbackHeader.Text" xml:space="preserve">
+    <value>Wyraź opinię</value>
+    <comment>The header for the feedback section in settings.</comment>
+  </data>
+  <data name="TextBlockSettingsHeader.Text" xml:space="preserve">
+    <value>Ustawienia</value>
+    <comment>The header for the settings page.</comment>
+  </data>
+  <data name="TextBlockSettingsSaveLocationHeader.Text" xml:space="preserve">
+    <value>Lokalizacja zapisu</value>
+    <comment>The header for the save location settings.</comment>
+  </data>
+  <data name="TextBlockSource.Text" xml:space="preserve">
+    <value>Źródło</value>
+    <comment>The header for the ComboBox where users select the source scanner.</comment>
+  </data>
+  <data name="TextBlockUpdateEnd.Text" xml:space="preserve">
+    <value>~ Dziękuję za Twoje wsparcie! ~</value>
+    <comment>The end of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection1Body.Text" xml:space="preserve">
+    <value>Ustawienia są teraz bardziej przejrzyste i mają więcej miejsca na to, co ważne.</value>
+    <comment>The body for the first section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection1Header.Text" xml:space="preserve">
+    <value>Przeprojektowane ustawienia</value>
+    <comment>The header for the first section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection2Body.Text" xml:space="preserve">
+    <value>Interfejs jest teraz bardziej użyteczny, imformatywny i kompaktowy.</value>
+    <comment>The body for the second section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection2Header.Text" xml:space="preserve">
+    <value>Poprawiony wygląd</value>
+    <comment>The header for the second section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection3Body.Text" xml:space="preserve">
+    <value>Przycisk folderu wskazuje teraz, czy wybrano niestandardową lokalizację zapisu.</value>
+    <comment>The body for the third section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection3Header.Text" xml:space="preserve">
+    <value>Dowiedz się, gdzie są Twoje pliki</value>
+    <comment>The header for the third section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection4Body.Text" xml:space="preserve">
+    <value>Naprawiono wiele problemów, które np. wpłynęły na użytkowników próbujących skanować do folderów poza Biblioteką Obrazów.</value>
+    <comment>The body for the fourth section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateSection4Header.Text" xml:space="preserve">
+    <value>Poprawki</value>
+    <comment>The header for the fourth section of the changelog.</comment>
+  </data>
+  <data name="TextBlockUpdateWarning.Text" xml:space="preserve">
+    <value>Niektóre funkcje mogą nie być dostępne w starszych wersjach systemu Windows 10.</value>
+    <comment>The warning that appears in the changelog.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioCustom.Text" xml:space="preserve">
+    <value>Niestandardowy</value>
+    <comment>The text that appears inside the menu item that unlocks the aspect ratio of the crop.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderChinese.Text" xml:space="preserve">
+    <value>Chiński</value>
+    <comment>The header for the Chinese aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderInternational.Text" xml:space="preserve">
+    <value>Międzynarodowy</value>
+    <comment>The header for the international aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioHeaderNA.Text" xml:space="preserve">
+    <value>Północno Amerykański</value>
+    <comment>The header for the North American aspect ratios.</comment>
+  </data>
+  <data name="ToggleMenuFlyoutItemAspectRatioSquare.Text" xml:space="preserve">
+    <value>Kwadratowy</value>
+    <comment>The text that appears inside the menu item that sets the aspect ratio of the crop to square.</comment>
+  </data>
+</root>
