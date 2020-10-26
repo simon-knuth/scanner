@@ -695,7 +695,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The header for the resolution ComboBox.</comment>
   </data>
   <data name="TextBlockScannerIndicator.Text" xml:space="preserve">
-    <value>Always searching for new devices...</value>
+    <value>Always looking for known devices...</value>
     <comment>The text inside the scanner list, that indicates that the search for new devices always continues.</comment>
   </data>
   <data name="TextBlockScannerSelectionHintHeader.Text" xml:space="preserve">

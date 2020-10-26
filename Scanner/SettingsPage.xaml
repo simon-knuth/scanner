@@ -56,9 +56,9 @@
                         </StackPanel>
                         <ComboBox x:Uid="ComboBoxSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
-                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeSystem" Content="Use system setting" Tag="0"/>
-                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeLight" Content="Light" Tag="1"/>
-                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeDark" Content="Dark" Tag="2"/>
+                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeSystem" Content="Use system setting" Tag="0" v1809:CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeLight" Content="Light" Tag="1" v1809:CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="ComboBoxItemSettingsThemeDark" Content="Dark" Tag="2" v1809:CornerRadius="2"/>
                             </ComboBox.Items>
                         </ComboBox>
                         <TextBlock x:Name="TextBlockRestart" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Visibility="Collapsed" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">

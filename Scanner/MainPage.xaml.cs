@@ -647,13 +647,6 @@ namespace Scanner
         {
             try
             {
-                await InitializeTempFolder();
-                
-                flowState = FlowState.scanning;
-                bool scanSuccessful = false;
-                if (startFresh) scanResult = null;
-                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
-
                 // disable controls and show progress bar
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
                 async () =>
@@ -670,6 +663,13 @@ namespace Scanner
                     await LockToolbar();
                     StoryboardProgressBarScanBegin.Begin();
                 });
+
+                await InitializeTempFolder();
+                
+                flowState = FlowState.scanning;
+                bool scanSuccessful = false;
+                if (startFresh) scanResult = null;
+                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;                
 
                 ImageScannerScanSource scanSource;
 
@@ -736,12 +736,26 @@ namespace Scanner
 
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = true);
 
+                    // determine target folder
+                    StorageFolder folderToScanTo;
+                    if (selectedFormat.Item2 == null)
+                    {
+                        folderToScanTo = scanFolder;
+                    }
+                    else if (selectedFormat.Item2 == SupportedFormat.PDF)
+                    {
+                        folderToScanTo = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
+                    }
+                    else
+                    {
+                        folderToScanTo = ApplicationData.Current.TemporaryFolder;
+                    }
+
                     // get scan
                     ImageScannerScanResult scannerScanResult = null;
                     scanProgress = new Progress<uint>();
                     scanCancellationToken = new CancellationTokenSource();
 
-                    StorageFolder folderToScanTo = selectedFormat.Item2 == null ? scanFolder : ApplicationData.Current.TemporaryFolder;
                     try
                     {
                         scannerScanResult = await selectedScanner.scanner.ScanFilesToFolderAsync(scanSource, folderToScanTo).AsTask(scanCancellationToken.Token, scanProgress);
@@ -777,7 +791,8 @@ namespace Scanner
                         else
                         {
                             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
-                                await scanResult.AddFiles(scannerScanResult.ScannedFiles);
+                                if (selectedFormat.Item2 != null) await scanResult.AddFiles(scannerScanResult.ScannedFiles, (SupportedFormat)selectedFormat.Item2);
+                                else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null);
                                 FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
                             });
                         }
@@ -816,7 +831,7 @@ namespace Scanner
                             {
                                 await file.MoveAsync(scanFolder, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
                             } 
-                            await scanResult.AddFiles(copiedDebugFiles);
+                            await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat);
                             FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
                         });
                     }

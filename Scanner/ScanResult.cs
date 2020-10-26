@@ -3,7 +3,6 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -43,7 +42,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ScanResult(IReadOnlyList<StorageFile> fileList)
+        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
         {
             foreach (StorageFile file in fileList)
             {
@@ -52,55 +51,47 @@ namespace Scanner
                 elements.Add(new ScanResultElement(file));
             }
             scanResultFormat = (SupportedFormat) ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
+            originalTargetFolder = targetFolder;
         }
 
 
-        private ScanResult(IReadOnlyList<StorageFile> fileList, SupportedFormat targetFormat, StorageFolder targetFolder)
-        {
-            foreach (StorageFile file in fileList)
-            {
-                if (file == null) continue;
+        //private ScanResult(IReadOnlyList<StorageFile> fileList, SupportedFormat targetFormat, StorageFolder targetFolder)
+        //{
+        //    foreach (StorageFile file in fileList)
+        //    {
+        //        if (file == null) continue;
 
-                elements.Add(new ScanResultElement(file));
-            }
+        //        elements.Add(new ScanResultElement(file));
+        //    }
 
-            if (targetFormat == SupportedFormat.PDF)
-            {
-                string pdfName = fileList[0].DisplayName + ".pdf";
-                Task[] moveTasks = new Task[elements.Count];
+        //    if (targetFormat == SupportedFormat.PDF)
+        //    {
+        //        string pdfName = fileList[0].DisplayName + ".pdf";
+        //        //Task.WaitAll(GeneratePDF(pdfName));
+        //        GeneratePDF(pdfName);
+        //    } 
+        //    else
+        //    {
+        //        Task[] convertTasks = new Task[elements.Count];
 
-                for (int i = 0; i < elements.Count; i++)
-                {
-                    if (elements[i] == null) continue;
+        //        for (int i = 0; i < elements.Count; i++)
+        //        {
+        //            if (elements[i] == null) continue;
 
-                    moveTasks[i] = MoveFileToFolderAsync(elements[i].ScanFile, conversionFolder, i + elements[i].ScanFile.FileType);
-                    Task.WaitAll(moveTasks);
-                    
-                    Task.WaitAll(GeneratePDF(pdfName));
-                }
-            } 
-            else
-            {
-                Task[] convertTasks = new Task[elements.Count];
-
-                for (int i = 0; i < elements.Count; i++)
-                {
-                    if (elements[i] == null) continue;
-
-                    SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(elements[i].ScanFile.FileType);
-                    if (sourceFormat == null) throw new ApplicationException("Could not determine source format of file for intial conversion.");
-                    if (sourceFormat == targetFormat) continue;
+        //            SupportedFormat? sourceFormat = ConvertFormatStringToSupportedFormat(elements[i].ScanFile.FileType);
+        //            if (sourceFormat == null) throw new ApplicationException("Could not determine source format of file for intial conversion.");
+        //            if (sourceFormat == targetFormat) continue;
 
 
-                    convertTasks[i] = ConvertScanAsync(i, targetFormat, targetFolder);
-                }
+        //            convertTasks[i] = ConvertScanAsync(i, targetFormat, targetFolder);
+        //        }
 
-                originalTargetFolder = targetFolder;
+        //        originalTargetFolder = targetFolder;
 
-                Task.WaitAll(convertTasks);
-            }
-            scanResultFormat = targetFormat;
-        }
+        //        Task.WaitAll(convertTasks);
+        //    }
+        //    scanResultFormat = targetFormat;
+        //}
 
 
         public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
@@ -113,7 +104,7 @@ namespace Scanner
             }
             await Task.WhenAll(moveTasks);
 
-            ScanResult result = new ScanResult(fileList);
+            ScanResult result = new ScanResult(fileList, targetFolder);
             await result.GetImagesAsync();
             await InitializeTempFolder();
             return result;
@@ -122,7 +113,24 @@ namespace Scanner
         public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat)
         {
             conversionFolder = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
-            ScanResult result = new ScanResult(fileList, targetFormat, targetFolder);
+            ScanResult result = new ScanResult(fileList, targetFolder);
+
+            if (targetFormat == SupportedFormat.PDF)
+            {
+                string pdfName = fileList[0].DisplayName + ".pdf";
+                await result.GeneratePDF(pdfName);
+            }
+            else
+            {
+                Task[] conversionTasks = new Task[result.GetTotalNumberOfScans()];
+                for (int i = 0; i < result.GetTotalNumberOfScans(); i++)
+                {
+                    conversionTasks[i] = result.ConvertScanAsync(i, targetFormat, targetFolder);
+                }
+                await Task.WhenAll(conversionTasks);
+            }
+
+            result.scanResultFormat = targetFormat;
             await result.GetImagesAsync();
             await InitializeTempFolder();
             return result;
@@ -322,28 +330,29 @@ namespace Scanner
                 case SupportedFormat.TIF:
                 case SupportedFormat.BMP:
                     // open image file, decode it and prepare an encoder with the target image format
-                    IRandomAccessStream stream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite);
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                    Guid encoderId = GetBitmapEncoderId(targetFormat);
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-
-                    // save/encode the file in the target format
-                    try { await encoder.FlushAsync(); }
-                    catch (Exception)
+                    using (IRandomAccessStream stream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
-                        throw;
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                        SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                        Guid encoderId = GetBitmapEncoderId(targetFormat);
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+
+                        // save/encode the file in the target format
+                        try { await encoder.FlushAsync(); }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
                     }
-                    stream.Dispose();
 
                     // get new file name with updated extension
                     newNameWithoutNumbering = RemoveNumbering(sourceFile.Name
-                        .Replace("." + sourceFile.Name.Split(".")[1], "." + targetFormat));
+                        .Replace("." + sourceFile.Name.Split(".")[1], "." + targetFormat.ToString().ToLower()));
                     newName = newNameWithoutNumbering;
 
                     // move file to the correct folder
-                    await MoveFileToFolderAsync(sourceFile, targetFolder, newName);
+                    newName = await MoveFileToFolderAsync(sourceFile, targetFolder, newName);
 
                     break;
 
@@ -373,7 +382,7 @@ namespace Scanner
         {
             try
             {
-                await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.FailIfExists);
+                await file.MoveAsync(targetFolder, desiredName);
             }
             catch (Exception)
             {
@@ -945,20 +954,48 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IReadOnlyList<StorageFile> files)
+        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat)
         {
-            foreach (StorageFile file in files)
+            if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
-                if (file == null) continue;
+                // no conversion (but perhaps generation later on), just add files for now
+                foreach (StorageFile file in files)
+                {
+                    if (file == null) continue;
 
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    elements.Add(new ScanResultElement(file)); 
-                });
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        elements.Add(new ScanResultElement(file));
+                    });
 
-                await GetImageAsync(elements.Count - 1);
+                    await GetImageAsync(elements.Count - 1);
+                }
+            } 
+            else
+            {
+                // immediate conversion necessary
+                foreach (StorageFile file in files)
+                {
+                    if (file == null) continue;
+
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        elements.Add(new ScanResultElement(file));
+                    });
+                }
+
+                Task[] conversionTasks = new Task[GetTotalNumberOfScans()];
+                for (int i = 0; i < GetTotalNumberOfScans(); i++)
+                {
+                    conversionTasks[i] = ConvertScanAsync(i, (SupportedFormat) targetFormat, originalTargetFolder);
+                }
+                await Task.WhenAll(conversionTasks);
+
+                for (int i = GetTotalNumberOfScans() - files.Count; i < GetTotalNumberOfScans(); i++)
+                {
+                    await GetImageAsync(i);
+                }
             }
 
-            // if necessary, generate PDF
+            // if necessary, generate PDF now
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
