@@ -89,9 +89,8 @@
     /// </summary>
     public enum ScopeActions
     {
-        Delete = 0,
-        Copy = 1,
-        OpenWith = 2,
-        Share = 3,
+        Copy = 0,
+        OpenWith = 1,
+        Share = 2,
     }
 }

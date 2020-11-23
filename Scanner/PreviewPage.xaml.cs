@@ -2,6 +2,7 @@
 using System.IO;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -20,9 +21,13 @@ namespace Scanner
             this.InitializeComponent();
 
             // register event listener
-            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (titleBar, y) =>
             {
-                GridPreviewHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    GridPreviewHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
+                });
             };
         }
 
@@ -46,10 +51,14 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            TextBlockPreviewHeaderConfig.Text = intent.scanSourceDescription;
-            
-            ScrollViewerPreview.Margin = new Thickness(0, GridPreviewHeader.ActualHeight, 0, 0);
-            ScrollViewerPreview.Padding = new Thickness(0, -GridPreviewHeader.ActualHeight, 0, 0);
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                TextBlockPreviewHeaderConfig.Text = intent.scanSourceDescription;
+
+                ScrollViewerPreview.Margin = new Thickness(0, GridPreviewHeader.ActualHeight, 0, 0);
+                ScrollViewerPreview.Padding = new Thickness(0, -GridPreviewHeader.ActualHeight, 0, 0);
+            });
 
             try
             {
@@ -58,8 +67,12 @@ namespace Scanner
                 {
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(previewStream);
-                    ImagePreview.Source = bitmapImage;
-                    ProgressBarPreview.Visibility = Visibility.Collapsed;
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        ImagePreview.Source = bitmapImage;
+                        ProgressRingPreview.Visibility = Visibility.Collapsed;
+                    });
                 }
                 else
                 {
@@ -68,8 +81,11 @@ namespace Scanner
             }
             catch (Exception)
             {
-                ProgressBarPreview.ShowError = true;
-                StoryboardError.Begin();
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    StoryboardError.Begin();
+                });
             }
         }
 

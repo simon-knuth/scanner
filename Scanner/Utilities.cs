@@ -948,20 +948,15 @@ static class Utilities
 
 
     /// <summary>
-    ///     Deletes all files from the root and first level of the temporary folder. Creates the following
-    ///     subfolders, if necessary:
+    ///     Deletes all files from temporary folder. Creates the following subfolders, if necessary:
     ///         - conversion
     /// </summary>
     public static async Task InitializeTempFolder()
     {
-        IReadOnlyList<StorageFolder> folders = await ApplicationData.Current.TemporaryFolder.GetFoldersAsync();
-        foreach (StorageFolder folder in folders)
+        IReadOnlyList<StorageFile> files = await ApplicationData.Current.TemporaryFolder.GetFilesAsync();
+        foreach (StorageFile file in files)
         {
-            IReadOnlyList<StorageFile> files = await ApplicationData.Current.TemporaryFolder.GetFilesAsync();
-            foreach (StorageFile file in files)
-            {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
+            await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
 
         try 

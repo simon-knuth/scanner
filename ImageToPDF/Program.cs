@@ -1,9 +1,12 @@
 ﻿using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
@@ -18,6 +21,7 @@ namespace ImageToPDF
         public static AppServiceConnection appServiceConnection;
         public static ManualResetEvent serviceCallEvent = new ManualResetEvent(false);
 
+        [STAThread]
         static void Main(string[] args)
         {
             ConnectToService();
@@ -69,25 +73,53 @@ namespace ImageToPDF
         {
             try
             {
-                // get source image file and open in reading mode (!!!)
-                string srcFileName = (string)ApplicationData.Current.LocalSettings.Values["pdfSourceFileName"];
-                FileStream srcFile = File.OpenRead(ApplicationData.Current.TemporaryFolder.Path + Path.DirectorySeparatorChar + srcFileName);
+                // get files to construct PDF from
+                StorageFolder conversionFolder;
+                //var folderPicker = new FolderBrowserDialog();
+                //folderPicker.ShowDialog();
+                //conversionFolder = await StorageFolder.GetFolderFromPathAsync(folderPicker.SelectedPath);
+                conversionFolder = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
 
-                // create single-page PDF
+                IReadOnlyList<StorageFile> conversionFiles = await conversionFolder.GetFilesAsync();
+
+                // sort files
+                List<StorageFile> sortedConversionFiles = new List<StorageFile>(conversionFiles);
+                sortedConversionFiles.Sort(new ConversionFilesComparer());
+
+                // construct PDF
                 PdfDocument document = new PdfDocument();
-                PdfPage page = document.AddPage();
-                page.Width = (uint)ApplicationData.Current.LocalSettings.Values["sourceFileWidth"];
-                page.Height = (uint)ApplicationData.Current.LocalSettings.Values["sourceFileHeight"];
+                foreach (StorageFile file in sortedConversionFiles)
+                {                    
+                    int imageWidth, imageHeight;
+                    
+                    using (Bitmap bitmap = new Bitmap(file.Path))
+                    {
+                        imageWidth = bitmap.Width;
+                        imageHeight = bitmap.Height;
+                    }
+                    
+                    using (FileStream srcFile = File.OpenRead(file.Path))
+                    {
+                        // start new page
+                        PdfPage page = document.AddPage();
 
-                // draw image
-                XGraphics gfx = XGraphics.FromPdfPage(page);
-                gfx.DrawImage(XImage.FromStream(srcFile), 0, 0, page.Width, page.Height);
-                srcFile.Dispose();
+                        // get measurements
+                        page.Width = imageWidth;
+                        page.Height = imageHeight;
+
+                        // draw image on page
+                        XGraphics gfx = XGraphics.FromPdfPage(page);
+                        gfx.DrawImage(XImage.FromStream(srcFile), 0, 0, page.Width, page.Height);
+                    }
+                }
 
                 // save to target file
+                FileStream resultStream;
+                //resultStream = new FileStream(conversionFolder.Path + Path.DirectorySeparatorChar + "result.pdf", FileMode.OpenOrCreate, FileAccess.Write);
                 string trgFileName = (string)ApplicationData.Current.LocalSettings.Values["targetFileName"];
-                FileStream resultStream = new FileStream(ApplicationData.Current.TemporaryFolder.Path + Path.DirectorySeparatorChar + trgFileName,
-                                                                FileMode.CreateNew, FileAccess.Write);
+                resultStream = new FileStream(ApplicationData.Current.TemporaryFolder.Path + Path.DirectorySeparatorChar + trgFileName,
+                                                                FileMode.OpenOrCreate, FileAccess.Write);
+
                 document.Save(resultStream, true);
             }
             catch (Exception)
@@ -124,6 +156,14 @@ namespace ImageToPDF
 
             // message sent successfully
             return true;
+        }
+    }
+
+    class ConversionFilesComparer : IComparer<StorageFile>
+    {
+        public int Compare(StorageFile x, StorageFile y)
+        {
+            return int.Parse(x.DisplayName).CompareTo(int.Parse(y.DisplayName));
         }
     }
 }

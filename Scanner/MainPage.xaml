@@ -271,19 +271,19 @@
                     </Grid>
                 </Grid>
                 
-                <RelativePanel x:Name="LeftPaneOrganize" PointerWheelChanged="IgnorePointerWheel">
-                    <Grid x:Name="GridLeftPaneOrganizeHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
-                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneOrganize" VerticalAlignment="Stretch" Opacity="{Binding ElementName=ScrollViewerLeftPaneOrganize, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" Margin="16,0,16,0">
-                            <Rectangle x:Name="RectangleGridLeftPaneOrganize" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=LeftPaneOrganize, Path=ActualWidth}" VerticalAlignment="Bottom" Height="{Binding ElementName=GridLeftPaneOrganizeHeader, Path=Height}"/>
+                <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
+                    <Grid x:Name="GridLeftPaneManageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
+                        <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneManage" VerticalAlignment="Stretch" Opacity="{Binding ElementName=ScrollViewerLeftPaneManage, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" Margin="16,0,16,0">
+                            <Rectangle x:Name="RectangleGridLeftPaneManage" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=LeftPaneManage, Path=ActualWidth}" VerticalAlignment="Bottom" Height="{Binding ElementName=GridLeftPaneManageHeader, Path=Height}"/>
                         </controls:DropShadowPanel>
-                        <Grid x:Name="GridLeftPaneOrganizeHeaderControls" Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Stretch">
+                        <Grid x:Name="GridLeftPaneManageHeaderControls" Background="{ThemeResource SystemControlAcrylicWindowBrush}" VerticalAlignment="Stretch">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Frame x:Name="FrameLeftPaneOrganizeHeader" Height="32" VerticalAlignment="Top" Grid.Row="0">
-                                <TextBlock x:Name="TextBlockLeftPaneOrganizeHeader" HorizontalAlignment="Center" VerticalAlignment="Center" Text="PDF - 6 pages (dummy text)" Opacity="0.6"/>
+                            <Frame x:Name="FrameLeftPaneManageHeader" Height="32" VerticalAlignment="Top" Grid.Row="0">
+                                <TextBlock x:Name="TextBlockLeftPaneManageHeader" HorizontalAlignment="Center" VerticalAlignment="Center" Text="PDF - 6 pages (dummy text)" Opacity="0.6"/>
                             </Frame>
 
                             <ScrollViewer Grid.Row="1"  HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
@@ -294,32 +294,32 @@
                                         </AppBarToggleButton.Icon>
                                     </AppBarToggleButton>
                                     <AppBarSeparator/>
-                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeRotate" ToolTipService.ToolTip="Rotate selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Rotate" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeRotate, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeShare, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeCopy, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneOrganizeDelete" ToolTipService.ToolTip="Delete selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Delete" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneOrganizeDelete, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageRotate" ToolTipService.ToolTip="Rotate selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Rotate" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageRotate, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageShare, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageCopy, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageDelete" ToolTipService.ToolTip="Delete selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Delete" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageDelete, Path=ActualHeight}"/>
                                 </CommandBar>
                             </ScrollViewer>
                         </Grid>
                     </Grid>
 
-                    <ScrollViewer x:Name="ScrollViewerLeftPaneOrganize" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneOrganizeHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <ListView x:Name="LeftPaneListViewOrganize" SelectionMode="Single" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneListViewOrganize_SelectionChanged">
+                    <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                        <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneListViewManage_SelectionChanged">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:ScanResultElement">
-                                    <ListViewItem x:Name="LeftPaneListViewOrganizeItem" Padding="0" HorizontalContentAlignment="Stretch">
-                                        <Grid Padding="24,6,24,6" HorizontalAlignment="Stretch">
+                                    <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
+                                        <Grid Padding="16,6,16,6" HorizontalAlignment="Stretch" Height="80">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="8*"/>
+                                                <ColumnDefinition Width="3*"/>
+                                                <ColumnDefinition Width="7*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewOrganizeItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Stretch" BlurRadius="10" OffsetY="5" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                                <Image Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="70"/>
+                                            <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="5">
+                                                <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
+                                                </Frame>
                                             </controls:DropShadowPanel>
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                                                <TextBlock Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
-                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                         </Grid>
                                     </ListViewItem>
                                 </DataTemplate>
@@ -329,12 +329,12 @@
                                 <TransitionCollection>
                                     <AddDeleteThemeTransition/>
                                     <ReorderThemeTransition/>
-                                    <RepositionThemeTransition x:Name="LeftPaneListViewOrganizeRepositionThemeTransition"/>
+                                    <RepositionThemeTransition x:Name="LeftPaneListViewManageRepositionThemeTransition"/>
                                 </TransitionCollection>
                             </ListView.ItemContainerTransitions>
                         </ListView>
                     </ScrollViewer>
-                    <StackPanel x:Name="LeftPaneOrganizeInitialText" Orientation="Vertical" Opacity="0.75" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                    <StackPanel x:Name="LeftPaneManageInitialText" Orientation="Vertical" Opacity="0.75" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
                         <TextBlock Text="Scanned pages will appear here" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
                     </StackPanel>
@@ -371,42 +371,20 @@
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="local:ScanResultElement">
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate" 
-                                          ZoomMode="Enabled" 
-                                          MinZoomFactor="1" 
-                                          MaxZoomFactor="3"
-                                          HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Auto"
-                                          Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                                          Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
+                                            ZoomMode="Enabled" 
+                                            MinZoomFactor="1" 
+                                            MaxZoomFactor="3"
+                                            HorizontalScrollBarVisibility="Auto"
+                                            VerticalScrollBarVisibility="Auto"
+                                            Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                                            Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
                                 <Image Source="{Binding CachedImage}" 
-                                       MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
-                                       MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
-                                       Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"/>
+                                        MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                                        MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
+                                        Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"/>
                             </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
-                    <!--<ScrollViewer ZoomMode="Enabled" 
-                                MinZoomFactor="1" 
-                                MaxZoomFactor="3"
-                                HorizontalScrollBarVisibility="Auto"
-                                VerticalScrollBarVisibility="Auto"
-                                Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}"
-                                Padding="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource NegativeTopThicknessConverter}}">
-                        <Image Source="/Assets/rainbow-wallpapers-hd1.jpg" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
-                                MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
-                                MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"/>
-                    </ScrollViewer>-->
-                    <!--<ScrollViewer ZoomMode="Enabled" 
-                                MinZoomFactor="1" 
-                                MaxZoomFactor="3"
-                                HorizontalScrollBarVisibility="Auto"
-                                VerticalScrollBarVisibility="Auto"
-                                Margin="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource TopThicknessConverter}}"
-                                Padding="{Binding ElementName=GridContentPaneTopToolbar, Path=Height, Converter={StaticResource NegativeTopThicknessConverter}}">
-                        <Image Source="/Assets/rainbow-wallpapers-hd1.jpg" Margin="{Binding Height, ElementName=GridContentPaneTopToolbar, Converter={StaticResource TopThicknessConverter}}"
-                                MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
-                                MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"/>
-                    </ScrollViewer>-->
                 </FlipView>
 
                 <Frame x:Name="ContentPaneFrameProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Visibility="Collapsed" Opacity="0">
@@ -462,14 +440,14 @@
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
-                                <InkToolbarCustomPenButton x:Name="ButtonOrganize" x:Uid="ButtonOrganize" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Organize" RelativePanel.AlignRightWithPanel="True" Click="ButtonOrganize_Click">
+                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                             </RelativePanel>
                         </Grid>
-                        
                     </StackPanel>
                 </Grid>
+                
 
                 <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewLeftPane_PaneClosed">
                     <SplitView.Pane>
@@ -505,6 +483,7 @@
             x:Name="TeachingTipScope"
             x:Uid="TeachingTipScope"
             PlacementMargin="8"
+            PreferredPlacement="BottomLeft"
             IsLightDismissEnabled="True"
             ActionButtonContent="Entire document"
             CloseButtonContent="Just this image"

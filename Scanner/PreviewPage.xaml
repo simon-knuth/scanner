@@ -36,7 +36,8 @@
                 Storyboard.TargetName="TextBlockPreview"
                 Storyboard.TargetProperty="Opacity"
                 From="0.0" To="1.0"
-                Duration="0:0:0.5">
+                Duration="0:0:0.5"
+                BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
@@ -45,28 +46,29 @@
                 Storyboard.TargetName="FontIconError"
                 Storyboard.TargetProperty="Opacity"
                 From="0.0" To="1.0"
-                Duration="0:0:0.5">
+                Duration="0:0:0.5"
+                BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation
-                Storyboard.TargetName="ProgressBarPreview"
+                Storyboard.TargetName="ProgressRingPreview"
                 Storyboard.TargetProperty="Opacity"
                 From="1.0" To="0.0"
-                Duration="0:0:3">
+                Duration="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="TextBlockPreview" Duration="0:0:1" From="0.0" To="30.0">
+                             Storyboard.TargetName="TextBlockPreview" Duration="0:0:1" From="0.0" To="30.0" BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="FontIconError" Duration="0:0:1" From="0.0" To="-55.0">
+                             Storyboard.TargetName="FontIconError" Duration="0:0:1" From="0.0" To="-55.0" BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
@@ -90,7 +92,7 @@
                     <CompositeTransform/>
                 </TextBlock.RenderTransform>
             </TextBlock>
-            <controlsxaml:ProgressBar x:Name="ProgressBarPreview" IsIndeterminate="True" ShowError="False" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <controlsxaml:ProgressRing x:Name="ProgressRingPreview" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True"/>
             <FontIcon x:Name="FontIconError" FontFamily="Segoe MDL2 Assets" Glyph="&#xE783;" Opacity="0.0" FontSize="64" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <FontIcon.RenderTransform>
                     <CompositeTransform/>

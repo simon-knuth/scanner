@@ -790,4 +790,16 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <value>Bitte versuchen Sie es erneut.</value>
     <comment>The body for a generic error message.</comment>
   </data>
+  <data name="ScopeQuestionCopy" xml:space="preserve">
+    <value>Was möchten Sie kopieren?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to copy the entire document or just the currently selected image.</comment>
+  </data>
+  <data name="ScopeQuestionOpenWith" xml:space="preserve">
+    <value>Was möchten Sie öffnen?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to open the entire document or just the currently selected image.</comment>
+  </data>
+  <data name="ScopeQuestionShare" xml:space="preserve">
+    <value>Was möchten Sie teilen?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to share the entire document or just the currently selected image.</comment>
+  </data>
 </root>

@@ -100,13 +100,12 @@ namespace Scanner
             Task[] moveTasks = new Task[fileList.Count];
             for (int i = 0; i < fileList.Count; i++)
             {
-                moveTasks[i] = MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name));
+                moveTasks[i] = MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
             }
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder);
             await result.GetImagesAsync();
-            await InitializeTempFolder();
             return result;
         }
 
@@ -118,6 +117,7 @@ namespace Scanner
             if (targetFormat == SupportedFormat.PDF)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
+                await result.NumberNewConversionFiles(fileList);
                 await result.GeneratePDF(pdfName);
             }
             else
@@ -132,7 +132,6 @@ namespace Scanner
 
             result.scanResultFormat = targetFormat;
             await result.GetImagesAsync();
-            await InitializeTempFolder();
             return result;
         }
 
@@ -352,7 +351,7 @@ namespace Scanner
                     newName = newNameWithoutNumbering;
 
                     // move file to the correct folder
-                    newName = await MoveFileToFolderAsync(sourceFile, targetFolder, newName);
+                    newName = await MoveFileToFolderAsync(sourceFile, targetFolder, newName, false);
 
                     break;
 
@@ -372,20 +371,24 @@ namespace Scanner
 
         /// <summary>
         ///     Moves the <paramref name="file"/> to the <paramref name="targetFolder"/>. Attempts to name
-        ///     it <paramref name="desiredName"/>, adding a number if there is any collision.
+        ///     it <paramref name="desiredName"/>.
         /// </summary>
         /// <param name="file">The file that's to be moved.</param>
         /// <param name="targetFolder">The folder that the file shall be moved to.</param>
         /// <param name="desiredName">The name that the file should ideally have when finished.</param>
+        /// <param name="replaceExisting">Replaces file if true, otherwise asks the OS to generate a unique name.</param>
         /// <returns>The final name of the file.</returns>
-        private static async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName)
+        private static async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
         {
             try
             {
-                await file.MoveAsync(targetFolder, desiredName);
+                if (replaceExisting) await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.ReplaceExisting);
+                else await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.FailIfExists);
             }
             catch (Exception)
             {
+                if (replaceExisting) throw;
+                
                 try { await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.GenerateUniqueName); }
                 catch (Exception) { throw; }
             }
@@ -963,11 +966,11 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
+                    if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files);
+
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                         elements.Add(new ScanResultElement(file));
                     });
-
-                    await GetImageAsync(elements.Count - 1);
                 }
             } 
             else
@@ -988,15 +991,16 @@ namespace Scanner
                     conversionTasks[i] = ConvertScanAsync(i, (SupportedFormat) targetFormat, originalTargetFolder);
                 }
                 await Task.WhenAll(conversionTasks);
-
-                for (int i = GetTotalNumberOfScans() - files.Count; i < GetTotalNumberOfScans(); i++)
-                {
-                    await GetImageAsync(i);
-                }
             }
 
             // if necessary, generate PDF now
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+
+            // generate new previews
+            for (int i = GetTotalNumberOfScans() - files.Count; i < GetTotalNumberOfScans(); i++)
+            {
+                await GetImageAsync(i);
+            }
         }
 
 
@@ -1064,13 +1068,17 @@ namespace Scanner
         /// <param name="fileName"></param>
         private async Task GeneratePDF(string fileName)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
-            {
-                string newNameWithoutNumbering;
+            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+            //{
+                string newName;
+                StorageFile newPdf;
 
                 if (pdf == null)
                 {
-                    pdf = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                    newPdf = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                } else
+                {
+                    newPdf = pdf;
                 }
 
                 try
@@ -1079,7 +1087,7 @@ namespace Scanner
                     var win32ResultAsync = taskCompletionSource.Task;
 
                     // save the source and target name
-                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = fileName;
+                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
 
                     // call win32 app and wait for result
                     if (appServiceConnection == null)
@@ -1092,30 +1100,43 @@ namespace Scanner
                         message.Add("REQUEST", "CONVERT");
                         var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
                     }
-                    await win32ResultAsync;
+                    await win32ResultAsync.ConfigureAwait(false);
 
                     // get result file and move it to its correct folder
-                    pdf = null;
-                    pdf = await ApplicationData.Current.TemporaryFolder.GetFileAsync(fileName);
+                    newPdf = null;
+                    newPdf = await ApplicationData.Current.TemporaryFolder.GetFileAsync(fileName);
 
                     // move PDF file to target folder
-                    if (pdf.DisplayName[pdf.DisplayName.Length - 1] == ')')
+                    newName = newPdf.Name;
+                    if (pdf == null)
                     {
-                        newNameWithoutNumbering = RemoveNumbering(pdf.Name);
+                        // PDF generated in target folder for the first time
+                        await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, false);
                     }
                     else
                     {
-                        newNameWithoutNumbering = pdf.Name;
+                        // PDF updated ~> replace old file
+                        await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, true);
                     }
-                    await MoveFileToFolderAsync(pdf, originalTargetFolder, newNameWithoutNumbering);
+                    pdf = newPdf;
+                    return;
                 }
                 catch (Exception) { throw; }
-            });
+            //});
         }
 
         private Task GeneratePDF()
         {
             return GeneratePDF(pdf.Name);
+        }
+
+        private async Task NumberNewConversionFiles(IReadOnlyList<StorageFile> files)
+        {
+            int nextNumber = GetTotalNumberOfScans() - 1;
+            foreach (StorageFile file in files)
+            {
+                await file.RenameAsync(nextNumber + file.FileType);
+            }
         }
     }
 }

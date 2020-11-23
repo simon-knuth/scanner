@@ -790,4 +790,16 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <value>Please try again.</value>
     <comment>The body for a generic error message.</comment>
   </data>
+  <data name="ScopeQuestionCopy" xml:space="preserve">
+    <value>What do you want to copy?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to copy the entire document or just the currently selected image.</comment>
+  </data>
+  <data name="ScopeQuestionOpenWith" xml:space="preserve">
+    <value>What do you want to open?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to open the entire document or just the currently selected image.</comment>
+  </data>
+  <data name="ScopeQuestionShare" xml:space="preserve">
+    <value>What do you want to share?</value>
+    <comment>The question that appears when trying to determine, whether the user wants to share the entire document or just the currently selected image.</comment>
+  </data>
 </root>
