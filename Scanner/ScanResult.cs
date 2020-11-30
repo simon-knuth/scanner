@@ -175,6 +175,18 @@ namespace Scanner
 
 
         /// <summary>
+        ///     Gets the thumbnail of a single scan in this instance.
+        /// </summary>
+        /// <param name="index">The desired thumbnail's index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public BitmapImage GetThumbnail(int index)
+        {
+            if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for getting file.");
+            else return elements.ElementAt(index).Thumbnail;
+        }
+
+
+        /// <summary>
         ///     Gets an image preview of every individual scan in this instance.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
@@ -547,7 +559,7 @@ namespace Scanner
             if (elements[index].ScanFile.Name == newName) return;
 
             // rename
-            await elements[index].ScanFile.RenameAsync(newName, NameCollisionOption.FailIfExists);
+            await elements[index].RenameFileAsync(newName);
         }
 
 
@@ -966,11 +978,11 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files);
-
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                         elements.Add(new ScanResultElement(file));
                     });
+
+                    if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files);
                 }
             } 
             else
@@ -1068,64 +1080,61 @@ namespace Scanner
         /// <param name="fileName"></param>
         private async Task GeneratePDF(string fileName)
         {
-            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
-            //{
-                string newName;
-                StorageFile newPdf;
+            string newName;
+            StorageFile newPdf;
 
+            if (pdf == null)
+            {
+                newPdf = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            } else
+            {
+                newPdf = pdf;
+            }
+
+            try
+            {
+                taskCompletionSource = new TaskCompletionSource<bool>();
+                var win32ResultAsync = taskCompletionSource.Task;
+
+                // save the source and target name
+                ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
+
+                // call win32 app and wait for result
+                //if (appServiceConnection == null)
+                //{
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                //}
+                //else
+                //{
+                    //ValueSet message = new ValueSet();
+                    //message.Add("REQUEST", "CONVERT");
+                    //var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
+                //}
+                await win32ResultAsync.ConfigureAwait(false);
+
+                // get result file and move it to its correct folder
+                newPdf = null;
+                newPdf = await ApplicationData.Current.TemporaryFolder.GetFileAsync(fileName);
+
+                // move PDF file to target folder
+                newName = newPdf.Name;
                 if (pdf == null)
                 {
-                    newPdf = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-                } else
-                {
-                    newPdf = pdf;
+                    // PDF generated in target folder for the first time
+                    await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, false);
                 }
-
-                try
+                else
                 {
-                    taskCompletionSource = new TaskCompletionSource<bool>();
-                    var win32ResultAsync = taskCompletionSource.Task;
-
-                    // save the source and target name
-                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
-
-                    // call win32 app and wait for result
-                    if (appServiceConnection == null)
-                    {
-                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                    }
-                    else
-                    {
-                        ValueSet message = new ValueSet();
-                        message.Add("REQUEST", "CONVERT");
-                        var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
-                    }
-                    await win32ResultAsync.ConfigureAwait(false);
-
-                    // get result file and move it to its correct folder
-                    newPdf = null;
-                    newPdf = await ApplicationData.Current.TemporaryFolder.GetFileAsync(fileName);
-
-                    // move PDF file to target folder
-                    newName = newPdf.Name;
-                    if (pdf == null)
-                    {
-                        // PDF generated in target folder for the first time
-                        await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, false);
-                    }
-                    else
-                    {
-                        // PDF updated ~> replace old file
-                        await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, true);
-                    }
-                    pdf = newPdf;
-                    return;
+                    // PDF updated ~> replace old file
+                    await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, true);
                 }
-                catch (Exception) { throw; }
-            //});
+                pdf = newPdf;
+                return;
+            }
+            catch (Exception) { throw; }
         }
 
-        private Task GeneratePDF()
+        public Task GeneratePDF()
         {
             return GeneratePDF(pdf.Name);
         }
@@ -1136,6 +1145,32 @@ namespace Scanner
             foreach (StorageFile file in files)
             {
                 await file.RenameAsync(nextNumber + file.FileType);
+                nextNumber++;
+            }
+        }
+
+        public async Task ApplyElementOrderToFiles()
+        {
+            if (GetFileFormat() != SupportedFormat.PDF) throw new ApplicationException("Can only reorder source files for PDF.");
+
+            int nextNumber = 0;
+            List<ScanResultElement> changedElements = new List<ScanResultElement>();
+
+            // first rename all affected files to a temporary name to free up the file names
+            foreach (ScanResultElement element in elements)
+            {
+                if (element.ScanFile.DisplayName != nextNumber.ToString())
+                {
+                    await element.RenameFileAsync("_" + nextNumber + element.ScanFile.FileType);
+                    changedElements.Add(element);
+                }
+                nextNumber++;
+            }
+
+            // then give each file its final name
+            foreach (ScanResultElement element in changedElements)
+            {
+                await element.RenameFileAsync(element.ScanFile.DisplayName.Split("_")[1] + element.ScanFile.FileType);
             }
         }
     }

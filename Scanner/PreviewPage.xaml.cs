@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Streams;
 using Windows.UI.Core;

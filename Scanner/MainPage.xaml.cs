@@ -57,7 +57,6 @@ namespace Scanner
             {
                 FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                 StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
-                FrameLeftPaneManageHeader.Height = titleBar.Height;
                 currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
             };
 
@@ -174,6 +173,7 @@ namespace Scanner
                 firstLoaded = false;
 
                 await LoadScanFolder();
+                await InitializeTempFolder();
 
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
@@ -468,7 +468,9 @@ namespace Scanner
                 TeachingTipDevices.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
             }
+            TeachingTipEmpty.CloseButtonContent = LocalizedString("CloseButtonText");
         }
 
         private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -530,14 +532,6 @@ namespace Scanner
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16,0,16,0);
                     ButtonManage.Visibility = Visibility.Visible;
                     ButtonScanOptions.Visibility = Visibility.Collapsed;
-                    if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2 <= currentTitleBarButtonWidth)
-                    {
-                        StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
-                    }
-                    else
-                    {
-                        StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
-                    }
                 } else if (width >= 1750 && uiState != UIstate.wide)    // wide window
                 {
                     uiState = UIstate.wide;
@@ -562,14 +556,15 @@ namespace Scanner
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
                     ButtonManage.Visibility = Visibility.Collapsed;
                     ButtonScanOptions.Visibility = Visibility.Collapsed;
-                    if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2 <= currentTitleBarButtonWidth)
-                    {
-                        StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
-                    }
-                    else
-                    {
-                        StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
-                    }
+                }
+                if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2 <= currentTitleBarButtonWidth
+                || uiState == UIstate.small)
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
+                }
+                else
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
                 }
             });
         }
@@ -652,8 +647,8 @@ namespace Scanner
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
                 async () =>
                 {
-                    await TransitionLeftPaneButtonsForScan(true);
                     ButtonLeftPaneScan.IsEnabled = false;
+                    await TransitionLeftPaneButtonsForScan(true);
                     FrameLeftPaneScanSource.IsEnabled = false;
                     FrameLeftPaneScanSourceMode.IsEnabled = false;
                     FrameLeftPaneScanColor.IsEnabled = false;
@@ -664,12 +659,14 @@ namespace Scanner
                     await LockToolbar();
                     StoryboardProgressBarScanBegin.Begin();
                 });
-
-                await InitializeTempFolder();
                 
                 flowState = FlowState.scanning;
                 bool scanSuccessful = false;
-                if (startFresh) scanResult = null;
+                if (startFresh)
+                {
+                    scanResult = null;
+                    await InitializeTempFolder();
+                }
                 Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;                
 
                 ImageScannerScanSource scanSource;
@@ -861,7 +858,7 @@ namespace Scanner
                     await RefreshFileName();
                 });
 
-                CleanMenuForNewScanner(selectedScanner);
+                await CleanMenuForNewScanner(selectedScanner);
                 await RefreshScanButton();
 
                 return scanSuccessful;
@@ -1258,11 +1255,20 @@ namespace Scanner
 
             if (scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
-                scopeAction = ScopeActions.Share;
-                TeachingTipScope.Target = ButtonShare;
-                TeachingTipScope.Title = LocalizedString("ScopeQuestionShare");
-                ReliablyOpenTeachingTip(TeachingTipScope);
-                return;
+                if (scanResult.GetTotalNumberOfScans() > 1)
+                {
+                    scopeAction = ScopeActions.Share;
+                    TeachingTipScope.Target = ButtonShare;
+                    TeachingTipScope.Title = LocalizedString("ScopeQuestionShare");
+                    ReliablyOpenTeachingTip(TeachingTipScope);
+                    return;
+                }
+                else
+                {
+                    shareIndexes = null;
+                    Share();
+                    return;
+                }
             }
 
             shareIndexes = new int[1];
@@ -1277,14 +1283,28 @@ namespace Scanner
             switch (scopeAction)
             {
                 case ScopeActions.Copy:
-                    await scanResult.CopyAsync();
+                    try
+                    {
+                        await scanResult.CopyAsync();
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                            TeachingTipScope.IsOpen = false;
+                            StoryboardIconCopyDone1.Begin();
+                        });
+                    }
+                    catch (Exception)
+                    {
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                            LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
+                    }
                     break;
                 case ScopeActions.OpenWith:
                     await scanResult.OpenWithAsync();
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
                     break;
                 case ScopeActions.Share:
                     shareIndexes = null;
                     Share();
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
                     break;
                 default:
                     break;
@@ -1307,32 +1327,210 @@ namespace Scanner
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
-            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            try
             {
-                scopeAction = ScopeActions.Copy;
-                TeachingTipScope.Target = ButtonCopy;
-                TeachingTipScope.Title = LocalizedString("ScopeQuestionCopy");
-                ReliablyOpenTeachingTip(TeachingTipScope);
-                return;
-            }
+                if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+                {
+                    if (scanResult.GetTotalNumberOfScans() > 1)
+                    {
+                        scopeAction = ScopeActions.Copy;
+                        TeachingTipScope.Target = ButtonCopy;
+                        TeachingTipScope.Title = LocalizedString("ScopeQuestionCopy");
+                        ReliablyOpenTeachingTip(TeachingTipScope);
+                        return;
+                    }
+                    else
+                    {
+                        await scanResult.CopyAsync();
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                        return;
+                    }
+                }
 
-            await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
+                await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+            }
+            catch (Exception)
+            {
+                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                    LocalizedString("ErrorMessageCopyHeader"), LocalizedString("ErrorMessageCopyBody"));
+            }            
         }
 
         private async void ButtonOpenWith_Click(object sender, RoutedEventArgs e)
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
-            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            try
             {
-                scopeAction = ScopeActions.OpenWith;
-                TeachingTipScope.Target = ButtonOpenWith;
-                TeachingTipScope.Title = LocalizedString("ScopeQuestionOpenWith");
-                ReliablyOpenTeachingTip(TeachingTipScope);
-                return;
-            }
+                if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+                {
+                    if (scanResult.GetTotalNumberOfScans() > 1)
+                    {
+                        scopeAction = ScopeActions.OpenWith;
+                        TeachingTipScope.Target = ButtonOpenWith;
+                        TeachingTipScope.Title = LocalizedString("ScopeQuestionOpenWith");
+                        ReliablyOpenTeachingTip(TeachingTipScope);
+                        return;
+                    }
+                    else
+                    {
+                        await scanResult.OpenWithAsync();
+                        return;
+                    }
+                }
 
-            await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
+                await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
+            }
+            catch (Exception) { }
+        }
+
+        private async void TeachingTipScope_CloseButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            // user wants to apply action for current image
+            switch (scopeAction)
+            {
+                case ScopeActions.Copy:
+                    await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                    break;
+                case ScopeActions.OpenWith:
+                    await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
+                    break;
+                case ScopeActions.Share:
+                    shareIndexes = new int[1];
+                    shareIndexes[0] = FlipViewScan.SelectedIndex;
+                    Share();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void LeftPaneListViewManage_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            if (scanResult != null && scanResult.GetTotalNumberOfScans() > 1 
+                && scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                // item order may have changed, generate PDF again
+                await scanResult.ApplyElementOrderToFiles();
+                await scanResult.GeneratePDF();
+            }
+        }
+
+        private void TextBoxRename_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter)
+            {
+                TeachingTipRename_ActionButtonClick(null, null);
+            }
+        }
+
+        private void TeachingTipRename_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            if (scanResult == null) return;
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF) Rename(null, TextBoxRename.Text);
+            else Rename(FlipViewScan.SelectedIndex, TextBoxRename.Text);
+        }
+
+        private async void Rename(int? index, string newName)
+        {
+            try
+            {
+                if (scanResult != null)
+                {
+                    if (index == null && scanResult.GetFileFormat() == SupportedFormat.PDF)
+                    {
+                        // rename PDF
+                        await scanResult.RenameScanAsync(newName + scanResult.pdf.FileType);
+                        await RefreshFileName();
+                    }
+                    else if (scanResult.GetTotalNumberOfScans() - 1 >= index || newName.Length > 0)
+                    {
+                        // rename image file
+                        StorageFile image = scanResult.GetImageFile((int)index);
+                        await scanResult.RenameScanAsync((int)index, newName + image.FileType);
+                        await RefreshFileName();
+                    }
+                    else return;
+
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        TeachingTipRename.IsOpen = false;
+                        StoryboardIconRenameDone1.Begin();
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                ErrorMessage.ShowErrorMessage(TeachingTipEmpty, 
+                    LocalizedString("ErrorMessageRenameHeader"), LocalizedString("ErrorMessageRenameBody"));
+            }
+        }
+
+        private async void ButtonRename_Click(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+                if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+                {
+                    // use PDF name
+                    TextBoxRename.Text = scanResult.pdf.DisplayName;
+                }
+                else
+                {
+                    // use selected image file name
+                    TextBoxRename.Text = scanResult.GetImageFile(FlipViewScan.SelectedIndex).DisplayName;
+                }
+
+                ReliablyOpenTeachingTip(TeachingTipRename);
+                TextBoxRename.SelectAll();
+                //TextBoxRename.Focus(FocusState.Programmatic);
+            });
+        }
+
+        private async void StoryboardIconCopyDone1_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone2.Begin());
+        }
+
+        private async void StoryboardIconCopyDone2_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => FontIconCopyDone.Opacity = 1.0);
+        }
+
+        private async void StoryboardIconRenameDone1_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconRenameDone2.Begin());
+        }
+
+        private async void StoryboardIconRenameDone2_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => FontIconRenameDone.Opacity = 1.0);
+        }
+
+        private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            try
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                {
+                    args.AllowedOperations = DataPackageOperation.Copy;
+                    args.Data.RequestedOperation = DataPackageOperation.Copy;
+
+                    List<StorageFile> list = new List<StorageFile>();
+                    list.Add(scanResult.GetImageFile(FlipViewScan.SelectedIndex));
+                    args.Data.SetStorageItems(list);
+
+                    args.DragUI.SetContentFromBitmapImage(scanResult.GetThumbnail(FlipViewScan.SelectedIndex));
+                });
+            }
+            catch (Exception) { }
         }
     }
 }

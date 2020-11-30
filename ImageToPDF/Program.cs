@@ -22,22 +22,22 @@ namespace ImageToPDF
         public static ManualResetEvent serviceCallEvent = new ManualResetEvent(false);
 
         [STAThread]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            ConnectToService();
+            await ConnectToService();
 
-            Conversion();
+            await Conversion();
 
-            while (true)
-            {
-                serviceCallEvent.WaitOne();
+            //while (true)
+            //{
+                //serviceCallEvent.WaitOne();
 
-                serviceCallEvent = new ManualResetEvent(false);
+                //serviceCallEvent = new ManualResetEvent(false);
 
-                ConnectToService();
+                //ConnectToService();
 
-                Conversion();
-            }
+                //Conversion();
+            //}
         }
 
 
@@ -45,7 +45,7 @@ namespace ImageToPDF
         /// <summary>
         ///     Connects to the app service, which links the app to its UWP container.
         /// </summary>
-        private static async void ConnectToService()
+        private static async Task ConnectToService()
         {
             appServiceConnection = new AppServiceConnection();
             appServiceConnection.AppServiceName = appServiceName;
@@ -69,7 +69,7 @@ namespace ImageToPDF
         /// <summary>
         ///     Converts the source file to a PDF file format.
         /// </summary>
-        private static async void Conversion()
+        private static async Task Conversion()
         {
             try
             {
