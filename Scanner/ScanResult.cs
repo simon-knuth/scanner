@@ -463,7 +463,6 @@ namespace Scanner
 
                             await encoder.FlushAsync();
                             elements[index].CurrentRotation = encoder.BitmapTransform.Rotation;
-     
                         }
                     }
                     catch (Exception e)

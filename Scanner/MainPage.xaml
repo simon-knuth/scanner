@@ -361,9 +361,9 @@
                                     </AppBarToggleButton>
                                     <AppBarSeparator/>
                                     <AppBarButton x:Name="ButtonLeftPaneManageRotate" ToolTipService.ToolTip="Rotate selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Rotate" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageRotate, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageShare, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageCopy, Path=ActualHeight}"/>
                                     <AppBarButton x:Name="ButtonLeftPaneManageDelete" ToolTipService.ToolTip="Delete selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Delete" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageDelete, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageCopy, Path=ActualHeight}"/>
+                                    <AppBarButton x:Name="ButtonLeftPaneManageShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageShare, Path=ActualHeight}"/>
                                 </CommandBar>
                             </ScrollViewer>
                         </Grid>
@@ -395,7 +395,6 @@
                                 <TransitionCollection>
                                     <AddDeleteThemeTransition/>
                                     <ReorderThemeTransition/>
-                                    <RepositionThemeTransition x:Name="LeftPaneListViewManageRepositionThemeTransition"/>
                                 </TransitionCollection>
                             </ListView.ItemContainerTransitions>
                         </ListView>
@@ -480,17 +479,17 @@
                                         </TransitionCollection>
                                     </StackPanel.ChildrenTransitions>
 
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Crop">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Crop">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Rotate">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Draw">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Draw">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Rename" Click="ButtonRename_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Rename" Click="ButtonRename_Click">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconRename" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                 <FontIcon.RenderTransform>
@@ -504,11 +503,11 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Delete">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Delete">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)" Click="ButtonCopy_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)" Click="ButtonCopy_Click">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                 <FontIcon.RenderTransform>
@@ -522,10 +521,10 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" ToolTipService.ToolTip="Open with" Click="ButtonOpenWith_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Open with" Click="ButtonOpenWith_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorStyle}" Click="ButtonShare_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" Click="ButtonShare_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
@@ -589,6 +588,7 @@
             ActionButtonContent="Confirm"
             ActionButtonClick="TeachingTipRename_ActionButtonClick"
             CloseButtonContent="Cancel"
+            Closed="TeachingTipRename_Closed"
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom" 
             Target="{Binding ElementName=ButtonRename}">
