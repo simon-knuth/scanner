@@ -748,6 +748,7 @@ namespace Scanner
                     // get scan
                     ImageScannerScanResult scannerScanResult = null;
                     scanProgress = new Progress<uint>();
+                    scanProgress.ProgressChanged += ScanProgress_ProgressChanged;
                     scanCancellationToken = new CancellationTokenSource();
 
                     try
@@ -870,6 +871,23 @@ namespace Scanner
             }            
         }
 
+        private async void ScanProgress_ProgressChanged(object sender, uint e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (e <= 1)
+                {
+                    TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
+                    TextBlockContentPaneGridProgressRingScan.Text = "";
+                }
+                else
+                {
+                    TextBlockContentPaneGridProgressRingScan.Text = e.ToString();
+                    TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Visible;
+                }
+            });
+        }
 
         private async Task<Tuple<ImageScannerFormat, SupportedFormat?>> PrepareScanConfig()
         {

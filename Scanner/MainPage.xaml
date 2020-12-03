@@ -91,9 +91,9 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardProgressBarScanBegin">
-                <DoubleAnimation Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Opacity" To="1.0"
+                <DoubleAnimation Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Opacity" To="1.0"
                                  Duration="0:0:0.5"/>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
@@ -101,11 +101,16 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardProgressBarScanEnd">
-                <DoubleAnimation Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Opacity" To="0.0"
+                <DoubleAnimation Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Opacity" To="0.0"
                                  Duration="0:0:0.5"/>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneFrameProgressRingScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextBlockContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
             </Storyboard>
@@ -432,7 +437,7 @@
                     </TextBlock>
                 </StackPanel>
 
-                <FlipView x:Name="FlipViewScan" Style="{StaticResource FlipViewStyleNoButtons}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" v1809:CornerRadius="0" Visibility="Collapsed" SelectionChanged="FlipViewScan_SelectionChanged">
+                <FlipView x:Name="FlipViewScan" Style="{StaticResource FlipViewStyleRoundedButtons}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" v1809:CornerRadius="0" Visibility="Collapsed" SelectionChanged="FlipViewScan_SelectionChanged">
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="local:ScanResultElement">
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate" 
@@ -453,9 +458,10 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <Frame x:Name="ContentPaneFrameProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Visibility="Collapsed" Opacity="0">
+                <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0">
                     <controlsxaml:ProgressRing Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Frame>
+                    <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
+                </Grid>
 
                 <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top">
                     <v1809:Grid.BackgroundTransition>
@@ -469,7 +475,7 @@
                                 <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                             </StackPanel>
                             <RelativePanel VerticalAlignment="Bottom">
-                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                                 <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
@@ -528,7 +534,7 @@
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
-                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
+                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                             </RelativePanel>
