@@ -14,7 +14,11 @@
     NavigationCacheMode="Disabled" 
     KeyDown="Page_KeyDown" Loaded="Page_Loaded">
 
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <Page.Resources>
+        <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
         <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
@@ -28,9 +32,13 @@
             <Setter Property="CornerRadius" Value="2"/>
         </v1809:Style>
 
+
+        <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
         <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
         <local:NegativeTopThicknessConverter x:Key="NegativeTopThicknessConverter"/>
-
+        
+        
+        <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
         <Storyboard x:Name="StoryboardError">
             <DoubleAnimation
                 Storyboard.TargetName="TextBlockPreview"
@@ -76,7 +84,9 @@
         </Storyboard>
     </Page.Resources>
 
-
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridPreviewPage">
         <Grid.RowDefinitions>
             <RowDefinition/>

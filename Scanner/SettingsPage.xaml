@@ -14,6 +14,7 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
             <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
@@ -26,12 +27,16 @@
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
-            
+
+
+            <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
-
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridSettingsPage">
         <Grid.RowDefinitions>
             <RowDefinition/>

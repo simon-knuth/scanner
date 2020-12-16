@@ -850,33 +850,46 @@ namespace Scanner
         ///     Copies all image files in this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyImagesAsync()
+        public Task CopyImagesAsync()
         {
-            if (GetTotalNumberOfScans() == 0) throw new ApplicationException("No scans left to copy."); 
-            if (GetTotalNumberOfScans() == 1)
+            List<int> indices = new List<int>();
+            for (int i = 0; i < GetTotalNumberOfScans(); i++)
             {
-                await CopyImageAsync(0);
-                return;
+                indices.Add(i);
             }
-            
+
+            return CopyImagesAsync(indices);
+        }
+
+
+        // <summary>
+        ///     Copies some image files in this instance to the clipboard.
+        /// </summary>
+        /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
+        public async Task CopyImagesAsync(IList<int> indices)
+        {
+            if (GetTotalNumberOfScans() == 0) throw new ApplicationException("No scans left to copy.");
+
             // create DataPackage for clipboard
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
-            // check whether the files are still available
-            foreach (ScanResultElement element in elements)
+            // check indices and whether the corresponding files are still available
+            foreach (int index in indices)
             {
-                try { await element.ScanFile.OpenAsync(FileAccessMode.Read); }
+                if (index < 0 || index > GetTotalNumberOfScans() - 1) throw new ApplicationException("Invalid index for copying scan file.");
+                
+                try { await elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
                 catch (Exception e) { throw new ApplicationException("At least one scan file is not available anymore.", e); }
             }
 
-            // copy all to clipboard
+            // copy desired scans to clipboard
             try
             {
                 List<StorageFile> list = new List<StorageFile>();
-                foreach (ScanResultElement element in elements)
+                foreach (int index in indices)
                 {
-                    list.Add(element.ScanFile);
+                    list.Add(elements[index].ScanFile);
                 }
                 dataPackage.SetStorageItems(list);
                 Clipboard.SetContent(dataPackage);
@@ -886,6 +899,7 @@ namespace Scanner
                 throw new ApplicationException("Something went wrong while copying the scans.", e);
             }
         }
+
 
 
         /// <summary>

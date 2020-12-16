@@ -12,14 +12,21 @@
     x:Class="Scanner.MainPage"
     xmlns:local="using:Scanner"
     mc:Ignorable="d" 
-    NavigationCacheMode="Required" Loaded="Page_Loaded" SizeChanged="Page_SizeChanged">
-
+    NavigationCacheMode="Required" 
+    Loaded="Page_Loaded" 
+    SizeChanged="Page_SizeChanged">
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        
+            
+            
+            <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
             <Style x:Name="ImageCropperThumbStyleAcrylic" TargetType="controls:ImageCropperThumb">
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
             </Style>
@@ -35,7 +42,9 @@
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
-
+            
+            
+            <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
             <Storyboard x:Name="StoryboardChangeButtonsBeginScan">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="-48.0">
@@ -135,6 +144,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
+
             <Storyboard x:Name="StoryboardIconRenameDone2" Completed="StoryboardIconRenameDone2_Completed">
                 <DoubleAnimation Storyboard.TargetName="FontIconRename" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
@@ -170,6 +180,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
+
             <Storyboard x:Name="StoryboardIconCopyDone2" Completed="StoryboardIconCopyDone2_Completed">
                 <DoubleAnimation Storyboard.TargetName="FontIconCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
@@ -185,6 +196,44 @@
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardIconLeftPaneManageCopyDone1" Completed="StoryboardIconLeftPaneManageCopyDone1_Completed" Duration="0:0:1.8">
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardIconLeftPaneManageCopyDone2" Completed="StoryboardIconLeftPaneManageCopyDone2_Completed">
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopy" Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+            </Storyboard>
+
+
+            <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
             <local:ButtonShadowConverter x:Key="ButtonShadowConverter"/>
             <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
@@ -196,6 +245,9 @@
         </ResourceDictionary>
     </Page.Resources>
 
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColumnLeftPane" Width="3*" MinWidth="300" MaxWidth="350"/>
@@ -358,18 +410,37 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="1"  HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
-                                <CommandBar VerticalAlignment="Bottom" DefaultLabelPosition="Right" Background="Transparent" IsDynamicOverflowEnabled="False" HorizontalAlignment="Center" OverflowButtonVisibility="Collapsed">
-                                    <AppBarToggleButton Label="Select" IsEnabled="False" Style="{StaticResource AppBarToggleButtonRevealStyle}" v1809:CornerRadius="2">
-                                        <AppBarToggleButton.Icon>
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE762;"/>
-                                        </AppBarToggleButton.Icon>
-                                    </AppBarToggleButton>
-                                    <AppBarSeparator/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageRotate" ToolTipService.ToolTip="Rotate selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Rotate" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageRotate, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageDelete" ToolTipService.ToolTip="Delete selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Delete" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageDelete, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageCopy" ToolTipService.ToolTip="Copy selection to clipboard" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Copy" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageCopy, Path=ActualHeight}"/>
-                                    <AppBarButton x:Name="ButtonLeftPaneManageShare" ToolTipService.ToolTip="Share selection" IsEnabled="False" Style="{StaticResource AppBarButtonRevealStyle}" Icon="Share" LabelPosition="Collapsed" v1809:CornerRadius="2" Width="{Binding ElementName=ButtonLeftPaneManageShare, Path=ActualHeight}"/>
-                                </CommandBar>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Frame>
+                                        <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageSelect" x:Uid="ButtonLeftPaneManageSelect" Click="ButtonLeftPaneManageSelect_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Select">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE762;" FontSize="16"/>
+                                        </InkToolbarCustomPenButton>
+                                    </Frame>
+                                    <Custom:ToolbarSeparator/>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonLeftPaneManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Rotate selection">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonLeftPaneManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" ToolTipService.ToolTip="Delete selection">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageCopy" x:Uid="ButtonLeftPaneManageCopy" Click="ButtonLeftPaneManageCopy_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Copy selection to clipboard">
+                                        <Grid Padding="0" Margin="0">
+                                            <FontIcon x:Name="FontIconLeftPaneManageCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                                <FontIcon.RenderTransform>
+                                                    <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                                </FontIcon.RenderTransform>
+                                            </FontIcon>
+                                            <FontIcon x:Name="FontIconLeftPaneManageCopyDone" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                                <FontIcon.RenderTransform>
+                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                                </FontIcon.RenderTransform>
+                                            </FontIcon>
+                                        </Grid>
+                                    </InkToolbarCustomPenButton>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageShare" x:Uid="ButtonLeftPaneManageShare" Click="ButtonLeftPaneManageShare_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Share selection">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
+                                    </InkToolbarCustomPenButton>
+                                </StackPanel>
                             </ScrollViewer>
                         </Grid>
                     </Grid>
@@ -379,13 +450,13 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:ScanResultElement">
                                     <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
-                                        <Grid Padding="16,6,20,6" HorizontalAlignment="Stretch" Height="80">
+                                        <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="3*"/>
                                                 <ColumnDefinition Width="7*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="5">
+                                            <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
                                                 <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                     <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
                                                 </Frame>
@@ -458,7 +529,7 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0">
+                <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0" Visibility="Collapsed">
                     <controlsxaml:ProgressRing Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
                 </Grid>
@@ -479,22 +550,16 @@
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                                 <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
-                                    <StackPanel.ChildrenTransitions>
-                                        <TransitionCollection>
-                                            <EntranceThemeTransition FromVerticalOffset="-30" IsStaggeringEnabled="True"/>
-                                        </TransitionCollection>
-                                    </StackPanel.ChildrenTransitions>
-
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Crop">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
+                                        <FontIcon x:Name="FontIconCrop" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+                                        <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Draw">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
+                                        <FontIcon x:Name="FontIconDraw" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <Custom:ToolbarSeparator/>
+                                    <Custom:ToolbarSeparator x:Name="ToolbarSeparator1"/>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonRename" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Rename" Click="ButtonRename_Click">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconRename" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16" RenderTransformOrigin="0.5,0.5">
@@ -510,7 +575,7 @@
                                         </Grid>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Delete">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
+                                        <FontIcon x:Name="FontIconDelete" FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator/>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)" Click="ButtonCopy_Click">
@@ -527,11 +592,11 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Open with" Click="ButtonOpenWith_Click">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Open with" Click="ButtonOpenWith_Click" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon x:Name="FontIconOpenWith" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AC;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" Click="ButtonShare_Click">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16" ToolTipService.ToolTip="Share (Ctrl+S)"/>
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Share (Ctrl+S)" Click="ButtonShare_Click">
+                                        <FontIcon x:Name="FontIconShare" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
                                 <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
@@ -607,9 +672,9 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEBE8;" FontSize="24" Margin="0,0,8,0"/>
                     <TextBlock Text="Debug Menu" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
-                <ScrollViewer VerticalScrollMode="Auto" MaxHeight="300">
+                <ScrollViewer VerticalScrollMode="Auto" MaxHeight="300" Padding="0,0,24,0">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <TextBlock Text="Scan from files" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <TextBlock Text="Scan from files" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,6,0,16"/>
                         <StackPanel Orientation="Horizontal">
                             <ComboBox x:Name="ComboBoxDebugFormat" Width="150"/>
                             <CheckBox x:Name="CheckBoxDebugStartFresh" Content="Start fresh" Margin="24,0,0,0"/>
@@ -618,24 +683,24 @@
 
                         <TextBlock Text="Test error message" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <TextBox x:Name="TextBoxDebugShowErrorTitle" PlaceholderText="Title"/>
-                        <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle"/>
-                        <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click"/>
+                        <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle" Margin="0,3,0,0"/>
+                        <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click" Margin="0,6,0,0"/>
 
                         <TextBlock Text="Fake scanner" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <TextBox x:Name="TextBoxDebugFakeScannerName" Text="Some scanner"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                            <StackPanel Orientation="Vertical" v1809:CornerRadius="3" Padding="3" Margin="0,1,0,1">
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAutoPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerAuto}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                            <StackPanel Orientation="Vertical" v1809:CornerRadius="3" Padding="3" Margin="0,1,0,1">
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbedPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedColor" Content="Color" IsChecked="True" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedGrayscale" Content="Grayscale" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFlatbedMonochrome" Content="Monochrome" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFlatbed}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Vertical" BorderBrush="LightGray" BorderThickness="1" v1809:CornerRadius="3" Padding="3" Margin="1">
+                            <StackPanel Orientation="Vertical" v1809:CornerRadius="3" Padding="3" Margin="0,1,0,1">
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="True"/>
                                 <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeederPreview" Header="Preview" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsChecked="True" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>

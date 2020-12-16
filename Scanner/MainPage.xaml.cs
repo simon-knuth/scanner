@@ -651,8 +651,8 @@ namespace Scanner
                     FrameLeftPaneResolution.IsEnabled = false;
                     FrameLeftPaneScanFeeder.IsEnabled = false;
                     FrameLeftPaneScanFormat.IsEnabled = false;
-                    ScrollViewerLeftPaneManage.IsEnabled = false;
-                    await LockToolbar();
+                    LockPaneManage(true);
+                    LockToolbar();
                     StoryboardProgressBarScanBegin.Begin();
                 });
                 
@@ -846,8 +846,8 @@ namespace Scanner
                     FrameLeftPaneResolution.IsEnabled = true;
                     FrameLeftPaneScanFeeder.IsEnabled = true;
                     FrameLeftPaneScanFormat.IsEnabled = true;
-                    ScrollViewerLeftPaneManage.IsEnabled = true;
-                    await UnlockToolbar();
+                    UnlockPaneManage(false);
+                    UnlockToolbar();
                     StoryboardProgressBarScanEnd.Begin();
                     FlipViewScan.Visibility = Visibility.Visible;
                     LeftPaneManageInitialText.Visibility = Visibility.Collapsed;
@@ -1039,7 +1039,10 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                LeftPaneListViewManage.SelectedIndex = FlipViewScan.SelectedIndex;
+                if (flowState != FlowState.select)
+                {
+                    LeftPaneListViewManage.SelectedIndex = FlipViewScan.SelectedIndex;
+                }
             });
         }
 
@@ -1049,36 +1052,28 @@ namespace Scanner
             catch (Exception) { }
         }
 
-        private async Task LockToolbar()
+        private void LockToolbar()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                ButtonCrop.IsEnabled = false;
-                ButtonRotate.IsEnabled = false;
-                ButtonDraw.IsEnabled = false;
-                ButtonRename.IsEnabled = false;
-                ButtonDelete.IsEnabled = false;
-                ButtonCopy.IsEnabled = false;
-                ButtonOpenWith.IsEnabled = false;
-                ButtonShare.IsEnabled = false;
-            });
+            ButtonCrop.IsEnabled = false;
+            ButtonRotate.IsEnabled = false;
+            ButtonDraw.IsEnabled = false;
+            ButtonRename.IsEnabled = false;
+            ButtonDelete.IsEnabled = false;
+            ButtonCopy.IsEnabled = false;
+            ButtonOpenWith.IsEnabled = false;
+            ButtonShare.IsEnabled = false;
         }
 
-        private async Task UnlockToolbar()
+        private void UnlockToolbar()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                ButtonCrop.IsEnabled = true;
-                ButtonRotate.IsEnabled = true;
-                ButtonDraw.IsEnabled = true;
-                ButtonRename.IsEnabled = true;
-                ButtonDelete.IsEnabled = true;
-                ButtonCopy.IsEnabled = true;
-                ButtonOpenWith.IsEnabled = true;
-                ButtonShare.IsEnabled = true;
-            });
+            ButtonCrop.IsEnabled = true;
+            ButtonRotate.IsEnabled = true;
+            ButtonDraw.IsEnabled = true;
+            ButtonRename.IsEnabled = true;
+            ButtonDelete.IsEnabled = true;
+            ButtonCopy.IsEnabled = true;
+            ButtonOpenWith.IsEnabled = true;
+            ButtonShare.IsEnabled = true;
         }
 
         private async Task TransitionLeftPaneButtonsForScan(bool beginScan)
@@ -1105,7 +1100,7 @@ namespace Scanner
             {
                 case FlowState.initial:
                     FlipViewScan.SelectedIndex = LeftPaneListViewManage.SelectedIndex;
-                    await UnlockToolbar();
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar() );
                     break;
                 case FlowState.scanning:
                     FlipViewScan.SelectedIndex = LeftPaneListViewManage.SelectedIndex;
@@ -1224,50 +1219,105 @@ namespace Scanner
             await Scan((bool) CheckBoxDebugStartFresh.IsChecked, files);
         }
 
-        private async void TransitionToEditingMode(SummonToolbar summonToolbar)
+        private void TransitionToEditingMode(SummonToolbar summonToolbar)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            async () =>
-            {
-                FlipViewLeftPane.IsEnabled = false;
-                ScrollViewerLeftPaneManage.IsEnabled = false;
-                ButtonLeftPaneScan.IsEnabled = false;
-                FrameLeftPaneScanSource.IsEnabled = false;
-                FrameLeftPaneScanSourceMode.IsEnabled = false;
-                FrameLeftPaneScanColor.IsEnabled = false;
-                FrameLeftPaneResolution.IsEnabled = false;
-                FrameLeftPaneScanFeeder.IsEnabled = false;
-                FrameLeftPaneScanFormat.IsEnabled = false;
-                await LockToolbar();
-            });
+            flowState = FlowState.edit;
+            FlipViewLeftPane.IsEnabled = false;
+            LockPaneManage(true);
+            ButtonLeftPaneScan.IsEnabled = false;
+            FrameLeftPaneScanSource.IsEnabled = false;
+            FrameLeftPaneScanSourceMode.IsEnabled = false;
+            FrameLeftPaneScanColor.IsEnabled = false;
+            FrameLeftPaneResolution.IsEnabled = false;
+            FrameLeftPaneScanFeeder.IsEnabled = false;
+            FrameLeftPaneScanFormat.IsEnabled = false;
+            LockToolbar();
         }
 
-        private async void TransitionFromEditingMode()
+        private void TransitionFromEditingMode()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
+            flowState = FlowState.initial;
+            FlipViewLeftPane.IsEnabled = true;
+            UnlockPaneManage(false);
+            //ButtonLeftPaneScan.IsEnabled = false;
+            //FrameLeftPaneScanSource.IsEnabled = false;
+            //FrameLeftPaneScanSourceMode.IsEnabled = false;
+            //FrameLeftPaneScanColor.IsEnabled = false;
+            //FrameLeftPaneResolution.IsEnabled = false;
+            //FrameLeftPaneScanFeeder.IsEnabled = false;
+            //FrameLeftPaneScanFormat.IsEnabled = false;
+        }
+
+        private void LockPaneManage(bool complete)
+        {
+            if (complete)
             {
-                FlipViewLeftPane.IsEnabled = true;
-                ScrollViewerLeftPaneManage.IsEnabled = true;
-                //ButtonLeftPaneScan.IsEnabled = false;
-                //FrameLeftPaneScanSource.IsEnabled = false;
-                //FrameLeftPaneScanSourceMode.IsEnabled = false;
-                //FrameLeftPaneScanColor.IsEnabled = false;
-                //FrameLeftPaneResolution.IsEnabled = false;
-                //FrameLeftPaneScanFeeder.IsEnabled = false;
-                //FrameLeftPaneScanFormat.IsEnabled = false;
-            });
+                ButtonLeftPaneManageSelect.IsEnabled = false;
+                ScrollViewerLeftPaneManage.IsEnabled = false;
+            }
+            ButtonLeftPaneManageRotate.IsEnabled = false;
+            ButtonLeftPaneManageDelete.IsEnabled = false;
+            ButtonLeftPaneManageCopy.IsEnabled = false;
+            ButtonLeftPaneManageShare.IsEnabled = false;
+        }
+
+        private void UnlockPaneManage(bool complete)
+        {
+            ButtonLeftPaneManageSelect.IsEnabled = true;
+            ScrollViewerLeftPaneManage.IsEnabled = true;
+            if (complete)
+            {
+                ButtonLeftPaneManageRotate.IsEnabled = true;
+                ButtonLeftPaneManageDelete.IsEnabled = true;
+                ButtonLeftPaneManageCopy.IsEnabled = true;
+                ButtonLeftPaneManageShare.IsEnabled = true;
+            }
+        }
+
+        private void TransitionToSelectMode()
+        {
+            flowState = FlowState.select;
+            LockToolbar();
+            UnlockPaneManage(true);
+            LeftPaneListViewManage.SelectionMode = ListViewSelectionMode.Multiple;
+            LeftPaneListViewManage.CanDragItems = false;
+            ButtonLeftPaneManageSelect.IsChecked = true;
+        }
+
+        private void TransitionFromSelectMode()
+        {
+            flowState = FlowState.initial;
+            LockToolbar();
+            LockPaneManage(false);
+            LeftPaneListViewManage.SelectionMode = ListViewSelectionMode.Single;
+            LeftPaneListViewManage.CanDragItems = true;
+            ButtonLeftPaneManageSelect.IsChecked = false;
+            if (scanResult != null && scanResult.GetTotalNumberOfScans() > 0)
+            {
+                FlipViewScan.SelectedIndex = 0;
+                LeftPaneListViewManage.SelectedIndex = 0;
+            }
+        }
+
+        private void Share(Control targetControl)
+        {
+            Rect rectangle;
+            ShareUIOptions shareUIOptions = new ShareUIOptions();
+
+            if (targetControl != null)
+            {
+                GeneralTransform transform;
+                transform = targetControl.TransformToVisual(null);
+                rectangle = transform.TransformBounds(new Rect(0, 0, targetControl.ActualWidth, targetControl.ActualHeight));
+                shareUIOptions.SelectionRect = rectangle;
+            }
+
+            DataTransferManager.ShowShareUI(shareUIOptions);
         }
 
         private void Share()
         {
-            GeneralTransform transform = ButtonShare.TransformToVisual(null);
-            Rect rectangle = transform.TransformBounds(new Rect(0, 0, ButtonShare.ActualWidth, ButtonShare.ActualHeight));
-
-            ShareUIOptions shareUIOptions = new ShareUIOptions();
-            shareUIOptions.SelectionRect = rectangle;
-
-            DataTransferManager.ShowShareUI(shareUIOptions);
+            Share(null);
         }
 
         private void ButtonShare_Click(object sender, RoutedEventArgs e)
@@ -1287,7 +1337,7 @@ namespace Scanner
                 else
                 {
                     shareIndexes = null;
-                    Share();
+                    Share(ButtonShare);
                     return;
                 }
             }
@@ -1295,7 +1345,7 @@ namespace Scanner
             shareIndexes = new int[1];
             shareIndexes[0] = FlipViewScan.SelectedIndex;
 
-            Share();
+            Share(ButtonShare);
         }
 
         private async void TeachingTipScope_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
@@ -1324,7 +1374,7 @@ namespace Scanner
                     break;
                 case ScopeActions.Share:
                     shareIndexes = null;
-                    Share();
+                    Share(ButtonShare);
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
                     break;
                 default:
@@ -1421,7 +1471,7 @@ namespace Scanner
                 case ScopeActions.Share:
                     shareIndexes = new int[1];
                     shareIndexes[0] = FlipViewScan.SelectedIndex;
-                    Share();
+                    Share(ButtonShare);
                     break;
                 default:
                     break;
@@ -1525,6 +1575,16 @@ namespace Scanner
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => FontIconCopyDone.Opacity = 1.0);
         }
 
+        private async void StoryboardIconLeftPaneManageCopyDone1_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone2.Begin());
+        }
+
+        private async void StoryboardIconLeftPaneManageCopyDone2_Completed(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => FontIconLeftPaneManageCopyDone.Opacity = 1.0);
+        }
+
         private async void StoryboardIconRenameDone1_Completed(object sender, object e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconRenameDone2.Begin());
@@ -1559,11 +1619,11 @@ namespace Scanner
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
             // lock UI
-            await LockToolbar();
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                ScrollViewerLeftPaneManage.IsEnabled = false;
+                LockToolbar();
+                LockPaneManage(true);
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -1590,11 +1650,11 @@ namespace Scanner
             await scanResult.GetImageAsync(index);
 
             // restore UI
-            await UnlockToolbar();
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                ScrollViewerLeftPaneManage.IsEnabled = true;
+                UnlockToolbar();
+                UnlockPaneManage(false);
             });
         }
 
@@ -1602,6 +1662,121 @@ namespace Scanner
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => ButtonRename.IsChecked = false);
+        }
+
+        private async void ButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                LockToolbar();
+                LockPaneManage(true);
+            });
+
+            Task[] tasksRotate = new Task[LeftPaneListViewManage.SelectedItems.Count];
+            Task[] tasksPreview = new Task[LeftPaneListViewManage.SelectedItems.Count];
+            int arrayIndex = 0;
+
+            foreach (var range in LeftPaneListViewManage.SelectedRanges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    tasksRotate[arrayIndex] = scanResult.RotateScanAsync(i, Windows.Graphics.Imaging.BitmapRotation.Clockwise90Degrees);
+                    arrayIndex++;
+                }
+            }
+            await Task.WhenAll(tasksRotate);
+
+            arrayIndex = 0;
+            foreach (var range in LeftPaneListViewManage.SelectedRanges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    tasksPreview[arrayIndex] = scanResult.GetImageAsync(i);
+                    arrayIndex++;
+                }
+            }
+            await Task.WhenAll(tasksPreview);
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                UnlockPaneManage(true);
+                UnlockToolbar();
+            });
+        }
+
+        private async void ButtonLeftPaneManageSelect_Click(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                if (flowState != FlowState.select)
+                {
+                    LockToolbar();
+                    TransitionToSelectMode();
+                } 
+                else
+                {
+
+                    TransitionFromSelectMode();
+                    UnlockToolbar();
+                }
+            });
+        }
+
+        private async void ButtonLeftPaneManageCopy_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+
+            try
+            {
+                List<int> indices = new List<int>();
+                foreach (var range in LeftPaneListViewManage.SelectedRanges)
+                {
+                    for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                    {
+                        indices.Add(i);
+                    }
+                }
+            
+                await scanResult.CopyImagesAsync(indices);
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone1.Begin());
+            }
+            catch (Exception)
+            {
+                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                    LocalizedString("ErrorMessageCopyHeader"), LocalizedString("ErrorMessageCopyBody"));
+            }
+        }
+
+        private void ButtonLeftPaneManageShare_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+
+            try
+            {
+                List<int> indices = new List<int>();
+                foreach (var range in LeftPaneListViewManage.SelectedRanges)
+                {
+                    for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                    {
+                        indices.Add(i);
+                    }
+                }
+
+                shareIndexes = new int[indices.Count];
+
+                for (int i = 0; i < indices.Count; i++)
+                {
+                    shareIndexes[i] = indices[i];
+                }
+
+                Share(ButtonLeftPaneManageShare);
+            }
+            catch (Exception) { }
         }
     }
 }
