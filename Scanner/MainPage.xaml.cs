@@ -159,7 +159,15 @@ namespace Scanner
             var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
 
             if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down)) await ContentDialogDebug.ShowAsync();       // show debug menu when CTRL key is pressed
-            else Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+            else
+            {
+                Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    SplitViewLeftPane.IsPaneOpen = false;
+                    ButtonScanOptions.IsChecked = false;
+                });
+            }
         }
 
 
