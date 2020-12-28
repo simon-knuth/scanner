@@ -27,6 +27,9 @@ public static class Globals
     public static BackgroundTaskDeferral appServiceDeferral;
     public static TaskCompletionSource<bool> taskCompletionSource = null;
 
+    public static StorageFolder folderTemp;
+    public static StorageFolder folderConversion;
+    public static StorageFolder folderWithoutRotation;
 
     public static string storeRateUri = "ms-windows-store://review/?productid=9N438MZHD3ZF";
 

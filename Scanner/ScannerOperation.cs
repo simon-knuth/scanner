@@ -155,9 +155,9 @@ class ScannerOperation
             newNativeFormats.AddLast("png");
             canConvert = true;
         }
-        //if (config.IsFormatSupported(ImageScannerFormat.Pdf)) newNativeFormats.AddLast("pdf");        // always use own PDF conversion
-        if (config.IsFormatSupported(ImageScannerFormat.Xps)) newNativeFormats.AddLast("xps");
-        if (config.IsFormatSupported(ImageScannerFormat.OpenXps)) newNativeFormats.AddLast("openxps");
+        //if (config.IsFormatSupported(ImageScannerFormat.Pdf)) newNativeFormats.AddLast("pdf");            // always use own PDF conversion
+        //if (config.IsFormatSupported(ImageScannerFormat.Xps)) newNativeFormats.AddLast("xps");            // no support for XPS
+        //if (config.IsFormatSupported(ImageScannerFormat.OpenXps)) newNativeFormats.AddLast("openxps");    // no support for OXPS
         if (config.IsFormatSupported(ImageScannerFormat.Tiff))
         {
             newNativeFormats.AddLast("tif");

@@ -736,7 +736,7 @@ static class Utilities
 
                     // get result file and move it to its correct folder
                     StorageFile convertedFile = null;
-                    convertedFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync(file.DisplayName + ".pdf");
+                    convertedFile = await folderTemp.GetFileAsync(file.DisplayName + ".pdf");
                     
                     // move PDF file to target folder
                     try 
@@ -953,7 +953,9 @@ static class Utilities
     /// </summary>
     public static async Task InitializeTempFolder()
     {
-        IReadOnlyList<StorageFile> files = await ApplicationData.Current.TemporaryFolder.GetFilesAsync();
+        folderTemp = ApplicationData.Current.TemporaryFolder;
+        
+        IReadOnlyList<StorageFile> files = await folderTemp.GetFilesAsync();
         foreach (StorageFile file in files)
         {
             await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
@@ -961,7 +963,13 @@ static class Utilities
 
         try 
         { 
-            await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("conversion", CreationCollisionOption.ReplaceExisting);
+            folderConversion = await folderTemp.CreateFolderAsync("conversion", CreationCollisionOption.ReplaceExisting);
+        }
+        catch (Exception) { throw; }
+
+        try
+        {
+            folderWithoutRotation = await folderTemp.CreateFolderAsync("withoutRotation", CreationCollisionOption.ReplaceExisting);
         }
         catch (Exception) { throw; }
     }

@@ -9,6 +9,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -17,6 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using static Enums;
@@ -170,12 +172,10 @@ namespace Scanner
             }
         }
 
-
         private async void HyperlinkSettings_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
         }
-
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -235,19 +235,27 @@ namespace Scanner
             }
         }
 
-        private async Task RefreshPreviewIndicators(bool auto, bool? flatbed, bool? feeder)
+        private async Task RefreshPreviewIndicators(bool autoPreview, bool? flatbedPreview, bool? feederPreview,
+            bool autoAllowed, bool flatbedAllowed, bool feederAllowed)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                if (auto) FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
+                if (autoPreview) FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
                 else FontIconAutoPreviewSupported.Visibility = Visibility.Collapsed;
 
-                if (flatbed == true) FontIconFlatbedPreviewSupported.Visibility = Visibility.Visible;
+                if (flatbedPreview == true) FontIconFlatbedPreviewSupported.Visibility = Visibility.Visible;
                 else FontIconFlatbedPreviewSupported.Visibility = Visibility.Collapsed;
 
-                if (feeder == true) FontIconFeederPreviewSupported.Visibility = Visibility.Visible;
+                if (feederPreview == true) FontIconFeederPreviewSupported.Visibility = Visibility.Visible;
                 else FontIconFeederPreviewSupported.Visibility = Visibility.Collapsed;
+
+                // allow preview of auto config when only one other mode is available and supports previewing
+                if (autoAllowed == true && (flatbedAllowed == true && feederAllowed == false && flatbedPreview == true
+                                            || flatbedAllowed == false && feederAllowed == true && feederPreview == true))
+                {
+                    FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
+                }
             });
         }
 
@@ -305,7 +313,8 @@ namespace Scanner
                         RadioButtonSourceFeeder.IsChecked = false;
                     }
                     ButtonLeftPaneScan.IsEnabled = true;
-                    await RefreshPreviewIndicators(scanner.autoPreviewAllowed, scanner.flatbedPreviewAllowed, scanner.feederPreviewAllowed);
+                    await RefreshPreviewIndicators(scanner.autoPreviewAllowed, scanner.flatbedPreviewAllowed, scanner.feederPreviewAllowed,
+                        scanner.autoAllowed, scanner.flatbedAllowed, scanner.feederAllowed);
                 }
                 else
                 {                    
@@ -322,7 +331,7 @@ namespace Scanner
                     FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
                     FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
 
-                    await RefreshPreviewIndicators(false, false, false);
+                    await RefreshPreviewIndicators(false, false, false, false, false, false);
                 }
 
                 ComboBoxScanners.IsEnabled = true;
@@ -442,7 +451,7 @@ namespace Scanner
                 // preview
                 if (RadioButtonSourceAutomatic.IsChecked == true)
                 {
-                    MenuFlyoutItemButtonScanPreview.IsEnabled = (bool)selectedScanner.autoPreviewAllowed;
+                    MenuFlyoutItemButtonScanPreview.IsEnabled = FontIconAutoPreviewSupported.Visibility == Visibility.Visible;
                 }
                 else if (RadioButtonSourceFlatbed.IsChecked == true)
                 {
@@ -637,7 +646,26 @@ namespace Scanner
 
         private void MenuFlyoutItemButtonScanPreview_Click(object sender, RoutedEventArgs e)
         {
-            if (RadioButtonSourceAutomatic.IsChecked == true) Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.AutoConfigured, RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
+            if (RadioButtonSourceAutomatic.IsChecked == true)
+            {
+                if (selectedScanner.autoPreviewAllowed == false)
+                {
+                    // auto preview only simulated
+                    if (selectedScanner.flatbedPreviewAllowed == true)
+                    {
+                        Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Flatbed, RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
+                    }
+                    else if (selectedScanner.feederPreviewAllowed == true)
+                    {
+                        Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Feeder, RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
+                    }
+                }
+                else
+                {
+                    // auto preview natively supported
+                    Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.AutoConfigured, RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
+                }
+            }
             else if (RadioButtonSourceFlatbed.IsChecked == true) Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Flatbed, RadioButtonSourceFlatbed.Content.ToString()), new DrillInNavigationTransitionInfo());
             else if (RadioButtonSourceFeeder.IsChecked == true) Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Feeder, RadioButtonSourceFeeder.Content.ToString()), new DrillInNavigationTransitionInfo());
         }
@@ -746,11 +774,11 @@ namespace Scanner
                     }
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
-                        folderToScanTo = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("conversion");
+                        folderToScanTo = await folderTemp.GetFolderAsync("conversion");
                     }
                     else
                     {
-                        folderToScanTo = ApplicationData.Current.TemporaryFolder;
+                        folderToScanTo = folderTemp;
                     }
 
                     // get scan
@@ -789,7 +817,7 @@ namespace Scanner
                             }
 
                             FlipViewScan.ItemsSource = scanResult.elements;
-                            LeftPaneListViewManage.ItemsSource = scanResult.elements;
+                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
                         }
                         else
                         {
@@ -809,7 +837,8 @@ namespace Scanner
                     List<StorageFile> copiedDebugFiles = new List<StorageFile>();
                     foreach (StorageFile file in debugFiles)
                     {
-                        copiedDebugFiles.Add(await file.CopyAsync(ApplicationData.Current.TemporaryFolder));
+                        if (selectedDebugFormat == SupportedFormat.PDF) copiedDebugFiles.Add(await file.CopyAsync(folderConversion));
+                        else copiedDebugFiles.Add(await file.CopyAsync(folderTemp));
                     }
 
                     if (scanResult == null || startFresh)
@@ -824,7 +853,7 @@ namespace Scanner
                         }
                         await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                             FlipViewScan.ItemsSource = scanResult.elements;
-                            LeftPaneListViewManage.ItemsSource = scanResult.elements;
+                            InitializePaneManage();
                         });
                     }
                     else
@@ -832,7 +861,8 @@ namespace Scanner
                         await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
                             foreach (StorageFile file in copiedDebugFiles)
                             {
-                                await file.MoveAsync(scanFolder, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                                if (selectedDebugFormat == SupportedFormat.PDF) await file.MoveAsync(folderConversion, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                                else await file.MoveAsync(scanFolder, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
                             } 
                             await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat);
                             FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
@@ -860,6 +890,8 @@ namespace Scanner
                     FlipViewScan.Visibility = Visibility.Visible;
                     LeftPaneManageInitialText.Visibility = Visibility.Collapsed;
                     FlipViewScan_SelectionChanged(null, null);
+                    TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
+                    TextBlockContentPaneGridProgressRingScan.Text = "";
                     await RefreshFileName();
                 });
 
@@ -878,6 +910,28 @@ namespace Scanner
                 return false;
             }            
         }
+
+
+        private void InitializePaneManage()
+        {
+            if (scanResult == null) throw new ApplicationException("Couldn't initialize PaneManage. (scanResult null)");
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                LeftPaneListViewManage.ItemsSource = null;
+                LeftPaneListViewManage.Visibility = Visibility.Collapsed;
+                LeftPaneGridViewManage.ItemsSource = scanResult.elements;
+                LeftPaneGridViewManage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                LeftPaneGridViewManage.ItemsSource = null;
+                LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
+                LeftPaneListViewManage.ItemsSource = scanResult.elements;
+                LeftPaneListViewManage.Visibility = Visibility.Visible;
+            }
+        }
+
 
         private async void ScanProgress_ProgressChanged(object sender, uint e)
         {
@@ -1049,9 +1103,33 @@ namespace Scanner
             {
                 if (flowState != FlowState.select)
                 {
-                    LeftPaneListViewManage.SelectedIndex = FlipViewScan.SelectedIndex;
+                    PaneManageSelectIndex(FlipViewScan.SelectedIndex);
                 }
             });
+        }
+
+        private void PaneManageSelectIndex(int index)
+        {
+            if (scanResult == null) throw new ApplicationException("Unable to select index in PaneManage. (scanResult null)");
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF) LeftPaneGridViewManage.SelectedIndex = index;
+            else LeftPaneListViewManage.SelectedIndex = index;
+        }
+
+        private int PaneManageGetFirstSelectedIndex()
+        {
+            if (scanResult == null) throw new ApplicationException("Unable to get first selected index in PaneManage. (scanResult null)");
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF) return LeftPaneGridViewManage.SelectedIndex;
+            return LeftPaneListViewManage.SelectedIndex;
+        }
+
+        private IReadOnlyList<ItemIndexRange> PaneManageGetSelectedRanges()
+        {
+            if (scanResult == null) throw new ApplicationException("Unable to get selected ranges in PaneManage. (scanResult null)");
+
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF) return LeftPaneGridViewManage.SelectedRanges;
+            return LeftPaneListViewManage.SelectedRanges;
         }
 
         private async void ButtonLeftPaneScanFolder_Click(object sender, RoutedEventArgs e)
@@ -1102,16 +1180,16 @@ namespace Scanner
             });
         }
 
-        private async void LeftPaneListViewManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void LeftPaneManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (flowState)
             {
                 case FlowState.initial:
-                    FlipViewScan.SelectedIndex = LeftPaneListViewManage.SelectedIndex;
+                    FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar() );
                     break;
                 case FlowState.scanning:
-                    FlipViewScan.SelectedIndex = LeftPaneListViewManage.SelectedIndex;
+                    FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
                     break;
                 case FlowState.edit:
                     break;
@@ -1217,7 +1295,11 @@ namespace Scanner
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
-            picker.FileTypeFilter.Add("." + ComboBoxDebugFormat.SelectedItem.ToString().ToLower());
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".tif");
+            picker.FileTypeFilter.Add(".tiff");
+            picker.FileTypeFilter.Add(".bmp");
 
             IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
             if (files.Count == 0) return;
@@ -1289,6 +1371,10 @@ namespace Scanner
             UnlockPaneManage(true);
             LeftPaneListViewManage.SelectionMode = ListViewSelectionMode.Multiple;
             LeftPaneListViewManage.CanDragItems = false;
+            LeftPaneListViewManage.CanReorderItems = false;
+            LeftPaneGridViewManage.SelectionMode = ListViewSelectionMode.Multiple;
+            LeftPaneGridViewManage.CanDragItems = false;
+            LeftPaneGridViewManage.CanReorderItems = false;
             ButtonLeftPaneManageSelect.IsChecked = true;
         }
 
@@ -1299,11 +1385,15 @@ namespace Scanner
             LockPaneManage(false);
             LeftPaneListViewManage.SelectionMode = ListViewSelectionMode.Single;
             LeftPaneListViewManage.CanDragItems = true;
+            LeftPaneListViewManage.CanReorderItems = true;
+            LeftPaneGridViewManage.SelectionMode = ListViewSelectionMode.Single;
+            LeftPaneGridViewManage.CanDragItems = true;
+            LeftPaneGridViewManage.CanReorderItems = true;
             ButtonLeftPaneManageSelect.IsChecked = false;
             if (scanResult != null && scanResult.GetTotalNumberOfScans() > 0)
             {
                 FlipViewScan.SelectedIndex = 0;
-                LeftPaneListViewManage.SelectedIndex = 0;
+                PaneManageSelectIndex(0);
             }
         }
 
@@ -1486,7 +1576,7 @@ namespace Scanner
             }
         }
 
-        private async void LeftPaneListViewManage_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        private async void LeftPaneManage_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
             if (scanResult != null && scanResult.GetTotalNumberOfScans() > 1 
                 && scanResult.GetFileFormat() == SupportedFormat.PDF)
@@ -1638,7 +1728,9 @@ namespace Scanner
 
             try
             {
-                await scanResult.RotateScanAsync(index, Windows.Graphics.Imaging.BitmapRotation.Clockwise90Degrees);
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                instructions.Add(new Tuple<int, BitmapRotation>(index, BitmapRotation.Clockwise90Degrees));
+                await scanResult.RotateScansAsync(instructions);
             }
             catch (Exception)
             {
@@ -1647,6 +1739,8 @@ namespace Scanner
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                    UnlockToolbar();
+                    UnlockPaneManage(false);
                 });
                 return;
             }
@@ -1674,7 +1768,8 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || 
+                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
@@ -1683,22 +1778,28 @@ namespace Scanner
                 LockPaneManage(true);
             });
 
-            Task[] tasksRotate = new Task[LeftPaneListViewManage.SelectedItems.Count];
-            Task[] tasksPreview = new Task[LeftPaneListViewManage.SelectedItems.Count];
-            int arrayIndex = 0;
+            IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
+            int totalSelections = 0;
+            foreach (var range in ranges)
+            {
+                totalSelections += Convert.ToInt32(range.Length);
+            }
 
-            foreach (var range in LeftPaneListViewManage.SelectedRanges)
+            Task[] tasksPreview = new Task[totalSelections];
+
+            // generate instructions for rotation
+            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+            foreach (var range in ranges)
             {
                 for (int i = range.FirstIndex; i <= range.LastIndex; i++)
                 {
-                    tasksRotate[arrayIndex] = scanResult.RotateScanAsync(i, Windows.Graphics.Imaging.BitmapRotation.Clockwise90Degrees);
-                    arrayIndex++;
+                    instructions.Add(new Tuple<int, BitmapRotation>(i, BitmapRotation.Clockwise90Degrees));
                 }
             }
-            await Task.WhenAll(tasksRotate);
+            await scanResult.RotateScansAsync(instructions);
 
-            arrayIndex = 0;
-            foreach (var range in LeftPaneListViewManage.SelectedRanges)
+            int arrayIndex = 0;
+            foreach (var range in ranges)
             {
                 for (int i = range.FirstIndex; i <= range.LastIndex; i++)
                 {
@@ -1737,12 +1838,13 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageCopy_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || 
+                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             try
             {
                 List<int> indices = new List<int>();
-                foreach (var range in LeftPaneListViewManage.SelectedRanges)
+                foreach (var range in PaneManageGetSelectedRanges())
                 {
                     for (int i = range.FirstIndex; i <= range.LastIndex; i++)
                     {
@@ -1762,12 +1864,13 @@ namespace Scanner
 
         private void ButtonLeftPaneManageShare_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || LeftPaneListViewManage.SelectedItems.Count == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             try
             {
                 List<int> indices = new List<int>();
-                foreach (var range in LeftPaneListViewManage.SelectedRanges)
+                foreach (var range in PaneManageGetSelectedRanges())
                 {
                     for (int i = range.FirstIndex; i <= range.LastIndex; i++)
                     {
@@ -1785,6 +1888,29 @@ namespace Scanner
                 Share(ButtonLeftPaneManageShare);
             }
             catch (Exception) { }
+        }
+
+        private async void ComboBoxDebugFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                if (scanResult == null)
+                {
+                    CheckBoxDebugStartFresh.IsEnabled = true;
+                }
+                else
+                {
+                    if ((SupportedFormat) ComboBoxDebugFormat.SelectedItem != scanResult.GetFileFormat())
+                    {
+                        CheckBoxDebugStartFresh.IsEnabled = false;
+                        CheckBoxDebugStartFresh.IsChecked = true;
+                    } else
+                    {
+                        CheckBoxDebugStartFresh.IsEnabled = true;
+                    }
+                }
+            });
         }
     }
 }

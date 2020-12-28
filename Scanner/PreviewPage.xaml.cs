@@ -62,6 +62,7 @@ namespace Scanner
             try
             {
                 var previewResult = await intent.scanner.ScanPreviewToStreamAsync(intent.scanSource, previewStream);
+                
                 if (previewResult.Succeeded)
                 {
                     BitmapImage bitmapImage = new BitmapImage();
