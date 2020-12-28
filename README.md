@@ -1,12 +1,8 @@
 <image src='https://i.imgur.com/ghnN0UV.png'/>
-<table width="100%">
-  <tr>
-    <td width="15%"><image src='https://i.imgur.com/4fMgKKY.png'/></td>
-    <td width="75%"><h1>Scanner for Windows 10</h1>
-                    <i>A scanner app built for the Universal Windows Platform</i><br><br>
-    </td>
-  </tr>
-</table>
+
+&nbsp;
+## Version 2.0 coming soon
+The new app will boast a redesigned yet familiar UI and many new features based on the received feedback.
 
 
 &nbsp;
@@ -73,10 +69,10 @@ The currently supported languages are:
   <li>German (DE)</li>
 </ul>  
 
-See [this page](help-translate.md), if you'd like to help improve existing translations or add new ones.
+See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
 
 
 &nbsp;
 ## Privacy policy
 
-You can find the privacy policy [here](privacy-policy.md).
+You can find the privacy policy [here](https://simon-knuth.github.io/scanner/privacy-policy.html).
