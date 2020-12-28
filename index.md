@@ -1,6 +1,11 @@
 <image src='https://i.imgur.com/ghnN0UV.png'/>
 
 &nbsp;
+## Version 2.0 coming soon
+The new app will boast a redesigned yet familiar UI and many new features based on the received feedback.
+
+
+&nbsp;
 ## Features
 <ul>
   <li>Preview after scan</li>
@@ -64,10 +69,10 @@ The currently supported languages are:
   <li>German (DE)</li>
 </ul>  
 
-See [this page](help-translate.md), if you'd like to help improve existing translations or add new ones.
+See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
 
 
 &nbsp;
 ## Privacy policy
 
-You can find the privacy policy [here](privacy-policy.md).
+You can find the privacy policy [here](https://simon-knuth.github.io/scanner/privacy-policy.html).
