@@ -77,6 +77,7 @@ namespace Scanner
             }
             TextBlockRestart.Visibility = Visibility.Collapsed;
             CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
+            CheckBoxAppendTime.IsChecked = settingAppendTime;
             CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
             CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
 
@@ -267,6 +268,7 @@ namespace Scanner
         {
             if (allSettingsLoaded)
             {
+                settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
                 settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
                 settingDrawPenDetected = (bool)CheckBoxSettingsDrawPenDetected.IsChecked;

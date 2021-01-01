@@ -71,6 +71,7 @@
                         </TextBlock>
 
                         <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
+                        <CheckBox x:Uid="CheckBoxSettingsAppendTime" x:Name="CheckBoxAppendTime" Content="Append time to file name" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 

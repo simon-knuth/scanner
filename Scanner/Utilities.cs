@@ -311,6 +311,16 @@ static class Utilities
             localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
         }
 
+        if (localSettingsContainer.Values["settingAppendTime"] != null)
+        {
+            settingAppendTime = (bool)localSettingsContainer.Values["settingAppendTime"];
+        }
+        else
+        {
+            settingAppendTime = true;
+            localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
+        }
+
         if (localSettingsContainer.Values["settingAutomaticScannerSelection"] != null)
         {
             settingAutomaticScannerSelection = (bool)localSettingsContainer.Values["settingAutomaticScannerSelection"];
@@ -638,6 +648,7 @@ static class Utilities
     public static void SaveSettings()
     {
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
+        localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;

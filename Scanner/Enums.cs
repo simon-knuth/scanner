@@ -19,8 +19,9 @@
     {
         initial = 0,                // there is nothing out of the ordinary happening
         scanning = 1,               // there is a scan in progress
-        edit = 2,                   // there is a result visible and being edited
-        select = 3                  // there is a result visible and scans being selected
+        select = 2,                 // there is a result visible and scans being selected
+        crop = 3,                   // there is a result visible and being cropped
+        draw = 4                    // there is a result visible and being used for inking
     }
 
 

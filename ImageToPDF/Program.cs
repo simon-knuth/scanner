@@ -59,7 +59,7 @@ namespace ImageToPDF
                         break;
                 }
             };
-            appServiceConnection.ServiceClosed += (x, y) => Environment.Exit(1);
+            //appServiceConnection.ServiceClosed += (x, y) => Environment.Exit(1);
 
             AppServiceConnectionStatus status = await appServiceConnection.OpenAsync();
         }

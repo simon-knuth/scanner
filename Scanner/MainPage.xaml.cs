@@ -18,6 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -192,6 +193,10 @@ namespace Scanner
                     SplitViewContentPane.Margin = SplitViewLeftPane.Margin;
                     ScrollViewerContentPaneContentDummy.Margin = SplitViewLeftPane.Margin;
                     PrepareTeachingTips();
+                    RectangleGeometry rectangleClip = new RectangleGeometry();
+                    rectangleClip.Rect = new Rect(0, 0, GridContentPaneTopToolbar.ActualWidth,
+                        GridContentPaneTopToolbar.ActualHeight);
+                    GridContentPaneTopToolbar.Clip = rectangleClip;
                 });
 
                 ComboBoxScanners.Focus(FocusState.Programmatic);
@@ -800,6 +805,8 @@ namespace Scanner
 
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = false);
 
+                    if (settingAppendTime) try { await SetInitialNames(scannerScanResult.ScannedFiles); } catch (Exception) { }
+
                     if (ScanResultValid(scannerScanResult))
                     {
                         await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => LeftPaneManageInitialText.Visibility = Visibility.Collapsed);
@@ -840,6 +847,8 @@ namespace Scanner
                         if (selectedDebugFormat == SupportedFormat.PDF) copiedDebugFiles.Add(await file.CopyAsync(folderConversion));
                         else copiedDebugFiles.Add(await file.CopyAsync(folderTemp));
                     }
+
+                    if (settingAppendTime) try { await SetInitialNames(copiedDebugFiles); } catch (Exception) { }
 
                     if (scanResult == null || startFresh)
                     {
@@ -1191,11 +1200,9 @@ namespace Scanner
                 case FlowState.scanning:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
                     break;
-                case FlowState.edit:
-                    break;
                 case FlowState.select:
-                    break;
-                default:
+                case FlowState.crop:
+                case FlowState.draw:
                     break;
             }
         }
@@ -1309,19 +1316,40 @@ namespace Scanner
             await Scan((bool) CheckBoxDebugStartFresh.IsChecked, files);
         }
 
-        private void TransitionToEditingMode(SummonToolbar summonToolbar)
+        private async void TransitionToEditingMode(SummonToolbar summonToolbar)
         {
-            flowState = FlowState.edit;
             FlipViewLeftPane.IsEnabled = false;
             LockPaneManage(true);
-            ButtonLeftPaneScan.IsEnabled = false;
-            FrameLeftPaneScanSource.IsEnabled = false;
-            FrameLeftPaneScanSourceMode.IsEnabled = false;
-            FrameLeftPaneScanColor.IsEnabled = false;
-            FrameLeftPaneResolution.IsEnabled = false;
-            FrameLeftPaneScanFeeder.IsEnabled = false;
-            FrameLeftPaneScanFormat.IsEnabled = false;
-            LockToolbar();
+
+            switch (summonToolbar)
+            {
+                case SummonToolbar.Hidden:
+                    throw new NotImplementedException();
+                case SummonToolbar.Crop:
+                    flowState = FlowState.crop;
+                    StoryboardToolbarTransitionToCrop.Begin();
+                    Thickness padding = ImageCropperScan.Padding;
+                    padding.Top = 32 + GridContentPaneTopToolbar.ActualHeight;
+                    ImageCropperScan.Padding = padding;
+                    try
+                    {
+                        await ImageCropperScan.LoadImageFromFile(scanResult.GetImageFile(FlipViewScan.SelectedIndex));
+                    }
+                    catch (Exception)
+                    {
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageCropHeader"), 
+                            LocalizedString("ErrorMessageCropBody"));
+                        TransitionFromEditingMode();
+                        return;
+                    }
+                    break;
+                case SummonToolbar.Draw:
+                    flowState = FlowState.draw;
+                    StoryboardToolbarTransitionToDraw.Begin();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void TransitionFromEditingMode()
@@ -1329,13 +1357,8 @@ namespace Scanner
             flowState = FlowState.initial;
             FlipViewLeftPane.IsEnabled = true;
             UnlockPaneManage(false);
-            //ButtonLeftPaneScan.IsEnabled = false;
-            //FrameLeftPaneScanSource.IsEnabled = false;
-            //FrameLeftPaneScanSourceMode.IsEnabled = false;
-            //FrameLeftPaneScanColor.IsEnabled = false;
-            //FrameLeftPaneResolution.IsEnabled = false;
-            //FrameLeftPaneScanFeeder.IsEnabled = false;
-            //FrameLeftPaneScanFormat.IsEnabled = false;
+            StoryboardToolbarTransitionFromSpecial.Begin();
+            try { ImageCropperScan.Source = null; } catch (Exception) { }
         }
 
         private void LockPaneManage(bool complete)
@@ -1745,9 +1768,6 @@ namespace Scanner
                 return;
             }
 
-            // generate PDF with rotated image
-            if (scanResult.GetFileFormat() == SupportedFormat.PDF) await scanResult.GeneratePDF();
-
             // generate image
             await scanResult.GetImageAsync(index);
 
@@ -1911,6 +1931,177 @@ namespace Scanner
                     }
                 }
             });
+        }
+
+        private async void ButtonCrop_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                TransitionToEditingMode(SummonToolbar.Crop);
+            });
+        }
+
+        private async void ButtonDiscard_Click(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                TransitionFromEditingMode();
+            });
+        }
+
+        private async void SetFixedAspectRatio(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                // set aspect ratio according to tag
+                ImageCropperScan.AspectRatio = 1.0 / double.Parse(((ToggleMenuFlyoutItem)sender).Tag.ToString(), new System.Globalization.CultureInfo("en-EN"));
+                TextBlockCropAspectRatio.Text = ((ToggleMenuFlyoutItem)sender).Text;
+
+                // only check selected item
+                foreach (var item in MenuFlyoutAspectRatio.Items)
+                {
+                    try { ((ToggleMenuFlyoutItem)item).IsChecked = false; }
+                    catch (InvalidCastException) { }
+                }
+                ((ToggleMenuFlyoutItem)sender).IsChecked = true;
+            });
+        }
+
+        private async void SetCustomAspectRatio(object sender, RoutedEventArgs e)
+        {
+            // only check selected item
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                // set aspect ratio to custom
+                ImageCropperScan.AspectRatio = null;
+                TextBlockCropAspectRatio.Text = ((ToggleMenuFlyoutItem)sender).Text;
+
+                // only check selected item
+                foreach (var item in MenuFlyoutAspectRatio.Items)
+                {
+                    try { ((ToggleMenuFlyoutItem)item).IsChecked = false; }
+                    catch (InvalidCastException) { }
+                }
+                ((ToggleMenuFlyoutItem)sender).IsChecked = true;
+            });
+        }
+
+        private async void FlipAspectRatio(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                ImageCropperScan.AspectRatio = ImageCropperScan.CroppedRegion.Height / ImageCropperScan.CroppedRegion.Width;
+            });
+        }
+
+        private async void ButtonCropAspectRatio_Click(object sender, RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(ButtonCropAspectRatio);
+            });
+        }
+
+        private async void MenuFlyoutAspectRatio_Closing(object sender, object e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                ButtonCropAspectRatio.IsChecked = false;
+            });
+        }
+
+        private async void ButtonDraw_Click(object sender, RoutedEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                TransitionToEditingMode(SummonToolbar.Draw);
+            });
+        }
+
+        private async Task SaveEdit(bool asCopy)
+        {
+            try
+            {
+                if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+                    (flowState != FlowState.crop && flowState != FlowState.draw)) throw new ApplicationException("Could not save changes.");
+
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    ButtonCropAspectRatio.IsEnabled = false;
+                    InkToolbarDraw.IsEnabled = false;
+                    ButtonSave.IsEnabled = false;
+                    ButtonSaveCopy.IsEnabled = false;
+                    ButtonDiscard.IsEnabled = false;
+                    ImageCropperScan.IsEnabled = false;
+                });
+
+                switch (flowState)
+                {
+                    case FlowState.initial:
+                    case FlowState.scanning:
+                    case FlowState.select:
+                        throw new ApplicationException("Could not save changes.");
+                    case FlowState.crop:
+                        if (asCopy)
+                        {
+                            await scanResult.CropScanAsCopyAsync(FlipViewScan.SelectedIndex, ImageCropperScan);
+                            await scanResult.GetImageAsync(FlipViewScan.SelectedIndex + 1);
+                        }
+                        else
+                        {
+                            await scanResult.CropScanAsync(FlipViewScan.SelectedIndex, ImageCropperScan);
+                            await scanResult.GetImageAsync(FlipViewScan.SelectedIndex);
+                        }
+                        break;
+                    case FlowState.draw:
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
+                });
+            } 
+            finally
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    if (!asCopy) TransitionFromEditingMode();
+                    ButtonCropAspectRatio.IsEnabled = true;
+                    InkToolbarDraw.IsEnabled = true;
+                    ButtonSave.IsEnabled = true;
+                    ButtonSaveCopy.IsEnabled = true;
+                    ButtonDiscard.IsEnabled = true;
+                    ImageCropperScan.IsEnabled = true;
+                });
+            }
+        }
+
+        private async void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveEdit(false);
+        }
+
+        private async void ButtonSaveCopy_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveEdit(true);
         }
     }
 }

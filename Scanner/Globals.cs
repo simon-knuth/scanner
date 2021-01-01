@@ -9,6 +9,7 @@ using static Enums;
 public static class Globals
 {
     public static Theme settingAppTheme;                            // user theme setting
+    public static bool settingAppendTime;                           // append time to file names
     public static bool settingAutomaticScannerSelection;            // automatically select first available scanner
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
     public static bool settingDrawPenDetected;                      // automatically start drawing when a pen is detected

@@ -610,10 +610,21 @@ namespace Scanner
             }
             stream.Dispose();
 
-            elements.Insert(index, new ScanResultElement(file));
+            elements.Insert(index + 1, new ScanResultElement(file));
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (scanResultFormat == SupportedFormat.PDF)
+            {
+
+                List<StorageFile> filesNumbering = new List<StorageFile>();
+                for (int i = index + 1; i < elements.Count; i++)
+                {
+                    await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                    filesNumbering.Add(elements[i].ScanFile);
+                }
+                await NumberNewConversionFiles(filesNumbering, index + 1);
+                await GeneratePDF();
+            }
         }
 
 
@@ -760,10 +771,21 @@ namespace Scanner
                 throw;
             }
 
-            elements.Insert(index, new ScanResultElement(file));
+            elements.Insert(index + 1, new ScanResultElement(file));
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (scanResultFormat == SupportedFormat.PDF)
+            {
+
+                List<StorageFile> filesNumbering = new List<StorageFile>();
+                for (int i = index + 1; i < elements.Count; i++)
+                {
+                    await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                    filesNumbering.Add(elements[i].ScanFile);
+                }
+                await NumberNewConversionFiles(filesNumbering, index + 1);
+                await GeneratePDF();
+            }
         }
 
 

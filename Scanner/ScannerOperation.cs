@@ -212,4 +212,22 @@ class ScannerOperation
             return false;
         }
     }
+
+
+    /// <summary>
+    ///     Sets the names of all scan files in the given <see cref="IList{StorageFile}"/> to their initial value.
+    /// </summary>
+    public static async Task SetInitialNames(IEnumerable<StorageFile> files)
+    {
+        string time = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
+        foreach (StorageFile file in files)
+        {
+            string baseName = file.Name;
+            RemoveNumbering(baseName);
+
+            string baseDisplayName = baseName.Split(".")[0];
+
+            await file.RenameAsync(baseDisplayName + "_" + time + file.FileType, NameCollisionOption.GenerateUniqueName);
+        }
+    }
 }

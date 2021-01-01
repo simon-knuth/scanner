@@ -42,8 +42,8 @@
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
-            
-            
+
+
             <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
             <Storyboard x:Name="StoryboardChangeButtonsBeginScan">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
@@ -230,6 +230,81 @@
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
                 <DoubleAnimation Storyboard.TargetName="FontIconLeftPaneManageCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardToolbarTransitionToCrop">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingCrop" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingDraw" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="50" Duration="0:0:0.15" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardToolbarTransitionToDraw">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingCrop" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingDraw" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="50" Duration="0:0:0.15" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardToolbarTransitionFromSpecial">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="50" Duration="0:0:0.15" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
             </Storyboard>
 
 
@@ -430,7 +505,7 @@
                                     </TransitionCollection>
                                 </ListView.ItemContainerTransitions>
                             </ListView>
-                            <GridView ItemContainerStyle="{StaticResource GridViewItemContainerStyle1}" x:Name="LeftPaneGridViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
+                            <GridView x:Name="LeftPaneGridViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
                                 <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsWrapGrid HorizontalAlignment="Center"
@@ -561,6 +636,8 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
+                <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32"/>
+
                 <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0" Visibility="Collapsed">
                     <controlsxaml:ProgressRing Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
@@ -581,14 +658,18 @@
                                 <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
-                                <StackPanel Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Crop">
+                                <StackPanel x:Name="StackPanelTopToolbarEditing" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                    <StackPanel.RenderTransform>
+                                        <TranslateTransform Y="0"/>
+                                    </StackPanel.RenderTransform>
+
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Crop" Click="ButtonCrop_Click">
                                         <FontIcon x:Name="FontIconCrop" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click">
                                         <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Draw">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Draw" Click="ButtonDraw_Click">
                                         <FontIcon x:Name="FontIconDraw" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator x:Name="ToolbarSeparator1"/>
@@ -630,6 +711,65 @@
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonShare" x:Uid="ButtonShare" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Share (Ctrl+S)" Click="ButtonShare_Click">
                                         <FontIcon x:Name="FontIconShare" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
+                                </StackPanel>
+                                <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                    <StackPanel.RenderTransform>
+                                        <TranslateTransform Y="50"/>
+                                    </StackPanel.RenderTransform>
+                                    
+                                    <StackPanel x:Name="StackPanelTopToolbarEditingCrop" Orientation="Horizontal">
+                                        <InkToolbarCustomPenButton x:Name="ButtonCropAspectRatio" x:Uid="ButtonCropAspectRatio" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Aspect Ratio" Click="ButtonCropAspectRatio_Click">
+                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                                                <FontIcon x:Name="FontIconCropAspectRatio" FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;" FontSize="16"/>
+                                                <TextBlock x:Name="TextBlockCropAspectRatio" Text="Aspect Ratio" Style="{ThemeResource BodyTextBlockStyle}" Margin="12,0,0,2" VerticalAlignment="Center"/>
+                                            </StackPanel>
+
+                                            <FlyoutBase.AttachedFlyout>
+                                                <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
+                                                    <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" Text="Custom" IsChecked="True" FontWeight="Medium" v1809:CornerRadius="2" Click="SetCustomAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioSquare" Text="Square" Tag="1" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="3:2" Tag="0.6666" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="4:3" Tag="0.7500" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="MenuFlyoutItemFlipAspectRatio" Text="Flip aspect ratio" Icon="Orientation" v1809:CornerRadius="2" Click="FlipAspectRatio"/>
+                                                    <MenuFlyoutSeparator/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderInternational" Text="International" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem Text="DIN A" Tag="1.4142" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <MenuFlyoutSeparator/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderNA" Text="North American" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem Text="ANSI A - Letter" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="ANSI B - Ledger/Tabloid" Tag="1.5455" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="ANSI C - Broadsheet" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <MenuFlyoutSeparator/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ToggleMenuFlyoutItemAspectRatioHeaderChinese" Text="Chinese" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem Text="Kai 4" Tag="1.3894" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="Kai 8" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="Kai 16" Tag="1.4054" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem Text="Kai 32" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                </MenuFlyout>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </InkToolbarCustomPenButton>
+                                        <Custom:ToolbarSeparator/>
+                                    </StackPanel>
+                                    <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal">
+                                        <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
+                                            <InkToolbarEraserButton/>
+                                        </InkToolbar>
+                                        <Custom:ToolbarSeparator/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <InkToolbarCustomPenButton  x:Name="ButtonSave" x:Uid="ButtonSave" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Save" Click="ButtonSave_Click">
+                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                                                <FontIcon x:Name="FontIconSave" FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;" FontSize="16"/>
+                                                <TextBlock Text="Save" Style="{ThemeResource BodyTextBlockStyle}" Margin="12,0,0,2" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </InkToolbarCustomPenButton>
+                                        <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Save a copy" Click="ButtonSaveCopy_Click">
+                                            <FontIcon x:Name="FontIconSaveCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;" FontSize="16"/>
+                                        </InkToolbarCustomPenButton>
+                                        <InkToolbarCustomPenButton x:Name="ButtonDiscard" x:Uid="ButtonDiscard" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Discard changes" Click="ButtonDiscard_Click">
+                                            <FontIcon x:Name="FontIconDiscard" FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" FontSize="16"/>
+                                        </InkToolbarCustomPenButton>
+                                    </StackPanel>
                                 </StackPanel>
                                 <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
