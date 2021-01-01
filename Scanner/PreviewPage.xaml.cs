@@ -7,6 +7,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using static Utilities;
+
 
 namespace Scanner
 {
@@ -22,7 +24,7 @@ namespace Scanner
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (titleBar, y) =>
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
                     GridPreviewHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
@@ -50,7 +52,7 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 TextBlockPreviewHeaderConfig.Text = intent.scanSourceDescription;
@@ -67,7 +69,7 @@ namespace Scanner
                 {
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(previewStream);
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
                     () =>
                     {
                         ImagePreview.Source = bitmapImage;
@@ -81,7 +83,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
                     StoryboardError.Begin();

@@ -26,6 +26,7 @@ using Windows.Foundation.Collections;
 using Windows.Services.Store;
 using System.Collections.Generic;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 
 static class Utilities
 {
@@ -983,5 +984,13 @@ static class Utilities
             folderWithoutRotation = await folderTemp.CreateFolderAsync("withoutRotation", CreationCollisionOption.ReplaceExisting);
         }
         catch (Exception) { throw; }
+    }
+
+    /// <summary>
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/> .
+    /// </summary>
+    public static IAsyncAction RunOnUITreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
+    {
+        return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
     }
 }

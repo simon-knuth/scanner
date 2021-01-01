@@ -232,6 +232,42 @@
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardIconSaveCopyDone1" Completed="StoryboardIconSaveCopyDone1_Completed" Duration="0:0:1.8">
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardIconSaveCopyDone2" Completed="StoryboardIconSaveCopyDone2_Completed">
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopyDone" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopy" Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="FontIconSaveCopyDone" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+            </Storyboard>
+
             <Storyboard x:Name="StoryboardToolbarTransitionToCrop">
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingCrop" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
@@ -254,12 +290,16 @@
                         <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionToDraw">
@@ -279,12 +319,16 @@
                         <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionFromSpecial">
@@ -299,12 +343,16 @@
                         <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
             </Storyboard>
 
 
@@ -712,7 +760,7 @@
                                         <FontIcon x:Name="FontIconShare" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
-                                <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Opacity="0" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
                                     <StackPanel.RenderTransform>
                                         <TranslateTransform Y="50"/>
                                     </StackPanel.RenderTransform>
@@ -764,7 +812,18 @@
                                             </StackPanel>
                                         </InkToolbarCustomPenButton>
                                         <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Save a copy" Click="ButtonSaveCopy_Click">
-                                            <FontIcon x:Name="FontIconSaveCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;" FontSize="16"/>
+                                            <Grid Padding="0" Margin="0">
+                                                <FontIcon x:Name="FontIconSaveCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                                    <FontIcon.RenderTransform>
+                                                        <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                                    </FontIcon.RenderTransform>
+                                                </FontIcon>
+                                                <FontIcon x:Name="FontIconSaveCopyDone" FontFamily="Segoe MDL2 Assets" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                                    <FontIcon.RenderTransform>
+                                                        <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                                    </FontIcon.RenderTransform>
+                                                </FontIcon>
+                                            </Grid>
                                         </InkToolbarCustomPenButton>
                                         <InkToolbarCustomPenButton x:Name="ButtonDiscard" x:Uid="ButtonDiscard" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Discard changes" Click="ButtonDiscard_Click">
                                             <FontIcon x:Name="FontIconDiscard" FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" FontSize="16"/>
