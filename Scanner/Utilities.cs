@@ -342,16 +342,6 @@ static class Utilities
             localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         }
 
-        if (localSettingsContainer.Values["settingDrawPenDetected"] != null)
-        {
-            settingDrawPenDetected = (bool)localSettingsContainer.Values["settingDrawPenDetected"];
-        }
-        else
-        {
-            settingDrawPenDetected = true;
-            localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;
-        }
-
         PackageVersion version = Package.Current.Id.Version;
         string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         if (localSettingsContainer.Values["lastKnownVersion"] != null)
@@ -465,7 +455,7 @@ static class Utilities
     /// </remarks>
     /// <exception cref="UnauthorizedAccessException">Access to the Pictures Library has been denied.</exception>
     /// <exception cref="Exception">Remaining errors</exception>
-    public static async void ResetScanFolder()
+    public static async Task ResetScanFolder()
     {
         StorageFolder folder;
         try
@@ -482,6 +472,7 @@ static class Utilities
         }
 
         scanFolder = folder;
+        StorageApplicationPermissions.FutureAccessList.AddOrReplace("scanFolder", scanFolder);
     }
 
 
@@ -652,19 +643,18 @@ static class Utilities
         localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        localSettingsContainer.Values["settingDrawPenDetected"] = settingDrawPenDetected;
     }
 
 
     // TODO documentation
-    public static Tuple<double, double> RefreshImageMeasurements(ImageProperties properties)
+    public static Tuple<double, double> GetImageMeasurements(ImageProperties properties)
     {
         return new Tuple<double, double>(properties.Width, properties.Height);
     }
 
 
     // TODO documentation
-    public static Tuple<double, double> RefreshImageMeasurements(BitmapImage image)
+    public static Tuple<double, double> GetImageMeasurements(BitmapImage image)
     {
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
     }
@@ -989,7 +979,7 @@ static class Utilities
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/> .
     /// </summary>
-    public static IAsyncAction RunOnUITreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
+    public static IAsyncAction RunOnUIThreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
     {
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
     }

@@ -280,8 +280,13 @@
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FlipViewScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
@@ -313,6 +318,16 @@
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ScrollViewerEditDraw" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FlipViewScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="50" Duration="0:0:0.15" BeginTime="0:0:0">
                     <DoubleAnimation.EasingFunction>
@@ -335,6 +350,16 @@
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ScrollViewerEditDraw" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FlipViewScan" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
@@ -686,6 +711,18 @@
 
                 <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32"/>
 
+                <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                              Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
+                    <Grid x:Name="GridEditDraw" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                        <Image x:Name="ImageEditDraw" HorizontalAlignment="Center" MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                               MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}" SizeChanged="ImageEditDraw_SizeChanged"/>
+                        <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <InkCanvas x:Name="InkCanvasEditDraw"/>
+                        </Viewbox>
+                    </Grid>
+                </ScrollViewer>
+
                 <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0" Visibility="Collapsed">
                     <controlsxaml:ProgressRing Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
@@ -769,7 +806,7 @@
                                         <InkToolbarCustomPenButton x:Name="ButtonCropAspectRatio" x:Uid="ButtonCropAspectRatio" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Aspect Ratio" Click="ButtonCropAspectRatio_Click">
                                             <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                                                 <FontIcon x:Name="FontIconCropAspectRatio" FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;" FontSize="16"/>
-                                                <TextBlock x:Name="TextBlockCropAspectRatio" Text="Aspect Ratio" Style="{ThemeResource BodyTextBlockStyle}" Margin="12,0,0,2" VerticalAlignment="Center"/>
+                                                <TextBlock x:Name="TextBlockCropAspectRatio" Text="Aspect Ratio" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
                                             </StackPanel>
 
                                             <FlyoutBase.AttachedFlyout>
@@ -799,19 +836,22 @@
                                         <Custom:ToolbarSeparator/>
                                     </StackPanel>
                                     <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal">
-                                        <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
+                                        <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasEditDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
                                         </InkToolbar>
+                                        <InkToolbarCustomPenButton x:Name="ButtonDrawTouch" x:Uid="ButtonDrawTouch" Visibility="Collapsed" ToolTipService.ToolTip="Draw with touch" Click="ButtonDrawTouch_Click">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="16"/>
+                                        </InkToolbarCustomPenButton>
                                         <Custom:ToolbarSeparator/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <InkToolbarCustomPenButton  x:Name="ButtonSave" x:Uid="ButtonSave" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Save" Click="ButtonSave_Click">
                                             <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
-                                                <FontIcon x:Name="FontIconSave" FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;" FontSize="16"/>
-                                                <TextBlock Text="Save" Style="{ThemeResource BodyTextBlockStyle}" Margin="12,0,0,2" VerticalAlignment="Center"/>
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;" FontSize="16"/>
+                                                <TextBlock Text="Save" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
                                             </StackPanel>
                                         </InkToolbarCustomPenButton>
-                                        <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Save a copy" Click="ButtonSaveCopy_Click">
+                                        <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Save as copy" Click="ButtonSaveCopy_Click">
                                             <Grid Padding="0" Margin="0">
                                                 <FontIcon x:Name="FontIconSaveCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                     <FontIcon.RenderTransform>

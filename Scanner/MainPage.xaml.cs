@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Input;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -107,7 +108,7 @@ namespace Scanner
 
         private async void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 // find lost scanner in scannerList to remove the corresponding scanner and its list entry
@@ -126,7 +127,7 @@ namespace Scanner
 
         private async void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             async () =>
             {
                 bool duplicate = false;
@@ -146,7 +147,7 @@ namespace Scanner
                     {
                         RecognizedScanner newScanner = await RecognizedScanner.CreateFromDeviceInformationAsync(args);
                         ComboBoxScanners.IsDropDownOpen = false;
-                        scannerList.Insert(0, CreateComboBoxItem(newScanner.scannerName, newScanner));
+                        scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(newScanner.scannerName, newScanner));
 
                         if (settingAutomaticScannerSelection == true && ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning)
                             ComboBoxScanners.SelectedIndex = 0;
@@ -165,7 +166,7 @@ namespace Scanner
             else
             {
                 Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
-                await RunOnUITreadAsync(CoreDispatcherPriority.Low, () =>
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
                     ButtonScanOptions.IsChecked = false;
@@ -187,7 +188,7 @@ namespace Scanner
                 await LoadScanFolder();
                 await InitializeTempFolder();
 
-                await RunOnUITreadAsync(CoreDispatcherPriority.Low, () =>
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.Margin = new Thickness(0, GridContentPaneTopToolbar.ActualHeight, 0, 0);
                     SplitViewContentPane.Margin = SplitViewLeftPane.Margin;
@@ -197,6 +198,16 @@ namespace Scanner
                     rectangleClip.Rect = new Rect(0, 0, GridContentPaneTopToolbar.ActualWidth,
                         GridContentPaneTopToolbar.ActualHeight);
                     GridContentPaneTopToolbar.Clip = rectangleClip;
+                    InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+                    IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
+                    foreach (var device in pointerDevices)
+                    {
+                        if (device.PointerDeviceType == PointerDeviceType.Touch)
+                        {
+                            ButtonDrawTouch.Visibility = Visibility.Visible;
+                            break;
+                        }
+                    }
                 });
 
                 ComboBoxScanners.Focus(FocusState.Programmatic);
@@ -232,8 +243,8 @@ namespace Scanner
                 else
                 {
                     // scanner selected
-                    selectedScanner = (RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag;
                     await CleanMenuForNewScanner((RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag);
+                    selectedScanner = (RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag;
                     RadioButtonSourceMode_Checked(null, null);
                     StackPanelContentPaneText.Visibility = Visibility.Collapsed;
                 }
@@ -243,7 +254,7 @@ namespace Scanner
         private async Task RefreshPreviewIndicators(bool autoPreview, bool? flatbedPreview, bool? feederPreview,
             bool autoAllowed, bool flatbedAllowed, bool feederAllowed)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (autoPreview) FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
@@ -266,7 +277,7 @@ namespace Scanner
 
         private async Task CleanMenuForNewScanner(RecognizedScanner scanner)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             async () =>
             {
                 ComboBoxScanners.IsEnabled = false;
@@ -275,11 +286,19 @@ namespace Scanner
                 if (scanner != null)
                 {
                     bool modeSelected = false;
+                    bool scannerAlreadySelected = false;
+                    if (selectedScanner != null && selectedScanner == scanner)
+                    {
+                        scannerAlreadySelected = true;
+                    }
 
                     if (scanner.autoAllowed)        // auto config
                     {
-                        RadioButtonSourceAutomatic.IsChecked = true;
-                        modeSelected = true;
+                        if (!scannerAlreadySelected)
+                        {
+                            RadioButtonSourceAutomatic.IsChecked = true;
+                            modeSelected = true;
+                        }
                         RadioButtonSourceAutomatic.IsEnabled = true;
                     } 
                     else
@@ -290,7 +309,7 @@ namespace Scanner
 
                     if (scanner.flatbedAllowed)     // flatbed
                     {
-                        if (!modeSelected)
+                        if (!modeSelected && !scannerAlreadySelected)
                         {
                             RadioButtonSourceFlatbed.IsChecked = true;
                             modeSelected = true;
@@ -305,7 +324,7 @@ namespace Scanner
 
                     if (scanner.feederAllowed)      // feeder
                     {
-                        if (!modeSelected)
+                        if (!modeSelected && !scannerAlreadySelected)
                         {
                             RadioButtonSourceFeeder.IsChecked = true;
                             modeSelected = true;
@@ -345,7 +364,7 @@ namespace Scanner
 
         private async void RadioButtonSourceMode_Checked(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 // color mode
@@ -500,7 +519,7 @@ namespace Scanner
 
         private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 double width = ((Frame)Window.Current.Content).ActualWidth;
@@ -575,6 +594,7 @@ namespace Scanner
                     ButtonManage.Visibility = Visibility.Collapsed;
                     ButtonScanOptions.Visibility = Visibility.Collapsed;
                 }
+                
                 if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2 <= currentTitleBarButtonWidth
                 || uiState == UIstate.small)
                 {
@@ -589,7 +609,7 @@ namespace Scanner
 
         private async void FlipViewLeftPane_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (FlipViewLeftPane.SelectedIndex == 0)
@@ -612,7 +632,7 @@ namespace Scanner
 
         private async void ButtonScanOptions_Checked(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (uiState == UIstate.small) SplitViewLeftPane.IsPaneOpen = true;
@@ -622,7 +642,7 @@ namespace Scanner
 
         private async void ButtonManage_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (ButtonManage.IsChecked == true)
@@ -681,7 +701,7 @@ namespace Scanner
             try
             {
                 // disable controls and show progress bar
-                await RunOnUITreadAsync(CoreDispatcherPriority.High,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 async () =>
                 {
                     ButtonLeftPaneScan.IsEnabled = false;
@@ -769,7 +789,7 @@ namespace Scanner
                         return false;
                     }
 
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = true);
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = true);
 
                     // determine target folder
                     StorageFolder folderToScanTo;
@@ -803,13 +823,13 @@ namespace Scanner
                         return false;
                     }
 
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = false);
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonLeftPaneCancel.IsEnabled = false);
 
                     if (settingAppendTime) try { await SetInitialNames(scannerScanResult.ScannedFiles); } catch (Exception) { }
 
                     if (ScanResultValid(scannerScanResult))
                     {
-                        await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => LeftPaneManageInitialText.Visibility = Visibility.Collapsed);
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => LeftPaneManageInitialText.Visibility = Visibility.Collapsed);
                         if (scanResult == null)
                         {
                             if (selectedFormat.Item2 == null)
@@ -824,11 +844,11 @@ namespace Scanner
                             }
 
                             FlipViewScan.ItemsSource = scanResult.elements;
-                            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
+                            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
                         }
                         else
                         {
-                            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, async () => {
+                            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => {
                                 if (selectedFormat.Item2 != null) await scanResult.AddFiles(scannerScanResult.ScannedFiles, (SupportedFormat)selectedFormat.Item2);
                                 else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null);
                                 FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
@@ -860,14 +880,14 @@ namespace Scanner
                         {
                             scanResult = await ScanResult.Create(copiedDebugFiles, scanFolder);
                         }
-                        await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => {
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => {
                             FlipViewScan.ItemsSource = scanResult.elements;
                             InitializePaneManage();
                         });
                     }
                     else
                     {
-                        await RunOnUITreadAsync(CoreDispatcherPriority.Normal, async () => {
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => {
                             foreach (StorageFile file in copiedDebugFiles)
                             {
                                 if (selectedDebugFormat == SupportedFormat.PDF) await file.MoveAsync(folderConversion, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
@@ -883,7 +903,7 @@ namespace Scanner
                 scanSuccessful = true;
 
                 // reenable controls and change UI
-                await RunOnUITreadAsync(CoreDispatcherPriority.High,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 async () =>
                 {
                     await TransitionLeftPaneButtonsForScan(false);
@@ -944,7 +964,7 @@ namespace Scanner
 
         private async void ScanProgress_ProgressChanged(object sender, uint e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (e <= 1)
@@ -1041,7 +1061,7 @@ namespace Scanner
         {
             throw new NotImplementedException();
 
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 
@@ -1076,7 +1096,7 @@ namespace Scanner
 
         private async Task RefreshFileName()
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (scanResult != null) 
@@ -1107,7 +1127,7 @@ namespace Scanner
         private async void FlipViewScan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             await RefreshFileName();
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (flowState != FlowState.select)
@@ -1173,7 +1193,7 @@ namespace Scanner
 
         private async Task TransitionLeftPaneButtonsForScan(bool beginScan)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (beginScan)
@@ -1195,7 +1215,7 @@ namespace Scanner
             {
                 case FlowState.initial:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar() );
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar() );
                     break;
                 case FlowState.scanning:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
@@ -1215,10 +1235,10 @@ namespace Scanner
                 ToggleSwitchDebugFakeScannerFeederPreview.IsOn, (bool)CheckBoxDebugFakeScannerFeederColor.IsChecked, (bool)CheckBoxDebugFakeScannerFeederGrayscale.IsChecked,
                 (bool)CheckBoxDebugFakeScannerFeederMonochrome.IsChecked, (bool)CheckBoxDebugFakeScannerFeederDuplex.IsChecked);
             
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
-                scannerList.Insert(0, CreateComboBoxItem(fakeScanner.scannerName, fakeScanner));
+                scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(fakeScanner.scannerName, fakeScanner));
 
                 if (settingAutomaticScannerSelection == true && ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning)
                     ComboBoxScanners.SelectedIndex = 0;
@@ -1232,7 +1252,7 @@ namespace Scanner
 
         private async Task RefreshScanButton()
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) 
@@ -1346,6 +1366,25 @@ namespace Scanner
                 case SummonToolbar.Draw:
                     flowState = FlowState.draw;
                     StoryboardToolbarTransitionToDraw.Begin();
+                    ImageEditDraw.Source = ((ScanResultElement)FlipViewScan.SelectedItem).CachedImage;
+                    Tuple<double, double> imageMeasurements = GetImageMeasurements(((ScanResultElement)FlipViewScan.SelectedItem).CachedImage);
+                    InitializeInkCanvas(InkCanvasEditDraw, imageMeasurements.Item1, imageMeasurements.Item2);
+                    if (lastTouchDrawState == true)
+                    {
+                        try
+                        {
+                            IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
+                            foreach (var device in pointerDevices)
+                            {
+                                if (device.PointerDeviceType == PointerDeviceType.Touch)
+                                {
+                                    ButtonDrawTouch.IsChecked = true;
+                                    break;
+                                }
+                            }
+                        }
+                        catch (Exception) { }
+                    }
                     break;
                 default:
                     break;
@@ -1355,6 +1394,7 @@ namespace Scanner
         private void TransitionFromEditingMode()
         {
             flowState = FlowState.initial;
+            ScrollViewerEditDraw.ChangeView(0, 0, 0);
             FlipViewLeftPane.IsEnabled = true;
             UnlockPaneManage(false);
             StoryboardToolbarTransitionFromSpecial.Begin();
@@ -1478,7 +1518,7 @@ namespace Scanner
                     try
                     {
                         await scanResult.CopyAsync();
-                        await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => {
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => {
                             TeachingTipScope.IsOpen = false;
                             StoryboardIconCopyDone1.Begin();
                         });
@@ -1491,12 +1531,12 @@ namespace Scanner
                     break;
                 case ScopeActions.OpenWith:
                     await scanResult.OpenWithAsync();
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
                     break;
                 case ScopeActions.Share:
                     shareIndexes = null;
                     Share(ButtonShare);
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
                     break;
                 default:
                     break;
@@ -1505,13 +1545,13 @@ namespace Scanner
 
         private async void SplitViewLeftPane_PaneClosed(SplitView sender, object args)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () => { ButtonScanOptions.IsChecked = false; });
         }
 
         private async void SplitViewContentPane_PaneClosed(SplitView sender, object args)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () => { ButtonManage.IsChecked = false; });
         }
 
@@ -1534,13 +1574,13 @@ namespace Scanner
                     else
                     {
                         await scanResult.CopyAsync();
-                        await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
                         return;
                     }
                 }
 
                 await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
-                await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
             }
             catch (Exception)
             {
@@ -1584,7 +1624,7 @@ namespace Scanner
             {
                 case ScopeActions.Copy:
                     await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
                     break;
                 case ScopeActions.OpenWith:
                     await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
@@ -1647,7 +1687,7 @@ namespace Scanner
                     }
                     else return;
 
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                     () =>
                     {
                         TeachingTipRename.IsOpen = false;
@@ -1664,7 +1704,7 @@ namespace Scanner
 
         private async void ButtonRename_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
@@ -1688,39 +1728,39 @@ namespace Scanner
 
         private async void StoryboardIconCopyDone1_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone2.Begin());
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone2.Begin());
         }
 
         private async void StoryboardIconCopyDone2_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => FontIconCopyDone.Opacity = 1.0);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FontIconCopyDone.Opacity = 1.0);
         }
 
         private async void StoryboardIconLeftPaneManageCopyDone1_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone2.Begin());
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone2.Begin());
         }
 
         private async void StoryboardIconLeftPaneManageCopyDone2_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => FontIconLeftPaneManageCopyDone.Opacity = 1.0);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FontIconLeftPaneManageCopyDone.Opacity = 1.0);
         }
 
         private async void StoryboardIconRenameDone1_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconRenameDone2.Begin());
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconRenameDone2.Begin());
         }
 
         private async void StoryboardIconRenameDone2_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => FontIconRenameDone.Opacity = 1.0);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FontIconRenameDone.Opacity = 1.0);
         }
 
         private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
             try
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.High, () =>
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     args.AllowedOperations = DataPackageOperation.Copy;
                     args.Data.RequestedOperation = DataPackageOperation.Copy;
@@ -1740,7 +1780,7 @@ namespace Scanner
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
             // lock UI
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 LockToolbar();
@@ -1757,7 +1797,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.High,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
@@ -1772,7 +1812,7 @@ namespace Scanner
             await scanResult.GetImageAsync(index);
 
             // restore UI
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 UnlockToolbar();
@@ -1782,7 +1822,7 @@ namespace Scanner
 
         private async void TeachingTipRename_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                     () => ButtonRename.IsChecked = false);
         }
 
@@ -1791,7 +1831,7 @@ namespace Scanner
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || 
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 LockToolbar();
@@ -1829,7 +1869,7 @@ namespace Scanner
             }
             await Task.WhenAll(tasksPreview);
 
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 UnlockPaneManage(true);
@@ -1839,7 +1879,7 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageSelect_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (flowState != FlowState.select)
@@ -1873,7 +1913,7 @@ namespace Scanner
                 }
             
                 await scanResult.CopyImagesAsync(indices);
-                await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone1.Begin());
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone1.Begin());
             }
             catch (Exception)
             {
@@ -1912,7 +1952,7 @@ namespace Scanner
 
         private async void ComboBoxDebugFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 if (scanResult == null)
@@ -1937,7 +1977,7 @@ namespace Scanner
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 TransitionToEditingMode(SummonToolbar.Crop);
@@ -1946,7 +1986,7 @@ namespace Scanner
 
         private async void ButtonDiscard_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 TransitionFromEditingMode();
@@ -1955,7 +1995,7 @@ namespace Scanner
 
         private async void SetFixedAspectRatio(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 // set aspect ratio according to tag
@@ -1975,7 +2015,7 @@ namespace Scanner
         private async void SetCustomAspectRatio(object sender, RoutedEventArgs e)
         {
             // only check selected item
-            await RunOnUITreadAsync(CoreDispatcherPriority.High,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 // set aspect ratio to custom
@@ -1994,7 +2034,7 @@ namespace Scanner
 
         private async void FlipAspectRatio(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 ImageCropperScan.AspectRatio = ImageCropperScan.CroppedRegion.Height / ImageCropperScan.CroppedRegion.Width;
@@ -2003,7 +2043,7 @@ namespace Scanner
 
         private async void ButtonCropAspectRatio_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 FlyoutBase.ShowAttachedFlyout(ButtonCropAspectRatio);
@@ -2012,7 +2052,7 @@ namespace Scanner
 
         private async void MenuFlyoutAspectRatio_Closing(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 ButtonCropAspectRatio.IsChecked = false;
@@ -2023,7 +2063,7 @@ namespace Scanner
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 TransitionToEditingMode(SummonToolbar.Draw);
@@ -2037,7 +2077,7 @@ namespace Scanner
                 if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
                     (flowState != FlowState.crop && flowState != FlowState.draw)) throw new ApplicationException("Could not save changes.");
 
-                await RunOnUITreadAsync(CoreDispatcherPriority.High,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
                     ButtonCropAspectRatio.IsEnabled = false;
@@ -2067,14 +2107,24 @@ namespace Scanner
                         }
                         break;
                     case FlowState.draw:
+                        if (asCopy)
+                        {
+                            await scanResult.DrawOnScanAsCopyAsync(FlipViewScan.SelectedIndex, InkCanvasEditDraw);
+                            await scanResult.GetImageAsync(FlipViewScan.SelectedIndex + 1);
+                        }
+                        else
+                        {
+                            await scanResult.DrawOnScanAsync(FlipViewScan.SelectedIndex, InkCanvasEditDraw);
+                            await scanResult.GetImageAsync(FlipViewScan.SelectedIndex);
+                        }
                         break;
                 }
 
-                if (asCopy) await RunOnUITreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
+                if (asCopy) await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
             }
             catch (Exception)
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageSaveHeader"), LocalizedString("ErrorMessageSaveBody"));
@@ -2082,7 +2132,7 @@ namespace Scanner
             } 
             finally
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.High,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
                     if (!asCopy) TransitionFromEditingMode();
@@ -2108,12 +2158,45 @@ namespace Scanner
 
         private async void StoryboardIconSaveCopyDone1_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconSaveCopyDone2.Begin());
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconSaveCopyDone2.Begin());
         }
 
         private async void StoryboardIconSaveCopyDone2_Completed(object sender, object e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal, () => FontIconSaveCopyDone.Opacity = 1.0);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FontIconSaveCopyDone.Opacity = 1.0);
+        }
+
+        private async void ButtonDrawTouch_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (InkCanvasEditDraw.InkPresenter.InputDeviceTypes.HasFlag(CoreInputDeviceTypes.Touch))
+                {
+                    InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen
+                                                                        | CoreInputDeviceTypes.Touch;
+                    ButtonDrawTouch.IsChecked = true;
+                    lastTouchDrawState = true;
+                    localSettingsContainer.Values["lastTouchDrawState"] = lastTouchDrawState;
+                }
+                else
+                {
+                    InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+                    ButtonDrawTouch.IsChecked = false;
+                    lastTouchDrawState = false;
+                    localSettingsContainer.Values["lastTouchDrawState"] = lastTouchDrawState;
+                }
+            });
+        }
+
+        private async void ImageEditDraw_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ViewboxEditDraw.Width = ImageEditDraw.ActualWidth;
+                ViewboxEditDraw.MaxWidth = ImageEditDraw.ActualWidth;
+                ViewboxEditDraw.Height = ImageEditDraw.ActualHeight;
+                ViewboxEditDraw.MaxHeight = ImageEditDraw.ActualHeight;
+            });
         }
     }
 }

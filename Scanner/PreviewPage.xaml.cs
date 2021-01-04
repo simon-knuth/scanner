@@ -24,7 +24,7 @@ namespace Scanner
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (titleBar, y) =>
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
                     GridPreviewHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
@@ -52,7 +52,7 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 TextBlockPreviewHeaderConfig.Text = intent.scanSourceDescription;
@@ -69,7 +69,7 @@ namespace Scanner
                 {
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(previewStream);
-                    await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                     () =>
                     {
                         ImagePreview.Source = bitmapImage;
@@ -83,7 +83,7 @@ namespace Scanner
             }
             catch (Exception)
             {
-                await RunOnUITreadAsync(CoreDispatcherPriority.Normal,
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
                     StoryboardError.Begin();

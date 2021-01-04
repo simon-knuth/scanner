@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -43,7 +46,7 @@ namespace Scanner
         {
             if (e.Key == Windows.System.VirtualKey.GoBack || e.Key == Windows.System.VirtualKey.Escape)
             {
-                ButtonBack_Click(null, null);
+                GoBack();
             }
         }
 
@@ -56,37 +59,38 @@ namespace Scanner
         {
             if (scanFolder != null)
             {
-                TextBlockSaveLocation.Text = scanFolder.Path;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
             } else
             {
-                ButtonResetLocation_Click(null, null);
+                await ResetScanLocation();
             }
-            
 
-            switch (settingAppTheme)
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                case Theme.light:
-                    ComboBoxTheme.SelectedIndex = 1;
-                    break;
-                case Theme.dark:
-                    ComboBoxTheme.SelectedIndex = 2;
-                    break;
-                default:
-                    ComboBoxTheme.SelectedIndex = 0;
-                    break;
-            }
-            TextBlockRestart.Visibility = Visibility.Collapsed;
-            CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
-            CheckBoxAppendTime.IsChecked = settingAppendTime;
-            CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
-            CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
+                switch (settingAppTheme)
+                {
+                    case Theme.light:
+                        ComboBoxTheme.SelectedIndex = 1;
+                        break;
+                    case Theme.dark:
+                        ComboBoxTheme.SelectedIndex = 2;
+                        break;
+                    default:
+                        ComboBoxTheme.SelectedIndex = 0;
+                        break;
+                }
+                TextBlockRestart.Visibility = Visibility.Collapsed;
+                CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
+                CheckBoxAppendTime.IsChecked = settingAppendTime;
+                CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
 
-            if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
+                if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
 
-            allSettingsLoaded = true;
+                allSettingsLoaded = true;
 
-            PackageVersion version = Package.Current.Id.Version;
-            RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+                PackageVersion version = Package.Current.Id.Version;
+                RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            });
         }
 
 
@@ -94,11 +98,11 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when another <see cref="Theme"/> is selected from <see cref="ComboBoxTheme"/>.
         /// </summary>
-        private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (allSettingsLoaded)
             {
-                TextBlockRestart.Visibility = Visibility.Visible;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockRestart.Visibility = Visibility.Visible);
 
                 settingAppTheme = (Theme)int.Parse(((ComboBoxItem)ComboBoxTheme.SelectedItem).Tag.ToString());
                 SaveSettings();
@@ -133,7 +137,8 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowContentDialog(LocalizedString("ErrorMessagePickFolderHeader"), LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeader"),
+                    LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
                 return;
             }
 
@@ -142,10 +147,10 @@ namespace Scanner
                 Windows.Storage.AccessCache.StorageApplicationPermissions.
                     FutureAccessList.AddOrReplace("scanFolder", folder);
                 scanFolder = folder;
-                TextBlockSaveLocation.Text = scanFolder.Path;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
             }
 
-            if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
+            if (await IsDefaultScanFolderSet() != true) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonResetLocation.IsEnabled = true);
         }
 
 
@@ -155,28 +160,37 @@ namespace Scanner
         /// </summary>
         private async void ButtonResetLocation_Click(object sender, RoutedEventArgs e)
         {
-            StorageFolder folder;
+            await ResetScanLocation();
+        }
+
+
+
+        private async Task ResetScanLocation()
+        {
             try
             {
-                folder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+                await ResetScanFolder();
             }
             catch (UnauthorizedAccessException)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"),
+                    LocalizedString("ErrorMessageResetFolderUnauthorizedBody")));
                 return;
             }
             catch (Exception exc)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageResetFolderHeader"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderHeader"),
+                    LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message));
                 return;
             }
 
-            scanFolder = folder;
-            Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.AddOrReplace("scanFolder", scanFolder);
-            TextBlockSaveLocation.Text = scanFolder.Path;
-            ButtonResetLocation.IsEnabled = false;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TextBlockSaveLocation.Text = scanFolder.Path;
+                ButtonResetLocation.IsEnabled = false;
+            });    
         }
+
 
 
         /// <summary>
@@ -191,29 +205,11 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageFeedbackHubHeader"), 
-                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageFeedbackHubHeader"),
+                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message));
             }
         }
 
-
-        /// <summary>
-        ///     Displays a <see cref="ContentDialog"/> consisting of a <paramref name="title"/>, <paramref name="message"/>
-        ///     and a button that allows the user to close the <see cref="ContentDialog"/>.
-        /// </summary>
-        /// <param name="title">The title of the <see cref="ContentDialog"/>.</param>
-        /// <param name="message">The body of the <see cref="ContentDialog"/>.</param>
-        public async void ShowContentDialog(string title, string message)
-        {
-            ContentDialogBlank.Title = title;
-            ContentDialogBlank.Content = message;
-
-            ContentDialogBlank.CloseButtonText = LocalizedString("CloseButtonText");
-            ContentDialogBlank.PrimaryButtonText = "";
-            ContentDialogBlank.SecondaryButtonText = "";
-
-            await ContentDialogBlank.ShowAsync();
-        }
 
 
         /// <summary>
@@ -237,15 +233,27 @@ namespace Scanner
         }
 
 
+
         /// <summary>
         ///     Page was loaded (possibly through navigation).
         /// </summary>
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ButtonBrowse.Focus(FocusState.Programmatic);
+            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                StoryboardEnter.Begin();
+                ButtonBrowse.Focus(FocusState.Programmatic);
 
-            ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
-            ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+                ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
+                ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+
+                if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+                {
+                    // v1809+
+                    TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
+                }
+                TeachingTipEmpty.CloseButtonContent = LocalizedString("CloseButtonText");
+            });
         }
 
 
@@ -259,6 +267,13 @@ namespace Scanner
 
         private void ButtonBack_Click(object sender, RoutedEventArgs e)
         {
+            GoBack();
+        }
+
+
+
+        private void GoBack()
+        {
             Frame.GoBack();
         }
 
@@ -271,7 +286,6 @@ namespace Scanner
                 settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
                 settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
-                settingDrawPenDetected = (bool)CheckBoxSettingsDrawPenDetected.IsChecked;
 
                 SaveSettings();
             }
@@ -283,11 +297,14 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkButtonSettingsAboutLicenses_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
-            ContentDialogLicenses.PrimaryButtonText = "";
-            ContentDialogLicenses.SecondaryButtonText = "";
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
+                ContentDialogLicenses.PrimaryButtonText = "";
+                ContentDialogLicenses.SecondaryButtonText = "";
 
-            await ContentDialogLicenses.ShowAsync();
+                await ContentDialogLicenses.ShowAsync();
+            });
         }
 
         private async void HyperlinkButtonSettingsHelpScannerSettings_Click(object sender, RoutedEventArgs e)

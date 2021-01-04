@@ -7,6 +7,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:local="using:Scanner"
+    xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
     NavigationCacheMode="Disabled" 
@@ -27,6 +28,26 @@
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
             </v1809:Style>
+
+
+            <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
+            <Storyboard x:Name="StoryboardEnter">
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             Storyboard.TargetName="StackPanelSettingsHeader" Duration="0:0:0.4" To="0.0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                Storyboard.TargetName="ButtonSettingsHeaderBack"
+                Storyboard.TargetProperty="Opacity"
+                To="1.0"
+                Duration="0:0:0.4">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
 
 
             <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
@@ -73,7 +94,6 @@
                         <CheckBox x:Uid="CheckBoxSettingsAutomaticScannerSelection" x:Name="CheckBoxAutomaticScannerSelection" Content="Automatically select first available scanner" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsAppendTime" x:Name="CheckBoxAppendTime" Content="Append time to file name" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="CheckBoxSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
-                        <CheckBox x:Uid="CheckBoxSettingsDrawPenDetected" x:Name="CheckBoxSettingsDrawPenDetected" Content="Start drawing when a pen is detected" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
@@ -138,8 +158,12 @@
                         <v1809:BrushTransition/>
                     </v1809:Grid.BackgroundTransition>
 
-                    <StackPanel Orientation="Horizontal" Padding="0,0,0,8">
-                        <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
+                    <StackPanel x:Name="StackPanelSettingsHeader" Orientation="Horizontal" Padding="0,0,0,8">
+                        <StackPanel.RenderTransform>
+                            <TranslateTransform X="-48"/>
+                        </StackPanel.RenderTransform>
+
+                        <Button x:Name="ButtonSettingsHeaderBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Opacity="0" VerticalAlignment="Stretch" Click="ButtonBack_Click">
                             <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
                         </Button>
                         <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="TextBlockSettingsHeader" Text="Settings" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
@@ -165,5 +189,10 @@
                 <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
             </TextBlock>
         </ContentDialog>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipEmpty"
+            IsLightDismissEnabled="True"
+            PlacementMargin="4"/>
     </Grid>
 </Page>
