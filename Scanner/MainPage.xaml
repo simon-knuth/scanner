@@ -728,7 +728,7 @@
                     <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
                 </Grid>
 
-                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top">
+                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <v1809:Grid.BackgroundTransition>
                         <v1803:BrushTransition/>
                     </v1809:Grid.BackgroundTransition>
@@ -909,6 +909,27 @@
             x:Name="TeachingTipEmpty"
             IsLightDismissEnabled="True"
             PlacementMargin="4"/>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipFeedback"
+            IsLightDismissEnabled="False"
+            PlacementMargin="4"
+            Title="Are you enjoying the app?"
+            Subtitle="We would love to hear from you:">
+            <controlsxaml:TeachingTip.IconSource>
+                <controlsxaml:FontIconSource Glyph="&#xEB52;"/>
+            </controlsxaml:TeachingTip.IconSource>
+
+            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                            <Span>
+                                <Run x:Uid="RunSettingsBeforeFeedbackLink" xml:space="preserve">Use the </Run>
+                                <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click">Feedback Hub<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink>
+                                <Run x:Uid="RunSettingsAfterFeedbackLink" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
+                                <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click">rate Scanner in the Microsoft Store</Hyperlink>
+                                <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
+                            </Span>
+            </TextBlock>
+        </controlsxaml:TeachingTip>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipScope"

@@ -920,7 +920,7 @@ static class Utilities
     }
 
 
-    public async static void ShowRatingDialog()
+    public async static Task ShowRatingDialog()
     {
         try
         {
@@ -931,6 +931,17 @@ static class Utilities
         {
             try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
         }
+    }
+
+
+    public async static Task LaunchFeedbackHub()
+    {
+        try
+        {
+            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+            await launcher.LaunchAsync();
+        }
+        catch (Exception) { }
     }
 
 

@@ -194,10 +194,6 @@ namespace Scanner
                     SplitViewContentPane.Margin = SplitViewLeftPane.Margin;
                     ScrollViewerContentPaneContentDummy.Margin = SplitViewLeftPane.Margin;
                     PrepareTeachingTips();
-                    RectangleGeometry rectangleClip = new RectangleGeometry();
-                    rectangleClip.Rect = new Rect(0, 0, GridContentPaneTopToolbar.ActualWidth,
-                        GridContentPaneTopToolbar.ActualHeight);
-                    GridContentPaneTopToolbar.Clip = rectangleClip;
                     InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
                     IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
                     foreach (var device in pointerDevices)
@@ -604,6 +600,11 @@ namespace Scanner
                 {
                     StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
                 }
+
+                RectangleGeometry rectangleClip = new RectangleGeometry();
+                rectangleClip.Rect = new Rect(0, 0, Double.PositiveInfinity,
+                    GridContentPaneTopToolbar.ActualHeight);
+                GridContentPaneTopToolbar.Clip = rectangleClip;
             });
         }
 
@@ -918,10 +919,10 @@ namespace Scanner
                     StoryboardProgressBarScanEnd.Begin();
                     FlipViewScan.Visibility = Visibility.Visible;
                     LeftPaneManageInitialText.Visibility = Visibility.Collapsed;
+                    if (startFresh) FlipViewScan.SelectedIndex = 0;
                     FlipViewScan_SelectionChanged(null, null);
                     TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
                     TextBlockContentPaneGridProgressRingScan.Text = "";
-                    await RefreshFileName();
                 });
 
                 await CleanMenuForNewScanner(selectedScanner);
@@ -929,6 +930,11 @@ namespace Scanner
 
                 // send toast if the app is minimized
                 if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("NotificationScanCompleteHeader"), LocalizedString("NotificationScanCompleteBody"), 5);
+
+                // ask for feedback
+                scanNumber++;
+                if (scanNumber == 10) ReliablyOpenTeachingTip(TeachingTipFeedback);
+                localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
                 return scanSuccessful;
             }
@@ -2197,6 +2203,16 @@ namespace Scanner
                 ViewboxEditDraw.Height = ImageEditDraw.ActualHeight;
                 ViewboxEditDraw.MaxHeight = ImageEditDraw.ActualHeight;
             });
+        }
+
+        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            await LaunchFeedbackHub();
+        }
+
+        private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            await ShowRatingDialog();
         }
     }
 }
