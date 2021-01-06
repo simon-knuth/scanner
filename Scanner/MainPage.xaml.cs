@@ -17,6 +17,7 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Text;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -52,6 +53,7 @@ namespace Scanner
         private DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
         private int[] shareIndexes;
         private ScopeActions scopeAction;
+        private UISettings uISettings;
 
 
         public MainPage()
@@ -79,6 +81,28 @@ namespace Scanner
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
             CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
+            uISettings = new UISettings();
+            uISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
+        }
+
+        private async void UISettings_ColorValuesChanged(UISettings sender, object args)
+        {
+            // fix bugs when theme is changed during runtime
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                FrameLeftPaneScanHeader.Background = null;
+                FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                RectangleGridLeftPaneScanOptions.Fill = null;
+                RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                GridLeftPaneFooterContent.Background = null;
+                GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                RectangleGridLeftPaneFooter.Fill = null;
+                RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                GridLeftPaneManageHeaderControls.Background = null;
+                GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                RectangleGridLeftPaneManage.Fill = null;
+                RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+            });
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
