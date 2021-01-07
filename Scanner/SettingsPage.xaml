@@ -125,7 +125,19 @@
                                 <Run x:Uid="RunSettingsAfterRateLink" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
                             </Span>
                         </TextBlock>
-                        
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE775;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                            <TextBlock x:Uid="TextBlockSettingsTranslateHeader" Text="Translations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                        </StackPanel>
+                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                            <Span>
+                                <Run x:Uid="RunSettingsBeforeTranslateLink" xml:space="preserve">Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See</Run>
+                                <Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html">this page<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B;" FontSize="12"/></Hyperlink>
+                                <Run x:Uid="RunSettingsAfterTranslateLink" xml:space="preserve">for more information.</Run>
+                            </Span>
+                        </TextBlock>
+
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                             <TextBlock x:Uid="TextBlockSettingsAboutHeader" Text="About this app" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
