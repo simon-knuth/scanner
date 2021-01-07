@@ -627,8 +627,16 @@
                                         </InkToolbarCustomPenButton>
                                     </Frame>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonLeftPaneManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Rotate selection">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonLeftPaneManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Rotate selection" RightTapped="ButtonLeftPaneManageRotate_RightTapped">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonLeftPaneManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" ToolTipService.ToolTip="Delete selection">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
@@ -751,8 +759,16 @@
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Crop" Click="ButtonCrop_Click">
                                         <FontIcon x:Name="FontIconCrop" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click" RightTapped="ButtonRotate_RightTapped">
                                         <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
+
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="MenuFlyoutItemButtonRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="MenuFlyoutItemButtonRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="MenuFlyoutItemButtonRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Draw" Click="ButtonDraw_Click">
                                         <FontIcon x:Name="FontIconDraw" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>

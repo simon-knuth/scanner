@@ -134,7 +134,7 @@
                             <Span>
                                 <Run x:Uid="RunSettingsBeforeTranslateLink" xml:space="preserve">Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See</Run>
                                 <Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html">this page<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B;" FontSize="12"/></Hyperlink>
-                                <Run x:Uid="RunSettingsAfterTranslateLink" xml:space="preserve">for more information.</Run>
+                                <Run x:Uid="RunSettingsAfterTranslateLink" xml:space="preserve"> for more information.</Run>
                             </Span>
                         </TextBlock>
 

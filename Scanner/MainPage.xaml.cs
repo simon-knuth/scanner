@@ -1807,47 +1807,7 @@ namespace Scanner
 
         private async void ButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
-
-            // lock UI
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                LockToolbar();
-                LockPaneManage(true);
-            });
-
-            int index = FlipViewScan.SelectedIndex;
-
-            try
-            {
-                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-                instructions.Add(new Tuple<int, BitmapRotation>(index, BitmapRotation.Clockwise90Degrees));
-                await scanResult.RotateScansAsync(instructions);
-            }
-            catch (Exception)
-            {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                        LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
-                    UnlockToolbar();
-                    UnlockPaneManage(false);
-                });
-                return;
-            }
-
-            // generate image
-            await scanResult.GetImageAsync(index);
-
-            // restore UI
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                UnlockToolbar();
-                UnlockPaneManage(false);
-            });
+            await RotateScanAsync(BitmapRotation.Clockwise90Degrees);
         }
 
         private async void TeachingTipRename_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
@@ -1858,53 +1818,7 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || 
-                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
-
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                LockToolbar();
-                LockPaneManage(true);
-            });
-
-            IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
-            int totalSelections = 0;
-            foreach (var range in ranges)
-            {
-                totalSelections += Convert.ToInt32(range.Length);
-            }
-
-            Task[] tasksPreview = new Task[totalSelections];
-
-            // generate instructions for rotation
-            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-            foreach (var range in ranges)
-            {
-                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
-                {
-                    instructions.Add(new Tuple<int, BitmapRotation>(i, BitmapRotation.Clockwise90Degrees));
-                }
-            }
-            await scanResult.RotateScansAsync(instructions);
-
-            int arrayIndex = 0;
-            foreach (var range in ranges)
-            {
-                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
-                {
-                    tasksPreview[arrayIndex] = scanResult.GetImageAsync(i);
-                    arrayIndex++;
-                }
-            }
-            await Task.WhenAll(tasksPreview);
-
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                UnlockPaneManage(true);
-                UnlockToolbar();
-            });
+            await RotateScansAsync(BitmapRotation.Clockwise90Degrees);
         }
 
         private async void ButtonLeftPaneManageSelect_Click(object sender, RoutedEventArgs e)
@@ -2237,6 +2151,134 @@ namespace Scanner
         private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             await ShowRatingDialog();
+        }
+
+        private async void ButtonRotate_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(ButtonRotate);
+            });
+        }
+
+        private async Task RotateScanAsync(BitmapRotation rotation)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            // lock UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (ButtonRotate.IsEnabled == false) return;
+                LockToolbar();
+                LockPaneManage(true);
+            });
+
+            int index = FlipViewScan.SelectedIndex;
+
+            try
+            {
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                instructions.Add(new Tuple<int, BitmapRotation>(index, rotation));
+                await scanResult.RotateScansAsync(instructions);
+            }
+            catch (Exception)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                        LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                    UnlockToolbar();
+                    UnlockPaneManage(false);
+                });
+                return;
+            }
+
+            // generate image
+            await scanResult.GetImageAsync(index);
+
+            // restore UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                UnlockToolbar();
+                UnlockPaneManage(false);
+            });
+        }
+
+        private async Task RotateScansAsync(BitmapRotation rotation)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (ButtonLeftPaneManageRotate.IsEnabled == false) return;
+                LockPaneManage(true);
+            });
+
+            IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
+            int totalSelections = 0;
+            foreach (var range in ranges)
+            {
+                totalSelections += Convert.ToInt32(range.Length);
+            }
+
+            Task[] tasksPreview = new Task[totalSelections];
+
+            // generate instructions for rotation
+            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+            foreach (var range in ranges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    instructions.Add(new Tuple<int, BitmapRotation>(i, rotation));
+                }
+            }
+            await scanResult.RotateScansAsync(instructions);
+
+            int arrayIndex = 0;
+            foreach (var range in ranges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    tasksPreview[arrayIndex] = scanResult.GetImageAsync(i);
+                    arrayIndex++;
+                }
+            }
+            await Task.WhenAll(tasksPreview);
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                UnlockPaneManage(true);
+            });
+        }
+
+        private async void MenuFlyoutItemButtonRotate_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender == MenuFlyoutItemButtonRotate90) await RotateScanAsync(BitmapRotation.Clockwise90Degrees);
+            else if (sender == MenuFlyoutItemButtonRotate180) await RotateScanAsync(BitmapRotation.Clockwise180Degrees);
+            else if (sender == MenuFlyoutItemButtonRotate270) await RotateScanAsync(BitmapRotation.Clockwise270Degrees);
+        }
+
+        private async void MenuFlyoutItemButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender == MenuFlyoutItemButtonLeftPaneManageRotate90) await RotateScansAsync(BitmapRotation.Clockwise90Degrees);
+            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate180) await RotateScansAsync(BitmapRotation.Clockwise180Degrees);
+            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate270) await RotateScansAsync(BitmapRotation.Clockwise270Degrees);
+        }
+
+        private async void ButtonLeftPaneManageRotate_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(ButtonLeftPaneManageRotate);
+            });
         }
     }
 }
