@@ -75,6 +75,20 @@ namespace Scanner
 
         public BitmapRotation CurrentRotation;
 
+        private string itemDescriptor;
+        public string ItemDescriptor
+        {
+            get
+            {
+                return itemDescriptor;
+            }
+            set
+            {
+                itemDescriptor = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItemDescriptor)));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
 

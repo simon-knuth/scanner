@@ -391,6 +391,7 @@
             <local:IsItemSelectedConverter x:Key="IsItemSelectedConverter"/>
             <local:NegativeThicknessConverter x:Key="NegativeThicknessConverter"/>
             <local:PaneManageItemConverter x:Key="PaneManageItemConverter"/>
+            <local:PaneManageItemDescriptorBackgroundConverter x:Key="PaneManageItemDescriptorBackgroundConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -550,7 +551,7 @@
                 <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Grid>
-                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,0,0,12">
+                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
                                         <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
@@ -589,12 +590,19 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
-                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" Padding="12" HorizontalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
-                                                <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
-                                                    <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
-                                                    </Frame>
-                                                </controls:DropShadowPanel>
+                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
+                                            <Grid>
+                                                <Frame Padding="12">
+                                                    <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
+                                                        <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
+                                                        </Frame>
+                                                    </controls:DropShadowPanel>
+                                                </Frame>
+                                                <Frame Margin="6" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" v1809:CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
+                                                    <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                </Frame>
+                                            </Grid>
                                         </GridViewItem>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>

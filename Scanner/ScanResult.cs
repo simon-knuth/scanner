@@ -50,6 +50,7 @@ namespace Scanner
             }
             scanResultFormat = (SupportedFormat) ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
             originalTargetFolder = targetFolder;
+            RefreshItemDescriptors();
         }
 
         public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
@@ -611,6 +612,7 @@ namespace Scanner
             stream.Dispose();
 
             elements.Insert(index + 1, new ScanResultElement(file));
+            RefreshItemDescriptors();
 
             // if necessary, generate PDF
             if (scanResultFormat == SupportedFormat.PDF)
@@ -661,6 +663,7 @@ namespace Scanner
             await elements[index].ScanFile.DeleteAsync(deleteOption);
 
             elements.RemoveAt(index);
+            RefreshItemDescriptors();
 
             // if necessary, generate PDF
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
@@ -772,6 +775,7 @@ namespace Scanner
             }
 
             elements.Insert(index + 1, new ScanResultElement(file));
+            RefreshItemDescriptors();
 
             // if necessary, generate PDF
             if (scanResultFormat == SupportedFormat.PDF)
@@ -968,16 +972,14 @@ namespace Scanner
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                foreach (StorageFile file in files)
-                {
-                    if (file == null) continue;
+                if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files, GetTotalNumberOfScans());
 
-                    if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files, GetTotalNumberOfScans());
-
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    foreach (StorageFile file in files)
+                    {
                         elements.Add(new ScanResultElement(file));
-                    });
-                }
+                    }
+                });
             } 
             else
             {
@@ -1002,10 +1004,11 @@ namespace Scanner
             // if necessary, generate PDF now
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
 
-            // generate new previews
+            // generate new previews and descriptors
             for (int i = GetTotalNumberOfScans() - files.Count; i < GetTotalNumberOfScans(); i++)
             {
                 await GetImageAsync(i);
+                elements[i].ItemDescriptor = GetDescriptorForIndex(i);
             }
         }
 
@@ -1147,6 +1150,8 @@ namespace Scanner
         {
             if (GetFileFormat() != SupportedFormat.PDF) throw new ApplicationException("Can only reorder source files for PDF.");
 
+            RefreshItemDescriptors();
+
             int nextNumber = 0;
             List<ScanResultElement> changedElements = new List<ScanResultElement>();
 
@@ -1166,6 +1171,19 @@ namespace Scanner
             {
                 await element.RenameFileAsync(element.ScanFile.DisplayName.Split("_")[1] + element.ScanFile.FileType);
             }
+        }
+
+        private void RefreshItemDescriptors()
+        {
+            for (int i = 0; i < elements.Count; i++)
+            {
+                elements[i].ItemDescriptor = GetDescriptorForIndex(i);
+            }
+        }
+
+        private string GetDescriptorForIndex(int index)
+        {
+            return LocalizedString("ItemDescriptorFront") + (index + 1).ToString() + LocalizedString("ItemDescriptorBack");
         }
     }
 }

@@ -802,4 +802,12 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <value>What would you like to share?</value>
     <comment>The question that appears when trying to determine, whether the user wants to share the entire document or just the currently selected image.</comment>
   </data>
+  <data name="ItemDescriptorBack" xml:space="preserve">
+    <value />
+    <comment>The end of the text that describes a page of the result and is displayed in the overview. This follows directly on ItemDescriptorFront and the page number (may require whitespace).</comment>
+  </data>
+  <data name="ItemDescriptorFront" xml:space="preserve">
+    <value>Page </value>
+    <comment>The beginning of the text that describes a page of the result and is displayed in the overview. Directly followed by the page number and ItemDescriptorBack (may require whitespace).</comment>
+  </data>
 </root>
