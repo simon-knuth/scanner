@@ -533,6 +533,8 @@ namespace Scanner
                 TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipManageDelete.ActionButtonStyle = RoundedButtonAccentStyle;
             }
             TeachingTipEmpty.CloseButtonContent = LocalizedString("CloseButtonText");
         }
@@ -726,11 +728,10 @@ namespace Scanner
             try
             {
                 // disable controls and show progress bar
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                async () =>
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     ButtonLeftPaneScan.IsEnabled = false;
-                    await TransitionLeftPaneButtonsForScan(true);
+                    TransitionLeftPaneButtonsForScan(true);
                     LockPaneScanOptions();
                     LockPaneManage(true);
                     LockToolbar();
@@ -924,9 +925,9 @@ namespace Scanner
 
                 // reenable controls and change UI
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                async () =>
+                () =>
                 {
-                    await TransitionLeftPaneButtonsForScan(false);
+                    TransitionLeftPaneButtonsForScan(false);
                     UnlockPaneScanOptions();
                     UnlockPaneManage(false);
                     UnlockToolbar();
@@ -1113,42 +1114,38 @@ namespace Scanner
             else RectangleGridLeftPaneScanOptions.Visibility = Visibility.Visible;
         }
 
-        private async Task RefreshFileName()
+        private void RefreshFileName()
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-            () =>
+            if (scanResult != null) 
             {
-                if (scanResult != null) 
+                if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
-                    if (scanResult.GetFileFormat() == SupportedFormat.PDF)
-                    {
-                        if (scanResult.pdf == null) return;
+                    if (scanResult.pdf == null) return;
                         
-                        TextBlockContentPaneTopToolbarFileName.Text = scanResult.pdf.DisplayName.Replace(scanResult.pdf.FileType, "");
-                        TextBlockContentPaneTopToolbarFileExtension.Text = scanResult.pdf.FileType;
-                    }
-                    else
-                    {
-                        if (FlipViewScan.SelectedIndex < 0) return;
-
-                        StorageFile selectedFile = ((ScanResultElement)FlipViewScan.SelectedItem).ScanFile;
-                        TextBlockContentPaneTopToolbarFileName.Text = selectedFile.DisplayName;
-                        TextBlockContentPaneTopToolbarFileExtension.Text = selectedFile.FileType;
-                    }
-                } else
-                {
-                    TextBlockContentPaneTopToolbarFileName.Text = "";
-                    TextBlockContentPaneTopToolbarFileExtension.Text = "";
+                    TextBlockContentPaneTopToolbarFileName.Text = scanResult.pdf.DisplayName.Replace(scanResult.pdf.FileType, "");
+                    TextBlockContentPaneTopToolbarFileExtension.Text = scanResult.pdf.FileType;
                 }
-            });
+                else
+                {
+                    if (FlipViewScan.SelectedIndex < 0) return;
+
+                    StorageFile selectedFile = ((ScanResultElement)FlipViewScan.SelectedItem).ScanFile;
+                    TextBlockContentPaneTopToolbarFileName.Text = selectedFile.DisplayName;
+                    TextBlockContentPaneTopToolbarFileExtension.Text = selectedFile.FileType;
+                }
+            } else
+            {
+                TextBlockContentPaneTopToolbarFileName.Text = "";
+                TextBlockContentPaneTopToolbarFileExtension.Text = "";
+            }
         }
 
         private async void FlipViewScan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await RefreshFileName();
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
+                RefreshFileName();
                 if (flowState != FlowState.select)
                 {
                     PaneManageSelectIndex(FlipViewScan.SelectedIndex);
@@ -1158,8 +1155,7 @@ namespace Scanner
 
         private void PaneManageSelectIndex(int index)
         {
-            if (scanResult == null) throw new ApplicationException("Unable to select index in PaneManage. (scanResult null)");
-
+            if (scanResult == null) return;
             if (scanResult.GetFileFormat() == SupportedFormat.PDF) LeftPaneGridViewManage.SelectedIndex = index;
             else LeftPaneListViewManage.SelectedIndex = index;
         }
@@ -1210,22 +1206,18 @@ namespace Scanner
             ButtonShare.IsEnabled = true;
         }
 
-        private async Task TransitionLeftPaneButtonsForScan(bool beginScan)
+        private void TransitionLeftPaneButtonsForScan(bool beginScan)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
+            if (beginScan)
             {
-                if (beginScan)
-                {
-                    ButtonLeftPaneSettings.IsEnabled = false;
-                    StoryboardChangeButtonsBeginScan.Begin();
-                }
-                else
-                {
-                    ButtonLeftPaneSettings.IsEnabled = true;
-                    StoryboardChangeButtonsEndScan.Begin();
-                }
-            });
+                ButtonLeftPaneSettings.IsEnabled = false;
+                StoryboardChangeButtonsBeginScan.Begin();
+            }
+            else
+            {
+                ButtonLeftPaneSettings.IsEnabled = true;
+                StoryboardChangeButtonsEndScan.Begin();
+            }
         }
 
         private async void LeftPaneManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1731,14 +1723,14 @@ namespace Scanner
                     {
                         // rename PDF
                         await scanResult.RenameScanAsync(newName + scanResult.pdf.FileType);
-                        await RefreshFileName();
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshFileName());
                     }
                     else if (scanResult.GetTotalNumberOfScans() - 1 >= index || newName.Length > 0)
                     {
                         // rename image file
                         StorageFile image = scanResult.GetImageFile((int)index);
                         await scanResult.RenameScanAsync((int)index, newName + image.FileType);
-                        await RefreshFileName();
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshFileName());
                     }
                     else return;
 
@@ -1832,7 +1824,7 @@ namespace Scanner
 
         private async void ButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            await RotateScanAsync(BitmapRotation.Clockwise90Degrees);
+            await RotateScanAsync(BitmapRotation.Clockwise90Degrees, true);
         }
 
         private async void TeachingTipRename_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
@@ -1843,7 +1835,7 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
         {
-            await RotateScansAsync(BitmapRotation.Clockwise90Degrees);
+            await RotateScansAsync(BitmapRotation.Clockwise90Degrees, false);
         }
 
         private async void ButtonLeftPaneManageSelect_Click(object sender, RoutedEventArgs e)
@@ -2187,7 +2179,7 @@ namespace Scanner
             });
         }
 
-        private async Task RotateScanAsync(BitmapRotation rotation)
+        private async Task RotateScanAsync(BitmapRotation rotation, bool lockToolbar)
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
@@ -2196,8 +2188,9 @@ namespace Scanner
             () =>
             {
                 if (ButtonRotate.IsEnabled == false) return;
-                LockToolbar();
+                if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
+                LockPaneScanOptions();
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2214,9 +2207,10 @@ namespace Scanner
                 () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                        LocalizedString("ErrorMessageRotateHeader"), LocalizedString("ErrorMessageRotateBody"));
+                        LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
                     UnlockToolbar();
                     UnlockPaneManage(false);
+                    UnlockPaneScanOptions();
                 });
                 return;
             }
@@ -2228,12 +2222,13 @@ namespace Scanner
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
-                UnlockToolbar();
+                if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(false);
+                UnlockPaneScanOptions();
             });
         }
 
-        private async Task RotateScansAsync(BitmapRotation rotation)
+        private async Task RotateScansAsync(BitmapRotation rotation, bool lockToolbar)
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
@@ -2242,7 +2237,9 @@ namespace Scanner
             () =>
             {
                 if (ButtonLeftPaneManageRotate.IsEnabled == false) return;
+                if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
+                LockPaneScanOptions();
             });
 
             IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
@@ -2279,22 +2276,24 @@ namespace Scanner
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
+                if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(true);
+                UnlockPaneScanOptions();
             });
         }
 
         private async void MenuFlyoutItemButtonRotate_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == MenuFlyoutItemButtonRotate90) await RotateScanAsync(BitmapRotation.Clockwise90Degrees);
-            else if (sender == MenuFlyoutItemButtonRotate180) await RotateScanAsync(BitmapRotation.Clockwise180Degrees);
-            else if (sender == MenuFlyoutItemButtonRotate270) await RotateScanAsync(BitmapRotation.Clockwise270Degrees);
+            if (sender == MenuFlyoutItemButtonRotate90) await RotateScanAsync(BitmapRotation.Clockwise90Degrees, true);
+            else if (sender == MenuFlyoutItemButtonRotate180) await RotateScanAsync(BitmapRotation.Clockwise180Degrees, true);
+            else if (sender == MenuFlyoutItemButtonRotate270) await RotateScanAsync(BitmapRotation.Clockwise270Degrees, true);
         }
 
         private async void MenuFlyoutItemButtonLeftPaneManageRotate_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == MenuFlyoutItemButtonLeftPaneManageRotate90) await RotateScansAsync(BitmapRotation.Clockwise90Degrees);
-            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate180) await RotateScansAsync(BitmapRotation.Clockwise180Degrees);
-            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate270) await RotateScansAsync(BitmapRotation.Clockwise270Degrees);
+            if (sender == MenuFlyoutItemButtonLeftPaneManageRotate90) await RotateScansAsync(BitmapRotation.Clockwise90Degrees, false);
+            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate180) await RotateScansAsync(BitmapRotation.Clockwise180Degrees, false);
+            else if (sender == MenuFlyoutItemButtonLeftPaneManageRotate270) await RotateScansAsync(BitmapRotation.Clockwise270Degrees, false);
         }
 
         private async void ButtonLeftPaneManageRotate_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
@@ -2304,6 +2303,200 @@ namespace Scanner
             {
                 FlyoutBase.ShowAttachedFlyout(ButtonLeftPaneManageRotate);
             });
+        }
+
+        private async Task DeleteScanAsync(bool lockToolbar)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+
+            // lock UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (ButtonDelete.IsEnabled == false) return;
+                if (lockToolbar) LockToolbar();
+                LockPaneManage(true);
+                LockPaneScanOptions();
+            });
+
+            int index = FlipViewScan.SelectedIndex;
+
+            try
+            {
+                await scanResult.DeleteScanAsync(index);
+            }
+            catch (Exception)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                        LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
+                    UnlockToolbar();
+                    UnlockPaneManage(false);
+                    UnlockPaneScanOptions();
+                });
+
+                // check if last page deleted
+                if (scanResult.GetTotalNumberOfScans() == 0)
+                {
+                    await ReturnAppToInitialStateAsync();
+                }
+                return;
+            }
+
+            // check if last page deleted
+            if (scanResult.GetTotalNumberOfScans() == 0)
+            {
+                await ReturnAppToInitialStateAsync();
+                return;
+            }
+
+            // restore UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (lockToolbar) UnlockToolbar();
+                UnlockPaneManage(false);
+                UnlockPaneScanOptions();
+            });
+        }
+
+        private async Task DeleteScansAsync(bool lockToolbar)
+        {
+            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+                (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (ButtonLeftPaneManageRotate.IsEnabled == false) return;
+                if (lockToolbar) LockToolbar();
+                LockPaneManage(true);
+                LockPaneScanOptions();
+            });
+
+            // generate list of items to delete
+            IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
+            List<int> indices = new List<int>();
+            foreach (var range in ranges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            try
+            {
+                await scanResult.DeleteScansAsync(indices);
+            }
+            catch (Exception)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                        LocalizedString("ErrorMessageDeleteHeader"), LocalizedString("ErrorMessageDeleteBody"));
+                    UnlockToolbar();
+                    UnlockPaneManage(false);
+                    ButtonLeftPaneManageSelect.IsChecked = false;
+                    UnlockPaneScanOptions();
+                });
+
+                // check if last page deleted
+                if (scanResult.GetTotalNumberOfScans() == 0)
+                {
+                    await ReturnAppToInitialStateAsync();
+                }
+                return;
+            }
+
+            // check if last page deleted
+            if (scanResult.GetTotalNumberOfScans() == 0)
+            {
+                await ReturnAppToInitialStateAsync();
+                return;
+            }
+
+            // restore UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                if (lockToolbar) UnlockToolbar();
+                UnlockPaneManage(true);
+                UnlockPaneScanOptions();
+            });
+        }
+
+        private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipDelete));
+        }
+
+        private async void TeachingTipDelete_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => TeachingTipDelete.IsOpen = false);
+
+            int newIndex = FlipViewScan.SelectedIndex;
+            for (int i = newIndex; i >= -1; i--)
+            {
+                if (i < scanResult.GetTotalNumberOfScans())
+                {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            await DeleteScanAsync(true);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FlipViewScan.SelectedIndex = newIndex);
+        }
+
+        private async void TeachingTipDelete_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => ButtonDelete.IsChecked = false);
+        }
+
+        private async void TeachingTipManageDelete_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => TeachingTipManageDelete.IsOpen = false);
+
+            await DeleteScansAsync(false);
+        }
+
+        private async void TeachingTipManageDelete_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => ButtonLeftPaneManageDelete.IsChecked = false);
+        }
+
+        private async void ButtonLeftPaneManageDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipManageDelete));
+        }
+
+        private async Task ReturnAppToInitialStateAsync()
+        {
+            scanResult = null;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TransitionFromSelectMode();
+                TransitionLeftPaneButtonsForScan(false);
+                ButtonLeftPaneCancel.IsEnabled = false;
+                LeftPaneListViewManage.ItemsSource = null;
+                LeftPaneListViewManage.Visibility = Visibility.Collapsed;
+                LeftPaneGridViewManage.ItemsSource = null;
+                LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
+                UnlockPaneScanOptions();
+                LockPaneManage(true);
+                FlipViewScan.Visibility = Visibility.Collapsed;
+                LeftPaneManageInitialText.Visibility = Visibility.Visible;
+                FlipViewScan.SelectedIndex = -1;
+                TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
+                TextBlockContentPaneGridProgressRingScan.Text = "";
+                RefreshFileName();
+            });
+            flowState = FlowState.initial;
+            await RefreshScanButton();
         }
     }
 }

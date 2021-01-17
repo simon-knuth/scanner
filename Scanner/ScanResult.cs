@@ -631,27 +631,50 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Deletes all scans in this instance.
+        ///     Deletes the desired scans in this instance. If the last element of a PDF file is deleted,
+        ///     the PDF file will be deleted as well.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while deleting the scans.</exception>
-        public async Task DeleteScansAsync(StorageDeleteOption deleteOption)
+        public async Task DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
         {
+            List<int> sortedIndices = new List<int>(indices);
+            sortedIndices.Sort();
+            sortedIndices.Reverse();
+            
+            foreach (int index in sortedIndices)
+            {
+                // check index
+                if (!IsValidIndex(index)) throw new ArgumentOutOfRangeException("Invalid index for mass deletion.");
+
+                await elements[index].ScanFile.DeleteAsync(deleteOption);
+                elements.RemoveAt(index);
+            }
+
+            RefreshItemDescriptors();
+
+            // if necessary, update or delete PDF
             if (scanResultFormat == SupportedFormat.PDF)
             {
-                await pdf.DeleteAsync(deleteOption);
+                if (GetTotalNumberOfScans() > 0) await GeneratePDF();
+                else await pdf.DeleteAsync();
             }
-            else
-            {
-                for (int i = 0; i < elements.Count; i++)
-                {
-                    await DeleteScanAsync(i, deleteOption);
-                }
-            }           
         }
 
 
         /// <summary>
-        ///     Deletes a single scan in this instance.
+        ///     Deletes the desired scans in this instance. If the last element of a PDF file is deleted,
+        ///     the PDF file will be deleted as well.
+        /// </summary>
+        /// <exception cref="Exception">Something went wrong while deleting the scans.</exception>
+        public async Task DeleteScansAsync(List<int> indices)
+        {
+            await DeleteScansAsync(indices, StorageDeleteOption.Default);
+        }
+
+
+        /// <summary>
+        ///     Deletes a single scan in this instance. If the last element of a PDF file is deleted,
+        ///     the PDF file will be deleted as well.
         /// </summary>
         /// <param name="index">The index of the scan that shall be deleted.</param>
         /// <exception cref="Exception">Something went wrong while delting the scan.</exception>
@@ -665,17 +688,22 @@ namespace Scanner
             elements.RemoveAt(index);
             RefreshItemDescriptors();
 
-            // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            // if necessary, update or delete PDF
+            if (scanResultFormat == SupportedFormat.PDF)
+            {
+                if (GetTotalNumberOfScans() > 0) await GeneratePDF();
+                else await pdf.DeleteAsync();
+            }
         }
 
 
         /// <summary>
-        ///     Deletes a single scan in this instance.
+        ///     Deletes a single scan in this instance. If the last element of a PDF file is deleted,
+        ///     the PDF file will be deleted as well.
         /// </summary>
         /// <param name="index">The index of the scan that shall be deleted.</param>
         /// <exception cref="Exception">Something went wrong while delting the scan.</exception>
-        public async Task DeleteScan(int index)
+        public async Task DeleteScanAsync(int index)
         {
             await DeleteScanAsync(index, StorageDeleteOption.Default);
         }

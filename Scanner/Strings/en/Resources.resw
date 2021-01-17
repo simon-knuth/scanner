@@ -679,7 +679,7 @@ Please use the Feedback Hub, if this something you would like to see addressed i
     <comment>The header for the color mode RadioButton group.</comment>
   </data>
   <data name="TeachingTipDelete.Subtitle" xml:space="preserve">
-    <value>The file will be moved to the recycle bin.</value>
+    <value>The image will be deleted permanently.</value>
     <comment>The text inside the delete flyout.</comment>
   </data>
   <data name="TextBlockFormatHeader.Text" xml:space="preserve">

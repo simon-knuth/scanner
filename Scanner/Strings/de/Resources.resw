@@ -679,7 +679,7 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <comment>The header for the color mode RadioButton group.</comment>
   </data>
   <data name="TeachingTipDelete.Subtitle" xml:space="preserve">
-    <value>Die Datei wird in den Papierkorb verschoben.</value>
+    <value>Das Bild wird unwiderruflich gelöscht.</value>
     <comment>The text inside the delete flyout.</comment>
   </data>
   <data name="TextBlockFormatHeader.Text" xml:space="preserve">

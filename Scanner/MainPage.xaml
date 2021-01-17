@@ -640,13 +640,13 @@
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="MenuFlyoutItemButtonLeftPaneManageRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonLeftPaneManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" ToolTipService.ToolTip="Delete selection">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonLeftPaneManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" ToolTipService.ToolTip="Delete selection" Click="ButtonLeftPaneManageDelete_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageCopy" x:Uid="ButtonLeftPaneManageCopy" Click="ButtonLeftPaneManageCopy_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Copy selection to clipboard">
@@ -756,7 +756,7 @@
                                 <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                             </StackPanel>
                             <RelativePanel VerticalAlignment="Bottom">
-                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Scan" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                                 <StackPanel x:Name="StackPanelTopToolbarEditing" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
@@ -772,7 +772,7 @@
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="MenuFlyoutItemButtonRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="MenuFlyoutItemButtonRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="MenuFlyoutItemButtonRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="MenuFlyoutItemButtonRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
                                             </MenuFlyout>
@@ -796,7 +796,7 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Delete">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Delete" Click="ButtonDelete_Click">
                                         <FontIcon x:Name="FontIconDelete" FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator/>
@@ -981,6 +981,34 @@
             Target="{Binding ElementName=ButtonRename}">
             <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
         </controlsxaml:TeachingTip>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipDelete"
+            x:Uid="TeachingTipDelete"
+            PlacementMargin="4"
+            Title="Are you sure?"
+            Subtitle="The image will be deleted permanently."
+            ActionButtonContent="Confirm"
+            ActionButtonClick="TeachingTipDelete_ActionButtonClick"
+            CloseButtonContent="Cancel"
+            Closed="TeachingTipDelete_Closed"
+            IsLightDismissEnabled="True"
+            PreferredPlacement="Bottom" 
+            Target="{Binding ElementName=ButtonDelete}"/>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipManageDelete"
+            x:Uid="TeachingTipManageDelete"
+            PlacementMargin="4"
+            Title="Are you sure?"
+            Subtitle="The selected images will be deleted permanently."
+            ActionButtonContent="Confirm"
+            ActionButtonClick="TeachingTipManageDelete_ActionButtonClick"
+            CloseButtonContent="Cancel"
+            Closed="TeachingTipManageDelete_Closed"
+            IsLightDismissEnabled="True"
+            PreferredPlacement="Bottom" 
+            Target="{Binding ElementName=ButtonLeftPaneManageDelete}"/>
 
         <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
             <StackPanel Orientation="Vertical">
