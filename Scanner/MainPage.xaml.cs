@@ -1690,7 +1690,7 @@ namespace Scanner
 
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
-                    UnlockPaneManage(true);
+                    UnlockPaneManage(false);
                     UnlockToolbar();
                     UnlockPaneScanOptions();
                 });
@@ -2471,7 +2471,11 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageDelete_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipManageDelete));
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (PaneManageGetSelectedRanges().Count > 0) ReliablyOpenTeachingTip(TeachingTipManageDelete);
+                else ButtonLeftPaneManageDelete.IsChecked = false;
+            });
         }
 
         private async Task ReturnAppToInitialStateAsync()

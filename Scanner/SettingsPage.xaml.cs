@@ -239,7 +239,7 @@ namespace Scanner
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
             {
                 StoryboardEnter.Begin();
                 ButtonBrowse.Focus(FocusState.Programmatic);
@@ -258,9 +258,9 @@ namespace Scanner
 
 
 
-        private void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            ShowRatingDialog();
+            await ShowRatingDialog();
         }
 
 
