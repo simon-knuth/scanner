@@ -810,4 +810,8 @@ Bitte nutzen Sie den Feedback Hub, falls dies in einem zukünftigen Update verbe
     <value>Seite </value>
     <comment>The beginning of the text that describes a page of the result and is displayed in the overview. Directly followed by the page number and ItemDescriptorBack (may require whitespace).</comment>
   </data>
+  <data name="ShareUITitleMultipleFiles" xml:space="preserve">
+    <value>Mehrere Dateien</value>
+    <comment>The title of the share UI shown when sharing multiple files.</comment>
+  </data>
 </root>

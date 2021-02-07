@@ -573,8 +573,8 @@ namespace Scanner
             if (elements[index].ImageWithoutRotation != null)
             {
                 await elements[index].ImageWithoutRotation.DeleteAsync();
-                elements[index].ImageWithoutRotation = null;
             }
+            elements[index].ImageWithoutRotation = null;
             elements[index].CurrentRotation = BitmapRotation.None;
 
             // if necessary, generate PDF
@@ -750,7 +750,6 @@ namespace Scanner
             if (elements[index].ImageWithoutRotation != null)
             {
                 await elements[index].ImageWithoutRotation.DeleteAsync();
-                elements[index].ImageWithoutRotation = null;
             }
             elements[index].ImageWithoutRotation = null;
             elements[index].CurrentRotation = BitmapRotation.None;
@@ -1209,7 +1208,7 @@ namespace Scanner
             }
         }
 
-        private string GetDescriptorForIndex(int index)
+        public string GetDescriptorForIndex(int index)
         {
             return LocalizedString("ItemDescriptorFront") + (index + 1).ToString() + LocalizedString("ItemDescriptorBack");
         }

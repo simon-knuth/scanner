@@ -112,21 +112,29 @@ namespace Scanner
                 List<StorageFile> files = new List<StorageFile>();
                 files.Add(scanResult.pdf);
                 args.Request.Data.SetStorageItems(files);
+                args.Request.Data.Properties.Title = scanResult.pdf.Name;
             }
-            else if (shareIndexes.Length == 1)
-            {
-                StorageFile file = scanResult.GetImageFile(shareIndexes[0]);
-                args.Request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
-                args.Request.Data.Properties.Title = file.Name;
-            } 
-            else
+            else if (shareIndexes != null)
             {
                 List<StorageFile> files = new List<StorageFile>();
                 foreach (int index in shareIndexes)
                 {
                     files.Add(scanResult.GetImageFile(index));
+
                 }
                 args.Request.Data.SetStorageItems(files);
+
+                if (shareIndexes.Length == 1)
+                {
+                    if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+                    {
+                        args.Request.Data.Properties.Title = scanResult.GetDescriptorForIndex(shareIndexes[0]);
+                    }
+                    else
+                    {
+                        args.Request.Data.Properties.Title = files[0].Name;
+                    }
+                } else args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
             }
         }
 
@@ -628,8 +636,7 @@ namespace Scanner
                 }
 
                 RectangleGeometry rectangleClip = new RectangleGeometry();
-                rectangleClip.Rect = new Rect(0, 0, Double.PositiveInfinity,
-                    GridContentPaneTopToolbar.ActualHeight);
+                rectangleClip.Rect = new Rect(0, 0, Double.PositiveInfinity, GridContentPaneTopToolbar.ActualHeight);
                 GridContentPaneTopToolbar.Clip = rectangleClip;
             });
         }
