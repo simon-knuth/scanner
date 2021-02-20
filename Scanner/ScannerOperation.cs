@@ -35,7 +35,7 @@ class ScannerOperation
 
         if (minX != actualX) resolutions.Add(CreateComboBoxItem(minX + " DPI", config.MinResolution));
 
-        resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("DefaultResolutionIndicator") + ")",
+        resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("TextScanOptionsDefaultResolutionIndicator") + ")",
             config.ActualResolution));
         comboBox.SelectedIndex = resolutions.Count - 1;
 

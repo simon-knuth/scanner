@@ -41,7 +41,7 @@
         <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
         <Storyboard x:Name="StoryboardError">
             <DoubleAnimation
-                Storyboard.TargetName="TextBlockPreview"
+                Storyboard.TargetName="TextBlockPreviewError"
                 Storyboard.TargetProperty="Opacity"
                 From="0.0" To="1.0"
                 Duration="0:0:0.5"
@@ -70,13 +70,13 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="TextBlockPreview" Duration="0:0:1" From="0.0" To="30.0" BeginTime="0:0:1">
+                             Storyboard.TargetName="TextBlockPreviewError" Duration="0:0:0.8" From="-20.0" To="0.0" BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="FontIconError" Duration="0:0:1" From="0.0" To="-55.0" BeginTime="0:0:1">
+                             Storyboard.TargetName="FontIconError" Duration="0:0:0.8" From="20.0" To="0.0" BeginTime="0:0:1">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
@@ -97,17 +97,19 @@
                 <v1809:BrushTransition/>
             </v1809:Grid.BackgroundTransition>
 
-            <TextBlock x:Name="TextBlockPreview" Style="{StaticResource SubtitleTextBlockStyle}" Text="An error occurred. Please try again." Opacity="0.0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock.RenderTransform>
-                    <CompositeTransform/>
-                </TextBlock.RenderTransform>
-            </TextBlock>
             <controlsxaml:ProgressRing x:Name="ProgressRingPreview" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True"/>
-            <FontIcon x:Name="FontIconError" FontFamily="Segoe MDL2 Assets" Glyph="&#xE783;" Opacity="0.0" FontSize="64" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <FontIcon.RenderTransform>
-                    <CompositeTransform/>
-                </FontIcon.RenderTransform>
-            </FontIcon>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="24,0,24,0">
+                <FontIcon x:Name="FontIconError" FontFamily="Segoe MDL2 Assets" Glyph="&#xE783;" Margin="0,0,0,20" Opacity="0.0" FontSize="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <FontIcon.RenderTransform>
+                        <CompositeTransform/>
+                    </FontIcon.RenderTransform>
+                </FontIcon>
+                <TextBlock x:Name="TextBlockPreviewError" x:Uid="TextPreviewError" TextAlignment="Center" MaxWidth="450" Style="{StaticResource SubtitleTextBlockStyle}" Text="An error occurred. Please try again." Opacity="0.0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.RenderTransform>
+                        <CompositeTransform/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </StackPanel>
 
             <ScrollViewer x:Name="ScrollViewerDummy" Margin="{Binding ActualHeight, ElementName=GridPreviewHeader, Converter={StaticResource TopThicknessConverter}}" IsEnabled="False">
                 <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -136,7 +138,7 @@
                             <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
                                 <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
                             </Button>
-                            <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="TextBlockPreviewHeader" Text="Preview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                            <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="HeadingPreview" Text="Preview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
                             <AppBarSeparator VerticalAlignment="Bottom"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" x:Name="TextBlockPreviewHeaderConfig" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" Margin="6,0,0,0" VerticalAlignment="Center" Padding="0,0,0,0"/>

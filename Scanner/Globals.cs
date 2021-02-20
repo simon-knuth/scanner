@@ -10,7 +10,6 @@ public static class Globals
 {
     public static Theme settingAppTheme;                            // user theme setting
     public static bool settingAppendTime;                           // append time to file names
-    public static bool settingAutomaticScannerSelection;            // automatically select first available scanner
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
 
     public static StorageFolder scanFolder = null;
@@ -22,6 +21,7 @@ public static class Globals
     public static bool? firstAppLaunchWithThisVersion;
     public static int scanNumber;
     public static bool lastTouchDrawState;                          // whether drawing with touch was enabled last time 
+    public static bool manageTutorialAlreadyShown;
 
     public static AppServiceConnection appServiceConnection;
     public static BackgroundTaskDeferral appServiceDeferral;

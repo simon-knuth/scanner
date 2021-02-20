@@ -9,7 +9,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -205,8 +204,8 @@ namespace Scanner
                             {
                                 try
                                 {   
-                                        bmp = new BitmapImage();
-                                        await bmp.SetSourceAsync(sourceStream);
+                                    bmp = new BitmapImage();
+                                    await bmp.SetSourceAsync(sourceStream);
                                     attempt = -1;
                                 }
                                 catch (Exception e)
@@ -1210,7 +1209,7 @@ namespace Scanner
 
         public string GetDescriptorForIndex(int index)
         {
-            return LocalizedString("ItemDescriptorFront") + (index + 1).ToString() + LocalizedString("ItemDescriptorBack");
+            return LocalizedString("PageDescriptorFront") + (index + 1).ToString() + LocalizedString("PageDescriptorBack");
         }
     }
 }

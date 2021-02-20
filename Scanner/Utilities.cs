@@ -268,12 +268,12 @@ static class Utilities
             }
             catch (UnauthorizedAccessException)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
+                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                 return;
             }
             catch (Exception exc)
             {
-                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderHeader"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
+                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                 return;
             }
             futureAccessList.AddOrReplace("scanFolder", scanFolder);
@@ -322,16 +322,6 @@ static class Utilities
             localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         }
 
-        if (localSettingsContainer.Values["settingAutomaticScannerSelection"] != null)
-        {
-            settingAutomaticScannerSelection = (bool)localSettingsContainer.Values["settingAutomaticScannerSelection"];
-        }
-        else
-        {
-            settingAutomaticScannerSelection = true;
-            localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
-        }
-
         if (localSettingsContainer.Values["settingNotificationScanComplete"] != null)
         {
             settingNotificationScanComplete = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
@@ -377,6 +367,15 @@ static class Utilities
         else
         {
             lastTouchDrawState = false;
+        }
+
+        if (localSettingsContainer.Values["manageTutorialAlreadyShown"] != null)
+        {
+            manageTutorialAlreadyShown = (bool)localSettingsContainer.Values["manageTutorialAlreadyShown"];
+        }
+        else
+        {
+            manageTutorialAlreadyShown = false;
         }
     }
 
@@ -641,7 +640,6 @@ static class Utilities
     {
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
         localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
-        localSettingsContainer.Values["settingAutomaticScannerSelection"] = settingAutomaticScannerSelection;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
     }
 

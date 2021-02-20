@@ -26,17 +26,11 @@ namespace Scanner
         {
             this.InitializeComponent();
 
-            // localize hyperlinks
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
-
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
         }
-
 
 
         /// <summary>
@@ -80,7 +74,6 @@ namespace Scanner
                         break;
                 }
                 TextBlockRestart.Visibility = Visibility.Collapsed;
-                CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
                 CheckBoxAppendTime.IsChecked = settingAppendTime;
                 CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
 
@@ -137,7 +130,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeader"),
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
                     LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
                 return;
             }
@@ -173,13 +166,13 @@ namespace Scanner
             }
             catch (UnauthorizedAccessException)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"),
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
                     LocalizedString("ErrorMessageResetFolderUnauthorizedBody")));
                 return;
             }
             catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderHeader"),
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderHeading"),
                     LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message));
                 return;
             }
@@ -205,7 +198,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageFeedbackHubHeader"),
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageFeedbackHubHeading"),
                     LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message));
             }
         }
@@ -284,7 +277,6 @@ namespace Scanner
             if (allSettingsLoaded)
             {
                 settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
-                settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
 
                 SaveSettings();
@@ -299,7 +291,6 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
                 ContentDialogLicenses.PrimaryButtonText = "";
                 ContentDialogLicenses.SecondaryButtonText = "";
 
@@ -307,9 +298,21 @@ namespace Scanner
             });
         }
 
+
         private async void HyperlinkButtonSettingsHelpScannerSettings_Click(object sender, RoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
+        }
+
+
+        private async void HyperlinkButtonSettingsTranslationsContributors_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogTranslationsContributors.ShowAsync());
+        }
+
+        private async void HyperlinkButtonSettingsAboutCredits_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogAboutCredits.ShowAsync());
         }
     }
 }
