@@ -251,6 +251,15 @@ namespace Scanner
 
                 ComboBoxScanners.Focus(FocusState.Programmatic);
 
+                if (firstAppLaunchWithThisVersion == null)
+                {
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => 
+                    {
+                        if (uiState == UIstate.small) TeachingTipTutorialSaveLocation.Target = null;
+                        ReliablyOpenTeachingTip(TeachingTipTutorialSaveLocation);
+                    });
+                }
+
                 // initialize debug menu
                 ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
                 ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
@@ -553,6 +562,7 @@ namespace Scanner
                 TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipManageDelete.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipTutorialSaveLocation.ActionButtonStyle = RoundedButtonAccentStyle;
             }
             TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
         }
@@ -2618,10 +2628,18 @@ namespace Scanner
                 ApplicationData.Current.LocalSettings.Values["manageTutorialAlreadyShown"] = true;
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
-                    if (ButtonManage.Visibility == Visibility.Visible) ReliablyOpenTeachingTip(TeachingTipTutorialManage);
+                    if (ButtonManage.Visibility == Visibility.Visible) TeachingTipTutorialManage.Target = ButtonManage;
+                    else TeachingTipTutorialManage.Target = RightPane;
+                    ReliablyOpenTeachingTip(TeachingTipTutorialManage);
                 });
             }
             catch (Exception) { }
+        }
+
+        private async void TeachingTipTutorialSaveLocation_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipTutorialSaveLocation.IsOpen = false);
+            Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());
         }
     }
 }

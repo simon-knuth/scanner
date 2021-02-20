@@ -710,7 +710,7 @@
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> and appears as online there.</value>
+    <value> and doesn't appear as offline there.</value>
     <comment>The second part of the body of the text that tells the user to select a scanner.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
@@ -782,8 +782,7 @@
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>The app collects all the pages you scan, as long as you don't change the file format or "start fresh" when scanning. If you are creating a PDF file, you can even reorder the pages.
-Give it a try!</value>
+    <value>The app collects all the pages you scan, as long as you don't change the file format or "start fresh" when scanning. If you are creating a PDF file, you can also reorder the pages here.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
@@ -805,5 +804,17 @@ Give it a try!</value>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
     <value>Contributors</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
+    <value>Settings</value>
+    <comment>The settings button of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
+    <value>Scans are saved to the default save location. You can select another folder in the settings.</value>
+    <comment>The subtitle of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
+    <value>Save location</value>
+    <comment>The heading of the dialog that explains the save location.</comment>
   </data>
 </root>

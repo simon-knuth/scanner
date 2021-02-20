@@ -1047,7 +1047,6 @@
             x:Uid="DialogTutorialManage"
             PlacementMargin="4"
             IsLightDismissEnabled="False"
-            PreferredPlacement="BottomLeft"
             Target="{Binding ElementName=ButtonManage}"
             Title="Your pages are here"
             Subtitle="The app collects all the pages you scan, as long as you don't change the file format or &quot;start fresh&quot; when scanning. If you are creating a PDF file, you can even reorder the pages.&#10;Give it a try!">
@@ -1058,6 +1057,18 @@
                     </controlsxaml:AnimatedVisualPlayer>
                 </Frame>
             </controlsxaml:TeachingTip.HeroContent>
+        </controlsxaml:TeachingTip>
+
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipTutorialSaveLocation"
+            x:Uid="DialogTutorialSaveLocation"
+            PlacementMargin="4"
+            IsLightDismissEnabled="False"
+            PreferredPlacement="BottomLeft"
+            Target="{Binding ElementName=ButtonLeftPaneScanFolder}"
+            Title="Save location"
+            Subtitle="Scans are saved to the default save location. You can select another folder in the settings."
+            ActionButtonClick="TeachingTipTutorialSaveLocation_ActionButtonClick">
         </controlsxaml:TeachingTip>
 
         <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
