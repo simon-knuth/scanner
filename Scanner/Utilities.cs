@@ -863,7 +863,7 @@ static class Utilities
             case ".bmp":
             case "BMP":
             case ".BMP":
-                return SupportedFormat.PNG;
+                return SupportedFormat.BMP;
 
             case "pdf":
             case ".pdf":

@@ -817,4 +817,56 @@
     <value>Save location</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
+  <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
+    <value>Changelog</value>
+    <comment>The action button text of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Subtitle" xml:space="preserve">
+    <value>You can take a look at what's new and improved in the changelog (may not be available in every language).</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Title" xml:space="preserve">
+    <value>App updated</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
+    <value>Close</value>
+    <comment>The close button text of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingDialogChangelog.Text" xml:space="preserve">
+    <value>What's new?</value>
+    <comment>The title of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingChangelog2.0.0.0Section1.Text" xml:space="preserve">
+    <value>A fresh new look</value>
+    <comment>The heading of the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2.0.0.0Section2.Text" xml:space="preserve">
+    <value>Full multi-page support</value>
+    <comment>The heading of the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2.0.0.0Section3.Text" xml:space="preserve">
+    <value>Duplex scanning</value>
+    <comment>The heading of the third changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2.0.0.0Section4.Text" xml:space="preserve">
+    <value>Preview</value>
+    <comment>The heading of the fourth changelog section.</comment>
+  </data>
+  <data name="TextChangelog2.0.0.0Section1.Text" xml:space="preserve">
+    <value>The interface has been completely redesigned.</value>
+    <comment>The text of the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog2.0.0.0Section2.Text" xml:space="preserve">
+    <value>Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file.</value>
+    <comment>The text of the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog2.0.0.0Section3.Text" xml:space="preserve">
+    <value>Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners.</value>
+    <comment>The text of the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog2.0.0.0Section4.Text" xml:space="preserve">
+    <value>Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes.</value>
+    <comment>The text of the fourth changelog section.</comment>
+  </data>
 </root>

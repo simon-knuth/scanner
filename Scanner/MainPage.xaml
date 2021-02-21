@@ -1071,6 +1071,75 @@
             ActionButtonClick="TeachingTipTutorialSaveLocation_ActionButtonClick">
         </controlsxaml:TeachingTip>
 
+        <controlsxaml:TeachingTip
+            x:Name="TeachingTipUpdated"
+            x:Uid="DialogUpdated"
+            PlacementMargin="4"
+            IsLightDismissEnabled="False"
+            PreferredPlacement="Bottom"
+            Title="App updated"
+            Subtitle="You can take a look at what's new and improved in the changelog (may not be available in every language)."
+            ActionButtonContent="Changelog"
+            ActionButtonClick="TeachingTipUpdated_ActionButtonClick">
+            <controlsxaml:TeachingTip.IconSource>
+                <controlsxaml:FontIconSource Glyph="&#xF133;"/>
+            </controlsxaml:TeachingTip.IconSource>
+        </controlsxaml:TeachingTip>
+
+        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog" CloseButtonText="Close">
+            <StackPanel Orientation="Vertical">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition IsStaggeringEnabled="True"/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                <TextBlock x:Uid="HeadingDialogChangelog" Text="What's new?" FontWeight="Bold" FontSize="24"/>
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="375">
+                    <Grid Margin="0,18,0,0">
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition IsStaggeringEnabled="True"/>
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
+                            <TextBlock x:Uid="HeadingChangelogV2Section1" Text="A fresh new look" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelogV2Section1" Text="The interface has been completely redesigned." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
+                            <TextBlock x:Uid="HeadingChangelogV2Section2" Text="Full multi-page support" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelogV2Section2" Text="Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
+                            <TextBlock x:Uid="HeadingChangelogV2Section3" Text="Duplex scanning" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelogV2Section3" Text="Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,0">
+                            <TextBlock x:Uid="HeadingChangelogV2Section4" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelogV2Section4" Text="Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </StackPanel>
+        </ContentDialog>
+
         <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">

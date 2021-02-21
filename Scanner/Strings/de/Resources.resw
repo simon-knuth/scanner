@@ -829,4 +829,56 @@
     <value>Speicherort</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
+  <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
+    <value>Was ist neu?</value>
+    <comment>The action button text of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Subtitle" xml:space="preserve">
+    <value>Sie können Änderungen im Changelog nachlesen (möglicherweise nicht in jeder Sprache verfügbar).</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Title" xml:space="preserve">
+    <value>App aktualisiert</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>The close button text of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingDialogChangelog.Text" xml:space="preserve">
+    <value>Was ist neu?</value>
+    <comment>The title of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingChangelogV2Section1.Text" xml:space="preserve">
+    <value>Ein frischer neuer Look</value>
+    <comment>The heading of the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelogV2Section2.Text" xml:space="preserve">
+    <value>Vollständige Unterstützung für mehrere Seiten</value>
+    <comment>The heading of the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelogV2Section3.Text" xml:space="preserve">
+    <value>Duplex-Scan</value>
+    <comment>The heading of the third changelog section.</comment>
+  </data>
+  <data name="HeadingChangelogV2Section4.Text" xml:space="preserve">
+    <value>Vorschau</value>
+    <comment>The heading of the fourth changelog section.</comment>
+  </data>
+  <data name="TextChangelogV2Section1.Text" xml:space="preserve">
+    <value>Die Oberfläche wurde komplett neu gestaltet.</value>
+    <comment>The text of the first changelog section.</comment>
+  </data>
+  <data name="TextChangelogV2Section2.Text" xml:space="preserve">
+    <value>Scannen Sie mehrere Seiten mit dem Einzug oder nacheinander mit dem Flachbett. Betrachten und bearbeiten Sie alle Seiten und kombinieren Sie sie in eine einzelne PDF-Datei.</value>
+    <comment>The text of the second changelog section.</comment>
+  </data>
+  <data name="TextChangelogV2Section3.Text" xml:space="preserve">
+    <value>Scannen Sie im Duplex-Modus gleichzeitig die Vorder- und Rückseite mit dem Einzug. Verfügbar nur bei unterstützten Scannern.</value>
+    <comment>The text of the third changelog section.</comment>
+  </data>
+  <data name="TextChangelogV2Section4.Text" xml:space="preserve">
+    <value>Fertigen Sie eine Vorschau an, bevor Sie scannen. Verfügbar nur bei unterstützten Scannern - halten Sie Ausschau nach dem Vorschau-Symbol neben den Quellmodi.</value>
+    <comment>The text of the fourth changelog section.</comment>
+  </data>
 </root>

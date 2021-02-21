@@ -259,6 +259,10 @@ namespace Scanner
                         ReliablyOpenTeachingTip(TeachingTipTutorialSaveLocation);
                     });
                 }
+                else if (firstAppLaunchWithThisVersion == true)
+                {
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                }
 
                 // initialize debug menu
                 ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
@@ -563,6 +567,7 @@ namespace Scanner
                 TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipManageDelete.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipTutorialSaveLocation.ActionButtonStyle = RoundedButtonAccentStyle;
+                TeachingTipUpdated.ActionButtonStyle = RoundedButtonAccentStyle;
             }
             TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
         }
@@ -2640,6 +2645,15 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipTutorialSaveLocation.IsOpen = false);
             Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());
+        }
+
+        private async void TeachingTipUpdated_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
+            {
+                TeachingTipUpdated.IsOpen = false;
+                await ContentDialogChangelog.ShowAsync();
+            });
         }
     }
 }
