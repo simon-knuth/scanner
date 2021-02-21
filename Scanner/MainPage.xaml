@@ -47,6 +47,16 @@
 
             <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
             <Storyboard x:Name="StoryboardChangeButtonsBeginScan">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="-48.0">
                     <DoubleAnimation.EasingFunction>
@@ -74,6 +84,16 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardChangeButtonsEndScan">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="0.0">
                     <DoubleAnimation.EasingFunction>
@@ -270,6 +290,11 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionToCrop">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingCrop" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
@@ -309,6 +334,11 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionToDraw">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingCrop" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
@@ -348,6 +378,11 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionFromSpecial">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.15">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
@@ -562,7 +597,7 @@
                                 <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanOptionsSaveLocation" ToolTipService.ToolTip="Open current save location" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">
                                     <FontIcon x:Name="FontIconButtonScanFolder" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
                                 </Button>
-                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" ToolTipService.ToolTip="Cancel" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
+                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" ToolTipService.ToolTip="Cancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
                                 </Button>
                             </StackPanel>
@@ -661,7 +696,7 @@
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
-                                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
+                                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="ButtonManageRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="ButtonManageRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="ButtonManageRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
@@ -796,7 +831,7 @@
                                         <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
-                                            <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
+                                            <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom">
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="ButtonEditRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="ButtonEditRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
                                                 <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="ButtonEditRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
@@ -852,12 +887,12 @@
                                         <FontIcon x:Name="FontIconShare" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
-                                <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Opacity="0" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Opacity="0" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True" Visibility="Collapsed">
                                     <StackPanel.RenderTransform>
                                         <TranslateTransform Y="50"/>
                                     </StackPanel.RenderTransform>
-                                    
-                                    <StackPanel x:Name="StackPanelTopToolbarEditingCrop" Orientation="Horizontal">
+
+                                    <StackPanel x:Name="StackPanelTopToolbarEditingCrop" Orientation="Horizontal" Visibility="Collapsed">
                                         <InkToolbarCustomPenButton x:Name="ButtonCropAspectRatio" x:Uid="ButtonEditCropAspectRatio" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" Click="ButtonCropAspectRatio_Click">
                                             <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                                                 <FontIcon x:Name="FontIconCropAspectRatio" FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;" FontSize="16"/>
@@ -890,7 +925,7 @@
                                         </InkToolbarCustomPenButton>
                                         <Custom:ToolbarSeparator/>
                                     </StackPanel>
-                                    <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal">
+                                    <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal" Visibility="Collapsed">
                                         <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasEditDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
                                         </InkToolbar>
