@@ -206,28 +206,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when a license hyperlink is clicked.
-        /// </summary>
-        private async void NavigateToLicenseWebsite(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            string url = null;
-
-            if (sender == HyperlinkLicenseUniversalWindowsPlatform) url = "https://github.com/Microsoft/dotnet/blob/master/releases/UWP/LICENSE.TXT";
-            else if (sender == HyperlinkLicenseStoreEngagement) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
-            else if (sender == HyperlinkLicenseUwpNotifications) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
-            else if (sender == HyperlinkLicenseUwpUiControls) url = "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md";
-            else if (sender == HyperlinkLicenseUiXaml) url = "https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license";
-            else if (sender == HyperlinkLicenseQueryStringNet) url = "https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE";
-            else if (sender == HyperlinkLicenseWin2dUwp) url = "https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm";
-            else if (sender == HyperlinkLicensePDFsharp) url = "http://www.pdfsharp.net/PDFsharp_License.ashx";
-
-            try { await Windows.System.Launcher.LaunchUriAsync(new Uri(url)); }
-            catch (Exception) { }
-        }
-
-
-
-        /// <summary>
         ///     Page was loaded (possibly through navigation).
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -284,6 +262,7 @@ namespace Scanner
         }
 
 
+
         /// <summary>
         ///     The event listener for when <see cref="HyperlinkButtonSettingsAboutLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
         /// </summary>
@@ -299,16 +278,20 @@ namespace Scanner
         }
 
 
+
         private async void HyperlinkButtonSettingsHelpScannerSettings_Click(object sender, RoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
         }
 
 
+
         private async void HyperlinkButtonSettingsTranslationsContributors_Click(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogTranslationsContributors.ShowAsync());
         }
+
+
 
         private async void HyperlinkButtonSettingsAboutCredits_Click(object sender, RoutedEventArgs e)
         {

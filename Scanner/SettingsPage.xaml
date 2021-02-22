@@ -190,16 +190,70 @@
         </Grid>
 
         <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
-            <TextBlock>
-                <Hyperlink x:Name="HyperlinkLicenseUniversalWindowsPlatform" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.NETCore.UniversalWindowsPlatform<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseStoreEngagement" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Services.Store.Engagement<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUwpNotifications" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.Notifications<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUwpUiControls" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.Toolkit.Uwp.UI.Controls<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseUiXaml" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Microsoft.UI.XAML<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicensePDFsharp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">PDFsharp<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseQueryStringNet" Click="NavigateToLicenseWebsite" UnderlineStyle="None">QueryString.NET<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-                <Hyperlink x:Name="HyperlinkLicenseWin2dUwp" Click="NavigateToLicenseWebsite" UnderlineStyle="None">Win2D.uwp<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><LineBreak/>
-            </TextBlock>
+            <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="375">
+                <StackPanel Orientation="Vertical">
+                    <HyperlinkButton NavigateUri="https://github.com/Microsoft/dotnet/blob/master/releases/UWP/LICENSE.TXT">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.NETCore.UniversalWindowsPlatform"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.Services.Store.Engagement"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.Toolkit.Uwp.Notifications"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Animations"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Controls"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/Lottie-Windows/blob/master/LICENSE.md">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Lottie"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Microsoft.UI.XAML"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="http://www.pdfsharp.net/PDFsharp_License.ashx">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="PDFsharp"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="QueryString.NET"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Win2D.uwp"/>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </HyperlinkButton>
+                </StackPanel>
+            </ScrollViewer>
         </ContentDialog>
 
         <ContentDialog x:Name="ContentDialogTranslationsContributors" x:Uid="DialogSettingsTranslationsContributors" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
