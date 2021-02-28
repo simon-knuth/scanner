@@ -9,7 +9,7 @@
 </table>
 
 &nbsp;
-## Version 2.0 coming soon
+## Version 2.0 coming March 2021
 The new app will boast a redesigned yet familiar UI and many new features based on the received feedback.
 
 
