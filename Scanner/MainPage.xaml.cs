@@ -254,8 +254,10 @@ namespace Scanner
 
                 if (isFirstAppLaunchWithThisVersion == null)
                 {
+                    // first app launch ever
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
                     {
+                        CheckBoxErrorStatistics.IsChecked = true;
                         await ContentDialogPrivacySetup.ShowAsync();
                         if (uiState == UIstate.small) TeachingTipTutorialSaveLocation.Target = null;
                         ReliablyOpenTeachingTip(TeachingTipTutorialSaveLocation);
@@ -263,6 +265,7 @@ namespace Scanner
                 }
                 else if (isFirstAppLaunchWithThisVersion == true)
                 {
+                    // first app launch after an update
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
                     {
                         await ContentDialogPrivacySetup.ShowAsync();

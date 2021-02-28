@@ -1194,7 +1194,7 @@
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogAppSetup_Closed">
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogAppSetup_Closed" v1809:CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
