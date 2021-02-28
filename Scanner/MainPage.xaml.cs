@@ -35,10 +35,10 @@ namespace Scanner
     {
         private double ColumnSidePaneMinWidth = 300;
         private double ColumnSidePaneMaxWidth = 350;
-        private bool makeNextScanAFreshOne = false;
-        private bool firstLoaded = true;
-        private bool inForeground = true;
-        private bool canceledScan = false;
+        private bool isNextScanFresh = false;
+        private bool isFirstLoaded = true;
+        private bool isInForeground = true;
+        private bool isScanCanceled = false;
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
         private DeviceWatcher scannerWatcher;
         private RecognizedScanner selectedScanner;
@@ -79,8 +79,8 @@ namespace Scanner
 
             // register event listeners
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-            CoreApplication.EnteredBackground += (x, y) => { inForeground = false; };
-            CoreApplication.LeavingBackground += (x, y) => { inForeground = true; };
+            CoreApplication.EnteredBackground += (x, y) => { isInForeground = false; };
+            CoreApplication.LeavingBackground += (x, y) => { isInForeground = true; };
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
         }
@@ -162,19 +162,19 @@ namespace Scanner
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             async () =>
             {
-                bool duplicate = false;
+                bool isDuplicate = false;
 
                 for(int i = 0; i < scannerList.Count - 1; i++)
                 {
-                    if (!((RecognizedScanner)scannerList[i].Tag).fake 
+                    if (!((RecognizedScanner)scannerList[i].Tag).isFake 
                         && ((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
                     {
-                        duplicate = true;
+                        isDuplicate = true;
                         break;
                     }
                 }
 
-                if (!duplicate)
+                if (!isDuplicate)
                 {
                     try 
                     {
@@ -222,9 +222,9 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (firstLoaded)
+            if (isFirstLoaded)
             {
-                firstLoaded = false;
+                isFirstLoaded = false;
 
                 await LoadScanFolder();
                 await InitializeTempFolder();
@@ -247,21 +247,27 @@ namespace Scanner
                         }
                     }
                     RelativePanelLeftPaneScan.ChildrenTransitions.Clear();
+                    CheckBoxErrorStatistics.IsChecked = settingErrorStatistics;
                 });
 
                 ComboBoxScanners.Focus(FocusState.Programmatic);
 
-                if (firstAppLaunchWithThisVersion == null)
+                if (isFirstAppLaunchWithThisVersion == null)
                 {
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => 
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
                     {
+                        await ContentDialogPrivacySetup.ShowAsync();
                         if (uiState == UIstate.small) TeachingTipTutorialSaveLocation.Target = null;
                         ReliablyOpenTeachingTip(TeachingTipTutorialSaveLocation);
                     });
                 }
-                else if (firstAppLaunchWithThisVersion == true)
+                else if (isFirstAppLaunchWithThisVersion == true)
                 {
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
+                    {
+                        await ContentDialogPrivacySetup.ShowAsync();
+                        ReliablyOpenTeachingTip(TeachingTipUpdated);
+                    });
                 }
 
                 // initialize debug menu
@@ -274,11 +280,11 @@ namespace Scanner
             }
 
             // refresh scan folder icon
-            bool? defaultFolder = await IsDefaultScanFolderSet();
-            if (defaultFolder == true || defaultFolder == null) FontIconButtonScanFolder.Glyph = glyphButtonRecentsDefault;
+            bool? isDefaultFolder = await IsDefaultScanFolderSet();
+            if (isDefaultFolder == true || isDefaultFolder == null) FontIconButtonScanFolder.Glyph = glyphButtonRecentsDefault;
             else FontIconButtonScanFolder.Glyph = glyphButtonRecentsCustom;
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
             {
                 // workaround: ProgressRing gets stuck after a page navigation
                 ProgressRingContentPane.IsActive = false;
@@ -311,21 +317,21 @@ namespace Scanner
             }
         }
 
-        private void RefreshPreviewIndicators(bool autoPreview, bool? flatbedPreview, bool? feederPreview,
-            bool autoAllowed, bool flatbedAllowed, bool feederAllowed)
+        private void RefreshPreviewIndicators(bool hasAutoPreview, bool? hasFlatbedPreview, bool? hasFeederPreview,
+            bool isAutoAllowed, bool isFlatbedAllowed, bool isFeederAllowed)
         {
-            if (autoPreview) FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
+            if (hasAutoPreview) FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
             else FontIconAutoPreviewSupported.Visibility = Visibility.Collapsed;
 
-            if (flatbedPreview == true) FontIconFlatbedPreviewSupported.Visibility = Visibility.Visible;
+            if (hasFlatbedPreview == true) FontIconFlatbedPreviewSupported.Visibility = Visibility.Visible;
             else FontIconFlatbedPreviewSupported.Visibility = Visibility.Collapsed;
 
-            if (feederPreview == true) FontIconFeederPreviewSupported.Visibility = Visibility.Visible;
+            if (hasFeederPreview == true) FontIconFeederPreviewSupported.Visibility = Visibility.Visible;
             else FontIconFeederPreviewSupported.Visibility = Visibility.Collapsed;
 
             // allow preview of auto config when only one other mode is available and supports previewing
-            if (autoAllowed == true && (flatbedAllowed == true && feederAllowed == false && flatbedPreview == true
-                                        || flatbedAllowed == false && feederAllowed == true && feederPreview == true))
+            if (isAutoAllowed == true && (isFlatbedAllowed == true && isFeederAllowed == false && hasFlatbedPreview == true
+                                        || isFlatbedAllowed == false && isFeederAllowed == true && hasFeederPreview == true))
             {
                 FontIconAutoPreviewSupported.Visibility = Visibility.Visible;
             }
@@ -338,19 +344,19 @@ namespace Scanner
             // select source mode and enable/disable scan button
             if (scanner != null)
             {
-                bool modeSelected = false;
-                bool scannerAlreadySelected = false;
+                bool isModeSelected = false;
+                bool isScannerAlreadySelected = false;
                 if (selectedScanner != null && selectedScanner == scanner)
                 {
-                    scannerAlreadySelected = true;
+                    isScannerAlreadySelected = true;
                 }
 
-                if (scanner.autoAllowed)        // auto config
+                if (scanner.isAutoAllowed)        // auto config
                 {
-                    if (!scannerAlreadySelected)
+                    if (!isScannerAlreadySelected)
                     {
                         RadioButtonSourceAutomatic.IsChecked = true;
-                        modeSelected = true;
+                        isModeSelected = true;
                     }
                     RadioButtonSourceAutomatic.IsEnabled = true;
                 } 
@@ -360,12 +366,12 @@ namespace Scanner
                     RadioButtonSourceAutomatic.IsChecked = false;
                 }
 
-                if (scanner.flatbedAllowed)     // flatbed
+                if (scanner.isFlatbedAllowed)     // flatbed
                 {
-                    if (!modeSelected && !scannerAlreadySelected)
+                    if (!isModeSelected && !isScannerAlreadySelected)
                     {
                         RadioButtonSourceFlatbed.IsChecked = true;
-                        modeSelected = true;
+                        isModeSelected = true;
                     }
                     RadioButtonSourceFlatbed.IsEnabled = true;
                 }
@@ -375,9 +381,9 @@ namespace Scanner
                     RadioButtonSourceFlatbed.IsChecked = false;
                 }
 
-                if (scanner.feederAllowed)      // feeder
+                if (scanner.isFeederAllowed)      // feeder
                 {
-                    if (!modeSelected && !scannerAlreadySelected)
+                    if (!isModeSelected && !isScannerAlreadySelected)
                     {
                         RadioButtonSourceFeeder.IsChecked = true;
                     }
@@ -389,8 +395,8 @@ namespace Scanner
                     RadioButtonSourceFeeder.IsChecked = false;
                 }
                 ButtonLeftPaneScan.IsEnabled = true;
-                RefreshPreviewIndicators(scanner.autoPreviewAllowed, scanner.flatbedPreviewAllowed, scanner.feederPreviewAllowed,
-                    scanner.autoAllowed, scanner.flatbedAllowed, scanner.feederAllowed);
+                RefreshPreviewIndicators(scanner.isAutoPreviewAllowed, scanner.isFlatbedPreviewAllowed, scanner.isFeederPreviewAllowed,
+                    scanner.isAutoAllowed, scanner.isFlatbedAllowed, scanner.isFeederAllowed);
             }
             else
             {                    
@@ -419,29 +425,29 @@ namespace Scanner
             () =>
             {
                 // color mode
-                bool colorSelected = false;
-                bool colorAllowed, grayscaleAllowed, monochromeAllowed;
+                bool isColorSelected = false;
+                bool isColorAllowed, isGrayscaleAllowed, isMonochromeAllowed;
 
                 if (RadioButtonSourceFlatbed.IsChecked == true)         // flatbed
                 {
-                    colorAllowed = (bool) selectedScanner.flatbedColorAllowed;
-                    grayscaleAllowed = (bool)selectedScanner.flatbedGrayscaleAllowed;
-                    monochromeAllowed = (bool)selectedScanner.flatbedGrayscaleAllowed;
+                    isColorAllowed = (bool) selectedScanner.isFlatbedColorAllowed;
+                    isGrayscaleAllowed = (bool)selectedScanner.isFlatbedGrayscaleAllowed;
+                    isMonochromeAllowed = (bool)selectedScanner.isFlatbedGrayscaleAllowed;
                 } else if (RadioButtonSourceFeeder.IsChecked == true)   // feeder
                 {
-                    colorAllowed = (bool)selectedScanner.feederColorAllowed;
-                    grayscaleAllowed = (bool)selectedScanner.feederGrayscaleAllowed;
-                    monochromeAllowed = (bool)selectedScanner.feederGrayscaleAllowed;
+                    isColorAllowed = (bool)selectedScanner.isFeederColorAllowed;
+                    isGrayscaleAllowed = (bool)selectedScanner.isFeederGrayscaleAllowed;
+                    isMonochromeAllowed = (bool)selectedScanner.isFeederGrayscaleAllowed;
                 }
                 else FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
 
                 if (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true)
                 {
-                    if (selectedScanner.flatbedColorAllowed == true)
+                    if (selectedScanner.isFlatbedColorAllowed == true)
                     {
                         RadioButtonColorModeColor.IsEnabled = true;
                         RadioButtonColorModeColor.IsChecked = true;
-                        colorSelected = true;
+                        isColorSelected = true;
                     }
                     else
                     {
@@ -449,13 +455,13 @@ namespace Scanner
                         RadioButtonColorModeColor.IsChecked = false;
                     }
 
-                    if (selectedScanner.flatbedGrayscaleAllowed == true)
+                    if (selectedScanner.isFlatbedGrayscaleAllowed == true)
                     {
                         RadioButtonColorModeGrayscale.IsEnabled = true;
-                        if (!colorSelected)
+                        if (!isColorSelected)
                         {
                             RadioButtonColorModeGrayscale.IsChecked = true;
-                            colorSelected = true;
+                            isColorSelected = true;
                         }
                     }
                     else
@@ -464,13 +470,13 @@ namespace Scanner
                         RadioButtonColorModeGrayscale.IsChecked = false;
                     }
 
-                    if (selectedScanner.flatbedMonochromeAllowed == true)
+                    if (selectedScanner.isFlatbedMonochromeAllowed == true)
                     {
                         RadioButtonColorModeMonochrome.IsEnabled = true;
-                        if (!colorSelected)
+                        if (!isColorSelected)
                         {
                             RadioButtonColorModeMonochrome.IsChecked = true;
-                            colorSelected = true;
+                            isColorSelected = true;
                         }
                     }
                     else
@@ -483,7 +489,7 @@ namespace Scanner
                 }
 
                 // resolution
-                if (selectedScanner.fake)
+                if (selectedScanner.isFake)
                 {
 
                 }
@@ -499,7 +505,7 @@ namespace Scanner
                 } else FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
 
                 // file formats
-                if (selectedScanner.fake)
+                if (selectedScanner.isFake)
                 {
                     
                 }
@@ -517,7 +523,7 @@ namespace Scanner
                 }
 
                 // duplex
-                if (selectedScanner.feederDuplexAllowed == true)
+                if (selectedScanner.isFeederDuplexAllowed == true)
                 {
                     CheckBoxDuplex.IsEnabled = true;
                     CheckBoxDuplex.IsChecked = false;
@@ -530,11 +536,11 @@ namespace Scanner
                 }
                 else if (RadioButtonSourceFlatbed.IsChecked == true)
                 {
-                    MenuFlyoutItemButtonScanPreview.IsEnabled = (bool)selectedScanner.flatbedPreviewAllowed;
+                    MenuFlyoutItemButtonScanPreview.IsEnabled = (bool)selectedScanner.isFlatbedPreviewAllowed;
                 }
                 else if (RadioButtonSourceFeeder.IsChecked == true)
                 {
-                    MenuFlyoutItemButtonScanPreview.IsEnabled = (bool)selectedScanner.feederPreviewAllowed;
+                    MenuFlyoutItemButtonScanPreview.IsEnabled = (bool)selectedScanner.isFeederPreviewAllowed;
                 }
                 else MenuFlyoutItemButtonScanPreview.IsEnabled = false;
             });
@@ -739,15 +745,15 @@ namespace Scanner
         {
             if (RadioButtonSourceAutomatic.IsChecked == true)
             {
-                if (selectedScanner.autoPreviewAllowed == false)
+                if (selectedScanner.isAutoPreviewAllowed == false)
                 {
                     // auto preview only simulated
-                    if (selectedScanner.flatbedPreviewAllowed == true)
+                    if (selectedScanner.isFlatbedPreviewAllowed == true)
                     {
                         Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Flatbed,
                             RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
                     }
-                    else if (selectedScanner.feederPreviewAllowed == true)
+                    else if (selectedScanner.isFeederPreviewAllowed == true)
                     {
                         Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Feeder,
                             RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
@@ -772,7 +778,7 @@ namespace Scanner
         {
             try
             {
-                canceledScan = false;
+                isScanCanceled = false;
                 
                 // disable controls and show progress bar
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
@@ -786,7 +792,7 @@ namespace Scanner
                 });
                 
                 flowState = FlowState.scanning;
-                bool scanSuccessful = false;
+                bool isScanSuccessful = false;
                 if (startFresh)
                 {
                     scanResult = null;
@@ -892,7 +898,7 @@ namespace Scanner
                     }
                     catch (Exception exc)
                     {
-                        if (!canceledScan) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, 
+                        if (!isScanCanceled) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, 
                             LocalizedString("ErrorMessageScanScannerErrorHeading"), 
                             LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
                         await CancelScan();
@@ -980,7 +986,7 @@ namespace Scanner
                 }
 
                 flowState = FlowState.initial;
-                scanSuccessful = true;
+                isScanSuccessful = true;
 
                 // reenable controls and change UI
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -1002,7 +1008,7 @@ namespace Scanner
                 await RefreshScanButton();
 
                 // send toast if the app is minimized
-                if (settingNotificationScanComplete && !inForeground) SendToastNotification(LocalizedString("HeadingNotificationScanComplete"),
+                if (settingNotificationScanComplete && !isInForeground) SendToastNotification(LocalizedString("HeadingNotificationScanComplete"),
                     LocalizedString("TextNotificationScanComplete"), 5);
 
                 // ask for feedback
@@ -1012,11 +1018,11 @@ namespace Scanner
 
                 DisplayManageTutorialIfNeeded();
 
-                return scanSuccessful;
+                return isScanSuccessful;
             }
             catch (Exception)
             {
-                if (!canceledScan) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"), 
+                if (!isScanCanceled) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"), 
                     LocalizedString("ErrorMessageScanErrorBody"));
                 await CancelScan();
                 return false;
@@ -1070,75 +1076,55 @@ namespace Scanner
             {
                 ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageNoFormatHeading"),
                     LocalizedString("ErrorMessageNoFormatBody"));
+                await CancelScan();
+                return null;
             }
-            
-            if (RadioButtonSourceAutomatic.IsChecked == true)
+
+            SourceMode? source = null;
+            if (RadioButtonSourceAutomatic.IsChecked == true) source = SourceMode.Auto;
+            else if (RadioButtonSourceFlatbed.IsChecked == true) source = SourceMode.Flatbed;
+            else if (RadioButtonSourceFeeder.IsChecked == true) source = SourceMode.Feeder;
+
+            if (source == null)
+            {
+                // no source mode selected
+                throw new ArgumentException("No source mode selected.");
+            }
+
+            if (source == SourceMode.Auto)
             {
                 selectedScanner.scanner.AutoConfiguration.Format = selectedFormat.Item1;
-            } 
-            else if (RadioButtonSourceFlatbed.IsChecked == true)
-            {
-                // color mode
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                if (selectedColorMode == null)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageHeader"),
-                        LocalizedString("ErrorMessageBody"));
-                    await CancelScan();
-                    return null;
-                }
-                else selectedScanner.scanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
-
-                // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                if (selectedResolution == null)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageHeader"),
-                        LocalizedString("ErrorMessageBody"));
-                    await CancelScan();
-                    return null;
-                }
-                selectedScanner.scanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
-
-                // format
-                selectedScanner.scanner.FlatbedConfiguration.Format = selectedFormat.Item1;
-            } 
-            else if (RadioButtonSourceFeeder.IsChecked == true)
-            {
-                // color mode
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                if (selectedColorMode == null)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageHeader"),
-                        LocalizedString("ErrorMessageBody"));
-                    await CancelScan();
-                    return null;
-                }
-                else selectedScanner.scanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
-
-                // resolution
-                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                if (selectedResolution == null)
-                {
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageHeader"),
-                        LocalizedString("ErrorMessageBody"));
-                    await CancelScan();
-                    return null;
-                }
-                selectedScanner.scanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
-
-                // format
-                selectedScanner.scanner.FeederConfiguration.Format = selectedFormat.Item1;
-
-                // additional options
-                if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
-                else selectedScanner.scanner.FeederConfiguration.Duplex = false;
-                if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 10;
-                else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
-            } 
+            }
             else
             {
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageHeader"), LocalizedString("ErrorMessageBody"));
+                // get color mode, resolution and format
+                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                if (selectedColorMode == null || selectedResolution == null)
+                {
+                    throw new ArgumentException("No color mode or resolution selected.");
+                }
+                ImageScannerFormat format = selectedFormat.Item1;
+
+                switch (source)
+                {
+                    case SourceMode.Flatbed:
+                        selectedScanner.scanner.FlatbedConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+                        selectedScanner.scanner.FlatbedConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+                        selectedScanner.scanner.FlatbedConfiguration.Format = format;
+                        break;
+                    case SourceMode.Feeder:
+                        selectedScanner.scanner.FeederConfiguration.ColorMode = (ImageScannerColorMode)selectedColorMode;
+                        selectedScanner.scanner.FeederConfiguration.DesiredResolution = (ImageScannerResolution)selectedResolution;
+                        selectedScanner.scanner.FeederConfiguration.Format = format;
+
+                        // additional options
+                        if (CheckBoxDuplex.IsChecked == true) selectedScanner.scanner.FeederConfiguration.Duplex = true;
+                        else selectedScanner.scanner.FeederConfiguration.Duplex = false;
+                        if (CheckBoxAllPages.IsChecked == true) selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 10;
+                        else selectedScanner.scanner.FeederConfiguration.MaxNumberOfPages = 1;
+                        break;
+                }
             }
 
             return selectedFormat;
@@ -1147,7 +1133,7 @@ namespace Scanner
 
         private async Task CancelScan()
         {
-            canceledScan = true;
+            isScanCanceled = true;
             if (scanCancellationToken != null)
             {
                 try { scanCancellationToken.Cancel(); }
@@ -1197,7 +1183,7 @@ namespace Scanner
         private async void ButtonLeftPaneScan_Click(Microsoft.UI.Xaml.Controls.SplitButton sender,
             Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
         {
-            await Scan(makeNextScanAFreshOne, null);
+            await Scan(isNextScanFresh, null);
         }
 
         private async void ButtonScanFresh_Click(object sender, RoutedEventArgs e)
@@ -1303,9 +1289,9 @@ namespace Scanner
             ButtonShare.IsEnabled = true;
         }
 
-        private void TransitionLeftPaneButtonsForScan(bool beginScan)
+        private void TransitionLeftPaneButtonsForScan(bool isScanBeginning)
         {
-            if (beginScan)
+            if (isScanBeginning)
             {
                 ButtonLeftPaneSettings.IsEnabled = false;
                 StoryboardChangeButtonsBeginScan.Begin();
@@ -1376,7 +1362,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                    makeNextScanAFreshOne = false;
+                    isNextScanFresh = false;
                     MenuFlyoutItemButtonScan.IsEnabled = true;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
                     MenuFlyoutItemButtonScan.Icon = null;
@@ -1403,7 +1389,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Visible;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                    makeNextScanAFreshOne = false;
+                    isNextScanFresh = false;
                     MenuFlyoutItemButtonScan.IsEnabled = true;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
                     MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
@@ -1414,7 +1400,7 @@ namespace Scanner
                 {
                     FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                     FontIconButtonScanStartFresh.Visibility = Visibility.Visible;
-                    makeNextScanAFreshOne = true;
+                    isNextScanFresh = true;
                     MenuFlyoutItemButtonScan.IsEnabled = false;
                     MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                     MenuFlyoutItemButtonScan.Icon = null;
@@ -1518,9 +1504,9 @@ namespace Scanner
             try { ImageCropperScan.Source = null; } catch (Exception) { }
         }
 
-        private void LockPaneManage(bool complete)
+        private void LockPaneManage(bool completely)
         {
-            if (complete)
+            if (completely)
             {
                 ButtonLeftPaneManageSelect.IsEnabled = false;
                 ScrollViewerLeftPaneManage.IsEnabled = false;
@@ -1531,11 +1517,11 @@ namespace Scanner
             ButtonLeftPaneManageShare.IsEnabled = false;
         }
 
-        private void UnlockPaneManage(bool complete)
+        private void UnlockPaneManage(bool completely)
         {
             ButtonLeftPaneManageSelect.IsEnabled = true;
             ScrollViewerLeftPaneManage.IsEnabled = true;
-            if (complete)
+            if (completely)
             {
                 ButtonLeftPaneManageRotate.IsEnabled = true;
                 ButtonLeftPaneManageDelete.IsEnabled = true;
@@ -2654,6 +2640,13 @@ namespace Scanner
                 TeachingTipUpdated.IsOpen = false;
                 await ContentDialogChangelog.ShowAsync();
             });
+        }
+
+        private void ContentDialogAppSetup_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+        {
+            if (CheckBoxErrorStatistics.IsChecked == true) settingErrorStatistics = true;
+            else settingErrorStatistics = false;
+            SaveSettings();
         }
     }
 }

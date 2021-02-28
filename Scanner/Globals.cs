@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Serilog;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.Storage;
@@ -11,6 +12,9 @@ public static class Globals
     public static Theme settingAppTheme;                            // user theme setting
     public static bool settingAppendTime;                           // append time to file names
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
+    public static bool settingErrorStatistics;                      // send reports to the Microsoft AppCenter
+
+    public static ILogger log;
 
     public static StorageFolder scanFolder = null;
     public static ApplicationDataContainer localSettingsContainer;
@@ -18,7 +22,7 @@ public static class Globals
 
     public static bool possiblyDeadScanner = false;
 
-    public static bool? firstAppLaunchWithThisVersion;
+    public static bool? isFirstAppLaunchWithThisVersion;
     public static int scanNumber;
     public static bool lastTouchDrawState;                          // whether drawing with touch was enabled last time 
     public static bool manageTutorialAlreadyShown;

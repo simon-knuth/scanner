@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
@@ -59,7 +61,7 @@ namespace Scanner
                 await ResetScanLocation();
             }
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
             {
                 switch (settingAppTheme)
                 {
@@ -76,6 +78,7 @@ namespace Scanner
                 TextBlockRestart.Visibility = Visibility.Collapsed;
                 CheckBoxAppendTime.IsChecked = settingAppendTime;
                 CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
+                CheckBoxSettingsErrorStatistics.IsChecked = settingErrorStatistics;
 
                 if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
 
@@ -256,6 +259,7 @@ namespace Scanner
             {
                 settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
+                settingErrorStatistics = (bool)CheckBoxSettingsErrorStatistics.IsChecked;
 
                 SaveSettings();
             }
@@ -296,6 +300,63 @@ namespace Scanner
         private async void HyperlinkButtonSettingsAboutCredits_Click(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogAboutCredits.ShowAsync());
+        }
+
+        private async void HyperlinkSettingsExportLog_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
+            {
+                ProgressBarExportLog.Visibility = Visibility.Visible;
+                ItemsRepeaterExportLog.Visibility = Visibility.Collapsed;
+                await ContentDialogExportLog.ShowAsync();
+            });
+
+            // populate file list
+            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
+            var files = await logFolder.GetFilesAsync();
+
+            List<LogFile> sortedFiles = new List<LogFile>();
+            foreach (var file in files)
+            {
+                sortedFiles.Add(await LogFile.CreateLogFile(file));
+            }
+            sortedFiles.Sort(delegate (LogFile x, LogFile y) {
+                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
+            });
+            sortedFiles.Reverse();
+
+            ObservableCollection<LogFile> logFilesExport = new ObservableCollection<LogFile>(sortedFiles);
+
+            
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => 
+            {
+                ItemsRepeaterExportLog.ItemsSource = logFilesExport;
+                ProgressBarExportLog.Visibility = Visibility.Collapsed;
+                ItemsRepeaterExportLog.Visibility = Visibility.Visible;
+            });
+        }
+
+        private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+            savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = ((string)button.Tag).Split(".")[0];
+
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+
+                // write to file
+                StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
+                StorageFile sourceFile = await logFolder.GetFileAsync((string)button.Tag);
+                await sourceFile.CopyAndReplaceAsync(file);
+                Windows.Storage.Provider.FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+            }
         }
     }
 }

@@ -18,23 +18,23 @@ namespace Scanner
         public ImageScanner scanner;
         public string scannerName;
 
-        public bool autoAllowed;
-        public bool feederAllowed;
-        public bool flatbedAllowed;
-        public bool autoPreviewAllowed;
+        public bool isAutoAllowed;
+        public bool isFeederAllowed;
+        public bool isFlatbedAllowed;
+        public bool isAutoPreviewAllowed;
 
-        public bool? feederColorAllowed;
-        public bool? feederGrayscaleAllowed;
-        public bool? feederMonochromeAllowed;
-        public bool? feederDuplexAllowed;
-        public bool? feederPreviewAllowed;
+        public bool? isFeederColorAllowed;
+        public bool? isFeederGrayscaleAllowed;
+        public bool? isFeederMonochromeAllowed;
+        public bool? isFeederDuplexAllowed;
+        public bool? isFeederPreviewAllowed;
 
-        public bool? flatbedColorAllowed;
-        public bool? flatbedGrayscaleAllowed;
-        public bool? flatbedMonochromeAllowed;
-        public bool? flatbedPreviewAllowed;
+        public bool? isFlatbedColorAllowed;
+        public bool? isFlatbedGrayscaleAllowed;
+        public bool? isFlatbedMonochromeAllowed;
+        public bool? isFlatbedPreviewAllowed;
 
-        public bool fake = false;
+        public bool isFake = false;
 
 
 
@@ -47,52 +47,52 @@ namespace Scanner
 
             scannerName = name;
 
-            autoAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured);
-            feederAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.Feeder);
-            flatbedAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
+            isAutoAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured);
+            isFeederAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.Feeder);
+            isFlatbedAllowed = scanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
 
-            autoPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.AutoConfigured);
+            isAutoPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.AutoConfigured);
 
-            if (feederAllowed)
+            if (isFeederAllowed)
             {
-                feederColorAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
-                feederGrayscaleAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
-                feederMonochromeAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                isFeederColorAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                isFeederGrayscaleAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                isFeederMonochromeAllowed = scanner.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
 
-                feederDuplexAllowed = scanner.FeederConfiguration.CanScanDuplex;
-                feederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
+                isFeederDuplexAllowed = scanner.FeederConfiguration.CanScanDuplex;
+                isFeederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
             }
 
-            if (flatbedAllowed)
+            if (isFlatbedAllowed)
             {
-                flatbedColorAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
-                flatbedGrayscaleAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
-                flatbedMonochromeAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
-                flatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
+                isFlatbedColorAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
+                isFlatbedGrayscaleAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
+                isFlatbedMonochromeAllowed = scanner.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                isFlatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
             }
         }
 
 
-        public RecognizedScanner(string scannerName, bool auto, bool autoPreview, bool flatbed, bool flatbedPreview, bool flatbedColor, bool flatbedGrayscale,
-            bool flatbedMonochrome, bool feeder, bool feederPreview, bool feederColor, bool feederGrayscale, bool feederMonochrome, bool feederDuplex)
+        public RecognizedScanner(string scannerName, bool hasAuto, bool hasAutoPreview, bool hasFlatbed, bool hasFlatbedPreview, bool hasFlatbedColor, bool hasFlatbedGrayscale,
+            bool hasFlatbedMonochrome, bool hasFeeder, bool hasFeederPreview, bool hasFeederColor, bool hasFeederGrayscale, bool hasFeederMonochrome, bool hasFeederDuplex)
         {
             // add debugging scanner
             this.scannerName = scannerName;
-            autoAllowed = auto;
-            autoPreviewAllowed = autoPreview;
-            flatbedAllowed = flatbed;
-            flatbedPreviewAllowed = flatbedPreview;
-            flatbedColorAllowed = flatbedColor;
-            flatbedGrayscaleAllowed = flatbedGrayscale;
-            flatbedMonochromeAllowed = flatbedMonochrome;
-            feederAllowed = feeder;
-            feederPreviewAllowed = feederPreview;
-            feederColorAllowed = feederColor;
-            feederGrayscaleAllowed = feederGrayscale;
-            feederMonochromeAllowed = feederMonochrome;
-            feederDuplexAllowed = feederDuplex;
+            isAutoAllowed = hasAuto;
+            isAutoPreviewAllowed = hasAutoPreview;
+            isFlatbedAllowed = hasFlatbed;
+            isFlatbedPreviewAllowed = hasFlatbedPreview;
+            isFlatbedColorAllowed = hasFlatbedColor;
+            isFlatbedGrayscaleAllowed = hasFlatbedGrayscale;
+            isFlatbedMonochromeAllowed = hasFlatbedMonochrome;
+            isFeederAllowed = hasFeeder;
+            isFeederPreviewAllowed = hasFeederPreview;
+            isFeederColorAllowed = hasFeederColor;
+            isFeederGrayscaleAllowed = hasFeederGrayscale;
+            isFeederMonochromeAllowed = hasFeederMonochrome;
+            isFeederDuplexAllowed = hasFeederDuplex;
 
-            fake = true;
+            isFake = true;
         }
 
 

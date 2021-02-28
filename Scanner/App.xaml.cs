@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Serilog;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -31,6 +35,10 @@ namespace Scanner
         /// </summary>
         public App()
         {
+            // register with Microsoft AppCenter
+            AppCenter.SetEnabledAsync(false);
+            AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
+
             // quickly load theme
             if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {
@@ -46,6 +54,8 @@ namespace Scanner
                         break;
                 }
             }
+
+            _ = InitializeSerilog();
             
             this.InitializeComponent();
             this.Suspending += OnSuspending;
@@ -53,7 +63,7 @@ namespace Scanner
 
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
@@ -72,7 +82,7 @@ namespace Scanner
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
@@ -135,7 +145,7 @@ namespace Scanner
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            // Save application state and stop any background activity
             deferral.Complete();
         }
 

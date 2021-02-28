@@ -927,7 +927,26 @@
                                     </StackPanel>
                                     <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal" Visibility="Collapsed">
                                         <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasEditDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
-                                            <InkToolbarEraserButton/>
+                                            <InkToolbarBallpointPenButton RenderTransformOrigin="0.5,0.5">
+                                                <InkToolbarBallpointPenButton.RenderTransform>
+                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                                </InkToolbarBallpointPenButton.RenderTransform>
+                                            </InkToolbarBallpointPenButton>
+                                            <InkToolbarPencilButton RenderTransformOrigin="0.5,0.5">
+                                                <InkToolbarPencilButton.RenderTransform>
+                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                                </InkToolbarPencilButton.RenderTransform>
+                                            </InkToolbarPencilButton>
+                                            <InkToolbarHighlighterButton RenderTransformOrigin="0.5,0.5">
+                                                <InkToolbarHighlighterButton.RenderTransform>
+                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                                </InkToolbarHighlighterButton.RenderTransform>
+                                            </InkToolbarHighlighterButton>
+                                            <InkToolbarEraserButton RenderTransformOrigin="0.5,0.5">
+                                                <InkToolbarEraserButton.RenderTransform>
+                                                    <CompositeTransform ScaleX="0.5" ScaleY="0.5"/>
+                                                </InkToolbarEraserButton.RenderTransform>
+                                            </InkToolbarEraserButton>
                                         </InkToolbar>
                                         <InkToolbarCustomPenButton x:Name="ButtonDrawTouch" x:Uid="ButtonEditDrawTouch" Visibility="Collapsed" ToolTipService.ToolTip="Draw with touch" Click="ButtonDrawTouch_Click">
                                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="16"/>
@@ -1129,7 +1148,7 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 <TextBlock x:Uid="HeadingDialogChangelog" Text="What's new?" FontWeight="Bold" FontSize="24"/>
-                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="375">
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,0">
                     <Grid Margin="0,18,0,0">
                         <Grid.ChildrenTransitions>
                             <TransitionCollection>
@@ -1172,6 +1191,35 @@
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
+            </StackPanel>
+        </ContentDialog>
+
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogAppSetup_Closed">
+            <StackPanel Orientation="Vertical">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition IsStaggeringEnabled="True"/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                <TextBlock x:Uid="HeadingDialogPrivacySetup" Text="The choice is yours." FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
+                <TextBlock x:Uid="TextDialogPrivacySetup" Text="The following settings require your attention." TextWrapping="WrapWholeWords" Margin="0,0,0,24"/>
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12">
+                    <StackPanel Orientation="Vertical">
+                        <CheckBox x:Name="CheckBoxErrorStatistics" Margin="1,0,0,0">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock x:Uid="OptionSettingsErrorStatistics" Text="Donate error reports und usage statistics" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="TextSettingsErrorStatistics" Text="This allows us to investigate app crashes and identify which features are most valuable to our users. Rest assured that your scans are never included in these reports." Margin="0,6,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                </ScrollViewer>
+                <TextBlock x:Uid="TextDialogPrivacySetupFooter" Text="Just head to the app's settings, if you ever change your mind." TextWrapping="WrapWholeWords" Margin="0,18,0,0"/>
+                <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" Text="Privacy Policy"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
+                    </StackPanel>
+                </HyperlinkButton>
             </StackPanel>
         </ContentDialog>
 

@@ -94,4 +94,15 @@
         OpenWith = 1,
         Share = 2,
     }
+
+
+    /// <summary>
+    ///     Represents the different source modes that a scanner can support.
+    /// </summary>
+    public enum SourceMode
+    {
+        Auto = 0,
+        Flatbed = 1,
+        Feeder = 2,
+    }
 }

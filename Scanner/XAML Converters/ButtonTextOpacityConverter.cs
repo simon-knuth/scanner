@@ -7,9 +7,9 @@ namespace Scanner
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool buttonEnabled = (bool) value;
+            bool isButtonEnabled = (bool) value;
 
-            if (buttonEnabled) return 1;
+            if (isButtonEnabled) return 1;
             else return 0.5;
         }
 

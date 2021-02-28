@@ -5,10 +5,6 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
-using static Enums;
-using static Globals;
-using static Utilities;
-
 
 namespace Scanner
 {
@@ -17,74 +13,74 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private StorageFile scanFile;
+        private StorageFile _ScanFile;
         public StorageFile ScanFile
         {
             get
             {
-                return scanFile;
+                return _ScanFile;
             }
             set
             {
-                scanFile = value;
+                _ScanFile = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanFile)));
             }
         }
 
-        private BitmapImage cachedImage;
+        private BitmapImage _CachedImage;
         public BitmapImage CachedImage
         {
             get
             {
-                return cachedImage;
+                return _CachedImage;
             }
             set
             {
-                cachedImage = value;
+                _CachedImage = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CachedImage)));
             }
         }
 
-        private BitmapImage thumbnail;
+        private BitmapImage _Thumbnail;
         public BitmapImage Thumbnail
         {
             get
             {
-                return thumbnail;
+                return _Thumbnail;
             }
             set
             {
-                thumbnail = value;
+                _Thumbnail = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Thumbnail)));
             }
         }
 
-        private StorageFile imageWithoutRotation;
+        private StorageFile _ImageWithoutRotation;
         public StorageFile ImageWithoutRotation
         {
             get
             {
-                return imageWithoutRotation;
+                return _ImageWithoutRotation;
             }
             set
             {
-                imageWithoutRotation = value;
+                _ImageWithoutRotation = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ImageWithoutRotation)));
             }
         }
 
         public BitmapRotation CurrentRotation;
 
-        private string itemDescriptor;
+        private string _ItemDescriptor;
         public string ItemDescriptor
         {
             get
             {
-                return itemDescriptor;
+                return _ItemDescriptor;
             }
             set
             {
-                itemDescriptor = value;
+                _ItemDescriptor = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItemDescriptor)));
             }
         }

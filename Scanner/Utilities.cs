@@ -27,6 +27,8 @@ using Windows.Services.Store;
 using System.Collections.Generic;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
+using Microsoft.AppCenter;
+using Serilog;
 
 static class Utilities
 {
@@ -332,14 +334,26 @@ static class Utilities
             localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         }
 
+        if (localSettingsContainer.Values["settingErrorStatistics"] != null)
+        {
+            settingErrorStatistics = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
+        }
+        else
+        {
+            settingErrorStatistics = false;
+            localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
+        }
+        if (settingErrorStatistics == true) AppCenter.SetEnabledAsync(true);
+        else AppCenter.SetEnabledAsync(false);
+
         PackageVersion version = Package.Current.Id.Version;
         string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         if (localSettingsContainer.Values["lastKnownVersion"] != null)
         {
             string lastKnownVersionNumber = (string) localSettingsContainer.Values["lastKnownVersion"];
 
-            if (currentVersionNumber != lastKnownVersionNumber) firstAppLaunchWithThisVersion = true;
-            else firstAppLaunchWithThisVersion = false;
+            if (currentVersionNumber != lastKnownVersionNumber) isFirstAppLaunchWithThisVersion = true;
+            else isFirstAppLaunchWithThisVersion = false;
 
             localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
         }
@@ -388,6 +402,18 @@ static class Utilities
     public static string LocalizedString(string resource)
     {
         return ResourceLoader.GetForCurrentView().GetString(resource);
+    }
+
+
+    /// <summary>
+    ///     Searches the app secrets for a localized version of a string.
+    /// </summary>
+    /// <param name="resource">The resource name.</param>
+    /// <returns>The secret.</returns>
+    public static string GetSecret(string secret)
+    {
+        var resources = new ResourceLoader("Secrets");
+        return resources.GetString(secret);
     }
 
 
@@ -641,17 +667,31 @@ static class Utilities
         localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
         localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
+        localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
+
+        if (settingErrorStatistics == true) AppCenter.SetEnabledAsync(true);
+        else AppCenter.SetEnabledAsync(false);
     }
 
 
-    // TODO documentation
+    /// <summary>
+    ///     Gets the image measurements from <see cref="ImageProperties"/>.
+    /// </summary>
+    /// <returns>
+    ///     A tuple of width and height.
+    /// </returns>
     public static Tuple<double, double> GetImageMeasurements(ImageProperties properties)
     {
         return new Tuple<double, double>(properties.Width, properties.Height);
     }
 
 
-    // TODO documentation
+    /// <summary>
+    ///     Gets the image measurements from a <see cref="BitmapImage"/>.
+    /// </summary>
+    /// <returns>
+    ///     A tuple of width and height.
+    /// </returns>
     public static Tuple<double, double> GetImageMeasurements(BitmapImage image)
     {
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
@@ -991,5 +1031,18 @@ static class Utilities
     public static IAsyncAction RunOnUIThreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
     {
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
+    }
+
+    public static async Task InitializeSerilog()
+    {
+        StorageFolder folder = await ApplicationData.Current.RoamingFolder
+            .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
+        string logPath = System.IO.Path.Combine(folder.Path, "log.json");
+
+        log = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
+            .CreateLogger();
+        log.Information("--- Log initialized ---");
     }
 }
