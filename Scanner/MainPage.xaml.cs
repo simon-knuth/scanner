@@ -1615,20 +1615,20 @@ namespace Scanner
 
             if (scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
-                if (scanResult.GetTotalNumberOfScans() > 1)
-                {
-                    scopeAction = ScopeActions.Share;
-                    TeachingTipScope.Target = ButtonShare;
-                    TeachingTipScope.Title = LocalizedString("DialogScopeQuestionShareHeading");
-                    ReliablyOpenTeachingTip(TeachingTipScope);
-                    return;
-                }
-                else
-                {
+                //if (scanResult.GetTotalNumberOfScans() > 1)
+                //{
+                //    scopeAction = ScopeActions.Share;
+                //    TeachingTipScope.Target = ButtonShare;
+                //    TeachingTipScope.Title = LocalizedString("DialogScopeQuestionShareHeading");
+                //    ReliablyOpenTeachingTip(TeachingTipScope);
+                //    return;
+                //}
+                //else
+                //{
                     shareIndexes = null;
                     Share(ButtonShare);
                     return;
-                }
+                //}
             }
 
             shareIndexes = new int[1];
@@ -1691,20 +1691,20 @@ namespace Scanner
             {
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
-                    if (scanResult.GetTotalNumberOfScans() > 1)
-                    {
-                        scopeAction = ScopeActions.Copy;
-                        TeachingTipScope.Target = ButtonCopy;
-                        TeachingTipScope.Title = LocalizedString("DialogScopeQuestionCopyHeading");
-                        ReliablyOpenTeachingTip(TeachingTipScope);
-                        return;
-                    }
-                    else
-                    {
+                    //if (scanResult.GetTotalNumberOfScans() > 1)
+                    //{
+                    //    scopeAction = ScopeActions.Copy;
+                    //    TeachingTipScope.Target = ButtonCopy;
+                    //    TeachingTipScope.Title = LocalizedString("DialogScopeQuestionCopyHeading");
+                    //    ReliablyOpenTeachingTip(TeachingTipScope);
+                    //    return;
+                    //}
+                    //else
+                    //{
                         await scanResult.CopyAsync();
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
                         return;
-                    }
+                    //}
                 }
 
                 await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
@@ -1725,19 +1725,19 @@ namespace Scanner
             {
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
-                    if (scanResult.GetTotalNumberOfScans() > 1)
-                    {
-                        scopeAction = ScopeActions.OpenWith;
-                        TeachingTipScope.Target = ButtonOpenWith;
-                        TeachingTipScope.Title = LocalizedString("DialogScopeQuestionOpenWithHeading");
-                        ReliablyOpenTeachingTip(TeachingTipScope);
-                        return;
-                    }
-                    else
-                    {
+                    //if (scanResult.GetTotalNumberOfScans() > 1)
+                    //{
+                    //    scopeAction = ScopeActions.OpenWith;
+                    //    TeachingTipScope.Target = ButtonOpenWith;
+                    //    TeachingTipScope.Title = LocalizedString("DialogScopeQuestionOpenWithHeading");
+                    //    ReliablyOpenTeachingTip(TeachingTipScope);
+                    //    return;
+                    //}
+                    //else
+                    //{
                         await scanResult.OpenWithAsync();
                         return;
-                    }
+                    //}
                 }
 
                 await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
@@ -2645,7 +2645,7 @@ namespace Scanner
             });
         }
 
-        private void ContentDialogAppSetup_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+        private void ContentDialogPrivacySetup_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
         {
             if (CheckBoxErrorStatistics.IsChecked == true) settingErrorStatistics = true;
             else settingErrorStatistics = false;

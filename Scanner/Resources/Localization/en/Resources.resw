@@ -905,10 +905,6 @@
     <value>Export event log</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
-  <data name="DialogAppSetup.CloseButtonText" xml:space="preserve">
-    <value>Done</value>
-    <comment>The close button text of the app setup dialog.</comment>
-  </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
     <value>Export</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
@@ -924,5 +920,9 @@
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Please confirm the following settings.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
+    <value>Credits</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
 </root>

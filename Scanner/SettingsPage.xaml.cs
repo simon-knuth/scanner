@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -311,6 +312,10 @@ namespace Scanner
                 await ContentDialogExportLog.ShowAsync();
             });
 
+            // flush log
+            Log.CloseAndFlush();
+            await InitializeSerilogAsync();
+
             // populate file list
             StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
             var files = await logFolder.GetFilesAsync();
@@ -339,7 +344,7 @@ namespace Scanner
 
         private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            Button button = sender as Button;
             
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
@@ -355,7 +360,7 @@ namespace Scanner
                 StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
                 StorageFile sourceFile = await logFolder.GetFileAsync((string)button.Tag);
                 await sourceFile.CopyAndReplaceAsync(file);
-                Windows.Storage.Provider.FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                await CachedFileManager.CompleteUpdatesAsync(file);
             }
         }
     }

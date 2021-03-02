@@ -90,22 +90,30 @@ static class Utilities
     /// <summary>
     ///     Converts the <paramref name="formatString"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
-    /// <param name="formatString">"jpg", "jpeg", "png", "bmp" or "tiff"/"tif".</param>
+    /// <param name="formatString">"jpg", "jpeg", "png", "bmp" or "tiff"/"tif" (with or without dot).</param>
     /// <returns>The corresponding BitmapEncoderId.</returns>
     public static Guid GetBitmapEncoderId(string formatString)
     {
-        switch (formatString)
+        switch (formatString.ToLower())
         {
             case "jpg":
-                return BitmapEncoder.JpegEncoderId;
+            case ".jpg":
             case "jpeg":
+            case ".jpeg":
                 return BitmapEncoder.JpegEncoderId;
             case "png":
+            case ".png":
                 return BitmapEncoder.PngEncoderId;
             case "bmp":
+            case ".bmp":
                 return BitmapEncoder.BmpEncoderId;
-            default:
+            case "tif":
+            case ".tif":
+            case "tiff":
+            case ".tiff":
                 return BitmapEncoder.TiffEncoderId;
+            default:
+                throw new ApplicationException("GetBitmapEncoderId received invalid format string '" + formatString.ToLower() + "'.");
         }
     }
 
@@ -125,8 +133,10 @@ static class Utilities
                 return BitmapEncoder.PngEncoderId;
             case SupportedFormat.TIF:
                 return BitmapEncoder.TiffEncoderId;
-            default:
+            case SupportedFormat.BMP:
                 return BitmapEncoder.BmpEncoderId;
+            default:
+                throw new ApplicationException("GetBitmapEncoderId received invalid SupportedFormat '" + format + "'.");
         }
     }
 
@@ -154,8 +164,9 @@ static class Utilities
                 return SupportedFormat.OpenXPS;
             case ImageScannerFormat.Pdf:
                 return SupportedFormat.PDF;
+            default:
+                throw new ApplicationException("ConvertImageScannerFormatToSupportedFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
         }
-        throw new Exception("Invalid ImageScannerFormat for conversion.");
     }
 
 
@@ -170,20 +181,22 @@ static class Utilities
     /// </returns>
     public static BitmapFileFormat GetBitmapFileFormat(StorageFile file)
     {
-        string formatString = file.Name.Split(".")[1];
+        string formatString = file.FileType;
 
         switch (formatString)
         {
-            case "jpg":
+            case ".jpg":
+            case ".jpeg":
                 return BitmapFileFormat.Jpeg;
-            case "jpeg":
-                return BitmapFileFormat.Jpeg;
-            case "png":
+            case ".png":
                 return BitmapFileFormat.Png;
-            case "bmp":
+            case ".bmp":
                 return BitmapFileFormat.Bmp;
-            default:
+            case ".tif":
+            case ".tiff":
                 return BitmapFileFormat.Tiff;
+            default:
+                throw new ApplicationException("GetBitmapFileFormat received invalid file format '" + formatString + "' for conversion.");
         }
     }
 
@@ -199,20 +212,22 @@ static class Utilities
     /// </returns>
     public static CanvasBitmapFileFormat GetCanvasBitmapFileFormat(StorageFile file)
     {
-        string formatString = file.Name.Split(".")[1];
+        string formatString = file.FileType;
 
         switch (formatString)
         {
-            case "jpg":
+            case ".jpg":
+            case ".jpeg":
                 return CanvasBitmapFileFormat.Jpeg;
-            case "jpeg":
-                return CanvasBitmapFileFormat.Jpeg;
-            case "png":
+            case ".png":
                 return CanvasBitmapFileFormat.Png;
-            case "bmp":
+            case ".bmp":
                 return CanvasBitmapFileFormat.Bmp;
-            default:
+            case ".tif":
+            case ".tiff":
                 return CanvasBitmapFileFormat.Tiff;
+            default:
+                throw new ApplicationException("GetCanvasBitmapFileFormat received invalid file format '" + formatString + "' for conversion.");
         }
     }
 
@@ -458,8 +473,8 @@ static class Utilities
     public static string RemoveNumbering(string input)
     {
         // expect string like "abc (def).xyz" and deliver "abc.xyz"
-        string name = input.Substring(0, input.LastIndexOf("."));       // get name without file extension
-        string extension = input.Substring(input.LastIndexOf("."));     // get file extension (with ".")
+        string name = input.Substring(0, input.LastIndexOf("."));           // get name without file extension
+        string extension = input.Substring(input.LastIndexOf("."));         // get file extension (with ".")
 
         if (name[name.Length - 1] == ')' && name.Contains(" ("))
         {
@@ -542,7 +557,6 @@ static class Utilities
             Visual = visual,
         };
 
-
         var toast = new ToastNotification(toastContent.GetXml());
         toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
 
@@ -584,7 +598,6 @@ static class Utilities
         {
             Visual = visual,
         };
-
 
         var toast = new ToastNotification(toastContent.GetXml());
         toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
@@ -726,146 +739,6 @@ static class Utilities
 
 
     /// <summary>
-    ///     Converts the <paramref name="file"/> to the next format, according to <paramref name="formatFlow"/>, and
-    ///     saves the result to the <paramref name="targetFolder"/> (see remarks). If the name is already in use, the
-    ///     function will automatically append the next available number "(xx)" at the end.
-    ///     The supported source formats are JPG, PNG, TIF and BMP.
-    ///     The supported target formats are JPG, PNG, TIF, BMP and PDF.
-    /// </summary>
-    /// <remarks>
-    ///     If the target format is JPG, PNG, TIF or BMP, the function ignores the <paramref name="targetFolder"/>
-    ///     and expects the <paramref name="file"/> to already be in the right place.
-    /// </remarks>
-    /// <param name="file">The image file that shall be converted.</param>
-    /// <param name="targetFormat">The <see cref="SupportedFormat"/> that indicates the desired format of the file.</param>
-    /// <param name="targetFolder">The folder that the converted file shall be saved to.</param>
-    /// <returns>The converted file.</returns>
-    public static async Task<string> ConvertScannedFile(StorageFile file, SupportedFormat? targetFormat, StorageFolder targetFolder)
-    {
-        string newName;
-        string newNameWithoutNumbering;
-        switch (targetFormat)
-        {
-            case SupportedFormat.PDF:
-                // convert to PDF
-                try
-                {
-                    taskCompletionSource = new TaskCompletionSource<bool>();
-                    var win32ResultAsync = taskCompletionSource.Task;
-
-                    // save the source and target name
-                    ApplicationData.Current.LocalSettings.Values["pdfSourceFileName"] = file.Name;
-                    ApplicationData.Current.LocalSettings.Values["targetFileName"] = file.DisplayName + ".pdf";
-
-                    // save measurements, which determine PDF file size
-                    var imageProperties = await file.Properties.GetImagePropertiesAsync();
-                    ApplicationData.Current.LocalSettings.Values["sourceFileWidth"] = imageProperties.Width;
-                    ApplicationData.Current.LocalSettings.Values["sourceFileHeight"] = imageProperties.Height;
-
-                    // call win32 app and wait for result
-                    if (appServiceConnection == null)
-                    {
-                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                    } else
-                    {
-                        ValueSet message = new ValueSet();
-                        message.Add("REQUEST", "CONVERT");
-                        var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
-                    }
-                    await Task.WhenAny(win32ResultAsync, Task.Delay(15000));
-
-                    // get result file and move it to its correct folder
-                    StorageFile convertedFile = null;
-                    convertedFile = await folderTemp.GetFileAsync(file.DisplayName + ".pdf");
-                    
-                    // move PDF file to target folder
-                    try 
-                    { 
-                        await convertedFile.MoveAsync(targetFolder, convertedFile.Name, NameCollisionOption.FailIfExists);
-                        newName = convertedFile.Name;
-                    }
-                    catch (Exception)
-                    {
-                        if (convertedFile.DisplayName[convertedFile.DisplayName.Length - 1] == ')')
-                        {
-                            newNameWithoutNumbering = RemoveNumbering(convertedFile.Name);
-                        } else
-                        {
-                            newNameWithoutNumbering = convertedFile.Name;
-                        }
-                        
-                        // cycle through file numberings until one is not occupied
-                        for (int i = 1; true; i++)
-                        {
-                            try
-                            {
-                                await convertedFile.MoveAsync(targetFolder, newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
-                                    + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                            break;
-                        }
-                    }
-
-                    // delete the source image
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    return newName;
-                }
-                catch (Exception) 
-                {
-                    throw;
-                }                
-
-            default:
-                // open image file, decode it and prepare an encoder with the target image format
-                IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                Guid encoderId = GetBitmapEncoderId(targetFormat);
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                encoder.SetSoftwareBitmap(softwareBitmap);
-
-                // save/encode the file in the target format
-                try { await encoder.FlushAsync(); }
-                catch (Exception)
-                {
-                    throw;
-                }
-                stream.Dispose();
-
-                // rename file to make the extension match the new format and watch out for name collisions
-                newNameWithoutNumbering = RemoveNumbering(file.Name
-                    .Replace("." + file.Name.Split(".")[1], "." + targetFormat));
-                newName = newNameWithoutNumbering;
-
-                try { await file.RenameAsync(newName, NameCollisionOption.FailIfExists); }
-                catch (Exception)
-                {
-                    // cycle through file numberings until one is not occupied
-                    for (int i = 1; true; i++)
-                    {
-                        try
-                        {
-                            await file.RenameAsync(newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString()
-                                + ")." + newNameWithoutNumbering.Split(".")[1], NameCollisionOption.FailIfExists);
-                        }
-                        catch (Exception)
-                        {
-                            continue;
-                        }
-                        newName = newNameWithoutNumbering.Split(".")[0] + " (" + i.ToString() + ")." + newNameWithoutNumbering.Split(".")[1];
-                        return newName;                  }
-                }
-                return newName;
-        }
-    }
-
-
-    /// <summary>
     ///     Converts a string to to a <see cref="SupportedFormat"/>.
     /// </summary>
     /// <param name="formatString">
@@ -875,86 +748,42 @@ static class Utilities
     /// <returns>The corresponding <see cref="SupportedFormat"/>.</returns>
     public static SupportedFormat? ConvertFormatStringToSupportedFormat(string formatString)
     {
-        switch (formatString)
+        switch (formatString.ToLower())
         {
             case "jpg":
             case "jpeg":
             case ".jpg":
-            case "JPG":
-            case "JPEG":
-            case ".JPG":
                 return SupportedFormat.JPG;
 
             case "png":
             case ".png":
-            case "PNG":
-            case ".PNG":
                 return SupportedFormat.PNG;
 
             case "tif":
-            case ".tif":
-            case "TIF":
-            case ".TIF":
             case "tiff":
-            case "TIFF":
+            case ".tif":
+            case ".tiff":
                 return SupportedFormat.TIF;
 
             case "bmp":
             case ".bmp":
-            case "BMP":
-            case ".BMP":
                 return SupportedFormat.BMP;
 
             case "pdf":
             case ".pdf":
-            case "PDF":
-            case ".PDF":
                 return SupportedFormat.PDF;
 
             case "xps":
             case ".xps":
-            case "XPS":
-            case ".XPS":
                 return SupportedFormat.XPS;
 
             case "oxps":
             case ".oxps":
-            case "OXPS":
-            case ".OXPS":
                 return SupportedFormat.OpenXPS;
 
             default: 
                 return null;
         }
-    }
-
-
-    /// <summary>
-    ///     Appends the indicator ComboBoxItem to the provided itemList.
-    /// </summary>
-    /// <param name="itemList">The list to which the indicaator icon shall be appended.</param>
-    public static void AddIndicatorComboBoxItem(ObservableCollection<ComboBoxItem> itemList)
-    {
-        ComboBoxItem item = new ComboBoxItem();
-        item.IsEnabled = false;
-        item.VerticalContentAlignment = VerticalAlignment.Bottom;
-
-        StackPanel stackPanel = new StackPanel();
-        stackPanel.Orientation = Orientation.Vertical;
-        item.Content = stackPanel;
-
-        TextBlock textBlock = new TextBlock();
-        textBlock.Text = LocalizedString("TextBlockScannerIndicatorText");
-        textBlock.Style = Application.Current.Resources["CaptionTextBlockStyle"] as Style;
-        textBlock.Margin = new Thickness(0, 0, 0, 1);
-        stackPanel.Children.Add(textBlock);
-
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.IsIndeterminate = true;
-        progressBar.Opacity = 0.75;
-        stackPanel.Children.Add(progressBar);
-
-        itemList.Add(item);
     }
 
 
@@ -1025,6 +854,7 @@ static class Utilities
         catch (Exception) { throw; }
     }
 
+
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/> .
     /// </summary>
@@ -1033,7 +863,11 @@ static class Utilities
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
     }
 
-    public static async Task InitializeSerilog()
+
+    /// <summary>
+    ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder.
+    /// </summary>
+    public static async Task InitializeSerilogAsync()
     {
         StorageFolder folder = await ApplicationData.Current.RoamingFolder
             .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
@@ -1041,7 +875,7 @@ static class Utilities
 
         log = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
+            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 16))
             .CreateLogger();
         log.Information("--- Log initialized ---");
     }

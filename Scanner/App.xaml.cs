@@ -55,7 +55,7 @@ namespace Scanner
                 }
             }
 
-            _ = InitializeSerilog();
+            _ = InitializeSerilogAsync();
             
             this.InitializeComponent();
             this.Suspending += OnSuspending;

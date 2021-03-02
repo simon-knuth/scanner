@@ -330,7 +330,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionToDraw">
@@ -374,7 +374,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionFromSpecial">
@@ -399,7 +399,7 @@
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                 To="50" Duration="0:0:0.15" BeginTime="0:0:0">
+                                 To="-50" Duration="0:0:0.15" BeginTime="0:0:0">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseIn"/>
                     </DoubleAnimation.EasingFunction>
@@ -413,7 +413,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardAppLaunch">
@@ -821,7 +821,7 @@
                                 </InkToolbarCustomPenButton>
                                 <StackPanel x:Name="StackPanelTopToolbarEditing" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
                                     <StackPanel.RenderTransform>
-                                        <TranslateTransform Y="0"/>
+                                        <TranslateTransform X="0"/>
                                     </StackPanel.RenderTransform>
 
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonEditCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Crop" Click="ButtonCrop_Click">
@@ -889,7 +889,7 @@
                                 </StackPanel>
                                 <StackPanel x:Name="StackPanelTopToolbarEditingSpecial" Opacity="0" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True" Visibility="Collapsed">
                                     <StackPanel.RenderTransform>
-                                        <TranslateTransform Y="50"/>
+                                        <TranslateTransform Y="-50"/>
                                     </StackPanel.RenderTransform>
 
                                     <StackPanel x:Name="StackPanelTopToolbarEditingCrop" Orientation="Horizontal" Visibility="Collapsed">
@@ -927,26 +927,7 @@
                                     </StackPanel>
                                     <StackPanel x:Name="StackPanelTopToolbarEditingDraw" Orientation="Horizontal" Visibility="Collapsed">
                                         <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasEditDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
-                                            <InkToolbarBallpointPenButton RenderTransformOrigin="0.5,0.5">
-                                                <InkToolbarBallpointPenButton.RenderTransform>
-                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
-                                                </InkToolbarBallpointPenButton.RenderTransform>
-                                            </InkToolbarBallpointPenButton>
-                                            <InkToolbarPencilButton RenderTransformOrigin="0.5,0.5">
-                                                <InkToolbarPencilButton.RenderTransform>
-                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
-                                                </InkToolbarPencilButton.RenderTransform>
-                                            </InkToolbarPencilButton>
-                                            <InkToolbarHighlighterButton RenderTransformOrigin="0.5,0.5">
-                                                <InkToolbarHighlighterButton.RenderTransform>
-                                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
-                                                </InkToolbarHighlighterButton.RenderTransform>
-                                            </InkToolbarHighlighterButton>
-                                            <InkToolbarEraserButton RenderTransformOrigin="0.5,0.5">
-                                                <InkToolbarEraserButton.RenderTransform>
-                                                    <CompositeTransform ScaleX="0.5" ScaleY="0.5"/>
-                                                </InkToolbarEraserButton.RenderTransform>
-                                            </InkToolbarEraserButton>
+                                            <InkToolbarEraserButton/>
                                         </InkToolbar>
                                         <InkToolbarCustomPenButton x:Name="ButtonDrawTouch" x:Uid="ButtonEditDrawTouch" Visibility="Collapsed" ToolTipService.ToolTip="Draw with touch" Click="ButtonDrawTouch_Click">
                                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="16"/>
@@ -1168,33 +1149,33 @@
 
                         <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelogV2Section1" Text="A fresh new look" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelogV2Section1" Text="The interface has been completely redesigned." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section1" Text="A fresh new look" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2.0.0.0Section1" Text="The interface has been completely redesigned." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
                         <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelogV2Section2" Text="Full multi-page support" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelogV2Section2" Text="Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section2" Text="Full multi-page support" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2.0.0.0Section2" Text="Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
                         <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelogV2Section3" Text="Duplex scanning" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelogV2Section3" Text="Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section3" Text="Duplex scanning" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2.0.0.0Section43" Text="Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
                         <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,0">
-                            <TextBlock x:Uid="HeadingChangelogV2Section4" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelogV2Section4" Text="Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section4" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2.0.0.0Section4" Text="Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogAppSetup_Closed" v1809:CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogPrivacySetup_Closed" v1809:CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
