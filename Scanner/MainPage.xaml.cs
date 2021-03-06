@@ -1019,6 +1019,7 @@ namespace Scanner
                 if (scanNumber == 10) ReliablyOpenTeachingTip(TeachingTipFeedback);
                 localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
+                // show tutorial for page management
                 DisplayManageTutorialIfNeeded();
 
                 return isScanSuccessful;

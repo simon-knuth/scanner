@@ -674,12 +674,20 @@
     <comment>The second part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value> um anderen Nutzern beim Finden der für sie passenden App zu helfen.</value>
+    <value> um anderen Nutzern beim Finden der für sie passenden App zu helfen. Professionelle Nutzer können außerdem auf </value>
     <comment>The third part of the text of the "Feedback" section in settings.</comment>
+  </data>
+  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
+    <value> die Weiterentwicklung der App beeinflussen.</value>
+    <comment>The fourth part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The hyperlink text for launching the Feedback Hub from the "Feedback" section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>bewerten Sie Scanner im Microsoft Store,</value>

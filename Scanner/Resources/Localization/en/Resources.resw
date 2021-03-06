@@ -678,8 +678,16 @@
     <comment>The second part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value> to help others decide whether this is the right app for them.</value>
+    <value> to help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
     <comment>The third part of the text of the "Feedback" section in settings.</comment>
+  </data>
+  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
+    <value>.</value>
+    <comment>The fourth part of the text of the "Feedback" section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
