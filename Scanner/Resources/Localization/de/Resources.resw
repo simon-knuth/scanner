@@ -666,18 +666,18 @@
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Nutzen Sie den</value>
+    <value>Nutzen Sie den </value>
     <comment>The first part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value>um neue Funktionen vorzuschlagen, Fehler zu melden und Vorschläge zu unterstützen, oder</value>
+    <value> um neue Funktionen vorzuschlagen, Fehler zu melden und Vorschläge zu unterstützen, oder </value>
     <comment>The second part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value>um anderen Nutzern beim Finden der für sie passenden App zu helfen.</value>
+    <value> um anderen Nutzern beim Finden der für sie passenden App zu helfen.</value>
     <comment>The third part of the text of the "Feedback" section in settings.</comment>
   </data>
-  <data name="HyperlinkSettingsFeedbackFeedbackHub" xml:space="preserve">
+  <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The hyperlink text for launching the Feedback Hub from the "Feedback" section in settings.</comment>
   </data>
@@ -698,7 +698,7 @@
     <comment>The second part of the text for restarting the app to apply changes.</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>Windows 10 unterstützt über 100 Sprachen - Sie können helfen, diese App mehr Menschen zugänglich zu machen. Mehr Informationen finden Sie auf</value>
+    <value>Windows 10 unterstützt über 100 Sprachen - Sie können helfen, diese App mehr Menschen zugänglich zu machen. Mehr Informationen finden Sie auf </value>
     <comment>The first part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
@@ -849,35 +849,35 @@
     <value>Was ist neu?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section1.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section1.Text" xml:space="preserve">
     <value>Ein frischer neuer Look</value>
     <comment>The heading of the first changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section2.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section2.Text" xml:space="preserve">
     <value>Vollständige Unterstützung für mehrere Seiten</value>
     <comment>The heading of the second changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section3.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section3.Text" xml:space="preserve">
     <value>Duplex-Scan</value>
     <comment>The heading of the third changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section4.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section4.Text" xml:space="preserve">
     <value>Vorschau</value>
     <comment>The heading of the fourth changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section1.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section1.Text" xml:space="preserve">
     <value>Die Oberfläche wurde komplett neu gestaltet.</value>
     <comment>The text of the first changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section2.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section2.Text" xml:space="preserve">
     <value>Scannen Sie mehrere Seiten mit dem Einzug oder nacheinander mit dem Flachbett. Betrachten und bearbeiten Sie alle Seiten und kombinieren Sie sie in eine einzelne PDF-Datei.</value>
     <comment>The text of the second changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section3.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section3.Text" xml:space="preserve">
     <value>Scannen Sie im Duplex-Modus gleichzeitig die Vorder- und Rückseite mit dem Einzug. Verfügbar nur bei unterstützten Scannern.</value>
     <comment>The text of the third changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section4.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section4.Text" xml:space="preserve">
     <value>Fertigen Sie eine Vorschau an, bevor Sie scannen. Verfügbar nur bei unterstützten Scannern - halten Sie Ausschau nach dem Vorschau-Symbol neben den Quellmodi.</value>
     <comment>The text of the fourth changelog section.</comment>
   </data>
@@ -924,5 +924,17 @@
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Bitte überprüfen Sie die folgenden Einstellungen.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
+    <value>3:2</value>
+    <comment>The aspect ratio description for a 3:2 aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio4by3.Text" xml:space="preserve">
+    <value>4:3</value>
+    <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
+  </data>
+  <data name="TextEditSave.Text" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>The text of the button that saves changes.</comment>
   </data>
 </root>

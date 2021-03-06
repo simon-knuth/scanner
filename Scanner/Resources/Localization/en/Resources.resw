@@ -670,18 +670,18 @@
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Use the</value>
+    <value>Use the </value>
     <comment>The first part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value>to request new features, report bugs and vote on suggestions or</value>
+    <value> to request new features, report bugs and vote on suggestions or </value>
     <comment>The second part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value>to help others decide whether this is the right app for them.</value>
+    <value> to help others decide whether this is the right app for them.</value>
     <comment>The third part of the text of the "Feedback" section in settings.</comment>
   </data>
-  <data name="HyperlinkSettingsFeedbackFeedbackHub" xml:space="preserve">
+  <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The hyperlink text for launching the Feedback Hub from the "Feedback" section in settings.</comment>
   </data>
@@ -698,7 +698,7 @@
     <comment>The second part of the text for restarting the app to apply changes.</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See</value>
+    <value>Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See </value>
     <comment>The first part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
@@ -837,35 +837,35 @@
     <value>What's new?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section1.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section1.Text" xml:space="preserve">
     <value>A fresh new look</value>
     <comment>The heading of the first changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section2.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section2.Text" xml:space="preserve">
     <value>Full multi-page support</value>
     <comment>The heading of the second changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section3.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section3.Text" xml:space="preserve">
     <value>Duplex scanning</value>
     <comment>The heading of the third changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2.0.0.0Section4.Text" xml:space="preserve">
+  <data name="HeadingChangelog2_0_0_0Section4.Text" xml:space="preserve">
     <value>Preview</value>
     <comment>The heading of the fourth changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section1.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section1.Text" xml:space="preserve">
     <value>The interface has been completely redesigned.</value>
     <comment>The text of the first changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section2.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section2.Text" xml:space="preserve">
     <value>Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file.</value>
     <comment>The text of the second changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section3.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section3.Text" xml:space="preserve">
     <value>Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners.</value>
     <comment>The text of the third changelog section.</comment>
   </data>
-  <data name="TextChangelog2.0.0.0Section4.Text" xml:space="preserve">
+  <data name="TextChangelog2_0_0_0Section4.Text" xml:space="preserve">
     <value>Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes.</value>
     <comment>The text of the fourth changelog section.</comment>
   </data>
@@ -924,5 +924,17 @@
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
     <value>Credits</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
+    <value>3:2</value>
+    <comment>The aspect ratio description for a 3:2 aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio4by3.Text" xml:space="preserve">
+    <value>4:3</value>
+    <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
+  </data>
+  <data name="TextEditSave.Text" xml:space="preserve">
+    <value>Save</value>
+    <comment>The text of the button that saves changes.</comment>
   </data>
 </root>

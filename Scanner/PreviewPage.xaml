@@ -4,11 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)" xmlns:local="using:Scanner"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"  
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
     NavigationCacheMode="Disabled" 
@@ -104,7 +101,7 @@
                         <CompositeTransform/>
                     </FontIcon.RenderTransform>
                 </FontIcon>
-                <TextBlock x:Name="TextBlockPreviewError" x:Uid="TextPreviewError" TextAlignment="Center" MaxWidth="450" Style="{StaticResource SubtitleTextBlockStyle}" Text="An error occurred. Please try again." Opacity="0.0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="TextBlockPreviewError" x:Uid="TextPreviewError" TextAlignment="Center" MaxWidth="450" Style="{StaticResource SubtitleTextBlockStyle}" Opacity="0.0" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock.RenderTransform>
                         <CompositeTransform/>
                     </TextBlock.RenderTransform>
@@ -138,7 +135,7 @@
                             <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
                                 <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
                             </Button>
-                            <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="HeadingPreview" Text="Preview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                            <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="HeadingPreview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
                             <AppBarSeparator VerticalAlignment="Bottom"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" x:Name="TextBlockPreviewHeaderConfig" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" Margin="6,0,0,0" VerticalAlignment="Center" Padding="0,0,0,0"/>

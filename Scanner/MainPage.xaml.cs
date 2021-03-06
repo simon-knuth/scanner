@@ -52,7 +52,7 @@ namespace Scanner
         private double currentTitleBarButtonWidth = 0;
         private DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
         private int[] shareIndexes;
-        private ScopeActions scopeAction;
+        //private ScopeActions scopeAction;
         private UISettings uISettings;
 
 
@@ -287,7 +287,7 @@ namespace Scanner
             if (isDefaultFolder == true || isDefaultFolder == null) FontIconButtonScanFolder.Glyph = glyphButtonRecentsDefault;
             else FontIconButtonScanFolder.Glyph = glyphButtonRecentsCustom;
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
                 // workaround: ProgressRing gets stuck after a page navigation
                 ProgressRingContentPane.IsActive = false;
@@ -571,7 +571,7 @@ namespace Scanner
                 // v1809+
                 TeachingTipDevices.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
+                //TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
                 TeachingTipManageDelete.ActionButtonStyle = RoundedButtonAccentStyle;
@@ -1637,39 +1637,39 @@ namespace Scanner
             Share(ButtonShare);
         }
 
-        private async void TeachingTipScope_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-        {
-            // user wants to apply action for entire document
-            switch (scopeAction)
-            {
-                case ScopeActions.Copy:
-                    try
-                    {
-                        await scanResult.CopyAsync();
-                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => {
-                            TeachingTipScope.IsOpen = false;
-                            StoryboardIconCopyDone1.Begin();
-                        });
-                    }
-                    catch (Exception)
-                    {
-                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                            LocalizedString("ErrorMessageRenameHeading"), LocalizedString("ErrorMessageRenameBody"));
-                    }
-                    break;
-                case ScopeActions.OpenWith:
-                    await scanResult.OpenWithAsync();
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
-                    break;
-                case ScopeActions.Share:
-                    shareIndexes = null;
-                    Share(ButtonShare);
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
-                    break;
-                default:
-                    break;
-            }            
-        }
+        //private async void TeachingTipScope_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        //{
+        //    // user wants to apply action for entire document
+        //    switch (scopeAction)
+        //    {
+        //        case ScopeActions.Copy:
+        //            try
+        //            {
+        //                await scanResult.CopyAsync();
+        //                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => {
+        //                    TeachingTipScope.IsOpen = false;
+        //                    StoryboardIconCopyDone1.Begin();
+        //                });
+        //            }
+        //            catch (Exception)
+        //            {
+        //                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+        //                    LocalizedString("ErrorMessageRenameHeading"), LocalizedString("ErrorMessageRenameBody"));
+        //            }
+        //            break;
+        //        case ScopeActions.OpenWith:
+        //            await scanResult.OpenWithAsync();
+        //            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
+        //            break;
+        //        case ScopeActions.Share:
+        //            shareIndexes = null;
+        //            Share(ButtonShare);
+        //            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipScope.IsOpen = false);
+        //            break;
+        //        default:
+        //            break;
+        //    }            
+        //}
 
         private async void SplitViewLeftPane_PaneClosed(SplitView sender, object args)
         {
@@ -1745,27 +1745,27 @@ namespace Scanner
             catch (Exception) { }
         }
 
-        private async void TeachingTipScope_CloseButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-        {
-            // user wants to apply action for current image
-            switch (scopeAction)
-            {
-                case ScopeActions.Copy:
-                    await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
-                    break;
-                case ScopeActions.OpenWith:
-                    await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
-                    break;
-                case ScopeActions.Share:
-                    shareIndexes = new int[1];
-                    shareIndexes[0] = FlipViewScan.SelectedIndex;
-                    Share(ButtonShare);
-                    break;
-                default:
-                    break;
-            }
-        }
+        //private async void TeachingTipScope_CloseButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        //{
+        //    // user wants to apply action for current image
+        //    switch (scopeAction)
+        //    {
+        //        case ScopeActions.Copy:
+        //            await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
+        //            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+        //            break;
+        //        case ScopeActions.OpenWith:
+        //            await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
+        //            break;
+        //        case ScopeActions.Share:
+        //            shareIndexes = new int[1];
+        //            shareIndexes[0] = FlipViewScan.SelectedIndex;
+        //            Share(ButtonShare);
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         private async void LeftPaneManage_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {

@@ -322,7 +322,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
-                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                                 To="0" Duration="0:0:0.1" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
@@ -330,7 +330,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.2"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionToDraw">
@@ -366,7 +366,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
-                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                                 To="0" Duration="0:0:0.1" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
@@ -374,7 +374,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.2"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarTransitionFromSpecial">
@@ -405,7 +405,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditingSpecial" Storyboard.TargetProperty="Opacity"
-                                 To="0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                                 To="0" Duration="0:0:0.1" BeginTime="0:0:0"/>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                  To="0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
@@ -413,7 +413,7 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
                 <DoubleAnimation Storyboard.TargetName="StackPanelTopToolbarEditing" Storyboard.TargetProperty="Opacity"
-                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.15"/>
+                                 To="1" Duration="0:0:0.1" BeginTime="0:0:0.2"/>
             </Storyboard>
 
             <Storyboard x:Name="StoryboardAppLaunch">
@@ -489,8 +489,8 @@
                                 <Frame x:Name="FrameLeftPaneScanSource" Margin="0,8,0,0">
                                     <StackPanel Orientation="Vertical">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Text="Source" Style="{StaticResource BaseTextBlockStyle}" Margin="0,8,0,3"/>
-                                            <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" VerticalAlignment="Stretch" Padding="0" ToolTipService.ToolTip="Manage scanners" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Height="{Binding ElementName=ComboBoxScanners, Path=Height}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}">
+                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,8,0,3"/>
+                                            <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" VerticalAlignment="Stretch" Padding="0" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Height="{Binding ElementName=ComboBoxScanners, Path=Height}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}">
                                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,3" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
                                             </Button>
                                         </StackPanel>
@@ -508,47 +508,47 @@
                                 <Frame x:Name="FrameLeftPaneScanSourceMode" Margin="0,12,0,0">
                                     <StackPanel Orientation="Vertical">
                                         <Grid>
-                                            <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Automatic configuration" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
-                                            <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                            <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
                                         </Grid>
                                         <Grid>
-                                            <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Flatbed" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
-                                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                            <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
                                         </Grid>
                                         <Grid>
-                                            <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="False" GroupName="RadioButtonGroupSource" Content="Feeder" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
-                                            <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" ToolTipService.ToolTip="Preview supported" Visibility="Collapsed"/>
+                                            <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch" Checked="RadioButtonSourceMode_Checked"/>
+                                            <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
                                         </Grid>
                                     </StackPanel>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed">
                                     <StackPanel x:Name="StackPanelColor" Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsColor" Text="Color mode" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" Content="Color" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" Content="Grayscale" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" Content="Monochrome" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                        <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed">
                                     <StackPanel x:Name="StackPanelResolution" Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsResolution" Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <TextBlock x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind resolutions}" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="{Binding ElementName=RadioButtonSourceFeeder, Path=IsChecked}">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Text="Additional Options" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <CheckBox x:Name="CheckBoxAllPages" x:Uid="OptionScanOptions10Pages" Content="Scan up to 10 pages consecutively" IsChecked="True" IsEnabled="True"/>
-                                        <CheckBox x:Name="CheckBoxDuplex" x:Uid="OptionScanOptionsDuplex" Content="Duplex (front &amp; back)" IsChecked="False" IsEnabled="False"/>
+                                        <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <CheckBox x:Name="CheckBoxAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" IsEnabled="True"/>
+                                        <CheckBox x:Name="CheckBoxDuplex" x:Uid="OptionScanOptionsDuplex" IsChecked="False" IsEnabled="False"/>
                                     </StackPanel>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanFormat" Margin="0,48,0,0">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsFormat" Text="Save as" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
                                     </StackPanel>
                                 </Frame>
@@ -566,19 +566,19 @@
                                         <StackPanel Orientation="Horizontal">
                                             <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
                                             <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
-                                            <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
+                                            <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
                                         </StackPanel>
                                     </Grid>
 
                                     <controlsxaml:SplitButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" Text="Scan" FontWeight="Bold" IsEnabled="True" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScan_Click"/>
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Text="Scan and start fresh" FontWeight="Normal" v1809:CornerRadius="2" Click="ButtonScanFresh_Click">
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="Bold" IsEnabled="True" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScan_Click"/>
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal" v1809:CornerRadius="2" Click="ButtonScanFresh_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" x:Uid="ButtonScanOptionsPreview" Text="Preview" IsEnabled="False" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScanPreview_Click">
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" x:Uid="ButtonScanOptionsPreview" IsEnabled="False" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonScanPreview_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;"/>
                                                 </MenuFlyoutItem.Icon>
@@ -591,13 +591,13 @@
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform/>
                                 </StackPanel.RenderTransform>
-                                <Button x:Name="ButtonLeftPaneSettings" x:Uid="ButtonScanOptionsSettings" ToolTipService.ToolTip="Settings" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneSettings_Click">
+                                <Button x:Name="ButtonLeftPaneSettings" x:Uid="ButtonScanOptionsSettings" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneSettings_Click">
                                     <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
                                 </Button>
-                                <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanOptionsSaveLocation" ToolTipService.ToolTip="Open current save location" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">
+                                <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanOptionsSaveLocation" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">
                                     <FontIcon x:Name="FontIconButtonScanFolder" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
                                 </Button>
-                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" ToolTipService.ToolTip="Cancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
+                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
                                 </Button>
                             </StackPanel>
@@ -687,26 +687,26 @@
                             <ScrollViewer Grid.Row="0" VerticalAlignment="Bottom" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Frame>
-                                        <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageSelect" x:Uid="ButtonManageSelect" Click="ButtonLeftPaneManageSelect_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" ToolTipService.ToolTip="Select">
+                                        <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageSelect" x:Uid="ButtonManageSelect" Click="ButtonLeftPaneManageSelect_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}">
                                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE762;" FontSize="16"/>
                                         </InkToolbarCustomPenButton>
                                     </Frame>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Rotate selection" RightTapped="ButtonLeftPaneManageRotate_RightTapped">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" RightTapped="ButtonLeftPaneManageRotate_RightTapped">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="ButtonManageRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="ButtonManageRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="ButtonManageRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="ButtonManageRotate90" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="ButtonManageRotate180" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="ButtonManageRotate270" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" ToolTipService.ToolTip="Delete selection" Click="ButtonLeftPaneManageDelete_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageDelete" x:Uid="ButtonManageDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonCenterStyle}" Click="ButtonLeftPaneManageDelete_Click">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageCopy" x:Uid="ButtonManageCopy" Click="ButtonLeftPaneManageCopy_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Copy selection to clipboard">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageCopy" x:Uid="ButtonManageCopy" Click="ButtonLeftPaneManageCopy_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconLeftPaneManageCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                 <FontIcon.RenderTransform>
@@ -720,7 +720,7 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageShare" x:Uid="ButtonManageShare" Click="ButtonLeftPaneManageShare_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Share selection">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageShare" x:Uid="ButtonManageShare" Click="ButtonLeftPaneManageShare_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                 </StackPanel>
@@ -730,7 +730,7 @@
 
                     <StackPanel x:Name="LeftPaneManageInitialText" Orientation="Vertical" Opacity="0.75" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
-                        <TextBlock x:Uid="TextManageInitialPlaceholder" Text="Scanned pages will appear here" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
                     </StackPanel>
                 </RelativePanel>
             </FlipView>
@@ -757,9 +757,9 @@
                 </ScrollViewer>
 
                 <StackPanel x:Name="StackPanelContentPaneText" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
-                    <TextBlock x:Uid="HeadingScannerSelectionHint" Text="Select a scanner" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Uid="HeadingScannerSelectionHint" Style="{ThemeResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,12" TextWrapping="WrapWholeWords"/>
                     <TextBlock x:Name="TextBlockScannerSelectionHintBody" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.75" TextAlignment="Center">
-                            <Span xml:space="preserve"><Run x:Uid="TextScannerSelectionHint1">If your scanner doesn't show up within three minutes, ensure that it has been added in the </Run><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" Click="HyperlinkSettings_Click"><Run x:Uid="HyperlinkScannerSelectionHintSettings" xml:space="preserve">settings app</Run><Run FontFamily="Segoe MDL2 Assets" Text=" &#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="TextScannerSelectionHint2"> and appears as online there.</Run></Span>
+                            <Span xml:space="preserve"><Run x:Uid="TextScannerSelectionHint1"/><Hyperlink UnderlineStyle="None" x:Name="HyperlinkSettings" Click="HyperlinkSettings_Click"><Run x:Uid="HyperlinkScannerSelectionHintSettings" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text=" &#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="TextScannerSelectionHint2"/></Span>
                     </TextBlock>
                 </StackPanel>
 
@@ -816,7 +816,7 @@
                                 <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                             </StackPanel>
                             <RelativePanel VerticalAlignment="Bottom">
-                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Scan" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                                 <StackPanel x:Name="StackPanelTopToolbarEditing" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
@@ -824,25 +824,25 @@
                                         <TranslateTransform X="0"/>
                                     </StackPanel.RenderTransform>
 
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonEditCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Crop" Click="ButtonCrop_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonEditCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" Click="ButtonCrop_Click">
                                         <FontIcon x:Name="FontIconCrop" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonEditRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Rotate" Click="ButtonRotate_Click" RightTapped="ButtonRotate_RightTapped">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonEditRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" Click="ButtonRotate_Click" RightTapped="ButtonRotate_RightTapped">
                                         <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="ButtonEditRotate90" Text="Rotate 90°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="ButtonEditRotate180" Text="Rotate 180°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="ButtonEditRotate270" Text="Rotate 270°" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="ButtonEditRotate90" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="ButtonEditRotate180" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="ButtonEditRotate270" v1809:CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonEditDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Draw" Click="ButtonDraw_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDraw" x:Uid="ButtonEditDraw" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" Click="ButtonDraw_Click">
                                         <FontIcon x:Name="FontIconDraw" FontFamily="Segoe MDL2 Assets" Glyph="&#xEDC6;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator x:Name="ToolbarSeparator1"/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonEditRename" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" ToolTipService.ToolTip="Rename" Click="ButtonRename_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRename" x:Uid="ButtonEditRename" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" Click="ButtonRename_Click">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconRename" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AC;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                 <FontIcon.RenderTransform>
@@ -856,11 +856,11 @@
                                             </FontIcon>
                                         </Grid>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonEditDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" ToolTipService.ToolTip="Delete" Click="ButtonDelete_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonDelete" x:Uid="ButtonEditDelete" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" Click="ButtonDelete_Click">
                                         <FontIcon x:Name="FontIconDelete" FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5"/>
                                     </InkToolbarCustomPenButton>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonEditCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Copy (Ctrl+C)" Click="ButtonCopy_Click">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCopy" x:Uid="ButtonEditCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" Click="ButtonCopy_Click">
                                         <Grid Padding="0" Margin="0">
                                             <FontIcon x:Name="FontIconCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                 <FontIcon.RenderTransform>
@@ -896,30 +896,30 @@
                                         <InkToolbarCustomPenButton x:Name="ButtonCropAspectRatio" x:Uid="ButtonEditCropAspectRatio" Style="{StaticResource CustomInkToolbarCustomPenButtonStyle}" Click="ButtonCropAspectRatio_Click">
                                             <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                                                 <FontIcon x:Name="FontIconCropAspectRatio" FontFamily="Segoe MDL2 Assets" Glyph="&#xE799;" FontSize="16"/>
-                                                <TextBlock x:Name="TextBlockCropAspectRatio" x:Uid="TextEditCropAspectRatio" Text="Aspect Ratio" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
+                                                <TextBlock x:Name="TextBlockCropAspectRatio" x:Uid="TextEditCropAspectRatio" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
                                             </StackPanel>
 
                                             <FlyoutBase.AttachedFlyout>
                                                 <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" Text="Custom" IsChecked="True" FontWeight="Medium" v1809:CornerRadius="2" Click="SetCustomAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Text="Square" Tag="1" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem Text="3:2" Tag="0.6666" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem Text="4:3" Tag="0.7500" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Text="Flip aspect ratio" Icon="Orientation" v1809:CornerRadius="2" Click="FlipAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" IsChecked="True" FontWeight="Medium" v1809:CornerRadius="2" Click="SetCustomAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" v1809:CornerRadius="2" Click="FlipAspectRatio"/>
                                                     <MenuFlyoutSeparator/>
-                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" Text="International" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Text="DIN A" Tag="1.4142" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
                                                     <MenuFlyoutSeparator/>
-                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" Text="North American" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Text="ANSI A - Letter" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Text="ANSI B - Ledger/Tabloid" Tag="1.5455" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Text="ANSI C - Broadsheet" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
                                                     <MenuFlyoutSeparator/>
-                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" Text="Chinese" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Text="Kai 4" Tag="1.3894" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Text="Kai 8" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Text="Kai 16" Tag="1.4054" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Text="Kai 32" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="Medium" v1809:CornerRadius="2"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230" v1809:CornerRadius="2" Click="SetFixedAspectRatio"/>
                                                 </MenuFlyout>
                                             </FlyoutBase.AttachedFlyout>
                                         </InkToolbarCustomPenButton>
@@ -929,19 +929,19 @@
                                         <InkToolbar x:Name="InkToolbarDraw" TargetInkCanvas="{Binding ElementName=InkCanvasEditDraw}" HorizontalAlignment="Right" Visibility="Visible" InitialControls="PensOnly">
                                             <InkToolbarEraserButton/>
                                         </InkToolbar>
-                                        <InkToolbarCustomPenButton x:Name="ButtonDrawTouch" x:Uid="ButtonEditDrawTouch" Visibility="Collapsed" ToolTipService.ToolTip="Draw with touch" Click="ButtonDrawTouch_Click">
+                                        <InkToolbarCustomPenButton x:Name="ButtonDrawTouch" x:Uid="ButtonEditDrawTouch" Visibility="Collapsed" Click="ButtonDrawTouch_Click">
                                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED5F;" FontSize="16"/>
                                         </InkToolbarCustomPenButton>
                                         <Custom:ToolbarSeparator/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <InkToolbarCustomPenButton x:Name="ButtonSave" x:Uid="ButtonEditSave" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" ToolTipService.ToolTip="Save" Click="ButtonSave_Click">
+                                        <InkToolbarCustomPenButton x:Name="ButtonSave" x:Uid="ButtonEditSave" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" Click="ButtonSave_Click">
                                             <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74E;" FontSize="16"/>
-                                                <TextBlock x:Uid="TextEditSave" Text="Save" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
+                                                <TextBlock x:Uid="TextEditSave" Style="{ThemeResource BodyTextBlockStyle}" Margin="10,0,0,2" VerticalAlignment="Center"/>
                                             </StackPanel>
                                         </InkToolbarCustomPenButton>
-                                        <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonEditSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" ToolTipService.ToolTip="Save as copy" Click="ButtonSaveCopy_Click">
+                                        <InkToolbarCustomPenButton x:Name="ButtonSaveCopy" x:Uid="ButtonEditSaveCopy" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" Click="ButtonSaveCopy_Click">
                                             <Grid Padding="0" Margin="0">
                                                 <FontIcon x:Name="FontIconSaveCopy" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                                     <FontIcon.RenderTransform>
@@ -955,12 +955,12 @@
                                                 </FontIcon>
                                             </Grid>
                                         </InkToolbarCustomPenButton>
-                                        <InkToolbarCustomPenButton x:Name="ButtonDiscard" x:Uid="ButtonEditDiscard" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" ToolTipService.ToolTip="Discard changes" Click="ButtonDiscard_Click">
+                                        <InkToolbarCustomPenButton x:Name="ButtonDiscard" x:Uid="ButtonEditDiscard" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorRightStyle}" Click="ButtonDiscard_Click">
                                             <FontIcon x:Name="FontIconDiscard" FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" FontSize="16"/>
                                         </InkToolbarCustomPenButton>
                                     </StackPanel>
                                 </StackPanel>
-                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" ToolTipService.ToolTip="Manage scan" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
+                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                             </RelativePanel>
@@ -987,9 +987,6 @@
             x:Name="TeachingTipDevices"
             x:Uid="DialogDevices"
             PlacementMargin="4"
-            Title="Select a scanner"
-            Subtitle="If your scanner doesn't show up within three minutes, you might need to add it in the settings app first."
-            ActionButtonContent="Launch settings"
             IsLightDismissEnabled="True"
             Target="{Binding ElementName=ButtonDevices}"
             PreferredPlacement="BottomRight" 
@@ -1004,44 +1001,36 @@
             x:Name="TeachingTipFeedback"
             x:Uid="DialogFeedback"
             IsLightDismissEnabled="False"
-            PlacementMargin="4"
-            Title="Are you enjoying the app?"
-            Subtitle="We would love to hear from you:">
+            PlacementMargin="4">
             <controlsxaml:TeachingTip.IconSource>
                 <controlsxaml:FontIconSource Glyph="&#xEB52;"/>
             </controlsxaml:TeachingTip.IconSource>
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
-                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve">You can use the </Run>
-                    <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve">Feedback Hub</Run><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink>
-                    <Run x:Uid="DialogFeedbackText2" xml:space="preserve"> to request new features, report bugs and vote on suggestions or </Run>
-                    <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve">rate Scanner in the Microsoft Store</Run></Hyperlink>
-                    <Run x:Uid="DialogFeedbackText3" xml:space="preserve"> to help others decide whether this is the right app for them.</Run>
+                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/>
+                    <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink>
+                    <Run x:Uid="DialogFeedbackText2" xml:space="preserve"/>
+                    <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink>
+                    <Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
                 </Span>
             </TextBlock>
         </controlsxaml:TeachingTip>
 
-        <controlsxaml:TeachingTip
+        <!--<controlsxaml:TeachingTip
             x:Name="TeachingTipScope"
             x:Uid="DialogScope"
             PlacementMargin="4"
             PreferredPlacement="BottomLeft"
             IsLightDismissEnabled="True"
-            ActionButtonContent="Entire document"
-            CloseButtonContent="Just this page"
             ActionButtonClick="TeachingTipScope_ActionButtonClick"
-            CloseButtonClick="TeachingTipScope_CloseButtonClick"/>
+            CloseButtonClick="TeachingTipScope_CloseButtonClick"/>-->
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipRename"
             x:Uid="DialogRename"
             PlacementMargin="4"
-            Title="Rename"
-            Subtitle="Enter a new name for the file:"
-            ActionButtonContent="Confirm"
             ActionButtonClick="TeachingTipRename_ActionButtonClick"
-            CloseButtonContent="Cancel"
             Closed="TeachingTipRename_Closed"
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom" 
@@ -1053,11 +1042,7 @@
             x:Name="TeachingTipDelete"
             x:Uid="DialogDelete"
             PlacementMargin="4"
-            Title="Are you sure?"
-            Subtitle="The page will be deleted permanently."
-            ActionButtonContent="Delete"
             ActionButtonClick="TeachingTipDelete_ActionButtonClick"
-            CloseButtonContent="Cancel"
             Closed="TeachingTipDelete_Closed"
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom" 
@@ -1067,11 +1052,7 @@
             x:Name="TeachingTipManageDelete"
             x:Uid="DialogDeleteSelect"
             PlacementMargin="4"
-            Title="Are you sure?"
-            Subtitle="The selected pages will be deleted permanently."
-            ActionButtonContent="Delete"
             ActionButtonClick="TeachingTipManageDelete_ActionButtonClick"
-            CloseButtonContent="Cancel"
             Closed="TeachingTipManageDelete_Closed"
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom" 
@@ -1082,9 +1063,7 @@
             x:Uid="DialogTutorialManage"
             PlacementMargin="4"
             IsLightDismissEnabled="False"
-            Target="{Binding ElementName=ButtonManage}"
-            Title="Your pages are here"
-            Subtitle="The app collects all the pages you scan, as long as you don't change the file format or &quot;start fresh&quot; when scanning. If you are creating a PDF file, you can even reorder the pages.&#10;Give it a try!">
+            Target="{Binding ElementName=ButtonManage}">
             <controlsxaml:TeachingTip.HeroContent>
                 <Frame v1809:CornerRadius="2" Padding="-50" Height="150">
                     <controlsxaml:AnimatedVisualPlayer PlaybackRate="0.4">
@@ -1101,8 +1080,6 @@
             IsLightDismissEnabled="False"
             PreferredPlacement="BottomLeft"
             Target="{Binding ElementName=ButtonLeftPaneScanFolder}"
-            Title="Save location"
-            Subtitle="Scans are saved to the default save location. You can select another folder in the settings."
             ActionButtonClick="TeachingTipTutorialSaveLocation_ActionButtonClick">
         </controlsxaml:TeachingTip>
 
@@ -1112,23 +1089,20 @@
             PlacementMargin="4"
             IsLightDismissEnabled="False"
             PreferredPlacement="Bottom"
-            Title="App updated"
-            Subtitle="You can take a look at what's new and improved in the changelog (may not be available in every language)."
-            ActionButtonContent="Changelog"
             ActionButtonClick="TeachingTipUpdated_ActionButtonClick">
             <controlsxaml:TeachingTip.IconSource>
                 <controlsxaml:FontIconSource Glyph="&#xF133;"/>
             </controlsxaml:TeachingTip.IconSource>
         </controlsxaml:TeachingTip>
 
-        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog" CloseButtonText="Close">
+        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition IsStaggeringEnabled="True"/>
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <TextBlock x:Uid="HeadingDialogChangelog" Text="What's new?" FontWeight="Bold" FontSize="24"/>
+                <TextBlock x:Uid="HeadingDialogChangelog" FontWeight="Bold" FontSize="24"/>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,0">
                     <Grid Margin="0,18,0,0">
                         <Grid.ChildrenTransitions>
@@ -1147,57 +1121,57 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section1" Text="A fresh new look" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2.0.0.0Section1" Text="The interface has been completely redesigned." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,20">
+                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_0_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section2" Text="Full multi-page support" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2.0.0.0Section2" Text="Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,20">
+                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_0_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,24">
-                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section3" Text="Duplex scanning" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2.0.0.0Section43" Text="Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
+                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_0_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
 
-                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,0">
-                            <TextBlock x:Uid="HeadingChangelog2.0.0.0Section4" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2.0.0.0Section4" Text="Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_0_0_0Section4" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" CloseButtonText="Done" Closed="ContentDialogPrivacySetup_Closed" v1809:CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" Closed="ContentDialogPrivacySetup_Closed" v1809:CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition IsStaggeringEnabled="True"/>
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <TextBlock x:Uid="HeadingDialogPrivacySetup" Text="The choice is yours." FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
-                <TextBlock x:Uid="TextDialogPrivacySetup" Text="The following settings require your attention." TextWrapping="WrapWholeWords" Margin="0,0,0,24"/>
+                <TextBlock x:Uid="HeadingDialogPrivacySetup" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
+                <TextBlock x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords" Margin="0,0,0,24"/>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12">
                     <StackPanel Orientation="Vertical">
                         <CheckBox x:Name="CheckBoxErrorStatistics" Margin="1,0,0,0">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock x:Uid="OptionSettingsErrorStatistics" Text="Donate error reports und usage statistics" TextWrapping="WrapWholeWords"/>
-                                <TextBlock x:Uid="TextSettingsErrorStatistics" Text="This allows us to investigate app crashes and identify which features are most valuable to our users. Rest assured that your scans are never included in these reports." Margin="0,6,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                                <TextBlock x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="0,6,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
                             </StackPanel>
                         </CheckBox>
                     </StackPanel>
                 </ScrollViewer>
-                <TextBlock x:Uid="TextDialogPrivacySetupFooter" Text="Just head to the app's settings, if you ever change your mind." TextWrapping="WrapWholeWords" Margin="0,18,0,0"/>
+                <TextBlock x:Uid="TextDialogPrivacySetupFooter" TextWrapping="WrapWholeWords" Margin="0,18,0,0"/>
                 <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" Text="Privacy Policy"/>
+                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
