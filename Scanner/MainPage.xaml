@@ -47,14 +47,14 @@
 
             <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
             <Storyboard x:Name="StoryboardChangeButtonsBeginScan">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
-                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="IsEnabled">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>False</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="IsEnabled">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
-                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                        <DiscreteObjectKeyFrame.Value>True</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
@@ -84,14 +84,14 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardChangeButtonsEndScan">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneSettings" Storyboard.TargetProperty="IsEnabled">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
-                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                        <DiscreteObjectKeyFrame.Value>True</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="IsEnabled">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
-                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                        <DiscreteObjectKeyFrame.Value>False</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
@@ -605,7 +605,7 @@
                     </Grid>
                 </Grid>
 
-                <!-- Manage Scan -->
+                <!-- Manage Pages -->
                 <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Grid>
@@ -734,7 +734,6 @@
                     </StackPanel>
                 </RelativePanel>
             </FlipView>
-            
         </Grid>
 
         <!-- Right Pane -->
@@ -975,9 +974,9 @@
                     </SplitView.Pane>
                 </SplitView>
 
-                <SplitView x:Name="SplitViewContentPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewContentPane_PaneClosed">
+                <SplitView x:Name="SplitViewRightPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewRightPane_PaneClosed">
                     <SplitView.Pane>
-                        <Grid x:Name="SplitViewContentPaneContent" Background="Transparent"/>
+                        <Grid x:Name="SplitViewRightPaneContent" Background="Transparent"/>
                     </SplitView.Pane>
                 </SplitView>
             </Grid>
@@ -1008,11 +1007,7 @@
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
-                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/>
-                    <Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink>
-                    <Run x:Uid="DialogFeedbackText2" xml:space="preserve"/>
-                    <Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink>
-                    <Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
+                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="DialogFeedbackText2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink><Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
                 </Span>
             </TextBlock>
         </controlsxaml:TeachingTip>
@@ -1185,7 +1180,7 @@
                     <TextBlock Text="Debug Menu" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
                 <ScrollViewer VerticalScrollMode="Auto" MaxHeight="300" Padding="0,0,24,0">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Padding="0,0,0,24">
                         <TextBlock Text="Scan from image files" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,0,0,16"/>
                         <TextBlock Text="Target format" Margin="0,0,0,6"/>
                         <StackPanel Orientation="Horizontal">
@@ -1223,6 +1218,17 @@
                             </StackPanel>
                         </StackPanel>
                         <Button x:Name="ButtonDebugAddScanner" Content="Add to scanner list" Click="ButtonDebugAddScanner_Click"/>
+
+                        <TextBlock Text="Display contextual dialog" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="ButtonDebugShowChangelog" Content="Changelog" Click="ButtonDebugShowChangelog_Click"/>
+                            <Button x:Name="ButtonDebugShowPrivacySetup" Content="Privacy setup" Margin="8,0,0,0" Click="ButtonDebugShowPrivacySetup_Click"/>
+                            <Button x:Name="ButtonDebugShowFeedback" Content="Feedback" Margin="8,0,0,0" Click="ButtonDebugShowFeedback_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <Button x:Name="ButtonDebugShowTutorialPageManagement" Content="Tutorial page management" Click="ButtonDebugShowTutorialPageManagement_Click"/>
+                            <Button x:Name="ButtonDebugShowTutorialSaveLocation" Content="Tutorial save location" Margin="8,0,0,0" Click="ButtonDebugShowTutorialSaveLocation_Click"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </StackPanel>

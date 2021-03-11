@@ -99,16 +99,16 @@
                             <TextBlock x:Uid="HeadingSettingsHelpSetup" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
                         </StackPanel>
                         <HyperlinkButton NavigateUri="https://support.microsoft.com/help/14088">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="TextBlockSettingsHelpInstallScanner" x:Uid="HyperlinkSettingsHelpSetupInstallScanner"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsHelpInstallScanner, Path=FontSize}"/>
-                            </StackPanel>
+                            <TextBlock TextWrapping="WrapWholeWords">
+                                <Run x:Uid="HyperlinkSettingsHelpSetupInstallScanner"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B;"/>
+                            </TextBlock>
                         </HyperlinkButton>
                         <HyperlinkButton x:Name="HyperlinkButtonSettingsHelpScannerSettings" Click="HyperlinkButtonSettingsHelpScannerSettings_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="TextSettingsHelpSetupScannerSettings" x:Uid="HyperlinkSettingsHelpSetupScannerSettings"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8AD;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="12"/>
-                            </StackPanel>
+                            <TextBlock TextWrapping="WrapWholeWords">
+                                <Span>
+                                    <Run x:Uid="HyperlinkSettingsHelpSetupScannerSettings"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD;" FontSize="12"/>
+                                </Span>
+                            </TextBlock>
                         </HyperlinkButton>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
@@ -139,7 +139,7 @@
                                 <Run x:Uid="TextSettingsTranslations1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html"><Run x:Uid="HyperlinkSettingsTranslations"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsTranslations2" xml:space="preserve"/>
                             </Span>
                         </TextBlock>
-                        <HyperlinkButton Visibility="Collapsed" x:Name="HyperlinkButtonSettingsTranslationsContributors" Click="HyperlinkButtonSettingsTranslationsContributors_Click">
+                        <HyperlinkButton x:Name="HyperlinkButtonSettingsTranslationsContributors" Click="HyperlinkButtonSettingsTranslationsContributors_Click">
                             <TextBlock x:Uid="HyperlinkSettingsTranslationsContributors" />
                         </HyperlinkButton>
 
@@ -294,8 +294,12 @@
 
         <ContentDialog x:Name="ContentDialogTranslationsContributors" x:Uid="DialogSettingsTranslationsContributors" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
-                <TextBlock x:Uid="HeadingDialogTranslationsContributors" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB52; " HorizontalAlignment="Left" FontSize="24" Margin="0,0,8,0"/>
+                    <TextBlock x:Uid="HeadingDialogTranslationsContributors" FontWeight="Bold" FontSize="24"/>
+                </StackPanel>
                 <TextBlock>
+                    <Run FontWeight="Bold">Damian Czupryn</Run> - Polish 
                 </TextBlock>
             </StackPanel>
             

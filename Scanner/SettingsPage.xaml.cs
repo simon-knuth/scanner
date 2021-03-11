@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -29,8 +28,11 @@ namespace Scanner
         {
             this.InitializeComponent();
 
+            log.Information("Navigated to SettingsPage.");
+
             // register event listener
-            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
+            {
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
         }
@@ -57,7 +59,8 @@ namespace Scanner
             if (scanFolder != null)
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
-            } else
+            }
+            else
             {
                 await ResetScanLocation();
             }
@@ -113,6 +116,7 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
+            log.Information("Requesting app restart.");
             await CoreApplication.RequestRestartAsync("");
         }
 
@@ -134,6 +138,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
+                log.Error(exc, "Picking a new save location failed.");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
                     LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
                 return;
@@ -148,6 +153,7 @@ namespace Scanner
             }
 
             if (await IsDefaultScanFolderSet() != true) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonResetLocation.IsEnabled = true);
+            log.Information("Successfully selected new save location.");
         }
 
 
@@ -166,7 +172,7 @@ namespace Scanner
         {
             try
             {
-                await ResetScanFolder();
+                await ResetScanFolderAsync();
             }
             catch (UnauthorizedAccessException)
             {
@@ -185,7 +191,7 @@ namespace Scanner
             {
                 TextBlockSaveLocation.Text = scanFolder.Path;
                 ButtonResetLocation.IsEnabled = false;
-            });    
+            });
         }
 
 
@@ -195,16 +201,8 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            try
-            {
-                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-                await launcher.LaunchAsync();
-            }
-            catch (Exception exc)
-            {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageFeedbackHubHeading"),
-                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message));
-            }
+            log.Information("Launching Feedback Hub.");
+            await LaunchFeedbackHub();
         }
 
 
@@ -314,7 +312,6 @@ namespace Scanner
 
             // flush log
             Log.CloseAndFlush();
-            await InitializeSerilogAsync();
 
             // populate file list
             StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
@@ -325,16 +322,17 @@ namespace Scanner
             {
                 sortedFiles.Add(await LogFile.CreateLogFile(file));
             }
-            sortedFiles.Sort(delegate (LogFile x, LogFile y) {
+            sortedFiles.Sort(delegate (LogFile x, LogFile y)
+            {
                 return DateTimeOffset.Compare(x.LastModified, y.LastModified);
             });
             sortedFiles.Reverse();
 
             ObservableCollection<LogFile> logFilesExport = new ObservableCollection<LogFile>(sortedFiles);
 
-            
+            await InitializeSerilogAsync();
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => 
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ItemsRepeaterExportLog.ItemsSource = logFilesExport;
                 ProgressBarExportLog.Visibility = Visibility.Collapsed;
@@ -345,7 +343,7 @@ namespace Scanner
         private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            
+
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
             savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });

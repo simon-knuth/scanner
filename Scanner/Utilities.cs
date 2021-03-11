@@ -1,34 +1,31 @@
-﻿using Microsoft.Graphics.Canvas;
+﻿using Microsoft.AppCenter;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Serilog;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources;
+using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using Windows.Services.Store;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml;
-
 using static Enums;
 using static Globals;
-using Windows.Foundation.Collections;
-using Windows.Services.Store;
-using System.Collections.Generic;
-using Windows.Devices.Scanners;
-using Windows.Foundation;
-using Microsoft.AppCenter;
-using Serilog;
 
 static class Utilities
 {
@@ -46,10 +43,11 @@ static class Utilities
     /// </returns>
     public static ComboBoxItem CreateComboBoxItem(string content, object tag)
     {
-        ComboBoxItem item = new ComboBoxItem();
-
-        item.Content = content;
-        item.Tag = tag;
+        ComboBoxItem item = new ComboBoxItem
+        {
+            Content = content,
+            Tag = tag
+        };
 
         if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
         {
@@ -259,18 +257,20 @@ static class Utilities
     /// <summary>
     ///     Loads the <see cref="scanFolder"/> from the <see cref="futureAccessList"/>.
     /// </summary>
-    public static async Task LoadScanFolder()
+    public static async Task LoadScanFolderAsync()
     {
         StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
 
         if (futureAccessList.Entries.Count != 0)
         {
             try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
-            catch (Exception)
+            catch (Exception exc)
             {
+                log.Error(exc, "Loading scanFolder from futureAccessList failed.");
                 try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists); }
-                catch (Exception)
+                catch (Exception exc2)
                 {
+                    log.Error(exc2, "Creating a new scanFolder in PicturesLibrary failed as well.");
                     ShowMessageDialog(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
                 }
                 futureAccessList.AddOrReplace("scanFolder", scanFolder);
@@ -283,13 +283,15 @@ static class Utilities
             {
                 scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException exc)
             {
+                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed. (Unauthorized)");
                 ShowMessageDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                 return;
             }
             catch (Exception exc)
             {
+                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed.");
                 ShowMessageDialog(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                 return;
             }
@@ -365,7 +367,7 @@ static class Utilities
         string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         if (localSettingsContainer.Values["lastKnownVersion"] != null)
         {
-            string lastKnownVersionNumber = (string) localSettingsContainer.Values["lastKnownVersion"];
+            string lastKnownVersionNumber = (string)localSettingsContainer.Values["lastKnownVersion"];
 
             if (currentVersionNumber != lastKnownVersionNumber) isFirstAppLaunchWithThisVersion = true;
             else isFirstAppLaunchWithThisVersion = false;
@@ -380,7 +382,7 @@ static class Utilities
 
         if (localSettingsContainer.Values["scanNumber"] != null)
         {
-            scanNumber = (int) localSettingsContainer.Values["scanNumber"];
+            scanNumber = (int)localSettingsContainer.Values["scanNumber"];
         }
         else
         {
@@ -406,6 +408,10 @@ static class Utilities
         {
             manageTutorialAlreadyShown = false;
         }
+
+        log.Information("Settings loaded: [settingAppTheme={SettingAppTheme}|settingAppendTime={SettingAppendTime}|settingNotificationScanComplete={SettingNotificationScanComplete}|settingErrorStatistics={SettingErrorStatistics}" +
+            "|isFirstAppLaunchWithThisVersion={IsFirstAppLaunchWithThisVersion}|scanNumber={ScanNumber}|lastTouchDrawState={LastTouchDrawState}|manageTutorialAlreadyShown={ManageTutorialAlreadyShown}]",
+            settingAppTheme, settingAppendTime, settingNotificationScanComplete, settingErrorStatistics, isFirstAppLaunchWithThisVersion, scanNumber, lastTouchDrawState, manageTutorialAlreadyShown);
     }
 
 
@@ -416,7 +422,8 @@ static class Utilities
     /// <returns>The localized string.</returns>
     public static string LocalizedString(string resource)
     {
-        return ResourceLoader.GetForCurrentView().GetString(resource);
+        if (CoreWindow.GetForCurrentThread() != null) return ResourceLoader.GetForCurrentView().GetString(resource);
+        else return "{~STRING~}";
     }
 
 
@@ -429,40 +436,6 @@ static class Utilities
     {
         var resources = new ResourceLoader("Secrets");
         return resources.GetString(secret);
-    }
-
-
-    /// <summary>
-    ///     Locks/disables all items of the given CommandBar, except for one.
-    /// </summary>
-    /// <param name="commandBar">The CommandBar of which the items shall be disabled.</param>
-    /// <param name="except">The control that shall not be disabled.</param>
-    public static void LockCommandBar(CommandBar commandBar, Control except)
-    {
-        if (except == null)
-        {
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                item.IsEnabled = false;
-            }
-        } else
-        {
-            foreach (Control item in commandBar.PrimaryCommands)
-            {
-                if (item != except) item.IsEnabled = false;
-            }
-        }
-        if (commandBar.Content != null) ((Control)commandBar.Content).IsEnabled = false;
-    }
-
-
-    /// <summary>
-    ///     Locks/disables all items of the given <paramref name="commandBar"/>.
-    /// </summary>
-    /// <param name="commandBar">The <see cref="CommandBar"/> of which the items shall be disabled.</param>
-    public static void LockCommandBar(CommandBar commandBar)
-    {
-        LockCommandBar(commandBar, null);
     }
 
 
@@ -480,7 +453,8 @@ static class Utilities
         {
             name = name.Substring(0, name.LastIndexOf(" ("));
             return name + extension;
-        } else
+        }
+        else
         {
             return input;
         }
@@ -495,7 +469,7 @@ static class Utilities
     /// </remarks>
     /// <exception cref="UnauthorizedAccessException">Access to the Pictures Library has been denied.</exception>
     /// <exception cref="Exception">Remaining errors</exception>
-    public static async Task ResetScanFolder()
+    public static async Task ResetScanFolderAsync()
     {
         StorageFolder folder;
         try
@@ -504,15 +478,18 @@ static class Utilities
         }
         catch (UnauthorizedAccessException exc)
         {
-            throw exc;
+            log.Error(exc, "Resetting the scan folder failed. (Unauthorized)");
+            throw;
         }
         catch (Exception exc)
         {
-            throw exc;
+            log.Error(exc, "Resetting the scan folder failed.");
+            throw;
         }
 
         scanFolder = folder;
         StorageApplicationPermissions.FutureAccessList.AddOrReplace("scanFolder", scanFolder);
+        log.Information("Resetting scan folder successful.");
     }
 
 
@@ -557,8 +534,10 @@ static class Utilities
             Visual = visual,
         };
 
-        var toast = new ToastNotification(toastContent.GetXml());
-        toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
+        var toast = new ToastNotification(toastContent.GetXml())
+        {
+            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
+        };
 
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
@@ -599,8 +578,10 @@ static class Utilities
             Visual = visual,
         };
 
-        var toast = new ToastNotification(toastContent.GetXml());
-        toast.ExpirationTime = DateTime.Now.AddMinutes(expirationTime);
+        var toast = new ToastNotification(toastContent.GetXml())
+        {
+            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
+        };
 
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
@@ -615,35 +596,6 @@ static class Utilities
     {
         MessageDialog messageDialog = new MessageDialog(message, title);
         await messageDialog.ShowAsync();
-    }
-
-
-    /// <summary>
-    ///     Unlocks/enables all items of the given <paramref name="commandBar"/>, <paramref name="except"/> for one.
-    /// </summary>
-    /// <param name="commandBar">The <see cref="CommandBar"/> of which the items shall be enabled.</param>
-    /// <param name="except">The control that shall not be enabled.</param>
-    public static void UnlockCommandBar(CommandBar commandBar, Control except)
-    {
-        if (except == null)
-        {
-            foreach (Control item in commandBar.PrimaryCommands) item.IsEnabled = true;
-        }
-        else
-        {
-            foreach (Control item in commandBar.PrimaryCommands) if (item != except) item.IsEnabled = true;
-        }
-        if (commandBar.Content != null) ((Control)commandBar.Content).IsEnabled = true;
-    }
-
-
-    /// <summary>
-    ///     Unlocks/enables all items of the given CommandBar.
-    /// </summary>
-    /// <param name="commandBar">The CommandBar of which the items shall be enabled.</param>
-    public static void UnlockCommandBar(CommandBar commandBar)
-    {
-        UnlockCommandBar(commandBar, null);
     }
 
 
@@ -664,7 +616,8 @@ static class Utilities
                 // Light mode is active
                 applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
             }
-        } else
+        }
+        else
         {
             if (settingAppTheme == Theme.light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
             else applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
@@ -677,7 +630,7 @@ static class Utilities
     /// </summary>
     public static void SaveSettings()
     {
-        localSettingsContainer.Values["settingAppTheme"] = (int) settingAppTheme;
+        localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
         localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
         localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
@@ -781,7 +734,7 @@ static class Utilities
             case ".oxps":
                 return SupportedFormat.OpenXPS;
 
-            default: 
+            default:
                 return null;
         }
     }
@@ -791,11 +744,13 @@ static class Utilities
     {
         try
         {
+            log.Information("Displaying rating dialog.");
             StoreContext storeContext = StoreContext.GetDefault();
             await storeContext.RequestRateAndReviewAppAsync();
         }
-        catch (Exception) 
+        catch (Exception exc)
         {
+            log.Error(exc, "Displaying the rating dialog failed.");
             try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
         }
     }
@@ -831,18 +786,18 @@ static class Utilities
     ///     Deletes all files from temporary folder. Creates the following subfolders, if necessary:
     ///         - conversion
     /// </summary>
-    public static async Task InitializeTempFolder()
+    public static async Task InitializeTempFolderAsync()
     {
         folderTemp = ApplicationData.Current.TemporaryFolder;
-        
+
         IReadOnlyList<StorageFile> files = await folderTemp.GetFilesAsync();
         foreach (StorageFile file in files)
         {
             await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
 
-        try 
-        { 
+        try
+        {
             folderConversion = await folderTemp.CreateFolderAsync("conversion", CreationCollisionOption.ReplaceExisting);
         }
         catch (Exception) { throw; }
@@ -852,6 +807,8 @@ static class Utilities
             folderWithoutRotation = await folderTemp.CreateFolderAsync("withoutRotation", CreationCollisionOption.ReplaceExisting);
         }
         catch (Exception) { throw; }
+
+        log.Information("Initialized temp folder");
     }
 
 
@@ -865,7 +822,8 @@ static class Utilities
 
 
     /// <summary>
-    ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder.
+    ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds some meta
+    ///     data to the log.
     /// </summary>
     public static async Task InitializeSerilogAsync()
     {
@@ -875,8 +833,16 @@ static class Utilities
 
         log = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 16))
+            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 8))
             .CreateLogger();
         log.Information("--- Log initialized ---");
+
+        // add meta data
+        PackageVersion version = Package.Current.Id.Version;
+        log.Information("App version: {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+        log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture}",
+            SystemInformation.OperatingSystem, SystemInformation.OperatingSystemVersion, SystemInformation.OperatingSystemArchitecture);
+        log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
+            SystemInformation.DeviceFamily, SystemInformation.DeviceModel, SystemInformation.DeviceManufacturer);
     }
 }

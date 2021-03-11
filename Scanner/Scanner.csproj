@@ -296,16 +296,19 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AnimatedVisuals\lottie_19814-data-list.json" />
+  </ItemGroup>
+  <ItemGroup>
     <PRIResource Include="Resources\Localization\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\AnimatedVisuals\lottie_19814-data-list.json" />
+    <PRIResource Include="Resources\Secrets.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Secrets.resw" />
+    <PRIResource Include="Resources\Localization\pl\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

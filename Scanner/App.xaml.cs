@@ -1,7 +1,6 @@
 ﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Serilog;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -9,14 +8,11 @@ using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-using static Enums;
 using static Globals;
 using static Utilities;
 
@@ -42,7 +38,7 @@ namespace Scanner
             // quickly load theme
             if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {
-                switch ((int) ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
+                switch ((int)ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
                 {
                     case 0:
                         break;
@@ -56,7 +52,7 @@ namespace Scanner
             }
 
             _ = InitializeSerilogAsync();
-            
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

@@ -102,10 +102,15 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task RenameFileAsync(string newName)
+        public async Task RenameFileAsync(string newName, NameCollisionOption collisionOption)
         {
-            await ScanFile.RenameAsync(newName, NameCollisionOption.FailIfExists);
+            await ScanFile.RenameAsync(newName, collisionOption);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanFile)));
+        }
+
+        public Task RenameFileAsync(string newName)
+        {
+            return RenameFileAsync(newName, NameCollisionOption.FailIfExists);
         }
     }
 }

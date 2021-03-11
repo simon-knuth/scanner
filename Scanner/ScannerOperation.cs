@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
 using static Enums;
@@ -24,12 +21,14 @@ class ScannerOperation
     /// <param name="config">The configuration that resolutions shall be generated for.</param>
     /// <param name="comboBox">The <see cref="ComboBox"/> that will contain the resolutions.</param>
     /// <param name="resolutions">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s.</param>
-    public static void GenerateResolutions(IImageScannerSourceConfiguration config, ComboBox comboBox, 
+    public static void GenerateResolutions(IImageScannerSourceConfiguration config, ComboBox comboBox,
         ObservableCollection<ComboBoxItem> resolutions)
     {
         float minX = config.MinResolution.DpiX;
         float maxX = config.MaxResolution.DpiX;
         float actualX = config.ActualResolution.DpiX;
+
+        log.Information("Generating resolutions. [minX={MinX}|maxX={MaxX}|actualX={ActualX}]", minX, maxX, actualX);
 
         resolutions.Clear();
 
@@ -65,7 +64,7 @@ class ScannerOperation
             return null;
         }
 
-        ComboBoxItem selectedItem = ((ComboBoxItem) comboBoxFormat.SelectedItem);
+        ComboBoxItem selectedItem = ((ComboBoxItem)comboBoxFormat.SelectedItem);
         ImageScannerFormat baseFormat = ImageScannerFormat.DeviceIndependentBitmap;          // initialize with most supported type
         SupportedFormat? secondFormat = null;
 
@@ -96,7 +95,8 @@ class ScannerOperation
                     }
                 }
             }
-        } else
+        }
+        else
         {
             if (selectedItem.Tag.ToString().Split(",")[0] == "jpg") baseFormat = ImageScannerFormat.Jpeg;
             else if (selectedItem.Tag.ToString().Split(",")[0] == "png") baseFormat = ImageScannerFormat.Png;
@@ -106,6 +106,7 @@ class ScannerOperation
             else if (selectedItem.Tag.ToString().Split(",")[0] == "tif") baseFormat = ImageScannerFormat.Tiff;
         }
 
+        log.Information("Got determined format: [baseFormat={Base}|secondFormat={Second}]", baseFormat, secondFormat);
         return new Tuple<ImageScannerFormat, SupportedFormat?>(baseFormat, secondFormat);
     }
 
@@ -118,7 +119,7 @@ class ScannerOperation
     public static ImageScannerResolution? GetDesiredResolution(ComboBox comboBoxResolution)
     {
         if (comboBoxResolution.SelectedIndex == -1) return null;
-        else return (ImageScannerResolution) ((ComboBoxItem)comboBoxResolution.SelectedItem).Tag;
+        else return (ImageScannerResolution)((ComboBoxItem)comboBoxResolution.SelectedItem).Tag;
     }
 
 
@@ -131,17 +132,16 @@ class ScannerOperation
     /// </summary>
     /// <param name="config">The configuration that determines whether to check the auto, flatbed or feeder mode.</param>
     /// <param name="formats">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s for the formats.</param>
-    /// <param name="selectedScanner">The <see cref="ImageScanner"/> that the <paramref name="config"/> belongs to.</param>
     /// <param name="comboBoxFormats">The <see cref="ComboBox"/> that contains the formats.</param>
     public static void GetSupportedFormats(IImageScannerFormatConfiguration config, ObservableCollection<ComboBoxItem> formats,
-        ImageScanner selectedScanner, ComboBox comboBoxFormats)
+        ComboBox comboBoxFormats)
     {
         string currentlySelected = "";
         LinkedList<string> newNativeFormats = new LinkedList<string>();
         bool canConvert = false;
 
         // save currently selected format to hopefully reselect it after the update
-        if ((ComboBoxItem) comboBoxFormats.SelectedItem != null) currentlySelected = ((ComboBoxItem) comboBoxFormats.SelectedItem).Tag.ToString().Split(",")[0];
+        if ((ComboBoxItem)comboBoxFormats.SelectedItem != null) currentlySelected = ((ComboBoxItem)comboBoxFormats.SelectedItem).Tag.ToString().Split(",")[0];
         formats.Clear();
 
         // see which formats are supported and whether conversion is possible
@@ -170,25 +170,27 @@ class ScannerOperation
         }
 
         // list available formats in correct order
-        if (newNativeFormats.Contains("jpg"))                   formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
-        else if (canConvert)                                        formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
-        if (newNativeFormats.Contains("png"))                   formats.Add(CreateComboBoxItem("PNG", "png,native"));
-        else if (canConvert)                                        formats.Add(CreateComboBoxItem("PNG", "png,converted"));
-        if (newNativeFormats.Contains("pdf"))                   formats.Add(CreateComboBoxItem("PDF", "pdf,native"));
-        else if (canConvert 
-            && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) 
-                                                                    formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
-        if (newNativeFormats.Contains("xps"))                   formats.Add(CreateComboBoxItem("XPS", "xps,native"));
-        if (newNativeFormats.Contains("openxps"))               formats.Add(CreateComboBoxItem("OpenXPS", "oxps,native"));
-        if (newNativeFormats.Contains("tif"))                   formats.Add(CreateComboBoxItem("TIF", "tif,native"));
-        else if (canConvert)                                        formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
-        if (newNativeFormats.Contains("bmp"))                   formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
-        else if (canConvert)                                        formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+        if (newNativeFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
+        if (newNativeFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
+        if (newNativeFormats.Contains("pdf")) formats.Add(CreateComboBoxItem("PDF", "pdf,native"));
+        else if (canConvert
+            && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
+        if (newNativeFormats.Contains("xps")) formats.Add(CreateComboBoxItem("XPS", "xps,native"));
+        if (newNativeFormats.Contains("openxps")) formats.Add(CreateComboBoxItem("OpenXPS", "oxps,native"));
+        if (newNativeFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
+        if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+
+        log.Information("Got supported formats: {@Formats}", formats);
 
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)
         {
-            if (((ComboBoxItem)formats[i]).Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
+            if (formats[i].Tag.ToString().Split(",")[0] == currentlySelected) comboBoxFormats.SelectedIndex = i;
         }
         if (comboBoxFormats.SelectedIndex == -1 && comboBoxFormats.Items.Count > 0) comboBoxFormats.SelectedIndex = 0;
     }
@@ -201,33 +203,16 @@ class ScannerOperation
     /// <returns></returns>
     public static bool ScanResultValid(ImageScannerScanResult result)
     {
-        try {
-            return (result != null 
-                    && result.ScannedFiles != null 
-                    && result.ScannedFiles[0] != null 
+        try
+        {
+            return (result != null
+                    && result.ScannedFiles != null
+                    && result.ScannedFiles[0] != null
                     && result.ScannedFiles.Count != 0);
         }
         catch (Exception)
         {
             return false;
-        }
-    }
-
-
-    /// <summary>
-    ///     Sets the names of all scan files in the given <see cref="IList{StorageFile}"/> to their initial value.
-    /// </summary>
-    public static async Task SetInitialNames(IEnumerable<StorageFile> files)
-    {
-        string time = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
-        foreach (StorageFile file in files)
-        {
-            string baseName = file.Name;
-            RemoveNumbering(baseName);
-
-            string baseDisplayName = baseName.Split(".")[0];
-
-            await file.RenameAsync(baseDisplayName + "_" + time + file.FileType, NameCollisionOption.GenerateUniqueName);
         }
     }
 }

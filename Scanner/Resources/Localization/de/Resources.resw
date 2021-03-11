@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -357,24 +357,24 @@
     <value>Wir würden gern von Ihnen hören:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackText1" xml:space="preserve">
-    <value>Nutzen Sie den</value>
+  <data name="DialogFeedbackText1.Text" xml:space="preserve">
+    <value>Nutzen Sie den </value>
     <comment>The first part of the dialog text that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve">
+  <data name="DialogFeedbackHyperlinkFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The Feedback Hub link in the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackText2" xml:space="preserve">
-    <value>um neue Funktionen vorzuschlagen, Fehler zu melden und Vorschläge zu unterstützen, oder</value>
+  <data name="DialogFeedbackText2.Text" xml:space="preserve">
+    <value> um neue Funktionen vorzuschlagen, Fehler zu melden und Vorschläge zu unterstützen, oder </value>
     <comment>The second part of the dialog text that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackHyperlinkRate" xml:space="preserve">
+  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
     <value>bewerten Sie Scanner im Microsoft Store,</value>
     <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackText3" xml:space="preserve">
-    <value>um anderen Nutzern beim Finden der für sie passenden App zu helfen.</value>
+  <data name="DialogFeedbackText3.Text" xml:space="preserve">
+    <value> um anderen Nutzern beim Finden der für sie passenden App zu helfen.</value>
     <comment>The third part of the dialog text that asks the user for feedback.</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
@@ -436,6 +436,10 @@
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
     <value>Etwas ist schiefgelaufen</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
+  </data>
+  <data name="ErrorMessageRenameBody" xml:space="preserve">
+    <value>Das Umbenennen ist derzeit nicht möglich. Existiert womöglich bereits eine Datei mit diesem Namen?</value>
+    <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
     <value>Etwas ist schiefgelaufen</value>
@@ -677,21 +681,9 @@
     <value> um anderen Nutzern beim Finden der für sie passenden App zu helfen. Professionelle Nutzer können außerdem auf </value>
     <comment>The third part of the text of the "Feedback" section in settings.</comment>
   </data>
-  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
-    <value> die Weiterentwicklung der App beeinflussen.</value>
-    <comment>The fourth part of the text of the "Feedback" section in settings.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Feedback Hub</value>
     <comment>The hyperlink text for launching the Feedback Hub from the "Feedback" section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>bewerten Sie Scanner im Microsoft Store,</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Installieren und Verwenden eines Scanners in Windows 10</value>
@@ -745,10 +737,6 @@
     <value>Einstellungen</value>
     <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.</comment>
   </data>
-  <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>Das Umbenennen ist derzeit nicht möglich. Existiert womöglich bereits eine Datei mit diesem Namen?</value>
-    <comment>The error message body that appears when renaming something fails.</comment>
-  </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
     <value>Scanner-Einstellungen</value>
     <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
@@ -772,6 +760,10 @@
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
     <value>Scan abgeschlossen</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>bewerten Sie Scanner im Microsoft Store,</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="PageDescriptorBack" xml:space="preserve">
     <value />
@@ -801,14 +793,6 @@
     <value>Standard</value>
     <comment>The text that indicates that a resolution in the list is the default one. Presented in brackets.</comment>
   </data>
-  <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Schließen</value>
-    <comment>The close button text of the translation contributors dialog.</comment>
-  </data>
-  <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Quellenangaben</value>
-    <comment>The title of the dialog that shows the translation contributors.</comment>
-  </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
     <value>Schließen</value>
     <comment>The close button text of the translation contributors dialog.</comment>
@@ -816,10 +800,6 @@
   <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
     <value>Übersetzer</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
-  </data>
-  <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Quellenangaben</value>
-    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
     <value>Übersetzer</value>
@@ -889,6 +869,14 @@
     <value>Fertigen Sie eine Vorschau an, bevor Sie scannen. Verfügbar nur bei unterstützten Scannern - halten Sie Ausschau nach dem Vorschau-Symbol neben den Quellmodi.</value>
     <comment>The text of the fourth changelog section.</comment>
   </data>
+  <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>The close button text of the translation contributors dialog.</comment>
+  </data>
+  <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
+    <value>Quellenangaben</value>
+    <comment>The title of the dialog that shows the translation contributors.</comment>
+  </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
     <value>Fehlerberichte und Statistiken zur Nutzung spenden</value>
     <comment>The option for sending error reports and usage statistics.</comment>
@@ -917,10 +905,6 @@
     <value>Ereignisprotokoll exportieren</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
-    <value>Bestätigen</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
-  </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
     <value>Exportieren</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
@@ -929,9 +913,17 @@
     <value>Keine Ihrer gescannten Seiten sind in diesen Protokollen enthalten.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
+  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
+    <value>Bestätigen</value>
+    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Bitte überprüfen Sie die folgenden Einstellungen.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
+    <value>Quellenangaben</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
     <value>3:2</value>
@@ -944,5 +936,25 @@
   <data name="TextEditSave.Text" xml:space="preserve">
     <value>Speichern</value>
     <comment>The text of the button that saves changes.</comment>
+  </data>
+  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
+    <value> die Weiterentwicklung der App beeinflussen.</value>
+    <comment>The fourth part of the text of the "Feedback" section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
+  </data>
+  <data name="ManifestDisplayName" xml:space="preserve">
+    <value>Scanner</value>
+    <comment>App name as displayed in app list.</comment>
+  </data>
+  <data name="ManifestPackageDisplayName" xml:space="preserve">
+    <value>Scanner für Windows 10</value>
+    <comment>App package name.</comment>
+  </data>
+  <data name="ManifestShortName" xml:space="preserve">
+    <value>Scanner</value>
+    <comment>App name as displayed on tile.</comment>
   </data>
 </root>

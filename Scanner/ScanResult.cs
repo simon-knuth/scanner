@@ -62,6 +62,7 @@ namespace Scanner
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder);
+            if (settingAppendTime) try { await result.SetInitialNames(); } catch (Exception) { }
             await result.GetImagesAsync();
             return result;
         }
@@ -87,6 +88,7 @@ namespace Scanner
             }
 
             result.scanResultFormat = targetFormat;
+            if (settingAppendTime) try { await result.SetInitialNames(); } catch (Exception) { }
             await result.GetImagesAsync();
             return result;
         }
@@ -995,17 +997,17 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat)
         {
+            string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
                 // no conversion (but perhaps generation later on), just add files for now
                 if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files, GetTotalNumberOfScans());
 
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    foreach (StorageFile file in files)
-                    {
-                        elements.Add(new ScanResultElement(file));
-                    }
-                });
+                foreach (StorageFile file in files)
+                {
+                    elements.Add(new ScanResultElement(file));
+                    if (settingAppendTime) await SetInitialName(elements[elements.Count - 1], append);
+                }
             } 
             else
             {
@@ -1014,9 +1016,8 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        elements.Add(new ScanResultElement(file));
-                    });
+                    elements.Add(new ScanResultElement(file));
+                    if (settingAppendTime) await SetInitialName(elements[elements.Count - 1], append);
                 }
 
                 Task[] conversionTasks = new Task[GetTotalNumberOfScans()];
@@ -1162,6 +1163,12 @@ namespace Scanner
             return GeneratePDF(pdf.Name);
         }
 
+
+        /// <summary>
+        ///     Numbers new files.
+        /// </summary>
+        /// <param name="files">The files to be numbered.</param>
+        /// <param name="startIndex">The first number.</param>
         private static async Task NumberNewConversionFiles(IReadOnlyList<StorageFile> files, int startIndex)
         {
             int nextNumber = startIndex;
@@ -1172,6 +1179,10 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     Applies the order of <see cref="elements"/> to the PDF file.
+        /// </summary>
         public async Task ApplyElementOrderToFiles()
         {
             if (GetFileFormat() != SupportedFormat.PDF) throw new ApplicationException("Can only reorder source files for PDF.");
@@ -1199,6 +1210,10 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     Refreshes all item descriptors of <see cref="elements"/>.
+        /// </summary>
         private void RefreshItemDescriptors()
         {
             for (int i = 0; i < elements.Count; i++)
@@ -1207,9 +1222,55 @@ namespace Scanner
             }
         }
 
+
+        /// <summary>
+        ///     Gets a specific item descriptor.
+        /// </summary>
+        /// <param name="index"></param>
         public string GetDescriptorForIndex(int index)
         {
             return LocalizedString("PageDescriptorFront") + (index + 1).ToString() + LocalizedString("PageDescriptorBack");
+        }
+
+
+        /// <summary>
+        ///     Sets the name elements or the PDF file to their initial value.
+        /// </summary>
+        protected async Task SetInitialName(ScanResultElement element, string append)
+        {
+            string baseName = element.ScanFile.Name;
+            RemoveNumbering(baseName);
+
+            string baseDisplayName = baseName.Split(".")[0];
+
+            await element.RenameFileAsync(baseDisplayName + "_" + append + element.ScanFile.FileType, NameCollisionOption.GenerateUniqueName);
+        }
+
+        protected async Task SetInitialName(StorageFile file, string append)
+        {
+            string baseName = file.Name;
+            RemoveNumbering(baseName);
+
+            string baseDisplayName = baseName.Split(".")[0];
+
+            await file.RenameAsync(baseDisplayName + "_" + append + file.FileType, NameCollisionOption.GenerateUniqueName);
+        }
+
+        protected async Task SetInitialNames()
+        {
+            string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
+            
+            if (scanResultFormat == SupportedFormat.PDF)
+            {
+                await SetInitialName(pdf, append);
+            }
+            else
+            {
+                foreach (ScanResultElement element in elements)
+                {
+                    await SetInitialName(element, append);
+                }
+            }
         }
     }
 }
