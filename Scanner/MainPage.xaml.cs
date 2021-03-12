@@ -67,6 +67,7 @@ namespace Scanner
             {
                 FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                 StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
+                FrameLeftPaneManageText.Height = titleBar.Height;
                 currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
             };
 
@@ -618,6 +619,7 @@ namespace Scanner
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 20, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Visible;
                     SplitViewRightPane.Visibility = Visibility.Visible;
+                    if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 750 && width < 1750 && uiState != UIstate.full)       // normal window
                 {
@@ -737,7 +739,11 @@ namespace Scanner
                     }
                     else if (uiState == UIstate.full)
                     {
-                        if (FlipViewLeftPane.SelectedIndex == 1) FlipViewLeftPane.SelectedIndex = 0;
+                        if (FlipViewLeftPane.SelectedIndex == 1)
+                        {
+                            FlipViewLeftPane.SelectedIndex = 0;
+                            if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
+                        }
                         else FlipViewLeftPane.SelectedIndex = 1;
                     }
                 }
@@ -747,6 +753,7 @@ namespace Scanner
                     {
                         SplitViewRightPane.IsPaneOpen = false;
                     }
+                    if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                     ButtonManage.IsChecked = false;
                 }
             });
@@ -1513,6 +1520,7 @@ namespace Scanner
             UnlockPaneManage(false);
             StoryboardToolbarTransitionFromSpecial.Begin();
             try { ImageCropperScan.Source = null; } catch (Exception) { }
+            ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
         }
 
         private void LockPaneManage(bool completely)
@@ -1594,6 +1602,7 @@ namespace Scanner
                 FlipViewScan.SelectedIndex = 0;
                 PaneManageSelectIndex(0);
             }
+            ProgressBarLeftPaneManage.IsIndeterminate = false;
         }
 
         private void Share(Control targetControl)
@@ -1688,7 +1697,11 @@ namespace Scanner
         private async void SplitViewRightPane_PaneClosed(SplitView sender, object args)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-            () => { ButtonManage.IsChecked = false; });
+            () =>
+            { 
+                ButtonManage.IsChecked = false;
+                if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
+            });
         }
 
         private async void ButtonCopy_Click(object sender, RoutedEventArgs e)
@@ -1786,6 +1799,7 @@ namespace Scanner
                     LockPaneManage(true);
                     LockToolbar();
                     LockPaneScanOptions();
+                    ProgressBarLeftPaneManage.IsIndeterminate = true;
                 });
 
                 await scanResult.ApplyElementOrderToFiles();
@@ -1796,6 +1810,7 @@ namespace Scanner
                     UnlockPaneManage(false);
                     UnlockToolbar();
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.IsIndeterminate = false;
                 });
             }
         }
@@ -1985,9 +2000,16 @@ namespace Scanner
                 ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                     LocalizedString("ErrorMessageCopyHeading"), LocalizedString("ErrorMessageCopyBody"));
             }
+            finally
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => 
+                {
+                    if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
+                });
+            }
         }
 
-        private void ButtonLeftPaneManageShare_Click(object sender, RoutedEventArgs e)
+        private async void ButtonLeftPaneManageShare_Click(object sender, RoutedEventArgs e)
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
@@ -2013,6 +2035,13 @@ namespace Scanner
                 Share(ButtonLeftPaneManageShare);
             }
             catch (Exception) { }
+            finally
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
+                });
+            }
         }
 
         private async void ComboBoxDebugFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2143,6 +2172,8 @@ namespace Scanner
                 if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
                     (flowState != FlowState.crop && flowState != FlowState.draw)) throw new ApplicationException("Could not save changes.");
 
+                SupportedFormat? format = scanResult.GetFileFormat();
+
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
@@ -2152,6 +2183,7 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = false;
                     ButtonDiscard.IsEnabled = false;
                     ImageCropperScan.IsEnabled = false;
+                    if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
                 });
 
                 switch (flowState)
@@ -2209,6 +2241,7 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = true;
                     ButtonDiscard.IsEnabled = true;
                     ImageCropperScan.IsEnabled = true;
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
             }
         }
@@ -2291,6 +2324,8 @@ namespace Scanner
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
+            SupportedFormat? format = scanResult.GetFileFormat();
+
             // lock UI
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
@@ -2299,6 +2334,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2319,6 +2355,7 @@ namespace Scanner
                     UnlockToolbar();
                     UnlockPaneManage(false);
                     UnlockPaneScanOptions();
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
                 return;
             }
@@ -2333,6 +2370,7 @@ namespace Scanner
                 if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(false);
                 UnlockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
             });
         }
 
@@ -2348,6 +2386,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
             IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
@@ -2387,6 +2426,8 @@ namespace Scanner
                 if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(true);
                 UnlockPaneScanOptions();
+                ProgressBarLeftPaneManage.IsIndeterminate = false;
+                if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
             });
         }
 
@@ -2419,6 +2460,8 @@ namespace Scanner
         {
             if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
 
+            SupportedFormat? format = scanResult.GetFileFormat();
+
             // lock UI
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
@@ -2427,6 +2470,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2445,6 +2489,7 @@ namespace Scanner
                     UnlockToolbar();
                     UnlockPaneManage(false);
                     UnlockPaneScanOptions();
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
 
                 // check if last page deleted
@@ -2469,6 +2514,7 @@ namespace Scanner
                 if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(false);
                 UnlockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
             });
         }
 
@@ -2484,6 +2530,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
             // generate list of items to delete
@@ -2512,6 +2559,8 @@ namespace Scanner
                     UnlockPaneManage(false);
                     ButtonLeftPaneManageSelect.IsChecked = false;
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.IsIndeterminate = false;
+                    if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                 });
 
                 // check if last page deleted
@@ -2536,6 +2585,8 @@ namespace Scanner
                 if (lockToolbar) UnlockToolbar();
                 UnlockPaneManage(true);
                 UnlockPaneScanOptions();
+                ProgressBarLeftPaneManage.IsIndeterminate = false;
+                if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
             });
         }
 
@@ -2610,6 +2661,7 @@ namespace Scanner
                 TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
                 TextBlockContentPaneGridProgressRingScan.Text = "";
                 RefreshFileName();
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
             });
             flowState = FlowState.initial;
             await RefreshScanButton();

@@ -608,71 +608,73 @@
                 <!-- Manage Pages -->
                 <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <Grid>
-                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="local:ScanResultElement">
-                                        <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
-                                            <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="3*"/>
-                                                    <ColumnDefinition Width="7*"/>
-                                                </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <Grid>
+                                <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="local:ScanResultElement">
+                                            <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
+                                                <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="7*"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                                <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
-                                                    <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
-                                                    </Frame>
-                                                </controls:DropShadowPanel>
-                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </Grid>
-                                        </ListViewItem>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-
-                                <ListView.ItemContainerTransitions>
-                                    <TransitionCollection>
-                                        <AddDeleteThemeTransition/>
-                                        <ReorderThemeTransition/>
-                                    </TransitionCollection>
-                                </ListView.ItemContainerTransitions>
-                            </ListView>
-                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
-                                <GridView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsWrapGrid HorizontalAlignment="Center"
-                                                       MaximumRowsOrColumns="2"
-                                                       Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </GridView.ItemsPanel>
-
-                                <GridView.ItemTemplate>
-                                    <DataTemplate x:DataType="local:ScanResultElement">
-                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
-                                            <Grid>
-                                                <Frame Padding="12">
-                                                    <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
+                                                    <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
                                                         <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
+                                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
                                                         </Frame>
                                                     </controls:DropShadowPanel>
-                                                </Frame>
-                                                <Frame Margin="6" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" v1809:CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
-                                                    <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BaseTextBlockStyle}"/>
-                                                </Frame>
-                                            </Grid>
-                                        </GridViewItem>
-                                    </DataTemplate>
-                                </GridView.ItemTemplate>
+                                                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                                </Grid>
+                                            </ListViewItem>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
 
-                                <GridView.ItemContainerTransitions>
-                                    <TransitionCollection>
-                                        <AddDeleteThemeTransition/>
-                                        <ReorderThemeTransition/>
-                                    </TransitionCollection>
-                                </GridView.ItemContainerTransitions>
-                            </GridView>
-                        </Grid>
+                                    <ListView.ItemContainerTransitions>
+                                        <TransitionCollection>
+                                            <AddDeleteThemeTransition/>
+                                            <ReorderThemeTransition/>
+                                        </TransitionCollection>
+                                    </ListView.ItemContainerTransitions>
+                                </ListView>
+                                <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsWrapGrid HorizontalAlignment="Center"
+                                                           MaximumRowsOrColumns="2"
+                                                           Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate x:DataType="local:ScanResultElement">
+                                            <GridViewItem x:Name="LeftPaneGridViewManageItem" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
+                                                <Grid>
+                                                    <Frame Padding="12">
+                                                        <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
+                                                            <Frame v1809:CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
+                                                            </Frame>
+                                                        </controls:DropShadowPanel>
+                                                    </Frame>
+                                                    <Frame Margin="6" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" v1809:CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
+                                                        <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                    </Frame>
+                                                </Grid>
+                                            </GridViewItem>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+
+                                    <GridView.ItemContainerTransitions>
+                                        <TransitionCollection>
+                                            <AddDeleteThemeTransition/>
+                                            <ReorderThemeTransition/>
+                                        </TransitionCollection>
+                                    </GridView.ItemContainerTransitions>
+                                </GridView>
+                            </Grid>
+                        </StackPanel>
                     </ScrollViewer>
 
                     <Grid x:Name="GridLeftPaneManageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
@@ -684,6 +686,11 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
+                            <StackPanel Orientation="Vertical">
+                                <Frame x:Name="FrameLeftPaneManageText" Height="32"/>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
+                            </StackPanel>
+                            
                             <ScrollViewer Grid.Row="0" VerticalAlignment="Bottom" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Frame>
@@ -810,10 +817,14 @@
 
                     <StackPanel Orientation="Vertical">
                         <Grid Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
-                            <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,12,0" Height="32" HorizontalAlignment="Center">
-                                <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
-                                <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="32" HorizontalAlignment="Center" Margin="12,0,12,0">
+                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
+                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
+                            
                             <RelativePanel VerticalAlignment="Bottom">
                                 <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
