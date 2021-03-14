@@ -1,4 +1,6 @@
 ﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
@@ -6,6 +8,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
@@ -16,6 +19,7 @@ using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -60,7 +64,7 @@ static class Utilities
 
     /// <summary>
     ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
-    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> 
+    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/>
     ///     is used to make the control visible once the image has been loaded.
     /// </summary>
     /// <remarks>
@@ -360,7 +364,11 @@ static class Utilities
             settingErrorStatistics = false;
             localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
         }
-        if (settingErrorStatistics == true) AppCenter.SetEnabledAsync(true);
+        if (settingErrorStatistics == true)
+        {
+            AppCenter.SetEnabledAsync(true);
+            RegisterWithMicrosoftAppCenter();
+        }
         else AppCenter.SetEnabledAsync(false);
 
         PackageVersion version = Package.Current.Id.Version;
@@ -844,5 +852,57 @@ static class Utilities
             SystemInformation.OperatingSystem, SystemInformation.OperatingSystemVersion, SystemInformation.OperatingSystemArchitecture);
         log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
             SystemInformation.DeviceFamily, SystemInformation.DeviceModel, SystemInformation.DeviceManufacturer);
+    }
+
+
+    public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReport(ErrorReport report)
+    {
+        try
+        {
+            // close log file
+            Log.CloseAndFlush();
+            await InitializeSerilogAsync();
+
+            // get all logs
+            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
+            IReadOnlyList<StorageFile> files = await logFolder.GetFilesAsync();
+
+            // find relevant log
+            List<StorageFile> sortedLogs = new List<StorageFile>(files);
+            sortedLogs.Sort(delegate (StorageFile x, StorageFile y)
+            {
+                return DateTimeOffset.Compare(x.DateCreated, y.DateCreated);
+            });
+            sortedLogs.Reverse();
+            foreach (StorageFile log in sortedLogs)
+            {
+                if (log.DateCreated <= report.AppErrorTime) {
+                    IBuffer buffer = await FileIO.ReadBufferAsync(log);
+                    return new ErrorAttachmentLog[]
+                    {
+                        ErrorAttachmentLog.AttachmentWithBinary(buffer.ToArray(), "log.json", "application/json")
+                    };
+                }
+            }
+        }
+        catch (Exception exc)
+        {
+            return new ErrorAttachmentLog[]
+            {
+                ErrorAttachmentLog.AttachmentWithText("Failed to append log. (" + exc.Message + ")", "nolog.txt")
+            };
+        }
+
+        return new ErrorAttachmentLog[]
+        {
+            ErrorAttachmentLog.AttachmentWithText("Failed to append log.", "nolog.txt")
+        };
+    }
+
+
+    public static void RegisterWithMicrosoftAppCenter()
+    {
+        Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReport(report).Result;
+        AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
     }
 }

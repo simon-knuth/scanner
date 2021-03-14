@@ -1794,7 +1794,7 @@ namespace Scanner
                 && scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
                 // item order may have changed, generate PDF again
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     LockPaneManage(true);
                     LockToolbar();
@@ -2755,6 +2755,11 @@ namespace Scanner
                 ContentDialogDebug.Hide();
                 ReliablyOpenTeachingTip(TeachingTipFeedback);
             });
+        }
+
+        private void ButtonDebugException_Click(object sender, RoutedEventArgs e)
+        {
+            throw new ApplicationException(TextBoxDebugException.Text);
         }
     }
 }

@@ -31,10 +31,6 @@ namespace Scanner
         /// </summary>
         public App()
         {
-            // register with Microsoft AppCenter
-            AppCenter.SetEnabledAsync(false);
-            AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
-
             // quickly load theme
             if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {

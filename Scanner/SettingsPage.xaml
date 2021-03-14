@@ -9,8 +9,8 @@
     xmlns:local="using:Scanner"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
-    NavigationCacheMode="Disabled" 
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Disabled"
     KeyDown="Page_KeyDown" Loading="Page_Loading" Loaded="Page_Loaded">
 
     <Page.Resources>
@@ -299,12 +299,12 @@
                     <TextBlock x:Uid="HeadingDialogTranslationsContributors" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
                 <TextBlock>
-                    <Run FontWeight="Bold">Damian Czupryn</Run> - Polish 
+                    <Run FontWeight="Bold">Damian Czupryn</Run> - Polish
                 </TextBlock>
             </StackPanel>
-            
+
         </ContentDialog>
-        
+
         <ContentDialog x:Name="ContentDialogAboutCredits" x:Uid="DialogSettingsAboutCredits" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="HeadingDialogAboutCredits" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
@@ -336,10 +336,14 @@
                                         <ColumnDefinition Width="3*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Padding="0,0,12,0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE9D9;" FontSize="24" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{Binding LastModified.LocalDateTime}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                    <RelativePanel Grid.Column="0" Padding="0,0,12,0" HorizontalAlignment="Stretch">
+                                        <FontIcon x:Name="FontIconExportLogLine" FontFamily="Segoe MDL2 Assets" Glyph="&#xE9D9;" FontSize="24" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                                        <StackPanel RelativePanel.RightOf="FontIconExportLogLine" Orientation="Vertical" HorizontalAlignment="Stretch">
+                                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" HorizontalAlignment="Stretch">
+                                                <Span>
+                                                    <Run Text="{Binding File.DateCreated.LocalDateTime}"/> - <Run Text="{Binding LastModified.LocalDateTime}"/>
+                                                </Span>
+                                            </TextBlock>
                                             <StackPanel Orientation="Horizontal">
                                                 <Frame v1809:CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="2" HorizontalAlignment="Left" Margin="0,2,0,0">
                                                     <TextBlock Text="{Binding File.Name}" Style="{ThemeResource CaptionTextBlockStyle}"/>
@@ -349,7 +353,7 @@
                                                 </Frame>
                                             </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
+                                    </RelativePanel>
 
                                     <Button Grid.Column="1" Padding="12,6,12,6" HorizontalAlignment="Right" Tag="{Binding File.Name}" VerticalAlignment="Center" Click="ButtonExportLog_Click">
                                         <StackPanel Orientation="Horizontal">

@@ -175,6 +175,9 @@ namespace Scanner
         /// <summary>
         ///     Gets an image preview of a single individual scan in this instance.
         /// </summary>
+        /// <remarks>
+        ///     Parts of this method are required run on the UI thread.
+        /// </remarks>
         /// <param name="index">The desired scan's index.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="ApplicationException">A file could not be accessed or a file's type could not be determined.</exception>
@@ -193,7 +196,7 @@ namespace Scanner
             StorageFile sourceFile = elements[index].ScanFile;
             BitmapImage bmp = null;
             int attempt = 0;
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () => {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () => {
                 using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
                 {
                     switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
@@ -234,10 +237,11 @@ namespace Scanner
                                         await page.RenderToStreamAsync(stream);
                                         await imageOfPdf.SetSourceAsync(stream);
                                     }
+                                    break;
                                 }
                                 catch (Exception e)
                                 {
-                                    if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF.", e);
+                                    if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF page.", e);
 
                                     await Task.Delay(500);
                                     attempt++;
@@ -258,17 +262,37 @@ namespace Scanner
 
                     // generate thumbnail
                     BitmapImage thumbnail = new BitmapImage();
-                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(sourceStream);
-                    SoftwareBitmap softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
-                    Guid encoderId = GetBitmapEncoderId(sourceFile.FileType);
-                    var imageStream = new InMemoryRandomAccessStream();
-                    BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
-                    bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
-                    bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 10;                   // reduce quality by 90%
-                    bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 10;                 //
-                    await bitmapEncoder.FlushAsync();
-                    await thumbnail.SetSourceAsync(imageStream);
-                    elements[index].Thumbnail = thumbnail;
+                    BitmapDecoder bitmapDecoder = null;
+                    attempt = 0;
+                    while (attempt != -1)
+                    {
+                        try
+                        {
+                            bitmapDecoder = await BitmapDecoder.CreateAsync(sourceStream);
+                            SoftwareBitmap softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                            Guid encoderId = GetBitmapEncoderId(sourceFile.FileType);
+                            var imageStream = new InMemoryRandomAccessStream();
+                            BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
+                            bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
+                            bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 10;                   // reduce quality by 90%
+                            bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 10;                 //
+                            await bitmapEncoder.FlushAsync();
+                            await thumbnail.SetSourceAsync(imageStream);
+                            elements[index].Thumbnail = thumbnail;
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            if (attempt >= 4)
+                            {
+                                log.Error(e, "Couldn't generate thumbnail page at index {Index}", index);
+                                return;
+                            }
+
+                            await Task.Delay(500);
+                            attempt++;
+                        }
+                    }
                 }
             });
             return bmp;

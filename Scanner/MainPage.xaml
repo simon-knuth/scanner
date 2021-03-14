@@ -1240,6 +1240,12 @@
                             <Button x:Name="ButtonDebugShowTutorialPageManagement" Content="Tutorial page management" Click="ButtonDebugShowTutorialPageManagement_Click"/>
                             <Button x:Name="ButtonDebugShowTutorialSaveLocation" Content="Tutorial save location" Margin="8,0,0,0" Click="ButtonDebugShowTutorialSaveLocation_Click"/>
                         </StackPanel>
+
+                        <TextBlock Text="Throw exception" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="TextBoxDebugException" Text="Debug exception" Width="300"/>
+                            <Button x:Name="ButtonDebugException" Margin="6,0,0,0" Content="Throw" Click="ButtonDebugException_Click"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </StackPanel>
