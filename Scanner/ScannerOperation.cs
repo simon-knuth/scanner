@@ -50,9 +50,9 @@ class ScannerOperation
     ///         (1) <see cref="ImageScannerFormat"/>    baseFormat
     ///         (2) <see cref="string"/>                formatToConvertTo
     ///     If no conversion is necessary, the string will be null.
-    ///     
+    ///
     ///     Returns <see cref="ImageScannerFormat.bitmap"/> as base format if no other match was found.
-    /// 
+    ///
     ///     Returns null if no format has been selected by the user.
     /// </returns>
     /// <param name="comboBoxFormat">The <see cref="ComboBox"/> that contains the format list.</param>

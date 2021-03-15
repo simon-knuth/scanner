@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.AppCenter.Analytics;
+using Serilog;
+using System;
+using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -7,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+
 using static Utilities;
 
 
@@ -37,7 +41,15 @@ namespace Scanner
         {
             base.OnNavigatedTo(e);
 
-            intent = (PreviewPageIntent) e.Parameter;
+            intent = (PreviewPageIntent)e.Parameter;
+
+            try
+            {
+                Analytics.TrackEvent("Preview", new Dictionary<string, string> {
+                        { "Source", intent.scanSource.ToString() },
+                });
+            }
+            catch (Exception) { }
         }
 
 
@@ -52,6 +64,7 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            Log.Information("Navigated to PreviewPage with {@Intent}.", intent);
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
@@ -64,7 +77,7 @@ namespace Scanner
             try
             {
                 var previewResult = await intent.scanner.ScanPreviewToStreamAsync(intent.scanSource, previewStream);
-                
+
                 if (previewResult.Succeeded)
                 {
                     BitmapImage bitmapImage = new BitmapImage();
@@ -81,8 +94,9 @@ namespace Scanner
                     throw new Exception();
                 }
             }
-            catch (Exception)
+            catch (Exception exc)
             {
+                Log.Error(exc, "Preview failed.");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {

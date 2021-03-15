@@ -758,7 +758,7 @@ static class Utilities
         }
         catch (Exception exc)
         {
-            log.Error(exc, "Displaying the rating dialog failed.");
+            log.Warning(exc, "Displaying the rating dialog failed.");
             try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
         }
     }
@@ -768,6 +768,7 @@ static class Utilities
     {
         try
         {
+            log.Information("Launching the Feedback Hub.");
             var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
             await launcher.LaunchAsync();
         }
@@ -841,7 +842,11 @@ static class Utilities
 
         log = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(), logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 8))
+            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(),
+            logPath,
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 8,
+            fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
             .CreateLogger();
         log.Information("--- Log initialized ---");
 
@@ -855,6 +860,9 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Attaches the relevant log to the Microsoft App Center error report.
+    /// </summary>
     public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReport(ErrorReport report)
     {
         try
@@ -900,6 +908,10 @@ static class Utilities
     }
 
 
+    /// <summary>
+    ///     Registers the app with Microsoft's App Center service. It can still be enabled/disabled
+    ///     separately from this.
+    /// </summary>
     public static void RegisterWithMicrosoftAppCenter()
     {
         Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReport(report).Result;

@@ -1,3 +1,5 @@
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -61,8 +63,6 @@ namespace Scanner
         {
             InitializeComponent();
 
-            log.Information("Navigated to MainPage.");
-
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
             {
                 FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
@@ -92,6 +92,7 @@ namespace Scanner
         private async void UISettings_ColorValuesChanged(UISettings sender, object args)
         {
             // fix bugs when theme is changed during runtime
+            log.Information("Detected theme change during runtime.");
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 FrameLeftPaneScanHeader.Background = null;
@@ -138,7 +139,8 @@ namespace Scanner
                     {
                         args.Request.Data.Properties.Title = files[0].Name;
                     }
-                } else args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
+                }
+                else args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
             }
         }
 
@@ -155,10 +157,12 @@ namespace Scanner
                         ComboBoxScanners.IsDropDownOpen = false;
                         ComboBoxScanners.SelectedIndex = -1;
                         scannerList.RemoveAt(i);
+                        log.Information("Removed scanner {@Device}.", args);
                         return;
                     }
                 }
             });
+            log.Warning("Attempted to remove scanner {@Device} but couldn't find it in the list.", args);
         }
 
         private async void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
@@ -168,27 +172,32 @@ namespace Scanner
             {
                 bool isDuplicate = false;
 
-                for(int i = 0; i < scannerList.Count - 1; i++)
+                for (int i = 0; i < scannerList.Count - 1; i++)
                 {
-                    if (!((RecognizedScanner)scannerList[i].Tag).isFake 
+                    if (!((RecognizedScanner)scannerList[i].Tag).isFake
                         && ((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
                     {
                         isDuplicate = true;
+                        log.Information("Wanted to add scanner {@Device}, but it's a duplicate.", args);
                         break;
                     }
                 }
 
                 if (!isDuplicate)
                 {
-                    try 
+                    try
                     {
                         RecognizedScanner newScanner = await RecognizedScanner.CreateFromDeviceInformationAsync(args);
                         ComboBoxScanners.IsDropDownOpen = false;
                         scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(newScanner.scannerName, newScanner));
 
                         if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
+                        log.Information("Added scanner {@Device}.", args);
                     }
-                    catch (Exception) { }
+                    catch (Exception exc)
+                    {
+                        log.Error(exc, "Failed to add scanner {@Device} to existing {ScannerList}.", args, scannerList);
+                    }
                 }
                 else return;
             });
@@ -226,6 +235,7 @@ namespace Scanner
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            log.Information("Navigated to MainPage.");
             if (isFirstLoaded)
             {
                 isFirstLoaded = false;
@@ -259,7 +269,8 @@ namespace Scanner
                 if (isFirstAppLaunchWithThisVersion == null)
                 {
                     // first app launch ever
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
+                    log.Information("MainPage loaded after first app launch ever.");
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
                     {
                         CheckBoxErrorStatistics.IsChecked = true;
                         await ContentDialogPrivacySetup.ShowAsync();
@@ -270,7 +281,8 @@ namespace Scanner
                 else if (isFirstAppLaunchWithThisVersion == true)
                 {
                     // first app launch after an update
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => 
+                    log.Information("MainPage loaded after first launch with this version.");
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
                     {
                         await ContentDialogPrivacySetup.ShowAsync();
                         ReliablyOpenTeachingTip(TeachingTipUpdated);
@@ -311,11 +323,11 @@ namespace Scanner
                     formats.Clear();
                     resolutions.Clear();
                     StackPanelContentPaneText.Visibility = Visibility.Visible;
-                } 
+                }
                 else
                 {
                     // scanner selected
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, 
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                         () => InitializeScanOptionsForScanner((RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag));
                     selectedScanner = (RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag;
                     RadioButtonSourceMode_Checked(null, null);
@@ -346,8 +358,10 @@ namespace Scanner
 
         private void InitializeScanOptionsForScanner(RecognizedScanner scanner)
         {
+            log.Information("Initializing scan options for {@Scanner}.", scanner);
+
             ComboBoxScanners.IsEnabled = false;
-                
+
             // select source mode and enable/disable scan button
             if (scanner != null)
             {
@@ -366,7 +380,7 @@ namespace Scanner
                         isModeSelected = true;
                     }
                     RadioButtonSourceAutomatic.IsEnabled = true;
-                } 
+                }
                 else
                 {
                     RadioButtonSourceAutomatic.IsEnabled = false;
@@ -406,7 +420,7 @@ namespace Scanner
                     scanner.isAutoAllowed, scanner.isFlatbedAllowed, scanner.isFeederAllowed);
             }
             else
-            {                    
+            {
                 ButtonLeftPaneScan.IsEnabled = false;
 
                 RadioButtonSourceAutomatic.IsEnabled = false;
@@ -437,16 +451,23 @@ namespace Scanner
 
                 if (RadioButtonSourceFlatbed.IsChecked == true)         // flatbed
                 {
-                    isColorAllowed = (bool) selectedScanner.isFlatbedColorAllowed;
+                    log.Information("Flatbed configuration selected.");
+                    isColorAllowed = (bool)selectedScanner.isFlatbedColorAllowed;
                     isGrayscaleAllowed = (bool)selectedScanner.isFlatbedGrayscaleAllowed;
                     isMonochromeAllowed = (bool)selectedScanner.isFlatbedGrayscaleAllowed;
-                } else if (RadioButtonSourceFeeder.IsChecked == true)   // feeder
+                }
+                else if (RadioButtonSourceFeeder.IsChecked == true)     // feeder
                 {
+                    log.Information("Feeder configuration selected.");
                     isColorAllowed = (bool)selectedScanner.isFeederColorAllowed;
                     isGrayscaleAllowed = (bool)selectedScanner.isFeederGrayscaleAllowed;
                     isMonochromeAllowed = (bool)selectedScanner.isFeederGrayscaleAllowed;
                 }
-                else FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
+                else
+                {
+                    log.Information("Automatic configuration selected.");
+                    FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
+                }
 
                 if (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true)
                 {
@@ -509,12 +530,13 @@ namespace Scanner
                 {
                     GenerateResolutions(selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
                     FrameLeftPaneResolution.Visibility = Visibility.Visible;
-                } else FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
+                }
+                else FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
 
                 // file formats
                 if (selectedScanner.isFake)
                 {
-                    
+
                 }
                 else if (RadioButtonSourceAutomatic.IsChecked == true)
                 {
@@ -526,7 +548,7 @@ namespace Scanner
                 }
                 else if (RadioButtonSourceFeeder.IsChecked == true)
                 {
-                    GetSupportedFormats(selectedScanner.scanner.FeederConfiguration, formats,  ComboBoxFormat);
+                    GetSupportedFormats(selectedScanner.scanner.FeederConfiguration, formats, ComboBoxFormat);
                 }
 
                 // duplex
@@ -594,6 +616,7 @@ namespace Scanner
 
                 if (width < 750 && uiState != UIstate.small)            // narrow window
                 {
+                    log.Information("UI transitioning to small state.");
                     uiState = UIstate.small;
                     ColumnLeftPane.MaxWidth = 0;
                     ColumnLeftPane.MinWidth = 0;
@@ -623,6 +646,7 @@ namespace Scanner
                 }
                 else if (width >= 750 && width < 1750 && uiState != UIstate.full)       // normal window
                 {
+                    log.Information("UI transitioning to normal state.");
                     uiState = UIstate.full;
                     ColumnLeftPane.MinWidth = ColumnSidePaneMinWidth;
                     ColumnLeftPane.MaxWidth = ColumnSidePaneMaxWidth;
@@ -640,16 +664,18 @@ namespace Scanner
                     GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
-                    DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16,0,16,0);
-                    DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16,0,16,0);
+                    DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16, 0, 16, 0);
+                    DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
                     ButtonManage.Visibility = Visibility.Visible;
                     ButtonScanOptions.Visibility = Visibility.Collapsed;
                     GridLeftPaneScanHeader.Visibility = Visibility.Visible;
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 8, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
-                } else if (width >= 1750 && uiState != UIstate.wide)    // wide window
+                }
+                else if (width >= 1750 && uiState != UIstate.wide)      // wide window
                 {
+                    log.Information("UI transitioning to wide state.");
                     uiState = UIstate.wide;
                     ColumnLeftPane.MinWidth = ColumnSidePaneMinWidth;
                     ColumnLeftPane.MaxWidth = ColumnSidePaneMaxWidth;
@@ -676,7 +702,7 @@ namespace Scanner
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                 }
 
-                if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2 
+                if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2
                     <= currentTitleBarButtonWidth
                 || uiState == UIstate.small)
                 {
@@ -707,7 +733,7 @@ namespace Scanner
                 {
                     ButtonManage.IsChecked = true;
                     ButtonScanOptions.IsChecked = false;
-                } 
+                }
                 else
                 {
                     ButtonManage.IsChecked = false;
@@ -769,11 +795,13 @@ namespace Scanner
                     // auto preview only simulated
                     if (selectedScanner.isFlatbedPreviewAllowed == true)
                     {
+                        log.Information("Preview requested for automatic configuration (simulated through flatbed).");
                         Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Flatbed,
                             RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
                     }
                     else if (selectedScanner.isFeederPreviewAllowed == true)
                     {
+                        log.Information("Preview requested for automatic configuration (simulated through feeder).");
                         Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Feeder,
                             RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
                     }
@@ -781,25 +809,36 @@ namespace Scanner
                 else
                 {
                     // auto preview natively supported
+                    log.Information("Preview requested for automatic configuration (native).");
                     Frame.Navigate(typeof(PreviewPage), new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.AutoConfigured, RadioButtonSourceAutomatic.Content.ToString()), new DrillInNavigationTransitionInfo());
                 }
             }
-            else if (RadioButtonSourceFlatbed.IsChecked == true) Frame.Navigate(typeof(PreviewPage),
+            else if (RadioButtonSourceFlatbed.IsChecked == true)
+            {
+                log.Information("Preview requested for flatbed configuration.");
+                Frame.Navigate(typeof(PreviewPage),
                 new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Flatbed, RadioButtonSourceFlatbed.Content.ToString()),
                 new DrillInNavigationTransitionInfo());
-            else if (RadioButtonSourceFeeder.IsChecked == true) Frame.Navigate(typeof(PreviewPage),
+            }
+            else if (RadioButtonSourceFeeder.IsChecked == true)
+            {
+                log.Information("Preview requested for feeder configuration.");
+                Frame.Navigate(typeof(PreviewPage),
                 new PreviewPageIntent(selectedScanner.scanner, ImageScannerScanSource.Feeder, RadioButtonSourceFeeder.Content.ToString()),
                 new DrillInNavigationTransitionInfo());
+            }
         }
 
 
         private async Task<bool> Scan(bool startFresh, IReadOnlyList<StorageFile> debugFiles)
         {
+            log.Information("Commencing scan. [startFresh={StartFresh}|debugFiles={@DebugFiles}]", startFresh, debugFiles);
             try
             {
                 isScanCanceled = false;
-                
+
                 // disable controls and show progress bar
+                log.Information("Preparing UI for scan.");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     ButtonLeftPaneScan.IsEnabled = false;
@@ -809,7 +848,7 @@ namespace Scanner
                     LockToolbar();
                     StoryboardProgressBarScanBegin.Begin();
                 });
-                
+
                 flowState = FlowState.scanning;
                 bool isScanSuccessful = false;
                 if (startFresh)
@@ -818,24 +857,27 @@ namespace Scanner
                     await InitializeTempFolderAsync();
                     RefreshFileName();
                 }
-                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;                
+                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
 
                 ImageScannerScanSource scanSource;
 
                 if (debugFiles == null)
                 {
+                    int pagesScanned = 0;
+
                     // no debug files provided, commence actual scan
                     // get selected format
                     selectedFormat = await PrepareScanConfigAsync();
                     if (selectedFormat == null) return false;
 
                     // get selected color mode
-                    ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
-                    if (selectedColorMode == null && (RadioButtonSourceFlatbed.IsChecked == true 
+                    ImageScannerColorMode? selectedColorMode = await GetDesiredColorModeAsync();
+                    if (selectedColorMode == null && (RadioButtonSourceFlatbed.IsChecked == true
                         || RadioButtonSourceFeeder.IsChecked == true))
                     {
-                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
-                            LocalizedString("ErrorMessageScanErrorBody"));
+                        log.Error("Color mode for scan couldn't be determined.");
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                            LocalizedString("ErrorMessageScanErrorHeading"), LocalizedString("ErrorMessageScanErrorBody")));
                         await CancelScanAsync();
                         return false;
                     }
@@ -844,8 +886,9 @@ namespace Scanner
                     ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                     if (selectedResolution == null && (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true))
                     {
-                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
-                            LocalizedString("ErrorMessageScanErrorBody"));
+                        log.Error("Resolution for scan couldn't be determined.");
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                            LocalizedString("ErrorMessageScanErrorHeading"), LocalizedString("ErrorMessageScanErrorBody")));
                         await CancelScanAsync();
                         return false;
                     }
@@ -881,8 +924,9 @@ namespace Scanner
                     }
                     else
                     {
-                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
-                            LocalizedString("ErrorMessageScanErrorBody"));
+                        log.Error("Couldn't determine source mode for scan.");
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                            LocalizedString("ErrorMessageScanErrorHeading"), LocalizedString("ErrorMessageScanErrorBody")));
                         await CancelScanAsync();
                         return false;
                     }
@@ -912,14 +956,16 @@ namespace Scanner
 
                     try
                     {
-                        scannerScanResult = await selectedScanner.scanner.ScanFilesToFolderAsync(scanSource, 
+                        log.Information("Commencing scan process itself.");
+                        scannerScanResult = await selectedScanner.scanner.ScanFilesToFolderAsync(scanSource,
                             folderToScanTo).AsTask(scanCancellationToken.Token, scanProgress);
                     }
                     catch (Exception exc)
                     {
-                        if (!isScanCanceled) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, 
-                            LocalizedString("ErrorMessageScanScannerErrorHeading"), 
-                            LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult);
+                        log.Error(exc, "Scan process itself failed.");
+                        if (!isScanCanceled) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                            ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanScannerErrorHeading"),
+                            LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult));
                         await CancelScanAsync();
                         return false;
                     }
@@ -928,8 +974,11 @@ namespace Scanner
 
                     if (ScanResultValid(scannerScanResult))
                     {
-                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, 
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
                             () => LeftPaneManageInitialText.Visibility = Visibility.Collapsed);
+
+                        pagesScanned = scannerScanResult.ScannedFiles.Count;
+
                         if (scanResult == null)
                         {
                             if (selectedFormat.Item2 == null)
@@ -949,19 +998,36 @@ namespace Scanner
                         }
                         else
                         {
-                            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => {
+                            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+                            {
                                 if (selectedFormat.Item2 != null) await scanResult.AddFiles(scannerScanResult.ScannedFiles,
                                     (SupportedFormat)selectedFormat.Item2);
                                 else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null);
-                                FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfScans() - 1;
+                                FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfPages() - 1;
                             });
                         }
                     }
+                    else
+                    {
+                        log.Error("The result of the scan {@Result} is invalid.", scannerScanResult);
+                        throw new ApplicationException("Result of the scan is invalid.");
+                    }
+
+                    try
+                    {
+                        Analytics.TrackEvent("Scan completed", new Dictionary<string, string> {
+                            { "Pages", pagesScanned.ToString() },
+                            { "Source", scanSource.ToString() },
+                            { "FormatFlow", selectedFormat.ToString() }
+                        });
+                    }
+                    catch (Exception) { }
                 }
                 else
                 {
+                    log.Information("'Scanning' from provided debug files.");
                     SupportedFormat selectedDebugFormat = (SupportedFormat)ComboBoxDebugFormat.SelectedItem;
-                        
+
                     // debug files provided, create scanResult from these
                     List<StorageFile> copiedDebugFiles = new List<StorageFile>();
                     foreach (StorageFile file in debugFiles)
@@ -980,7 +1046,8 @@ namespace Scanner
                         {
                             scanResult = await ScanResult.Create(copiedDebugFiles, scanFolder);
                         }
-                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => {
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                        {
                             FlipViewScan.ItemsSource = scanResult.elements;
                             InitializePaneManage();
                         });
@@ -994,7 +1061,7 @@ namespace Scanner
                             else await file.MoveAsync(scanFolder, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
                         }
                         await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat);
-                        int newIndex = scanResult.GetTotalNumberOfScans() - 1;
+                        int newIndex = scanResult.GetTotalNumberOfPages() - 1;
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FlipViewScan.SelectedIndex = newIndex);
                     }
                 }
@@ -1003,6 +1070,7 @@ namespace Scanner
                 isScanSuccessful = true;
 
                 // reenable controls and change UI
+                log.Information("Returning UI to its normal state after scan.");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
@@ -1017,9 +1085,8 @@ namespace Scanner
                     FlipViewScan_SelectionChanged(null, null);
                     TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
                     TextBlockContentPaneGridProgressRingScan.Text = "";
+                    RefreshScanButton();
                 });
-
-                await RefreshScanButton();
 
                 // send toast if the app is minimized
                 if (settingNotificationScanComplete && !isInForeground) SendToastNotification(LocalizedString("HeadingNotificationScanComplete"),
@@ -1027,6 +1094,7 @@ namespace Scanner
 
                 // ask for feedback
                 scanNumber++;
+                log.Information("This was scan process number {Num}", scanNumber);
                 if (scanNumber == 10) ReliablyOpenTeachingTip(TeachingTipFeedback);
                 localSettingsContainer.Values["scanNumber"] = ((int)localSettingsContainer.Values["scanNumber"]) + 1;
 
@@ -1035,13 +1103,15 @@ namespace Scanner
 
                 return isScanSuccessful;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                if (!isScanCanceled) ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"), 
-                    LocalizedString("ErrorMessageScanErrorBody"));
+                log.Error(exc, "Unhandled exception occurred during scan.");
+                if (!isScanCanceled) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
+                    LocalizedString("ErrorMessageScanErrorBody")));
                 await CancelScanAsync();
                 return false;
-            }            
+            }
         }
 
 
@@ -1090,8 +1160,9 @@ namespace Scanner
             if (selectedFormat == null)
             {
                 log.Error("No format while preparing scan config.");
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageNoFormatHeading"),
-                    LocalizedString("ErrorMessageNoFormatBody"));
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageNoFormatHeading"),
+                    LocalizedString("ErrorMessageNoFormatBody")));
                 await CancelScanAsync();
                 return null;
             }
@@ -1115,7 +1186,7 @@ namespace Scanner
             else
             {
                 // get color mode, resolution and format
-                ImageScannerColorMode? selectedColorMode = GetDesiredColorMode();
+                ImageScannerColorMode? selectedColorMode = await GetDesiredColorModeAsync();
                 ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
                 if (selectedColorMode == null || selectedResolution == null)
                 {
@@ -1164,15 +1235,16 @@ namespace Scanner
                 try { scanCancellationToken.Cancel(); }
                 catch (Exception)
                 {
-                    log.Error("Cancelling scan with token failed.");
-                    ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanCancelHeading"),
-                        LocalizedString("ErrorMessageScanCancelBody"));
+                    log.Warning("Cancelling scan with token failed.");
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanCancelHeading"),
+                        LocalizedString("ErrorMessageScanCancelBody")));
                     return;
                 }
             }
             scanCancellationToken = null;
 
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0)
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0)
             {
                 await ReturnAppToInitialStateAsync();
             }
@@ -1197,12 +1269,17 @@ namespace Scanner
         }
 
 
-        private ImageScannerColorMode? GetDesiredColorMode()
+        private async Task<ImageScannerColorMode?> GetDesiredColorModeAsync()
         {
-            if (RadioButtonColorModeColor.IsChecked.Value) return ImageScannerColorMode.Color;
-            if (RadioButtonColorModeGrayscale.IsChecked.Value) return ImageScannerColorMode.Grayscale;
-            if (RadioButtonColorModeMonochrome.IsChecked.Value) return ImageScannerColorMode.Monochrome;
-            return null;
+            ImageScannerColorMode? result = null;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (RadioButtonColorModeColor.IsChecked.Value) result = ImageScannerColorMode.Color;
+                else if (RadioButtonColorModeGrayscale.IsChecked.Value) result = ImageScannerColorMode.Grayscale;
+                else if (RadioButtonColorModeMonochrome.IsChecked.Value) result = ImageScannerColorMode.Monochrome;
+            });
+            log.Information("Desired color mode is {@Color}.", result);
+            return result;
         }
 
 
@@ -1225,12 +1302,12 @@ namespace Scanner
 
         private void RefreshFileName()
         {
-            if (scanResult != null) 
+            if (scanResult != null)
             {
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
                     if (scanResult.pdf == null) return;
-                        
+
                     TextBlockContentPaneTopToolbarFileName.Text = scanResult.pdf.DisplayName.Replace(scanResult.pdf.FileType, "");
                     TextBlockContentPaneTopToolbarFileExtension.Text = scanResult.pdf.FileType;
                 }
@@ -1242,7 +1319,8 @@ namespace Scanner
                     TextBlockContentPaneTopToolbarFileName.Text = selectedFile.DisplayName;
                     TextBlockContentPaneTopToolbarFileExtension.Text = selectedFile.FileType;
                 }
-            } else
+            }
+            else
             {
                 TextBlockContentPaneTopToolbarFileName.Text = "";
                 TextBlockContentPaneTopToolbarFileExtension.Text = "";
@@ -1288,7 +1366,7 @@ namespace Scanner
         private async void ButtonLeftPaneScanFolder_Click(object sender, RoutedEventArgs e)
         {
             try { await Launcher.LaunchFolderAsync(scanFolder); }
-            catch (Exception) { }
+            catch (Exception exc) { log.Error(exc, "Couldn't display save location."); }
         }
 
         private void LockToolbar()
@@ -1324,12 +1402,12 @@ namespace Scanner
         private async void LeftPaneManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (scanResult == null) return;
-            
+
             switch (flowState)
             {
                 case FlowState.initial:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar() );
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar());
                     break;
                 case FlowState.scanning:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
@@ -1344,19 +1422,19 @@ namespace Scanner
         private async void ButtonDebugAddScanner_Click(object sender, RoutedEventArgs e)
         {
             RecognizedScanner fakeScanner = new RecognizedScanner(TextBoxDebugFakeScannerName.Text,
-                ToggleSwitchDebugFakeScannerAuto.IsOn, 
+                ToggleSwitchDebugFakeScannerAuto.IsOn,
                 ToggleSwitchDebugFakeScannerAutoPreview.IsOn,
                 ToggleSwitchDebugFakeScannerFlatbed.IsOn, ToggleSwitchDebugFakeScannerFlatbedPreview.IsOn,
                 (bool)CheckBoxDebugFakeScannerFlatbedColor.IsChecked,
-                (bool)CheckBoxDebugFakeScannerFlatbedGrayscale.IsChecked, 
+                (bool)CheckBoxDebugFakeScannerFlatbedGrayscale.IsChecked,
                 (bool)CheckBoxDebugFakeScannerFlatbedMonochrome.IsChecked,
                 ToggleSwitchDebugFakeScannerFeeder.IsOn,
-                ToggleSwitchDebugFakeScannerFeederPreview.IsOn, 
+                ToggleSwitchDebugFakeScannerFeederPreview.IsOn,
                 (bool)CheckBoxDebugFakeScannerFeederColor.IsChecked,
                 (bool)CheckBoxDebugFakeScannerFeederGrayscale.IsChecked,
-                (bool)CheckBoxDebugFakeScannerFeederMonochrome.IsChecked, 
+                (bool)CheckBoxDebugFakeScannerFeederMonochrome.IsChecked,
                 (bool)CheckBoxDebugFakeScannerFeederDuplex.IsChecked);
-            
+
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
@@ -1366,71 +1444,68 @@ namespace Scanner
             });
         }
 
-        private void ButtonDebugShowError_Click(object sender, RoutedEventArgs e)
+        private async void ButtonDebugShowError_Click(object sender, RoutedEventArgs e)
         {
-            ErrorMessage.ShowErrorMessage(TeachingTipEmpty, TextBoxDebugShowErrorTitle.Text, TextBoxDebugShowErrorSubtitle.Text);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                TextBoxDebugShowErrorTitle.Text, TextBoxDebugShowErrorSubtitle.Text));
         }
 
-        private async Task RefreshScanButton()
+        private void RefreshScanButton()
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0)
             {
-                if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) 
-                {
-                    FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
-                    FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                    isNextScanFresh = false;
-                    MenuFlyoutItemButtonScan.IsEnabled = true;
-                    MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
-                    MenuFlyoutItemButtonScan.Icon = null;
-                    MenuFlyoutItemButtonScanFresh.IsEnabled = false;
-                    MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
-                    return;
-                }
+                FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
+                FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
+                isNextScanFresh = false;
+                MenuFlyoutItemButtonScan.IsEnabled = true;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.Icon = null;
+                MenuFlyoutItemButtonScanFresh.IsEnabled = false;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
+                return;
+            }
 
-                // get currently selected format
-                var selectedFormatTuple = GetDesiredFormat(ComboBoxFormat, formats);
-                if (selectedFormatTuple == null) return;
-                SupportedFormat selectedFormat;
-                if (selectedFormatTuple.Item2 != null)
-                {
-                    selectedFormat = (SupportedFormat) selectedFormatTuple.Item2;
-                }
-                else
-                {
-                    selectedFormat = ConvertImageScannerFormatToSupportedFormat(selectedFormatTuple.Item1);
-                }
+            // get currently selected format
+            var selectedFormatTuple = GetDesiredFormat(ComboBoxFormat, formats);
+            if (selectedFormatTuple == null) return;
+            SupportedFormat selectedFormat;
+            if (selectedFormatTuple.Item2 != null)
+            {
+                selectedFormat = (SupportedFormat)selectedFormatTuple.Item2;
+            }
+            else
+            {
+                selectedFormat = ConvertImageScannerFormatToSupportedFormat(selectedFormatTuple.Item1);
+            }
 
-                var currentFormat = scanResult.GetFileFormat();
-                if (selectedFormat == currentFormat)
-                {
-                    FontIconButtonScanAdd.Visibility = Visibility.Visible;
-                    FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                    isNextScanFresh = false;
-                    MenuFlyoutItemButtonScan.IsEnabled = true;
-                    MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
-                    MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
-                    MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                    MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
-                }
-                else
-                {
-                    FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
-                    FontIconButtonScanStartFresh.Visibility = Visibility.Visible;
-                    isNextScanFresh = true;
-                    MenuFlyoutItemButtonScan.IsEnabled = false;
-                    MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
-                    MenuFlyoutItemButtonScan.Icon = null;
-                    MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                    MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
-                }
-            });
+            var currentFormat = scanResult.GetFileFormat();
+            if (selectedFormat == currentFormat)
+            {
+                FontIconButtonScanAdd.Visibility = Visibility.Visible;
+                FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
+                isNextScanFresh = false;
+                MenuFlyoutItemButtonScan.IsEnabled = true;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
+                MenuFlyoutItemButtonScanFresh.IsEnabled = true;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
+            }
+            else
+            {
+                FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
+                FontIconButtonScanStartFresh.Visibility = Visibility.Visible;
+                isNextScanFresh = true;
+                MenuFlyoutItemButtonScan.IsEnabled = false;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
+                MenuFlyoutItemButtonScan.Icon = null;
+                MenuFlyoutItemButtonScanFresh.IsEnabled = true;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+            }
         }
 
         private async void ComboBoxFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await RefreshScanButton();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => RefreshScanButton());
         }
 
         private void MenuFlyoutItemButtonScan_Click(object sender, RoutedEventArgs e)
@@ -1454,7 +1529,7 @@ namespace Scanner
 
             ContentDialogDebug.Hide();
 
-            await Scan((bool) CheckBoxDebugStartFresh.IsChecked, files);
+            await Scan((bool)CheckBoxDebugStartFresh.IsChecked, files);
         }
 
         private async void TransitionToEditingMode(SummonToolbar summonToolbar)
@@ -1467,6 +1542,7 @@ namespace Scanner
                 case SummonToolbar.Hidden:
                     throw new NotImplementedException();
                 case SummonToolbar.Crop:
+                    log.Information("Transitioning to editing mode (crop).");
                     flowState = FlowState.crop;
                     StoryboardToolbarTransitionToCrop.Begin();
                     Thickness padding = ImageCropperScan.Padding;
@@ -1478,13 +1554,15 @@ namespace Scanner
                     }
                     catch (Exception)
                     {
-                        ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageCropHeading"), 
-                            LocalizedString("ErrorMessageCropBody"));
+                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                            ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageCropHeading"),
+                            LocalizedString("ErrorMessageCropBody")));
                         TransitionFromEditingMode();
                         return;
                     }
                     break;
                 case SummonToolbar.Draw:
+                    log.Information("Transitioning to editing mode (draw).");
                     flowState = FlowState.draw;
                     StoryboardToolbarTransitionToDraw.Begin();
                     ImageEditDraw.Source = ((ScanResultElement)FlipViewScan.SelectedItem).CachedImage;
@@ -1514,6 +1592,7 @@ namespace Scanner
 
         private void TransitionFromEditingMode()
         {
+            log.Information("Transitioning from editing mode.");
             flowState = FlowState.initial;
             ScrollViewerEditDraw.ChangeView(0, 0, 0);
             FlipViewLeftPane.IsEnabled = true;
@@ -1597,7 +1676,7 @@ namespace Scanner
             LeftPaneGridViewManage.CanDragItems = true;
             LeftPaneGridViewManage.CanReorderItems = true;
             ButtonLeftPaneManageSelect.IsChecked = false;
-            if (scanResult != null && scanResult.GetTotalNumberOfScans() > 0)
+            if (scanResult != null && scanResult.GetTotalNumberOfPages() > 0)
             {
                 FlipViewScan.SelectedIndex = 0;
                 PaneManageSelectIndex(0);
@@ -1607,6 +1686,8 @@ namespace Scanner
 
         private void Share(Control targetControl)
         {
+            Analytics.TrackEvent("Share");
+
             Rect rectangle;
             ShareUIOptions shareUIOptions = new ShareUIOptions();
 
@@ -1628,7 +1709,9 @@ namespace Scanner
 
         private void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
+
+            log.Information("Sharing.");
 
             if (scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
@@ -1642,9 +1725,9 @@ namespace Scanner
                 //}
                 //else
                 //{
-                    shareIndexes = null;
-                    Share(ButtonShare);
-                    return;
+                shareIndexes = null;
+                Share(ButtonShare);
+                return;
                 //}
             }
 
@@ -1685,7 +1768,7 @@ namespace Scanner
         //            break;
         //        default:
         //            break;
-        //    }            
+        //    }
         //}
 
         private async void SplitViewLeftPane_PaneClosed(SplitView sender, object args)
@@ -1698,7 +1781,7 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
-            { 
+            {
                 ButtonManage.IsChecked = false;
                 if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
             });
@@ -1706,7 +1789,7 @@ namespace Scanner
 
         private async void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             try
             {
@@ -1722,25 +1805,26 @@ namespace Scanner
                     //}
                     //else
                     //{
-                        await scanResult.CopyAsync();
-                        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
-                        return;
+                    await scanResult.CopyAsync();
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
+                    return;
                     //}
                 }
 
                 await scanResult.CopyImageAsync(FlipViewScan.SelectedIndex);
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconCopyDone1.Begin());
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                    LocalizedString("ErrorMessageCopyHeading"), LocalizedString("ErrorMessageCopyBody"));
-            }            
+                log.Error(exc, "Copying failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                    LocalizedString("ErrorMessageCopyHeading"), LocalizedString("ErrorMessageCopyBody")));
+            }
         }
 
         private async void ButtonOpenWith_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             try
             {
@@ -1756,14 +1840,14 @@ namespace Scanner
                     //}
                     //else
                     //{
-                        await scanResult.OpenWithAsync();
-                        return;
+                    await scanResult.OpenWithAsync();
+                    return;
                     //}
                 }
 
                 await scanResult.OpenImageWithAsync(FlipViewScan.SelectedIndex);
             }
-            catch (Exception) { }
+            catch (Exception exc) { log.Error(exc, "Opening with failed."); }
         }
 
         //private async void TeachingTipScope_CloseButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
@@ -1790,9 +1874,11 @@ namespace Scanner
 
         private async void LeftPaneManage_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            if (scanResult != null && scanResult.GetTotalNumberOfScans() > 1 
+            if (scanResult != null && scanResult.GetTotalNumberOfPages() > 1
                 && scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
+                log.Information("Drag&Drop of PDF pages detected.");
+
                 // item order may have changed, generate PDF again
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
@@ -1843,7 +1929,7 @@ namespace Scanner
                         await scanResult.RenameScanAsync(newName + scanResult.pdf.FileType);
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshFileName());
                     }
-                    else if (scanResult.GetTotalNumberOfScans() - 1 >= index || newName.Length > 0)
+                    else if (scanResult.GetTotalNumberOfPages() - 1 >= index || newName.Length > 0)
                     {
                         // rename image file
                         StorageFile image = scanResult.GetImageFile((int)index);
@@ -1860,10 +1946,11 @@ namespace Scanner
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty, 
-                    LocalizedString("ErrorMessageRenameHeading"), LocalizedString("ErrorMessageRenameBody"));
+                log.Error(exc, "Renaming failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                    LocalizedString("ErrorMessageRenameHeading"), LocalizedString("ErrorMessageRenameBody")));
             }
         }
 
@@ -1872,7 +1959,7 @@ namespace Scanner
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
-                if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+                if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
@@ -1966,7 +2053,7 @@ namespace Scanner
                 {
                     LockToolbar();
                     TransitionToSelectMode();
-                } 
+                }
                 else
                 {
 
@@ -1978,7 +2065,7 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageCopy_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 || 
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             try
@@ -1991,18 +2078,19 @@ namespace Scanner
                         indices.Add(i);
                     }
                 }
-            
+
                 await scanResult.CopyImagesAsync(indices);
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardIconLeftPaneManageCopyDone1.Begin());
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                    LocalizedString("ErrorMessageCopyHeading"), LocalizedString("ErrorMessageCopyBody"));
+                log.Error(exc, "Copying failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                    LocalizedString("ErrorMessageCopyHeading"), LocalizedString("ErrorMessageCopyBody")));
             }
             finally
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => 
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                 });
@@ -2011,7 +2099,7 @@ namespace Scanner
 
         private async void ButtonLeftPaneManageShare_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             try
@@ -2034,7 +2122,7 @@ namespace Scanner
 
                 Share(ButtonLeftPaneManageShare);
             }
-            catch (Exception) { }
+            catch (Exception exc) { log.Error(exc, "Sharing failed."); }
             finally
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
@@ -2055,11 +2143,12 @@ namespace Scanner
                 }
                 else
                 {
-                    if ((SupportedFormat) ComboBoxDebugFormat.SelectedItem != scanResult.GetFileFormat())
+                    if ((SupportedFormat)ComboBoxDebugFormat.SelectedItem != scanResult.GetFileFormat())
                     {
                         CheckBoxDebugStartFresh.IsEnabled = false;
                         CheckBoxDebugStartFresh.IsChecked = true;
-                    } else
+                    }
+                    else
                     {
                         CheckBoxDebugStartFresh.IsEnabled = true;
                     }
@@ -2069,7 +2158,7 @@ namespace Scanner
 
         private async void ButtonCrop_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
@@ -2156,7 +2245,7 @@ namespace Scanner
 
         private async void ButtonDraw_Click(object sender, RoutedEventArgs e)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
@@ -2167,10 +2256,11 @@ namespace Scanner
 
         private async Task SaveEdit(bool asCopy)
         {
+            log.Information("Saving edits. [asCopy={Copy}]", asCopy);
             try
             {
-                if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
-                    (flowState != FlowState.crop && flowState != FlowState.draw)) throw new ApplicationException("Could not save changes.");
+                if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0 ||
+                    (flowState != FlowState.crop && flowState != FlowState.draw)) throw new ApplicationException("Precondition for saving changes failed.");
 
                 SupportedFormat? format = scanResult.GetFileFormat();
 
@@ -2191,7 +2281,7 @@ namespace Scanner
                     case FlowState.initial:
                     case FlowState.scanning:
                     case FlowState.select:
-                        throw new ApplicationException("Could not save changes.");
+                        throw new ApplicationException("Wrong flowState for saving changes.");
                     case FlowState.crop:
                         if (asCopy)
                         {
@@ -2220,15 +2310,15 @@ namespace Scanner
 
                 if (asCopy) await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-                () =>
+                log.Error(exc, "Failed to save changes.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageSaveHeading"),
                         LocalizedString("ErrorMessageSaveBody"));
                 });
-            } 
+            }
             finally
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -2322,7 +2412,7 @@ namespace Scanner
 
         private async Task RotateScanAsync(BitmapRotation rotation, bool lockToolbar)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             SupportedFormat? format = scanResult.GetFileFormat();
 
@@ -2345,10 +2435,10 @@ namespace Scanner
                 instructions.Add(new Tuple<int, BitmapRotation>(index, rotation));
                 await scanResult.RotateScansAsync(instructions);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
+                log.Error(exc, "Rotating page failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
@@ -2376,7 +2466,7 @@ namespace Scanner
 
         private async Task RotateScansAsync(BitmapRotation rotation, bool lockToolbar)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -2389,46 +2479,57 @@ namespace Scanner
                 ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
-            IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
-            int totalSelections = 0;
-            foreach (var range in ranges)
+            try
             {
-                totalSelections += Convert.ToInt32(range.Length);
-            }
-
-            Task[] tasksPreview = new Task[totalSelections];
-
-            // generate instructions for rotation
-            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-            foreach (var range in ranges)
-            {
-                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                IReadOnlyList<ItemIndexRange> ranges = PaneManageGetSelectedRanges();
+                int totalSelections = 0;
+                foreach (var range in ranges)
                 {
-                    instructions.Add(new Tuple<int, BitmapRotation>(i, rotation));
+                    totalSelections += Convert.ToInt32(range.Length);
                 }
-            }
-            await scanResult.RotateScansAsync(instructions);
 
-            int arrayIndex = 0;
-            foreach (var range in ranges)
-            {
-                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                Task[] tasksPreview = new Task[totalSelections];
+
+                // generate instructions for rotation
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                foreach (var range in ranges)
                 {
-                    tasksPreview[arrayIndex] = scanResult.GetImageAsync(i);
-                    arrayIndex++;
+                    for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                    {
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, rotation));
+                    }
                 }
-            }
-            await Task.WhenAll(tasksPreview);
+                await scanResult.RotateScansAsync(instructions);
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-            () =>
+                int arrayIndex = 0;
+                foreach (var range in ranges)
+                {
+                    for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                    {
+                        tasksPreview[arrayIndex] = scanResult.GetImageAsync(i);
+                        arrayIndex++;
+                    }
+                }
+                await Task.WhenAll(tasksPreview);
+            }
+            catch (Exception exc)
             {
-                if (lockToolbar) UnlockToolbar();
-                UnlockPaneManage(true);
-                UnlockPaneScanOptions();
-                ProgressBarLeftPaneManage.IsIndeterminate = false;
-                if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
-            });
+                log.Error(exc, "Rotating pages failed.");
+                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
+                        LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
+            }
+            finally
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    if (lockToolbar) UnlockToolbar();
+                    UnlockPaneManage(true);
+                    UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.IsIndeterminate = false;
+                    if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
+                });
+            }
         }
 
         private async void MenuFlyoutItemButtonRotate_Click(object sender, RoutedEventArgs e)
@@ -2458,7 +2559,7 @@ namespace Scanner
 
         private async Task DeleteScanAsync(bool lockToolbar)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0) return;
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0) return;
 
             SupportedFormat? format = scanResult.GetFileFormat();
 
@@ -2479,10 +2580,11 @@ namespace Scanner
             {
                 await scanResult.DeleteScanAsync(index);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
+                log.Error(exc, "Deleting page failed.");
+
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageDeleteHeading"), LocalizedString("ErrorMessageDeleteBody"));
@@ -2493,7 +2595,7 @@ namespace Scanner
                 });
 
                 // check if last page deleted
-                if (scanResult.GetTotalNumberOfScans() == 0)
+                if (scanResult.GetTotalNumberOfPages() == 0)
                 {
                     await ReturnAppToInitialStateAsync();
                 }
@@ -2501,7 +2603,7 @@ namespace Scanner
             }
 
             // check if last page deleted
-            if (scanResult.GetTotalNumberOfScans() == 0)
+            if (scanResult.GetTotalNumberOfPages() == 0)
             {
                 await ReturnAppToInitialStateAsync();
                 return;
@@ -2520,7 +2622,7 @@ namespace Scanner
 
         private async Task DeleteScansAsync(bool lockToolbar)
         {
-            if (scanResult == null || scanResult.GetTotalNumberOfScans() == 0 ||
+            if (scanResult == null || scanResult.GetTotalNumberOfPages() == 0 ||
                 (LeftPaneListViewManage.SelectedItems.Count == 0 && LeftPaneGridViewManage.SelectedItems.Count == 0)) return;
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -2548,10 +2650,10 @@ namespace Scanner
             {
                 await scanResult.DeleteScansAsync(indices);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
+                log.Error(exc, "Deleting pages failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageDeleteHeading"), LocalizedString("ErrorMessageDeleteBody"));
@@ -2564,7 +2666,7 @@ namespace Scanner
                 });
 
                 // check if last page deleted
-                if (scanResult.GetTotalNumberOfScans() == 0)
+                if (scanResult.GetTotalNumberOfPages() == 0)
                 {
                     await ReturnAppToInitialStateAsync();
                 }
@@ -2572,7 +2674,7 @@ namespace Scanner
             }
 
             // check if last page deleted
-            if (scanResult.GetTotalNumberOfScans() == 0)
+            if (scanResult.GetTotalNumberOfPages() == 0)
             {
                 await ReturnAppToInitialStateAsync();
                 return;
@@ -2602,7 +2704,7 @@ namespace Scanner
             int newIndex = FlipViewScan.SelectedIndex;
             for (int i = newIndex; i >= -1; i--)
             {
-                if (i < scanResult.GetTotalNumberOfScans())
+                if (i < scanResult.GetTotalNumberOfPages() - 1)
                 {
                     newIndex = i;
                     break;
@@ -2643,6 +2745,7 @@ namespace Scanner
 
         private async Task ReturnAppToInitialStateAsync()
         {
+            log.Information("Returning app to its initial state.");
             scanResult = null;
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -2662,9 +2765,9 @@ namespace Scanner
                 TextBlockContentPaneGridProgressRingScan.Text = "";
                 RefreshFileName();
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+                RefreshScanButton();
             });
             flowState = FlowState.initial;
-            await RefreshScanButton();
         }
 
         private async void ButtonLeftPaneCancel_Click(object sender, RoutedEventArgs e)
@@ -2676,8 +2779,9 @@ namespace Scanner
         {
             try
             {
-                if (manageTutorialAlreadyShown || scanResult.GetTotalNumberOfScans() < 2) return;
+                if (manageTutorialAlreadyShown || scanResult.GetTotalNumberOfPages() < 2) return;
 
+                log.Information("Displaying the page management tutorial.");
                 manageTutorialAlreadyShown = true;
                 ApplicationData.Current.LocalSettings.Values["manageTutorialAlreadyShown"] = true;
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
@@ -2687,7 +2791,11 @@ namespace Scanner
                     ReliablyOpenTeachingTip(TeachingTipTutorialManage);
                 });
             }
-            catch (Exception) { }
+            catch (Exception exc)
+            {
+                Crashes.TrackError(exc);
+                log.Error(exc, "Failed to display page management tutorial.");
+            }
         }
 
         private async void TeachingTipTutorialSaveLocation_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)

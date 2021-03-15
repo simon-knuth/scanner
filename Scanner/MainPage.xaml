@@ -12,11 +12,11 @@
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     x:Class="Scanner.MainPage"
     xmlns:local="using:Scanner"
-    mc:Ignorable="d" 
-    NavigationCacheMode="Required" 
-    Loaded="Page_Loaded" 
+    mc:Ignorable="d"
+    NavigationCacheMode="Required"
+    Loaded="Page_Loaded"
     SizeChanged="Page_SizeChanged">
-    
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -25,8 +25,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
-            
+
+
             <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
             <Style x:Name="ImageCropperThumbStyleAcrylic" TargetType="controls:ImageCropperThumb">
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
@@ -453,7 +453,7 @@
             <ColumnDefinition x:Name="ColumnContentPane" Width="7*"/>
             <ColumnDefinition x:Name="ColumnRightPane" Width="3*" MinWidth="0" MaxWidth="0"/>
         </Grid.ColumnDefinitions>
-        
+
         <!-- Left Pane -->
         <Grid x:Name="LeftPane" Grid.Column="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <v1809:Grid.BackgroundTransition>
@@ -555,7 +555,7 @@
                             </StackPanel>
                         </ScrollViewer>
                     </RelativePanel>
-                    <Grid x:Name="GridLeftPaneFooter" Grid.Row="1">
+                    <Grid x:Name="GridLeftPaneFooter" Grid.Row="1" PointerWheelChanged="IgnorePointerWheel">
                         <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneFooter" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
                             <Rectangle x:Name="RectangleGridLeftPaneFooter" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=GridLeftPaneFooter, Path=ActualHeight}"/>
                         </controls:DropShadowPanel>
@@ -690,7 +690,7 @@
                                 <Frame x:Name="FrameLeftPaneManageText" Height="32"/>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
-                            
+
                             <ScrollViewer Grid.Row="0" VerticalAlignment="Bottom" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Frame>
@@ -824,7 +824,7 @@
                                 </StackPanel>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
-                            
+
                             <RelativePanel VerticalAlignment="Bottom">
                                 <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
@@ -885,8 +885,8 @@
                                         </Grid>
 
                                         <InkToolbarCustomPenButton.KeyboardAccelerators>
-                                            <KeyboardAccelerator 
-                                                Modifiers="Control" 
+                                            <KeyboardAccelerator
+                                                Modifiers="Control"
                                                 Key="C" />
                                         </InkToolbarCustomPenButton.KeyboardAccelerators>
                                     </InkToolbarCustomPenButton>
@@ -977,7 +977,7 @@
                         </Grid>
                     </StackPanel>
                 </Grid>
-                
+
 
                 <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewLeftPane_PaneClosed">
                     <SplitView.Pane>
@@ -999,7 +999,7 @@
             PlacementMargin="4"
             IsLightDismissEnabled="True"
             Target="{Binding ElementName=ButtonDevices}"
-            PreferredPlacement="BottomRight" 
+            PreferredPlacement="BottomRight"
             ActionButtonClick="TeachingTipDevices_ActionButtonClick"/>
 
         <controlsxaml:TeachingTip
@@ -1039,7 +1039,7 @@
             ActionButtonClick="TeachingTipRename_ActionButtonClick"
             Closed="TeachingTipRename_Closed"
             IsLightDismissEnabled="True"
-            PreferredPlacement="Bottom" 
+            PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonRename}">
             <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
         </controlsxaml:TeachingTip>
@@ -1051,7 +1051,7 @@
             ActionButtonClick="TeachingTipDelete_ActionButtonClick"
             Closed="TeachingTipDelete_Closed"
             IsLightDismissEnabled="True"
-            PreferredPlacement="Bottom" 
+            PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonDelete}"/>
 
         <controlsxaml:TeachingTip
@@ -1061,7 +1061,7 @@
             ActionButtonClick="TeachingTipManageDelete_ActionButtonClick"
             Closed="TeachingTipManageDelete_Closed"
             IsLightDismissEnabled="True"
-            PreferredPlacement="Bottom" 
+            PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonLeftPaneManageDelete}"/>
 
         <controlsxaml:TeachingTip

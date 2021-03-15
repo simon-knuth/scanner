@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
@@ -27,8 +28,6 @@ namespace Scanner
         public SettingsPage()
         {
             this.InitializeComponent();
-
-            log.Information("Navigated to SettingsPage.");
 
             // register event listener
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
@@ -138,7 +137,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Picking a new save location failed.");
+                log.Warning(exc, "Picking a new save location failed.");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
                     LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
                 return;
@@ -212,6 +211,7 @@ namespace Scanner
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            log.Information("Navigated to SettingsPage.");
             await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
             {
                 StoryboardEnter.Begin();
@@ -312,6 +312,7 @@ namespace Scanner
 
             // flush log
             Log.CloseAndFlush();
+            Thread.Sleep(1000);
 
             // populate file list
             StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
