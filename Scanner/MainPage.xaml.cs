@@ -11,7 +11,6 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Input;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System;
@@ -41,7 +40,12 @@ namespace Scanner
         private bool isNextScanFresh = false;
         private bool isFirstLoaded = true;
         private bool isInForeground = true;
-        private bool isScanCanceled = false;
+        private long _isScanCanceled = 0;
+        private bool isScanCanceled
+        {
+            get { return Interlocked.Read(ref _isScanCanceled) == 1; }
+            set { Interlocked.Exchange(ref _isScanCanceled, Convert.ToInt64(value)); }
+        }
         private ObservableCollection<ComboBoxItem> scannerList = new ObservableCollection<ComboBoxItem>();
         private DeviceWatcher scannerWatcher;
         private RecognizedScanner selectedScanner;
@@ -150,15 +154,18 @@ namespace Scanner
             () =>
             {
                 // find lost scanner in scannerList to remove the corresponding scanner and its list entry
-                for (int i = 0; i < scannerList.Count - 1; i++)
+                lock (scannerList)
                 {
-                    if (((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
+                    for (int i = 0; i < scannerList.Count - 1; i++)
                     {
-                        ComboBoxScanners.IsDropDownOpen = false;
-                        ComboBoxScanners.SelectedIndex = -1;
-                        scannerList.RemoveAt(i);
-                        log.Information("Removed scanner {@Device}.", args);
-                        return;
+                        if (((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
+                        {
+                            ComboBoxScanners.IsDropDownOpen = false;
+                            ComboBoxScanners.SelectedIndex = -1;
+                            scannerList.RemoveAt(i);
+                            log.Information("Removed scanner {@Device}.", args);
+                            return;
+                        }
                     }
                 }
             });
@@ -172,14 +179,17 @@ namespace Scanner
             {
                 bool isDuplicate = false;
 
-                for (int i = 0; i < scannerList.Count - 1; i++)
+                lock (scannerList)
                 {
-                    if (!((RecognizedScanner)scannerList[i].Tag).isFake
-                        && ((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
+                    for (int i = 0; i < scannerList.Count - 1; i++)
                     {
-                        isDuplicate = true;
-                        log.Information("Wanted to add scanner {@Device}, but it's a duplicate.", args);
-                        break;
+                        if (!((RecognizedScanner)scannerList[i].Tag).isFake
+                            && ((RecognizedScanner)scannerList[i].Tag).scanner.DeviceId.ToLower() == args.Id.ToLower())
+                        {
+                            isDuplicate = true;
+                            log.Information("Wanted to add scanner {@Device}, but it's a duplicate.", args);
+                            break;
+                        }
                     }
                 }
 
@@ -327,9 +337,17 @@ namespace Scanner
                 else
                 {
                     // scanner selected
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
-                        () => InitializeScanOptionsForScanner((RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag));
-                    selectedScanner = (RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag;
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        lock (scannerList)
+                        {
+                            InitializeScanOptionsForScanner((RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag);
+                        }
+                    });
+                    lock (scannerList)
+                    {
+                        selectedScanner = (RecognizedScanner)scannerList[ComboBoxScanners.SelectedIndex].Tag;
+                    }
                     RadioButtonSourceMode_Checked(null, null);
                     StackPanelContentPaneText.Visibility = Visibility.Collapsed;
                 }
@@ -592,18 +610,6 @@ namespace Scanner
 
         private void PrepareTeachingTips()
         {
-            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-            {
-                // v1809+
-                TeachingTipDevices.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
-                //TeachingTipScope.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipRename.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipDelete.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipManageDelete.ActionButtonStyle = RoundedButtonAccentStyle;
-                TeachingTipTutorialSaveLocation.ActionButtonStyle = RoundedButtonStyle;
-                TeachingTipUpdated.ActionButtonStyle = RoundedButtonAccentStyle;
-            }
             TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
         }
 
@@ -2434,6 +2440,9 @@ namespace Scanner
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 instructions.Add(new Tuple<int, BitmapRotation>(index, rotation));
                 await scanResult.RotateScansAsync(instructions);
+
+                // generate image
+                await scanResult.GetImageAsync(index);
             }
             catch (Exception exc)
             {
@@ -2442,26 +2451,20 @@ namespace Scanner
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
-                    UnlockToolbar();
+                });
+            }
+            finally
+            {
+                // restore UI
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    if (lockToolbar) UnlockToolbar();
                     UnlockPaneManage(false);
                     UnlockPaneScanOptions();
                     ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
-                return;
             }
-
-            // generate image
-            await scanResult.GetImageAsync(index);
-
-            // restore UI
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                if (lockToolbar) UnlockToolbar();
-                UnlockPaneManage(false);
-                UnlockPaneScanOptions();
-                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
-            });
         }
 
         private async Task RotateScansAsync(BitmapRotation rotation, bool lockToolbar)
@@ -2515,8 +2518,9 @@ namespace Scanner
             catch (Exception exc)
             {
                 log.Error(exc, "Rotating pages failed.");
-                ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
-                        LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageRotateHeading"),
+                LocalizedString("ErrorMessageRotateBody")));
             }
             finally
             {
@@ -2588,36 +2592,28 @@ namespace Scanner
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageDeleteHeading"), LocalizedString("ErrorMessageDeleteBody"));
-                    UnlockToolbar();
-                    UnlockPaneManage(false);
-                    UnlockPaneScanOptions();
-                    ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
-
+            }
+            finally
+            {
                 // check if last page deleted
                 if (scanResult.GetTotalNumberOfPages() == 0)
                 {
                     await ReturnAppToInitialStateAsync();
                 }
-                return;
+                else
+                {
+                    // restore UI
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                    () =>
+                    {
+                        if (lockToolbar) UnlockToolbar();
+                        UnlockPaneManage(false);
+                        UnlockPaneScanOptions();
+                        ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+                    });
+                }
             }
-
-            // check if last page deleted
-            if (scanResult.GetTotalNumberOfPages() == 0)
-            {
-                await ReturnAppToInitialStateAsync();
-                return;
-            }
-
-            // restore UI
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                if (lockToolbar) UnlockToolbar();
-                UnlockPaneManage(false);
-                UnlockPaneScanOptions();
-                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
-            });
         }
 
         private async Task DeleteScansAsync(bool lockToolbar)
@@ -2657,39 +2653,29 @@ namespace Scanner
                 {
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageDeleteHeading"), LocalizedString("ErrorMessageDeleteBody"));
-                    UnlockToolbar();
-                    UnlockPaneManage(false);
-                    ButtonLeftPaneManageSelect.IsChecked = false;
-                    UnlockPaneScanOptions();
-                    ProgressBarLeftPaneManage.IsIndeterminate = false;
-                    if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                 });
-
+            }
+            finally
+            {
                 // check if last page deleted
                 if (scanResult.GetTotalNumberOfPages() == 0)
                 {
                     await ReturnAppToInitialStateAsync();
                 }
-                return;
+                else
+                {
+                    // restore UI
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                    () =>
+                    {
+                        if (lockToolbar) UnlockToolbar();
+                        UnlockPaneManage(true);
+                        UnlockPaneScanOptions();
+                        ProgressBarLeftPaneManage.IsIndeterminate = false;
+                        if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
+                    });
+                }
             }
-
-            // check if last page deleted
-            if (scanResult.GetTotalNumberOfPages() == 0)
-            {
-                await ReturnAppToInitialStateAsync();
-                return;
-            }
-
-            // restore UI
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                if (lockToolbar) UnlockToolbar();
-                UnlockPaneManage(true);
-                UnlockPaneScanOptions();
-                ProgressBarLeftPaneManage.IsIndeterminate = false;
-                if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
-            });
         }
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)

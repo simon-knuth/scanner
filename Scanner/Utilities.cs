@@ -854,9 +854,9 @@ static class Utilities
         PackageVersion version = Package.Current.Id.Version;
         log.Information("App version: {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture}",
-            SystemInformation.OperatingSystem, SystemInformation.OperatingSystemVersion, SystemInformation.OperatingSystemArchitecture);
+            SystemInformation.Instance.OperatingSystem, SystemInformation.Instance.OperatingSystemVersion, SystemInformation.Instance.OperatingSystemArchitecture);
         log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
-            SystemInformation.DeviceFamily, SystemInformation.DeviceModel, SystemInformation.DeviceManufacturer);
+            SystemInformation.Instance.DeviceFamily, SystemInformation.Instance.DeviceModel, SystemInformation.Instance.DeviceManufacturer);
     }
 
 

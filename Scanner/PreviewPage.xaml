@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)" xmlns:local="using:Scanner"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
+    xmlns:local="using:Scanner"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
-    NavigationCacheMode="Disabled" 
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Disabled"
     KeyDown="Page_KeyDown" Loaded="Page_Loaded">
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -16,25 +16,25 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <Page.Resources>
         <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
-        <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
+        <Style x:Name="RoundedButtonStyle" TargetType="Button">
             <Setter Property="CornerRadius" Value="2"/>
-        </v1809:Style>
-        <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+        </Style>
+        <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
             <Setter Property="CornerRadius" Value="3"/>
             <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-        </v1809:Style>
-        <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
+        </Style>
+        <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
             <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
             <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
             <Setter Property="CornerRadius" Value="2"/>
-        </v1809:Style>
+        </Style>
 
 
         <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
         <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
         <local:NegativeTopThicknessConverter x:Key="NegativeTopThicknessConverter"/>
-        
-        
+
+
         <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
         <Storyboard x:Name="StoryboardError">
             <DoubleAnimation
@@ -90,9 +90,9 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <v1809:Grid.BackgroundTransition>
-                <v1809:BrushTransition/>
-            </v1809:Grid.BackgroundTransition>
+            <Grid.BackgroundTransition>
+                <BrushTransition/>
+            </Grid.BackgroundTransition>
 
             <controlsxaml:ProgressRing x:Name="ProgressRingPreview" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True"/>
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="24,0,24,0">
@@ -121,9 +121,9 @@
                             MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}"/>
                 </ScrollViewer>
                 <Grid x:Name="GridPreviewHeader" Padding="0,32,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
-                    <v1809:Grid.BackgroundTransition>
-                        <v1809:BrushTransition/>
-                    </v1809:Grid.BackgroundTransition>
+                    <Grid.BackgroundTransition>
+                        <BrushTransition/>
+                    </Grid.BackgroundTransition>
 
                     <Grid Padding="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>

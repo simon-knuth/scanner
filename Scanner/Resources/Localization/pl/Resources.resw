@@ -767,7 +767,7 @@ Fuzzy</comment>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="PageDescriptorBack" xml:space="preserve">
-    <value>TylniOpisStrony</value>
+    <value></value>
     <comment>The text that in behind the page number in the scan management.</comment>
   </data>
   <data name="PageDescriptorFront" xml:space="preserve">

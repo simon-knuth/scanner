@@ -1013,7 +1013,7 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
         public async Task CopyImagesAsync(IList<int> indices)
         {
-            Analytics.TrackEvent("Copying pages");
+            Analytics.TrackEvent("Copy pages");
             log.Information("Copying indices {@Indices} requested.", indices);
 
             if (GetTotalNumberOfPages() == 0)

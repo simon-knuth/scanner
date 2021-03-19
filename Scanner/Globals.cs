@@ -24,7 +24,7 @@ public static class Globals
 
     public static bool? isFirstAppLaunchWithThisVersion;
     public static int scanNumber;
-    public static bool lastTouchDrawState;                          // whether drawing with touch was enabled last time 
+    public static bool lastTouchDrawState;                          // whether drawing with touch was enabled last time
     public static bool manageTutorialAlreadyShown;
 
     public static AppServiceConnection appServiceConnection;

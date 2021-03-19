@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:v1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:local="using:Scanner"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
@@ -16,18 +15,18 @@
     <Page.Resources>
         <ResourceDictionary>
             <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
-            <v1809:Style x:Name="RoundedButtonStyle" TargetType="Button">
+            <Style x:Name="RoundedButtonStyle" TargetType="Button">
                 <Setter Property="CornerRadius" Value="2"/>
-            </v1809:Style>
-            <v1809:Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+            </Style>
+            <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
                 <Setter Property="CornerRadius" Value="3"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </v1809:Style>
-            <v1809:Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
+            </Style>
+            <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
                 <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
                 <Setter Property="CornerRadius" Value="2"/>
-            </v1809:Style>
+            </Style>
 
 
             <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
@@ -64,9 +63,9 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <v1809:Grid.BackgroundTransition>
-                <v1809:BrushTransition/>
-            </v1809:Grid.BackgroundTransition>
+            <Grid.BackgroundTransition>
+                <BrushTransition/>
+            </Grid.BackgroundTransition>
 
             <RelativePanel x:Name="StackPanelSettings">
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -82,9 +81,9 @@
                         </StackPanel>
                         <ComboBox x:Uid="HeadingSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" Content="Use system setting" Tag="0" v1809:CornerRadius="2"/>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeLight" Content="Light" Tag="1" v1809:CornerRadius="2"/>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2" v1809:CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" Content="Use system setting" Tag="0" CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeLight" Content="Light" Tag="1" CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2" CornerRadius="2"/>
                             </ComboBox.Items>
                         </ComboBox>
                         <TextBlock x:Name="TextBlockRestart" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Visibility="Collapsed" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
@@ -174,9 +173,9 @@
                     <Rectangle x:Name="RectangleSettingsHeader" Fill="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" VerticalAlignment="Bottom" Height="10"/>
                 </controls:DropShadowPanel>
                 <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
-                    <v1809:Grid.BackgroundTransition>
-                        <v1809:BrushTransition/>
-                    </v1809:Grid.BackgroundTransition>
+                    <Grid.BackgroundTransition>
+                        <BrushTransition/>
+                    </Grid.BackgroundTransition>
 
                     <StackPanel x:Name="StackPanelSettingsHeader" Orientation="Horizontal" Padding="0,0,0,8">
                         <StackPanel.RenderTransform>
@@ -192,7 +191,7 @@
             </RelativePanel>
         </Grid>
 
-        <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
@@ -292,7 +291,7 @@
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogTranslationsContributors" x:Uid="DialogSettingsTranslationsContributors" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogTranslationsContributors" x:Uid="DialogSettingsTranslationsContributors" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB52; " HorizontalAlignment="Left" FontSize="24" Margin="0,0,8,0"/>
@@ -305,7 +304,7 @@
 
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogAboutCredits" x:Uid="DialogSettingsAboutCredits" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogAboutCredits" x:Uid="DialogSettingsAboutCredits" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="HeadingDialogAboutCredits" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
                 <TextBlock>
@@ -316,7 +315,7 @@
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogExportLog" x:Uid="DialogExportLog" v1809:Style="{StaticResource RoundedContentDialog}" DefaultButton="None" v1809:CloseButtonStyle="{StaticResource RoundedButtonStyle}">
+        <ContentDialog x:Name="ContentDialogExportLog" x:Uid="DialogExportLog" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Uid="HeadingDialogExportLog" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
                 <TextBlock x:Uid="TextDialogExportLog" Margin="0,0,0,12"/>
@@ -345,10 +344,10 @@
                                                 </Span>
                                             </TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <Frame v1809:CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="2" HorizontalAlignment="Left" Margin="0,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="2" HorizontalAlignment="Left" Margin="0,2,0,0">
                                                     <TextBlock Text="{Binding File.Name}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
-                                                <Frame v1809:CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="2" HorizontalAlignment="Left" Margin="6,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="2" HorizontalAlignment="Left" Margin="6,2,0,0">
                                                     <TextBlock Text="{Binding FileSize}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
                                             </StackPanel>

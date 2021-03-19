@@ -22,7 +22,12 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
-        private bool allSettingsLoaded = false;
+        private long _allSettingsLoaded = 0;
+        private bool allSettingsLoaded
+        {
+            get { return Interlocked.Read(ref _allSettingsLoaded) == 1; }
+            set { Interlocked.Exchange(ref _allSettingsLoaded, Convert.ToInt64(value)); }
+        }
 
 
         public SettingsPage()
@@ -220,11 +225,6 @@ namespace Scanner
                 ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
                 ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
 
-                if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-                {
-                    // v1809+
-                    TeachingTipEmpty.ActionButtonStyle = RoundedButtonAccentStyle;
-                }
                 TeachingTipEmpty.CloseButtonContent = LocalizedString("CloseButtonText");
             });
         }
