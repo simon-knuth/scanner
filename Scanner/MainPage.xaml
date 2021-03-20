@@ -531,12 +531,6 @@
                                         <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
                                     </StackPanel>
-
-                                    <Frame.Transitions>
-                                        <TransitionCollection>
-                                            <RepositionThemeTransition/>
-                                        </TransitionCollection>
-                                    </Frame.Transitions>
                                 </Frame>
                             </StackPanel>
                         </ScrollViewer>
@@ -645,7 +639,7 @@
                                                         </controls:DropShadowPanel>
                                                     </Frame>
                                                     <Frame Margin="6" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
-                                                        <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                        <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BodyTextBlockStyle}"/>
                                                     </Frame>
                                                 </Grid>
                                             </GridViewItem>
@@ -756,12 +750,6 @@
                 </StackPanel>
 
                 <FlipView x:Name="FlipViewScan" Style="{StaticResource FlipViewStyleNoButtons}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="0" Visibility="Collapsed" SelectionChanged="FlipViewScan_SelectionChanged">
-                    <FlipView.ItemContainerTransitions>
-                        <TransitionCollection>
-                            <AddDeleteThemeTransition/>
-                        </TransitionCollection>
-                    </FlipView.ItemContainerTransitions>
-
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="local:ScanResultElement">
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate"
@@ -812,7 +800,7 @@
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                 <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="12,0,12,0">
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
-                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>

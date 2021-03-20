@@ -83,7 +83,7 @@ namespace Scanner
                         ComboBoxTheme.SelectedIndex = 0;
                         break;
                 }
-                TextBlockRestart.Visibility = Visibility.Collapsed;
+                StackPanelTextBlockRestart.Visibility = Visibility.Collapsed;
                 CheckBoxAppendTime.IsChecked = settingAppendTime;
                 CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
                 CheckBoxSettingsErrorStatistics.IsChecked = settingErrorStatistics;
@@ -94,6 +94,13 @@ namespace Scanner
 
                 PackageVersion version = Package.Current.Id.Version;
                 RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+
+                if (localSettingsContainer.Values["awaitingRestartAfterThemeChange"] != null
+                    && (bool) localSettingsContainer.Values["awaitingRestartAfterThemeChange"] == true)
+                {
+                    // theme change pending
+                    StackPanelTextBlockRestart.Visibility = Visibility.Visible;
+                }
             });
         }
 
@@ -106,9 +113,10 @@ namespace Scanner
         {
             if (allSettingsLoaded)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockRestart.Visibility = Visibility.Visible);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StackPanelTextBlockRestart.Visibility = Visibility.Visible);
 
                 settingAppTheme = (Theme)int.Parse(((ComboBoxItem)ComboBoxTheme.SelectedItem).Tag.ToString());
+                localSettingsContainer.Values["awaitingRestartAfterThemeChange"] = true;
                 SaveSettings();
             }
         }
@@ -225,7 +233,7 @@ namespace Scanner
                 ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
                 ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
 
-                TeachingTipEmpty.CloseButtonContent = LocalizedString("CloseButtonText");
+                TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
             });
         }
 

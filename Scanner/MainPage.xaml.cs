@@ -2868,7 +2868,10 @@ namespace Scanner
 
         private void ButtonDebugException_Click(object sender, RoutedEventArgs e)
         {
-            throw new ApplicationException(TextBoxDebugException.Text);
+            Exception exc = new ApplicationException(TextBoxDebugException.Text, new ApplicationException("Inner exception"));
+            log.Information(exc, "Throwing debug exception.");
+            Serilog.Log.CloseAndFlush();
+            throw exc;
         }
     }
 }

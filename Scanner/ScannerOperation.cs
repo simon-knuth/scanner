@@ -185,7 +185,7 @@ class ScannerOperation
         if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
         else if (canConvert) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
 
-        log.Information("Got supported formats: {@Formats}", formats);
+        log.Information("Got supported formats: {Formats}", formats.ToString());
 
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)

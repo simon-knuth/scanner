@@ -86,9 +86,13 @@
                                 <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2" CornerRadius="2"/>
                             </ComboBox.Items>
                         </ComboBox>
-                        <TextBlock x:Name="TextBlockRestart" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" Visibility="Collapsed" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run x:Uid="TextSettingsRestart1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click"><Run x:Uid="HyperlinkSettingsRestart" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsRestart2" xml:space="preserve"/></Span>
-                        </TextBlock>
+                        <StackPanel x:Name="StackPanelTextBlockRestart" Orientation="Horizontal" Margin="0,12,0,0" Visibility="Collapsed">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE783;" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="TextBlockRestart" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Span><Run x:Uid="TextSettingsRestart1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRestart" UnderlineStyle="None" Click="HyperlinkRestart_Click"><Run x:Uid="HyperlinkSettingsRestart" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsRestart2" xml:space="preserve"/></Span>
+                            </TextBlock>
+                        </StackPanel>
+
 
                         <CheckBox x:Uid="OptionSettingsAppendTime" x:Name="CheckBoxAppendTime" Content="Append time to file name" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
                         <CheckBox x:Uid="OptionSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
@@ -271,6 +275,12 @@
                         <HyperlinkButton NavigateUri="https://github.com/serilog/serilog/blob/dev/LICENSE">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Serilog"/>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </HyperlinkButton>
+                        <HyperlinkButton NavigateUri="https://github.com/RehanSaeed/Serilog.Exceptions/blob/main/LICENSE.md">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Serilog.Exceptions"/>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
                             </StackPanel>
                         </HyperlinkButton>

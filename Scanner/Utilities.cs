@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Serilog;
+using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -334,6 +335,7 @@ static class Utilities
             settingAppTheme = Theme.system;
             localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
         }
+        localSettingsContainer.Values["awaitingRestartAfterThemeChange"] = false;
 
         if (localSettingsContainer.Values["settingAppendTime"] != null)
         {
@@ -487,11 +489,13 @@ static class Utilities
         catch (UnauthorizedAccessException exc)
         {
             log.Error(exc, "Resetting the scan folder failed. (Unauthorized)");
+            Crashes.TrackError(exc);
             throw;
         }
         catch (Exception exc)
         {
             log.Error(exc, "Resetting the scan folder failed.");
+            Crashes.TrackError(exc);
             throw;
         }
 
@@ -847,6 +851,7 @@ static class Utilities
             rollingInterval: RollingInterval.Day,
             retainedFileCountLimit: 8,
             fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
+            .Enrich.WithExceptionDetails()
             .CreateLogger();
         log.Information("--- Log initialized ---");
 
