@@ -120,7 +120,7 @@
                             MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerDummy}"
                             MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}"/>
                 </ScrollViewer>
-                <Grid x:Name="GridPreviewHeader" Padding="0,32,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                <Grid x:Name="GridPreviewHeader" Padding="0,30,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>

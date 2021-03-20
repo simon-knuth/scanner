@@ -1176,7 +1176,7 @@ namespace Scanner
                 foreach (StorageFile file in files)
                 {
                     elements.Add(new ScanResultElement(file));
-                    if (settingAppendTime) await SetInitialName(elements[elements.Count - 1], append);
+                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialName(elements[elements.Count - 1], append);
                 }
             }
             else

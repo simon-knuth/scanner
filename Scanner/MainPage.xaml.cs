@@ -51,7 +51,12 @@ namespace Scanner
         private RecognizedScanner selectedScanner;
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
-        private FlowState flowState = FlowState.initial;
+        private long _flowState = (long) FlowState.initial;
+        private FlowState flowState
+        {
+            get { return (FlowState)Interlocked.Read(ref _flowState); }
+            set { Interlocked.Exchange(ref _flowState, (long)value); }
+        }
         private UIstate uiState = UIstate.unset;
         private CancellationTokenSource scanCancellationToken;
         private Progress<uint> scanProgress;
@@ -67,12 +72,15 @@ namespace Scanner
         {
             InitializeComponent();
 
-            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (titleBar, y) =>
             {
-                FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
-                StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
-                FrameLeftPaneManageText.Height = titleBar.Height;
-                currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                {
+                    FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
+                    StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
+                    FrameLeftPaneManageText.Height = titleBar.Height;
+                    currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
+                });
             };
 
             // add scanner search indicator
@@ -255,7 +263,6 @@ namespace Scanner
 
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
-                    StoryboardAppLaunch.Begin();
                     SplitViewLeftPane.Margin = new Thickness(0, GridContentPaneTopToolbar.ActualHeight, 0, 0);
                     SplitViewRightPane.Margin = SplitViewLeftPane.Margin;
                     ScrollViewerContentPaneContentDummy.Margin = SplitViewLeftPane.Margin;
@@ -460,7 +467,7 @@ namespace Scanner
 
         private async void RadioButtonSourceMode_Checked(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 // color mode
@@ -2315,6 +2322,12 @@ namespace Scanner
                 }
 
                 if (asCopy) await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
+
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+                () =>
+                {
+                    if (!asCopy) TransitionFromEditingMode();
+                });
             }
             catch (Exception exc)
             {
@@ -2330,7 +2343,6 @@ namespace Scanner
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High,
                 () =>
                 {
-                    if (!asCopy) TransitionFromEditingMode();
                     ButtonCropAspectRatio.IsEnabled = true;
                     InkToolbarDraw.IsEnabled = true;
                     ButtonSave.IsEnabled = true;
@@ -2452,6 +2464,9 @@ namespace Scanner
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
                 });
+
+                // try generating the image again, just to be sure
+                try { await scanResult.GetImageAsync(index); } catch (Exception) { }
             }
             finally
             {

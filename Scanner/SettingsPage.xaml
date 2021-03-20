@@ -172,7 +172,7 @@
                 <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="15" ShadowOpacity="0.1" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Rectangle x:Name="RectangleSettingsHeader" Fill="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" VerticalAlignment="Bottom" Height="10"/>
                 </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,32,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
+                <Grid x:Name="GridSettingsHeader" Padding="0,30,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>

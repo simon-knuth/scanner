@@ -414,19 +414,6 @@
                                  To="1" Duration="0:0:0.1" BeginTime="0:0:0.2"/>
             </Storyboard>
 
-            <Storyboard x:Name="StoryboardAppLaunch">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RectangleLeftPaneScanHeaderBackground" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:1">
-                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DropShadowPanelGridLeftPaneScanHeader" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:1">
-                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                </ObjectAnimationUsingKeyFrames>
-            </Storyboard>
-
 
             <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
@@ -467,17 +454,12 @@
                     </Grid.RowDefinitions>
 
                     <RelativePanel x:Name="RelativePanelLeftPaneScan" Grid.Row="0" VerticalAlignment="Stretch" PointerWheelChanged="IgnorePointerWheel">
-                        <RelativePanel.ChildrenTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromHorizontalOffset="0" FromVerticalOffset="100" IsStaggeringEnabled="False"/>
-                            </TransitionCollection>
-                        </RelativePanel.ChildrenTransitions>
                         <Grid x:Name="GridLeftPaneScanHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                             <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneScanHeader" Opacity="{Binding ElementName=ScrollViewerLeftPaneScan, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0" Visibility="Collapsed">
                                 <Rectangle x:Name="RectangleGridLeftPaneScanOptions" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=FrameLeftPaneScanHeader, Path=ActualHeight}"/>
                             </controls:DropShadowPanel>
                             <Rectangle x:Name="RectangleLeftPaneScanHeaderBackground" Fill="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
-                            <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,32,0,0">
+                            <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,30,0,0">
                                 <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
                             </Frame>
                         </Grid>
@@ -549,6 +531,12 @@
                                         <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
                                     </StackPanel>
+
+                                    <Frame.Transitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition/>
+                                        </TransitionCollection>
+                                    </Frame.Transitions>
                                 </Frame>
                             </StackPanel>
                         </ScrollViewer>
@@ -596,7 +584,7 @@
                                     <FontIcon x:Name="FontIconButtonScanFolder" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
                                 </Button>
                                 <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF78A;" Margin="8,8,8,8"/>
+                                    <SymbolIcon Symbol="Cancel" Margin="8,8,8,8"/>
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -623,7 +611,7 @@
                                                             <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
                                                         </Frame>
                                                     </controls:DropShadowPanel>
-                                                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BaseTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                                 </Grid>
                                             </ListViewItem>
                                         </DataTemplate>
@@ -685,7 +673,7 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Orientation="Vertical">
-                                <Frame x:Name="FrameLeftPaneManageText" Height="32"/>
+                                <Frame x:Name="FrameLeftPaneManageText" Height="30"/>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
 
@@ -768,6 +756,12 @@
                 </StackPanel>
 
                 <FlipView x:Name="FlipViewScan" Style="{StaticResource FlipViewStyleNoButtons}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="0" Visibility="Collapsed" SelectionChanged="FlipViewScan_SelectionChanged">
+                    <FlipView.ItemContainerTransitions>
+                        <TransitionCollection>
+                            <AddDeleteThemeTransition/>
+                        </TransitionCollection>
+                    </FlipView.ItemContainerTransitions>
+
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="local:ScanResultElement">
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate"
@@ -816,7 +810,7 @@
                     <StackPanel Orientation="Vertical">
                         <Grid Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                                <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="32" HorizontalAlignment="Center" Margin="12,0,12,0">
+                                <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="12,0,12,0">
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                                 </StackPanel>

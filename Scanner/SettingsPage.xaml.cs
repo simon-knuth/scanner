@@ -312,7 +312,6 @@ namespace Scanner
 
             // flush log
             Log.CloseAndFlush();
-            Thread.Sleep(1000);
 
             // populate file list
             StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
