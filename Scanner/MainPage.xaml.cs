@@ -1367,8 +1367,30 @@ namespace Scanner
         private void PaneManageSelectIndex(int index)
         {
             if (scanResult == null) return;
-            if (scanResult.GetFileFormat() == SupportedFormat.PDF) LeftPaneGridViewManage.SelectedIndex = index;
-            else LeftPaneListViewManage.SelectedIndex = index;
+            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            {
+                LeftPaneGridViewManage.SelectedIndex = index;
+
+                // scroll to item
+                try
+                {
+                    GridViewItem itemContainer = (GridViewItem)LeftPaneGridViewManage.ContainerFromItem(LeftPaneGridViewManage.SelectedItem);
+                    itemContainer.StartBringIntoView();
+                }
+                catch (Exception) { }
+            }
+            else
+            {
+                LeftPaneListViewManage.SelectedIndex = index;
+
+                // scroll to item
+                try
+                {
+                    ListViewItem itemContainer = (ListViewItem)LeftPaneListViewManage.ContainerFromItem(LeftPaneListViewManage.SelectedItem);
+                    itemContainer.StartBringIntoView();
+                }
+                catch (Exception) { }
+            }
         }
 
         private int PaneManageGetFirstSelectedIndex()

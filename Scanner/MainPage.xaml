@@ -456,10 +456,10 @@
 
                     <RelativePanel x:Name="RelativePanelLeftPaneScan" Grid.Row="0" VerticalAlignment="Stretch" PointerWheelChanged="IgnorePointerWheel">
                         <Grid x:Name="GridLeftPaneScanHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                            <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneScanHeader" Opacity="{Binding ElementName=ScrollViewerLeftPaneScan, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0" Visibility="Collapsed">
+                            <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneScanHeader" Opacity="{Binding ElementName=ScrollViewerLeftPaneScan, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
                                 <Rectangle x:Name="RectangleGridLeftPaneScanOptions" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=FrameLeftPaneScanHeader, Path=ActualHeight}"/>
                             </controls:DropShadowPanel>
-                            <Rectangle x:Name="RectangleLeftPaneScanHeaderBackground" Fill="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+                            <Rectangle x:Name="RectangleLeftPaneScanHeaderBackground" Fill="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,30,0,0">
                                 <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
                             </Frame>
