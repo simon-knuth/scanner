@@ -71,7 +71,9 @@ class ScannerOperation
         if (selectedItem.Tag.ToString().Split(",")[1] == "converted")
         {
             secondFormat = ConvertFormatStringToSupportedFormat(selectedItem.Tag.ToString().Split(",")[0]);
-            foreach (ComboBoxItem item in formats)
+            List<ComboBoxItem> reversedFormats = new List<ComboBoxItem>(formats);
+            reversedFormats.Reverse();
+            foreach (ComboBoxItem item in reversedFormats)
             {
                 if (item.Tag.ToString().Split(",")[1] == "native")
                 {
@@ -106,7 +108,7 @@ class ScannerOperation
             else if (selectedItem.Tag.ToString().Split(",")[0] == "tif") baseFormat = ImageScannerFormat.Tiff;
         }
 
-        log.Information("Got determined format: [baseFormat={Base}|secondFormat={Second}]", baseFormat, secondFormat);
+        log.Information("Got desired format: [baseFormat={Base}|secondFormat={Second}]", baseFormat, secondFormat);
         return new Tuple<ImageScannerFormat, SupportedFormat?>(baseFormat, secondFormat);
     }
 
@@ -185,7 +187,7 @@ class ScannerOperation
         if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
         else if (canConvert) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
 
-        log.Information("Got supported formats: {Formats}", formats.ToString());
+        log.Information("Got natively supported formats: {@Formats}. [canConvert={Convert}]", newNativeFormats, canConvert);
 
         // select last selected format again (if possible)
         for (int i = 0; i < formats.Count; i++)

@@ -857,6 +857,7 @@ namespace Scanner
                     ButtonLeftPaneScan.IsEnabled = false;
                     TransitionLeftPaneButtonsForScan(true);
                     LockPaneScanOptions();
+                    TransitionFromSelectMode();
                     LockPaneManage(true);
                     LockToolbar();
                     StoryboardProgressBarScanBegin.Begin();
@@ -869,6 +870,7 @@ namespace Scanner
                     scanResult = null;
                     await InitializeTempFolderAsync();
                     RefreshFileName();
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
                 }
                 Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
 
@@ -1093,7 +1095,6 @@ namespace Scanner
                     UnlockToolbar();
                     StoryboardProgressBarScanEnd.Begin();
                     FlipViewScan.Visibility = Visibility.Visible;
-                    LeftPaneManageInitialText.Visibility = Visibility.Collapsed;
                     if (startFresh) FlipViewScan.SelectedIndex = 0;
                     FlipViewScan_SelectionChanged(null, null);
                     TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
@@ -1130,21 +1131,31 @@ namespace Scanner
 
         private void InitializePaneManage()
         {
-            if (scanResult == null) throw new ApplicationException("Couldn't initialize PaneManage. (scanResult null)");
-
-            if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+            if (scanResult == null)
             {
                 LeftPaneListViewManage.ItemsSource = null;
                 LeftPaneListViewManage.Visibility = Visibility.Collapsed;
-                LeftPaneGridViewManage.ItemsSource = scanResult.elements;
-                LeftPaneGridViewManage.Visibility = Visibility.Visible;
+                LeftPaneGridViewManage.ItemsSource = null;
+                LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
+                LeftPaneManageInitialText.Visibility = Visibility.Visible;
             }
             else
             {
-                LeftPaneGridViewManage.ItemsSource = null;
-                LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
-                LeftPaneListViewManage.ItemsSource = scanResult.elements;
-                LeftPaneListViewManage.Visibility = Visibility.Visible;
+                LeftPaneManageInitialText.Visibility = Visibility.Collapsed;
+                if (scanResult.GetFileFormat() == SupportedFormat.PDF)
+                {
+                    LeftPaneListViewManage.ItemsSource = null;
+                    LeftPaneListViewManage.Visibility = Visibility.Collapsed;
+                    LeftPaneGridViewManage.ItemsSource = scanResult.elements;
+                    LeftPaneGridViewManage.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    LeftPaneGridViewManage.ItemsSource = null;
+                    LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
+                    LeftPaneListViewManage.ItemsSource = scanResult.elements;
+                    LeftPaneListViewManage.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -1412,7 +1423,7 @@ namespace Scanner
             else StoryboardChangeButtonsEndScan.Begin();
         }
 
-        private async void LeftPaneManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LeftPaneManage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (scanResult == null) return;
 
@@ -1420,7 +1431,6 @@ namespace Scanner
             {
                 case FlowState.initial:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => UnlockToolbar());
                     break;
                 case FlowState.scanning:
                     FlipViewScan.SelectedIndex = PaneManageGetFirstSelectedIndex();
@@ -2252,7 +2262,8 @@ namespace Scanner
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                ButtonCropAspectRatio.IsChecked = false;
+                if (ToggleMenuFlyoutItemAspectRatioCustom.IsChecked == false) ButtonCropAspectRatio.IsChecked = true;
+                else ButtonCropAspectRatio.IsChecked = false;
             });
         }
 
@@ -2753,10 +2764,7 @@ namespace Scanner
                 TransitionFromSelectMode();
                 ButtonLeftPaneCancel.IsEnabled = false;
                 TransitionLeftPaneButtonsForScan(false);
-                LeftPaneListViewManage.ItemsSource = null;
-                LeftPaneListViewManage.Visibility = Visibility.Collapsed;
-                LeftPaneGridViewManage.ItemsSource = null;
-                LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
+                InitializePaneManage();
                 UnlockPaneScanOptions();
                 LockPaneManage(true);
                 FlipViewScan.Visibility = Visibility.Collapsed;

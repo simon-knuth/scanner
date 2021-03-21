@@ -711,19 +711,32 @@ namespace Scanner
             stream.Dispose();
 
             elements.Insert(index + 1, new ScanResultElement(file));
+
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
             if (scanResultFormat == SupportedFormat.PDF)
             {
 
-                List<StorageFile> filesNumbering = new List<StorageFile>();
-                for (int i = index + 1; i < elements.Count; i++)
+                try
                 {
-                    await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
-                    filesNumbering.Add(elements[i].ScanFile);
+                    List<StorageFile> filesNumbering = new List<StorageFile>();
+                    for (int i = index + 1; i < elements.Count; i++)
+                    {
+                        await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                        filesNumbering.Add(elements[i].ScanFile);
+                    }
+                    await NumberNewConversionFiles(filesNumbering, index + 1);
                 }
-                await NumberNewConversionFiles(filesNumbering, index + 1);
+                catch (Exception exc)
+                {
+                    log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
+                    Crashes.TrackError(exc);
+                    elements.RemoveAt(index + 1);
+                    try { await file.DeleteAsync(); } catch (Exception e) { log.Error(e, "Undo failed as well."); }
+                    RefreshItemDescriptors();
+                    throw;
+                }
                 await GeneratePDF();
             }
         }
@@ -936,14 +949,25 @@ namespace Scanner
             // if necessary, generate PDF
             if (scanResultFormat == SupportedFormat.PDF)
             {
-
-                List<StorageFile> filesNumbering = new List<StorageFile>();
-                for (int i = index + 1; i < elements.Count; i++)
+                try
                 {
-                    await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
-                    filesNumbering.Add(elements[i].ScanFile);
+                    List<StorageFile> filesNumbering = new List<StorageFile>();
+                    for (int i = index + 1; i < elements.Count; i++)
+                    {
+                        await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                        filesNumbering.Add(elements[i].ScanFile);
+                    }
+                    await NumberNewConversionFiles(filesNumbering, index + 1);
                 }
-                await NumberNewConversionFiles(filesNumbering, index + 1);
+                catch (Exception exc)
+                {
+                    log.Error(exc, "Failed to generate PDF after drawing on index {Index} as copy. Attempting to get rid of copy.", index);
+                    Crashes.TrackError(exc);
+                    elements.RemoveAt(index + 1);
+                    try { await file.DeleteAsync(); } catch (Exception e) { log.Error(e, "Undo failed as well."); }
+                    RefreshItemDescriptors();
+                    throw;
+                }
                 await GeneratePDF();
             }
         }
@@ -1362,11 +1386,19 @@ namespace Scanner
         /// <param name="startIndex">The first number.</param>
         private static async Task NumberNewConversionFiles(IReadOnlyList<StorageFile> files, int startIndex)
         {
-            int nextNumber = startIndex;
-            foreach (StorageFile file in files)
+            try
             {
-                await file.RenameAsync(nextNumber + file.FileType);
-                nextNumber++;
+                int nextNumber = startIndex;
+                foreach (StorageFile file in files)
+                {
+                    await file.RenameAsync(nextNumber + file.FileType);
+                    nextNumber++;
+                }
+            }
+            catch (Exception exc)
+            {
+                log.Error(exc, "Number new conversion files with startIndex {Index} failed.", startIndex);
+                throw;
             }
         }
 
