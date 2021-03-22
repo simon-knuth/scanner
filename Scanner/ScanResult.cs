@@ -34,7 +34,7 @@ namespace Scanner
         public ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
         public SupportedFormat scanResultFormat;
         public StorageFile pdf = null;
-        private readonly StorageFolder originalTargetFolder;
+        public readonly StorageFolder originalTargetFolder;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -602,7 +602,7 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
-                                                        <Frame CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Frame CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                             <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
                                                         </Frame>
                                                     </controls:DropShadowPanel>

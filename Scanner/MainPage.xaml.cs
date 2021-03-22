@@ -320,8 +320,10 @@ namespace Scanner
             if (isDefaultFolder == true || isDefaultFolder == null) FontIconButtonScanFolder.Glyph = glyphButtonRecentsDefault;
             else FontIconButtonScanFolder.Glyph = glyphButtonRecentsCustom;
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
+                RefreshScanButton();
+
                 // workaround: ProgressRing gets stuck after a page navigation
                 ProgressRingContentPane.IsActive = false;
                 ProgressRingContentPane.IsActive = true;
@@ -1509,6 +1511,19 @@ namespace Scanner
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
                 return;
             }
+            else if (scanResult != null && scanResult.originalTargetFolder.Path != scanFolder.Path)
+            {
+                // save location has changed
+                FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
+                FontIconButtonScanStartFresh.Visibility = Visibility.Visible;
+                isNextScanFresh = true;
+                MenuFlyoutItemButtonScan.IsEnabled = false;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
+                MenuFlyoutItemButtonScan.Icon = null;
+                MenuFlyoutItemButtonScanFresh.IsEnabled = true;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+                return;
+            }
 
             // get currently selected format
             var selectedFormatTuple = GetDesiredFormat(ComboBoxFormat, formats);
@@ -1712,7 +1727,6 @@ namespace Scanner
         private void TransitionFromSelectMode()
         {
             flowState = FlowState.initial;
-            LockToolbar();
             LockPaneManage(false);
             LeftPaneListViewManage.SelectionMode = ListViewSelectionMode.Single;
             LeftPaneListViewManage.CanDragItems = true;
@@ -1725,6 +1739,7 @@ namespace Scanner
             {
                 FlipViewScan.SelectedIndex = 0;
                 PaneManageSelectIndex(0);
+                UnlockToolbar();
             }
             ProgressBarLeftPaneManage.IsIndeterminate = false;
         }
