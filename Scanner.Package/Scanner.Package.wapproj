@@ -51,8 +51,8 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>1b39989e-060f-40d3-8371-f20f4cca2bc9</ProjectGuid>
-    <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\Scanner\Scanner.csproj</EntryPointProjectUniqueName>
@@ -61,7 +61,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>E1DF0AE77848314C984E8E6F11B6F548FBB2CD0E</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>11E659DAFA42853369811DAF8803116C1934C61B</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -142,13 +142,11 @@
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-96.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-96.png" />
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Assets\Square44x44Logo.scale-125.png" />
     <Content Include="Assets\Square44x44Logo.scale-150.png" />
@@ -159,7 +157,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-96.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-125.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />

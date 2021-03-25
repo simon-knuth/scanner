@@ -6,9 +6,9 @@
     public enum UIstate
     {
         unset = -1,
-        full = 0,                   // the whole UI is visible
-        small_initial = 1,          // only the options pane is visible
-        small_result = 2            // only the result of a scan is visible
+        small = 0,                  // the whole UI is visible
+        full = 1,                   // the small UI is visible
+        wide = 2                    // the wide UI is visible
     }
 
 
@@ -17,10 +17,11 @@
     /// </summary>
     public enum FlowState
     {
-        initial = 0,                // there is no result visible
-        result = 1,                 // there is a result visible but no crop in progress
-        crop = 2,                   // there is a result visible and a crop in progress
-        draw = 3                    // there is a result visible and drawing in progress
+        initial = 0,                // there is nothing out of the ordinary happening
+        scanning = 1,               // there is a scan in progress
+        select = 2,                 // there is a result visible and scans being selected
+        crop = 3,                   // there is a result visible and being cropped
+        draw = 4                    // there is a result visible and being used for inking
     }
 
 
@@ -70,5 +71,38 @@
         PDF = 4,
         XPS = 5,
         OpenXPS = 6,
+    }
+
+
+    /// <summary>
+    ///     Represents the different modes for the editing toolbar.
+    /// </summary>
+    public enum SummonToolbar
+    {
+        Hidden = 0,
+        Crop = 1,
+        Draw = 2,
+    }
+
+
+    /// <summary>
+    ///     Represents the different actions that can request a scope selection.
+    /// </summary>
+    public enum ScopeActions
+    {
+        Copy = 0,
+        OpenWith = 1,
+        Share = 2,
+    }
+
+
+    /// <summary>
+    ///     Represents the different source modes that a scanner can support.
+    /// </summary>
+    public enum SourceMode
+    {
+        Auto = 0,
+        Flatbed = 1,
+        Feeder = 2,
     }
 }

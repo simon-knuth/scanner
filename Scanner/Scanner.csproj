@@ -11,13 +11,13 @@
     <AssemblyName>Scanner</AssemblyName>
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateThumbprint>A9FCF24AB118D1D5D41E897393E18A52031E5D02</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>11E659DAFA42853369811DAF8803116C1934C61B</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -128,6 +128,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ErrorMessage.cs" />
+    <Compile Include="FlipViewScanItemData.cs" />
+    <Compile Include="PreviewPageIntent.cs" />
+    <Compile Include="RecognizedScanner.cs" />
+    <Compile Include="LogFile.cs" />
+    <Compile Include="ScanResultElement.cs" />
     <Compile Include="ScanResult.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Globals.cs" />
@@ -136,6 +142,23 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PreviewPage.xaml.cs">
+      <DependentUpon>PreviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
+    <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
+    <Compile Include="XAML Converters\NegativeVisibilityConverter.cs" />
+    <Compile Include="XAML Converters\NegativeBoolConverter.cs" />
+    <Compile Include="XAML Converters\ButtonTextOpacityConverter.cs" />
+    <Compile Include="XAML Converters\ButtonShadowConverter.cs" />
+    <Compile Include="XAML Converters\HeaderScrollBackgroundConverter.cs" />
+    <Compile Include="XAML Converters\HeaderScrollShadowConverter.cs" />
+    <Compile Include="XAML Converters\PaneManageItemBackgroundConverter.cs" />
+    <Compile Include="XAML Converters\PaneManageItemDescriptorBackgroundConverter.cs" />
+    <Compile Include="XAML Converters\PaneManageItemConverter.cs" />
+    <Compile Include="XAML Converters\TopThicknessConverter.cs" />
+    <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverter.cs" />
+    <Compile Include="XAML Converters\NegativeTopThicknessConverter.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -204,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="PreviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="StylesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -218,46 +245,86 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>4.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>4.1.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.10</Version>
+      <Version>6.2.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1901.28001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>6.0.0</Version>
+      <Version>7.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.0.0</Version>
+      <Version>7.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Lottie">
+      <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.3.200213001</Version>
+      <Version>2.5.0</Version>
     </PackageReference>
     <PackageReference Include="QueryString.NET">
       <Version>1.0.0</Version>
     </PackageReference>
+    <PackageReference Include="Serilog">
+      <Version>2.10.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Exceptions">
+      <Version>6.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.Async">
+      <Version>1.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.File">
+      <Version>4.1.0</Version>
+    </PackageReference>
     <PackageReference Include="Win2D.uwp">
-      <Version>1.24.0</Version>
+      <Version>1.25.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
     </SDKReference>
-    <SDKReference Include="WindowsDesktop, Version=10.0.17134.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.19041.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\en\Resources.resw" />
+    <Content Include="Assets\AnimatedVisuals\lottie_19814-data-list.json" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\de\Resources.resw" />
+    <PRIResource Include="Resources\Localization\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Secrets.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\pl\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- Modification for Lottie to pass WACK -->
+  <Target Name="_AddXamlWinmdToPackageLayoutRoot" AfterTargets="_CreatePackageLayout">
+    <Copy
+        SourceFiles="@(_PackageLayoutFileSource)"
+        DestinationFiles="@(_PackageLayoutFileSource->'$(AppxLayoutDir)%(Filename)%(Extension)')"
+        Condition="'%(Filename)%(Extension)' == 'Microsoft.UI.Xaml.winmd'" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

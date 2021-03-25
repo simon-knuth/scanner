@@ -1,8 +1,14 @@
-﻿using System;
+﻿using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -16,29 +22,24 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
-        private string websiteUrl = "https://simon-knuth.github.io/scanner";
-        private string privacyPolicyUrl = "https://simon-knuth.github.io/scanner/privacy-policy";
-        private bool allSettingsLoaded = false;
+        private long _allSettingsLoaded = 0;
+        private bool allSettingsLoaded
+        {
+            get { return Interlocked.Read(ref _allSettingsLoaded) == 1; }
+            set { Interlocked.Exchange(ref _allSettingsLoaded, Convert.ToInt64(value)); }
+        }
 
 
         public SettingsPage()
         {
             this.InitializeComponent();
 
-            // localize hyperlinks
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkRestart.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRestartHintLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkFeedbackHub.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsFeedbackLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkRate.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsRateLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkWebsite.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsWebsiteLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkLicenses.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsLicensesLink");
-            ((Windows.UI.Xaml.Documents.Run)HyperlinkPrivacyPolicy.Inlines[0]).Text = ResourceLoader.GetForCurrentView().GetString("HyperlinkSettingsPrivacyPolicyLink");
-
             // register event listener
-            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) => {
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
+            {
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
         }
-
 
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace Scanner
         {
             if (e.Key == Windows.System.VirtualKey.GoBack || e.Key == Windows.System.VirtualKey.Escape)
             {
-                ButtonBack_Click(null, null);
+                GoBack();
             }
         }
 
@@ -57,39 +58,50 @@ namespace Scanner
         ///     The event listener for when the page is loading. Loads all current settings and updates
         ///     the version indicator at the bottom.
         /// </summary>
-        private void Page_Loading(FrameworkElement sender, object args)
+        private async void Page_Loading(FrameworkElement sender, object args)
         {
             if (scanFolder != null)
             {
-                TextBlockSaveLocation.Text = scanFolder.Path;
-            } else
-            {
-                ButtonResetLocation_Click(null, null);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
             }
-            
-
-            switch (settingAppTheme)
+            else
             {
-                case Theme.light:
-                    ComboBoxTheme.SelectedIndex = 1;
-                    break;
-                case Theme.dark:
-                    ComboBoxTheme.SelectedIndex = 2;
-                    break;
-                default:
-                    ComboBoxTheme.SelectedIndex = 0;
-                    break;
+                await ResetScanLocation();
             }
-            TextBlockRestart.Visibility = Visibility.Collapsed;
-            CheckBoxAutomaticScannerSelection.IsChecked = settingAutomaticScannerSelection;
-            CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
-            CheckBoxUnsupportedFileFormat.IsChecked = settingUnsupportedFileFormat;
-            CheckBoxSettingsDrawPenDetected.IsChecked = settingDrawPenDetected;
 
-            allSettingsLoaded = true;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
+            {
+                switch (settingAppTheme)
+                {
+                    case Theme.light:
+                        ComboBoxTheme.SelectedIndex = 1;
+                        break;
+                    case Theme.dark:
+                        ComboBoxTheme.SelectedIndex = 2;
+                        break;
+                    default:
+                        ComboBoxTheme.SelectedIndex = 0;
+                        break;
+                }
+                StackPanelTextBlockRestart.Visibility = Visibility.Collapsed;
+                CheckBoxAppendTime.IsChecked = settingAppendTime;
+                CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
+                CheckBoxSettingsErrorStatistics.IsChecked = settingErrorStatistics;
 
-            PackageVersion version = Package.Current.Id.Version;
-            RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+                if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
+
+                allSettingsLoaded = true;
+
+                PackageVersion version = Package.Current.Id.Version;
+                RunSettingsVersion.Text = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+
+                if (localSettingsContainer.Values["awaitingRestartAfterThemeChange"] != null
+                    && (bool) localSettingsContainer.Values["awaitingRestartAfterThemeChange"] == true)
+                {
+                    // theme change pending
+                    StackPanelTextBlockRestart.Visibility = Visibility.Visible;
+                }
+            });
         }
 
 
@@ -97,13 +109,14 @@ namespace Scanner
         /// <summary>
         ///     The event listener for when another <see cref="Theme"/> is selected from <see cref="ComboBoxTheme"/>.
         /// </summary>
-        private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (allSettingsLoaded)
             {
-                TextBlockRestart.Visibility = Visibility.Visible;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StackPanelTextBlockRestart.Visibility = Visibility.Visible);
 
                 settingAppTheme = (Theme)int.Parse(((ComboBoxItem)ComboBoxTheme.SelectedItem).Tag.ToString());
+                localSettingsContainer.Values["awaitingRestartAfterThemeChange"] = true;
                 SaveSettings();
             }
         }
@@ -115,6 +128,7 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkRestart_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
+            log.Information("Requesting app restart.");
             await CoreApplication.RequestRestartAsync("");
         }
 
@@ -136,7 +150,9 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                ShowContentDialog(LocalizedString("ErrorMessagePickFolderHeader"), LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message);
+                log.Warning(exc, "Picking a new save location failed.");
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
+                    LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
                 return;
             }
 
@@ -145,26 +161,11 @@ namespace Scanner
                 Windows.Storage.AccessCache.StorageApplicationPermissions.
                     FutureAccessList.AddOrReplace("scanFolder", folder);
                 scanFolder = folder;
-                TextBlockSaveLocation.Text = scanFolder.Path;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
             }
-        }
 
-
-        /// <summary>
-        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
-        /// </summary>
-        private async void HyperlinkWebsite_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(websiteUrl));
-        }
-
-
-        /// <summary>
-        ///     The event listener for when the <see cref="HyperlinkWebsite"/>, which opens the app's website, is clicked.
-        /// </summary>
-        private async void HyperlinkPrivacyPolicy_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(privacyPolicyUrl));
+            if (await IsDefaultScanFolderSet() != true) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonResetLocation.IsEnabled = true);
+            log.Information("Successfully selected new save location.");
         }
 
 
@@ -174,27 +175,37 @@ namespace Scanner
         /// </summary>
         private async void ButtonResetLocation_Click(object sender, RoutedEventArgs e)
         {
-            StorageFolder folder;
+            await ResetScanLocation();
+        }
+
+
+
+        private async Task ResetScanLocation()
+        {
             try
             {
-                folder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+                await ResetScanFolderAsync();
             }
             catch (UnauthorizedAccessException)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeader"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
+                    LocalizedString("ErrorMessageResetFolderUnauthorizedBody")));
                 return;
             }
             catch (Exception exc)
             {
-                ShowContentDialog(LocalizedString("ErrorMessageResetFolderHeader"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageResetFolderHeading"),
+                    LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message));
                 return;
             }
 
-            scanFolder = folder;
-            Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.AddOrReplace("scanFolder", scanFolder);
-            TextBlockSaveLocation.Text = scanFolder.Path;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TextBlockSaveLocation.Text = scanFolder.Path;
+                ButtonResetLocation.IsEnabled = false;
+            });
         }
+
 
 
         /// <summary>
@@ -202,93 +213,47 @@ namespace Scanner
         /// </summary>
         private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            try
-            {
-                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-                await launcher.LaunchAsync();
-            }
-            catch (Exception exc)
-            {
-                ShowContentDialog(LocalizedString("ErrorMessageFeedbackHubHeader"), 
-                    LocalizedString("ErrorMessageFeedbackHubBody") + "\n" + exc.Message);
-            }
+            log.Information("Launching Feedback Hub.");
+            await LaunchFeedbackHub();
         }
 
-
-        /// <summary>
-        ///     Displays a <see cref="ContentDialog"/> consisting of a <paramref name="title"/>, <paramref name="message"/>
-        ///     and a button that allows the user to close the <see cref="ContentDialog"/>.
-        /// </summary>
-        /// <param name="title">The title of the <see cref="ContentDialog"/>.</param>
-        /// <param name="message">The body of the <see cref="ContentDialog"/>.</param>
-        public async void ShowContentDialog(string title, string message)
-        {
-            ContentDialogBlank.Title = title;
-            ContentDialogBlank.Content = message;
-
-            ContentDialogBlank.CloseButtonText = LocalizedString("CloseButtonText");
-            ContentDialogBlank.PrimaryButtonText = "";
-            ContentDialogBlank.SecondaryButtonText = "";
-
-            await ContentDialogBlank.ShowAsync();
-        }
-
-
-        /// <summary>
-        ///     The event listener for when <see cref="HyperlinkLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
-        /// </summary>
-        private async void HyperlinkLicenses_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            ContentDialogLicenses.CloseButtonText = LocalizedString("CloseButtonText");
-            ContentDialogLicenses.PrimaryButtonText = "";
-            ContentDialogLicenses.SecondaryButtonText = "";
-
-            await ContentDialogLicenses.ShowAsync();
-        }
-
-
-        /// <summary>
-        ///     The event listener for when a license hyperlink is clicked.
-        /// </summary>
-        private async void NavigateToLicenseWebsite(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            string url = null;
-
-            if (sender == HyperlinkLicenseUniversalWindowsPlatform) url = "https://github.com/Microsoft/dotnet/blob/master/releases/UWP/LICENSE.TXT";
-            else if (sender == HyperlinkLicenseStoreEngagement) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
-            else if (sender == HyperlinkLicenseUwpNotifications) url = "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx";
-            else if (sender == HyperlinkLicenseUwpUiControls) url = "https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md";
-            else if (sender == HyperlinkLicenseUiXaml) url = "https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license";
-            else if (sender == HyperlinkLicenseQueryStringNet) url = "https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE";
-            else if (sender == HyperlinkLicenseWin2dUwp) url = "https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm";
-            else if (sender == HyperlinkLicensePDFsharp) url = "http://www.pdfsharp.net/PDFsharp_License.ashx";
-
-            try { await Windows.System.Launcher.LaunchUriAsync(new Uri(url)); }
-            catch (Exception) { }
-        }
 
 
         /// <summary>
         ///     Page was loaded (possibly through navigation).
         /// </summary>
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ButtonBrowse.Focus(FocusState.Programmatic);
+            log.Information("Navigated to SettingsPage.");
+            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+            {
+                StoryboardEnter.Begin();
+                ButtonBrowse.Focus(FocusState.Programmatic);
 
-            ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
-            ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+                ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
+                ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+
+                TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
+            });
         }
 
 
 
-        private void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            ShowRatingDialog();
+            await ShowRatingDialog();
         }
 
 
 
         private void ButtonBack_Click(object sender, RoutedEventArgs e)
+        {
+            GoBack();
+        }
+
+
+
+        private void GoBack()
         {
             Frame.GoBack();
         }
@@ -299,14 +264,109 @@ namespace Scanner
         {
             if (allSettingsLoaded)
             {
-                settingAutomaticScannerSelection = (bool)CheckBoxAutomaticScannerSelection.IsChecked;
+                settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
-                settingUnsupportedFileFormat = (bool)CheckBoxUnsupportedFileFormat.IsChecked;
-                settingDrawPenDetected = (bool)CheckBoxSettingsDrawPenDetected.IsChecked;
+                settingErrorStatistics = (bool)CheckBoxSettingsErrorStatistics.IsChecked;
 
                 SaveSettings();
+            }
+        }
 
-                if (sender == CheckBoxUnsupportedFileFormat) formatSettingChanged = true;
+
+
+        /// <summary>
+        ///     The event listener for when <see cref="HyperlinkButtonSettingsAboutLicenses"/>, which displays <see cref="ContentDialogLicenses"/>, is clicked.
+        /// </summary>
+        private async void HyperlinkButtonSettingsAboutLicenses_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                ContentDialogLicenses.PrimaryButtonText = "";
+                ContentDialogLicenses.SecondaryButtonText = "";
+
+                await ContentDialogLicenses.ShowAsync();
+            });
+        }
+
+
+
+        private async void HyperlinkButtonSettingsHelpScannerSettings_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
+        }
+
+
+
+        private async void HyperlinkButtonSettingsTranslationsContributors_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogTranslationsContributors.ShowAsync());
+        }
+
+
+
+        private async void HyperlinkButtonSettingsAboutCredits_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogAboutCredits.ShowAsync());
+        }
+
+        private async void HyperlinkSettingsExportLog_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
+            {
+                ProgressBarExportLog.Visibility = Visibility.Visible;
+                ItemsRepeaterExportLog.Visibility = Visibility.Collapsed;
+                await ContentDialogExportLog.ShowAsync();
+            });
+
+            // flush log
+            Log.CloseAndFlush();
+
+            // populate file list
+            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
+            var files = await logFolder.GetFilesAsync();
+
+            List<LogFile> sortedFiles = new List<LogFile>();
+            foreach (var file in files)
+            {
+                sortedFiles.Add(await LogFile.CreateLogFile(file));
+            }
+            sortedFiles.Sort(delegate (LogFile x, LogFile y)
+            {
+                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
+            });
+            sortedFiles.Reverse();
+
+            ObservableCollection<LogFile> logFilesExport = new ObservableCollection<LogFile>(sortedFiles);
+
+            await InitializeSerilogAsync();
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ItemsRepeaterExportLog.ItemsSource = logFilesExport;
+                ProgressBarExportLog.Visibility = Visibility.Collapsed;
+                ItemsRepeaterExportLog.Visibility = Visibility.Visible;
+            });
+        }
+
+        private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+            savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = ((string)button.Tag).Split(".")[0];
+
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+
+                // write to file
+                StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
+                StorageFile sourceFile = await logFolder.GetFileAsync((string)button.Tag);
+                await sourceFile.CopyAndReplaceAsync(file);
+                await CachedFileManager.CompleteUpdatesAsync(file);
             }
         }
     }

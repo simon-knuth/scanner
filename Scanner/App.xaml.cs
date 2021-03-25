@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-using static Enums;
 using static Globals;
 using static Utilities;
 
@@ -34,7 +34,7 @@ namespace Scanner
             // quickly load theme
             if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {
-                switch ((int) ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
+                switch ((int)ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
                 {
                     case 0:
                         break;
@@ -46,14 +46,16 @@ namespace Scanner
                         break;
                 }
             }
-            
+
+            _ = InitializeSerilogAsync();
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
@@ -72,7 +74,7 @@ namespace Scanner
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
@@ -135,7 +137,7 @@ namespace Scanner
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            // Save application state and stop any background activity
             deferral.Complete();
         }
 
