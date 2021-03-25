@@ -1,4 +1,4 @@
-<image src='https://user-images.githubusercontent.com/50021001/112044040-9f837c80-8b49-11eb-8786-3e4ae274bbd8.png'/>
+<image src='https://user-images.githubusercontent.com/50021001/112540418-71ed3c00-8db2-11eb-92ce-42bb49370345.png'/>
 <table>
   <tr>
     <td width="15%"><image src='https://user-images.githubusercontent.com/50021001/112044278-ea04f900-8b49-11eb-8399-8499f6391e57.png'/></td>
@@ -8,15 +8,11 @@
   </tr>
 </table>
 
-&nbsp;
-## Version 2.0 coming March 2021
-The new app will boast a redesigned yet familiar UI and many new features based on the received feedback.
-
 
 &nbsp;
 ## Features
 <ul>
-  <li>Preview after scan</li>
+  <li>See result after scanning</li>
   <li>Built-in image editing
     <ul>
       <li>Crop</li>
@@ -24,13 +20,10 @@ The new app will boast a redesigned yet familiar UI and many new features based 
       <li>Draw with Windows Ink</li>
     </ul>
   </li>
+  <li>Scan multiple pages and create a single PDF file</li>
   <li>Share and copy scans instantly</li>
   <li>Select custom save location</li>
-  <li>Scan from flatbed or feeder</li>
-  <li>Color modes</li>
-  <li>Resolutions</li>
   <li>Fluent design</li>
-  <li>Light and dark mode</li>
 </ul>
 
 
@@ -38,12 +31,12 @@ The new app will boast a redesigned yet familiar UI and many new features based 
 ## Screenshots
 <table>
   <tr>
-    <td width="50%"><image src='https://i.imgur.com/zsU3aEHh.png'/></td>
-    <td width="50%"><image src='https://i.imgur.com/A65r0oJh.png'/></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png'/></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png'/></td>
   </tr>
   <tr>
-    <td width="50%"><image src='https://i.imgur.com/GxDbtoph.png'/></td>
-    <td width="50%"><image src='https://i.imgur.com/JR4wOcih.png'/></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png'/></td>
+    <td width="50%"></td>
   </tr>
 </table>
 
@@ -66,7 +59,7 @@ Banner (base picture): <a href="https://unsplash.com/@microsoftedge">Microsoft E
 
 Banner (laptop wallpaper): <a href="https://www.pexels.com/@apasaric">Aleksandar Pasaric</a>  
 
-Screenshots (background wallpaper): <a href="https://www.pexels.com/@belart84">Artem Beliaikin</a>  
+Screenshots (background wallpaper): <a href="https://unsplash.com/@willianjusten">Willian Justen de Vasconcellos</a>  
 
 
 &nbsp;
