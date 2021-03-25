@@ -1487,6 +1487,13 @@ namespace Scanner
             {
                 scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(fakeScanner.scannerName, fakeScanner));
 
+                formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
+                formats.Add(CreateComboBoxItem("PNG", "png,native"));
+                formats.Add(CreateComboBoxItem("PDF", "pdf,native"));
+                formats.Add(CreateComboBoxItem("TIF", "tif,native"));
+                formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
+                ComboBoxFormat.SelectedIndex = 0;
+
                 if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
             });
         }
