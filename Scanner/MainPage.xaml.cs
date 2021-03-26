@@ -223,26 +223,26 @@ namespace Scanner
 
         private async void ButtonLeftPaneSettings_Click(object sender, RoutedEventArgs e)
         {
-            var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+            //var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
 
-            if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
-            {
-                // show debug menu when CTRL key is pressed
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
-                {
-                    ComboBoxDebugFormat_SelectionChanged(null, null);
-                    await ContentDialogDebug.ShowAsync();
-                });
-            }
-            else
-            {
+            //if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
+            //{
+            //    // show debug menu when CTRL key is pressed
+            //    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
+            //    {
+            //        ComboBoxDebugFormat_SelectionChanged(null, null);
+            //        await ContentDialogDebug.ShowAsync();
+            //    });
+            //}
+            //else
+            //{
                 Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
                     ButtonScanOptions.IsChecked = false;
                 });
-            }
+            //}
         }
 
         private async void HyperlinkSettings_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
