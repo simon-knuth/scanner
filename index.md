@@ -67,7 +67,9 @@ Screenshots (background wallpaper): <a href="https://unsplash.com/@willianjusten
 The currently supported languages are:
 <ul>
   <li>English (EN)</li>
+  <li>French (FR)</li>
   <li>German (DE)</li>
+  <li>Italian (IT)</li>
   <li>Polish (PL)</li>
 </ul>  
 
