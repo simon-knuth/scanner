@@ -1205,6 +1205,8 @@ namespace Scanner
             }
             else
             {
+                int numberOfPagesOld = GetTotalNumberOfPages();
+
                 // immediate conversion necessary
                 foreach (StorageFile file in files)
                 {
@@ -1214,12 +1216,39 @@ namespace Scanner
                     if (settingAppendTime) await SetInitialName(elements[elements.Count - 1], append);
                 }
 
-                Task[] conversionTasks = new Task[GetTotalNumberOfPages()];
-                for (int i = 0; i < GetTotalNumberOfPages(); i++)
+                Task[] conversionTasks = new Task[files.Count];
+                try
                 {
-                    conversionTasks[i] = ConvertScanAsync(i, (SupportedFormat)targetFormat, originalTargetFolder);
+                    for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
+                    {
+                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (SupportedFormat)targetFormat, originalTargetFolder);
+                    }
+                    await Task.WhenAll(conversionTasks);
                 }
-                await Task.WhenAll(conversionTasks);
+                catch (Exception exc)
+                {
+                    log.Error(exc, "Failed to convert at least one new page. All new pages will be discarded.");
+
+                    // wait until all tasks are completed, the result is irrelevant
+                    Task[] actualConversionTasks = conversionTasks.Where(task => task != null).ToArray();
+                    while (Array.Find(actualConversionTasks, task => task.IsCompleted != true) != null)
+                    {
+                        try
+                        {
+                            await Task.WhenAll(actualConversionTasks);
+                        }
+                        catch (Exception) { }
+                    }
+
+                    // discard new pages to restore the old state
+                    List<int> indices = new List<int>();
+                    for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
+                    {
+                        indices.Add(i);
+                    }
+                    await DeleteScansAsync(indices);
+                    throw;
+                }
             }
 
             // if necessary, generate PDF now
@@ -1456,7 +1485,7 @@ namespace Scanner
         /// <param name="index"></param>
         public string GetDescriptorForIndex(int index)
         {
-            return LocalizedString("PageDescriptorFront") + (index + 1).ToString() + LocalizedString("PageDescriptorBack");
+            return String.Format(LocalizedString("TextPageListDescriptor"), (index + 1).ToString());
         }
 
 

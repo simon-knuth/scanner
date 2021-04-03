@@ -307,8 +307,10 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB52; " HorizontalAlignment="Left" FontSize="24" Margin="0,0,8,0"/>
                     <TextBlock x:Uid="HeadingDialogTranslationsContributors" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
-                <TextBlock>
-                    <Run FontWeight="Bold">Damian Czupryn</Run> - Polish
+                <TextBlock LineHeight="28">
+                    <Run FontWeight="Bold">Astreptocoque</Run> - French
+                    <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
+                    <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
                 </TextBlock>
             </StackPanel>
 

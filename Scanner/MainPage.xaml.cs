@@ -299,11 +299,7 @@ namespace Scanner
                 {
                     // first app launch after an update
                     log.Information("MainPage loaded after first launch with this version.");
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
-                    {
-                        await ContentDialogPrivacySetup.ShowAsync();
-                        ReliablyOpenTeachingTip(TeachingTipUpdated);
-                    });
+                    //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
 
                 // initialize debug menu

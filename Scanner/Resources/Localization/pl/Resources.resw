@@ -766,14 +766,6 @@ Fuzzy</comment>
     <value>oceń Skaner w sklepie Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
-  <data name="PageDescriptorBack" xml:space="preserve">
-    <value></value>
-    <comment>The text that in behind the page number in the scan management.</comment>
-  </data>
-  <data name="PageDescriptorFront" xml:space="preserve">
-    <value>Strona </value>
-    <comment>The text that appears in front of the page number in the scan management.</comment>
-  </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
     <value>Wiele stron</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
@@ -880,7 +872,8 @@ Fuzzy</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
     <value>Przekazuj raporty o błędach i statystyki użytkowania</value>
-    <comment>The option for sending error reports and usage statistics.</comment>
+    <comment>The option for sending error reports and usage statistics.
+Fuzzy</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
     <value>Dzięki temu, będziemy mogli badać awarie aplikacji i określić, które funkcje są najbardziej wartościowe dla naszych użytkowników. Zapewniamy, że zeskanowane strony nie są przesyłane.</value>
@@ -958,5 +951,9 @@ Fuzzy</comment>
   <data name="ManifestShortName" xml:space="preserve">
     <value>Skaner</value>
     <comment>App name as displayed on tile.</comment>
+  </data>
+  <data name="TextPageListDescriptor" xml:space="preserve">
+    <value>Strona {0}</value>
+    <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
 </root>
