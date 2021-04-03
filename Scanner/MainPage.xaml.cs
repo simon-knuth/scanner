@@ -2515,9 +2515,6 @@ namespace Scanner
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty,
                         LocalizedString("ErrorMessageRotateHeading"), LocalizedString("ErrorMessageRotateBody"));
                 });
-
-                // try generating the image again, just to be sure
-                try { await scanResult.GetImageAsync(index); } catch (Exception) { }
             }
             finally
             {
