@@ -156,7 +156,8 @@ namespace Scanner
                 return;
             }
 
-            if (folder != null && folder.Path != scanFolder.Path)
+            if (folder != null &&
+                (( scanFolder != null && folder.Path != scanFolder.Path ) || scanFolder == null))
             {
                 Windows.Storage.AccessCache.StorageApplicationPermissions.
                     FutureAccessList.AddOrReplace("scanFolder", folder);

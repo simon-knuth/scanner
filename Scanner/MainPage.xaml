@@ -786,6 +786,7 @@
                 </ScrollViewer>
 
                 <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0" Visibility="Collapsed">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.25"/>
                     <controlsxaml:ProgressRing x:Name="ProgressRingContentPane" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TextBlockContentPaneGridProgressRingScan" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Visibility="Collapsed"/>
                 </Grid>
