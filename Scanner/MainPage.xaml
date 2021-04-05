@@ -33,13 +33,8 @@
                 <Setter Property="CornerRadius" Value="2"/>
             </Style>
             <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="CornerRadius" Value="4"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </Style>
-            <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
-                <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
-                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
-                <Setter Property="CornerRadius" Value="2"/>
             </Style>
 
 
@@ -990,13 +985,13 @@
             Target="{Binding ElementName=ButtonDevices}"
             PreferredPlacement="BottomRight"
             ActionButtonClick="TeachingTipDevices_ActionButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipEmpty"
             IsLightDismissEnabled="True"
             PlacementMargin="4"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipFeedback"
@@ -1022,7 +1017,7 @@
             IsLightDismissEnabled="True"
             ActionButtonClick="TeachingTipScope_ActionButtonClick"
             CloseButtonClick="TeachingTipScope_CloseButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>-->
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>-->
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipRename"
@@ -1033,7 +1028,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonRename}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}">
             <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
         </controlsxaml:TeachingTip>
 
@@ -1046,7 +1041,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonDelete}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipManageDelete"
@@ -1057,7 +1052,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonLeftPaneManageDelete}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipTutorialManage"
@@ -1092,7 +1087,7 @@
             IsLightDismissEnabled="False"
             PreferredPlacement="Bottom"
             ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}">
             <controlsxaml:TeachingTip.IconSource>
                 <controlsxaml:FontIconSource Glyph="&#xF133;"/>
             </controlsxaml:TeachingTip.IconSource>
@@ -1152,7 +1147,7 @@
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" Closed="ContentDialogPrivacySetup_Closed" CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" Closed="ContentDialogPrivacySetup_Closed" CloseButtonStyle="{StaticResource ButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>

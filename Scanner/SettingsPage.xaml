@@ -19,13 +19,8 @@
                 <Setter Property="CornerRadius" Value="2"/>
             </Style>
             <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="CornerRadius" Value="4"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </Style>
-            <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
-                <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
-                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
-                <Setter Property="CornerRadius" Value="2"/>
             </Style>
 
 
