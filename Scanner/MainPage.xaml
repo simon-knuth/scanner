@@ -771,7 +771,14 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32"/>
+                <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32">
+                    <controls:ImageCropper.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.2"/>
+                    </controls:ImageCropper.Background>
+                    <controls:ImageCropper.Mask>
+                        <SolidColorBrush Color="Black" Opacity="0.5"/>
+                    </controls:ImageCropper.Mask>
+                </controls:ImageCropper>
 
                 <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"

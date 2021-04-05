@@ -7,7 +7,7 @@
     {
         unset = -1,
         small = 0,                  // the whole UI is visible
-        full = 1,                   // the small UI is visible
+        normal = 1,                   // the small UI is visible
         wide = 2                    // the wide UI is visible
     }
 

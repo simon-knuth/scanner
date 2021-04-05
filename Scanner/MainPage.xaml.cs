@@ -223,26 +223,35 @@ namespace Scanner
 
         private async void ButtonLeftPaneSettings_Click(object sender, RoutedEventArgs e)
         {
-            //var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+            #if DEBUG
+                var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
 
-            //if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
-            //{
-            //    // show debug menu when CTRL key is pressed
-            //    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
-            //    {
-            //        ComboBoxDebugFormat_SelectionChanged(null, null);
-            //        await ContentDialogDebug.ShowAsync();
-            //    });
-            //}
-            //else
-            //{
+                if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    // show debug menu when CTRL key is pressed
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
+                    {
+                        ComboBoxDebugFormat_SelectionChanged(null, null);
+                        await ContentDialogDebug.ShowAsync();
+                    });
+                }
+                else
+                {
+                    Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                    {
+                        SplitViewLeftPane.IsPaneOpen = false;
+                        ButtonScanOptions.IsChecked = false;
+                    });
+                }
+            #else
                 Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
                     ButtonScanOptions.IsChecked = false;
                 });
-            //}
+            #endif
         }
 
         private async void HyperlinkSettings_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
@@ -655,10 +664,10 @@ namespace Scanner
                     SplitViewRightPane.Visibility = Visibility.Visible;
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
-                else if (width >= 750 && width < 1750 && uiState != UIstate.full)       // normal window
+                else if (width >= 750 && width < 1750 && uiState != UIstate.normal)       // normal window
                 {
                     log.Information("UI transitioning to normal state.");
-                    uiState = UIstate.full;
+                    uiState = UIstate.normal;
                     ColumnLeftPane.MinWidth = ColumnSidePaneMinWidth;
                     ColumnLeftPane.MaxWidth = ColumnSidePaneMaxWidth;
                     ColumnRightPane.MaxWidth = 0;
@@ -683,6 +692,7 @@ namespace Scanner
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 8, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
+                    if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 1750 && uiState != UIstate.wide)      // wide window
                 {
@@ -774,7 +784,7 @@ namespace Scanner
                     {
                         SplitViewRightPane.IsPaneOpen = true;
                     }
-                    else if (uiState == UIstate.full)
+                    else if (uiState == UIstate.normal)
                     {
                         if (FlipViewLeftPane.SelectedIndex == 1)
                         {
