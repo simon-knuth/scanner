@@ -39,4 +39,6 @@ public static class Globals
 
     public static string glyphButtonRecentsDefault = "\uE838";
     public static string glyphButtonRecentsCustom = "\uEC25";
+    public static string glyphFormatImage = "\uEB9F";
+    public static string glyphFormatPdf = "\uEA90";
 }

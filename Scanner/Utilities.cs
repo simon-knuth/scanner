@@ -64,6 +64,50 @@ static class Utilities
 
 
     /// <summary>
+    ///     Creates a ComboBoxItem with the specified glyph, content string and tag string.
+    /// </summary>
+    /// <param name="glyph">
+    ///     The glyph that shall be displayed to the left of the content.
+    /// </param>
+    /// <param name="content">
+    ///     The ComboBoxItem's content.
+    /// </param>
+    /// <param name="tag">
+    ///     The ComboBoxItem's tag.
+    /// </param>
+    /// <returns>
+    ///     The ComboBoxItem.
+    /// </returns>
+    public static ComboBoxItem CreateComboBoxItem(string glyph, string content, object tag)
+    {
+        StackPanel stackPanel = new StackPanel();
+        stackPanel.Orientation = Orientation.Horizontal;
+
+        stackPanel.Children.Add(new FontIcon
+        {
+            Glyph = glyph,
+            Margin = new Thickness(0, 0, 8, 0),
+            FontSize = 16,
+            Opacity = 0.9
+        });
+
+        stackPanel.Children.Add(new TextBlock
+        {
+            Text = content
+        });
+
+        ComboBoxItem item = new ComboBoxItem
+        {
+            Content = stackPanel,
+            Tag = tag,
+            CornerRadius = new CornerRadius(2)
+        };
+
+        return item;
+    }
+
+
+    /// <summary>
     ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
     ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/>
     ///     is used to make the control visible once the image has been loaded.
