@@ -10,6 +10,7 @@ using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
@@ -309,6 +310,7 @@ static class Utilities
     public static async Task LoadScanFolderAsync()
     {
         StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
+        string defaultScanFolderName = GetDefaultScanFolderName();
 
         if (futureAccessList.Entries.Count != 0)
         {
@@ -316,7 +318,7 @@ static class Utilities
             catch (Exception exc)
             {
                 log.Error(exc, "Loading scanFolder from futureAccessList failed.");
-                try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists); }
+                try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists); }
                 catch (Exception exc2)
                 {
                     log.Error(exc2, "Creating a new scanFolder in PicturesLibrary failed as well.");
@@ -330,7 +332,7 @@ static class Utilities
             // Either first app launch ever or the futureAccessList is unavailable ~> Reset it
             try
             {
-                scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+                scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
             }
             catch (UnauthorizedAccessException exc)
             {
@@ -526,9 +528,11 @@ static class Utilities
     public static async Task ResetScanFolderAsync()
     {
         StorageFolder folder;
+        string defaultScanFolderName = GetDefaultScanFolderName();
+
         try
         {
-            folder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Scans", CreationCollisionOption.OpenIfExists);
+            folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
         }
         catch (UnauthorizedAccessException exc)
         {
@@ -721,6 +725,34 @@ static class Utilities
 
 
     /// <summary>
+    ///     Returns the default name of the folder that scans are saved to. This varies depending on the system language.
+    ///     The fallback name is "Scans".
+    /// </summary>
+    private static string GetDefaultScanFolderName()
+    {
+        string defaultScanFolderName = LocalizedString("DefaultScanFolderName");
+        bool validName = true;
+
+        foreach (char character in defaultScanFolderName.ToCharArray())
+        {
+            if (!Char.IsLetter(character))
+            {
+                validName = false;
+                break;
+            }
+        }
+
+        if (defaultScanFolderName == "" || validName == false)
+        {
+            defaultScanFolderName = "Scans";        // fallback name if there is an issue with the localization
+            Crashes.TrackError(new ApplicationException("The localized scan folder name is invalid, using 'Scans' instead."));
+        }
+
+        return defaultScanFolderName;
+    }
+
+
+    /// <summary>
     ///     Checks whether <see cref="scanFolder"/> is set to its default value (..\Pictures\Scans).
     /// </summary>
     /// <returns>
@@ -735,7 +767,7 @@ static class Utilities
         StorageFolder folder;
         try
         {
-            folder = await KnownFolders.PicturesLibrary.GetFolderAsync("Scans");
+            folder = await KnownFolders.PicturesLibrary.GetFolderAsync(GetDefaultScanFolderName());
         }
         catch (Exception)
         {

@@ -351,10 +351,10 @@
                                                 </Span>
                                             </TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="2" HorizontalAlignment="Left" Margin="0,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="0,2,0,0">
                                                     <TextBlock Text="{Binding File.Name}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
-                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="2" HorizontalAlignment="Left" Margin="6,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="6,2,0,0">
                                                     <TextBlock Text="{Binding FileSize}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
                                             </StackPanel>
