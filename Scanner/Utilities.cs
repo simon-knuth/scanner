@@ -10,7 +10,6 @@ using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
@@ -322,7 +321,7 @@ static class Utilities
                 catch (Exception exc2)
                 {
                     log.Error(exc2, "Creating a new scanFolder in PicturesLibrary failed as well.");
-                    ShowMessageDialog(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
+                    ShowMessageDialogAsync(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
                 }
                 futureAccessList.AddOrReplace("scanFolder", scanFolder);
             }
@@ -337,13 +336,13 @@ static class Utilities
             catch (UnauthorizedAccessException exc)
             {
                 log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed. (Unauthorized)");
-                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
+                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                 return;
             }
             catch (Exception exc)
             {
                 log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed.");
-                ShowMessageDialog(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
+                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                 return;
             }
             futureAccessList.AddOrReplace("scanFolder", scanFolder);
@@ -357,6 +356,16 @@ static class Utilities
     public static void LoadSettings()
     {
         localSettingsContainer = ApplicationData.Current.LocalSettings;
+
+        if (localSettingsContainer.Values["settingSaveLocationAsk"] != null)
+        {
+            settingSaveLocationAsk = (bool)localSettingsContainer.Values["settingSaveLocationAsk"];
+        }
+        else
+        {
+            settingSaveLocationAsk = false;
+            localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
+        }
 
         if (localSettingsContainer.Values["settingAppTheme"] != null)
         {
@@ -465,9 +474,9 @@ static class Utilities
             manageTutorialAlreadyShown = false;
         }
 
-        log.Information("Settings loaded: [settingAppTheme={SettingAppTheme}|settingAppendTime={SettingAppendTime}|settingNotificationScanComplete={SettingNotificationScanComplete}|settingErrorStatistics={SettingErrorStatistics}" +
+        log.Information("Settings loaded: [settingSaveLocationAsk={SettingSaveLocationAsk}|settingAppTheme={SettingAppTheme}|settingAppendTime={SettingAppendTime}|settingNotificationScanComplete={SettingNotificationScanComplete}|settingErrorStatistics={SettingErrorStatistics}" +
             "|isFirstAppLaunchWithThisVersion={IsFirstAppLaunchWithThisVersion}|scanNumber={ScanNumber}|lastTouchDrawState={LastTouchDrawState}|manageTutorialAlreadyShown={ManageTutorialAlreadyShown}]",
-            settingAppTheme, settingAppendTime, settingNotificationScanComplete, settingErrorStatistics, isFirstAppLaunchWithThisVersion, scanNumber, lastTouchDrawState, manageTutorialAlreadyShown);
+            settingSaveLocationAsk, settingAppTheme, settingAppendTime, settingNotificationScanComplete, settingErrorStatistics, isFirstAppLaunchWithThisVersion, scanNumber, lastTouchDrawState, manageTutorialAlreadyShown);
     }
 
 
@@ -652,7 +661,7 @@ static class Utilities
     /// </summary>
     /// <param name="title">The title of the <see cref="MessageDialog"/>.</param>
     /// <param name="message">The body of the <see cref="MessageDialog"/>.</param>
-    public async static void ShowMessageDialog(string title, string message)
+    public async static void ShowMessageDialogAsync(string title, string message)
     {
         MessageDialog messageDialog = new MessageDialog(message, title);
         await messageDialog.ShowAsync();
@@ -690,6 +699,7 @@ static class Utilities
     /// </summary>
     public static void SaveSettings()
     {
+        localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
         localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
         localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
         localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
@@ -760,7 +770,7 @@ static class Utilities
     ///     true  - <see cref="scanFolder"/> is set to its default value
     ///     false - <see cref="scanFolder"/> is not set to its default value or null
     /// </returns>
-    public static async Task<bool?> IsDefaultScanFolderSet()
+    public static async Task<bool?> IsDefaultScanFolderSetAsync()
     {
         if (scanFolder == null) return null;
 
@@ -828,7 +838,7 @@ static class Utilities
     }
 
 
-    public async static Task ShowRatingDialog()
+    public async static Task ShowRatingDialogAsync()
     {
         try
         {
@@ -844,7 +854,7 @@ static class Utilities
     }
 
 
-    public async static Task LaunchFeedbackHub()
+    public async static Task LaunchFeedbackHubAsync()
     {
         try
         {
@@ -885,17 +895,40 @@ static class Utilities
             await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
 
+        // attempt to actively delete folders first, replacing is not reliable
+        try
+        {
+            StorageFolder folder = await folderTemp.GetFolderAsync("conversion");
+            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        } catch (Exception exc) { log.Error(exc, "Actively deleting folder 'conversion' in temp folder failed."); }
+
+        try
+        {
+            StorageFolder folder = await folderTemp.GetFolderAsync("withoutRotation");
+            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        }
+        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'withoutRotation' in temp folder failed."); }
+
+        // replace/create folders
         try
         {
             folderConversion = await folderTemp.CreateFolderAsync("conversion", CreationCollisionOption.ReplaceExisting);
         }
-        catch (Exception) { throw; }
+        catch (Exception exc)
+        {
+            log.Error(exc, "Couldn't create/replace folder 'conversion' in temp folder.");
+            throw;
+        }
 
         try
         {
             folderWithoutRotation = await folderTemp.CreateFolderAsync("withoutRotation", CreationCollisionOption.ReplaceExisting);
         }
-        catch (Exception) { throw; }
+        catch (Exception exc)
+        {
+            log.Error(exc, "Couldn't create/replace folder 'withoutRotation' in temp folder.");
+            throw;
+        }
 
         log.Information("Initialized temp folder");
     }
@@ -944,7 +977,7 @@ static class Utilities
     /// <summary>
     ///     Attaches the relevant log to the Microsoft App Center error report.
     /// </summary>
-    public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReport(ErrorReport report)
+    public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReportAsync(ErrorReport report)
     {
         try
         {
@@ -995,7 +1028,7 @@ static class Utilities
     /// </summary>
     public static void RegisterWithMicrosoftAppCenter()
     {
-        Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReport(report).Result;
+        Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReportAsync(report).Result;
         AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
     }
 }

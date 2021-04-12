@@ -9,6 +9,7 @@ using static Enums;
 
 public static class Globals
 {
+    public static bool settingSaveLocationAsk;                      // ask user for save location after each scan
     public static Theme settingAppTheme;                            // user theme setting
     public static bool settingAppendTime;                           // append time to file names
     public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
@@ -39,6 +40,7 @@ public static class Globals
 
     public static string glyphButtonRecentsDefault = "\uE838";
     public static string glyphButtonRecentsCustom = "\uEC25";
+    public static string glyphButtonRecentsHistory = "\uE81C";
     public static string glyphFormatImage = "\uEB9F";
     public static string glyphFormatPdf = "\uEA90";
 }

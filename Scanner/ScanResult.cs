@@ -53,7 +53,7 @@ namespace Scanner
             RefreshItemDescriptors();
         }
 
-        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
         {
             log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
             Task[] moveTasks = new Task[fileList.Count];
@@ -64,13 +64,13 @@ namespace Scanner
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder);
-            if (settingAppendTime) try { await result.SetInitialNames(); } catch (Exception) { }
+            if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             await result.GetImagesAsync();
             log.Information("ScanResult created.");
             return result;
         }
 
-        public async static Task<ScanResult> Create(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat)
         {
             log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
@@ -79,8 +79,8 @@ namespace Scanner
             if (targetFormat == SupportedFormat.PDF)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
-                await NumberNewConversionFiles(fileList, 0);
-                await result.GeneratePDF(pdfName);
+                await NumberNewConversionFilesAsync(fileList, 0);
+                await result.GeneratePDFAsync(pdfName);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace Scanner
             }
 
             result.scanResultFormat = targetFormat;
-            if (settingAppendTime) try { await result.SetInitialNames(); } catch (Exception) { }
+            if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             await result.GetImagesAsync();
             log.Information("ScanResult created.");
             return result;
@@ -726,7 +726,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberNewConversionFiles(filesNumbering, index + 1);
+                    await NumberNewConversionFilesAsync(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -957,7 +957,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberNewConversionFiles(filesNumbering, index + 1);
+                    await NumberNewConversionFilesAsync(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -1184,10 +1184,11 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Adds the specified files to this instance.
+        ///     Adds the specified files to this instance and converts them to the targetFormat, if necessary. The final files are
+        ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat)
+        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder)
         {
             log.Information("Adding {Num} files, the target format is {Format}.", files.Count, targetFormat);
 
@@ -1195,12 +1196,12 @@ namespace Scanner
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFiles(files, GetTotalNumberOfPages());
+                if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFilesAsync(files, GetTotalNumberOfPages());
 
                 foreach (StorageFile file in files)
                 {
                     elements.Add(new ScanResultElement(file));
-                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialName(elements[elements.Count - 1], append);
+                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
             }
             else
@@ -1213,7 +1214,7 @@ namespace Scanner
                     if (file == null) continue;
 
                     elements.Add(new ScanResultElement(file));
-                    if (settingAppendTime) await SetInitialName(elements[elements.Count - 1], append);
+                    if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
 
                 Task[] conversionTasks = new Task[files.Count];
@@ -1221,7 +1222,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
                     {
-                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (SupportedFormat)targetFormat, originalTargetFolder);
+                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (SupportedFormat)targetFormat, targetFolder);
                     }
                     await Task.WhenAll(conversionTasks);
                 }
@@ -1260,6 +1261,16 @@ namespace Scanner
                 await GetImageAsync(i);
                 elements[i].ItemDescriptor = GetDescriptorForIndex(i);
             }
+        }
+
+
+        /// <summary>
+        ///     Adds the specified files to this instance.
+        /// </summary>
+        /// <exception cref="Exception">Something went wrong while adding the files.</exception>
+        public Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat)
+        {
+            return AddFiles(files, targetFormat, originalTargetFolder);
         }
 
 
@@ -1334,7 +1345,7 @@ namespace Scanner
         ///     this scanResult. The pages are constructed using all images found in the temp folder's subfolder "conversion".
         /// </summary>
         /// <param name="fileName"></param>
-        private async Task GeneratePDF(string fileName)
+        private async Task GeneratePDFAsync(string fileName)
         {
             log.Information("Requested PDF generation.");
 
@@ -1404,7 +1415,7 @@ namespace Scanner
 
         public Task GeneratePDF()
         {
-            return GeneratePDF(pdf.Name);
+            return GeneratePDFAsync(pdf.Name);
         }
 
 
@@ -1413,7 +1424,7 @@ namespace Scanner
         /// </summary>
         /// <param name="files">The files to be numbered.</param>
         /// <param name="startIndex">The first number.</param>
-        private static async Task NumberNewConversionFiles(IReadOnlyList<StorageFile> files, int startIndex)
+        private static async Task NumberNewConversionFilesAsync(IReadOnlyList<StorageFile> files, int startIndex)
         {
             try
             {
@@ -1435,7 +1446,7 @@ namespace Scanner
         /// <summary>
         ///     Applies the order of <see cref="elements"/> to the PDF file.
         /// </summary>
-        public async Task ApplyElementOrderToFiles()
+        public async Task ApplyElementOrderToFilesAsync()
         {
             if (GetFileFormat() != SupportedFormat.PDF)
             {
@@ -1492,7 +1503,7 @@ namespace Scanner
         /// <summary>
         ///     Sets the name of the elements or the PDF file to their initial value.
         /// </summary>
-        protected async Task SetInitialName(ScanResultElement element, string append)
+        protected async Task SetInitialNameAsync(ScanResultElement element, string append)
         {
             string baseName = element.ScanFile.Name;
             RemoveNumbering(baseName);
@@ -1502,7 +1513,7 @@ namespace Scanner
             await element.RenameFileAsync(baseDisplayName + "_" + append + element.ScanFile.FileType, NameCollisionOption.GenerateUniqueName);
         }
 
-        protected async Task SetInitialName(StorageFile file, string append)
+        protected async Task SetInitialNameAsync(StorageFile file, string append)
         {
             string baseName = file.Name;
             RemoveNumbering(baseName);
@@ -1512,19 +1523,19 @@ namespace Scanner
             await file.RenameAsync(baseDisplayName + "_" + append + file.FileType, NameCollisionOption.GenerateUniqueName);
         }
 
-        protected async Task SetInitialNames()
+        protected async Task SetInitialNamesAsync()
         {
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
 
             if (scanResultFormat == SupportedFormat.PDF)
             {
-                await SetInitialName(pdf, append);
+                await SetInitialNameAsync(pdf, append);
             }
             else
             {
                 foreach (ScanResultElement element in elements)
                 {
-                    await SetInitialName(element, append);
+                    await SetInitialNameAsync(element, append);
                 }
             }
         }
