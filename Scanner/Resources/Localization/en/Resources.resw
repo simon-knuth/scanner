@@ -829,38 +829,6 @@
     <value>What's new?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
-  <data name="HeadingChangelog2_0_0_0Section1.Text" xml:space="preserve">
-    <value>A fresh new look</value>
-    <comment>The heading of the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section2.Text" xml:space="preserve">
-    <value>Full multi-page support</value>
-    <comment>The heading of the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section3.Text" xml:space="preserve">
-    <value>Duplex scanning</value>
-    <comment>The heading of the third changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section4.Text" xml:space="preserve">
-    <value>Preview</value>
-    <comment>The heading of the fourth changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section1.Text" xml:space="preserve">
-    <value>The interface has been completely redesigned.</value>
-    <comment>The text of the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section2.Text" xml:space="preserve">
-    <value>Scan multiple pages with a feeder or one-by-one with a flatbed. View and edit all pages and combine them into a single PDF file.</value>
-    <comment>The text of the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section3.Text" xml:space="preserve">
-    <value>Scan both front and back of a page simultaneously in duplex mode when using a feeder. Only available for compatible scanners.</value>
-    <comment>The text of the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section4.Text" xml:space="preserve">
-    <value>Quickly preview a scan. Only available for compatible scanners - look for a preview icon next to the source modes.</value>
-    <comment>The text of the fourth changelog section.</comment>
-  </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The close button text of the translation contributors dialog.</comment>
@@ -956,5 +924,22 @@
   <data name="DefaultScanFolderName" xml:space="preserve">
     <value>Scans</value>
     <comment>The name of the folder that's used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+  </data>
+  <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
+    <value>Ask for a save location</value>
+    <comment>The heading of the fourth changelog section.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
+    <value>Ask every time</value>
+    <comment>The option to ask for a save location for each scan.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
+    <value>Use a set location</value>
+    <comment>The option to use a set save location.</comment>
+  </data>
+  <data name="TextChangelog2_1_0_0Section1.Text" xml:space="preserve">
+    <value>Choose a new save location every time you scan, instead of having to move files afterwards.
+This feature can be enabled in the settings.</value>
+    <comment>The text of the first changelog section.</comment>
   </data>
 </root>

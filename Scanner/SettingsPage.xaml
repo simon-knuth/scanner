@@ -88,8 +88,8 @@
                     <StackPanel Padding="24,100,24,24" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="HeadingSettingsSaveLocation" Style="{ThemeResource BodyTextBlockStyle}"/>
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="24">
-                            <RadioButton x:Name="RadioButtonSaveLocationSet" Content="Use set location" Checked="SettingCheckboxChanged"/>
-                            <RadioButton x:Name="RadioButtonSaveLocationAsk" Content="Ask every time" Checked="SettingCheckboxChanged"/>
+                            <RadioButton x:Name="RadioButtonSaveLocationSet" x:Uid="OptionSettingsSaveLocationSet" Checked="SettingCheckboxChanged"/>
+                            <RadioButton x:Name="RadioButtonSaveLocationAsk" x:Uid="OptionSettingsSaveLocationAsk" Checked="SettingCheckboxChanged"/>
                         </controls:WrapPanel>
 
                         <StackPanel x:Name="StackPanelSettingsSaveLocationSet" Orientation="Vertical">

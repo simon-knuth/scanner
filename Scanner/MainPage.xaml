@@ -1147,28 +1147,10 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,0">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section4" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2_1_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_1_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
