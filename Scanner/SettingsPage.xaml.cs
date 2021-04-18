@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -66,11 +65,22 @@ namespace Scanner
             }
             else
             {
-                await ResetScanLocation();
+                await ResetSaveLocationAsync();
             }
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
             {
+                if (settingSaveLocationAsk)
+                {
+                    RadioButtonSaveLocationAsk.IsChecked = true;
+                    StackPanelSettingsSaveLocationSet.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    RadioButtonSaveLocationSet.IsChecked = true;
+                    StackPanelSettingsSaveLocationSet.Visibility = Visibility.Visible;
+                }
+
                 switch (settingAppTheme)
                 {
                     case Theme.light:
@@ -88,7 +98,7 @@ namespace Scanner
                 CheckBoxNotificationScanComplete.IsChecked = settingNotificationScanComplete;
                 CheckBoxSettingsErrorStatistics.IsChecked = settingErrorStatistics;
 
-                if (await IsDefaultScanFolderSet() != true) ButtonResetLocation.IsEnabled = true;
+                if (await IsDefaultScanFolderSetAsync() != true) ButtonResetLocation.IsEnabled = true;
 
                 allSettingsLoaded = true;
 
@@ -165,7 +175,7 @@ namespace Scanner
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBlockSaveLocation.Text = scanFolder.Path);
             }
 
-            if (await IsDefaultScanFolderSet() != true) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonResetLocation.IsEnabled = true);
+            if (await IsDefaultScanFolderSetAsync() != true) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ButtonResetLocation.IsEnabled = true);
             log.Information("Successfully selected new save location.");
         }
 
@@ -176,12 +186,12 @@ namespace Scanner
         /// </summary>
         private async void ButtonResetLocation_Click(object sender, RoutedEventArgs e)
         {
-            await ResetScanLocation();
+            await ResetSaveLocationAsync();
         }
 
 
 
-        private async Task ResetScanLocation()
+        private async Task ResetSaveLocationAsync()
         {
             try
             {
@@ -215,7 +225,7 @@ namespace Scanner
         private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
             log.Information("Launching Feedback Hub.");
-            await LaunchFeedbackHub();
+            await LaunchFeedbackHubAsync();
         }
 
 
@@ -242,7 +252,7 @@ namespace Scanner
 
         private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
-            await ShowRatingDialog();
+            await ShowRatingDialogAsync();
         }
 
 
@@ -261,13 +271,20 @@ namespace Scanner
 
 
 
-        private void SettingCheckboxChanged(object sender, RoutedEventArgs e)
+        private async void SettingCheckboxChanged(object sender, RoutedEventArgs e)
         {
             if (allSettingsLoaded)
             {
+                settingSaveLocationAsk = (bool)RadioButtonSaveLocationAsk.IsChecked;
                 settingAppendTime = (bool)CheckBoxAppendTime.IsChecked;
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
                 settingErrorStatistics = (bool)CheckBoxSettingsErrorStatistics.IsChecked;
+
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                {
+                    if (RadioButtonSaveLocationAsk.IsChecked == true) StackPanelSettingsSaveLocationSet.Visibility = Visibility.Collapsed;
+                    else StoryboardSaveLocationSet.Begin();
+                });
 
                 SaveSettings();
             }

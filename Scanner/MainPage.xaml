@@ -33,13 +33,8 @@
                 <Setter Property="CornerRadius" Value="2"/>
             </Style>
             <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="CornerRadius" Value="4"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </Style>
-            <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
-                <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
-                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
-                <Setter Property="CornerRadius" Value="2"/>
             </Style>
 
 
@@ -303,7 +298,7 @@
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
@@ -381,7 +376,7 @@
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
@@ -463,6 +458,12 @@
                             <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,30,0,0">
                                 <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
                             </Frame>
+
+                            <Grid.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </Grid.Transitions>
                         </Grid>
 
                         <ScrollViewer x:Name="ScrollViewerLeftPaneScan" Background="Transparent" VerticalScrollBarVisibility="Auto" RelativePanel.Below="GridLeftPaneScanHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -484,6 +485,12 @@
                                             </ComboBoxItem>
                                         </ComboBox>
                                     </StackPanel>
+
+                                    <Frame.Transitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition/>
+                                        </TransitionCollection>
+                                    </Frame.Transitions>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanSourceMode" Margin="0,12,0,0">
@@ -501,6 +508,12 @@
                                             <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
                                         </Grid>
                                     </StackPanel>
+
+                                    <Frame.Transitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition/>
+                                        </TransitionCollection>
+                                    </Frame.Transitions>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed">
@@ -532,6 +545,12 @@
                                         <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
                                     </StackPanel>
+
+                                    <Frame.Transitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition/>
+                                        </TransitionCollection>
+                                    </Frame.Transitions>
                                 </Frame>
                             </StackPanel>
                         </ScrollViewer>
@@ -589,73 +608,71 @@
                 <!-- Manage Pages -->
                 <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <StackPanel Orientation="Vertical">
-                            <Grid>
-                                <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate x:DataType="local:ScanResultElement">
-                                            <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
-                                                <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="3*"/>
-                                                        <ColumnDefinition Width="7*"/>
-                                                    </Grid.ColumnDefinitions>
+                        <Grid>
+                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:ScanResultElement">
+                                        <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
+                                            <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3*"/>
+                                                    <ColumnDefinition Width="7*"/>
+                                                </Grid.ColumnDefinitions>
 
-                                                    <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
+                                                <controls:DropShadowPanel Grid.Column="0" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=LeftPaneListViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
+                                                    <Frame CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
+                                                    </Frame>
+                                                </controls:DropShadowPanel>
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            </Grid>
+                                        </ListViewItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                                <ListView.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <AddDeleteThemeTransition/>
+                                        <ReorderThemeTransition/>
+                                    </TransitionCollection>
+                                </ListView.ItemContainerTransitions>
+                            </ListView>
+                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid HorizontalAlignment="Center"
+                                                        MaximumRowsOrColumns="2"
+                                                        Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:ScanResultElement">
+                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" Style="{StaticResource GridViewItemStyleRounded}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
+                                            <Grid Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemBackgroundConverter}}">
+                                                <Frame Padding="8">
+                                                    <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
                                                         <Frame CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
+                                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
                                                         </Frame>
                                                     </controls:DropShadowPanel>
-                                                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                                </Grid>
-                                            </ListViewItem>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
+                                                </Frame>
+                                                <Frame Margin="4" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
+                                                    <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BodyTextBlockStyle}"/>
+                                                </Frame>
+                                            </Grid>
+                                        </GridViewItem>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
 
-                                    <ListView.ItemContainerTransitions>
-                                        <TransitionCollection>
-                                            <AddDeleteThemeTransition/>
-                                            <ReorderThemeTransition/>
-                                        </TransitionCollection>
-                                    </ListView.ItemContainerTransitions>
-                                </ListView>
-                                <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
-                                    <GridView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <ItemsWrapGrid HorizontalAlignment="Center"
-                                                           MaximumRowsOrColumns="2"
-                                                           Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </GridView.ItemsPanel>
-
-                                    <GridView.ItemTemplate>
-                                        <DataTemplate x:DataType="local:ScanResultElement">
-                                            <GridViewItem x:Name="LeftPaneGridViewManageItem" Style="{StaticResource GridViewItemStyleRounded}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
-                                                <Grid Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemBackgroundConverter}}">
-                                                    <Frame Padding="8">
-                                                        <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
-                                                            <Frame CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}"/>
-                                                            </Frame>
-                                                        </controls:DropShadowPanel>
-                                                    </Frame>
-                                                    <Frame Margin="4" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
-                                                        <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BodyTextBlockStyle}"/>
-                                                    </Frame>
-                                                </Grid>
-                                            </GridViewItem>
-                                        </DataTemplate>
-                                    </GridView.ItemTemplate>
-
-                                    <GridView.ItemContainerTransitions>
-                                        <TransitionCollection>
-                                            <AddDeleteThemeTransition/>
-                                            <ReorderThemeTransition/>
-                                        </TransitionCollection>
-                                    </GridView.ItemContainerTransitions>
-                                </GridView>
-                            </Grid>
-                        </StackPanel>
+                                <GridView.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <AddDeleteThemeTransition/>
+                                        <ReorderThemeTransition/>
+                                    </TransitionCollection>
+                                </GridView.ItemContainerTransitions>
+                            </GridView>
+                        </Grid>
                     </ScrollViewer>
 
                     <Grid x:Name="GridLeftPaneManageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
@@ -734,7 +751,7 @@
 
         <!-- Content Pane -->
         <controls:DropShadowPanel x:Name="ContentPaneDropShadowPanel" HorizontalContentAlignment="Stretch" Grid.Column="1" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="30">
-            <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1,0,0,0">
                 <Grid.BackgroundTransition>
                     <BrushTransition/>
                 </Grid.BackgroundTransition>
@@ -771,14 +788,16 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32">
-                    <controls:ImageCropper.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.2"/>
-                    </controls:ImageCropper.Background>
-                    <controls:ImageCropper.Mask>
-                        <SolidColorBrush Color="Black" Opacity="0.5"/>
-                    </controls:ImageCropper.Mask>
-                </controls:ImageCropper>
+                <Frame x:Name="FrameImageCropperScan" Visibility="Collapsed" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32,32,32,32">
+                        <controls:ImageCropper.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.2"/>
+                        </controls:ImageCropper.Background>
+                        <controls:ImageCropper.Mask>
+                            <SolidColorBrush Color="Black" Opacity="0.5"/>
+                        </controls:ImageCropper.Mask>
+                    </controls:ImageCropper>
+                </Frame>
 
                 <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
@@ -799,7 +818,7 @@
                 </Grid>
 
                 <!-- Top Toolbar -->
-                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid x:Name="GridContentPaneTopToolbar" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>
@@ -900,25 +919,25 @@
 
                                             <FlyoutBase.AttachedFlyout>
                                                 <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" IsChecked="True" FontWeight="Medium" CornerRadius="2" Click="SetCustomAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" CornerRadius="2" Click="FlipAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" IsChecked="True" FontWeight="Medium" CornerRadius="2" Click="SetCustomAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" CornerRadius="2" Click="FlipAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
                                                     <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142" CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
                                                     <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
                                                     <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054" CornerRadius="2" Click="SetFixedAspectRatio"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatio"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
                                                 </MenuFlyout>
                                             </FlyoutBase.AttachedFlyout>
                                         </InkToolbarCustomPenButton>
@@ -990,13 +1009,17 @@
             Target="{Binding ElementName=ButtonDevices}"
             PreferredPlacement="BottomRight"
             ActionButtonClick="TeachingTipDevices_ActionButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}">
+            <controlsxaml:TeachingTip.ActionButtonContent>
+                <TextBlock x:Uid="ButtonDialogDevices" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            </controlsxaml:TeachingTip.ActionButtonContent>
+        </controlsxaml:TeachingTip>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipEmpty"
             IsLightDismissEnabled="True"
             PlacementMargin="4"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipFeedback"
@@ -1022,7 +1045,7 @@
             IsLightDismissEnabled="True"
             ActionButtonClick="TeachingTipScope_ActionButtonClick"
             CloseButtonClick="TeachingTipScope_CloseButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>-->
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>-->
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipRename"
@@ -1033,7 +1056,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonRename}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}">
             <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
         </controlsxaml:TeachingTip>
 
@@ -1046,7 +1069,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonDelete}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipManageDelete"
@@ -1057,7 +1080,7 @@
             IsLightDismissEnabled="True"
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonLeftPaneManageDelete}"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}"/>
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}"/>
 
         <controlsxaml:TeachingTip
             x:Name="TeachingTipTutorialManage"
@@ -1092,7 +1115,7 @@
             IsLightDismissEnabled="False"
             PreferredPlacement="Bottom"
             ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
-            ActionButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+            ActionButtonStyle="{StaticResource ButtonAccentStyle}">
             <controlsxaml:TeachingTip.IconSource>
                 <controlsxaml:FontIconSource Glyph="&#xF133;"/>
             </controlsxaml:TeachingTip.IconSource>
@@ -1124,35 +1147,17 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB3C;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xF586;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-
-                        <FontIcon Grid.Row="3" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,0,0,0">
-                            <TextBlock x:Uid="HeadingChangelog2_0_0_0Section4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_0_0_0Section4" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2_1_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="TextChangelog2_1_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" Closed="ContentDialogPrivacySetup_Closed" CloseButtonStyle="{StaticResource RoundedButtonAccentStyle}">
+        <ContentDialog x:Name="ContentDialogPrivacySetup" x:Uid="DialogPrivacySetup" Closed="ContentDialogPrivacySetup_Closed" CloseButtonStyle="{StaticResource ButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>

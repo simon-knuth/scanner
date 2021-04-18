@@ -172,20 +172,20 @@ class ScannerOperation
         }
 
         // list available formats in correct order
-        if (newNativeFormats.Contains("jpg")) formats.Add(CreateComboBoxItem("JPG", "jpg,native"));
-        else if (canConvert) formats.Add(CreateComboBoxItem("JPG", "jpg,converted"));
-        if (newNativeFormats.Contains("png")) formats.Add(CreateComboBoxItem("PNG", "png,native"));
-        else if (canConvert) formats.Add(CreateComboBoxItem("PNG", "png,converted"));
-        if (newNativeFormats.Contains("pdf")) formats.Add(CreateComboBoxItem("PDF", "pdf,native"));
+        if (newNativeFormats.Contains("jpg")) formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,converted"));
+        if (newNativeFormats.Contains("png")) formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,converted"));
+        if (newNativeFormats.Contains("pdf")) formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "pdf,native"));
         else if (canConvert
             && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
-            formats.Add(CreateComboBoxItem("PDF", "PDF,converted"));
+            formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "PDF,converted"));
         if (newNativeFormats.Contains("xps")) formats.Add(CreateComboBoxItem("XPS", "xps,native"));
         if (newNativeFormats.Contains("openxps")) formats.Add(CreateComboBoxItem("OpenXPS", "oxps,native"));
-        if (newNativeFormats.Contains("tif")) formats.Add(CreateComboBoxItem("TIF", "tif,native"));
-        else if (canConvert) formats.Add(CreateComboBoxItem("TIF", "tif,converted"));
-        if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem("BMP", "bmp,native"));
-        else if (canConvert) formats.Add(CreateComboBoxItem("BMP", "bmp,converted"));
+        if (newNativeFormats.Contains("tif")) formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,converted"));
+        if (newNativeFormats.Contains("bmp")) formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,native"));
+        else if (canConvert) formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,converted"));
 
         log.Information("Got natively supported formats: {@Formats}. [canConvert={Convert}]", newNativeFormats, canConvert);
 

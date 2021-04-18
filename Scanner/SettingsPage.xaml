@@ -14,18 +14,18 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
             <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
             <Style x:Name="RoundedButtonStyle" TargetType="Button">
                 <Setter Property="CornerRadius" Value="2"/>
             </Style>
             <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="CornerRadius" Value="4"/>
                 <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </Style>
-            <Style x:Name="RoundedButtonAccentStyle" TargetType="Button">
-                <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
-                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}"/>
-                <Setter Property="CornerRadius" Value="2"/>
             </Style>
 
 
@@ -44,6 +44,22 @@
                 Duration="0:0:0.4">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardSaveLocationSet">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.05">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="Opacity"
+                                 From="0"  To="1" Duration="0:0:0.25" BeginTime="0:0:0.0"/>
+                <DoubleAnimation Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 From="-30"  To="0" Duration="0:0:0.35" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="5" EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
@@ -71,20 +87,38 @@
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <StackPanel Padding="24,100,24,24" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="HeadingSettingsSaveLocation" Style="{ThemeResource BodyTextBlockStyle}"/>
-                        <RelativePanel Margin="0,6,0,0">
-                            <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                            <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,6,0" IsTextSelectionEnabled="True"/>
-                        </RelativePanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
-                            <Button x:Uid="ButtonSettingsSaveLocationChoose" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click" TabIndex="0"/>
-                            <Button x:Uid="ButtonSettingsSaveLocationReset" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click" IsEnabled="False"/>
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="24">
+                            <RadioButton x:Name="RadioButtonSaveLocationSet" x:Uid="OptionSettingsSaveLocationSet" Checked="SettingCheckboxChanged"/>
+                            <RadioButton x:Name="RadioButtonSaveLocationAsk" x:Uid="OptionSettingsSaveLocationAsk" Checked="SettingCheckboxChanged"/>
+                        </controls:WrapPanel>
+
+                        <StackPanel x:Name="StackPanelSettingsSaveLocationSet" Orientation="Vertical">
+                            <StackPanel.RenderTransform>
+                                <TranslateTransform Y="0"/>
+                            </StackPanel.RenderTransform>
+
+                            <RelativePanel Margin="0,12,0,0">
+                                <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                                <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,6,0" IsTextSelectionEnabled="True"/>
+                            </RelativePanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0" >
+                                <Button x:Uid="ButtonSettingsSaveLocationChoose" x:Name="ButtonBrowse" Content="Choose folder" VerticalAlignment="Bottom" Click="ButtonBrowse_Click" TabIndex="0"/>
+                                <Button x:Uid="ButtonSettingsSaveLocationReset" x:Name="ButtonResetLocation" Content="Reset to default" VerticalAlignment="Bottom" Margin="12,0,0,0" Click="ButtonResetLocation_Click" IsEnabled="False"/>
+                            </StackPanel>
                         </StackPanel>
+
                         <ComboBox x:Uid="HeadingSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
                                 <ComboBoxItem x:Uid="OptionSettingsThemeSystem" Content="Use system setting" Tag="0" CornerRadius="2"/>
                                 <ComboBoxItem x:Uid="OptionSettingsThemeLight" Content="Light" Tag="1" CornerRadius="2"/>
                                 <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2" CornerRadius="2"/>
                             </ComboBox.Items>
+
+                            <ComboBox.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </ComboBox.Transitions>
                         </ComboBox>
                         <StackPanel x:Name="StackPanelTextBlockRestart" Orientation="Horizontal" Margin="0,12,0,0" Visibility="Collapsed">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE783;" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
@@ -93,90 +127,129 @@
                             </TextBlock>
                         </StackPanel>
 
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox x:Uid="OptionSettingsAppendTime" x:Name="CheckBoxAppendTime" Content="Append time to file name" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
+                            <CheckBox x:Uid="OptionSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
 
-                        <CheckBox x:Uid="OptionSettingsAppendTime" x:Name="CheckBoxAppendTime" Content="Append time to file name" Margin="0,24,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
-                        <CheckBox x:Uid="OptionSettingsBackgroundNotification" x:Name="CheckBoxNotificationScanComplete" Content="Send a notification when scanning ends in the background" Margin="0,12,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged"/>
-
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                            <TextBlock x:Uid="HeadingSettingsHelpSetup" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
                         </StackPanel>
-                        <HyperlinkButton NavigateUri="https://support.microsoft.com/help/14088">
-                            <TextBlock TextWrapping="WrapWholeWords">
-                                <Run x:Uid="HyperlinkSettingsHelpSetupInstallScanner"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B;"/>
-                            </TextBlock>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Name="HyperlinkButtonSettingsHelpScannerSettings" Click="HyperlinkButtonSettingsHelpScannerSettings_Click">
-                            <TextBlock TextWrapping="WrapWholeWords">
-                                <Span>
-                                    <Run x:Uid="HyperlinkSettingsHelpSetupScannerSettings"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD;" FontSize="12"/>
-                                </Span>
-                            </TextBlock>
-                        </HyperlinkButton>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                            <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                <TextBlock x:Uid="HeadingSettingsHelpSetup" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                            </StackPanel>
+                            <HyperlinkButton NavigateUri="https://support.microsoft.com/help/14088">
+                                <TextBlock TextWrapping="WrapWholeWords">
+                                    <Run x:Uid="HyperlinkSettingsHelpSetupInstallScanner"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B;"/>
+                                </TextBlock>
+                            </HyperlinkButton>
+                            <HyperlinkButton x:Name="HyperlinkButtonSettingsHelpScannerSettings" Click="HyperlinkButtonSettingsHelpScannerSettings_Click">
+                                <TextBlock TextWrapping="WrapWholeWords">
+                                    <Span>
+                                        <Run x:Uid="HyperlinkSettingsHelpSetupScannerSettings"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD;" FontSize="12"/>
+                                    </Span>
+                                </TextBlock>
+                            </HyperlinkButton>
+
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
                         </StackPanel>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+
+                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                            </StackPanel>
+                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                             <Span>
                                 <Run x:Uid="TextSettingsFeedback1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="HyperlinkSettingsFeedbackFeedbackHub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="TextSettingsFeedback2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="HyperlinkSettingsFeedbackRate" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback3" xml:space="preserve"/><Hyperlink UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="HyperlinkSettingsFeedbackGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback4" xml:space="preserve"/>
                             </Span>
-                        </TextBlock>
-                        <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,18,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged">
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
-                                <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="0,6,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                            </StackPanel>
-                        </CheckBox>
-                        <HyperlinkButton x:Name="HyperlinkSettingsExportLog" Margin="0,18,0,0" Click="HyperlinkSettingsExportLog_Click">
-                            <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
-                        </HyperlinkButton>
+                            </TextBlock>
+                            <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,18,0,0" Checked="SettingCheckboxChanged" Unchecked="SettingCheckboxChanged">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="0,6,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <HyperlinkButton x:Name="HyperlinkSettingsExportLog" Margin="0,18,0,0" Click="HyperlinkSettingsExportLog_Click">
+                                <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
+                            </HyperlinkButton>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE775;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                            <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
                         </StackPanel>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                            <Span>
-                                <Run x:Uid="TextSettingsTranslations1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html"><Run x:Uid="HyperlinkSettingsTranslations"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsTranslations2" xml:space="preserve"/>
-                            </Span>
-                        </TextBlock>
-                        <HyperlinkButton x:Name="HyperlinkButtonSettingsTranslationsContributors" Click="HyperlinkButtonSettingsTranslationsContributors_Click">
-                            <TextBlock x:Uid="HyperlinkSettingsTranslationsContributors" />
-                        </HyperlinkButton>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,0">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                            <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE775;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                            </StackPanel>
+                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                                <Span>
+                                    <Run x:Uid="TextSettingsTranslations1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html"><Run x:Uid="HyperlinkSettingsTranslations"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsTranslations2" xml:space="preserve"/>
+                                </Span>
+                            </TextBlock>
+                            <HyperlinkButton x:Name="HyperlinkButtonSettingsTranslationsContributors" Click="HyperlinkButtonSettingsTranslationsContributors_Click">
+                                <TextBlock x:Uid="HyperlinkSettingsTranslationsContributors" />
+                            </HyperlinkButton>
+
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
                         </StackPanel>
-                        <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                        <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2021 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run></Span>
-                        </TextBlock>
-                        <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" Margin="0,18,0,0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutWebsite, Path=FontSize}"/>
+
+                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                             </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" Click="HyperlinkButtonSettingsAboutLicenses_Click">
-                            <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses"/>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutCredits" Click="HyperlinkButtonSettingsAboutCredits_Click">
-                            <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
-                        </HyperlinkButton>
+                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                            <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2021 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run></Span>
+                            </TextBlock>
+                            <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" Margin="0,18,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite"/>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutWebsite, Path=FontSize}"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" Click="HyperlinkButtonSettingsAboutLicenses_Click">
+                                <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses"/>
+                            </HyperlinkButton>
+                            <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutCredits" Click="HyperlinkButtonSettingsAboutCredits_Click">
+                                <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
+                            </HyperlinkButton>
+
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
-                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="15" ShadowOpacity="0.1" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
+                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="25" ShadowOpacity="0.15" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Rectangle x:Name="RectangleSettingsHeader" Fill="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" VerticalAlignment="Bottom" Height="10"/>
                 </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,30,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
+                <Grid x:Name="GridSettingsHeader" Padding="0,30,0,0" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>
@@ -356,10 +429,10 @@
                                                 </Span>
                                             </TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="2" HorizontalAlignment="Left" Margin="0,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentMediumColor}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="0,2,0,0">
                                                     <TextBlock Text="{Binding File.Name}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
-                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="2" HorizontalAlignment="Left" Margin="6,2,0,0">
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemListAccentLowColor}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="6,2,0,0">
                                                     <TextBlock Text="{Binding FileSize}" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </Frame>
                                             </StackPanel>
