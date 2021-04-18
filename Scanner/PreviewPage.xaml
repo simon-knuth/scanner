@@ -15,65 +15,72 @@
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <Page.Resources>
-        <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
-        <Style x:Name="RoundedButtonStyle" TargetType="Button">
-            <Setter Property="CornerRadius" Value="2"/>
-        </Style>
-        <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
 
-        <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
-        <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
-        <local:NegativeTopThicknessConverter x:Key="NegativeTopThicknessConverter"/>
+            <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
+            <Style x:Name="RoundedButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="2"/>
+            </Style>
+            <Style x:Name="RoundedContentDialog" TargetType="ContentDialog">
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+            </Style>
 
 
-        <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
-        <Storyboard x:Name="StoryboardError">
-            <DoubleAnimation
-                Storyboard.TargetName="TextBlockPreviewError"
-                Storyboard.TargetProperty="Opacity"
-                From="0.0" To="1.0"
-                Duration="0:0:0.5"
-                BeginTime="0:0:1">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseIn"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-            <DoubleAnimation
-                Storyboard.TargetName="FontIconError"
-                Storyboard.TargetProperty="Opacity"
-                From="0.0" To="1.0"
-                Duration="0:0:0.5"
-                BeginTime="0:0:1">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseIn"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-            <DoubleAnimation
-                Storyboard.TargetName="ProgressRingPreview"
-                Storyboard.TargetProperty="Opacity"
-                From="1.0" To="0.0"
-                Duration="0:0:1">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseIn"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="TextBlockPreviewError" Duration="0:0:0.8" From="-20.0" To="0.0" BeginTime="0:0:1">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                             Storyboard.TargetName="FontIconError" Duration="0:0:0.8" From="20.0" To="0.0" BeginTime="0:0:1">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
+            <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
+            <local:TopThicknessConverter x:Key="TopThicknessConverter"/>
+            <local:NegativeTopThicknessConverter x:Key="NegativeTopThicknessConverter"/>
+
+
+            <!-- - - - - - - - -  STORYBOARDS  - - - - - - - - -->
+            <Storyboard x:Name="StoryboardError">
+                <DoubleAnimation
+                    Storyboard.TargetName="TextBlockPreviewError"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0.0" To="1.0"
+                    Duration="0:0:0.5"
+                    BeginTime="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                    Storyboard.TargetName="FontIconError"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0.0" To="1.0"
+                    Duration="0:0:0.5"
+                    BeginTime="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                    Storyboard.TargetName="ProgressRingPreview"
+                    Storyboard.TargetProperty="Opacity"
+                    From="1.0" To="0.0"
+                    Duration="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseIn"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                                 Storyboard.TargetName="TextBlockPreviewError" Duration="0:0:0.8" From="-20.0" To="0.0" BeginTime="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                                 Storyboard.TargetName="FontIconError" Duration="0:0:0.8" From="20.0" To="0.0" BeginTime="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </ResourceDictionary>
     </Page.Resources>
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
@@ -115,7 +122,7 @@
                             MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerDummy}"
                             MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}"/>
                 </ScrollViewer>
-                <Grid x:Name="GridPreviewHeader" Padding="0,30,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                <Grid x:Name="GridPreviewHeader" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Padding="0,30,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>

@@ -927,7 +927,7 @@
   </data>
   <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
     <value>Ask for a save location</value>
-    <comment>The heading of the fourth changelog section.</comment>
+    <comment>The heading of the first changelog section.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
     <value>Ask every time</value>

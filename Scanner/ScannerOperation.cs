@@ -71,9 +71,7 @@ class ScannerOperation
         if (selectedItem.Tag.ToString().Split(",")[1] == "converted")
         {
             secondFormat = ConvertFormatStringToSupportedFormat(selectedItem.Tag.ToString().Split(",")[0]);
-            List<ComboBoxItem> reversedFormats = new List<ComboBoxItem>(formats);
-            reversedFormats.Reverse();
-            foreach (ComboBoxItem item in reversedFormats)
+            foreach (ComboBoxItem item in formats)
             {
                 if (item.Tag.ToString().Split(",")[1] == "native")
                 {
