@@ -476,9 +476,7 @@ namespace Scanner
                 RadioButtonSourceFeeder.IsEnabled = false;
                 RadioButtonSourceFeeder.IsChecked = false;
 
-                FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
-                FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
-                FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
+                StoryboardScanOptionsAuto.Begin();
 
                 RefreshPreviewIndicators(false, false, false, false, false, false);
             }
@@ -512,7 +510,6 @@ namespace Scanner
                 else
                 {
                     log.Information("Automatic configuration selected.");
-                    FrameLeftPaneScanColor.Visibility = Visibility.Collapsed;
                 }
 
                 if (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true)
@@ -558,26 +555,17 @@ namespace Scanner
                         RadioButtonColorModeMonochrome.IsEnabled = false;
                         RadioButtonColorModeMonochrome.IsChecked = false;
                     }
-
-                    FrameLeftPaneScanColor.Visibility = Visibility.Visible;
                 }
 
                 // resolution
-                if (selectedScanner.isFake)
-                {
-
-                }
-                else if (RadioButtonSourceFlatbed.IsChecked == true)
+                if (RadioButtonSourceFlatbed.IsChecked == true && !selectedScanner.isFake)
                 {
                     GenerateResolutions(selectedScanner.scanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
-                    FrameLeftPaneResolution.Visibility = Visibility.Visible;
                 }
-                else if (RadioButtonSourceFeeder.IsChecked == true)
+                else if (RadioButtonSourceFeeder.IsChecked == true && !selectedScanner.isFake)
                 {
                     GenerateResolutions(selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
-                    FrameLeftPaneResolution.Visibility = Visibility.Visible;
                 }
-                else FrameLeftPaneResolution.Visibility = Visibility.Collapsed;
 
                 // file formats
                 if (selectedScanner.isFake)
@@ -602,6 +590,20 @@ namespace Scanner
                 {
                     CheckBoxDuplex.IsEnabled = true;
                     CheckBoxDuplex.IsChecked = false;
+                }
+
+                // visibilities
+                if (RadioButtonSourceFlatbed.IsChecked == true)         // flatbed
+                {
+                    StoryboardScanOptionsFlatbed.Begin();
+                }
+                else if (RadioButtonSourceFeeder.IsChecked == true)     // feeder
+                {
+                    StoryboardScanOptionsFeeder.Begin();
+                }
+                else                                                    // auto
+                {
+                    StoryboardScanOptionsAuto.Begin();
                 }
 
                 // preview

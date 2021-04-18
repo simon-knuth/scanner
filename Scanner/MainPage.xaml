@@ -409,6 +409,84 @@
                                  To="1" Duration="0:0:0.1" BeginTime="0:0:0.2"/>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardScanOptionsAuto">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0" BeginTime="0:0:0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0" BeginTime="0:0:0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0" BeginTime="0:0:0"/>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardScanOptionsFlatbed">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.25" BeginTime="0:0:0.0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.25" BeginTime="0:0:0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Opacity"
+                                 To="0" Duration="0:0:0" BeginTime="0:0:0"/>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardScanOptionsFeeder">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanColor" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.25" BeginTime="0:0:0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneResolution" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.25" BeginTime="0:0:0"/>
+
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="FrameLeftPaneScanFeeder" Storyboard.TargetProperty="Opacity"
+                                 To="1" Duration="0:0:0.25" BeginTime="0:0:0"/>
+            </Storyboard>
+
 
             <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
@@ -516,7 +594,7 @@
                                     </Frame.Transitions>
                                 </Frame>
 
-                                <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed">
+                                <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
                                     <StackPanel x:Name="StackPanelColor" Orientation="Vertical">
                                         <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
@@ -525,14 +603,14 @@
                                     </StackPanel>
                                 </Frame>
 
-                                <Frame x:Name="FrameLeftPaneResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed">
+                                <Frame x:Name="FrameLeftPaneResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed" Opacity="0">
                                     <StackPanel x:Name="StackPanelResolution" Orientation="Vertical">
                                         <TextBlock x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind resolutions}" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Frame>
 
-                                <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="{Binding ElementName=RadioButtonSourceFeeder, Path=IsChecked}">
+                                <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
                                         <CheckBox x:Name="CheckBoxAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" IsEnabled="True"/>
@@ -1007,7 +1085,7 @@
             PlacementMargin="4"
             IsLightDismissEnabled="True"
             Target="{Binding ElementName=ButtonDevices}"
-            PreferredPlacement="BottomRight"
+            PreferredPlacement="RightBottom"
             ActionButtonClick="TeachingTipDevices_ActionButtonClick"
             ActionButtonStyle="{StaticResource ButtonAccentStyle}">
             <controlsxaml:TeachingTip.ActionButtonContent>
