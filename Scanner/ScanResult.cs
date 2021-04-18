@@ -843,7 +843,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while applying the strokes.</exception>
         public async Task DrawOnScanAsync(int index, InkCanvas inkCanvas)
         {
-            Analytics.TrackEvent("Draw on page as copy");
+            Analytics.TrackEvent("Draw on page");
             log.Information("Drawing on index {Index} requested.", index);
 
             // check index

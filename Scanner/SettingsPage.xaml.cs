@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -284,7 +283,7 @@ namespace Scanner
                 await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
                 {
                     if (RadioButtonSaveLocationAsk.IsChecked == true) StackPanelSettingsSaveLocationSet.Visibility = Visibility.Collapsed;
-                    else StackPanelSettingsSaveLocationSet.Visibility = Visibility.Visible;
+                    else StoryboardSaveLocationSet.Begin();
                 });
 
                 SaveSettings();

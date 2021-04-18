@@ -716,6 +716,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="FilledTeachingTipStyle" TargetType="controlsxaml:TeachingTip">
         <Setter Property="Background" Value="{ThemeResource TeachingTipBackgroundBrush}"/>
         <Setter Property="Foreground" Value="{ThemeResource TeachingTipForegroundBrush}"/>
@@ -3213,19 +3214,22 @@
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
                 <Setter Property="ShadowOpacity" Value="0.15"/>
             </Style>
-            <Brush x:Key="DisabledButtonBackgroundThemedStyle" >#AEAEAE</Brush>
+            <Brush x:Key="DisabledButtonBackgroundThemedStyle">#AEAEAE</Brush>
+            <Brush x:Key="CustomSeparatorBorderThemeBrush">#25000000</Brush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
                 <Setter Property="ShadowOpacity" Value="0.3"/>
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#656565</Brush>
+            <Brush x:Key="CustomSeparatorBorderThemeBrush">#25FFFFFF</Brush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
                 <Setter Property="ShadowOpacity" Value="0.3"/>
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#656565</Brush>
+            <Brush x:Key="CustomSeparatorBorderThemeBrush">#25000000</Brush>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

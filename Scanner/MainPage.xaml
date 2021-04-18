@@ -298,7 +298,7 @@
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
@@ -376,7 +376,7 @@
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ImageCropperScan" Storyboard.TargetProperty="Visibility">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FrameImageCropperScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
@@ -751,7 +751,7 @@
 
         <!-- Content Pane -->
         <controls:DropShadowPanel x:Name="ContentPaneDropShadowPanel" HorizontalContentAlignment="Stretch" Grid.Column="1" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="30">
-            <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid x:Name="ContentPane" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1,0,0,0">
                 <Grid.BackgroundTransition>
                     <BrushTransition/>
                 </Grid.BackgroundTransition>
@@ -788,14 +788,16 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Visibility="Collapsed" Padding="32,32,32,32">
-                    <controls:ImageCropper.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.2"/>
-                    </controls:ImageCropper.Background>
-                    <controls:ImageCropper.Mask>
-                        <SolidColorBrush Color="Black" Opacity="0.5"/>
-                    </controls:ImageCropper.Mask>
-                </controls:ImageCropper>
+                <Frame x:Name="FrameImageCropperScan" Visibility="Collapsed" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32,32,32,32">
+                        <controls:ImageCropper.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.2"/>
+                        </controls:ImageCropper.Background>
+                        <controls:ImageCropper.Mask>
+                            <SolidColorBrush Color="Black" Opacity="0.5"/>
+                        </controls:ImageCropper.Mask>
+                    </controls:ImageCropper>
+                </Frame>
 
                 <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
@@ -816,7 +818,7 @@
                 </Grid>
 
                 <!-- Top Toolbar -->
-                <Grid x:Name="GridContentPaneTopToolbar" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid x:Name="GridContentPaneTopToolbar" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>

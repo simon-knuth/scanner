@@ -14,6 +14,11 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
             <!-- - - - - - - - -  LOCAL STYLES  - - - - - - - - -->
             <Style x:Name="RoundedButtonStyle" TargetType="Button">
                 <Setter Property="CornerRadius" Value="2"/>
@@ -39,6 +44,22 @@
                 Duration="0:0:0.4">
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardSaveLocationSet">
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.05">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="Opacity"
+                                 From="0"  To="1" Duration="0:0:0.25" BeginTime="0:0:0.0"/>
+                <DoubleAnimation Storyboard.TargetName="StackPanelSettingsSaveLocationSet" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 From="-30"  To="0" Duration="0:0:0.35" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="5" EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
@@ -72,6 +93,10 @@
                         </controls:WrapPanel>
 
                         <StackPanel x:Name="StackPanelSettingsSaveLocationSet" Orientation="Vertical">
+                            <StackPanel.RenderTransform>
+                                <TranslateTransform Y="0"/>
+                            </StackPanel.RenderTransform>
+
                             <RelativePanel Margin="0,12,0,0">
                                 <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
                                 <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,6,0" IsTextSelectionEnabled="True"/>
@@ -221,10 +246,10 @@
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
-                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="15" ShadowOpacity="0.1" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
+                <controls:DropShadowPanel x:Name="DropShadowPanelSettingsHeader" BlurRadius="25" ShadowOpacity="0.15" Opacity="{Binding ElementName=ScrollViewerSettings, Path=VerticalOffset, Converter={StaticResource HeaderScrollShadowConverter}}" HorizontalContentAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="GridSettingsHeader"  RelativePanel.AlignRightWithPanel="True">
                     <Rectangle x:Name="RectangleSettingsHeader" Fill="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" VerticalAlignment="Bottom" Height="10"/>
                 </controls:DropShadowPanel>
-                <Grid x:Name="GridSettingsHeader" Padding="0,30,0,0" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
+                <Grid x:Name="GridSettingsHeader" Padding="0,30,0,0" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>

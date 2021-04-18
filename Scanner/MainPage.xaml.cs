@@ -676,6 +676,7 @@ namespace Scanner
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 20, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Visible;
                     SplitViewRightPane.Visibility = Visibility.Visible;
+                    ContentPane.BorderThickness = new Thickness(0);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 750 && width < 1750 && uiState != UIstate.normal)       // normal window
@@ -706,6 +707,7 @@ namespace Scanner
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 8, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
+                    ContentPane.BorderThickness = new Thickness(1, 0, 0, 0);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 1750 && uiState != UIstate.wide)      // wide window
@@ -735,6 +737,7 @@ namespace Scanner
                     FrameLeftPaneScanSource.Margin = new Thickness(0, 8, 0, 0);
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
+                    ContentPane.BorderThickness = new Thickness(1, 0, 1, 0);
                 }
 
                 if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2
@@ -748,9 +751,9 @@ namespace Scanner
                     StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
                 }
 
-                RectangleGeometry rectangleClip = new RectangleGeometry();
-                rectangleClip.Rect = new Rect(0, 0, Double.PositiveInfinity, GridContentPaneTopToolbar.ActualHeight);
-                GridContentPaneTopToolbar.Clip = rectangleClip;
+                RectangleGeometry rectangleClipToolbarButtons = new RectangleGeometry();
+                rectangleClipToolbarButtons.Rect = new Rect(0, 0, Double.PositiveInfinity, GridContentPaneTopToolbar.ActualHeight);
+                GridContentPaneTopToolbar.Clip = rectangleClipToolbarButtons;
             });
         }
 
