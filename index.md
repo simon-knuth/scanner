@@ -67,10 +67,13 @@ Screenshots (background wallpaper): <a href="https://unsplash.com/@willianjusten
 The currently supported languages are:
 <ul>
   <li>English (EN)</li>
+  <li>English (EN-GB)</li>
   <li>French (FR)</li>
   <li>German (DE)</li>
   <li>Italian (IT)</li>
   <li>Polish (PL)</li>
+  <li>Portuguese (PT)</li>
+  <li>Russian (RU)</li>
 </ul>  
 
 See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
