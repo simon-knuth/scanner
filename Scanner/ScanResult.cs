@@ -12,6 +12,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -40,20 +41,23 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
+        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
+            int futureAccessListIndex = futureAccessListIndexStart;
             foreach (StorageFile file in fileList)
             {
                 if (file == null) continue;
 
-                elements.Add(new ScanResultElement(file));
+                elements.Add(new ScanResultElement(file, futureAccessListIndex));
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
+                futureAccessListIndex += 1;
             }
             scanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
             originalTargetFolder = targetFolder;
             RefreshItemDescriptors();
         }
 
-        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
             log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
             Task[] moveTasks = new Task[fileList.Count];
@@ -63,18 +67,18 @@ namespace Scanner
             }
             await Task.WhenAll(moveTasks);
 
-            ScanResult result = new ScanResult(fileList, targetFolder);
+            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
             if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             await result.GetImagesAsync();
             log.Information("ScanResult created.");
             return result;
         }
 
-        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat, int futureAccessListIndexStart)
         {
             log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
-            ScanResult result = new ScanResult(fileList, targetFolder);
+            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
 
             if (targetFormat == SupportedFormat.PDF)
             {
@@ -698,7 +702,7 @@ namespace Scanner
             IRandomAccessStream stream = null;
             try
             {
-                StorageFolder folder = await elements[index].ScanFile.GetParentAsync();
+                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].futureAccessListIndex.ToString());
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 stream = await file.OpenAsync(FileAccessMode.ReadWrite);
                 await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
@@ -710,7 +714,7 @@ namespace Scanner
             }
             stream.Dispose();
 
-            elements.Insert(index + 1, new ScanResultElement(file));
+            elements.Insert(index + 1, new ScanResultElement(file, elements[index].futureAccessListIndex));
 
             RefreshItemDescriptors();
 
@@ -930,7 +934,7 @@ namespace Scanner
                     }
                 }
 
-                StorageFolder folder = await elements[index].ScanFile.GetParentAsync();
+                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].futureAccessListIndex.ToString());
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
@@ -943,7 +947,7 @@ namespace Scanner
                 throw;
             }
 
-            elements.Insert(index + 1, new ScanResultElement(file));
+            elements.Insert(index + 1, new ScanResultElement(file, elements[index].futureAccessListIndex));
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
@@ -1188,9 +1192,10 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder)
+        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
             log.Information("Adding {Num} files, the target format is {Format}.", files.Count, targetFormat);
+            int futureAccessListIndex = futureAccessListIndexStart;
 
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
@@ -1200,7 +1205,9 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    elements.Add(new ScanResultElement(file));
+                    elements.Add(new ScanResultElement(file, futureAccessListIndex));
+                    futureAccessListIndex += 1;
+                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
                     if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
             }
@@ -1213,7 +1220,9 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    elements.Add(new ScanResultElement(file));
+                    elements.Add(new ScanResultElement(file, futureAccessListIndex));
+                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
+                    futureAccessListIndex += 1;
                     if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
 
@@ -1268,9 +1277,9 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat)
+        public Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
         {
-            return AddFiles(files, targetFormat, originalTargetFolder);
+            return AddFiles(files, targetFormat, originalTargetFolder, futureAccessListIndexStart);
         }
 
 

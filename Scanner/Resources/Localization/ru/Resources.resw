@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Veuillez réessayer.</value>
+    <value>Пожалуйста, попробуйте еще раз.</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copier la page dans le presse-papier (Ctrl+C)</value>
+    <value>Копировать страницу в буфер обмена (Ctrl + C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rogner la page</value>
+    <value>Обрезать страницу</value>
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Proportions</value>
+    <value>Соотношение сторон</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>Proportions</value>
+    <value>Соотношение сторон</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
@@ -146,7 +146,7 @@
     <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
-    <value>Kai 8</value>
+    <value>Kai 8</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
@@ -158,748 +158,750 @@
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>Personnalisé</value>
+    <value>Пользовательское</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>Retourner</value>
+    <value>Повернуть</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
-    <value>DIN A</value>
+    <value>DIN A</value>
     <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
-    <value>ANSI A - Lettre</value>
+    <value>ANSI A - Letter</value>
     <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
-    <value>ANSI B - Ledger/Tabloïd</value>
+    <value>ANSI B - Ledger/Tabloid</value>
     <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
-    <value>ANSI C - Grand format</value>
+    <value>ANSI C - Broadsheet</value>
     <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
-    <value>Carré</value>
+    <value>Квадрат</value>
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Supprimer la page</value>
+    <value>Удалить страницу</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Annuler les modifications</value>
+    <value>Отменить изменения</value>
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Annoter avec Windows Ink</value>
+    <value>Рисуйте и выделяйте с помощью Windows Ink</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Dessiner avec le doigt</value>
+    <value>Рисовать касанием</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ouvrir dans une autre app</value>
+    <value>Открыть в другом приложении</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Renommer le fichier</value>
+    <value>Переименовать файл</value>
     <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
-    <value>Pivoter de 90°</value>
+    <value>Повернуть на 90 °</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
-    <value>Pivoter de 180°</value>
+    <value>Повернуть на 180 °</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
-    <value>Pivoter de 270°</value>
+    <value>Повернуть на 270 °</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pivoter la page</value>
+    <value>Повернуть страницу</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Enregistrer les modifications</value>
+    <value>Сохранить изменения</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Enregistrer les modifications comme copie</value>
+    <value>Сохранить изменения как копию</value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Partager</value>
+    <value>Поделиться</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gérer les pages</value>
+    <value>Управление страницами</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copier les pages sélectionnées</value>
+    <value>Копировать выбранные страницы</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Supprimer les pages sélectionnées</value>
+    <value>Удалить выбранные страницы</value>
     <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
-    <value>Pivoter les pages sélectionnées de 90°</value>
+    <value>Повернуть выбранные страницы на 90 °</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
-    <value>Pivoter les pages sélectionnées de 180°</value>
+    <value>Повернуть выбранные страницы на 180 °</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
-    <value>Pivoter les pages sélectionnées de 270°</value>
+    <value>Повернуть выбранные страницы на 270 °</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pivoter les pages sélectionnées</value>
+    <value>Повернуть выбранные страницы</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sélectionner des pages</value>
+    <value>Выбрать страницы</value>
     <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Partager les pages sélectionnées</value>
+    <value>Поделиться выбранными страницами</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Numériser des pages</value>
+    <value>Сканировать страницы</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Annuler la numérisation en cours</value>
+    <value>Отменить текущее сканирование</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gérer les scanneurs</value>
+    <value>Управление сканерами</value>
     <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>Aperçu</value>
+    <value>просмотр</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Montrer les fichiers dans l&apos;explorateur de fichier</value>
+    <value>Показать место сохранения в проводнике</value>
     <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
-    <value>Numériser</value>
+    <value>Сканировать</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>Numériser et recommencer à zéro</value>
+    <value>Сканировать и начать заново</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>Настройки</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
   <data name="DialogDelete.Title" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Вы уверены?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.Subtitle" xml:space="preserve">
-    <value>La page va être définitivement supprimée.</value>
+    <value>Страница будет удалена без возможности восстановления.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
-    <value>Supprimer</value>
+    <value>Удалить</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.CloseButtonContent" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Отмена</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDeleteSelect.Title" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Вы уверены?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
-    <value>Les pages sélectionnées vont être définitivement supprimées</value>
+    <value>Выбранные страницы будут удалены без возможности восстановления.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
-    <value>Supprimer</value>
+    <value>Удалить</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.CloseButtonContent" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Отмена</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDevices.Title" xml:space="preserve">
-    <value>Sélectionner un scanneur</value>
+    <value>Выберите сканер</value>
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>Si votre scanneur ne s&apos;affiche pas dans les trois minutes, vous devrez peut-être d&apos;abord l&apos;ajouter dans les paramètres Windows.</value>
+    <value>Если ваш сканер не появляется в течение трех минут, возможно вам нужно добавить его в настройках приложения.
+</value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="ButtonDialogDevices.Text" xml:space="preserve">
-    <value>Ouvrir les paramètres</value>
+    <value>Настройки запуска</value>
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>L&apos;app vous plait ?</value>
+    <value>Вам нравится приложение?</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>Nous serions ravis de vous entendre :</value>
+    <value>Мы были бы рады получить известия от вас:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>Vous pouvez utiliser le </value>
+    <value>Вы можете использовать </value>
     <comment>The first part of the dialog text that asks the user for feedback.
 | -&gt; DialogFeedbackHyperlinkFeedbackHub.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkFeedbackHub.Text" xml:space="preserve">
-    <value>Hub de commentaires</value>
+    <value>Центр отзывов</value>
     <comment>The Feedback Hub link in the dialog that asks the user for feedback.
 DialogFeedbackText1.Text &lt;- | -&gt; DialogFeedbackText2.Text</comment>
   </data>
   <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> pour demander de nouvelles fonctionnalités, signaler des bugs et voter des suggestions ou </value>
+    <value> запрос новых функций, сообщить об ошибках и голосовать за предложения, или </value>
     <comment>The second part of the dialog text that asks the user for feedback.
 DialogFeedbackHyperlinkFeedbackHub.Text &lt;- | -&gt; DialogFeedbackHyperlinkRate.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
-    <value>évaluer Scanner dans le Microsoft Store</value>
+    <value>оцените Сканер в Microsoft Store</value>
     <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
 DialogFeedbackText2.Text &lt;- | -&gt; DialogFeedbackText3.Text</comment>
   </data>
   <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value> pour aider les autres à décider si l&apos;application leur convient.</value>
+    <value> чтобы помочь другим решить, подходит ли им это приложение.</value>
     <comment>The third part of the dialog text that asks the user for feedback.
 DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
-    <value>Renommer</value>
+    <value>Переименовать</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.Subtitle" xml:space="preserve">
-    <value>Entrez un nouveau nom pour le fichier :</value>
+    <value>Введите новое имя для файла:</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.ActionButtonContent" xml:space="preserve">
-    <value>Confirmer</value>
+    <value>Подтвердить</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.CloseButtonContent" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Отмена</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogScope.ActionButtonContent" xml:space="preserve">
-    <value>Tout le document</value>
+    <value>Весь документ</value>
     <comment>The button text of the dialog that allows the user to apply an action to an entire document.</comment>
   </data>
   <data name="DialogScope.CloseButtonContent" xml:space="preserve">
-    <value>Juste cette page</value>
+    <value>Только эта страница</value>
     <comment>The button text of the dialog that allows the user to apply an action to a single page in a document.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
-    <value>La copie dans le presse-papiers a échoué.</value>
+    <value>Не удалось скопировать в буфер обмена.</value>
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
-    <value>Le recadrage n&apos;est pas disponible pour le moment.</value>
+    <value>Обрезка сейчас недоступна.</value>
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>Impossible de supprimer ceci pour le moment.</value>
+    <value>Это удалить сейчас невозможно.</value>
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>Oups !</value>
+    <value>ОЙ!</value>
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>Veuillez sélectionner un format de fichier.</value>
+    <value>Пожалуйста, выберите формат файла.</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>Impossible de renommer ceci pour le moment. Peut-être qu&apos;un fichier du même nom existe déjà?</value>
+    <value>Переименование сейчас невозможно. Возможно, файл с таким именем уже существует?</value>
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>Impossible de pivoter ceci pour le moment. Veuillez réessayer.</value>
+    <value>Поворот сейчас невозможен. Пожалуйста, попробуйте еще раз.</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>L&apos;enregistrement de ces modifications a échoué. Veuillez vous assurer que le fichier est toujours disponible et réessayer.</value>
+    <value>Не удалось сохранить изменения. Убедитесь, что файл все еще доступен, и повторите попытку.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>Le scanneur refuse la demande d&apos;annulation de la numérisation par l&apos;app.</value>
+    <value>Сейчас сканер в не принимает запрос на отмену сканирования.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>La numérisation a échoué en raison d&apos;une erreur inconnue.</value>
+    <value>Сканирование не удалось из-за неизвестной ошибки.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when a scan fails with more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
-    <value>La numérisation a échoué avec l&apos;erreur suivante :</value>
+    <value>Сканирование завершилось неудачно со следующей ошибкой:</value>
     <comment>The error message body that appears when a scan fails with more information.</comment>
   </data>
   <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
-    <value>Sélectionnez un scanneur</value>
+    <value>Выберите сканер</value>
     <comment>The heading that tells the user to select a scanner.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
-    <value>Chinois</value>
+    <value>Китайский</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
-    <value>International</value>
+    <value>Международный</value>
     <comment>The heading for international aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
-    <value>Nord américain</value>
+    <value>Североамериканский</value>
     <comment>The heading for North American aspect ratio options.</comment>
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
-    <value>Scanner</value>
+    <value>Сканер</value>
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>Mode de couleur</value>
+    <value>Цветной режим</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
-    <value>Enregistrer sous</value>
+    <value>Сохранить как</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsMoreOptions.Text" xml:space="preserve">
-    <value>Options additionelles</value>
+    <value>Дополнительные настройки</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
-    <value>Résolution</value>
+    <value>Разрешение</value>
     <comment>The heading for resolution options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
-    <value>Source</value>
+    <value>Источник</value>
     <comment>The heading for source options in the scan options section.</comment>
   </data>
   <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
-    <value>Numérisez jusqu&apos;à 10 pages consécutivement</value>
+    <value>Последовательное сканирование до 10 страниц</value>
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>Couleur</value>
+    <value>Цветное</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>Niveaux de gris</value>
+    <value>Оттенки серого</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>Monochrome</value>
+    <value>Монохромное</value>
     <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
-    <value>Recto-verso</value>
+    <value>Двустороннее (спереди и сзади)</value>
     <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
-    <value>Configuration automatique</value>
+    <value>Автоматическая настройка</value>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>Chargeur</value>
+    <value>Податчик
+</value>
     <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Plateau</value>
+    <value>Планшет</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>Si votre scanner n&apos;apparaît pas dans les trois minutes, assurez-vous qu&apos;il a été ajouté dans les </value>
+    <value>если ваш сканер не появляется в течение трех минут, убедитесь, что он был добавлен в </value>
     <comment>The first part of the body of the text that tells the user to select a scanner.
 | -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>Les pages numérisées apparaitront ici</value>
+    <value>Здесь появятся отсканированные страницы</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
   <data name="TextScannerIndicator.Text" xml:space="preserve">
-    <value>Recherche des scanneurs disponibles</value>
+    <value>Всегда искать доступные сканеры</value>
     <comment>The placeholder text in the scanner selection list.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Supporte l&apos;aperçu</value>
+    <value>Поддерживает предварительный просмотр</value>
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>Aperçu</value>
+    <value>Просмотр</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Un problème est survenu. Veuillez vous assurer qu&apos;une page a été insérée et réessayez.</value>
+    <value>Что-то пошло не так. Убедитесь, что страница вставлена, и попробуйте еще раз.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Choisir le dossier</value>
+    <value>Выберите папку</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>Dossier par défaut</value>
+    <value>Восстановление значений по умолчанию</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>Licenses tierces</value>
+    <value>Сторонние лицензии</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubHeading" xml:space="preserve">
-    <value>Oups !</value>
+    <value>ОЙ!</value>
     <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>Le Hub de commentaires n&apos;a pas pu être lancé.</value>
+    <value>Центр отзывов не может быть запущен.</value>
     <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так. Убедитесь, что страница вставлена, и попробуйте еще раз.</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>Le dossier sélectionné n&apos;est pas disponible. Essayez-en un autre.</value>
+    <value>Выбранная папка недоступна. Пожалуйста, попробуйте выбрать другую.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>Un problème est survenu</value>
+    <value>Что-то пошло не так</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>La réinitialisation de l&apos;emplacement par défaut a échoué. Le message d&apos;erreur est :</value>
+    <value>Не удалось сбросить местоположение папки. Сообщение об ошибке:</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
-    <value>Accès refusé</value>
+    <value>Доступ запрещен</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>L&apos;app n&apos;est pas autorisée à utiliser ce dossier. Veuillez en choisir un autre.</value>
+    <value>Приложению не разрешено использовать эту папку. Пожалуйста, попробуйте выбрать другую.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>À propos de cette app</value>
+    <value>О приложении</value>
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Donnez votre avis</value>
+    <value>Отправить сообщение разработчику</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
-    <value>Aide &amp; configuration</value>
+    <value>Помощь и настройка</value>
     <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Emplacement d&apos;enregistrement</value>
+    <value>Сохранить местоположение</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTheme.Header" xml:space="preserve">
-    <value>Thème</value>
+    <value>Тема</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Translations</value>
+    <value>Переводы</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
-    <value>Redémarrer l&apos;app</value>
+    <value>перезапустить приложение</value>
     <comment>The hyperlink text for restarting the app to apply changes.
 TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>Adjoindre l&apos;heure au nom du fichier</value>
+    <value>Добавить время к имени файла</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="OptionSettingsBackgroundNotification.Content" xml:space="preserve">
-    <value>Afficher une notification lorsqu&apos;une numérisation se termine en arrière-plan</value>
+    <value>Показывать уведомление о завершении сканирования в фоновом режиме</value>
     <comment>The text for the option for sending a notification when a scan ends in the background.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
-    <value>Licences tierces</value>
+    <value>Сторонние лицензии</value>
     <comment>The hyperlink text for viewing third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
-    <value>Politique de confidentialité</value>
+    <value>Политика конфиденциальности</value>
     <comment>The hyperlink text for viewing the privacy policy.</comment>
   </data>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
-    <value>Site web</value>
+    <value>Веб-сайт</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Utilisez le </value>
+    <value>Используйте </value>
     <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
 | -&gt; HyperlinkSettingsFeedbackFeedbackHub.Text</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> pour demander de nouvelles fonctionnalités, signaler des bugs et voter pour des suggestions ou </value>
+    <value> запрос новых функций, сообщить об ошибках и голосовать за предложения, или </value>
     <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
 HyperlinkSettingsFeedbackFeedbackHub.Text &lt;- | -&gt; HyperlinkSettingsFeedbackRate.Text</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value> pour aider les autres à décider si l&apos;application leur convient. Les utilisateurs professionnels peuvent également influencer le développement ultérieur sur </value>
+    <value> чтобы помочь другим решить, подходит ли им это приложение. Опытные пользователи также могут повлиять на дальнейшее развитие </value>
     <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
 TextSettingsFeedback3.Text &lt;- | -&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
-    <value>Hub de commentaires</value>
+    <value>Центр отзывов</value>
     <comment>The hyperlink text for launching the Feedback Hub from the &quot;Feedback&quot; section in settings.
 TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
-    <value>Apprenez à installer et à utiliser un scanneur sous Windows 10</value>
+    <value>Узнайте, как установить и использовать сканер в Windows 10</value>
     <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
-    <value>Veuillez </value>
+    <value>Пожалуйста </value>
     <comment>The first part of the text for restarting the app to apply changes.
 | -&gt; HyperlinkSettingsRestart.Text</comment>
   </data>
   <data name="TextSettingsRestart2.Text" xml:space="preserve">
-    <value> pour appliquer les modifications.</value>
+    <value> чтобы изменения вступили в силу.</value>
     <comment>The second part of the text for restarting the app to apply changes.
 HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>Windows 10 prend en charge plus de 100 langues - vous pouvez contribuer à rendre cette application accessible à tous. Voir </value>
+    <value>Windows 10 предлагает поддержку более 100 языков - вы можете сделать это приложение доступным для всех. Посмотреть </value>
     <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
-    <value> pour plus d&apos;information.</value>
+    <value> за дополнительной информацией.</value>
     <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>cette page</value>
+    <value>эта страница</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> et qu&apos;il n&apos;apparait pas comme étant hors-ligne.</value>
+    <value> и не отображается там как выключенный.</value>
     <comment>The second part of the body of the text that tells the user to select a scanner.
 HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>Настройки</value>
     <comment>The heading for the settings.</comment>
   </data>
   <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
-    <value>Sombre</value>
+    <value>Темная</value>
     <comment>The dark theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
-    <value>Clair</value>
+    <value>Светлая</value>
     <comment>The light theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
-    <value>Utiliser le paramètre système</value>
+    <value>Использовать системные настройки</value>
     <comment>The system theme option in the settings.</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
-    <value>paramètres Windows</value>
+    <value>настройки приложения</value>
     <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
 TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
-    <value>Accéder aux paramètres du scanneur</value>
+    <value>Зайдите в настройки сканера</value>
     <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="DialogScopeQuestionCopyHeading" xml:space="preserve">
-    <value>Qu&apos;est-ce qui doit être copié ?</value>
+    <value>Что должно быть скопировано?</value>
     <comment>The heading for the dialog that asks whether the user wants to copy an entire document or just a single page.</comment>
   </data>
   <data name="DialogScopeQuestionOpenWithHeading" xml:space="preserve">
-    <value>Qu&apos;est-ce qui doit être ouvert ?</value>
+    <value>Что должно быть открыто?</value>
     <comment>The heading for the dialog that asks whether the user wants to open an entire document or just a single page.</comment>
   </data>
   <data name="DialogScopeQuestionShareHeading" xml:space="preserve">
-    <value>Qu&apos;est-ce qui doit être partagé ?</value>
+    <value>Чем нужно поделиться?</value>
     <comment>The heading for the dialog that asks whether the user wants to share an entire document or just a single page.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
-    <value>Numérisation terminée</value>
+    <value>Сканирование завершено</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>Évaluez Scanner dans le Microsoft Store</value>
+    <value>Оцените Сканер в Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
 TextSettingsFeedback2.Text &lt;- | -&gt; TextSettingsFeedback3.Text
 Fuzzy</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
-    <value>Plusieurs pages</value>
+    <value>Несколько страниц</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>Revenez à l&apos;application pour afficher et modifier le résultat.</value>
+    <value>Вернитесь в приложение, чтобы просмотреть и отредактировать результат.</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>L&apos;application recueille toutes les pages que vous numérisez, tant que vous ne modifiez pas le format de fichier ou que vous ne choisissez pas &quot;Recommencer à zéro&quot; pendant la numérisation. Si vous créez un fichier PDF, vous pouvez également réorganiser les pages ici.</value>
+    <value>Приложение собирает все отсканированные страницы, если вы не меняете формат файла или не начинаете сканировать заново. Если вы создаете файл PDF, вы также можете изменить порядок страниц здесь.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
-    <value>Vos pages sont ici</value>
+    <value>Ваши страницы здесь</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="TextScanOptionsDefaultResolutionIndicator" xml:space="preserve">
-    <value>Par défaut</value>
+    <value>По умолчанию</value>
     <comment>The text that indicates that a resolution in the list is the default one. Presented in brackets.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
-    <value>Contributeurs</value>
+    <value>Авторы</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
-    <value>Contributeurs</value>
+    <value>Авторы</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>Настройки</value>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>Les numérisations sont enregistrées dans l&apos;emplacement par défaut. Vous pouvez sélectionner un autre dossier dans les paramètres.</value>
+    <value>Сканы сохраняются в папку для сохранения по умолчанию. Вы можете выбрать другую папку в настройках.</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>Emplacement d&apos;enregistrement</value>
+    <value>Сохранить местоположение</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Журнал изменений</value>
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>Vous pouvez consulter les nouveautés et les améliorations dans le changlog (pas forcément disponible dans toutes les langues).</value>
+    <value>Вы можете узнать, о новшествах  и улучшениях, в журнале изменений (может быть доступно не на всех языках).</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
-    <value>Mise à jour de l&apos;app</value>
+    <value>Приложение обновлено</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>Nouveautés</value>
+    <value>Что нового?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Crédits</value>
+    <value>Титры</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Envoyer les rapports d&apos;erreur et des statistiques d&apos;utilisation</value>
+    <value>Отправлять отчеты об ошибках и статистику использования</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Cela nous permet d&apos;enquêter sur les plantages de l&apos;application et d&apos;identifier les fonctionnalités préférées de nos utilisateurs. Soyez assuré que vos pages numérisées ne sont jamais incluses dans ces rapports.</value>
+    <value>Это позволяет нам исследовать сбои приложений и определять, какие функции наиболее ценны для наших пользователей. Будьте уверены, что ваши отсканированные страницы никогда не включаются в эти отчеты.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
-    <value>La confidentialité avant tout</value>
+    <value>Конфиденциальность прежде всего</value>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>Vous pouvez toujours changer d&apos;avis dans les paramètres de l&apos;application.</value>
+    <value>Вы всегда можете сделать изменения в настройках приложения.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>Fermer</value>
+    <value>Закрыть</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Exporter le journal des événements</value>
+    <value>Экспорт журнала событий</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Exporter le journal des événements</value>
+    <value>Экспорт журнала событий</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
-    <value>Exporter</value>
+    <value>Экспорт</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>Aucune de vos pages numérisées n&apos;est incluse dans ces journaux.</value>
+    <value>Ни одна из ваших отсканированных страниц не вклчена в эти журналы.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
-    <value>Confirmer</value>
+    <value>Подтвердить</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Veuillez confirmer les paramètres suivants.</value>
+    <value>Пожалуйста, подтвердите следующие настройки.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Crédits</value>
+    <value>Титры</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -911,7 +913,7 @@ Fuzzy</comment>
     <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
   </data>
   <data name="TextEditSave.Text" xml:space="preserve">
-    <value>Enregistrer</value>
+    <value>Сохранить</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
   <data name="TextSettingsFeedback4.Text" xml:space="preserve">
@@ -925,40 +927,40 @@ HyperlinkSettingsFeedbackGithub.Text &lt;- |</comment>
 TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
-    <value>Scanner</value>
+    <value>Сканер</value>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Scanner pour Windows 10</value>
+    <value>Сканер для Windows 10</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
-    <value>Scanner</value>
+    <value>Сканер</value>
     <comment>App name as displayed on tile.</comment>
   </data>
   <data name="TextPageListDescriptor" xml:space="preserve">
-    <value>Page {0}</value>
+    <value>Страница {0}</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
-    <value>Numérisations</value>
+    <value>Отсканированное</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Demander où enregistrer</value>
+    <value>Спросите место сохранения</value>
     <comment>The heading of the first changelog section.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>Demander à chaque fois</value>
+    <value>Спросите каждый раз</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Utiliser un emplacement défini</value>
+    <value>Используйте установленное папку</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="TextChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Choisissez un nouvel emplacement d&apos;enregistrement à chaque fois que vous numérisez, au lieu d&apos;avoir à déplacer des fichiers par la suite.
-Cette fonctionnalité peut être activée dans les paramètres.</value>
+    <value>Выберите каждый раз при сканировании новое место сохранения, вместо того чтобы впоследствии перемещать файлы.
+Эту функцию можно включить в настройках.</value>
     <comment>The text of the first changelog section.</comment>
   </data>
 </root>

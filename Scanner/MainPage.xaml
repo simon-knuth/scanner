@@ -536,12 +536,6 @@
                             <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,30,0,0">
                                 <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
                             </Frame>
-
-                            <Grid.Transitions>
-                                <TransitionCollection>
-                                    <RepositionThemeTransition/>
-                                </TransitionCollection>
-                            </Grid.Transitions>
                         </Grid>
 
                         <ScrollViewer x:Name="ScrollViewerLeftPaneScan" Background="Transparent" VerticalScrollBarVisibility="Auto" RelativePanel.Below="GridLeftPaneScanHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -563,12 +557,6 @@
                                             </ComboBoxItem>
                                         </ComboBox>
                                     </StackPanel>
-
-                                    <Frame.Transitions>
-                                        <TransitionCollection>
-                                            <RepositionThemeTransition/>
-                                        </TransitionCollection>
-                                    </Frame.Transitions>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanSourceMode" Margin="0,12,0,0">
@@ -586,12 +574,6 @@
                                             <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
                                         </Grid>
                                     </StackPanel>
-
-                                    <Frame.Transitions>
-                                        <TransitionCollection>
-                                            <RepositionThemeTransition/>
-                                        </TransitionCollection>
-                                    </Frame.Transitions>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
@@ -1067,13 +1049,13 @@
 
                 <SplitView x:Name="SplitViewLeftPane" PanePlacement="Left" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewLeftPane_PaneClosed">
                     <SplitView.Pane>
-                        <Grid x:Name="SplitViewLeftPaneContent" Background="Transparent"/>
+                        <Grid x:Name="SplitViewLeftPaneContent" Background="Transparent" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,1,0"/>
                     </SplitView.Pane>
                 </SplitView>
 
                 <SplitView x:Name="SplitViewRightPane" PanePlacement="Right" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}" PaneClosed="SplitViewRightPane_PaneClosed">
                     <SplitView.Pane>
-                        <Grid x:Name="SplitViewRightPaneContent" Background="Transparent"/>
+                        <Grid x:Name="SplitViewRightPaneContent" Background="Transparent" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1,0,0,0"/>
                     </SplitView.Pane>
                 </SplitView>
             </Grid>

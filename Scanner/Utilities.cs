@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;

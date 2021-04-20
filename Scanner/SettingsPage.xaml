@@ -83,7 +83,7 @@
                 <BrushTransition/>
             </Grid.BackgroundTransition>
 
-            <RelativePanel x:Name="StackPanelSettings">
+            <RelativePanel x:Name="RelativePanelSettings">
                 <ScrollViewer x:Name="ScrollViewerSettings" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <StackPanel Padding="24,100,24,24" MaxWidth="600" Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock x:Uid="HeadingSettingsSaveLocation" Style="{ThemeResource BodyTextBlockStyle}"/>
@@ -92,12 +92,12 @@
                             <RadioButton x:Name="RadioButtonSaveLocationAsk" x:Uid="OptionSettingsSaveLocationAsk" Checked="SettingCheckboxChanged"/>
                         </controls:WrapPanel>
 
-                        <StackPanel x:Name="StackPanelSettingsSaveLocationSet" Orientation="Vertical">
+                        <StackPanel x:Name="StackPanelSettingsSaveLocationSet" Orientation="Vertical" Margin="0,12,0,0">
                             <StackPanel.RenderTransform>
                                 <TranslateTransform Y="0"/>
                             </StackPanel.RenderTransform>
 
-                            <RelativePanel Margin="0,12,0,0">
+                            <RelativePanel Margin="0,0,0,0">
                                 <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
                                 <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,6,0" IsTextSelectionEnabled="True"/>
                             </RelativePanel>
@@ -380,11 +380,17 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB52; " HorizontalAlignment="Left" FontSize="24" Margin="0,0,8,0"/>
                     <TextBlock x:Uid="HeadingDialogTranslationsContributors" FontWeight="Bold" FontSize="24"/>
                 </StackPanel>
-                <TextBlock LineHeight="28">
-                    <Run FontWeight="Bold">Astreptocoque</Run> - French
-                    <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
-                    <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
-                </TextBlock>
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
+                    <TextBlock LineHeight="28">
+                        <Run FontWeight="Bold">Astreptocoque</Run> - French
+                        <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
+                        <LineBreak/><Run FontWeight="Bold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="Bold">João Tavares</Run> - Portuguese
+                        <LineBreak/><Run FontWeight="Bold">Раф</Run> - Russian
+                        <LineBreak/><Run FontWeight="Bold">00000051</Run> - Russian
+                    </TextBlock>
+                </ScrollViewer>
             </StackPanel>
 
         </ContentDialog>

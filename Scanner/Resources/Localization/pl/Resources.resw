@@ -345,7 +345,7 @@
     <value>Jeśli skaner nie pojawi się w ciągu trzech minut, może być konieczne dodanie go najpierw w Ustawieniach.</value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
-  <data name="DialogDevices.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDevices.Text" xml:space="preserve">
     <value>Otwórz ustawienia</value>
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
@@ -359,23 +359,28 @@
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
     <value>Możesz użyć </value>
-    <comment>The first part of the dialog text that asks the user for feedback.</comment>
+    <comment>The first part of the dialog text that asks the user for feedback.
+| -&gt; DialogFeedbackHyperlinkFeedbackHub.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkFeedbackHub.Text" xml:space="preserve">
     <value>Centrum opinii</value>
-    <comment>The Feedback Hub link in the dialog that asks the user for feedback.</comment>
+    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
+DialogFeedbackText1.Text &lt;- | -&gt; DialogFeedbackText2.Text</comment>
   </data>
   <data name="DialogFeedbackText2.Text" xml:space="preserve">
     <value> w celu zasugerowania nowych funkcji, zgłaszania błędów oraz głosowania na sugestie, lub </value>
-    <comment>The second part of the dialog text that asks the user for feedback.</comment>
+    <comment>The second part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkFeedbackHub.Text &lt;- | -&gt; DialogFeedbackHyperlinkRate.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
     <value>ocenić Skaner w sklepie Microsoft Store,</value>
-    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.</comment>
+    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
+DialogFeedbackText2.Text &lt;- | -&gt; DialogFeedbackText3.Text</comment>
   </data>
   <data name="DialogFeedbackText3.Text" xml:space="preserve">
     <value> aby pomóc innym zdecydować, czy jest to aplikacja odpowiednia dla nich.</value>
-    <comment>The third part of the dialog text that asks the user for feedback.</comment>
+    <comment>The third part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
     <value>Zmień nazwę</value>
@@ -555,7 +560,8 @@
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
     <value>Jeśli skaner nie pojawi się w ciągu trzech minut, upewnij się, że został dodany w </value>
-    <comment>The first part of the body of the text that tells the user to select a scanner.</comment>
+    <comment>The first part of the body of the text that tells the user to select a scanner.
+| -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
     <value>Tutaj pojawią się zeskanowane strony</value>
@@ -647,7 +653,8 @@
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
     <value>uruchom ponownie aplikację</value>
-    <comment>The hyperlink text for restarting the app to apply changes.</comment>
+    <comment>The hyperlink text for restarting the app to apply changes.
+TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
     <value>Dołącz czas do nazwy pliku</value>
@@ -671,20 +678,24 @@
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
     <value>Użyj </value>
-    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
+| -&gt; HyperlinkSettingsFeedbackFeedbackHub.Text</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
     <value> w celu zasugerowania nowych funkcji, zgłaszania błędów oraz głosowania na sugestie, lub </value>
-    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackFeedbackHub.Text &lt;- | -&gt; HyperlinkSettingsFeedbackRate.Text</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
     <value> aby pomóc zdecydować innym, czy jest to aplikacja odpowiednia dla nich. Zaawansowani użytkownicy mogą wpłynąć na rozwój aplikacji, także w serwisie </value>
     <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
+TextSettingsFeedback3.Text &lt;- | -&gt; HyperlinkSettingsFeedbackGithub.Text
 Fuzzy</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
     <value>Centrum opinii</value>
-    <comment>The hyperlink text for launching the Feedback Hub from the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The hyperlink text for launching the Feedback Hub from the &quot;Feedback&quot; section in settings.
+TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Dowiedz się, jak zainstalować i używać skanera w systemie Windows 10</value>
@@ -692,11 +703,13 @@ Fuzzy</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
     <value>Proszę </value>
-    <comment>The first part of the text for restarting the app to apply changes.</comment>
+    <comment>The first part of the text for restarting the app to apply changes.
+| -&gt; HyperlinkSettingsRestart.Text</comment>
   </data>
   <data name="TextSettingsRestart2.Text" xml:space="preserve">
     <value> aby zmiany odniosły skutek.</value>
-    <comment>The second part of the text for restarting the app to apply changes.</comment>
+    <comment>The second part of the text for restarting the app to apply changes.
+HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
     <value>System Windows 10 oferuje obsługę ponad 100 języków – możesz pomóc sprawić, że ta aplikacja będzie dostępna dla wszystkich. Sprawdź </value>
@@ -712,7 +725,8 @@ Fuzzy</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
     <value> i nie pojawia się tam jako offline.</value>
-    <comment>The second part of the body of the text that tells the user to select a scanner.</comment>
+    <comment>The second part of the body of the text that tells the user to select a scanner.
+HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>Ustawienia</value>
@@ -736,7 +750,8 @@ Fuzzy</comment>
   </data>
   <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
     <value>aplikacja Ustawienia</value>
-    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.</comment>
+    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
+TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
     <value>Przejdź do ustawień skanera</value>
@@ -764,7 +779,9 @@ Fuzzy</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>oceń Skaner w sklepie Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
+TextSettingsFeedback2.Text &lt;- | -&gt; TextSettingsFeedback3.Text
+Fuzzy</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
     <value>Wiele stron</value>
@@ -829,38 +846,6 @@ Fuzzy</comment>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
     <value>Co nowego?</value>
     <comment>The title of the changelog dialog.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section1.Text" xml:space="preserve">
-    <value>Nowy, świeży wygląd</value>
-    <comment>The heading of the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section2.Text" xml:space="preserve">
-    <value>Pełna obsługa wielu stron</value>
-    <comment>The heading of the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section3.Text" xml:space="preserve">
-    <value>Skanowanie dwustronne</value>
-    <comment>The heading of the third changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_0_0_0Section4.Text" xml:space="preserve">
-    <value>Podgląd</value>
-    <comment>The heading of the fourth changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section1.Text" xml:space="preserve">
-    <value>Interfejs został całkowicie przeprojektowany.</value>
-    <comment>The text of the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section2.Text" xml:space="preserve">
-    <value>Skanuj wiele stron za pomocą podajnika lub dodawaj je pojedyńczo za pomocą skanera płaskiego. Przeglądaj i edytuj wszystkie strony oraz łącz je w jeden plik PDF.</value>
-    <comment>The text of the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section3.Text" xml:space="preserve">
-    <value>Podczas korzystania z podajnika skanuj jednocześnie przód i tył strony w trybie dwustronnym. Dostępne tylko dla zgodnych skanerów.</value>
-    <comment>The text of the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_0_0_0Section4.Text" xml:space="preserve">
-    <value>Szybki podgląd skanu. Dostępne tylko dla zgodnych skanerów - poszukaj ikony podglądu obok trybów źródłowych.</value>
-    <comment>The text of the fourth changelog section.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
     <value>Zamknij</value>
@@ -934,11 +919,13 @@ Fuzzy</comment>
   <data name="TextSettingsFeedback4.Text" xml:space="preserve">
     <value>.</value>
     <comment>The fourth part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackGithub.Text &lt;- |
 Fuzzy</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
     <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
+TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
     <value>Skaner</value>
@@ -955,5 +942,25 @@ Fuzzy</comment>
   <data name="TextPageListDescriptor" xml:space="preserve">
     <value>Strona {0}</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
+  </data>
+  <data name="DefaultScanFolderName" xml:space="preserve">
+    <value>Skany</value>
+    <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+  </data>
+  <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
+    <value>Pytaj o lokalizację zapisu</value>
+    <comment>The heading of the first changelog section.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
+    <value>Zawsze pytaj</value>
+    <comment>The option to ask for a save location for each scan.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
+    <value>Użyj zdefiniowanej lokalzacji</value>
+    <comment>The option to use a set save location.</comment>
+  </data>
+  <data name="TextChangelog2_1_0_0Section1.Text" xml:space="preserve">
+    <value>Wybierz nową lokalizację zapisu, za każdym razem, gdy skanujesz, eliminując konieczność przenoszenia plików. Ta funkcja może zostać włączona w ustawieniach.</value>
+    <comment>The text of the first changelog section.</comment>
   </data>
 </root>

@@ -280,11 +280,14 @@ namespace Scanner
                 settingNotificationScanComplete = (bool)CheckBoxNotificationScanComplete.IsChecked;
                 settingErrorStatistics = (bool)CheckBoxSettingsErrorStatistics.IsChecked;
 
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                if (sender != null && (sender == RadioButtonSaveLocationAsk || sender == RadioButtonSaveLocationSet))
                 {
-                    if (RadioButtonSaveLocationAsk.IsChecked == true) StackPanelSettingsSaveLocationSet.Visibility = Visibility.Collapsed;
-                    else StoryboardSaveLocationSet.Begin();
-                });
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                    {
+                        if (RadioButtonSaveLocationAsk.IsChecked == true) StackPanelSettingsSaveLocationSet.Visibility = Visibility.Collapsed;
+                        else StoryboardSaveLocationSet.Begin();
+                    });
+                }
 
                 SaveSettings();
             }

@@ -13,6 +13,7 @@ using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -66,7 +67,8 @@ namespace Scanner
         private int[] shareIndexes;
         //private ScopeActions scopeAction;
         private UISettings uISettings;
-        public static StorageFolder scanFolderTemp = null;
+        private StorageFolder scanFolderTemp = null;
+        private int futureAccessListIndex = 0;
 
 
         public MainPage()
@@ -899,8 +901,9 @@ namespace Scanner
                     RefreshFileName();
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
                 }
-                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
+                if (scanResult == null) futureAccessListIndex = 0;
 
+                Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
                 ImageScannerScanSource scanSource;
 
                 if (settingSaveLocationAsk && ( scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF))
@@ -1051,13 +1054,13 @@ namespace Scanner
                             if (selectedFormat.Item2 == null)
                             {
                                 // no conversion
-                                scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo);
+                                scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo, futureAccessListIndex);
                             }
                             else
                             {
                                 // conversion necessary
                                 scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo,
-                                    (SupportedFormat)selectedFormat.Item2);
+                                    (SupportedFormat)selectedFormat.Item2, futureAccessListIndex);
                             }
 
                             FlipViewScan.ItemsSource = scanResult.elements;
@@ -1068,8 +1071,8 @@ namespace Scanner
                             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
                             {
                                 if (selectedFormat.Item2 != null) await scanResult.AddFiles(scannerScanResult.ScannedFiles,
-                                    (SupportedFormat)selectedFormat.Item2, folderToSaveTo);
-                                else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null, folderToSaveTo);
+                                    (SupportedFormat)selectedFormat.Item2, folderToSaveTo, futureAccessListIndex);
+                                else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null, folderToSaveTo, futureAccessListIndex);
                                 FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfPages() - 1;
                             });
                         }
@@ -1079,6 +1082,8 @@ namespace Scanner
                         log.Error("The result of the scan {@Result} is invalid.", scannerScanResult);
                         throw new ApplicationException("Result of the scan is invalid.");
                     }
+
+                    futureAccessListIndex += scannerScanResult.ScannedFiles.Count;
 
                     try
                     {
@@ -1108,11 +1113,11 @@ namespace Scanner
                     {
                         if (ConvertFormatStringToSupportedFormat(copiedDebugFiles[0].FileType) != selectedDebugFormat)
                         {
-                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, selectedDebugFormat);
+                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, selectedDebugFormat, futureAccessListIndex);
                         }
                         else
                         {
-                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo);
+                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, futureAccessListIndex);
                         }
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                         {
@@ -1122,16 +1127,20 @@ namespace Scanner
                     }
                     else
                     {
-                        foreach (StorageFile file in copiedDebugFiles)
+                        if (selectedDebugFormat == SupportedFormat.PDF)
                         {
-                            if (selectedDebugFormat == SupportedFormat.PDF) await file.MoveAsync(folderConversion,
-                                RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
-                            else await file.MoveAsync(folderToSaveTo, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                            foreach (StorageFile file in copiedDebugFiles)
+                            {
+                                await file.MoveAsync(folderConversion, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                            }
                         }
-                        await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat);
+
+                        await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat, folderToSaveTo, futureAccessListIndex);
                         int newIndex = scanResult.GetTotalNumberOfPages() - 1;
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FlipViewScan.SelectedIndex = newIndex);
                     }
+
+                    futureAccessListIndex += debugFiles.Count;
                 }
 
                 flowState = FlowState.initial;
@@ -1173,6 +1182,7 @@ namespace Scanner
             catch (Exception exc)
             {
                 log.Error(exc, "Unhandled exception occurred during scan.");
+                Crashes.TrackError(exc);
                 if (!isScanCanceled) await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
                     LocalizedString("ErrorMessageScanErrorBody")));
@@ -1466,7 +1476,7 @@ namespace Scanner
         {
             try
             {
-                if (settingSaveLocationAsk) await Launcher.LaunchFolderAsync(scanFolderTemp);
+                if (settingSaveLocationAsk && scanFolderTemp != null) await Launcher.LaunchFolderAsync(scanFolderTemp);
                 else await Launcher.LaunchFolderAsync(scanFolder);
             }
             catch (Exception exc) { log.Error(exc, "Couldn't display save location. [settingSaveLocationAsk={SettingSaveLocationAsk}]", settingSaveLocationAsk); }
