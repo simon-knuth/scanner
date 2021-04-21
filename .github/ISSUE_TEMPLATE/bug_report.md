@@ -24,4 +24,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Log data**
-Please add the appropriate event log(s) to the issue. You can export event logs from the app's settings menu (section "Give feedback"). Just drag & drop the .json file here.
+Please add the appropriate event log(s) to the issue. You can export event logs from the app's settings menu (section "Give feedback"). Just drag & drop the .txt file here.
