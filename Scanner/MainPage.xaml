@@ -500,6 +500,7 @@
             <local:PaneManageItemConverter x:Key="PaneManageItemConverter"/>
             <local:PaneManageItemBackgroundConverter x:Key="PaneManageItemBackgroundConverter"/>
             <local:PaneManageItemDescriptorBackgroundConverter x:Key="PaneManageItemDescriptorBackgroundConverter"/>
+            <local:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -684,7 +685,13 @@
                                                         <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding Thumbnail}" MaxHeight="70" MaxWidth="85"/>
                                                     </Frame>
                                                 </controls:DropShadowPanel>
-                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Margin="16,0,0,0" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxHeight="70" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                                <StackPanel Orientation="Vertical" Margin="16,0,0,0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxLines="2" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                                    <StackPanel Orientation="Horizontal" CornerRadius="2" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="0,6,0,0" Visibility="{Binding DisplayedFolder, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
+                                                        <FontIcon FontSize="16" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838; " HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                                                        <TextBlock Text="{Binding DisplayedFolder}" Style="{ThemeResource CaptionTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                </StackPanel>
                                             </Grid>
                                         </ListViewItem>
                                     </DataTemplate>
@@ -717,7 +724,7 @@
                                                         </Frame>
                                                     </controls:DropShadowPanel>
                                                 </Frame>
-                                                <Frame Margin="4" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" CornerRadius="2"  Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
+                                                <Frame Margin="4" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,1,6,4" CornerRadius="2" Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemDescriptorBackgroundConverter}}">
                                                     <TextBlock Text="{Binding ItemDescriptor}" Style="{ThemeResource BodyTextBlockStyle}"/>
                                                 </Frame>
                                             </Grid>

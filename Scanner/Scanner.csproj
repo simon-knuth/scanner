@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
     <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
+    <Compile Include="XAML Converters\StringNotEmptyVisibilityConverter.cs" />
     <Compile Include="XAML Converters\NegativeVisibilityConverter.cs" />
     <Compile Include="XAML Converters\NegativeBoolConverter.cs" />
     <Compile Include="XAML Converters\ButtonTextOpacityConverter.cs" />

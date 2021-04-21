@@ -85,7 +85,21 @@ namespace Scanner
             }
         }
 
-        public int futureAccessListIndex;
+        public int FutureAccessListIndex;
+
+        private string _DisplayedFolder;
+        public string DisplayedFolder
+        {
+            get
+            {
+                return _DisplayedFolder;
+            }
+            set
+            {
+                _DisplayedFolder = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayedFolder)));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -93,13 +107,14 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanResultElement(StorageFile file, int futureAccessListIndex)
+        public ScanResultElement(StorageFile file, int futureAccessListIndex, string displayedFolder)
         {
             ScanFile = file;
             CachedImage = null;
             ImageWithoutRotation = null;
             CurrentRotation = BitmapRotation.None;
-            this.futureAccessListIndex = futureAccessListIndex;
+            FutureAccessListIndex = futureAccessListIndex;
+            DisplayedFolder = displayedFolder;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

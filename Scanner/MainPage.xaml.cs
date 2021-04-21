@@ -13,7 +13,6 @@ using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -1054,13 +1053,14 @@ namespace Scanner
                             if (selectedFormat.Item2 == null)
                             {
                                 // no conversion
-                                scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo, futureAccessListIndex);
+                                scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo, futureAccessListIndex,
+                                    settingSaveLocationAsk);
                             }
                             else
                             {
                                 // conversion necessary
                                 scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo,
-                                    (SupportedFormat)selectedFormat.Item2, futureAccessListIndex);
+                                    (SupportedFormat)selectedFormat.Item2, futureAccessListIndex, settingSaveLocationAsk);
                             }
 
                             FlipViewScan.ItemsSource = scanResult.elements;
@@ -1071,8 +1071,9 @@ namespace Scanner
                             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
                             {
                                 if (selectedFormat.Item2 != null) await scanResult.AddFiles(scannerScanResult.ScannedFiles,
-                                    (SupportedFormat)selectedFormat.Item2, folderToSaveTo, futureAccessListIndex);
-                                else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null, folderToSaveTo, futureAccessListIndex);
+                                    (SupportedFormat)selectedFormat.Item2, folderToSaveTo, futureAccessListIndex, settingSaveLocationAsk);
+                                else await scanResult.AddFiles(scannerScanResult.ScannedFiles, null, folderToSaveTo, futureAccessListIndex,
+                                    settingSaveLocationAsk);
                                 FlipViewScan.SelectedIndex = scanResult.GetTotalNumberOfPages() - 1;
                             });
                         }
@@ -1113,11 +1114,12 @@ namespace Scanner
                     {
                         if (ConvertFormatStringToSupportedFormat(copiedDebugFiles[0].FileType) != selectedDebugFormat)
                         {
-                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, selectedDebugFormat, futureAccessListIndex);
+                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, selectedDebugFormat, futureAccessListIndex,
+                                settingSaveLocationAsk);
                         }
                         else
                         {
-                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, futureAccessListIndex);
+                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, futureAccessListIndex, settingSaveLocationAsk);
                         }
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                         {
@@ -1135,7 +1137,7 @@ namespace Scanner
                             }
                         }
 
-                        await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat, folderToSaveTo, futureAccessListIndex);
+                        await scanResult.AddFiles(copiedDebugFiles, selectedDebugFormat, folderToSaveTo, futureAccessListIndex, settingSaveLocationAsk);
                         int newIndex = scanResult.GetTotalNumberOfPages() - 1;
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => FlipViewScan.SelectedIndex = newIndex);
                     }
