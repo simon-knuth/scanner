@@ -1378,6 +1378,8 @@ namespace Scanner
                 newPdf = pdf;
             }
 
+            newName = newPdf.Name;
+
             try
             {
                 taskCompletionSource = new TaskCompletionSource<bool>();
@@ -1403,10 +1405,9 @@ namespace Scanner
 
                 // get result file and move it to its correct folder
                 newPdf = null;
-                newPdf = await folderTemp.GetFileAsync(fileName);
+                newPdf = await folderTemp.GetFileAsync(newName);
 
                 // move PDF file to target folder
-                newName = newPdf.Name;
                 if (pdf == null)
                 {
                     // PDF generated in target folder for the first time
@@ -1422,7 +1423,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "generating the PDF failed.");
+                log.Error(exc, "Generating the PDF failed.");
                 Crashes.TrackError(exc);
                 throw;
             }

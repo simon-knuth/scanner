@@ -952,7 +952,7 @@ static class Utilities
     {
         StorageFolder folder = await ApplicationData.Current.RoamingFolder
             .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
-        string logPath = System.IO.Path.Combine(folder.Path, "log.json");
+        string logPath = Path.Combine(folder.Path, "log.txt");
 
         log = new LoggerConfiguration()
             .MinimumLevel.Debug()

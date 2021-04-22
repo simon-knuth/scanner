@@ -687,10 +687,15 @@
                                                 </controls:DropShadowPanel>
                                                 <StackPanel Orientation="Vertical" Margin="16,0,0,0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                                     <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding ScanFile.DisplayName}" Style="{ThemeResource BodyTextBlockStyle}" MaxLines="2" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                                    <StackPanel Orientation="Horizontal" CornerRadius="2" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="0,6,0,0" Visibility="{Binding DisplayedFolder, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
-                                                        <FontIcon FontSize="16" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838; " HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                                                        <TextBlock Text="{Binding DisplayedFolder}" Style="{ThemeResource CaptionTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
-                                                    </StackPanel>
+                                                    <Grid CornerRadius="2" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="4,2,4,2" HorizontalAlignment="Left" Margin="0,6,0,0" Visibility="{Binding DisplayedFolder, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="20"/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <FontIcon Grid.Column="0" FontSize="14" Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838; " HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                                                        <TextBlock Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}" Text="{Binding DisplayedFolder}" Style="{ThemeResource CaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Stretch" MaxLines="1"/>
+                                                    </Grid>
                                                 </StackPanel>
                                             </Grid>
                                         </ListViewItem>
@@ -753,7 +758,7 @@
 
                             <StackPanel Orientation="Vertical">
                                 <Frame x:Name="FrameLeftPaneManageText" Height="30"/>
-                                <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0" BorderThickness="0"/>
                             </StackPanel>
 
                             <ScrollViewer Grid.Row="0" VerticalAlignment="Bottom" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
@@ -897,7 +902,7 @@
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" BorderThickness="0" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
 
                             <RelativePanel VerticalAlignment="Bottom">

@@ -101,6 +101,29 @@ namespace Scanner
             CoreApplication.LeavingBackground += (x, y) => { isInForeground = true; };
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
+            Window.Current.Activated += Window_Activated;
+        }
+
+        private async void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                // window deactivated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    StackPanelContentPaneTopToolbarText.Opacity = 0.5;
+                    GridLeftPaneScanHeader.Opacity = 0.5;
+                });
+            }
+            else
+            {
+                // window activated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    StackPanelContentPaneTopToolbarText.Opacity = 1;
+                    GridLeftPaneScanHeader.Opacity = 1;
+                });
+            }
         }
 
         private async void UISettings_ColorValuesChanged(UISettings sender, object args)
@@ -2863,7 +2886,7 @@ namespace Scanner
         {
             log.Information("Returning app to its initial state.");
             scanResult = null;
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 TransitionFromSelectMode();
                 ButtonLeftPaneCancel.IsEnabled = false;

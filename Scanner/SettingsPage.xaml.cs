@@ -375,7 +375,7 @@ namespace Scanner
 
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
-            savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+            savePicker.FileTypeChoices.Add("TXT", new List<string>() { ".txt" });
             savePicker.SuggestedFileName = ((string)button.Tag).Split(".")[0];
 
             StorageFile file = await savePicker.PickSaveFileAsync();
