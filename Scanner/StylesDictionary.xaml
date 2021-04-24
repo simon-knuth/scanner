@@ -3228,8 +3228,8 @@
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
                 <Setter Property="ShadowOpacity" Value="0.3"/>
             </Style>
-            <Brush x:Key="DisabledButtonBackgroundThemedStyle">#656565</Brush>
-            <Brush x:Key="CustomSeparatorBorderThemeBrush">#25000000</Brush>
+            <SolidColorBrush x:Key="DisabledButtonBackgroundThemedStyle" Color="{ThemeResource SystemColorGrayTextColor}"/>
+            <SolidColorBrush x:Key="CustomSeparatorBorderThemeBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
