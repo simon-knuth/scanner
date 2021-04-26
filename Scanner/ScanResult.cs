@@ -704,7 +704,10 @@ namespace Scanner
             IRandomAccessStream stream = null;
             try
             {
-                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+                StorageFolder folder = null;
+                if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 stream = await file.OpenAsync(FileAccessMode.ReadWrite);
                 await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
@@ -936,7 +939,10 @@ namespace Scanner
                     }
                 }
 
-                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+                StorageFolder folder = null;
+                if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
