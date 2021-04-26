@@ -5,6 +5,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner;
 using Serilog;
 using Serilog.Exceptions;
 using System;
@@ -1031,5 +1032,76 @@ static class Utilities
     {
         Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReportAsync(report).Result;
         AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
+    }
+
+
+    /// <summary>
+    ///     Send information on a new scanner to App Center
+    /// </summary>
+    public static void SendScannerAnalytics(RecognizedScanner scanner)
+    {
+        string formatCombination = "";
+        bool jpgSupported, pngSupported, pdfSupported, xpsSupported, oxpsSupported, tifSupported, bmpSupported;
+        jpgSupported = pngSupported = pdfSupported = xpsSupported = oxpsSupported = tifSupported = bmpSupported = false;
+
+        try
+        {
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|JPG");
+                jpgSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|PNG");
+                pngSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|PDF");
+                pdfSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|XPS");
+                xpsSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|OXPS");
+                oxpsSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|TIF");
+                tifSupported = true;
+            }
+            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
+            {
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|BMP");
+                bmpSupported = true;
+            }
+
+            formatCombination = formatCombination.Insert(formatCombination.Length, "|");
+
+
+            Analytics.TrackEvent("Scanner added", new Dictionary<string, string> {
+                            { "formatCombination", formatCombination },
+                            { "jpgSupported", jpgSupported.ToString() },
+                            { "pngSupported", pngSupported.ToString() },
+                            { "pdfSupported", pdfSupported.ToString() },
+                            { "xpsSupported", xpsSupported.ToString() },
+                            { "oxpsSupported", oxpsSupported.ToString() },
+                            { "tifSupported", tifSupported.ToString() },
+                            { "bmpSupported", bmpSupported.ToString() },
+                            { "hasAuto", scanner.isAutoAllowed.ToString() },
+                            { "hasFlatbed", scanner.isFlatbedAllowed.ToString() },
+                            { "hasFeeder", scanner.isFeederAllowed.ToString() },
+                            { "autoPreviewSupported", scanner.isAutoPreviewAllowed.ToString() },
+                            { "flatbedPreviewSupported", scanner.isFlatbedPreviewAllowed.ToString() },
+                            { "feederPreviewSupported", scanner.isFeederPreviewAllowed.ToString() },
+                        });
+        }
+        catch (Exception) { }
     }
 }

@@ -231,6 +231,10 @@ namespace Scanner
                     try
                     {
                         RecognizedScanner newScanner = await RecognizedScanner.CreateFromDeviceInformationAsync(args);
+
+                        try { SendScannerAnalytics(newScanner); }
+                        catch (Exception) { }
+
                         ComboBoxScanners.IsDropDownOpen = false;
                         scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(newScanner.scannerName, newScanner));
 
