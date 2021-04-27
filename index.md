@@ -8,6 +8,10 @@
   </tr>
 </table>
 
+&nbsp;
+## License change
+The licensing recently changed. You can find out more [here](https://simon-knuth.github.io/scanner/license-change.html).
+
 
 &nbsp;
 ## Features
