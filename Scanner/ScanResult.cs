@@ -43,6 +43,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
+            log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart, displayFolder);
             int futureAccessListIndex = futureAccessListIndexStart;
             foreach (StorageFile file in fileList)
             {
@@ -51,7 +52,7 @@ namespace Scanner
                 if (displayFolder) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
                 else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
-                StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                 futureAccessListIndex += 1;
             }
             scanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
@@ -706,7 +707,7 @@ namespace Scanner
             {
                 StorageFolder folder = null;
                 if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
-                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 stream = await file.OpenAsync(FileAccessMode.ReadWrite);
@@ -941,7 +942,7 @@ namespace Scanner
 
                 StorageFolder folder = null;
                 if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
-                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(elements[index].FutureAccessListIndex.ToString());
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
@@ -1213,11 +1214,15 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    if (displayFolder) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    if (displayFolder && targetFolder != null) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
                     else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
-                    futureAccessListIndex += 1;
-                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
+                    if (targetFolder != null)
+                    {
+                        StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
+                        futureAccessListIndex += 1;
+                    }
+
                     if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
             }
@@ -1230,11 +1235,15 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    if (displayFolder) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    if (displayFolder && targetFolder != null) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
                     else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
-                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(futureAccessListIndex.ToString(), targetFolder);
-                    futureAccessListIndex += 1;
+                    if (targetFolder != null)
+                    {
+                        StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
+                        futureAccessListIndex += 1;
+                    }
+
                     if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
 

@@ -337,7 +337,7 @@ namespace Scanner
                 {
                     // first app launch after an update
                     log.Information("MainPage loaded after first launch with this version.");
-                    //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
 
                 // initialize debug menu
@@ -932,6 +932,7 @@ namespace Scanner
                 Tuple<ImageScannerFormat, SupportedFormat?> selectedFormat;
                 ImageScannerScanSource scanSource;
 
+                bool askedForFolder = false;
                 if (settingSaveLocationAsk && ( scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF))
                 {
                     // ask user for save location
@@ -948,6 +949,7 @@ namespace Scanner
                         await CancelScanAsync();
                         return false;
                     }
+                    askedForFolder = true;
                 }
                 else scanFolderTemp = null;
 
@@ -1081,13 +1083,13 @@ namespace Scanner
                             {
                                 // no conversion
                                 scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo, futureAccessListIndex,
-                                    settingSaveLocationAsk);
+                                    askedForFolder);
                             }
                             else
                             {
                                 // conversion necessary
                                 scanResult = await ScanResult.CreateAsync(scannerScanResult.ScannedFiles, folderToSaveTo,
-                                    (SupportedFormat)selectedFormat.Item2, futureAccessListIndex, settingSaveLocationAsk);
+                                    (SupportedFormat)selectedFormat.Item2, futureAccessListIndex, askedForFolder);
                             }
 
                             FlipViewScan.ItemsSource = scanResult.elements;
@@ -1142,11 +1144,11 @@ namespace Scanner
                         if (ConvertFormatStringToSupportedFormat(copiedDebugFiles[0].FileType) != selectedDebugFormat)
                         {
                             scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, selectedDebugFormat, futureAccessListIndex,
-                                settingSaveLocationAsk);
+                                askedForFolder);
                         }
                         else
                         {
-                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, futureAccessListIndex, settingSaveLocationAsk);
+                            scanResult = await ScanResult.CreateAsync(copiedDebugFiles, folderToSaveTo, futureAccessListIndex, askedForFolder);
                         }
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                         {
@@ -1612,7 +1614,9 @@ namespace Scanner
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
                 return;
             }
-            else if (scanResult != null && scanResult.originalTargetFolder.Path != scanFolder.Path && !settingSaveLocationAsk)
+            else if (scanResult != null &&
+                        ((settingSaveLocationAsk && String.IsNullOrEmpty(scanResult.elements[0].DisplayedFolder)) ||    // switched from set location
+                            (!settingSaveLocationAsk && scanResult.originalTargetFolder.Path != scanFolder.Path)))      // switched to set location or changed location
             {
                 // save location has changed
                 FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
