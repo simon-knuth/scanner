@@ -498,7 +498,6 @@
             <local:IsItemSelectedConverter x:Key="IsItemSelectedConverter"/>
             <local:NegativeThicknessConverter x:Key="NegativeThicknessConverter"/>
             <local:PaneManageItemConverter x:Key="PaneManageItemConverter"/>
-            <local:PaneManageItemBackgroundConverter x:Key="PaneManageItemBackgroundConverter"/>
             <local:PaneManageItemDescriptorBackgroundConverter x:Key="PaneManageItemDescriptorBackgroundConverter"/>
             <local:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
         </ResourceDictionary>

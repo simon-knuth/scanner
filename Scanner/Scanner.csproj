@@ -153,7 +153,6 @@
     <Compile Include="XAML Converters\ButtonShadowConverter.cs" />
     <Compile Include="XAML Converters\HeaderScrollBackgroundConverter.cs" />
     <Compile Include="XAML Converters\HeaderScrollShadowConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemBackgroundConverter.cs" />
     <Compile Include="XAML Converters\PaneManageItemDescriptorBackgroundConverter.cs" />
     <Compile Include="XAML Converters\PaneManageItemConverter.cs" />
     <Compile Include="XAML Converters\TopThicknessConverter.cs" />
