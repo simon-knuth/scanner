@@ -2772,24 +2772,35 @@
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
-
                                     <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlTransparentRevealBorderBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Storyboard.TargetName="BorderRectangle"
+                                            Storyboard.TargetProperty="Opacity"
+                                            Duration="0"
+                                            To="1" />
                                     </Storyboard>
+                                    <!--<Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                    </Storyboard>-->
                                 </VisualState>
 
                                 <VisualState x:Name="PointerOver">
 
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="BorderRectangle"
-                        Storyboard.TargetProperty="Opacity"
-                        Duration="0"
-                        To="1" />
+                                            Storyboard.TargetProperty="Opacity"
+                                            Duration="0"
+                                            To="1" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundChromeMediumRevealBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListBoxItemPointerOverBackgroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryBrush">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
@@ -2797,7 +2808,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryThickness">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="2" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />-->
                                     </Storyboard>
                                 </VisualState>
 
@@ -2809,10 +2820,13 @@
                         Duration="0"
                         To="1" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource InkToolbarButtonPressedBackgroundThemeBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryBrush">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
@@ -2820,7 +2834,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryThickness">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="2" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation TargetName="ContentPresenter" />
+                                        <!--<PointerDownThemeAnimation TargetName="ContentPresenter" />-->
                                     </Storyboard>
                                 </VisualState>
 
@@ -2836,10 +2850,13 @@
                         Duration="0"
                         To="1" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentRevealBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryBrush">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
@@ -2850,7 +2867,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />-->
                                     </Storyboard>
                                 </VisualState>
 
@@ -2866,10 +2883,13 @@
                         Duration="0"
                         To="1" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentRevealBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryBrush">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}" />
@@ -2880,7 +2900,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />-->
                                     </Storyboard>
                                 </VisualState>
 
@@ -2896,10 +2916,13 @@
                         Duration="0"
                         To="1" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderRectangle" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentRevealBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemListAccentLowColor}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="FocusVisualSecondaryBrush">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}" />
@@ -2910,7 +2933,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation TargetName="ContentPresenter" />
+                                        <!--<PointerDownThemeAnimation TargetName="ContentPresenter" />-->
                                     </Storyboard>
                                 </VisualState>
 
@@ -3158,12 +3181,14 @@
                         <Rectangle x:Name="BorderRectangle"
                 IsHitTestVisible="False"
                 Stroke="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                StrokeThickness="2"
+                StrokeThickness="1.5"
                 RadiusX="4"
                 RadiusY="4"
                 Opacity="0" />
                         <Border x:Name="MultiSelectSquare"
                 Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}"
+                                BorderThickness="1"
                 Width="20"
                 Height="20"
                 Margin="0,4,4,0"
@@ -3175,7 +3200,7 @@
                   FontFamily="{ThemeResource SymbolThemeFontFamily}"
                   Glyph="&#xE73E;"
                   FontSize="16"
-                  Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                  Foreground="{ThemeResource CheckBoxCheckGlyphForegroundChecked}"
                   Opacity="0" />
                         </Border>
                         <Border x:Name="MultiArrangeOverlayTextBorder"
@@ -3216,6 +3241,7 @@
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#AEAEAE</Brush>
             <Brush x:Key="CustomSeparatorBorderThemeBrush">#25000000</Brush>
+            <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="{ThemeResource SystemListAccentLowColor}" Opacity="0.25"/>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
@@ -3223,6 +3249,7 @@
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#656565</Brush>
             <Brush x:Key="CustomSeparatorBorderThemeBrush">#25FFFFFF</Brush>
+            <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="{ThemeResource SystemListAccentLowColor}" Opacity="0.25"/>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <Style x:Key="DropShadowPanelThemedStyle" TargetType="controls:DropShadowPanel">
@@ -3230,6 +3257,7 @@
             </Style>
             <SolidColorBrush x:Key="DisabledButtonBackgroundThemedStyle" Color="{ThemeResource SystemColorGrayTextColor}"/>
             <SolidColorBrush x:Key="CustomSeparatorBorderThemeBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+            <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="Transparent"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

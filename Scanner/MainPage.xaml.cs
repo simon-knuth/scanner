@@ -68,6 +68,7 @@ namespace Scanner
         private UISettings uISettings;
         private StorageFolder scanFolderTemp = null;
         private int futureAccessListIndex = 0;
+        private int lastFlipViewIndex = -1;
 
 
         public MainPage()
@@ -260,7 +261,7 @@ namespace Scanner
                     // show debug menu when CTRL key is pressed
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
                     {
-                        ComboBoxDebugFormat_SelectionChanged(null, null);
+                        FindName("ContentDialogDebug");
                         await ContentDialogDebug.ShowAsync();
                     });
                 }
@@ -339,14 +340,6 @@ namespace Scanner
                     log.Information("MainPage loaded after first launch with this version.");
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
-
-                // initialize debug menu
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.TIF);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.BMP);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.PDF);
-                ComboBoxDebugFormat.SelectedIndex = 0;
             }
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
@@ -1039,7 +1032,7 @@ namespace Scanner
                     }
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
-                        folderToScanTo = await folderTemp.GetFolderAsync("conversion");
+                        folderToScanTo = folderConversion;
                     }
                     else
                     {
@@ -1455,6 +1448,7 @@ namespace Scanner
                 {
                     PaneManageSelectIndex(FlipViewScan.SelectedIndex);
                 }
+                lastFlipViewIndex = FlipViewScan.SelectedIndex;
             });
         }
 
@@ -1838,8 +1832,22 @@ namespace Scanner
             ButtonLeftPaneManageSelect.IsChecked = false;
             if (scanResult != null && scanResult.GetTotalNumberOfPages() > 0)
             {
-                FlipViewScan.SelectedIndex = 0;
-                PaneManageSelectIndex(0);
+                if (lastFlipViewIndex == -1)
+                {
+                    FlipViewScan.SelectedIndex = 0;
+                    PaneManageSelectIndex(0);
+                }
+                else if (lastFlipViewIndex >= scanResult.GetTotalNumberOfPages())
+                {
+                    int newIndex = scanResult.GetTotalNumberOfPages() - 1;
+                    FlipViewScan.SelectedIndex = newIndex;
+                    PaneManageSelectIndex(newIndex);
+                }
+                else
+                {
+                    FlipViewScan.SelectedIndex = lastFlipViewIndex;
+                    PaneManageSelectIndex(lastFlipViewIndex);
+                }
                 UnlockToolbar();
             }
             ProgressBarLeftPaneManage.IsIndeterminate = false;
@@ -2910,6 +2918,7 @@ namespace Scanner
                 RefreshFileName();
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 RefreshScanButton();
+                lastFlipViewIndex = -1;
             });
             flowState = FlowState.initial;
         }
@@ -3015,6 +3024,61 @@ namespace Scanner
             log.Information(exc, "Throwing debug exception.");
             Serilog.Log.CloseAndFlush();
             throw exc;
+        }
+
+        private void ContentDialogDebug_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+            if (ComboBoxDebugFormat.Items.Count == 0)
+            {
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.TIF);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.BMP);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PDF);
+                ComboBoxDebugFormat.SelectedIndex = 0;
+            }
+            ComboBoxDebugFormat_SelectionChanged(null, null);
+        }
+
+        private void LeftPaneGridViewManage_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+        }
+
+        private async void LeftPaneGridViewManage_Drop(object sender, DragEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF) return;
+
+            // collect valid files that can be added
+            List<StorageFile> newFilesTemp = new List<StorageFile>();
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+                foreach (IStorageItem item in items)
+                {
+                    if (item.IsOfType(StorageItemTypes.File))
+                    {
+                        // file among dropped stuff
+                        StorageFile file = (StorageFile)item;
+                        SupportedFormat? format = ConvertFormatStringToSupportedFormat(file.FileType);
+
+                        if (format != null && IsImageFormat((SupportedFormat)format)) newFilesTemp.Add(file);
+                    }
+                }
+            }
+
+            if (newFilesTemp.Count == 0) return;
+            IReadOnlyList<StorageFile> newFiles = newFilesTemp;
+
+            // move files to correct folder and add them to the scanResult
+            Task[] copyTasks = new Task[newFiles.Count];
+            for (int i = 0; i < copyTasks.Length; i++)
+            {
+                copyTasks[i] = (Task)newFiles[i].CopyAsync(folderConversion, newFiles[i].Name, NameCollisionOption.GenerateUniqueName);
+            }
+            await Task.WhenAll(copyTasks);
+
+            await scanResult.AddFiles(newFiles, scanResult.GetFileFormat(), futureAccessListIndex);
         }
     }
 }

@@ -1309,16 +1309,7 @@ namespace Scanner
         /// </summary>
         public bool IsImage()
         {
-            switch (scanResultFormat)
-            {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
-                    return true;
-                default:
-                    return false;
-            }
+            return IsImageFormat(scanResultFormat);
         }
 
 

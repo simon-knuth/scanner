@@ -1104,4 +1104,22 @@ static class Utilities
         }
         catch (Exception) { }
     }
+
+
+    /// <summary>
+    ///     Checks whether the given format is an image format.
+    /// </summary>
+    public static bool IsImageFormat(SupportedFormat format)
+    {
+        switch (format)
+        {
+            case SupportedFormat.JPG:
+            case SupportedFormat.PNG:
+            case SupportedFormat.TIF:
+            case SupportedFormat.BMP:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

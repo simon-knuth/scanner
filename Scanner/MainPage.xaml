@@ -709,7 +709,7 @@
                                     </TransitionCollection>
                                 </ListView.ItemContainerTransitions>
                             </ListView>
-                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
+                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" DragOver="LeftPaneGridViewManage_DragOver" Drop="LeftPaneGridViewManage_Drop">
                                 <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsWrapGrid HorizontalAlignment="Center"
@@ -721,7 +721,7 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
                                         <GridViewItem x:Name="LeftPaneGridViewManageItem" Style="{StaticResource GridViewItemStyleRounded}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
-                                            <Grid Background="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource PaneManageItemBackgroundConverter}}">
+                                            <Grid>
                                                 <Frame Padding="8">
                                                     <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
                                                         <Frame CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -1258,7 +1258,7 @@
             </StackPanel>
         </ContentDialog>
 
-        <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close">
+        <ContentDialog x:Name="ContentDialogDebug" CloseButtonText="Close" x:Load="False" Opened="ContentDialogDebug_Opened">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEBE8;" FontSize="24" Margin="0,0,8,0"/>
