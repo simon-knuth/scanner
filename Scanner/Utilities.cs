@@ -806,6 +806,7 @@ static class Utilities
             case "jpg":
             case "jpeg":
             case ".jpg":
+            case ".jpeg":
                 return SupportedFormat.JPG;
 
             case "png":

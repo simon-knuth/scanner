@@ -1201,9 +1201,9 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        public async Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
-            log.Information("Adding {Num} files, the target format is {Format}.", files.Count, targetFormat);
+            log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
 
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
@@ -1247,7 +1247,7 @@ namespace Scanner
                     if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
 
-                Task[] conversionTasks = new Task[files.Count];
+                Task[] conversionTasks = new Task[files.Count()];
                 try
                 {
                     for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
@@ -1286,7 +1286,7 @@ namespace Scanner
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
 
             // generate new previews and descriptors
-            for (int i = GetTotalNumberOfPages() - files.Count; i < GetTotalNumberOfPages(); i++)
+            for (int i = GetTotalNumberOfPages() - files.Count(); i < GetTotalNumberOfPages(); i++)
             {
                 await GetImageAsync(i);
                 elements[i].ItemDescriptor = GetDescriptorForIndex(i);
@@ -1298,7 +1298,7 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
+        public Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
         {
             return AddFiles(files, targetFormat, originalTargetFolder, futureAccessListIndexStart, false);
         }
@@ -1446,7 +1446,7 @@ namespace Scanner
         /// </summary>
         /// <param name="files">The files to be numbered.</param>
         /// <param name="startIndex">The first number.</param>
-        private static async Task NumberNewConversionFilesAsync(IReadOnlyList<StorageFile> files, int startIndex)
+        private static async Task NumberNewConversionFilesAsync(IEnumerable<StorageFile> files, int startIndex)
         {
             try
             {

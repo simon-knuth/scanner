@@ -708,7 +708,7 @@
                                     </TransitionCollection>
                                 </ListView.ItemContainerTransitions>
                             </ListView>
-                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" DragOver="LeftPaneGridViewManage_DragOver" Drop="LeftPaneGridViewManage_Drop">
+                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" DragOver="LeftPaneGridViewManage_DragOver" Drop="LeftPaneGridViewManage_Drop" DragLeave="LeftPaneGridViewManage_DragLeave">
                                 <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsWrapGrid HorizontalAlignment="Center"

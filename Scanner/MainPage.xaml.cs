@@ -3040,14 +3040,35 @@ namespace Scanner
             ComboBoxDebugFormat_SelectionChanged(null, null);
         }
 
-        private void LeftPaneGridViewManage_DragOver(object sender, DragEventArgs e)
+        private async void LeftPaneGridViewManage_DragOver(object sender, DragEventArgs e)
         {
-            e.AcceptedOperation = DataPackageOperation.Copy;
+            if (scanResult != null && scanResult.GetFileFormat() == SupportedFormat.PDF && flowState == FlowState.initial
+                && e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => LeftPaneGridViewManage.CanReorderItems = false);
+            }
+            else
+            {
+                e.AcceptedOperation = DataPackageOperation.None;
+                return;
+            }
         }
 
         private async void LeftPaneGridViewManage_Drop(object sender, DragEventArgs e)
         {
-            if (scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF) return;
+            if (scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF || flowState != FlowState.initial) return;
+            log.Information("Data dropped onto GridView.");
+
+            // lock UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                LockToolbar();
+                LockPaneManage(true);
+                LockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+            });
 
             // collect valid files that can be added
             List<StorageFile> newFilesTemp = new List<StorageFile>();
@@ -3067,18 +3088,41 @@ namespace Scanner
                 }
             }
 
-            if (newFilesTemp.Count == 0) return;
-            IReadOnlyList<StorageFile> newFiles = newFilesTemp;
-
             // move files to correct folder and add them to the scanResult
-            Task[] copyTasks = new Task[newFiles.Count];
-            for (int i = 0; i < copyTasks.Length; i++)
+            List<StorageFile> conversionFiles = new List<StorageFile>();
+            for (int i = 0; i < newFilesTemp.Count; i++)
             {
-                copyTasks[i] = (Task)newFiles[i].CopyAsync(folderConversion, newFiles[i].Name, NameCollisionOption.GenerateUniqueName);
-            }
-            await Task.WhenAll(copyTasks);
+                StorageFile conversionFile = null;
+                try
+                {
+                    conversionFile = await newFilesTemp[i].CopyAsync(folderConversion, newFilesTemp[i].Name, NameCollisionOption.GenerateUniqueName);
+                }
+                catch (Exception exc)
+                {
+                    log.Error(exc, "Copying a dropped file to the conversion folder failed.");
+                }
 
-            await scanResult.AddFiles(newFiles, scanResult.GetFileFormat(), futureAccessListIndex);
+                if (conversionFile != null) conversionFiles.Add(conversionFile);
+            }
+
+            IReadOnlyList<StorageFile> filesToAdd = conversionFiles;
+
+            if (filesToAdd.Count != 0) await scanResult.AddFiles(filesToAdd, scanResult.GetFileFormat(), futureAccessListIndex);
+
+            // restore UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                UnlockToolbar();
+                UnlockPaneManage(false);
+                UnlockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+            });
+        }
+
+        private async void LeftPaneGridViewManage_DragLeave(object sender, DragEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => LeftPaneGridViewManage.CanReorderItems = true);
         }
     }
 }
