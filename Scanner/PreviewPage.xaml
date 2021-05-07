@@ -9,7 +9,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Disabled"
-    KeyDown="Page_KeyDown" Loaded="Page_Loaded">
+    KeyDown="Page_KeyDown"
+    Loading="Page_Loading"
+    Loaded="Page_Loaded">
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -91,7 +93,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid x:Name="GridPreviewContent" Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.BackgroundTransition>
                 <BrushTransition/>
             </Grid.BackgroundTransition>
@@ -135,7 +137,13 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
-                                <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
+                                <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <SymbolIcon.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform x:Name="ButtonBackScaleTransform" ScaleX="-1"/>
+                                        </TransformGroup>
+                                    </SymbolIcon.RenderTransform>
+                                </SymbolIcon>
                             </Button>
                             <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="HeadingPreview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
                             <AppBarSeparator x:Name="AppBarSeparatorPreviewHeader" VerticalAlignment="Bottom"/>

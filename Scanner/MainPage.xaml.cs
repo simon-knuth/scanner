@@ -3129,5 +3129,21 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBoxRename.Focus(FocusState.Programmatic));
         }
+
+        private async void Page_Loading(FrameworkElement sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                if (flowDirectionSetting == "LTR")
+                {
+                    GridRoot.FlowDirection = FlowDirection.LeftToRight;
+                }
+                else
+                {
+                    GridRoot.FlowDirection = FlowDirection.RightToLeft;
+                }
+            });
+        }
     }
 }

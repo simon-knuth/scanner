@@ -136,5 +136,24 @@ namespace Scanner
         {
             Frame.GoBack();
         }
+
+
+        private async void Page_Loading(FrameworkElement sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                if (flowDirectionSetting == "LTR")
+                {
+                    GridPreviewContent.FlowDirection = FlowDirection.LeftToRight;
+                    ButtonBackScaleTransform.ScaleX = 1;
+                }
+                else
+                {
+                    GridPreviewContent.FlowDirection = FlowDirection.RightToLeft;
+                    ButtonBackScaleTransform.ScaleX = -1;
+                }
+            });
+        }
     }
 }

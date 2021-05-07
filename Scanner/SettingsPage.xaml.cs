@@ -92,6 +92,22 @@ namespace Scanner
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
             {
+                var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                if (flowDirectionSetting == "LTR")
+                {
+                    GridSettingsContent.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.LeftToRight;
+                    ButtonSettingsHeaderBackScaleTransform.ScaleX = 1;
+                    ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = 1;
+                }
+                else
+                {
+                    GridSettingsContent.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.RightToLeft;
+                    ButtonSettingsHeaderBackScaleTransform.ScaleX = -1;
+                    ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = -1;
+                }
+
                 if (settingSaveLocationAsk)
                 {
                     RadioButtonSaveLocationAsk.IsChecked = true;

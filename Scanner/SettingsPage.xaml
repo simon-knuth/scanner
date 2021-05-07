@@ -78,7 +78,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+        <Grid x:Name="GridSettingsContent" Grid.Row="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <Grid.BackgroundTransition>
                 <BrushTransition/>
             </Grid.BackgroundTransition>
@@ -259,7 +259,13 @@
                             <TranslateTransform X="-48"/>
                         </StackPanel.RenderTransform>
 
-                        <Button x:Name="ButtonSettingsHeaderBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Opacity="0" VerticalAlignment="Stretch" Click="ButtonBack_Click">
+                        <Button x:Name="ButtonSettingsHeaderBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Opacity="0" VerticalAlignment="Stretch" Click="ButtonBack_Click" RenderTransformOrigin="0.5,0.5">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform x:Name="ButtonSettingsHeaderBackScaleTransform" ScaleX="-1"/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+
                             <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
                         </Button>
                         <TextBlock x:Name="TextBlockSettingsHeader" x:Uid="HeadingSettings" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
@@ -270,8 +276,14 @@
 
         <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                <StackPanel x:Name="StackPanelDialogLicensesHeading" Orientation="Horizontal" Margin="0,0,0,6">
                     <Button x:Name="ButtonDialogLicensesHeadingBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonDialogLicensesHeadingBack_Click" IsEnabled="False">
+                        <Button.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="ButtonDialogLicensesHeadingBackScaleTransform" ScaleX="-1"/>
+                            </TransformGroup>
+                        </Button.RenderTransform>
+
                         <SymbolIcon Symbol="Back" Margin="0,2,8,0" VerticalAlignment="Center"/>
                     </Button>
                     <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24"/>

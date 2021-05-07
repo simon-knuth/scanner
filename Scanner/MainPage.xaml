@@ -12,6 +12,7 @@
     x:Class="Scanner.MainPage"
     mc:Ignorable="d"
     NavigationCacheMode="Required"
+    Loading="Page_Loading"
     Loaded="Page_Loaded"
     SizeChanged="Page_SizeChanged">
 
