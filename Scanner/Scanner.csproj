@@ -129,6 +129,12 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorMessage.cs" />
+    <Compile Include="LicenseDetailPage.xaml.cs">
+      <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LicensePage.xaml.cs">
+      <DependentUpon>LicensePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PreviewPageIntent.cs" />
     <Compile Include="RecognizedScanner.cs" />
     <Compile Include="LogFile.cs" />
@@ -369,6 +375,22 @@
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-400.png" />
+    <Content Include="License Texts\LicenseSerilogSinksFile.txt" />
+    <Content Include="License Texts\LicenseSerilogSinksAsync.txt" />
+    <Content Include="License Texts\LicenseSerilogExceptions.txt" />
+    <Content Include="License Texts\LicenseSerilog.txt" />
+    <Content Include="License Texts\LicenseWin2Duwp.txt" />
+    <Content Include="License Texts\LicenseQueryStringNET.txt" />
+    <Content Include="License Texts\LicensePDFsharp.txt" />
+    <Content Include="License Texts\LicenseMicrosoftUIXAML.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUILottie.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUIControls.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUIAnimations.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpNotifications.txt" />
+    <Content Include="License Texts\LicenseMicrosoftServicesStoreEngagement.txt" />
+    <Content Include="License Texts\LicenseMicrosoftNETCoreUniversalWindowsPlatform.txt" />
+    <Content Include="License Texts\LicenseMicrosoftAppCenterCrashes.txt" />
+    <Content Include="License Texts\LicenseMicrosoftAppCenterAnalytics.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +398,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="LicenseDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LicensePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PreviewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

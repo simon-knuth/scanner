@@ -270,107 +270,19 @@
 
         <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
-                <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
-                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
-                    <StackPanel Orientation="Vertical">
-                        <HyperlinkButton NavigateUri="https://licenses.nuget.org/MIT">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.AppCenter.Analytics"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://licenses.nuget.org/MIT">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.AppCenter.Crashes"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/Microsoft/dotnet/blob/master/releases/UWP/LICENSE.TXT">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.NETCore.UniversalWindowsPlatform"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.Services.Store.Engagement"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.Toolkit.Uwp.Notifications"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Animations"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/license.md">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Controls"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/windows-toolkit/Lottie-Windows/blob/master/LICENSE.md">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.Toolkit.Uwp.UI.Lottie"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://www.nuget.org/packages/Microsoft.UI.Xaml/2.2.190917002/license">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Microsoft.UI.XAML"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="http://www.pdfsharp.net/PDFsharp_License.ashx">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="PDFsharp"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://raw.githubusercontent.com/WindowsNotifications/QueryString.NET/master/LICENSE">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="QueryString.NET"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://www.microsoft.com/web/webpi/eula/eula_win2d_10012014.htm">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Win2D.uwp"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/serilog/serilog/blob/dev/LICENSE">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Serilog"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/RehanSaeed/Serilog.Exceptions/blob/main/LICENSE.md">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Serilog.Exceptions"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/serilog/serilog-sinks-async/blob/dev/LICENSE">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Serilog.Sinks.Async"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://github.com/serilog/serilog-sinks-file/blob/dev/LICENSE">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Serilog.Sinks.File"/>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" FontSize="12" Margin="6,0,0,0"/>
-                            </StackPanel>
-                        </HyperlinkButton>
-                    </StackPanel>
-                </ScrollViewer>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                    <Button x:Name="ButtonDialogLicensesHeadingBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonDialogLicensesHeadingBack_Click" IsEnabled="False">
+                        <SymbolIcon Symbol="Back" Margin="0,2,8,0" VerticalAlignment="Center"/>
+                    </Button>
+                    <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24"/>
+                </StackPanel>
+                <Frame x:Name="FrameDialogLicenses" Height="350" Width="350" Navigated="FrameDialogLicenses_Navigated">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
             </StackPanel>
         </ContentDialog>
 

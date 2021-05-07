@@ -11,7 +11,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-
+using Windows.UI.Xaml.Media.Animation;
 using static Enums;
 using static Globals;
 using static Utilities;
@@ -304,6 +304,9 @@ namespace Scanner
             {
                 ContentDialogLicenses.PrimaryButtonText = "";
                 ContentDialogLicenses.SecondaryButtonText = "";
+                ButtonDialogLicensesHeadingBack.IsEnabled = false;
+
+                FrameDialogLicenses.Navigate(typeof(LicensePage), new SuppressNavigationTransitionInfo());
 
                 await ContentDialogLicenses.ShowAsync();
             });
@@ -329,6 +332,7 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogAboutCredits.ShowAsync());
         }
+
 
         private async void HyperlinkSettingsExportLog_Click(object sender, RoutedEventArgs e)
         {
@@ -369,6 +373,7 @@ namespace Scanner
             });
         }
 
+
         private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -388,6 +393,29 @@ namespace Scanner
                 StorageFile sourceFile = await logFolder.GetFileAsync((string)button.Tag);
                 await sourceFile.CopyAndReplaceAsync(file);
                 await CachedFileManager.CompleteUpdatesAsync(file);
+            }
+        }
+
+
+        private void ButtonDialogLicensesHeadingBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (FrameDialogLicenses.Content.GetType() == typeof(LicenseDetailPage))
+            {
+                FrameDialogLicenses.GoBack(new SlideNavigationTransitionInfo()
+                { Effect = SlideNavigationTransitionEffect.FromRight });
+            }
+        }
+
+
+        private void FrameDialogLicenses_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(LicenseDetailPage))
+            {
+                ButtonDialogLicensesHeadingBack.IsEnabled = true;
+            }
+            else
+            {
+                ButtonDialogLicensesHeadingBack.IsEnabled = false;
             }
         }
     }

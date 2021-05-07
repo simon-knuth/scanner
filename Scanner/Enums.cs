@@ -105,4 +105,25 @@
         Flatbed = 1,
         Feeder = 2,
     }
+
+
+    public enum ThirdPartyLicense
+    {
+        MicrosoftAppCenterAnalytics = 0,
+        MicrosoftAppCenterCrashes = 1,
+        MicrosoftNETCoreUniversalWindowsPlatform = 2,
+        MicrosoftServicesStoreEngagement = 3,
+        MicrosoftToolkitUwpNotifications = 4,
+        MicrosoftToolkitUwpUIAnimations = 5,
+        MicrosoftToolkitUwpUIControls = 6,
+        MicrosoftToolkitUwpUILottie = 7,
+        MicrosoftUIXAML = 8,
+        PDFsharp = 9,
+        QueryStringNET = 10,
+        Win2Duwp = 11,
+        Serilog = 12,
+        SerilogExceptions = 13,
+        SerilogSinksAsync = 14,
+        SerilogSinksFile = 15,
+    }
 }
