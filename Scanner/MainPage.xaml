@@ -1128,7 +1128,7 @@
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonRename}"
             ActionButtonStyle="{StaticResource ButtonAccentStyle}">
-            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown"/>
+            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded"/>
         </controlsxaml:TeachingTip>
 
         <controlsxaml:TeachingTip

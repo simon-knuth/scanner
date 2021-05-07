@@ -3124,5 +3124,10 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => LeftPaneGridViewManage.CanReorderItems = true);
         }
+
+        private async void TextBoxRename_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBoxRename.Focus(FocusState.Programmatic));
+        }
     }
 }
