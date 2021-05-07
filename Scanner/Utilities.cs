@@ -56,11 +56,6 @@ static class Utilities
             Tag = tag
         };
 
-        if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-        {
-            item.CornerRadius = new CornerRadius(2);
-        }
-
         return item;
     }
 
@@ -102,7 +97,6 @@ static class Utilities
         {
             Content = stackPanel,
             Tag = tag,
-            CornerRadius = new CornerRadius(2)
         };
 
         return item;

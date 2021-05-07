@@ -109,9 +109,9 @@
 
                         <ComboBox x:Uid="HeadingSettingsTheme" x:Name="ComboBoxTheme" Header="Theme" MinWidth="200" Margin="0,24,0,0" SelectionChanged="ComboBoxTheme_SelectionChanged" ItemContainerStyle="{ThemeResource ComboBoxItemRevealStyle}">
                             <ComboBox.Items>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" Content="Use system setting" Tag="0" CornerRadius="2"/>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeLight" Content="Light" Tag="1" CornerRadius="2"/>
-                                <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2" CornerRadius="2"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" Content="Use system setting" Tag="0"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeLight" Content="Light" Tag="1"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeDark" Content="Dark" Tag="2"/>
                             </ComboBox.Items>
 
                             <ComboBox.Transitions>
