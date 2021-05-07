@@ -25,7 +25,7 @@ namespace Scanner
         {
             this.InitializeComponent();
 
-            // register event listener
+            // register event listeners
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (titleBar, y) =>
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
@@ -34,6 +34,32 @@ namespace Scanner
                     GridPreviewHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                 });
             };
+            Window.Current.Activated += Window_Activated;
+        }
+
+
+        private async void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                // window deactivated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockPreviewHeader.Opacity = 0.5;
+                    AppBarSeparatorPreviewHeader.Opacity = 0.5;
+                    TextBlockPreviewHeaderConfig.Opacity = 0.5;
+                });
+            }
+            else
+            {
+                // window activated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockPreviewHeader.Opacity = 1;
+                    AppBarSeparatorPreviewHeader.Opacity = 1;
+                    TextBlockPreviewHeaderConfig.Opacity = 1;
+                });
+            }
         }
 
 

@@ -33,11 +33,33 @@ namespace Scanner
         {
             this.InitializeComponent();
 
-            // register event listener
+            // register event listeners
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
             {
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
+            Window.Current.Activated += Window_Activated;
+        }
+
+
+        private async void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                // window deactivated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockSettingsHeader.Opacity = 0.5;
+                });
+            }
+            else
+            {
+                // window activated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockSettingsHeader.Opacity = 1;
+                });
+            }
         }
 
 

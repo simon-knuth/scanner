@@ -138,7 +138,7 @@
                                 <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center"/>
                             </Button>
                             <TextBlock x:Name="TextBlockPreviewHeader" x:Uid="HeadingPreview" FontSize="32" FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
-                            <AppBarSeparator VerticalAlignment="Bottom"/>
+                            <AppBarSeparator x:Name="AppBarSeparatorPreviewHeader" VerticalAlignment="Bottom"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" x:Name="TextBlockPreviewHeaderConfig" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" Margin="6,0,0,0" VerticalAlignment="Center" Padding="0,0,0,0"/>
                     </Grid>
