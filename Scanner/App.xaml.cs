@@ -173,6 +173,8 @@ namespace Scanner
         private void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             // win32 component finished
+            if (taskCompletionSource == null) return;
+
             object result;
             args.Request.Message.TryGetValue("RESULT", out result);
             if ((string)result == "SUCCESS") taskCompletionSource.TrySetResult(true);

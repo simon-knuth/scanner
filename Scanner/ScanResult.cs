@@ -306,8 +306,21 @@ namespace Scanner
                             var imageStream = new InMemoryRandomAccessStream();
                             BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
                             bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
-                            bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 10;                   // reduce quality by 90%
-                            bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 10;                 //
+
+                            // reduce resolution of thumbnail
+                            int resolutionScaling = 1;
+                            if (softwareBitmap.PixelWidth < softwareBitmap.PixelHeight)
+                            {
+                                resolutionScaling = softwareBitmap.PixelWidth / 150;
+                            }
+                            else
+                            {
+                                resolutionScaling = softwareBitmap.PixelHeight / 150;
+                            }
+                            if (resolutionScaling < 1) resolutionScaling = 1;
+                            bitmapEncoder.BitmapTransform.ScaledWidth = Convert.ToUInt32(bitmapDecoder.PixelWidth / resolutionScaling);
+                            bitmapEncoder.BitmapTransform.ScaledHeight = Convert.ToUInt32(bitmapDecoder.PixelHeight / resolutionScaling);
+
                             await bitmapEncoder.FlushAsync();
                             await thumbnail.SetSourceAsync(imageStream);
                             elements[index].Thumbnail = thumbnail;
@@ -1395,23 +1408,22 @@ namespace Scanner
                 ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
 
                 // call win32 app and wait for result
-                //if (appServiceConnection == null)
-                //{
                 log.Information("Launching full trust process.");
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                //}
-                //else
-                //{
-                //ValueSet message = new ValueSet();
-                //message.Add("REQUEST", "CONVERT");
-                //var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
-                //}
                 await win32ResultAsync.ConfigureAwait(false);
                 log.Information("Full trust process is done.");
 
                 // get result file and move it to its correct folder
                 newPdf = null;
-                newPdf = await folderTemp.GetFileAsync(newName);
+                try
+                {
+                    newPdf = await folderTemp.GetFileAsync(newName);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    newPdf = await folderTemp.GetFileAsync(newName);
+                }
 
                 // move PDF file to target folder
                 if (pdf == null)
