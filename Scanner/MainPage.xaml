@@ -488,6 +488,16 @@
                                  To="1" Duration="0:0:0.25" BeginTime="0:0:0"/>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardScannerAdded1" Completed="StoryboardScannerAdded1_Completed">
+                <DoubleAnimation Storyboard.TargetName="FrameTextScannerCountBackground" Storyboard.TargetProperty="Opacity"
+                                To="1" Duration="0:0:0.15"/>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardScannerAdded2">
+                <DoubleAnimation Storyboard.TargetName="FrameTextScannerCountBackground" Storyboard.TargetProperty="Opacity"
+                                To="0" Duration="0:0:1"/>
+            </Storyboard>
+
 
             <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
@@ -543,13 +553,23 @@
                             <StackPanel Orientation="Vertical" Padding="24,0,24,12" SizeChanged="StackPanel_SizeChanged">
                                 <Frame x:Name="FrameLeftPaneScanSource" Margin="0,8,0,0">
                                     <StackPanel Orientation="Vertical">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,8,0,3"/>
-                                            <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" VerticalAlignment="Stretch" Padding="0" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Height="{Binding ElementName=ComboBoxScanners, Path=Height}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}">
-                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,3" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
+                                        <RelativePanel>
+                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Margin="0,8,0,6" Style="{StaticResource BaseTextBlockStyle}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+                                            <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" Padding="0" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}" RelativePanel.RightOf="TextBlockSource" RelativePanel.AlignBottomWithPanel="True">
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,7" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
                                             </Button>
-                                        </StackPanel>
-                                        <ComboBox x:Name="ComboBoxScanners" HorizontalAlignment="Stretch" Margin="0,3,0,0" TabIndex="0" ItemsSource="{x:Bind scannerList}" SelectionChanged="ComboBoxScanners_SelectionChanged">
+                                            <Grid x:Name="GridTextScannerCount" Opacity="0" CornerRadius="2" Margin="0,0,0,3" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                                                <Grid.OpacityTransition>
+                                                    <ScalarTransition Duration="0:0:1"/>
+                                                </Grid.OpacityTransition>
+
+                                                <Frame x:Name="FrameTextScannerCountBackground" CornerRadius="2" Opacity="0" Background="{ThemeResource SystemAccentColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}">
+                                                    <TextBlock x:Name="TextScannerCount" Opacity="0.6" Style="{StaticResource BodyTextBlockStyle}" Margin="4,2,4,2" TextAlignment="Right" MaxLines="1"/>
+                                                </Frame>
+                                            </Grid>
+                                        </RelativePanel>
+                                        <ComboBox x:Name="ComboBoxScanners" HorizontalAlignment="Stretch" Margin="0,6,0,0" TabIndex="0" ItemsSource="{x:Bind scannerList}" SelectionChanged="ComboBoxScanners_SelectionChanged" >
                                             <ComboBoxItem x:Name="ComboBoxItemScannerIndicator" IsEnabled="False" VerticalContentAlignment="Bottom" Visibility="Collapsed">
                                                 <StackPanel Orientation="Vertical">
                                                     <TextBlock x:Uid="TextScannerIndicator" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,3"/>
@@ -633,13 +653,13 @@
 
                                     <controlsxaml:SplitButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="Bold" IsEnabled="True" CornerRadius="2" Click="MenuFlyoutItemButtonScan_Click"/>
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal" CornerRadius="2" Click="ButtonScanFresh_Click">
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="Bold" IsEnabled="True" Click="MenuFlyoutItemButtonScan_Click"/>
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal" Click="ButtonScanFresh_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" x:Uid="ButtonScanOptionsPreview" IsEnabled="False" CornerRadius="2" Click="MenuFlyoutItemButtonScanPreview_Click">
+                                            <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" x:Uid="ButtonScanOptionsPreview" IsEnabled="False" Click="MenuFlyoutItemButtonScanPreview_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;"/>
                                                 </MenuFlyoutItem.Icon>
@@ -774,9 +794,9 @@
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="ButtonManageRotate90" CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="ButtonManageRotate180" CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="ButtonManageRotate270" CornerRadius="2" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate90" x:Uid="ButtonManageRotate90" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click" FontWeight="Bold"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate180" x:Uid="ButtonManageRotate180" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonLeftPaneManageRotate270" x:Uid="ButtonManageRotate270" Click="MenuFlyoutItemButtonLeftPaneManageRotate_Click"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
@@ -922,9 +942,9 @@
 
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom">
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="ButtonEditRotate90" CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="ButtonEditRotate180" CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
-                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="ButtonEditRotate270" CornerRadius="2" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate90" x:Uid="ButtonEditRotate90" Click="MenuFlyoutItemButtonRotate_Click" FontWeight="Bold"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate180" x:Uid="ButtonEditRotate180" Click="MenuFlyoutItemButtonRotate_Click"/>
+                                                <MenuFlyoutItem x:Name="MenuFlyoutItemButtonRotate270" x:Uid="ButtonEditRotate270" Click="MenuFlyoutItemButtonRotate_Click"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </InkToolbarCustomPenButton>
@@ -991,25 +1011,25 @@
 
                                             <FlyoutBase.AttachedFlyout>
                                                 <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom" Closing="MenuFlyoutAspectRatio_Closing">
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" IsChecked="True" FontWeight="Medium" CornerRadius="2" Click="SetCustomAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" CornerRadius="2" Click="FlipAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" x:Name="ToggleMenuFlyoutItemAspectRatioCustom" IsChecked="True" FontWeight="Medium" Click="SetCustomAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500" Click="SetFixedAspectRatioAsync"/>
+                                                    <MenuFlyoutItem x:Name="MenuFlyoutItemFlipAspectRatio" x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" Click="FlipAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
-                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="Medium" />
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142" Click="SetFixedAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
-                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="Medium"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941" Click="SetFixedAspectRatioAsync"/>
                                                     <MenuFlyoutSeparator/>
                                                     <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="Medium" CornerRadius="2"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
-                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230" CornerRadius="2" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054" Click="SetFixedAspectRatioAsync"/>
+                                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230" Click="SetFixedAspectRatioAsync"/>
                                                 </MenuFlyout>
                                             </FlyoutBase.AttachedFlyout>
                                         </InkToolbarCustomPenButton>
@@ -1302,7 +1322,10 @@
                                 <CheckBox x:Name="CheckBoxDebugFakeScannerFeederDuplex" Content="Duplex" IsEnabled="{Binding IsOn, ElementName=ToggleSwitchDebugFakeScannerFeeder}"/>
                             </StackPanel>
                         </StackPanel>
-                        <Button x:Name="ButtonDebugAddScanner" Content="Add to scanner list" Click="ButtonDebugAddScanner_Click"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="ButtonDebugAddScanner" Content="Add to scanner list" Click="ButtonDebugAddScanner_Click"/>
+                            <Button x:Name="ButtonDebugRemoveFakeScanners" Content="Remove all fake scanners" Margin="8,0,0,0" Click="ButtonDebugRemoveFakeScanners_Click"/>
+                        </StackPanel>
 
                         <TextBlock Text="Display contextual dialog" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <StackPanel Orientation="Horizontal">

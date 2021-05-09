@@ -259,7 +259,7 @@
                             <TranslateTransform X="-48"/>
                         </StackPanel.RenderTransform>
 
-                        <Button x:Name="ButtonSettingsHeaderBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Opacity="0" VerticalAlignment="Stretch" Click="ButtonBack_Click" RenderTransformOrigin="0.5,0.5">
+                        <Button x:Name="ButtonSettingsHeaderBack" x:Uid="ButtonBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Opacity="0" VerticalAlignment="Stretch" Click="ButtonBack_Click" RenderTransformOrigin="0.5,0.5">
                             <Button.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform x:Name="ButtonSettingsHeaderBackScaleTransform" ScaleX="-1"/>
@@ -277,7 +277,7 @@
         <ContentDialog x:Name="ContentDialogLicenses" x:Uid="DialogSettingsLicenses" Style="{StaticResource RoundedContentDialog}" DefaultButton="None" CloseButtonStyle="{StaticResource RoundedButtonStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel x:Name="StackPanelDialogLicensesHeading" Orientation="Horizontal" Margin="0,0,0,6">
-                    <Button x:Name="ButtonDialogLicensesHeadingBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonDialogLicensesHeadingBack_Click" IsEnabled="False">
+                    <Button x:Name="ButtonDialogLicensesHeadingBack" x:Uid="ButtonBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonDialogLicensesHeadingBack_Click" IsEnabled="False">
                         <Button.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform x:Name="ButtonDialogLicensesHeadingBackScaleTransform" ScaleX="-1"/>

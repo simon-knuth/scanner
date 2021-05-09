@@ -136,7 +136,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal">
-                            <Button Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
+                            <Button x:Uid="ButtonBack" Style="{ThemeResource TextBlockButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" Click="ButtonBack_Click">
                                 <SymbolIcon Symbol="Back" Margin="14,8,14,8" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                     <SymbolIcon.RenderTransform>
                                         <TransformGroup>

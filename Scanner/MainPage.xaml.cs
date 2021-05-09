@@ -86,7 +86,8 @@ namespace Scanner
                 });
             };
 
-            // add scanner search indicator
+            // initialize scanner list
+            scannerList.CollectionChanged += ScannerList_CollectionChanged;
             scannerList.Add(ComboBoxItemScannerIndicator);
             ComboBoxItemScannerIndicator.Visibility = Visibility.Visible;
 
@@ -103,6 +104,16 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
             Window.Current.Activated += Window_Activated;
+        }
+
+        private async void ScannerList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TextScannerCount.Text = String.Format(LocalizedString("TextScannerCount"), scannerList.Count - 1);
+                GridTextScannerCount.Opacity = 1;
+                if (e.NewItems.Count >= 1 && !e.NewItems.Contains(ComboBoxItemScannerIndicator)) StoryboardScannerAdded1.Begin();
+            });
         }
 
         private async void Window_Activated(object sender, WindowActivatedEventArgs e)
@@ -184,7 +195,7 @@ namespace Scanner
 
         private async void OnScannerRemovedAsync(DeviceWatcher sender, DeviceInformationUpdate args)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 // find lost scanner in scannerList to remove the corresponding scanner and its list entry
@@ -240,12 +251,12 @@ namespace Scanner
                         scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(newScanner.scannerName, newScanner));
 
                         if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
-                        log.Information("Added scanner {@Device}.", args);
                     }
                     catch (Exception exc)
                     {
                         log.Error(exc, "Failed to add scanner {@Device} to existing {ScannerList}.", args, scannerList);
                     }
+                    log.Information("Added scanner {@Device}.", args);
                 }
                 else return;
             });
@@ -1577,11 +1588,14 @@ namespace Scanner
             {
                 scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(fakeScanner.scannerName, fakeScanner));
 
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "pdf,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,native"));
+                if (formats.Count == 0)
+                {
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "pdf,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,native"));
+                }
                 ComboBoxFormat.SelectedIndex = 0;
 
                 if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
@@ -3144,6 +3158,34 @@ namespace Scanner
                     GridRoot.FlowDirection = FlowDirection.RightToLeft;
                 }
             });
+        }
+
+        private async void ButtonDebugRemoveFakeScanners_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                List<ComboBoxItem> fakes = new List<ComboBoxItem>();
+                foreach (var scanner in scannerList)
+                {
+                    RecognizedScanner recognizedScanner = (RecognizedScanner)scanner.Tag;
+
+                    if (scanner != ComboBoxItemScannerIndicator && recognizedScanner.isFake)
+                    {
+                        fakes.Add(scanner);
+                    }
+                }
+
+                foreach (var fake in fakes)
+                {
+                    scannerList.Remove(fake);
+                }
+            });
+        }
+
+        private async void StoryboardScannerAdded1_Completed(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardScannerAdded2.Begin());
         }
     }
 }
