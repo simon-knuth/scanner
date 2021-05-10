@@ -112,7 +112,7 @@ namespace Scanner
             {
                 TextScannerCount.Text = String.Format(LocalizedString("TextScannerCount"), scannerList.Count - 1);
                 GridTextScannerCount.Opacity = 1;
-                if (e.NewItems.Count >= 1 && !e.NewItems.Contains(ComboBoxItemScannerIndicator)) StoryboardScannerAdded1.Begin();
+                if (e.NewItems != null && !e.NewItems.Contains(ComboBoxItemScannerIndicator)) StoryboardScannerAdded1.Begin();
             });
         }
 

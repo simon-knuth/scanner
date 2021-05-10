@@ -2172,14 +2172,18 @@
                                 <VisualState x:Name="RightToLeft"/>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ButtonFlyoutDirectionStates">
-                                <VisualState x:Name="BottomDirection"/>
+                                <VisualState x:Name="BottomDirection">
+                                    <VisualState.Setters>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="TopDirection">
                                     <VisualState.Setters>
                                         <Setter Target="SelectionAccent.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Top"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,2,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE96D;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="RightDirection">
@@ -2191,7 +2195,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Right"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,0,2,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26B;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="LeftDirection">
@@ -2203,7 +2207,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Left"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="2,0,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26C;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="RightDirectionRTL">
@@ -2215,7 +2219,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Right"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,0,2,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26C;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="LeftDirectionRTL">
@@ -2227,13 +2231,13 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Left"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="2,0,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26B;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Rectangle x:Name="ContentBackground" Fill="Transparent"/>
-                        <TextBlock x:Name="ExtensionGlyph" AutomationProperties.AccessibilityView="Raw" Style="{StaticResource InkToolbarExtensionGlyphStyle}"/>
+                        <TextBlock x:Name="ExtensionGlyph" AutomationProperties.AccessibilityView="Raw" HorizontalAlignment="Right" Margin="0,0,3,2" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" Style="{StaticResource InkToolbarExtensionGlyphStyle}"/>
                         <ContentPresenter x:Name="Content" HighContrastAdjustment="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" Margin="1,0" Grid.RowSpan="2"/>
                         <Rectangle x:Name="SelectionAccent" Style="{StaticResource InkToolbarSelectionAccentStyle}" Visibility="Collapsed"/>
@@ -2321,14 +2325,18 @@
                                 <VisualState x:Name="RightToLeft"/>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ButtonFlyoutDirectionStates">
-                                <VisualState x:Name="BottomDirection"/>
+                                <VisualState x:Name="BottomDirection">
+                                    <VisualState.Setters>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="TopDirection">
                                     <VisualState.Setters>
                                         <Setter Target="SelectionAccent.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Top"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,2,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE96D;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="RightDirection">
@@ -2340,7 +2348,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Right"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,0,2,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26B;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="LeftDirection">
@@ -2352,7 +2360,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Left"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="2,0,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26C;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="RightDirectionRTL">
@@ -2364,7 +2372,7 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Right"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="0,0,2,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26C;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="LeftDirectionRTL">
@@ -2376,13 +2384,13 @@
                                         <Setter Target="ExtensionGlyph.HorizontalAlignment" Value="Left"/>
                                         <Setter Target="ExtensionGlyph.VerticalAlignment" Value="Center"/>
                                         <Setter Target="ExtensionGlyph.Margin" Value="2,0,0,0"/>
-                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE26B;"/>
+                                        <Setter Target="ExtensionGlyph.Text" Value="&#xE70D;"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Rectangle x:Name="ContentBackground" Fill="Transparent"/>
-                        <TextBlock x:Name="ExtensionGlyph" AutomationProperties.AccessibilityView="Raw" Style="{StaticResource InkToolbarExtensionGlyphStyle}"/>
+                        <TextBlock x:Name="ExtensionGlyph" AutomationProperties.AccessibilityView="Raw" HorizontalAlignment="Right" Margin="0,0,3,2" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}" Style="{StaticResource InkToolbarExtensionGlyphStyle}"/>
                         <ContentPresenter x:Name="Content" HighContrastAdjustment="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" Margin="1,0" Grid.RowSpan="2"/>
                         <Rectangle x:Name="SelectionAccent" Style="{StaticResource InkToolbarSelectionAccentStyle}" Visibility="Collapsed"/>

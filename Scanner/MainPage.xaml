@@ -558,14 +558,14 @@
                                             <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" Padding="0" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}" RelativePanel.RightOf="TextBlockSource" RelativePanel.AlignBottomWithPanel="True">
                                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,7" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
                                             </Button>
-                                            <Grid x:Name="GridTextScannerCount" Opacity="0" CornerRadius="2" Margin="0,0,0,3" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                                            <Grid x:Name="GridTextScannerCount" Opacity="0" CornerRadius="2" Margin="0,0,0,3" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
                                                 <Grid.OpacityTransition>
                                                     <ScalarTransition Duration="0:0:1"/>
                                                 </Grid.OpacityTransition>
 
-                                                <Frame x:Name="FrameTextScannerCountBackground" CornerRadius="2" Opacity="0" Background="{ThemeResource SystemAccentColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                                <Frame CornerRadius="2" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}">
-                                                    <TextBlock x:Name="TextScannerCount" Opacity="0.6" Style="{StaticResource BodyTextBlockStyle}" Margin="4,2,4,2" TextAlignment="Right" MaxLines="1"/>
+                                                <Frame x:Name="FrameTextScannerCountBackground" CornerRadius="2" Opacity="0" Background="{ThemeResource SystemAccentColor}" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                                <Frame CornerRadius="2" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1">
+                                                    <TextBlock x:Name="TextScannerCount" Opacity="0.6" Style="{StaticResource BodyTextBlockStyle}" Padding="4,2,4,2" TextAlignment="Right" MaxLines="1"/>
                                                 </Frame>
                                             </Grid>
                                         </RelativePanel>
@@ -789,7 +789,7 @@
                                         </InkToolbarCustomPenButton>
                                     </Frame>
                                     <Custom:ToolbarSeparator/>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonManageRotate" Click="ButtonLeftPaneManageRotate_Click" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" RightTapped="ButtonLeftPaneManageRotate_RightTapped">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonLeftPaneManageRotate" x:Uid="ButtonManageRotate" Click="ButtonLeftPaneManageRotate_Click" IsExtensionGlyphShown="True" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" RightTapped="ButtonLeftPaneManageRotate_RightTapped">
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
@@ -937,7 +937,7 @@
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonCrop" x:Uid="ButtonEditCrop" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorLeftStyle}" Click="ButtonCrop_Click">
                                         <FontIcon x:Name="FontIconCrop" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7A8;" FontSize="16"/>
                                     </InkToolbarCustomPenButton>
-                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonEditRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" Click="ButtonRotate_Click" RightTapped="ButtonRotate_RightTapped">
+                                    <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonRotate" x:Uid="ButtonEditRotate" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" IsExtensionGlyphShown="True" Click="ButtonRotate_Click" RightTapped="ButtonRotate_RightTapped">
                                         <FontIcon x:Name="FontIconRotate" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7AD;" FontSize="16"/>
 
                                         <FlyoutBase.AttachedFlyout>
