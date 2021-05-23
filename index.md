@@ -31,11 +31,11 @@
 ## Screenshots
 <table>
   <tr>
-    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png'/></td>
-    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png'/></td>
+    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png"><image src='https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png'/></a></td>
+    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png"><image src='https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png'/></a></td>
   </tr>
   <tr>
-    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png'/></td>
+    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png"><image src='https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png'/></a></td>
     <td width="50%"></td>
   </tr>
 </table>
