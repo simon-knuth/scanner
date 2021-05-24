@@ -150,6 +150,7 @@
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XAML Converters\SliderThumbToolTipPercentageConverter.cs" />
     <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
     <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
     <Compile Include="XAML Converters\StringNotEmptyVisibilityConverter.cs" />
@@ -485,9 +486,6 @@
     <PRIResource Include="Resources\Secrets.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\en\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Resources\Localization\en-gb\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -507,6 +505,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\ru\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\en\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

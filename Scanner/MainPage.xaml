@@ -511,6 +511,7 @@
             <local:PaneManageItemConverter x:Key="PaneManageItemConverter"/>
             <local:PaneManageItemDescriptorBackgroundConverter x:Key="PaneManageItemDescriptorBackgroundConverter"/>
             <local:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
+            <local:SliderThumbToolTipPercentageConverter x:Key="SliderThumbToolTipPercentageConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -565,7 +566,7 @@
 
                                                 <Frame x:Name="FrameTextScannerCountBackground" CornerRadius="2" Opacity="0" Background="{ThemeResource SystemAccentColor}" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                                 <Frame CornerRadius="2" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="1">
-                                                    <TextBlock x:Name="TextScannerCount" Opacity="0.6" Style="{StaticResource BodyTextBlockStyle}" Padding="4,2,4,2" TextAlignment="Right" MaxLines="1"/>
+                                                    <TextBlock x:Name="TextScannerCount" Opacity="0.6" Style="{StaticResource BodyTextBlockStyle}" Padding="6,2,6,2" TextAlignment="Right" MaxLines="1"/>
                                                 </Frame>
                                             </Grid>
                                         </RelativePanel>
@@ -689,8 +690,8 @@
                 <!-- Manage Pages -->
                 <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <Grid>
-                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" Padding="0,6,0,12">
+                        <Grid Margin="0,6,0,12">
+                            <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
                                         <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
@@ -729,7 +730,7 @@
                                     </TransitionCollection>
                                 </ListView.ItemContainerTransitions>
                             </ListView>
-                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,6,20,12" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" DragOver="LeftPaneGridViewManage_DragOver" Drop="LeftPaneGridViewManage_Drop" DragLeave="LeftPaneGridViewManage_DragLeave">
+                            <GridView x:Name="LeftPaneGridViewManage" HorizontalAlignment="Left" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" Padding="20,0,20,0" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted" DragOver="LeftPaneGridViewManage_DragOver" Drop="LeftPaneGridViewManage_Drop" DragLeave="LeftPaneGridViewManage_DragLeave">
                                 <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsWrapGrid HorizontalAlignment="Center"
@@ -869,7 +870,8 @@
                                             HorizontalScrollBarVisibility="Auto"
                                             VerticalScrollBarVisibility="Auto"
                                             Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                                            Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
+                                            Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}"
+                                            ViewChanging="ScrollViewerFlipViewScanDataTemplate_ViewChanging">
                                 <Image Source="{Binding CachedImage}"
                                         MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
                                         MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
@@ -879,6 +881,37 @@
                         </DataTemplate>
                     </FlipView.ItemTemplate>
                 </FlipView>
+
+                <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                              Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}" ViewChanging="ScrollViewerEditDraw_ViewChanging">
+                    <Grid x:Name="GridEditDraw" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                        <Image x:Name="ImageEditDraw" HorizontalAlignment="Center" MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                               MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}" SizeChanged="ImageEditDraw_SizeChanged"/>
+                        <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <InkCanvas x:Name="InkCanvasEditDraw"/>
+                        </Viewbox>
+                    </Grid>
+                </ScrollViewer>
+
+                <controls:DropShadowPanel x:Name="OverlayScan" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="24" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20" Visibility="Collapsed">
+                    <Frame Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}">
+                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderThickness="1">
+                            <TextBlock x:Name="TextBlockPageIndicator" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Right" VerticalAlignment="Center" MaxLines="1" Padding="12,0,12,0" Visibility="{Binding ElementName=FlipViewScan, Path=Visibility}"/>
+                            <Custom:ToolbarSeparator Visibility="{Binding ElementName=FlipViewScan, Path=Visibility}"/>
+                            <InkToolbarCustomPenButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorOverlayStyle}" Click="ButtonZoomInOut_Click" IsEnabled="False">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <Grid MinWidth="60">
+                                <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1"/>
+                                <Rectangle x:Name="ZoomFactorAccent" Style="{StaticResource InkToolbarSelectionAccentStyle}" Opacity="1" HorizontalAlignment="Stretch" Margin="5,0,5,2" RadiusX="1" RadiusY="1"/>
+                            </Grid>
+                            <InkToolbarCustomPenButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorOverlayStyle}" Click="ButtonZoomInOut_Click">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                        </StackPanel>
+                    </Frame>
+                </controls:DropShadowPanel>
 
                 <Frame x:Name="FrameImageCropperScan" Visibility="Collapsed" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <controls:ImageCropper x:Name="ImageCropperScan" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32,32,32,32">
@@ -890,18 +923,6 @@
                         </controls:ImageCropper.Mask>
                     </controls:ImageCropper>
                 </Frame>
-
-                <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                              Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}">
-                    <Grid x:Name="GridEditDraw" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                        <Image x:Name="ImageEditDraw" HorizontalAlignment="Center" MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
-                               MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}" SizeChanged="ImageEditDraw_SizeChanged"/>
-                        <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <InkCanvas x:Name="InkCanvasEditDraw"/>
-                        </Viewbox>
-                    </Grid>
-                </ScrollViewer>
 
                 <Grid x:Name="ContentPaneGridProgressRingScan" Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0" Visibility="Collapsed">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.25"/>
@@ -987,7 +1008,7 @@
                                         <InkToolbarCustomPenButton.KeyboardAccelerators>
                                             <KeyboardAccelerator
                                                 Modifiers="Control"
-                                                Key="C" />
+                                                Key="C"/>
                                         </InkToolbarCustomPenButton.KeyboardAccelerators>
                                     </InkToolbarCustomPenButton>
                                     <InkToolbarCustomPenButton IsEnabled="False" x:Name="ButtonOpenWith" x:Uid="ButtonEditOpenWith" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorCenterStyle}" Click="ButtonOpenWith_Click">
@@ -1149,7 +1170,7 @@
             PreferredPlacement="Bottom"
             Target="{Binding ElementName=ButtonRename}"
             ActionButtonStyle="{StaticResource ButtonAccentStyle}">
-            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded"/>
+            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" MaxWidth="275" HorizontalAlignment="Stretch"/>
         </controlsxaml:TeachingTip>
 
         <controlsxaml:TeachingTip

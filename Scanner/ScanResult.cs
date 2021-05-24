@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -32,7 +33,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
+        private ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
         public SupportedFormat scanResultFormat;
         public StorageFile pdf = null;
         public readonly StorageFolder originalTargetFolder;
@@ -58,6 +59,7 @@ namespace Scanner
             scanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
             originalTargetFolder = targetFolder;
             RefreshItemDescriptors();
+            elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
         }
 
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
@@ -105,6 +107,12 @@ namespace Scanner
             log.Information("ScanResult created.");
             return result;
         }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // EVENTS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public event NotifyCollectionChangedEventHandler PagesChanged;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1484,7 +1492,7 @@ namespace Scanner
         {
             if (GetFileFormat() != SupportedFormat.PDF)
             {
-                log.Error("Attempted to apply element order to PDF files.");
+                log.Error("Attempted to apply element order to non-PDF file.");
                 throw new ApplicationException("Can only reorder source files for PDF.");
             }
 
@@ -1572,6 +1580,18 @@ namespace Scanner
                     await SetInitialNameAsync(element, append);
                 }
             }
+        }
+
+        public void SetItemsSourceForControl(ItemsControl flipView)
+        {
+            flipView.ItemsSource = elements;
+        }
+
+        public bool HasDisplayedFolder(int index)
+        {
+            if (!IsValidIndex(index)) throw new ApplicationException("Invalid index " + index + " for HasDisplayedFolder().");
+
+            return !String.IsNullOrEmpty(elements[index].DisplayedFolder);
         }
     }
 }
