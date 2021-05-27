@@ -464,7 +464,9 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while rotating. Perhaps the scan format isn't supported.</exception>
         public async Task RotateScansAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
-            Analytics.TrackEvent("Rotate pages");
+            Analytics.TrackEvent("Rotate pages", new Dictionary<string, string> {
+                            { "Rotation", instructions[0].Item2.ToString() },
+                        });
             log.Information("Received {@Instructions} for rotations.", instructions);
 
             // check indices and rotations

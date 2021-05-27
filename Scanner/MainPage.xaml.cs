@@ -1199,7 +1199,7 @@ namespace Scanner
                     TextBlockContentPaneGridProgressRingScan.Text = "";
                     RefreshScanButton();
                     ButtonLeftPaneScanFolder.IsEnabled = true;
-                    RefreshZoomUI(1);
+                    RefreshZoomUIForFactor(1);
                     OverlayScan.Visibility = Visibility.Visible;
                 });
 
@@ -1464,7 +1464,7 @@ namespace Scanner
                 {
                     PaneManageSelectIndex(FlipViewScan.SelectedIndex);
                 }
-                try { RefreshZoomUI(GetCurrentScanScrollViewer().ZoomFactor); } catch (Exception) { }
+                try { RefreshZoomUIForFactor(GetCurrentScanScrollViewer().ZoomFactor); } catch (Exception) { }
                 try { if (e.RemovedItems.Count != 0) TryZoomScanAsync(1, lastFlipViewIndex, true); } catch (Exception) { }
                 lastFlipViewIndex = FlipViewScan.SelectedIndex;
             });
@@ -1757,7 +1757,9 @@ namespace Scanner
                     break;
                 case SummonToolbar.Draw:
                     log.Information("Transitioning to editing mode (draw).");
+                    TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
                     flowState = FlowState.draw;
+                    RefreshZoomUIForFactor(1);
                     StoryboardToolbarTransitionToDraw.Begin();
                     ImageEditDraw.Source = ((ScanResultElement)FlipViewScan.SelectedItem).CachedImage;
                     Tuple<double, double> imageMeasurements = GetImageMeasurements(((ScanResultElement)FlipViewScan.SelectedItem).CachedImage);
@@ -1794,6 +1796,7 @@ namespace Scanner
             StoryboardToolbarTransitionFromSpecial.Begin();
             try { ImageCropperScan.Source = null; } catch (Exception) { }
             ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+            RefreshZoomUIForFactor(1);
         }
 
         private void LockPaneManage(bool completely)
@@ -3265,7 +3268,7 @@ namespace Scanner
             {
                 if (flowState == FlowState.initial || flowState == FlowState.select || flowState == FlowState.scanning)
                 {
-                    RefreshZoomUI(e.FinalView.ZoomFactor);
+                    RefreshZoomUIForFactor(e.NextView.ZoomFactor);
                 }
             });
         }
@@ -3318,14 +3321,14 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (flowState == FlowState.draw) RefreshZoomUI(e.FinalView.ZoomFactor);
+                if (flowState == FlowState.draw) RefreshZoomUIForFactor(e.NextView.ZoomFactor);
             });
         }
 
-        private void RefreshZoomUI(float factor)
+        private void RefreshZoomUIForFactor(float factor)
         {
             TextBlockZoomFactor.Text = String.Format(LocalizedString("TextZoomFactor"), factor * 100);
-            if (factor <= 1.05)
+            if (factor < (float)1.05)
             {
                 ButtonZoomOut.IsEnabled = false;
                 ButtonZoomIn.IsEnabled = true;
@@ -3345,6 +3348,19 @@ namespace Scanner
                 ButtonZoomIn.IsEnabled = true;
                 ZoomFactorAccent.Visibility = Visibility.Visible;
                 TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+            }
+        }
+
+        private void ScrollViewerFlipViewScanDataTemplate_Loading(FrameworkElement sender, object args)
+        {
+            IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+            snapPoints.Add(1);
+            float value = (float)1.05;
+            while (value <= 3)
+            {
+                snapPoints.Add(value);
+                value = (float)(value + 0.01);
             }
         }
     }

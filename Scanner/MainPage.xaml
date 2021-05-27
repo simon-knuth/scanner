@@ -344,12 +344,12 @@
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ScrollViewerEditDraw" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FlipViewScan" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.55">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
@@ -383,7 +383,7 @@
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ScrollViewerEditDraw" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
@@ -864,19 +864,21 @@
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="local:ScanResultElement">
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate"
-                                            ZoomMode="Enabled"
-                                            MinZoomFactor="1"
-                                            MaxZoomFactor="3"
-                                            HorizontalScrollBarVisibility="Auto"
-                                            VerticalScrollBarVisibility="Auto"
-                                            Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                                            Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}"
-                                            ViewChanging="ScrollViewerFlipViewScanDataTemplate_ViewChanging">
+                                          ZoomMode="Enabled"
+                                          MinZoomFactor="1"
+                                          MaxZoomFactor="3"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                                          Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}"
+                                          ZoomSnapPointsType="Mandatory"
+                                          Loading="ScrollViewerFlipViewScanDataTemplate_Loading"
+                                          ViewChanging="ScrollViewerFlipViewScanDataTemplate_ViewChanging">
                                 <Image Source="{Binding CachedImage}"
-                                        MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
-                                        MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
-                                        Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                                        CanDrag="True" DragStarting="Image_DragStarting"/>
+                                       MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
+                                       MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
+                                       Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
+                                       CanDrag="True" DragStarting="Image_DragStarting"/>
                             </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
@@ -888,7 +890,7 @@
                     <Grid x:Name="GridEditDraw" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                         <Image x:Name="ImageEditDraw" HorizontalAlignment="Center" MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
                                MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}" SizeChanged="ImageEditDraw_SizeChanged"/>
-                        <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <InkCanvas x:Name="InkCanvasEditDraw"/>
                         </Viewbox>
                     </Grid>
