@@ -835,7 +835,7 @@
         </Grid>
 
         <!-- Right Pane -->
-        <Grid x:Name="RightPane" Grid.Column="2" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <Grid Grid.Column="2" x:Name="RightPane" Background="{ThemeResource SystemControlBackgroundAltMediumHighBrush}">
             <Grid.BackgroundTransition>
                 <BrushTransition/>
             </Grid.BackgroundTransition>

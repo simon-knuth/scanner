@@ -142,20 +142,17 @@ namespace Scanner
         {
             // fix bugs when theme is changed during runtime
             log.Information("Detected theme change during runtime.");
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
                 FrameLeftPaneScanHeader.Background = null;
-                FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneScanOptions.Fill = null;
-                RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                 GridLeftPaneFooterContent.Background = null;
-                GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneFooter.Fill = null;
                 RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                 GridLeftPaneManageHeaderControls.Background = null;
                 GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneManage.Fill = null;
-                RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                ChangeUIColors(uiState);
             });
         }
 
@@ -675,6 +672,39 @@ namespace Scanner
             TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
         }
 
+        private void ChangeUIColors(UIstate state)
+        {
+            switch (state)
+            {
+                case UIstate.small:
+                    GridLeftPaneFooterContent.Background = new SolidColorBrush(Colors.Transparent);
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    GridLeftPaneManageHeaderControls.Background = new SolidColorBrush(Colors.Transparent);
+                    FrameLeftPaneScanHeader.Background = new SolidColorBrush(Colors.Transparent);
+                    break;
+                case UIstate.normal:
+                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    break;
+                case UIstate.wide:
+                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlBackgroundAltMediumHighBrush"];
+                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlBackgroundAltMediumHighBrush"];
+                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -694,12 +724,6 @@ namespace Scanner
                     RightPane.Children.Clear();
                     try { SplitViewLeftPaneContent.Children.Add(LeftPaneScanOptions); } catch (Exception) { }
                     try { SplitViewRightPaneContent.Children.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = new SolidColorBrush(Colors.Transparent);
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    GridLeftPaneManageHeaderControls.Background = new SolidColorBrush(Colors.Transparent);
-                    FrameLeftPaneScanHeader.Background = new SolidColorBrush(Colors.Transparent);
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(0);
@@ -711,6 +735,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Visible;
                     SplitViewRightPane.Visibility = Visibility.Visible;
                     ContentPane.BorderThickness = new Thickness(0);
+                    ChangeUIColors(UIstate.small);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 750 && width < 1750 && uiState != UIstate.normal)       // normal window
@@ -726,12 +751,6 @@ namespace Scanner
                     RightPane.Children.Clear();
                     try { FlipViewLeftPane.Items.Insert(0, LeftPaneScanOptions); } catch (Exception) { }
                     try { FlipViewLeftPane.Items.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
@@ -742,6 +761,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                     ContentPane.BorderThickness = new Thickness(1, 0, 0, 0);
+                    ChangeUIColors(UIstate.normal);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 1750 && uiState != UIstate.wide)      // wide window
@@ -757,11 +777,6 @@ namespace Scanner
                     try { FlipViewLeftPane.Items.Remove(LeftPaneManage); } catch (Exception) { }
                     try { FlipViewLeftPane.Items.Insert(0, LeftPaneScanOptions); } catch (Exception) { }
                     try { RightPane.Children.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
@@ -772,6 +787,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                     ContentPane.BorderThickness = new Thickness(1, 0, 1, 0);
+                    ChangeUIColors(UIstate.wide);
                 }
 
                 if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2
@@ -985,6 +1001,10 @@ namespace Scanner
 
                     // get selected resolution
                     ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
+                    float resX, resY;
+                    float.TryParse(NumberBoxResolution.Text, out resX);
+                    resY = resX;
+                    selectedResolution = new ImageScannerResolution { DpiX = resX, DpiY = resY };
                     if (selectedResolution == null && (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true))
                     {
                         log.Error("Resolution for scan couldn't be determined.");
@@ -1637,7 +1657,7 @@ namespace Scanner
                 FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
                 isNextScanFresh = false;
                 MenuFlyoutItemButtonScan.IsEnabled = true;
-                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.SemiBold;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = false;
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
@@ -1655,7 +1675,7 @@ namespace Scanner
                 MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.SemiBold;
                 return;
             }
 
@@ -1679,7 +1699,7 @@ namespace Scanner
                 FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
                 isNextScanFresh = false;
                 MenuFlyoutItemButtonScan.IsEnabled = true;
-                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.SemiBold;
                 if (selectedFormat == SupportedFormat.PDF) MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
@@ -1693,7 +1713,7 @@ namespace Scanner
                 MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.SemiBold;
             }
         }
 
