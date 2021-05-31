@@ -946,6 +946,8 @@ static class Utilities
     /// </summary>
     public static async Task InitializeSerilogAsync()
     {
+        Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
+
         StorageFolder folder = await ApplicationData.Current.RoamingFolder
             .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
         string logPath = Path.Combine(folder.Path, "log.txt");

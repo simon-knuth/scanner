@@ -148,9 +148,7 @@ namespace Scanner
                 RectangleGridLeftPaneScanOptions.Fill = null;
                 GridLeftPaneFooterContent.Background = null;
                 RectangleGridLeftPaneFooter.Fill = null;
-                RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                 GridLeftPaneManageHeaderControls.Background = null;
-                GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneManage.Fill = null;
                 ChangeUIColors(uiState);
             });
@@ -589,11 +587,11 @@ namespace Scanner
                 // resolution
                 if (RadioButtonSourceFlatbed.IsChecked == true && !selectedScanner.isFake)
                 {
-                    GenerateResolutions(selectedScanner.scanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, selectedScanner.scanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
                 }
                 else if (RadioButtonSourceFeeder.IsChecked == true && !selectedScanner.isFake)
                 {
-                    GenerateResolutions(selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
                 }
 
                 // file formats
@@ -1001,10 +999,6 @@ namespace Scanner
 
                     // get selected resolution
                     ImageScannerResolution? selectedResolution = GetDesiredResolution(ComboBoxResolution);
-                    float resX, resY;
-                    float.TryParse(NumberBoxResolution.Text, out resX);
-                    resY = resX;
-                    selectedResolution = new ImageScannerResolution { DpiX = resX, DpiY = resY };
                     if (selectedResolution == null && (RadioButtonSourceFlatbed.IsChecked == true || RadioButtonSourceFeeder.IsChecked == true))
                     {
                         log.Error("Resolution for scan couldn't be determined.");
@@ -3382,6 +3376,34 @@ namespace Scanner
                 snapPoints.Add(value);
                 value = (float)(value + 0.01);
             }
+        }
+
+        private async void ButtonDebugResolution_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ComboBoxScanners.SelectedItem == null) return;
+
+                RecognizedScanner scanner = (RecognizedScanner)((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag;
+
+                IImageScannerSourceConfiguration config = null;
+                if (RadioButtonDebugResolutionFlatbed.IsChecked == true) config = scanner.scanner.FlatbedConfiguration;
+                else if (RadioButtonDebugResolutionFeeder.IsChecked == true) config = scanner.scanner.FeederConfiguration;
+
+                if (config != null)
+                {
+                    float value;
+                    float.TryParse(NumberBoxDebugResolution.Text, out value);
+
+                    config.DesiredResolution = new ImageScannerResolution { DpiX = value, DpiY = value };
+                    TextBlockDebugResolutionMinX.Text = String.Format("MinX = {0:0}", config.MinResolution.DpiX);
+                    TextBlockDebugResolutionMinY.Text = String.Format("MinY = {0:0}", config.MinResolution.DpiY);
+                    TextBlockDebugResolutionMaxX.Text = String.Format("MaxX = {0:0}", config.MaxResolution.DpiX);
+                    TextBlockDebugResolutionMaxY.Text = String.Format("MaxY = {0:0}", config.MaxResolution.DpiY);
+                    TextBlockDebugResolutionActualX.Text = String.Format("ActualX = {0:0}", config.ActualResolution.DpiX);
+                    TextBlockDebugResolutionActualY.Text = String.Format("ActualY = {0:0}", config.ActualResolution.DpiY);
+                }
+            });
         }
     }
 }

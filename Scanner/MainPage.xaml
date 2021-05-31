@@ -1366,6 +1366,31 @@
                             <TextBox x:Name="TextBoxDebugException" Text="Debug exception" Width="300"/>
                             <Button x:Name="ButtonDebugException" Margin="6,0,0,0" Content="Throw" Click="ButtonDebugException_Click"/>
                         </StackPanel>
+
+                        <TextBlock Text="Available resolution" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <StackPanel Orientation="Vertical">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Vertical">
+                                    <RadioButton x:Name="RadioButtonDebugResolutionFlatbed" Content="Flatbed" IsEnabled="{Binding ElementName=RadioButtonSourceFlatbed, Path=IsEnabled}"/>
+                                    <RadioButton x:Name="RadioButtonDebugResolutionFeeder" Content="Feeder" IsEnabled="{Binding ElementName=RadioButtonSourceFeeder, Path=IsEnabled}"/>
+                                    <controlsxaml:NumberBox x:Name="NumberBoxDebugResolution" Grid.Column="0" Header="DesiredResolution" Value="300" Minimum="100" SmallChange="50" LargeChange="100" SpinButtonPlacementMode="Inline" Margin="0,6,0,0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="24,0,0,0">
+                                    <TextBlock x:Name="TextBlockDebugResolutionMinX" Text="MinX ="/>
+                                    <TextBlock x:Name="TextBlockDebugResolutionMinY" Text="MinY ="/>
+                                    <TextBlock x:Name="TextBlockDebugResolutionMaxX" Text="MaxX ="/>
+                                    <TextBlock x:Name="TextBlockDebugResolutionMaxY" Text="MaxY ="/>
+                                    <TextBlock x:Name="TextBlockDebugResolutionActualX" Text="ActualX =" FontWeight="SemiBold" Margin="0,6,0,0"/>
+                                    <TextBlock x:Name="TextBlockDebugResolutionActualY" Text="ActualY =" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button x:Name="ButtonDebugResolution" Margin="0,6,0,0" Content="Refresh" Click="ButtonDebugResolution_Click"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </StackPanel>

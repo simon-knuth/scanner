@@ -107,6 +107,9 @@
     }
 
 
+    /// <summary>
+    ///     Represents all applicable third-party licenses.
+    /// </summary>
     public enum ThirdPartyLicense
     {
         MicrosoftAppCenterAnalytics = 0,
@@ -125,5 +128,17 @@
         SerilogExceptions = 13,
         SerilogSinksAsync = 14,
         SerilogSinksFile = 15,
+    }
+
+
+    /// <summary>
+    ///     Represents the different properties that a resolution value can have.
+    /// </summary>
+    public enum ResolutionProperty
+    {
+        None = 0,
+        Default = 1,
+        Documents = 2,
+        Photos = 3,
     }
 }
