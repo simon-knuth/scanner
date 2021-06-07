@@ -19,21 +19,21 @@ class ScannerOperation
     ///     This also marks the items according to their <see cref="ResolutionProperty"/>.
     /// </summary>
     /// <param name="scanner">The scanner that supplies the available resolutions.</param>
-    /// <param name="config">The configuration that resolutions shall be generated for.</param>
+    /// <param name="mode">The source mode that resolutions shall be generated for.</param>
     /// <param name="comboBox">The <see cref="ComboBox"/> that will contain the resolutions.</param>
     /// <param name="resolutions">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s.</param>
-    public static void GenerateResolutionItems(RecognizedScanner scanner, IImageScannerSourceConfiguration config, ComboBox comboBox,
+    public static void GenerateResolutionItems(RecognizedScanner scanner, SourceMode mode, ComboBox comboBox,
         ObservableCollection<ComboBoxItem> resolutions)
     {
         log.Information("Generating resolution items for ComboBox.");
         resolutions.Clear();
 
         List<ValueTuple<float, ResolutionProperty>> scannerResolutions = null;
-        if (config.GetType() == typeof(ImageScannerFlatbedConfiguration))
+        if (mode == SourceMode.Flatbed)
         {
             scannerResolutions = scanner.flatbedResolutions;
         }
-        else if (config.GetType() == typeof(ImageScannerFeederConfiguration))
+        else if (mode == SourceMode.Feeder)
         {
             scannerResolutions = scanner.feederResolutions;
         }

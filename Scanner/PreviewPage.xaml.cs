@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -153,6 +154,17 @@ namespace Scanner
                     GridPreviewContent.FlowDirection = FlowDirection.RightToLeft;
                     ButtonBackScaleTransform.ScaleX = -1;
                 }
+            });
+
+            await InitializeAutomationPropertiesAsync();
+        }
+
+
+        private async Task InitializeAutomationPropertiesAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CopyToolTipToAutomationPropertiesName(ButtonBack);
             });
         }
     }

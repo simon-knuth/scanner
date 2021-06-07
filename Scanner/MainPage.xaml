@@ -51,6 +51,11 @@
                         <DiscreteObjectKeyFrame.Value>True</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                        <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="LeftPaneStackPanelButtons" Duration="0:0:0.5" To="-48.0">
                     <DoubleAnimation.EasingFunction>
@@ -86,6 +91,11 @@
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="IsEnabled">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
                         <DiscreteObjectKeyFrame.Value>False</DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLeftPaneCancel" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.25">
+                        <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
@@ -546,16 +556,16 @@
                             </controls:DropShadowPanel>
                             <Rectangle x:Name="RectangleLeftPaneScanHeaderBackground" Fill="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             <Frame x:Name="FrameLeftPaneScanHeader" VerticalAlignment="Top" Padding="0,30,0,0">
-                                <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8"/>
+                                <TextBlock x:Uid="HeadingScanner" Text="Scanner" FontWeight="Bold" FontSize="32" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="24,0,24,8" AutomationProperties.HeadingLevel="Level1"/>
                             </Frame>
                         </Grid>
 
-                        <ScrollViewer x:Name="ScrollViewerLeftPaneScan" Background="Transparent" VerticalScrollBarVisibility="Auto" RelativePanel.Below="GridLeftPaneScanHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                        <ScrollViewer x:Name="ScrollViewerLeftPaneScan" Background="Transparent" VerticalScrollBarVisibility="Auto" RelativePanel.Below="GridLeftPaneScanHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" AutomationProperties.LandmarkType="Form">
                             <StackPanel Orientation="Vertical" Padding="24,0,24,12" SizeChanged="StackPanel_SizeChanged">
                                 <Frame x:Name="FrameLeftPaneScanSource" Margin="0,8,0,0">
                                     <StackPanel Orientation="Vertical">
                                         <RelativePanel>
-                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Margin="0,8,0,6" Style="{StaticResource BaseTextBlockStyle}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+                                            <TextBlock x:Name="TextBlockSource" x:Uid="HeadingScanOptionsSource" Margin="0,8,0,6" Style="{StaticResource BaseTextBlockStyle}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" AutomationProperties.HeadingLevel="Level2"/>
                                             <Button x:Name="ButtonDevices" x:Uid="ButtonScanOptionsDevices" Padding="0" TabIndex="1" Style="{ThemeResource TextBlockButtonStyle}" Click="ButtonDevices_Click" Visibility="{Binding Visibility, ElementName=StackPanelContentPaneText, Converter={StaticResource NegativeVisibilityConverter}}" RelativePanel.RightOf="TextBlockSource" RelativePanel.AlignBottomWithPanel="True">
                                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" Margin="8,8,8,7" FontSize="{Binding ElementName=TextBlockSource, Path=FontSize}"/>
                                             </Button>
@@ -570,7 +580,7 @@
                                                 </Frame>
                                             </Grid>
                                         </RelativePanel>
-                                        <ComboBox x:Name="ComboBoxScanners" HorizontalAlignment="Stretch" Margin="0,6,0,0" TabIndex="0" ItemsSource="{x:Bind scannerList}" SelectionChanged="ComboBoxScanners_SelectionChanged" >
+                                        <ComboBox x:Name="ComboBoxScanners" HorizontalAlignment="Stretch" Margin="0,6,0,0" TabIndex="0" ItemsSource="{x:Bind scannerList}" SelectionChanged="ComboBoxScanners_SelectionChanged" AutomationProperties.Name="{Binding ElementName=TextBlockSource, Path=Text}" AutomationProperties.IsRequiredForForm="True">
                                             <ComboBoxItem x:Name="ComboBoxItemScannerIndicator" IsEnabled="False" VerticalContentAlignment="Bottom" Visibility="Collapsed">
                                                 <StackPanel Orientation="Vertical">
                                                     <TextBlock x:Uid="TextScannerIndicator" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,3"/>
@@ -600,7 +610,7 @@
 
                                 <Frame x:Name="FrameLeftPaneScanColor" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
                                     <StackPanel x:Name="StackPanelColor" Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <TextBlock x:Name="HeadingScanOptionsColor" x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                                         <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
                                         <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
                                         <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
@@ -609,14 +619,14 @@
 
                                 <Frame x:Name="FrameLeftPaneResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed" Opacity="0">
                                     <StackPanel x:Name="StackPanelResolution" Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind resolutions}" Margin="0,6,0,0" HorizontalAlignment="Stretch"/>
+                                        <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                                        <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind resolutions}" Margin="0,6,0,0" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding ElementName=HeadingScanOptionsResolution, Path=Text}"/>
                                     </StackPanel>
                                 </Frame>
 
                                 <Frame x:Name="FrameLeftPaneScanFeeder" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
+                                        <TextBlock x:Name="HeadingScanOptionsMoreOptions" x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                                         <CheckBox x:Name="CheckBoxAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" IsEnabled="True"/>
                                         <CheckBox x:Name="CheckBoxDuplex" x:Uid="OptionScanOptionsDuplex" IsChecked="False" IsEnabled="False"/>
                                     </StackPanel>
@@ -624,8 +634,8 @@
 
                                 <Frame x:Name="FrameLeftPaneScanFormat" Margin="0,48,0,0">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6"/>
-                                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged"/>
+                                        <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                                        <ComboBox x:Name="ComboBoxFormat" Margin="0,6,0,0" ItemsSource="{x:Bind formats}" HorizontalAlignment="Stretch" IsEnabled="{Binding ElementName=ComboBoxScanners, Path=SelectedIndex, Converter={StaticResource IsItemSelectedConverter}, FallbackValue=False}" SelectionChanged="ComboBoxFormat_SelectionChanged" AutomationProperties.Name="{Binding ElementName=HeadingScanOptionsFormat, Path=Text}"/>
                                     </StackPanel>
 
                                     <Frame.Transitions>
@@ -641,14 +651,14 @@
                         <controls:DropShadowPanel x:Name="DropShadowPanelGridLeftPaneFooter" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="15" VerticalAlignment="Top" Margin="16,0,16,0">
                             <Rectangle x:Name="RectangleGridLeftPaneFooter" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{Binding ElementName=ScrollViewerLeftPaneScan, Path=ViewportWidth}" Height="{Binding ElementName=GridLeftPaneFooter, Path=ActualHeight}"/>
                         </controls:DropShadowPanel>
-                        <Grid x:Name="GridLeftPaneFooterContent" Padding="24,0,24,0" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid x:Name="GridLeftPaneFooterContent" Padding="24,0,24,0" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutomationProperties.LandmarkType="Main">
                             <controls:DropShadowPanel x:Name="DropShadowPanelLeftPaneScanButton" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=ButtonLeftPaneScan, Path=IsEnabled, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Center" BlurRadius="10" OffsetY="5" HorizontalAlignment="Right">
-                                <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{ThemeResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click">
+                                <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{ThemeResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click" AutomationProperties.Name="{Binding ElementName=TextBlockButtonScan, Path=Text}">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
                                             <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
                                             <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
-                                            <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
+                                            <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
                                         </StackPanel>
                                     </Grid>
 
@@ -679,7 +689,7 @@
                                 <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanOptionsSaveLocation" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">
                                     <FontIcon x:Name="FontIconButtonScanFolder" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" Margin="8,8,8,8"/>
                                 </Button>
-                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click">
+                                <Button x:Name="ButtonLeftPaneCancel" x:Uid="ButtonScanOptionsCancel" IsTabStop="False" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Opacity="0.0" Click="ButtonLeftPaneCancel_Click" Visibility="Collapsed">
                                     <SymbolIcon Symbol="Cancel" Margin="8,8,8,8"/>
                                 </Button>
                             </StackPanel>
@@ -694,7 +704,7 @@
                             <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
-                                        <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch">
+                                        <ListViewItem x:Name="LeftPaneListViewManageItem" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{Binding ScanFile.DisplayName}">
                                             <Grid Padding="16,8,20,8" HorizontalAlignment="Stretch" Height="85">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="3*"/>
@@ -741,7 +751,7 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="local:ScanResultElement">
-                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" Style="{StaticResource GridViewItemStyleRounded}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}">
+                                        <GridViewItem x:Name="LeftPaneGridViewManageItem" Style="{StaticResource GridViewItemStyleRounded}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" Width="{Binding ViewportWidth, ElementName=ScrollViewerLeftPaneManage, Converter={StaticResource PaneManageItemConverter}}" AutomationProperties.Name="{Binding ItemDescriptor}">
                                             <Grid>
                                                 <Frame Padding="8">
                                                     <controls:DropShadowPanel Style="{ThemeResource DropShadowPanelThemedStyle}" Padding="12" ShadowOpacity="{Binding ElementName=LeftPaneGridViewManageItem, Path=IsSelected, Converter={StaticResource ButtonShadowConverter}}" BlurRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" OffsetY="3">
@@ -779,7 +789,7 @@
 
                             <StackPanel Orientation="Vertical">
                                 <Frame x:Name="FrameLeftPaneManageText" Height="30"/>
-                                <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0" BorderThickness="0"/>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0" BorderThickness="0" Visibility="Collapsed"/>
                             </StackPanel>
 
                             <ScrollViewer Grid.Row="0" VerticalAlignment="Bottom" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
@@ -878,7 +888,8 @@
                                        MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerContentPaneContentDummy}"
                                        MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerContentPaneContentDummy}"
                                        Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
-                                       CanDrag="True" DragStarting="Image_DragStarting"/>
+                                       CanDrag="True" DragStarting="Image_DragStarting"
+                                       AutomationProperties.Name="{Binding ItemDescriptor}"/>
                             </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
@@ -942,14 +953,15 @@
                         <Grid Height="{Binding ElementName=GridLeftPaneScanHeader, Path=ActualHeight}">
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                 <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="12,0,12,0">
+                                    <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
                                     <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Visible" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" BorderThickness="0" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
+                                <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Collapsed" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" BorderThickness="0" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>
 
                             <RelativePanel VerticalAlignment="Bottom">
-                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed">
+                                <InkToolbarCustomPenButton x:Name="ButtonScanOptions" x:Uid="ButtonScanOptions" IsChecked="True" Style="{StaticResource CustomInkToolbarCustomPenButtonRightStyle}" RelativePanel.AlignLeftWithPanel="True" Checked="ButtonScanOptions_Checked" Visibility="Collapsed" AutomationProperties.LandmarkType="Navigation">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                                 <StackPanel x:Name="StackPanelTopToolbarEditing" Orientation="Horizontal" RelativePanel.AlignHorizontalCenterWithPanel="True">
@@ -1093,7 +1105,7 @@
                                         </InkToolbarCustomPenButton>
                                     </StackPanel>
                                 </StackPanel>
-                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click">
+                                <InkToolbarCustomPenButton x:Name="ButtonManage" x:Uid="ButtonManage" Style="{StaticResource CustomInkToolbarCustomPenButtonLeftStyle}" IsEnabled="True" RelativePanel.AlignRightWithPanel="True" Click="ButtonManage_Click" AutomationProperties.LandmarkType="Navigation">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16"/>
                                 </InkToolbarCustomPenButton>
                             </RelativePanel>
@@ -1243,7 +1255,7 @@
                         <EntranceThemeTransition IsStaggeringEnabled="True"/>
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <TextBlock x:Uid="HeadingDialogChangelog" FontWeight="Bold" FontSize="24"/>
+                <TextBlock x:Uid="HeadingDialogChangelog" FontWeight="Bold" FontSize="24" AutomationProperties.HeadingLevel="Level1"/>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,0">
                     <Grid Margin="0,18,0,0">
                         <Grid.ChildrenTransitions>
@@ -1262,10 +1274,22 @@
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
 
-                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE838;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <FontIcon Grid.Row="0" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7B3;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,20">
-                            <TextBlock x:Uid="HeadingChangelog2_1_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock x:Uid="TextChangelog2_1_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Uid="HeadingChangelog2_2_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="TextChangelog2_2_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE8A3;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,20">
+                            <TextBlock x:Uid="HeadingChangelog2_2_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="TextChangelog2_2_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+
+                        <FontIcon Grid.Row="2" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Glyph="&#xED4D;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
+                            <TextBlock x:Uid="HeadingChangelog2_2_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="TextChangelog2_2_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
@@ -1279,7 +1303,7 @@
                         <EntranceThemeTransition IsStaggeringEnabled="True"/>
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <TextBlock x:Uid="HeadingDialogPrivacySetup" FontWeight="Bold" FontSize="24" Margin="0,0,0,6"/>
+                <TextBlock x:Uid="HeadingDialogPrivacySetup" FontWeight="Bold" FontSize="24" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level1"/>
                 <TextBlock x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords" Margin="0,0,0,24"/>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12">
                     <StackPanel Orientation="Vertical">

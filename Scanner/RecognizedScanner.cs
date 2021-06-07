@@ -91,17 +91,21 @@ namespace Scanner
             this.scannerName = scannerName;
             isAutoAllowed = hasAuto;
             isAutoPreviewAllowed = hasAutoPreview;
+
             isFlatbedAllowed = hasFlatbed;
             isFlatbedPreviewAllowed = hasFlatbedPreview;
             isFlatbedColorAllowed = hasFlatbedColor;
             isFlatbedGrayscaleAllowed = hasFlatbedGrayscale;
             isFlatbedMonochromeAllowed = hasFlatbedMonochrome;
+            flatbedResolutions = GenerateFakeResolutions();
+
             isFeederAllowed = hasFeeder;
             isFeederPreviewAllowed = hasFeederPreview;
             isFeederColorAllowed = hasFeederColor;
             isFeederGrayscaleAllowed = hasFeederGrayscale;
             isFeederMonochromeAllowed = hasFeederMonochrome;
             isFeederDuplexAllowed = hasFeederDuplex;
+            feederResolutions = GenerateFakeResolutions();
 
             isFake = true;
         }
@@ -178,6 +182,19 @@ namespace Scanner
             log.Information("Generated {@Resolutions} for scanner.", result);
 
             return result;
+        }
+
+
+        private List<ValueTuple<float, ResolutionProperty>> GenerateFakeResolutions()
+        {
+            return new List<(float, ResolutionProperty)>
+            {
+                new ValueTuple<float,ResolutionProperty>(200, ResolutionProperty.None),
+                new ValueTuple<float, ResolutionProperty>(300, ResolutionProperty.Documents),
+                new ValueTuple<float, ResolutionProperty>(550, ResolutionProperty.Photos),
+                new ValueTuple<float, ResolutionProperty>(800, ResolutionProperty.None),
+                new ValueTuple<float, ResolutionProperty>(1200, ResolutionProperty.None)
+            };
         }
     }
 }

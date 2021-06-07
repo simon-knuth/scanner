@@ -798,10 +798,6 @@ Fuzzy</comment>
     <value>Your pages are here</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
-  <data name="TextScanOptionsDefaultResolutionIndicator" xml:space="preserve">
-    <value>Default</value>
-    <comment>The text that indicates that a resolution in the list is the default one. Presented in brackets.</comment>
-  </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The close button text of the translation contributors dialog.</comment>
@@ -944,10 +940,6 @@ TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
     <value>Scans</value>
     <comment>The name of the folder that's used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
-  <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Ask for a save location</value>
-    <comment>The heading of the first changelog section.</comment>
-  </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
     <value>Ask every time</value>
     <comment>The option to ask for a save location for each scan.</comment>
@@ -955,11 +947,6 @@ TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
     <value>Use a set location</value>
     <comment>The option to use a set save location.</comment>
-  </data>
-  <data name="TextChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Choose a new save location every time you scan, instead of having to move files afterwards.
-This feature can be enabled in the settings.</value>
-    <comment>The text of the first changelog section.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
     <value>Back</value>
@@ -1000,5 +987,25 @@ This feature can be enabled in the settings.</value>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
     <value>{0:0} DPI (Best for photos)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
+    <value>Scan complete, added {0} pages</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
+  </data>
+  <data name="TextScanFailAccessibility" xml:space="preserve">
+    <value>Scan failed</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
+  </data>
+  <data name="TextSavedChangesAccessibility" xml:space="preserve">
+    <value>Changes saved</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
+  </data>
+  <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
+    <value>Scan complete, added one page</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
+  </data>
+  <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
+    <value>Changes saved as copy</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
 </root>

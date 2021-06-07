@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
+using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
-
+using Windows.UI.Xaml.Controls;
 using static Enums;
 
 public static class Globals
@@ -35,6 +36,9 @@ public static class Globals
     public static StorageFolder folderTemp;
     public static StorageFolder folderConversion;
     public static StorageFolder folderWithoutRotation;
+
+    public static SpeechSynthesizer narratorSpeech = new SpeechSynthesizer();
+    public static MediaElement narratorMediaElement = new MediaElement();
 
     public static string storeRateUri = "ms-windows-store://review/?productid=9N438MZHD3ZF";
 

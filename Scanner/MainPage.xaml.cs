@@ -346,6 +346,8 @@ namespace Scanner
                     log.Information("MainPage loaded after first launch with this version.");
                     //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
+
+                await InitializeAutomationPropertiesAsync();
             }
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
@@ -585,13 +587,13 @@ namespace Scanner
                 }
 
                 // resolution
-                if (RadioButtonSourceFlatbed.IsChecked == true && !selectedScanner.isFake)
+                if (RadioButtonSourceFlatbed.IsChecked == true)
                 {
-                    GenerateResolutionItems(selectedScanner, selectedScanner.scanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, SourceMode.Flatbed, ComboBoxResolution, resolutions);
                 }
-                else if (RadioButtonSourceFeeder.IsChecked == true && !selectedScanner.isFake)
+                else if (RadioButtonSourceFeeder.IsChecked == true)
                 {
-                    GenerateResolutionItems(selectedScanner, selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, SourceMode.Feeder, ComboBoxResolution, resolutions);
                 }
 
                 // file formats
@@ -922,6 +924,7 @@ namespace Scanner
             try
             {
                 isScanCanceled = false;
+                int pagesScanned = 0;
 
                 // disable controls and show progress bar
                 log.Information("Preparing UI for scan.");
@@ -978,8 +981,6 @@ namespace Scanner
 
                 if (debugFiles == null)
                 {
-                    int pagesScanned = 0;
-
                     // no debug files provided, commence actual scan
                     // get selected format
                     selectedFormat = await PrepareScanConfigAsync();
@@ -1083,6 +1084,7 @@ namespace Scanner
                             ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanScannerErrorHeading"),
                             LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult));
                         await CancelScanAsync();
+                        await NarratorAnnounceAsync(LocalizedString("TextScanFailAccessibility"), TextBlockNarratorStatus);
                         return false;
                     }
 
@@ -1149,6 +1151,7 @@ namespace Scanner
                 {
                     log.Information("'Scanning' from provided debug files.");
                     SupportedFormat selectedDebugFormat = (SupportedFormat)ComboBoxDebugFormat.SelectedItem;
+                    pagesScanned = debugFiles.Count;
 
                     // debug files provided, create scanResult from these
                     List<StorageFile> copiedDebugFiles = new List<StorageFile>();
@@ -1217,6 +1220,16 @@ namespace Scanner
                     OverlayScan.Visibility = Visibility.Visible;
                 });
 
+                // request narrator announcement
+                if (pagesScanned > 1)
+                {
+                    await NarratorAnnounceAsync(String.Format(LocalizedString("TextScanCompleteMultipleAccessibility"), pagesScanned), TextBlockNarratorStatus);
+                }
+                else
+                {
+                    await NarratorAnnounceAsync(LocalizedString("TextScanCompleteSingleAccessibility"), TextBlockNarratorStatus);
+                }
+
                 // send toast if the app is minimized
                 if (settingNotificationScanComplete && !isInForeground) SendToastNotification(LocalizedString("HeadingNotificationScanComplete"),
                     LocalizedString("TextNotificationScanComplete"), 5);
@@ -1240,6 +1253,7 @@ namespace Scanner
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
                     LocalizedString("ErrorMessageScanErrorBody")));
                 await CancelScanAsync();
+                await NarratorAnnounceAsync(LocalizedString("TextScanFailAccessibility"), TextBlockNarratorStatus);
                 return false;
             }
         }
@@ -1809,6 +1823,7 @@ namespace Scanner
             UnlockPaneManage(false);
             StoryboardToolbarTransitionFromSpecial.Begin();
             try { ImageCropperScan.Source = null; } catch (Exception) { }
+            ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
             ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
             RefreshZoomUIForFactor(1);
         }
@@ -1902,6 +1917,7 @@ namespace Scanner
                 }
                 UnlockToolbar();
             }
+            ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
             ProgressBarLeftPaneManage.IsIndeterminate = false;
         }
 
@@ -2106,6 +2122,7 @@ namespace Scanner
                     LockPaneManage(true);
                     LockToolbar();
                     LockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                     ProgressBarLeftPaneManage.IsIndeterminate = true;
                 });
 
@@ -2117,6 +2134,7 @@ namespace Scanner
                     UnlockPaneManage(false);
                     UnlockToolbar();
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                     ProgressBarLeftPaneManage.IsIndeterminate = false;
                 });
             }
@@ -2495,7 +2513,11 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = false;
                     ButtonDiscard.IsEnabled = false;
                     ImageCropperScan.IsEnabled = false;
-                    if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                    if (format == SupportedFormat.PDF)
+                    {
+                        ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                        ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                    }
                 });
 
                 switch (flowState)
@@ -2532,17 +2554,14 @@ namespace Scanner
 
                 if (asCopy)
                 {
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-                    {
-                        StoryboardIconSaveCopyDone1.Begin();
-                    });
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
+                    await NarratorAnnounceAsync(LocalizedString("TextSavedChangesCopyAccessibility"), TextBlockNarratorStatus);
                 }
-
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
+                else
                 {
-                    if (!asCopy) TransitionFromEditingMode();
-                });
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => TransitionFromEditingMode());
+                    await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
+                }
             }
             catch (Exception exc)
             {
@@ -2564,6 +2583,7 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = true;
                     ButtonDiscard.IsEnabled = true;
                     ImageCropperScan.IsEnabled = true;
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                     ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
             }
@@ -2657,7 +2677,11 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
-                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                if (format == SupportedFormat.PDF)
+                {
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                }
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2670,6 +2694,7 @@ namespace Scanner
 
                 // generate image
                 await scanResult.GetImageAsync(index);
+                await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
             }
             catch (Exception exc)
             {
@@ -2689,6 +2714,7 @@ namespace Scanner
                     if (lockToolbar) UnlockToolbar();
                     UnlockPaneManage(false);
                     UnlockPaneScanOptions();
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                     ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
             }
@@ -2706,6 +2732,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                 ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
@@ -2741,6 +2768,7 @@ namespace Scanner
                     }
                 }
                 await Task.WhenAll(tasksPreview);
+                await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
             }
             catch (Exception exc)
             {
@@ -2757,6 +2785,7 @@ namespace Scanner
                     if (lockToolbar) UnlockToolbar();
                     UnlockPaneManage(true);
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                     ProgressBarLeftPaneManage.IsIndeterminate = false;
                     if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                 });
@@ -2802,7 +2831,11 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
-                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                if (format == SupportedFormat.PDF)
+                {
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                }
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2837,6 +2870,7 @@ namespace Scanner
                         if (lockToolbar) UnlockToolbar();
                         UnlockPaneManage(false);
                         UnlockPaneScanOptions();
+                        ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                         ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                     });
                 }
@@ -2855,6 +2889,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                 ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
@@ -2898,6 +2933,7 @@ namespace Scanner
                         if (lockToolbar) UnlockToolbar();
                         UnlockPaneManage(true);
                         UnlockPaneScanOptions();
+                        ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                         ProgressBarLeftPaneManage.IsIndeterminate = false;
                         if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                     });
@@ -2974,6 +3010,7 @@ namespace Scanner
                 TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
                 TextBlockContentPaneGridProgressRingScan.Text = "";
                 RefreshFileName();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 RefreshScanButton();
                 OverlayScan.Visibility = Visibility.Collapsed;
@@ -3126,6 +3163,7 @@ namespace Scanner
                 LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
             });
 
@@ -3175,6 +3213,7 @@ namespace Scanner
                 UnlockToolbar();
                 UnlockPaneManage(false);
                 UnlockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
             });
         }
@@ -3198,11 +3237,13 @@ namespace Scanner
                 {
                     GridRoot.FlowDirection = FlowDirection.LeftToRight;
                     ContentPane.FlowDirection = FlowDirection.LeftToRight;
+                    ContentDialogChangelog.FlowDirection = FlowDirection.LeftToRight;
                 }
                 else
                 {
                     GridRoot.FlowDirection = FlowDirection.RightToLeft;
                     ContentPane.FlowDirection = FlowDirection.RightToLeft;
+                    ContentDialogChangelog.FlowDirection = FlowDirection.RightToLeft;
                 }
             });
         }
@@ -3403,6 +3444,36 @@ namespace Scanner
                     TextBlockDebugResolutionActualX.Text = String.Format("ActualX = {0:0}", config.ActualResolution.DpiX);
                     TextBlockDebugResolutionActualY.Text = String.Format("ActualY = {0:0}", config.ActualResolution.DpiY);
                 }
+            });
+        }
+
+        private async Task InitializeAutomationPropertiesAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneSettings);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneScanFolder);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneCancel);
+                CopyToolTipToAutomationPropertiesName(ButtonScanOptions);
+                CopyToolTipToAutomationPropertiesName(ButtonManage);
+                CopyToolTipToAutomationPropertiesName(ButtonCrop);
+                CopyToolTipToAutomationPropertiesName(ButtonRotate);
+                CopyToolTipToAutomationPropertiesName(ButtonDraw);
+                CopyToolTipToAutomationPropertiesName(ButtonRename);
+                CopyToolTipToAutomationPropertiesName(ButtonDelete);
+                CopyToolTipToAutomationPropertiesName(ButtonCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonOpenWith);
+                CopyToolTipToAutomationPropertiesName(ButtonShare);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageSelect);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageRotate);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageShare);
+                CopyToolTipToAutomationPropertiesName(ButtonZoomIn);
+                CopyToolTipToAutomationPropertiesName(ButtonZoomOut);
+                CopyToolTipToAutomationPropertiesName(ButtonCropAspectRatio);
+                CopyToolTipToAutomationPropertiesName(ButtonSave);
+                CopyToolTipToAutomationPropertiesName(ButtonSaveCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonDiscard);
             });
         }
     }

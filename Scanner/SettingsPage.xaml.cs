@@ -97,6 +97,7 @@ namespace Scanner
                 {
                     GridSettingsContent.FlowDirection = FlowDirection.LeftToRight;
                     StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.LeftToRight;
+                    ItemsRepeaterExportLog.FlowDirection = FlowDirection.LeftToRight;
                     ButtonSettingsHeaderBackScaleTransform.ScaleX = 1;
                     ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = 1;
                 }
@@ -104,6 +105,7 @@ namespace Scanner
                 {
                     GridSettingsContent.FlowDirection = FlowDirection.RightToLeft;
                     StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.RightToLeft;
+                    ItemsRepeaterExportLog.FlowDirection = FlowDirection.RightToLeft;
                     ButtonSettingsHeaderBackScaleTransform.ScaleX = -1;
                     ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = -1;
                 }
@@ -150,6 +152,8 @@ namespace Scanner
                     StackPanelTextBlockRestart.Visibility = Visibility.Visible;
                 }
             });
+
+            await InitializeAutomationPropertiesAsync();
         }
 
 
@@ -344,7 +348,14 @@ namespace Scanner
                 ContentDialogLicenses.SecondaryButtonText = "";
                 ButtonDialogLicensesHeadingBack.IsEnabled = false;
 
-                FrameDialogLicenses.Navigate(typeof(LicensePage), new SuppressNavigationTransitionInfo());
+                if (FrameDialogLicenses.Content == null)
+                {
+                    FrameDialogLicenses.Navigate(typeof(LicensePage), new SuppressNavigationTransitionInfo());
+                }
+                if (FrameDialogLicenses.Content.GetType() == typeof(LicenseDetailPage))
+                {
+                    FrameDialogLicenses.GoBack(new SuppressNavigationTransitionInfo());
+                }
 
                 await ContentDialogLicenses.ShowAsync();
             });
@@ -455,6 +466,16 @@ namespace Scanner
             {
                 ButtonDialogLicensesHeadingBack.IsEnabled = false;
             }
+        }
+
+
+        private async Task InitializeAutomationPropertiesAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CopyToolTipToAutomationPropertiesName(ButtonSettingsHeaderBack);
+                CopyToolTipToAutomationPropertiesName(ButtonDialogLicensesHeadingBack);
+            });
         }
     }
 }
