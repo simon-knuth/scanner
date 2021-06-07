@@ -3454,6 +3454,7 @@ namespace Scanner
                 CopyToolTipToAutomationPropertiesName(ButtonLeftPaneSettings);
                 CopyToolTipToAutomationPropertiesName(ButtonLeftPaneScanFolder);
                 CopyToolTipToAutomationPropertiesName(ButtonLeftPaneCancel);
+                CopyToolTipToAutomationPropertiesName(ButtonDevices);
                 CopyToolTipToAutomationPropertiesName(ButtonScanOptions);
                 CopyToolTipToAutomationPropertiesName(ButtonManage);
                 CopyToolTipToAutomationPropertiesName(ButtonCrop);
