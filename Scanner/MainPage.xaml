@@ -543,7 +543,7 @@
 
             <FlipView x:Name="FlipViewLeftPane" Style="{StaticResource FlipViewStyleNoButtons}" CornerRadius="0" Background="Transparent" IsTabStop="False" SelectionChanged="FlipViewLeftPane_SelectionChanged">
                 <!-- Scan Options -->
-                <Grid x:Name="LeftPaneScanOptions">
+                <Grid x:Name="LeftPaneScanOptions" x:Uid="LeftPaneScanOptions">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="75"/>
@@ -698,7 +698,7 @@
                 </Grid>
 
                 <!-- Manage Pages -->
-                <RelativePanel x:Name="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
+                <RelativePanel x:Name="LeftPaneManage" x:Uid="LeftPaneManage" PointerWheelChanged="IgnorePointerWheel">
                     <ScrollViewer x:Name="ScrollViewerLeftPaneManage" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" RelativePanel.Below="GridLeftPaneManageHeader" RelativePanel.AlignBottomWithPanel="True"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Grid Margin="0,6,0,12">
                             <ListView x:Name="LeftPaneListViewManage" SelectionMode="Single" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" SelectionChanged="LeftPaneManage_SelectionChanged" DragItemsCompleted="LeftPaneManage_DragItemsCompleted">
@@ -788,7 +788,12 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Orientation="Vertical">
-                                <Frame x:Name="FrameLeftPaneManageText" Height="30"/>
+                                <Frame x:Name="FrameLeftPaneManageText" Height="30" Visibility="{Binding ElementName=LeftPaneManageInitialText, Path=Visibility, Converter={StaticResource NegativeVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16" Margin="0,0,8,0"/>
+                                        <TextBlock x:Uid="TextBlockLeftPaneManageHeading" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" AutomationProperties.HeadingLevel="Level2"/>
+                                    </StackPanel>
+                                </Frame>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0" BorderThickness="0" Visibility="Collapsed"/>
                             </StackPanel>
 

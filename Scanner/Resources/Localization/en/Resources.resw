@@ -238,7 +238,7 @@
     <comment>The tooltip text that appears while hovering the "Share" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Manage pages</value>
+    <value>Show scanned pages</value>
     <comment>The text of the "Manage scan" button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
@@ -274,7 +274,7 @@
     <comment>The tooltip text that appears while hovering the "Share" button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Scan pages</value>
+    <value>Show scan options</value>
     <comment>The tooltip text that appears while hovering the "Scan Options" button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
@@ -1031,5 +1031,17 @@ TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
   <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
     <value>Added support for screen readers and voice recognition services.</value>
     <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
+    <value>Page list</value>
+    <comment>The name of the page management area for use by accessibility tools.</comment>
+  </data>
+  <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Scan options</value>
+    <comment>The name of the scan options area for use by accessibility tools.</comment>
+  </data>
+  <data name="TextBlockLeftPaneManageHeading.Text" xml:space="preserve">
+    <value>Pages</value>
+    <comment>The heading for the page management.</comment>
   </data>
 </root>
