@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controlsxaml="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:local="using:Scanner"
+    xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Disabled"
@@ -117,13 +119,31 @@
             </ScrollViewer>
 
             <RelativePanel x:Name="RelativePanelPreview">
-                <ScrollViewer x:Name="ScrollViewerPreview" MinZoomFactor="1" MaxZoomFactor="3" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" ZoomMode="Enabled" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True"
+                <ScrollViewer x:Name="ScrollViewerPreview" MinZoomFactor="1" MaxZoomFactor="2.5" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" ZoomMode="Enabled" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True"
                               HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource TopThicknessConverter}}"
-                              Padding="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource NegativeTopThicknessConverter}}">
+                              Padding="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource NegativeTopThicknessConverter}}" ViewChanging="ScrollViewerPreview_ViewChanging" Loading="ScrollViewerPreview_Loading">
                     <Image  x:Name="ImagePreview" Margin="{Binding ActualHeight, ElementName=GridPreviewHeader, Converter={StaticResource TopThicknessConverter}}"
                             MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerDummy}"
                             MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}"/>
                 </ScrollViewer>
+
+                <controls:DropShadowPanel x:Name="OverlayPreview" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" Margin="24" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20" Visibility="Collapsed">
+                    <Frame Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}">
+                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderThickness="1">
+                            <InkToolbarCustomPenButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorOverlayStyle}" Click="ButtonZoomInOut_Click" IsEnabled="False">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                            <Grid MinWidth="60">
+                                <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1"/>
+                                <Rectangle x:Name="ZoomFactorAccent" Style="{StaticResource InkToolbarSelectionAccentStyle}" Opacity="1" HorizontalAlignment="Stretch" Margin="5,0,5,2" RadiusX="1" RadiusY="1"/>
+                            </Grid>
+                            <InkToolbarCustomPenButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" Style="{StaticResource CustomInkToolbarCustomPenButtonHiddenIndicatorOverlayStyle}" Click="ButtonZoomInOut_Click">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                            </InkToolbarCustomPenButton>
+                        </StackPanel>
+                    </Frame>
+                </controls:DropShadowPanel>
+
                 <Grid x:Name="GridPreviewHeader" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Padding="0,30,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Background="{ThemeResource SystemControlAcrylicElementBrush}">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>

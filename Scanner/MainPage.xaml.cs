@@ -3355,10 +3355,9 @@ namespace Scanner
                 {
                     ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
 
-                    if (scrollViewer.ZoomFactor == 3) return;
+                    if (scrollViewer.ZoomFactor >= 2.45) return;
 
-                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync(2, FlipViewScan.SelectedIndex, true);
-                    else TryZoomScanAsync(3, FlipViewScan.SelectedIndex, true);
+                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync((float)2.5, FlipViewScan.SelectedIndex, true);
                 }
                 else if (sender == ButtonZoomOut)
                 {
@@ -3366,8 +3365,7 @@ namespace Scanner
 
                     if (scrollViewer.ZoomFactor == 1) return;
 
-                    if (scrollViewer.ZoomFactor > 2.05) TryZoomScanAsync(2, FlipViewScan.SelectedIndex, true);
-                    else TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
+                    if (scrollViewer.ZoomFactor >= 2.45) TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
                 }
             });
         }
@@ -3390,17 +3388,17 @@ namespace Scanner
                 ZoomFactorAccent.Visibility = Visibility.Collapsed;
                 TextBlockZoomFactor.FontWeight = FontWeights.Normal;
             }
-            else if (factor >= 2.95)
+            else if (factor < 2.45)
             {
                 ButtonZoomOut.IsEnabled = true;
-                ButtonZoomIn.IsEnabled = false;
+                ButtonZoomIn.IsEnabled = true;
                 ZoomFactorAccent.Visibility = Visibility.Visible;
                 TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
             }
             else
             {
                 ButtonZoomOut.IsEnabled = true;
-                ButtonZoomIn.IsEnabled = true;
+                ButtonZoomIn.IsEnabled = false;
                 ZoomFactorAccent.Visibility = Visibility.Visible;
                 TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
             }
@@ -3412,7 +3410,7 @@ namespace Scanner
 
             snapPoints.Add(1);
             float value = (float)1.05;
-            while (value <= 3)
+            while (value <= 2.5)
             {
                 snapPoints.Add(value);
                 value = (float)(value + 0.01);

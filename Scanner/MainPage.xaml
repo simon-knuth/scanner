@@ -881,7 +881,7 @@
                             <ScrollViewer x:Name="ScrollViewerFlipViewScanDataTemplate"
                                           ZoomMode="Enabled"
                                           MinZoomFactor="1"
-                                          MaxZoomFactor="3"
+                                          MaxZoomFactor="2.5"
                                           HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto"
                                           Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"

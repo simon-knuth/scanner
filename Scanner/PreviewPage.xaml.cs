@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -99,6 +100,7 @@ namespace Scanner
 
                 ScrollViewerPreview.Margin = new Thickness(0, GridPreviewHeader.ActualHeight, 0, 0);
                 ScrollViewerPreview.Padding = new Thickness(0, -GridPreviewHeader.ActualHeight, 0, 0);
+                RefreshZoomUIForFactor(1);
             });
 
             try
@@ -114,6 +116,7 @@ namespace Scanner
                     {
                         ImagePreview.Source = bitmapImage;
                         ProgressRingPreview.Visibility = Visibility.Collapsed;
+                        OverlayPreview.Visibility = Visibility.Visible;
                     });
                 }
                 else
@@ -166,6 +169,104 @@ namespace Scanner
             {
                 CopyToolTipToAutomationPropertiesName(ButtonBack);
             });
+        }
+
+
+        private async void ButtonZoomInOut_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (sender == ButtonZoomIn)
+                {
+                    ScrollViewer scrollViewer = ScrollViewerPreview;
+
+                    if (scrollViewer.ZoomFactor >= 2.45) return;
+
+                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync((float)2.5, true);
+                }
+                else if (sender == ButtonZoomOut)
+                {
+                    ScrollViewer scrollViewer = ScrollViewerPreview;
+
+                    if (scrollViewer.ZoomFactor == 1) return;
+
+                    if (scrollViewer.ZoomFactor >= 2.45) TryZoomScanAsync(1, true);
+                }
+            });
+        }
+
+
+        private void RefreshZoomUIForFactor(float factor)
+        {
+            TextBlockZoomFactor.Text = String.Format(LocalizedString("TextZoomFactor"), factor * 100);
+            if (factor < (float)1.05)
+            {
+                ButtonZoomOut.IsEnabled = false;
+                ButtonZoomIn.IsEnabled = true;
+                ZoomFactorAccent.Visibility = Visibility.Collapsed;
+                TextBlockZoomFactor.FontWeight = FontWeights.Normal;
+            }
+            else if (factor < 2.45)
+            {
+                ButtonZoomOut.IsEnabled = true;
+                ButtonZoomIn.IsEnabled = true;
+                ZoomFactorAccent.Visibility = Visibility.Visible;
+                TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+            }
+            else
+            {
+                ButtonZoomOut.IsEnabled = true;
+                ButtonZoomIn.IsEnabled = false;
+                ZoomFactorAccent.Visibility = Visibility.Visible;
+                TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+            }
+        }
+
+
+        private void TryZoomScanAsync(float factor, bool animate)
+        {
+            if (factor < 1.02) factor = 1;
+
+            double horizontalOffset = ScrollViewerPreview.ViewportWidth / 2 * (factor - 1);
+            if (ScrollViewerPreview.ZoomFactor > 1)
+            {
+                double previousHorizontalOffset = ScrollViewerPreview.HorizontalOffset / (ScrollViewerPreview.ZoomFactor - 1) * (factor - 1);
+                if (previousHorizontalOffset < horizontalOffset) horizontalOffset = horizontalOffset - (horizontalOffset - previousHorizontalOffset);
+                else horizontalOffset = horizontalOffset + (previousHorizontalOffset - horizontalOffset);
+            }
+
+            double verticalOffset = ScrollViewerPreview.ViewportHeight / 2 * (factor - 1);
+            if (ScrollViewerPreview.ZoomFactor > 1)
+            {
+                double previousVerticalOffset = ScrollViewerPreview.VerticalOffset / (ScrollViewerPreview.ZoomFactor - 1) * (factor - 1);
+                if (previousVerticalOffset < verticalOffset) verticalOffset = verticalOffset - (verticalOffset - previousVerticalOffset);
+                else verticalOffset = verticalOffset + (previousVerticalOffset - verticalOffset);
+            }
+
+            ScrollViewerPreview.ChangeView(horizontalOffset, verticalOffset, factor, !animate);
+        }
+
+
+        private async void ScrollViewerPreview_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                RefreshZoomUIForFactor(e.NextView.ZoomFactor);
+            });
+        }
+
+
+        private void ScrollViewerPreview_Loading(FrameworkElement sender, object args)
+        {
+            IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+            snapPoints.Add(1);
+            float value = (float)1.05;
+            while (value <= 2.5)
+            {
+                snapPoints.Add(value);
+                value = (float)(value + 0.01);
+            }
         }
     }
 }
