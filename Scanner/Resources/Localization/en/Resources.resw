@@ -358,29 +358,24 @@
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>You can use the </value>
-    <comment>The first part of the dialog text that asks the user for feedback.
-| -&gt; DialogFeedbackHyperlinkFeedbackHub.Text</comment>
+    <value>You can </value>
+    <comment>The first part of the dialog text that asks the user for feedback.</comment>
   </data>
-  <data name="DialogFeedbackHyperlinkFeedbackHub.Text" xml:space="preserve">
-    <value>Feedback Hub</value>
-    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
-DialogFeedbackText1.Text &lt;- | -&gt; DialogFeedbackText2.Text</comment>
+  <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The Feedback Hub link in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> to request new features, report bugs and vote on suggestions or </value>
-    <comment>The second part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkFeedbackHub.Text &lt;- | -&gt; DialogFeedbackHyperlinkRate.Text</comment>
+    <value> to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
+    <comment>The second part of the dialog text that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
     <value>rate Scanner in the Microsoft Store</value>
-    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
-DialogFeedbackText2.Text &lt;- | -&gt; DialogFeedbackText3.Text</comment>
+    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value> to help others decide whether this is the right app for them.</value>
-    <comment>The third part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
+    <value>.</value>
+    <comment>The third part of the dialog text that asks the user for feedback.</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
     <value>Rename</value>
@@ -560,8 +555,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
     <value>If your scanner doesn't show up within three minutes, ensure that it has been added in the </value>
-    <comment>The first part of the body of the text that tells the user to select a scanner.
-| -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
+    <comment>The first part of the body of the text that tells the user to select a scanner.</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
     <value>Scanned pages will appear here</value>
@@ -653,8 +647,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
     <value>restart the app</value>
-    <comment>The hyperlink text for restarting the app to apply changes.
-TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
+    <comment>The hyperlink text for restarting the app to apply changes.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
     <value>Append time to file name</value>
@@ -677,24 +670,16 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Use the </value>
-    <comment>The first part of the text of the "Feedback" section in settings.
-| -&gt; HyperlinkSettingsFeedbackFeedbackHub.Text</comment>
+    <value>You can </value>
+    <comment>The first part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> to request new features, report bugs and vote on suggestions or </value>
-    <comment>The second part of the text of the "Feedback" section in settings.
-HyperlinkSettingsFeedbackFeedbackHub.Text &lt;- | -&gt; HyperlinkSettingsFeedbackRate.Text</comment>
+    <value> to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
+    <comment>The second part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value> to help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
-    <comment>The third part of the text of the "Feedback" section in settings.
-TextSettingsFeedback3.Text &lt;- | -&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
-    <value>Feedback Hub</value>
-    <comment>The hyperlink text for launching the Feedback Hub from the "Feedback" section in settings.
-TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
+    <value>.</value>
+    <comment>The third part of the text of the "Feedback" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Learn how to install and use a scanner in Windows 10</value>
@@ -702,13 +687,11 @@ TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
     <value>Please </value>
-    <comment>The first part of the text for restarting the app to apply changes.
-| -&gt; HyperlinkSettingsRestart.Text</comment>
+    <comment>The first part of the text for restarting the app to apply changes.</comment>
   </data>
   <data name="TextSettingsRestart2.Text" xml:space="preserve">
     <value> for changes to take effect.</value>
-    <comment>The second part of the text for restarting the app to apply changes.
-HyperlinkSettingsRestart.Text &lt;- |</comment>
+    <comment>The second part of the text for restarting the app to apply changes.</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
     <value>Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See </value>
@@ -724,8 +707,7 @@ HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
     <value> and doesn't appear as offline there.</value>
-    <comment>The second part of the body of the text that tells the user to select a scanner.
-HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
+    <comment>The second part of the body of the text that tells the user to select a scanner.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>Settings</value>
@@ -749,8 +731,7 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
     <value>settings app</value>
-    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
-TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
+    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
     <value>Go to scanner settings</value>
@@ -778,9 +759,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>rate Scanner in the Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.
-TextSettingsFeedback2.Text &lt;- | -&gt; TextSettingsFeedback3.Text
-Fuzzy</comment>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
     <value>Multiple pages</value>
@@ -910,15 +889,9 @@ Fuzzy</comment>
     <value>Save</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
-  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The fourth part of the text of the "Feedback" section in settings.
-HyperlinkSettingsFeedbackGithub.Text &lt;- |</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
     <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.
-TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
     <value>Scanner</value>

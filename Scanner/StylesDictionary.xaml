@@ -345,7 +345,7 @@
     <Style x:Key="SplitButtonAccentRevealStyle" TargetType="controlsxaml:SplitButton">
         <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentRevealBackgroundBrush}" />
         <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonRevealBorderThemeThickness}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -394,8 +394,6 @@
                                                         <VisualState x:Name="Disabled">
                                                             <VisualState.Setters>
                                                                 <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource SplitButtonForegroundDisabled}"/>
-                                                                <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource DisabledButtonBackgroundThemedStyle}"/>
-                                                                <Setter Target="ContentPresenter.Background" Value="{ThemeResource DisabledButtonBackgroundThemedStyle}" />
                                                             </VisualState.Setters>
                                                         </VisualState>
                                                     </VisualStateGroup>
@@ -420,15 +418,20 @@
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Target="PrimaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
+                                        <Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
                                 <VisualState x:Name="FlyoutOpen">
                                     <VisualState.Setters>
-                                        <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPressed}"/>
-                                        <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPressed}"/>
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}"/>
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+                                        <Setter Target="PrimaryButton.Background" Value="{ThemeResource PressedButtonBackgroundThemedStyle}"/>
+                                        <Setter Target="SecondaryButton.Background" Value="{ThemeResource PressedButtonBackgroundThemedStyle}"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -445,7 +448,8 @@
                                 <VisualState x:Name="PrimaryPointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SystemControlHighlightAccent2RevealBackgroundBrush}"/>
-                                        <Setter Target="PrimaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPointerOver}"/>
+                                        <Setter Target="PrimaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
+                                        <Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
                                     </VisualState.Setters>
                                 </VisualState>
@@ -461,7 +465,8 @@
                                 <VisualState x:Name="SecondaryPointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SystemControlHighlightAccent2RevealBackgroundBrush}"/>
-                                        <Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPointerOver}"/>
+                                        <Setter Target="PrimaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
+                                        <Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
                                     </VisualState.Setters>
                                 </VisualState>
@@ -567,11 +572,9 @@
                             <ColumnDefinition x:Name="SecondaryButtonColumn" Width="{ThemeResource SplitButtonSecondaryButtonSize}"/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid x:Name="PrimaryBackgroundGrid"
-                            Background="{TemplateBinding Background}"/>
+                        <Grid x:Name="PrimaryBackgroundGrid"/>
 
                         <Grid x:Name="SecondaryBackgroundGrid"
-                            Background="{TemplateBinding Background}"
                             Grid.Column="2"/>
 
                         <Grid x:Name="Border"
@@ -591,6 +594,7 @@
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Command="{TemplateBinding Command}"
                             CommandParameter="{TemplateBinding CommandParameter}"
+                            CornerRadius="2,0,0,2"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
                             FontWeight="{TemplateBinding FontWeight}"
@@ -600,6 +604,7 @@
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Padding="{TemplateBinding Padding}"
                             IsTabStop="False"
+                            Style="{ThemeResource SplitButtonAccentRevealPartStyle}"
                             AutomationProperties.AccessibilityView="Raw"/>
 
                         <Button x:Name="SecondaryButton"
@@ -608,12 +613,14 @@
                             Background="{TemplateBinding Background}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="Transparent"
+                            CornerRadius="0,2,2,0"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Padding="0,0,9,0"
                             IsTabStop="False"
+                            Style="{ThemeResource SplitButtonAccentRevealPartStyle}"
                             AutomationProperties.AccessibilityView="Raw">
                             <Button.Content>
                                 <TextBlock
@@ -706,6 +713,68 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="SplitButtonAccentRevealPartStyle" TargetType="Button">
+        <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
+        <Setter Property="Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+        <Setter Property="Padding" Value="{StaticResource ButtonPadding}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
+        <Setter Property="FocusVisualMargin" Value="-3"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BackgroundSizing="{TemplateBinding BackgroundSizing}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" CornerRadius="{TemplateBinding CornerRadius}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAccent3RevealAccent2BackgroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonAccentRevealBackgroundBrushPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style x:Key="FilledTeachingTipStyle" TargetType="controlsxaml:TeachingTip">
         <Setter Property="Background" Value="{ThemeResource TeachingTipBackgroundBrush}"/>
@@ -3497,6 +3566,7 @@
                 <Setter Property="ShadowOpacity" Value="0.15"/>
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#AEAEAE</Brush>
+            <Brush x:Key="PressedButtonBackgroundThemedStyle">#656565</Brush>
             <Brush x:Key="CustomSeparatorBorderThemeBrush">#20000000</Brush>
             <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="{ThemeResource SystemListAccentLowColor}" Opacity="0.25"/>
         </ResourceDictionary>
@@ -3505,6 +3575,7 @@
                 <Setter Property="ShadowOpacity" Value="0.3"/>
             </Style>
             <Brush x:Key="DisabledButtonBackgroundThemedStyle">#656565</Brush>
+            <Brush x:Key="PressedButtonBackgroundThemedStyle">#656565</Brush>
             <Brush x:Key="CustomSeparatorBorderThemeBrush">#20FFFFFF</Brush>
             <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="{ThemeResource SystemListAccentLowColor}" Opacity="0.25"/>
         </ResourceDictionary>
@@ -3513,6 +3584,7 @@
                 <Setter Property="ShadowOpacity" Value="0.3"/>
             </Style>
             <SolidColorBrush x:Key="DisabledButtonBackgroundThemedStyle" Color="{ThemeResource SystemColorGrayTextColor}"/>
+            <SolidColorBrush x:Key="PressedButtonBackgroundThemedStyle" Color="{ThemeResource SystemColorGrayTextColor}"/>
             <SolidColorBrush x:Key="CustomSeparatorBorderThemeBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
             <SolidColorBrush x:Key="CustomGridViewItemSelectedBackgroundBrush" Color="Transparent"/>
         </ResourceDictionary>

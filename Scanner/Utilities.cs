@@ -855,18 +855,6 @@ static class Utilities
     }
 
 
-    public async static Task LaunchFeedbackHubAsync()
-    {
-        try
-        {
-            log.Information("Launching the Feedback Hub.");
-            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-            await launcher.LaunchAsync();
-        }
-        catch (Exception) { }
-    }
-
-
     /// <summary>
     ///     Opens a teaching tip and takes care of usual pitfalls.
     /// </summary>

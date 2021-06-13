@@ -262,17 +262,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when <see cref="HyperlinkFeedbackHub"/>, which opens the app's Feedback Hub section, is clicked.
-        /// </summary>
-        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            log.Information("Launching Feedback Hub.");
-            await LaunchFeedbackHubAsync();
-        }
-
-
-
-        /// <summary>
         ///     Page was loaded (possibly through navigation).
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)

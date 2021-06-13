@@ -653,7 +653,7 @@
                         </controls:DropShadowPanel>
                         <Grid x:Name="GridLeftPaneFooterContent" Padding="24,0,24,0" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutomationProperties.LandmarkType="Main">
                             <controls:DropShadowPanel x:Name="DropShadowPanelLeftPaneScanButton" Style="{ThemeResource DropShadowPanelThemedStyle}" ShadowOpacity="{Binding ElementName=ButtonLeftPaneScan, Path=IsEnabled, Converter={StaticResource ButtonShadowConverter}}" VerticalAlignment="Center" BlurRadius="10" OffsetY="5" HorizontalAlignment="Right">
-                                <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{ThemeResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click" AutomationProperties.Name="{Binding ElementName=TextBlockButtonScan, Path=Text}">
+                                <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{StaticResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click" AutomationProperties.Name="{Binding ElementName=TextBlockButtonScan, Path=Text}">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
                                             <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
@@ -1164,7 +1164,7 @@
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
                 <Span>
-                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkFeedbackHub" UnderlineStyle="None" Click="HyperlinkFeedbackHub_Click"><Run x:Uid="DialogFeedbackHyperlinkFeedbackHub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE8AD; " FontSize="12"/></Hyperlink><Run x:Uid="DialogFeedbackText2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink><Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
+                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/><Hyperlink UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink><Run x:Uid="DialogFeedbackText2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="DialogFeedbackHyperlinkGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
                 </Span>
             </TextBlock>
         </controlsxaml:TeachingTip>

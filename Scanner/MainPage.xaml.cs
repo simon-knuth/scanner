@@ -2642,12 +2642,6 @@ namespace Scanner
             });
         }
 
-        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
-            Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await LaunchFeedbackHubAsync();
-        }
-
         private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
             Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
