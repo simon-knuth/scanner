@@ -1162,11 +1162,20 @@
                 <controlsxaml:FontIconSource Glyph="&#xEB52;"/>
             </controlsxaml:TeachingTip.IconSource>
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                <Span>
-                    <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/><Hyperlink UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink><Run x:Uid="DialogFeedbackText2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="DialogFeedbackHyperlinkGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
-                </Span>
-            </TextBlock>
+            <StackPanel>
+                <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                    <Span>
+                        <Run x:Uid="DialogFeedbackText1" xml:space="preserve"/><Hyperlink UnderlineStyle="None" Click="HyperlinkRate_Click"><Run x:Uid="DialogFeedbackHyperlinkRate" xml:space="preserve"/></Hyperlink><Run x:Uid="DialogFeedbackText2" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="DialogFeedbackHyperlinkGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink><Run x:Uid="DialogFeedbackText3" xml:space="preserve"/>
+                    </Span>
+                </TextBlock>
+
+                <Button IsEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                        <TextBlock x:Uid="DialogFeedbackButtonDonate" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </controlsxaml:TeachingTip>
 
         <!--<controlsxaml:TeachingTip

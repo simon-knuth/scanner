@@ -1017,4 +1017,24 @@
     <value>Pages</value>
     <comment>The heading for the page management.</comment>
   </data>
+  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+    <value>Support the development</value>
+    <comment>The heading for the "Donation" section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
+    <value>support me with a donation</value>
+    <comment>The hyperlink text allowing the user to donate from the "Donation" section in settings.</comment>
+  </data>
+  <data name="TextSettingsDonate1.Text" xml:space="preserve">
+    <value>This app is available at no cost for everyone to use. If it saved you some time and you would like to see more, you can </value>
+    <comment>The first part of the text of the "Donation" section in settings.</comment>
+  </data>
+  <data name="TextSettingsDonate2.Text" xml:space="preserve">
+    <value>. Thank you!</value>
+    <comment>The second part of the text of the "Donation" section in settings.</comment>
+  </data>
+  <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
+    <value>Support the development</value>
+    <comment>The link to the "Donate" section in the dialog that asks the user for feedback.</comment>
+  </data>
 </root>

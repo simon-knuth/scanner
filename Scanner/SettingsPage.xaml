@@ -165,6 +165,24 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,72,0,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                <TextBlock x:Uid="HeadingSettingsDonate" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
+                            </StackPanel>
+                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                            <Span>
+                                <Run x:Uid="TextSettingsDonate1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkDonate" UnderlineStyle="None" NavigateUri="https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url"><Run x:Uid="HyperlinkSettingsDonate" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsDonate2" xml:space="preserve"/>
+                            </Span>
+                            </TextBlock>
+
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>
