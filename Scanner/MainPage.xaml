@@ -1169,7 +1169,7 @@
                     </Span>
                 </TextBlock>
 
-                <Button IsEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Button x:Name="ButtonDialogFeedbackDonate" IsEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonDialogFeedbackDonate_Click">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock x:Uid="DialogFeedbackButtonDonate" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
@@ -1262,7 +1262,7 @@
             </controlsxaml:TeachingTip.IconSource>
         </controlsxaml:TeachingTip>
 
-        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog">
+        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog" IsPrimaryButtonEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" PrimaryButtonClick="ContentDialogChangelog_PrimaryButtonClick">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>

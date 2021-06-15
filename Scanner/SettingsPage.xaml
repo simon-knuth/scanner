@@ -10,7 +10,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Disabled"
-    KeyDown="Page_KeyDown" Loading="Page_Loading" Loaded="Page_Loaded">
+    KeyDown="Page_KeyDown"
+    Loading="Page_Loading"
+    Loaded="Page_Loaded">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -64,6 +66,12 @@
                 </DoubleAnimation>
             </Storyboard>
 
+            <Storyboard x:Name="StoryboardScrollingToDonate">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             Storyboard.TargetName="FrameSettingsDonateBackground" Duration="0:0:0.5" To="0.2">
+                </DoubleAnimation>
+            </Storyboard>
+
 
             <!-- - - - - - - - -  XAML CONVERTERS  - - - - - - - - -->
             <local:HeaderScrollShadowConverter x:Key="HeaderScrollShadowConverter"/>
@@ -97,7 +105,7 @@
                                 <TranslateTransform Y="0"/>
                             </StackPanel.RenderTransform>
 
-                            <RelativePanel Margin="0,0,0,0">
+                            <RelativePanel x:Name="RelativePanelSettingsSaveLocation" Margin="0,0,0,0">
                                 <FontIcon x:Name="FontIconSaveLocation" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Glyph="&#xE838;" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
                                 <TextBlock x:Name="TextBlockSaveLocation" RelativePanel.RightOf="FontIconSaveLocation" Style="{ThemeResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Padding="6,0,6,0" IsTextSelectionEnabled="True"/>
                             </RelativePanel>
@@ -139,7 +147,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
+                            <StackPanel x:Name="StackPanelSettingsHeadingHelpSetup" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,72,0,12">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsHelpSetup" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>
@@ -163,26 +171,37 @@
                             </StackPanel.Transitions>
                         </StackPanel>
 
-                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                                <TextBlock x:Uid="HeadingSettingsDonate" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
-                            </StackPanel>
-                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                            <Span>
-                                <Run x:Uid="TextSettingsDonate1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkDonate" UnderlineStyle="None" NavigateUri="https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url"><Run x:Uid="HyperlinkSettingsDonate" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsDonate2" xml:space="preserve"/>
-                            </Span>
-                            </TextBlock>
+                        <Grid x:Name="GridSettingsDonate" Margin="0,72,0,0" Padding="0,0,0,12">
+                            <Frame x:Name="FrameSettingsDonateBackground" Background="{ThemeResource SystemAccentColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" Margin="-12,-12,-12,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}" BorderThickness="2"/>
 
-                            <StackPanel.Transitions>
+                            <StackPanel x:Name="StackPanelSettingsDonate" Orientation="Vertical" CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                <StackPanel x:Name="StackPanelSettingsHeadingDonate" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                    <TextBlock x:Uid="HeadingSettingsDonate" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
+                                </StackPanel>
+                                <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
+                                    <Span>
+                                        <Run x:Uid="TextSettingsDonate1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkDonate" UnderlineStyle="None" NavigateUri="https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url"><Run x:Uid="HyperlinkSettingsDonate" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsDonate2" xml:space="preserve"/>
+                                    </Span>
+                                </TextBlock>
+
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <RepositionThemeTransition/>
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+                            </StackPanel>
+
+                            <Grid.Transitions>
                                 <TransitionCollection>
                                     <RepositionThemeTransition/>
                                 </TransitionCollection>
-                            </StackPanel.Transitions>
-                        </StackPanel>
+                            </Grid.Transitions>
+                        </Grid>
+                        
 
-                        <StackPanel Orientation="Vertical" Margin="0,72,0,0">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Vertical" Margin="0,60,0,0">
+                            <StackPanel x:Name="StackPanelSettingsHeadingFeedback" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE939;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>
@@ -209,7 +228,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,72,0,0">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                            <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE775;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>
@@ -230,7 +249,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,72,0,0">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                            <StackPanel x:Name="StackPanelSettingsHeadingAbout" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>

@@ -273,7 +273,7 @@ namespace Scanner
             }
             else
             {
-                Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
@@ -281,7 +281,7 @@ namespace Scanner
                 });
             }
 #else
-                Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
@@ -3044,7 +3044,7 @@ namespace Scanner
         private async void TeachingTipTutorialSaveLocation_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipTutorialSaveLocation.IsOpen = false);
-            Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());
         }
 
         private async void TeachingTipUpdated_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
@@ -3467,6 +3467,27 @@ namespace Scanner
                 CopyToolTipToAutomationPropertiesName(ButtonSave);
                 CopyToolTipToAutomationPropertiesName(ButtonSaveCopy);
                 CopyToolTipToAutomationPropertiesName(ButtonDiscard);
+            });
+        }
+
+        private async void ButtonDialogFeedbackDonate_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(true), new DrillInNavigationTransitionInfo());     // navigate to settings
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TeachingTipFeedback.IsOpen = false;
+                SplitViewLeftPane.IsPaneOpen = false;
+                ButtonScanOptions.IsChecked = false;
+            });
+        }
+
+        private async void ContentDialogChangelog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(true), new DrillInNavigationTransitionInfo());     // navigate to settings
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                SplitViewLeftPane.IsPaneOpen = false;
+                ButtonScanOptions.IsChecked = false;
             });
         }
     }

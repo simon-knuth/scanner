@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 using static Enums;
 using static Globals;
 using static Utilities;
@@ -21,6 +22,7 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
+        private SettingsPageIntent intent;
         private long _allSettingsLoaded = 0;
         private bool allSettingsLoaded
         {
@@ -39,6 +41,14 @@ namespace Scanner
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
             Window.Current.Activated += Window_Activated;
+        }
+
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            intent = (SettingsPageIntent)e.Parameter;
         }
 
 
@@ -98,6 +108,13 @@ namespace Scanner
                     GridSettingsContent.FlowDirection = FlowDirection.LeftToRight;
                     StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.LeftToRight;
                     ItemsRepeaterExportLog.FlowDirection = FlowDirection.LeftToRight;
+                    RelativePanelSettingsSaveLocation.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelTextBlockRestart.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingHelpSetup.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingDonate.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingFeedback.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingTranslations.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingAbout.FlowDirection = FlowDirection.LeftToRight;
                     ButtonSettingsHeaderBackScaleTransform.ScaleX = 1;
                     ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = 1;
                 }
@@ -106,6 +123,13 @@ namespace Scanner
                     GridSettingsContent.FlowDirection = FlowDirection.RightToLeft;
                     StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.RightToLeft;
                     ItemsRepeaterExportLog.FlowDirection = FlowDirection.RightToLeft;
+                    RelativePanelSettingsSaveLocation.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelTextBlockRestart.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingHelpSetup.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingDonate.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingFeedback.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingTranslations.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingAbout.FlowDirection = FlowDirection.RightToLeft;
                     ButtonSettingsHeaderBackScaleTransform.ScaleX = -1;
                     ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = -1;
                 }
@@ -274,6 +298,12 @@ namespace Scanner
 
                 ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
                 ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+
+                if (intent.scrollToDonateSection)
+                {
+                    GridSettingsDonate.StartBringIntoView();
+                    StoryboardScrollingToDonate.Begin();
+                }
 
                 TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
             });

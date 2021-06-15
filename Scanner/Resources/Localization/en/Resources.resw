@@ -1037,4 +1037,8 @@
     <value>Support the development</value>
     <comment>The link to the "Donate" section in the dialog that asks the user for feedback.</comment>
   </data>
+  <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
+    <value>Support the development</value>
+    <comment>The text of the button that links to the "Donate" section in the changelog dialog. This is constrained in size and shouldn't be much longer than the English version.</comment>
+  </data>
 </root>
