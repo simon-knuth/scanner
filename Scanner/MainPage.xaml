@@ -900,7 +900,7 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
 
-                <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="3" HorizontalScrollBarVisibility="Auto"
+                <ScrollViewer x:Name="ScrollViewerEditDraw" Visibility="Collapsed" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}"
                               Padding="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy, Converter={StaticResource NegativeThicknessConverter}}" ViewChanging="ScrollViewerEditDraw_ViewChanging">
                     <Grid x:Name="GridEditDraw" Margin="{Binding Margin, ElementName=ScrollViewerContentPaneContentDummy}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

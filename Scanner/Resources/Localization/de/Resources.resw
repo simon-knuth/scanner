@@ -238,9 +238,8 @@
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Seiten verwalten</value>
-    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.
-Fuzzy</comment>
+    <value>Gescannte Seiten anzeigen</value>
+    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Ausgewählte Seiten kopieren</value>
@@ -275,9 +274,8 @@ Fuzzy</comment>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Seiten scannen</value>
-    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.
-Fuzzy</comment>
+    <value>Scan-Optionen anzeigen</value>
+    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
     <value>Aktuell laufenden Scan abbrechen</value>
@@ -806,7 +804,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Dies erlaubt es uns, Abstürze zu untersuchen und herauszufinden welche Funktionen unseren Nutzern besonders wichtig sind. Ihre gescannten Dokumente werden niemals verschickt.</value>
+    <value>Dies erlaubt es mir, Abstürze zu untersuchen und herauszufinden welche Funktionen Nutzern besonders wichtig sind. Ihre gescannten Dokumente werden niemals verschickt.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
@@ -1034,5 +1032,32 @@ TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
     <value>GitHub</value>
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
 TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
+  </data>
+  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+    <value>Entwicklung unterstützen</value>
+    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
+    <value>mich mit einer Spende unterstützen</value>
+    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
+TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
+  </data>
+  <data name="TextSettingsDonate1.Text" xml:space="preserve">
+    <value>Diese App steht für jedermann kostenfrei zur Verfügung. Wenn sie Ihnen etwas Zeit sparen konnte und Sie gern mehr davon sehen würden, können Sie </value>
+    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
+|-&gt; HyperlinkSettingsDonate.Text</comment>
+  </data>
+  <data name="TextSettingsDonate2.Text" xml:space="preserve">
+    <value>. Danke!</value>
+    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
+HyperlinkSettingsDonate.Text &lt;-|</comment>
+  </data>
+  <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
+    <value>Entwicklung unterstützen</value>
+    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
+    <value>Entwicklung unterstützen</value>
+    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
 </root>

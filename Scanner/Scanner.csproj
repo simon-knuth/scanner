@@ -135,8 +135,8 @@
     <Compile Include="LicensePage.xaml.cs">
       <DependentUpon>LicensePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPageIntent.cs" />
     <Compile Include="PreviewPageIntent.cs" />
+    <Compile Include="SettingsPageIntent.cs" />
     <Compile Include="RecognizedScanner.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="ScanResultElement.cs" />
