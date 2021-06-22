@@ -656,8 +656,8 @@
                                 <controlsxaml:SplitButton x:Name="ButtonLeftPaneScan" Style="{StaticResource SplitButtonAccentRevealStyle}" Foreground="{ThemeResource SystemColorHighlightTextColor}" Padding="12,8,12,8" MinWidth="80" IsEnabled="False" Click="ButtonLeftPaneScan_Click" AutomationProperties.Name="{Binding ElementName=TextBlockButtonScan, Path=Text}">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
-                                            <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
-                                            <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Foreground="{Binding Foreground, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
+                                            <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
+                                            <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
                                             <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}" Opacity="{Binding IsEnabled, ElementName=ButtonLeftPaneScan, Converter={StaticResource ButtonTextOpacityConverter}}"/>
                                         </StackPanel>
                                     </Grid>
@@ -1169,7 +1169,7 @@
                     </Span>
                 </TextBlock>
 
-                <Button x:Name="ButtonDialogFeedbackDonate" IsEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonDialogFeedbackDonate_Click">
+                <Button x:Name="ButtonDialogFeedbackDonate" IsEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource ButtonAccentStyle}" Click="ButtonDialogFeedbackDonate_Click">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED56;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                         <TextBlock x:Uid="DialogFeedbackButtonDonate" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Segoe UI"/>
@@ -1262,7 +1262,7 @@
             </controlsxaml:TeachingTip.IconSource>
         </controlsxaml:TeachingTip>
 
-        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog" IsPrimaryButtonEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" PrimaryButtonClick="ContentDialogChangelog_PrimaryButtonClick">
+        <ContentDialog x:Name="ContentDialogChangelog" x:Uid="DialogChangelog" IsPrimaryButtonEnabled="{Binding ElementName=ButtonLeftPaneSettings, Path=IsEnabled}" PrimaryButtonClick="ContentDialogChangelog_PrimaryButtonClick" PrimaryButtonStyle="{StaticResource ButtonAccentStyle}">
             <StackPanel Orientation="Vertical">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
@@ -1355,11 +1355,6 @@
                         </StackPanel>
                         <Button x:Name="ButtonDebugSelectFiles" Content="Select files" Click="ButtonDebugSelectFiles_Click" Margin="0,6,0,0"/>
 
-                        <TextBlock Text="Test error message" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
-                        <TextBox x:Name="TextBoxDebugShowErrorTitle" PlaceholderText="Title"/>
-                        <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle" Margin="0,3,0,0"/>
-                        <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click" Margin="0,6,0,0"/>
-
                         <TextBlock Text="Fake scanner" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <TextBox x:Name="TextBoxDebugFakeScannerName" Text="Some scanner"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
@@ -1387,6 +1382,11 @@
                             <Button x:Name="ButtonDebugAddScanner" Content="Add to scanner list" Click="ButtonDebugAddScanner_Click"/>
                             <Button x:Name="ButtonDebugRemoveFakeScanners" Content="Remove all fake scanners" Margin="8,0,0,0" Click="ButtonDebugRemoveFakeScanners_Click"/>
                         </StackPanel>
+
+                        <TextBlock Text="Test error message" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
+                        <TextBox x:Name="TextBoxDebugShowErrorTitle" PlaceholderText="Title"/>
+                        <TextBox x:Name="TextBoxDebugShowErrorSubtitle" PlaceholderText="Subtitle" Margin="0,3,0,0"/>
+                        <Button x:Name="ButtonDebugShowError" Content="Show error message" Click="ButtonDebugShowError_Click" Margin="0,6,0,0"/>
 
                         <TextBlock Text="Display contextual dialog" Style="{StaticResource BaseTextBlockStyle}" FontSize="20" Margin="0,32,0,16"/>
                         <StackPanel Orientation="Horizontal">

@@ -1451,7 +1451,9 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Generating the PDF failed.");
+                log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
+                var files = await folderTemp.GetFilesAsync();
+                log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
                 Crashes.TrackError(exc);
                 throw;
             }

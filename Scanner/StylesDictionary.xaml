@@ -422,6 +422,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="PrimaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
                                         <Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}"/>
+                                        <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
+                                        <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SystemColorHighlightTextColor}"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
