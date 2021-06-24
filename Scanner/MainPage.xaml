@@ -788,12 +788,7 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Orientation="Vertical">
-                                <Frame x:Name="FrameLeftPaneManageText" Height="30" Visibility="{Binding ElementName=LeftPaneManageInitialText, Path=Visibility, Converter={StaticResource NegativeVisibilityConverter}}">
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" FontSize="16" Margin="0,0,8,0"/>
-                                        <TextBlock x:Uid="TextBlockLeftPaneManageHeading" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" AutomationProperties.HeadingLevel="Level2"/>
-                                    </StackPanel>
-                                </Frame>
+                                <Frame x:Name="FrameLeftPaneManageTitlebar" Height="30" Visibility="{Binding ElementName=LeftPaneManageInitialText, Path=Visibility, Converter={StaticResource NegativeVisibilityConverter}}"/>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarLeftPaneManage" IsIndeterminate="False" Background="Transparent" Padding="5,0,5,0" Margin="-5,0,-5,0" BorderThickness="0" Visibility="Collapsed"/>
                             </StackPanel>
 
@@ -949,7 +944,7 @@
                 </Grid>
 
                 <!-- Top Toolbar -->
-                <Grid x:Name="GridContentPaneTopToolbar" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid x:Name="GridContentPaneTopToolbar" BorderBrush="{ThemeResource CustomSeparatorBorderThemeBrush}" BorderThickness="0,0,0,1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" SizeChanged="GridContentPaneTopToolbar_SizeChanged">
                     <Grid.BackgroundTransition>
                         <BrushTransition/>
                     </Grid.BackgroundTransition>
@@ -959,8 +954,8 @@
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                 <StackPanel x:Name="StackPanelContentPaneTopToolbarText" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="12,0,12,0">
                                     <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
-                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center" MaxWidth="250"/>
-                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileName" TextTrimming="CharacterEllipsis" Style="{StaticResource BaseTextBlockStyle}" Opacity="0.9" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TextBlockContentPaneTopToolbarFileExtension" TextTrimming="None" Style="{StaticResource BodyTextBlockStyle}" Opacity="0.6" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <controlsxaml:ProgressBar x:Name="ProgressBarContentPaneTopToolbar" Visibility="Collapsed" IsIndeterminate="False" Background="Transparent" HorizontalAlignment="Stretch" BorderThickness="0" Padding="5,0,5,0" Margin="-5,0,-5,0"/>
                             </StackPanel>

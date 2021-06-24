@@ -81,7 +81,7 @@ namespace Scanner
                 {
                     FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                     StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
-                    FrameLeftPaneManageText.Height = titleBar.Height;
+                    FrameLeftPaneManageTitlebar.Height = titleBar.Height;
                     currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
                 });
             };
@@ -788,17 +788,6 @@ namespace Scanner
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                     ContentPane.BorderThickness = new Thickness(1, 0, 1, 0);
                     ChangeUIColors(UIstate.wide);
-                }
-
-                if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2
-                    <= currentTitleBarButtonWidth
-                || uiState == UIstate.small)
-                {
-                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
-                }
-                else
-                {
-                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
                 }
 
                 RectangleGeometry rectangleClipToolbarButtons = new RectangleGeometry();
@@ -1663,7 +1652,7 @@ namespace Scanner
             {
                 FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                 FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                isNextScanFresh = false;
+                isNextScanFresh = true;
                 MenuFlyoutItemButtonScan.IsEnabled = true;
                 MenuFlyoutItemButtonScan.FontWeight = FontWeights.SemiBold;
                 MenuFlyoutItemButtonScan.Icon = null;
@@ -2259,8 +2248,6 @@ namespace Scanner
                     List<StorageFile> list = new List<StorageFile>();
                     list.Add(scanResult.GetImageFile(FlipViewScan.SelectedIndex));
                     args.Data.SetStorageItems(list);
-
-                    args.DragUI.SetContentFromBitmapImage(scanResult.GetThumbnail(FlipViewScan.SelectedIndex));
                 });
             }
             catch (Exception) { }
@@ -3488,6 +3475,30 @@ namespace Scanner
             {
                 SplitViewLeftPane.IsPaneOpen = false;
                 ButtonScanOptions.IsChecked = false;
+            });
+        }
+
+        private async void GridContentPaneTopToolbar_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                double newMaxWidth;
+                if (GridContentPaneTopToolbar.ActualWidth < 750
+                || uiState == UIstate.small)
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
+                    newMaxWidth = GridContentPaneTopToolbar.ActualWidth - currentTitleBarButtonWidth - 24;
+                }
+                else
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
+                    newMaxWidth = GridContentPaneTopToolbar.ActualWidth - 2 * currentTitleBarButtonWidth - 24;
+                }
+
+                if (newMaxWidth > 500) newMaxWidth = 500;
+                else if (newMaxWidth <= 0) newMaxWidth = 0;
+
+                TextBlockContentPaneTopToolbarFileName.MaxWidth = newMaxWidth;
             });
         }
     }
