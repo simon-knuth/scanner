@@ -354,7 +354,7 @@
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>Wir würden gern von Ihnen hören:</value>
+    <value>Ich würde gern von Ihnen hören:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
@@ -978,10 +978,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
     <value>Scan-Optionen</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
-  </data>
-  <data name="TextBlockLeftPaneManageHeading.Text" xml:space="preserve">
-    <value>Seiten</value>
-    <comment>The heading for the page management.</comment>
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
     <value>Sie können </value>
