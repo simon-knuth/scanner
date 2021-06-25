@@ -18,6 +18,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using Windows.Media.SpeechSynthesis;
 using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -29,6 +30,7 @@ using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using static Enums;
@@ -55,11 +57,6 @@ static class Utilities
             Content = content,
             Tag = tag
         };
-
-        if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-        {
-            item.CornerRadius = new CornerRadius(2);
-        }
 
         return item;
     }
@@ -102,8 +99,9 @@ static class Utilities
         {
             Content = stackPanel,
             Tag = tag,
-            CornerRadius = new CornerRadius(2)
         };
+
+        Windows.UI.Xaml.Automation.AutomationProperties.SetName(item, content);
 
         return item;
     }
@@ -806,6 +804,7 @@ static class Utilities
             case "jpg":
             case "jpeg":
             case ".jpg":
+            case ".jpeg":
                 return SupportedFormat.JPG;
 
             case "png":
@@ -856,18 +855,6 @@ static class Utilities
     }
 
 
-    public async static Task LaunchFeedbackHubAsync()
-    {
-        try
-        {
-            log.Information("Launching the Feedback Hub.");
-            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-            await launcher.LaunchAsync();
-        }
-        catch (Exception) { }
-    }
-
-
     /// <summary>
     ///     Opens a teaching tip and takes care of usual pitfalls.
     /// </summary>
@@ -902,7 +889,8 @@ static class Utilities
         {
             StorageFolder folder = await folderTemp.GetFolderAsync("conversion");
             await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        } catch (Exception exc) { log.Error(exc, "Actively deleting folder 'conversion' in temp folder failed."); }
+        }
+        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'conversion' in temp folder failed."); }
 
         try
         {
@@ -951,6 +939,8 @@ static class Utilities
     /// </summary>
     public static async Task InitializeSerilogAsync()
     {
+        Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
+
         StorageFolder folder = await ApplicationData.Current.RoamingFolder
             .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
         string logPath = Path.Combine(folder.Path, "log.txt");
@@ -1000,7 +990,8 @@ static class Utilities
             sortedLogs.Reverse();
             foreach (StorageFile log in sortedLogs)
             {
-                if (log.DateCreated <= report.AppErrorTime) {
+                if (log.DateCreated <= report.AppErrorTime)
+                {
                     IBuffer buffer = await FileIO.ReadBufferAsync(log);
                     return new ErrorAttachmentLog[]
                     {
@@ -1103,5 +1094,63 @@ static class Utilities
                         });
         }
         catch (Exception) { }
+    }
+
+
+    /// <summary>
+    ///     Checks whether the given format is an image format.
+    /// </summary>
+    public static bool IsImageFormat(SupportedFormat format)
+    {
+        switch (format)
+        {
+            case SupportedFormat.JPG:
+            case SupportedFormat.PNG:
+            case SupportedFormat.TIF:
+            case SupportedFormat.BMP:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
+    /// <summary>
+    ///     Outputs text if narrator is enabled.
+    /// </summary>
+    /// <param name="text">The text that narrator shall read.</param>
+    public static async Task SayAsync(string text)
+    {
+        SpeechSynthesisStream stream = await narratorSpeech.SynthesizeTextToStreamAsync(text);
+
+        // Send the stream to the media object, then play it.
+        narratorMediaElement.SetSource(stream, stream.ContentType);
+        narratorMediaElement.Play();
+    }
+
+
+    /// <summary>
+    ///     Ask the narrator to announce something.
+    /// </summary>
+    /// <param name="announcement">The announcement.</param>
+    /// <param name="liveRegion">A live region on the current page.</param>
+    public static async Task NarratorAnnounceAsync(string announcement, TextBlock liveRegion)
+    {
+        await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+        {
+            liveRegion.Text = announcement;
+            TextBlockAutomationPeer peer = new TextBlockAutomationPeer(liveRegion);
+            peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+        });
+    }
+
+
+    /// <summary>
+    ///     Copies the tooltip string of a <see cref="UIElement"/> to its AutomationProperties.Name.
+    /// </summary>
+    public static void CopyToolTipToAutomationPropertiesName(UIElement element)
+    {
+        string toolTip = (string)ToolTipService.GetToolTip(element);
+        Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
     }
 }

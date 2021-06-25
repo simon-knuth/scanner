@@ -129,7 +129,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorMessage.cs" />
+    <Compile Include="LicenseDetailPage.xaml.cs">
+      <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LicensePage.xaml.cs">
+      <DependentUpon>LicensePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PreviewPageIntent.cs" />
+    <Compile Include="SettingsPageIntent.cs" />
     <Compile Include="RecognizedScanner.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="ScanResultElement.cs" />
@@ -144,6 +151,7 @@
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XAML Converters\SliderThumbToolTipPercentageConverter.cs" />
     <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
     <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
     <Compile Include="XAML Converters\StringNotEmptyVisibilityConverter.cs" />
@@ -153,7 +161,6 @@
     <Compile Include="XAML Converters\ButtonShadowConverter.cs" />
     <Compile Include="XAML Converters\HeaderScrollBackgroundConverter.cs" />
     <Compile Include="XAML Converters\HeaderScrollShadowConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemBackgroundConverter.cs" />
     <Compile Include="XAML Converters\PaneManageItemDescriptorBackgroundConverter.cs" />
     <Compile Include="XAML Converters\PaneManageItemConverter.cs" />
     <Compile Include="XAML Converters\TopThicknessConverter.cs" />
@@ -370,6 +377,22 @@
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-400.png" />
+    <Content Include="License Texts\LicenseSerilogSinksFile.txt" />
+    <Content Include="License Texts\LicenseSerilogSinksAsync.txt" />
+    <Content Include="License Texts\LicenseSerilogExceptions.txt" />
+    <Content Include="License Texts\LicenseSerilog.txt" />
+    <Content Include="License Texts\LicenseWin2Duwp.txt" />
+    <Content Include="License Texts\LicenseQueryStringNET.txt" />
+    <Content Include="License Texts\LicensePDFsharp.txt" />
+    <Content Include="License Texts\LicenseMicrosoftUIXAML.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUILottie.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUIControls.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpUIAnimations.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitUwpNotifications.txt" />
+    <Content Include="License Texts\LicenseMicrosoftServicesStoreEngagement.txt" />
+    <Content Include="License Texts\LicenseMicrosoftNETCoreUniversalWindowsPlatform.txt" />
+    <Content Include="License Texts\LicenseMicrosoftAppCenterCrashes.txt" />
+    <Content Include="License Texts\LicenseMicrosoftAppCenterAnalytics.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -377,6 +400,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="LicenseDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LicensePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PreviewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -395,6 +426,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter">
+      <Version>4.2.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>4.2.0</Version>
     </PackageReference>
@@ -408,16 +442,16 @@
       <Version>10.1901.28001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.0.1</Version>
+      <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>7.0.1</Version>
+      <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.1</Version>
+      <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Lottie">
-      <Version>7.0.2</Version>
+      <Version>7.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0</Version>
@@ -438,7 +472,7 @@
       <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
-      <Version>1.25.0</Version>
+      <Version>1.26.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -456,6 +490,9 @@
     <PRIResource Include="Resources\Secrets.resw" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <PRIResource Include="Resources\Localization\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -463,9 +500,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\fr\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\it\Resources.resw" />
@@ -483,10 +517,6 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- Modification for Lottie to pass WACK -->
-  <Target Name="_AddXamlWinmdToPackageLayoutRoot" AfterTargets="_CreatePackageLayout">
-    <Copy SourceFiles="@(_PackageLayoutFileSource)" DestinationFiles="@(_PackageLayoutFileSource->'$(AppxLayoutDir)%(Filename)%(Extension)')" Condition="'%(Filename)%(Extension)' == 'Microsoft.UI.Xaml.winmd'" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,7 +1,4 @@
-﻿using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -81,7 +78,10 @@ namespace Scanner
                 Window.Current.Content = rootFrame;
             }
 
-            // Hide default title bar.
+            // register event handler
+            this.UnhandledException += App_UnhandledException;
+
+            // hide default title bar.
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
@@ -93,10 +93,10 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UpdateTheme;
 
-            // Load settings from local app data
+            // load settings from local app data
             LoadSettings();
 
-            // Update theme once to ensure that the titlebar buttons are correct
+            // update theme once to ensure that the titlebar buttons are correct
             UpdateTheme(null, null);
 
             if (e.PrelaunchActivated == false)
@@ -111,9 +111,19 @@ namespace Scanner
                 // Set minimum width and height
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
 
-                // Ensure the current window is active
+                // ensure the current window is active
                 Window.Current.Activate();
             }
+        }
+
+
+        /// <summary>
+        ///     Invoked when an exception is not handled by any user-code.
+        /// </summary>
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            log.Fatal(e.Exception, "CRASH");
+            Serilog.Log.CloseAndFlush();
         }
 
 
@@ -126,6 +136,7 @@ namespace Scanner
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
+
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
@@ -140,7 +151,6 @@ namespace Scanner
             // Save application state and stop any background activity
             deferral.Complete();
         }
-
 
 
         protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
@@ -158,11 +168,13 @@ namespace Scanner
             appServiceConnection.ServiceClosed += AppServiceConnection_Closed;
         }
 
+
         private void AppService_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             appServiceConnection = null;
             appServiceDeferral.Complete();
         }
+
 
         private void AppServiceConnection_Closed(AppServiceConnection sender, AppServiceClosedEventArgs args)
         {
@@ -170,9 +182,12 @@ namespace Scanner
             appServiceDeferral.Complete();
         }
 
+
         private void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             // win32 component finished
+            if (taskCompletionSource == null) return;
+
             object result;
             args.Request.Message.TryGetValue("RESULT", out result);
             if ((string)result == "SUCCESS") taskCompletionSource.TrySetResult(true);

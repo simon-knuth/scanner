@@ -11,7 +11,8 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 using static Enums;
 using static Globals;
 using static Utilities;
@@ -21,6 +22,7 @@ namespace Scanner
 {
     public sealed partial class SettingsPage : Page
     {
+        private SettingsPageIntent intent;
         private long _allSettingsLoaded = 0;
         private bool allSettingsLoaded
         {
@@ -33,11 +35,41 @@ namespace Scanner
         {
             this.InitializeComponent();
 
-            // register event listener
+            // register event listeners
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += (titleBar, y) =>
             {
                 GridSettingsHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
             };
+            Window.Current.Activated += Window_Activated;
+        }
+
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            intent = (SettingsPageIntent)e.Parameter;
+        }
+
+
+        private async void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                // window deactivated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockSettingsHeader.Opacity = 0.5;
+                });
+            }
+            else
+            {
+                // window activated
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    TextBlockSettingsHeader.Opacity = 1;
+                });
+            }
         }
 
 
@@ -70,6 +102,38 @@ namespace Scanner
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
             {
+                var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                if (flowDirectionSetting == "LTR")
+                {
+                    GridSettingsContent.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.LeftToRight;
+                    ItemsRepeaterExportLog.FlowDirection = FlowDirection.LeftToRight;
+                    RelativePanelSettingsSaveLocation.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelTextBlockRestart.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingHelpSetup.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingDonate.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingFeedback.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingTranslations.FlowDirection = FlowDirection.LeftToRight;
+                    StackPanelSettingsHeadingAbout.FlowDirection = FlowDirection.LeftToRight;
+                    ButtonSettingsHeaderBackScaleTransform.ScaleX = 1;
+                    ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = 1;
+                }
+                else
+                {
+                    GridSettingsContent.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelDialogLicensesHeading.FlowDirection = FlowDirection.RightToLeft;
+                    ItemsRepeaterExportLog.FlowDirection = FlowDirection.RightToLeft;
+                    RelativePanelSettingsSaveLocation.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelTextBlockRestart.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingHelpSetup.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingDonate.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingFeedback.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingTranslations.FlowDirection = FlowDirection.RightToLeft;
+                    StackPanelSettingsHeadingAbout.FlowDirection = FlowDirection.RightToLeft;
+                    ButtonSettingsHeaderBackScaleTransform.ScaleX = -1;
+                    ButtonDialogLicensesHeadingBackScaleTransform.ScaleX = -1;
+                }
+
                 if (settingSaveLocationAsk)
                 {
                     RadioButtonSaveLocationAsk.IsChecked = true;
@@ -112,6 +176,8 @@ namespace Scanner
                     StackPanelTextBlockRestart.Visibility = Visibility.Visible;
                 }
             });
+
+            await InitializeAutomationPropertiesAsync();
         }
 
 
@@ -220,17 +286,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     The event listener for when <see cref="HyperlinkFeedbackHub"/>, which opens the app's Feedback Hub section, is clicked.
-        /// </summary>
-        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            log.Information("Launching Feedback Hub.");
-            await LaunchFeedbackHubAsync();
-        }
-
-
-
-        /// <summary>
         ///     Page was loaded (possibly through navigation).
         /// </summary>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -243,6 +298,12 @@ namespace Scanner
 
                 ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
                 ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
+
+                if (intent.scrollToDonateSection)
+                {
+                    GridSettingsDonate.StartBringIntoView();
+                    StoryboardScrollingToDonate.Begin();
+                }
 
                 TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
             });
@@ -304,6 +365,16 @@ namespace Scanner
             {
                 ContentDialogLicenses.PrimaryButtonText = "";
                 ContentDialogLicenses.SecondaryButtonText = "";
+                ButtonDialogLicensesHeadingBack.IsEnabled = false;
+
+                if (FrameDialogLicenses.Content == null)
+                {
+                    FrameDialogLicenses.Navigate(typeof(LicensePage), new SuppressNavigationTransitionInfo());
+                }
+                if (FrameDialogLicenses.Content.GetType() == typeof(LicenseDetailPage))
+                {
+                    FrameDialogLicenses.GoBack(new SuppressNavigationTransitionInfo());
+                }
 
                 await ContentDialogLicenses.ShowAsync();
             });
@@ -329,6 +400,7 @@ namespace Scanner
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await ContentDialogAboutCredits.ShowAsync());
         }
+
 
         private async void HyperlinkSettingsExportLog_Click(object sender, RoutedEventArgs e)
         {
@@ -369,6 +441,7 @@ namespace Scanner
             });
         }
 
+
         private async void ButtonExportLog_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -389,6 +462,39 @@ namespace Scanner
                 await sourceFile.CopyAndReplaceAsync(file);
                 await CachedFileManager.CompleteUpdatesAsync(file);
             }
+        }
+
+
+        private void ButtonDialogLicensesHeadingBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (FrameDialogLicenses.Content.GetType() == typeof(LicenseDetailPage))
+            {
+                FrameDialogLicenses.GoBack(new SlideNavigationTransitionInfo()
+                { Effect = SlideNavigationTransitionEffect.FromRight });
+            }
+        }
+
+
+        private void FrameDialogLicenses_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(LicenseDetailPage))
+            {
+                ButtonDialogLicensesHeadingBack.IsEnabled = true;
+            }
+            else
+            {
+                ButtonDialogLicensesHeadingBack.IsEnabled = false;
+            }
+        }
+
+
+        private async Task InitializeAutomationPropertiesAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CopyToolTipToAutomationPropertiesName(ButtonSettingsHeaderBack);
+                CopyToolTipToAutomationPropertiesName(ButtonDialogLicensesHeadingBack);
+            });
         }
     }
 }

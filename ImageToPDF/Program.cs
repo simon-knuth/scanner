@@ -89,15 +89,15 @@ namespace ImageToPDF
                 // construct PDF
                 PdfDocument document = new PdfDocument();
                 foreach (StorageFile file in sortedConversionFiles)
-                {                    
+                {
                     int imageWidth, imageHeight;
-                    
+
                     using (Bitmap bitmap = new Bitmap(file.Path))
                     {
                         imageWidth = bitmap.Width;
                         imageHeight = bitmap.Height;
                     }
-                    
+
                     using (FileStream srcFile = File.OpenRead(file.Path))
                     {
                         // start new page

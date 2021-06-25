@@ -122,7 +122,7 @@
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Пожалуйста, попробуйте еще раз.</value>
+    <value>Пожалуйста, попробуйте ещё раз.</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
@@ -194,7 +194,7 @@
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Рисуйте и выделяйте с помощью Windows Ink</value>
+    <value>Рисовать и выделять с помощью Windows Ink</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
@@ -222,7 +222,7 @@
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Повернуть страницу</value>
+    <value>Повернуть страницу (правый щелчёк мыши для вариантов)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
@@ -262,7 +262,7 @@
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Повернуть выбранные страницы</value>
+    <value>Повернуть выбранные страницы (правый щелчёк мыши для вариантов)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
@@ -274,7 +274,7 @@
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Сканировать страницы</value>
+    <value>Показать параметры сканирования</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
@@ -286,7 +286,7 @@
     <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>просмотр</value>
+    <value>Просмотр</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
@@ -342,7 +342,7 @@
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>Если ваш сканер не появляется в течение трех минут, возможно вам нужно добавить его в настройках приложения.
+    <value>Если ваш сканер не появляется в течение трёх минут, возможно вам нужно добавить его в настройках приложения.
 </value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
@@ -355,33 +355,9 @@
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>Мы были бы рады получить известия от вас:</value>
-    <comment>The subtitle of the dialog that asks the user for feedback.</comment>
-  </data>
-  <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>Вы можете использовать </value>
-    <comment>The first part of the dialog text that asks the user for feedback.
-| -&gt; DialogFeedbackHyperlinkFeedbackHub.Text</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkFeedbackHub.Text" xml:space="preserve">
-    <value>Центр отзывов</value>
-    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
-DialogFeedbackText1.Text &lt;- | -&gt; DialogFeedbackText2.Text</comment>
-  </data>
-  <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> запрос новых функций, сообщить об ошибках и голосовать за предложения, или </value>
-    <comment>The second part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkFeedbackHub.Text &lt;- | -&gt; DialogFeedbackHyperlinkRate.Text</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
-    <value>оцените Сканер в Microsoft Store</value>
-    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
-DialogFeedbackText2.Text &lt;- | -&gt; DialogFeedbackText3.Text</comment>
-  </data>
-  <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value> чтобы помочь другим решить, подходит ли им это приложение.</value>
-    <comment>The third part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
+    <value>Мы были бы рады узнать от вас:</value>
+    <comment>The subtitle of the dialog that asks the user for feedback.
+Fuzzy</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
     <value>Переименовать</value>
@@ -428,7 +404,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>Это удалить сейчас невозможно.</value>
+    <value>удаление не удалось</value>
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
@@ -468,7 +444,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>Сейчас сканер в не принимает запрос на отмену сканирования.</value>
+    <value>Сейчас сканер не принимает запрос на отмену сканирования.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
@@ -561,12 +537,12 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>если ваш сканер не появляется в течение трех минут, убедитесь, что он был добавлен в </value>
+    <value>Если ваш сканер не появляется в течение трёх минут, убедитесь, что он был добавлен в </value>
     <comment>The first part of the body of the text that tells the user to select a scanner.
 | -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>Здесь появятся отсканированные страницы</value>
+    <value>Отсканированные страницы будут отображаться здесь</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
   <data name="TextScannerIndicator.Text" xml:space="preserve">
@@ -586,11 +562,11 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Выберите папку</value>
+    <value>Выбрать папку</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>Восстановление значений по умолчанию</value>
+    <value>Восстановить значение по умолчанию</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
@@ -642,7 +618,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Сохранить местоположение</value>
+    <value>Место сохранения</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTheme.Header" xml:space="preserve">
@@ -650,7 +626,7 @@ DialogFeedbackHyperlinkRate.Text &lt;- |</comment>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Переводы</value>
+    <value>Перевод</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
@@ -678,26 +654,6 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
     <value>Веб-сайт</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
-  <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Используйте </value>
-    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
-| -&gt; HyperlinkSettingsFeedbackFeedbackHub.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> запрос новых функций, сообщить об ошибках и голосовать за предложения, или </value>
-    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
-HyperlinkSettingsFeedbackFeedbackHub.Text &lt;- | -&gt; HyperlinkSettingsFeedbackRate.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value> чтобы помочь другим решить, подходит ли им это приложение. Опытные пользователи также могут повлиять на дальнейшее развитие </value>
-    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
-TextSettingsFeedback3.Text &lt;- | -&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackFeedbackHub.Text" xml:space="preserve">
-    <value>Центр отзывов</value>
-    <comment>The hyperlink text for launching the Feedback Hub from the &quot;Feedback&quot; section in settings.
-TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
-  </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Узнайте, как установить и использовать сканер в Windows 10</value>
     <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -713,15 +669,15 @@ TextSettingsFeedback1.Text &lt;- | -&gt; TextSettingsFeedback2.Text</comment>
 HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>Windows 10 предлагает поддержку более 100 языков - вы можете сделать это приложение доступным для всех. Посмотреть </value>
+    <value>Windows 10 предлагает поддержку более 100 языков - вы можете сделать это приложение доступным для всех. Посмотрите</value>
     <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
-    <value> за дополнительной информацией.</value>
+    <value> для дополнительной информации.</value>
     <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>эта страница</value>
+    <value>эту страницу</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
@@ -778,12 +734,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Сканирование завершено</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
-  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>Оцените Сканер в Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
-TextSettingsFeedback2.Text &lt;- | -&gt; TextSettingsFeedback3.Text
-Fuzzy</comment>
-  </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
     <value>Несколько страниц</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
@@ -799,10 +749,6 @@ Fuzzy</comment>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
     <value>Ваши страницы здесь</value>
     <comment>The title of the dialog that explains the page management.</comment>
-  </data>
-  <data name="TextScanOptionsDefaultResolutionIndicator" xml:space="preserve">
-    <value>По умолчанию</value>
-    <comment>The text that indicates that a resolution in the list is the default one. Presented in brackets.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
     <value>Закрыть</value>
@@ -825,7 +771,7 @@ Fuzzy</comment>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>Сохранить местоположение</value>
+    <value>Место сохранения</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
@@ -861,7 +807,7 @@ Fuzzy</comment>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Это позволяет нам исследовать сбои приложений и определять, какие функции наиболее ценны для наших пользователей. Будьте уверены, что ваши отсканированные страницы никогда не включаются в эти отчеты.</value>
+    <value>Это позволяет нам исследовать сбои приложения и определять, какие функции наиболее ценны для наших пользователей. Будьте уверены, что ваши отсканированные страницы никогда не включаются в эти отчеты.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
@@ -869,7 +815,7 @@ Fuzzy</comment>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>Вы всегда можете сделать изменения в настройках приложения.</value>
+    <value>Вы всегда можете поменять своё решение в настройках приложения.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
@@ -889,7 +835,7 @@ Fuzzy</comment>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>Ни одна из ваших отсканированных страниц не вклчена в эти журналы.</value>
+    <value>Ни одна из ваших отсканированных страниц не включена в эти журналы.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
@@ -916,16 +862,6 @@ Fuzzy</comment>
     <value>Сохранить</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
-  <data name="TextSettingsFeedback4.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The fourth part of the text of the &quot;Feedback&quot; section in settings.
-HyperlinkSettingsFeedbackGithub.Text &lt;- |</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
-TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
-  </data>
   <data name="ManifestDisplayName" xml:space="preserve">
     <value>Сканер</value>
     <comment>App name as displayed in app list.</comment>
@@ -946,21 +882,181 @@ TextSettingsFeedback3.Text &lt;- | -&gt; TextSettingsFeedback4.Text</comment>
     <value>Отсканированное</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
-  <data name="HeadingChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Спросите место сохранения</value>
-    <comment>The heading of the first changelog section.</comment>
-  </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>Спросите каждый раз</value>
+    <value>Спрашивать каждый раз</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Используйте установленное папку</value>
+    <value>Использовать выбранную папку</value>
     <comment>The option to use a set save location.</comment>
   </data>
-  <data name="TextChangelog2_1_0_0Section1.Text" xml:space="preserve">
-    <value>Выберите каждый раз при сканировании новое место сохранения, вместо того чтобы впоследствии перемещать файлы.
-Эту функцию можно включить в настройках.</value>
-    <comment>The text of the first changelog section.</comment>
+  <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Назад</value>
+    <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+  </data>
+  <data name="TextScannerCount" xml:space="preserve">
+    <value>{0} доступно</value>
+    <comment>The number of currently available scanners. The placeholder {0} is replaced with the actual number itself.</comment>
+  </data>
+  <data name="TextZoomFactor" xml:space="preserve">
+    <value>{0:000} %</value>
+    <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
+  </data>
+  <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Увеличить масштаб (Ctrl + колесо мыши вверх)</value>
+    <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
+  </data>
+  <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Уменьшить масштаб (Ctrl + колесо мыши вниз)</value>
+    <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
+  </data>
+  <data name="TextPageIndicator" xml:space="preserve">
+    <value>{0} из {1}</value>
+    <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
+  </data>
+  <data name="OptionScanOptionsResolution" xml:space="preserve">
+    <value>{0:0} DPI</value>
+    <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
+    <value>{0: 0} DPI (по умолчанию)</value>
+    <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
+    <value>{0: 0} DPI (лучше всего для документов)</value>
+    <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
+    <value>{0: 0} DPI (лучше всего для фотографий)</value>
+    <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
+    <value>Сканирование завершено, добавлено {0} страниц</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
+  </data>
+  <data name="TextScanFailAccessibility" xml:space="preserve">
+    <value>Ошибка сканирования</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
+  </data>
+  <data name="TextSavedChangesAccessibility" xml:space="preserve">
+    <value>Изменения сохранены</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
+  </data>
+  <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
+    <value>Сканирование завершено, добавлена ​​одна страница</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
+  </data>
+  <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
+    <value>Изменения сохранены как копия</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
+  </data>
+  <data name="HeadingChangelog2_2_0_0Section1.Text" xml:space="preserve">
+    <value>Больше вариантов разрешения</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2_2_0_0Section2.Text" xml:space="preserve">
+    <value>Умный интерфейс</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2_2_0_0Section3.Text" xml:space="preserve">
+    <value>Улучшенный доступ</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section1.Text" xml:space="preserve">
+    <value>Выберите из больших  вариантов разрешения для лучшего качества.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section2.Text" xml:space="preserve">
+    <value>Интерфейс был улучшен, чтобы дать вам лучший просмотр ваших отсканированных страниц и доступных сканеров.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
+    <value>Добавлена ​​поддержка программ чтения с экрана и служб распознавания голоса.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
+    <value>Обзор страницы</value>
+    <comment>The name of the page management area for use by accessibility tools.</comment>
+  </data>
+  <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Параметры сканирования</value>
+    <comment>The name of the scan options area for use by accessibility tools.</comment>
+  </data>
+  <data name="DialogFeedbackText1.Text" xml:space="preserve">
+    <value>Вы можете </value>
+    <comment>The first part of the dialog text that asks the user for feedback.
+|-&gt; DialogFeedbackHyperlinkRate.Text</comment>
+  </data>
+  <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
+DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
+  </data>
+  <data name="DialogFeedbackText2.Text" xml:space="preserve">
+    <value> предлагать новые функции и помочь другим решить подходит ли им это приложение. Опытные пользователи также могут повлиять на дальнейшее развитие </value>
+    <comment>The second part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkRate.Text &lt;-|-&gt; DialogFeedbackHyperlinkGithub.Text</comment>
+  </data>
+  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
+    <value>Оцените Сканер в Microsoft Store</value>
+    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
+DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
+  </data>
+  <data name="DialogFeedbackText3.Text" xml:space="preserve">
+    <value>.</value>
+    <comment>The third part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
+  </data>
+  <data name="TextSettingsFeedback1.Text" xml:space="preserve">
+    <value>Вы можете </value>
+    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
+|-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
+  </data>
+  <data name="TextSettingsFeedback2.Text" xml:space="preserve">
+    <value> предлагать новые функции и помочь другим решить подходит ли им это приложение. Опытные пользователи также могут повлиять на дальнейшее развитие </value>
+    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
+  </data>
+  <data name="TextSettingsFeedback3.Text" xml:space="preserve">
+    <value>.</value>
+    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>оцените Сканер в Microsoft Store</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
+TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
+TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
+  </data>
+  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+    <value>Поддержите развитие</value>
+    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
+    <value>поддержите меня пожертвованием</value>
+    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
+TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
+  </data>
+  <data name="TextSettingsDonate1.Text" xml:space="preserve">
+    <value>Это приложение доступно всем бесплатно. Если это сэкономило вам время и вы хотели бы видеть больше подобных, вы можете </value>
+    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
+|-&gt; HyperlinkSettingsDonate.Text</comment>
+  </data>
+  <data name="TextSettingsDonate2.Text" xml:space="preserve">
+    <value>. Спасибо!</value>
+    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
+HyperlinkSettingsDonate.Text &lt;-|</comment>
+  </data>
+  <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
+    <value>Поддержите развитие</value>
+    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
+    <value>Поддержите развитие</value>
+    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
 </root>

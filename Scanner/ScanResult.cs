@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -32,7 +33,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
+        private ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
         public SupportedFormat scanResultFormat;
         public StorageFile pdf = null;
         public readonly StorageFolder originalTargetFolder;
@@ -58,6 +59,7 @@ namespace Scanner
             scanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
             originalTargetFolder = targetFolder;
             RefreshItemDescriptors();
+            elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
         }
 
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
@@ -105,6 +107,12 @@ namespace Scanner
             log.Information("ScanResult created.");
             return result;
         }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // EVENTS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public event NotifyCollectionChangedEventHandler PagesChanged;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -306,8 +314,21 @@ namespace Scanner
                             var imageStream = new InMemoryRandomAccessStream();
                             BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(encoderId, imageStream);
                             bitmapEncoder.SetSoftwareBitmap(softwareBitmap);
-                            bitmapEncoder.BitmapTransform.ScaledWidth = bitmapDecoder.PixelWidth / 10;                   // reduce quality by 90%
-                            bitmapEncoder.BitmapTransform.ScaledHeight = bitmapDecoder.PixelHeight / 10;                 //
+
+                            // reduce resolution of thumbnail
+                            int resolutionScaling = 1;
+                            if (softwareBitmap.PixelWidth < softwareBitmap.PixelHeight)
+                            {
+                                resolutionScaling = softwareBitmap.PixelWidth / 150;
+                            }
+                            else
+                            {
+                                resolutionScaling = softwareBitmap.PixelHeight / 150;
+                            }
+                            if (resolutionScaling < 1) resolutionScaling = 1;
+                            bitmapEncoder.BitmapTransform.ScaledWidth = Convert.ToUInt32(bitmapDecoder.PixelWidth / resolutionScaling);
+                            bitmapEncoder.BitmapTransform.ScaledHeight = Convert.ToUInt32(bitmapDecoder.PixelHeight / resolutionScaling);
+
                             await bitmapEncoder.FlushAsync();
                             await thumbnail.SetSourceAsync(imageStream);
                             elements[index].Thumbnail = thumbnail;
@@ -443,7 +464,9 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while rotating. Perhaps the scan format isn't supported.</exception>
         public async Task RotateScansAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
-            Analytics.TrackEvent("Rotate pages");
+            Analytics.TrackEvent("Rotate pages", new Dictionary<string, string> {
+                            { "Rotation", instructions[0].Item2.ToString() },
+                        });
             log.Information("Received {@Instructions} for rotations.", instructions);
 
             // check indices and rotations
@@ -1201,9 +1224,9 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        public async Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
-            log.Information("Adding {Num} files, the target format is {Format}.", files.Count, targetFormat);
+            log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
 
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
@@ -1247,7 +1270,7 @@ namespace Scanner
                     if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
                 }
 
-                Task[] conversionTasks = new Task[files.Count];
+                Task[] conversionTasks = new Task[files.Count()];
                 try
                 {
                     for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
@@ -1286,7 +1309,7 @@ namespace Scanner
             if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
 
             // generate new previews and descriptors
-            for (int i = GetTotalNumberOfPages() - files.Count; i < GetTotalNumberOfPages(); i++)
+            for (int i = GetTotalNumberOfPages() - files.Count(); i < GetTotalNumberOfPages(); i++)
             {
                 await GetImageAsync(i);
                 elements[i].ItemDescriptor = GetDescriptorForIndex(i);
@@ -1298,7 +1321,7 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public Task AddFiles(IReadOnlyList<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
+        public Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
         {
             return AddFiles(files, targetFormat, originalTargetFolder, futureAccessListIndexStart, false);
         }
@@ -1309,16 +1332,7 @@ namespace Scanner
         /// </summary>
         public bool IsImage()
         {
-            switch (scanResultFormat)
-            {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
-                    return true;
-                default:
-                    return false;
-            }
+            return IsImageFormat(scanResultFormat);
         }
 
 
@@ -1404,23 +1418,22 @@ namespace Scanner
                 ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
 
                 // call win32 app and wait for result
-                //if (appServiceConnection == null)
-                //{
                 log.Information("Launching full trust process.");
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                //}
-                //else
-                //{
-                //ValueSet message = new ValueSet();
-                //message.Add("REQUEST", "CONVERT");
-                //var sendMessageAsync = appServiceConnection.SendMessageAsync(message);
-                //}
                 await win32ResultAsync.ConfigureAwait(false);
                 log.Information("Full trust process is done.");
 
                 // get result file and move it to its correct folder
                 newPdf = null;
-                newPdf = await folderTemp.GetFileAsync(newName);
+                try
+                {
+                    newPdf = await folderTemp.GetFileAsync(newName);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    newPdf = await folderTemp.GetFileAsync(newName);
+                }
 
                 // move PDF file to target folder
                 if (pdf == null)
@@ -1438,7 +1451,9 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Generating the PDF failed.");
+                log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
+                var files = await folderTemp.GetFilesAsync();
+                log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
                 Crashes.TrackError(exc);
                 throw;
             }
@@ -1455,7 +1470,7 @@ namespace Scanner
         /// </summary>
         /// <param name="files">The files to be numbered.</param>
         /// <param name="startIndex">The first number.</param>
-        private static async Task NumberNewConversionFilesAsync(IReadOnlyList<StorageFile> files, int startIndex)
+        private static async Task NumberNewConversionFilesAsync(IEnumerable<StorageFile> files, int startIndex)
         {
             try
             {
@@ -1481,7 +1496,7 @@ namespace Scanner
         {
             if (GetFileFormat() != SupportedFormat.PDF)
             {
-                log.Error("Attempted to apply element order to PDF files.");
+                log.Error("Attempted to apply element order to non-PDF file.");
                 throw new ApplicationException("Can only reorder source files for PDF.");
             }
 
@@ -1569,6 +1584,18 @@ namespace Scanner
                     await SetInitialNameAsync(element, append);
                 }
             }
+        }
+
+        public void SetItemsSourceForControl(ItemsControl flipView)
+        {
+            flipView.ItemsSource = elements;
+        }
+
+        public bool HasDisplayedFolder(int index)
+        {
+            if (!IsValidIndex(index)) throw new ApplicationException("Invalid index " + index + " for HasDisplayedFolder().");
+
+            return !String.IsNullOrEmpty(elements[index].DisplayedFolder);
         }
     }
 }

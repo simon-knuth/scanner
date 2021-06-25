@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scanner;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Devices.Scanners;
@@ -13,32 +14,60 @@ using static Utilities;
 class ScannerOperation
 {
     /// <summary>
-    ///     Updates resolutions according to given <paramref name="config"/> (flatbed or feeder).
-    ///     Resolutions added are:
-    ///         MinResolution -> ActualResolution -> MaxResolution
-    ///     The ActualResolution is marked with the DefaultResolutionIndicator resource and automatically selected by the <paramref name="comboBox"/>.
+    ///     Converts the resolutions previously generated in <see cref="RecognizedScanner"/> to their corresponding
+    ///     items in the given <see cref="ComboBox"/>. Their item's tags contain the <see cref="ImageScannerResolution"/>.
+    ///     This also marks the items according to their <see cref="ResolutionProperty"/>.
     /// </summary>
-    /// <param name="config">The configuration that resolutions shall be generated for.</param>
+    /// <param name="scanner">The scanner that supplies the available resolutions.</param>
+    /// <param name="mode">The source mode that resolutions shall be generated for.</param>
     /// <param name="comboBox">The <see cref="ComboBox"/> that will contain the resolutions.</param>
     /// <param name="resolutions">The <see cref="ObservableCollection{ComboBoxItem}"/> that will contain the <see cref="ComboBoxItem"/>s.</param>
-    public static void GenerateResolutions(IImageScannerSourceConfiguration config, ComboBox comboBox,
+    public static void GenerateResolutionItems(RecognizedScanner scanner, SourceMode mode, ComboBox comboBox,
         ObservableCollection<ComboBoxItem> resolutions)
     {
-        float minX = config.MinResolution.DpiX;
-        float maxX = config.MaxResolution.DpiX;
-        float actualX = config.ActualResolution.DpiX;
-
-        log.Information("Generating resolutions. [minX={MinX}|maxX={MaxX}|actualX={ActualX}]", minX, maxX, actualX);
-
+        log.Information("Generating resolution items for ComboBox.");
         resolutions.Clear();
 
-        if (minX != actualX) resolutions.Add(CreateComboBoxItem(minX + " DPI", config.MinResolution));
+        List<ValueTuple<float, ResolutionProperty>> scannerResolutions = null;
+        if (mode == SourceMode.Flatbed)
+        {
+            scannerResolutions = scanner.flatbedResolutions;
+        }
+        else if (mode == SourceMode.Feeder)
+        {
+            scannerResolutions = scanner.feederResolutions;
+        }
 
-        resolutions.Add(CreateComboBoxItem(actualX + " DPI" + " (" + LocalizedString("TextScanOptionsDefaultResolutionIndicator") + ")",
-            config.ActualResolution));
-        comboBox.SelectedIndex = resolutions.Count - 1;
+        int currentIndex = 0, newIndex = -1;
+        foreach (var resolution in scannerResolutions)
+        {
+            switch (resolution.Item2)
+            {
+                case ResolutionProperty.None:
+                    resolutions.Add(CreateComboBoxItem(String.Format(LocalizedString("OptionScanOptionsResolution"), resolution.Item1),
+                        new ImageScannerResolution { DpiX = resolution.Item1, DpiY = resolution.Item1 }));
+                    break;
+                case ResolutionProperty.Default:
+                    resolutions.Add(CreateComboBoxItem(String.Format(LocalizedString("OptionScanOptionsResolutionDefault"), resolution.Item1),
+                        new ImageScannerResolution { DpiX = resolution.Item1, DpiY = resolution.Item1 }));
+                    newIndex = currentIndex;
+                    break;
+                case ResolutionProperty.Documents:
+                    resolutions.Add(CreateComboBoxItem(String.Format(LocalizedString("OptionScanOptionsResolutionDocuments"), resolution.Item1),
+                        new ImageScannerResolution { DpiX = resolution.Item1, DpiY = resolution.Item1 }));
+                    newIndex = currentIndex;
+                    break;
+                case ResolutionProperty.Photos:
+                    resolutions.Add(CreateComboBoxItem(String.Format(LocalizedString("OptionScanOptionsResolutionPhotos"), resolution.Item1),
+                        new ImageScannerResolution { DpiX = resolution.Item1, DpiY = resolution.Item1 }));
+                    break;
+                default:
+                    break;
+            }
+            currentIndex += 1;
+        }
 
-        if (maxX != actualX) resolutions.Add(CreateComboBoxItem(maxX + " DPI", config.MaxResolution));
+        comboBox.SelectedIndex = newIndex;
     }
 
 

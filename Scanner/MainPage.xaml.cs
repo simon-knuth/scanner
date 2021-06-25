@@ -51,7 +51,7 @@ namespace Scanner
         private RecognizedScanner selectedScanner;
         private ObservableCollection<ComboBoxItem> formats = new ObservableCollection<ComboBoxItem>();
         private ObservableCollection<ComboBoxItem> resolutions = new ObservableCollection<ComboBoxItem>();
-        private long _flowState = (long) FlowState.initial;
+        private long _flowState = (long)FlowState.initial;
         private FlowState flowState
         {
             get { return (FlowState)Interlocked.Read(ref _flowState); }
@@ -68,6 +68,7 @@ namespace Scanner
         private UISettings uISettings;
         private StorageFolder scanFolderTemp = null;
         private int futureAccessListIndex = 0;
+        private int lastFlipViewIndex = -1;
 
 
         public MainPage()
@@ -80,12 +81,13 @@ namespace Scanner
                 {
                     FrameLeftPaneScanHeader.Padding = new Thickness(0, titleBar.Height, 0, 0);
                     StackPanelContentPaneTopToolbarText.Height = titleBar.Height;
-                    FrameLeftPaneManageText.Height = titleBar.Height;
+                    FrameLeftPaneManageTitlebar.Height = titleBar.Height;
                     currentTitleBarButtonWidth = titleBar.SystemOverlayRightInset;
                 });
             };
 
-            // add scanner search indicator
+            // initialize scanner list
+            scannerList.CollectionChanged += ScannerList_CollectionChanged;
             scannerList.Add(ComboBoxItemScannerIndicator);
             ComboBoxItemScannerIndicator.Visibility = Visibility.Visible;
 
@@ -102,6 +104,16 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
             Window.Current.Activated += Window_Activated;
+        }
+
+        private async void ScannerList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TextScannerCount.Text = String.Format(LocalizedString("TextScannerCount"), scannerList.Count - 1);
+                GridTextScannerCount.Opacity = 1;
+                if (e.NewItems != null && !e.NewItems.Contains(ComboBoxItemScannerIndicator)) StoryboardScannerAdded1.Begin();
+            });
         }
 
         private async void Window_Activated(object sender, WindowActivatedEventArgs e)
@@ -130,20 +142,15 @@ namespace Scanner
         {
             // fix bugs when theme is changed during runtime
             log.Information("Detected theme change during runtime.");
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
                 FrameLeftPaneScanHeader.Background = null;
-                FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneScanOptions.Fill = null;
-                RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                 GridLeftPaneFooterContent.Background = null;
-                GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneFooter.Fill = null;
-                RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
                 GridLeftPaneManageHeaderControls.Background = null;
-                GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                 RectangleGridLeftPaneManage.Fill = null;
-                RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                ChangeUIColors(uiState);
             });
         }
 
@@ -183,7 +190,7 @@ namespace Scanner
 
         private async void OnScannerRemovedAsync(DeviceWatcher sender, DeviceInformationUpdate args)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal,
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
             () =>
             {
                 // find lost scanner in scannerList to remove the corresponding scanner and its list entry
@@ -239,12 +246,12 @@ namespace Scanner
                         scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(newScanner.scannerName, newScanner));
 
                         if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
-                        log.Information("Added scanner {@Device}.", args);
                     }
                     catch (Exception exc)
                     {
                         log.Error(exc, "Failed to add scanner {@Device} to existing {ScannerList}.", args, scannerList);
                     }
+                    log.Information("Added scanner {@Device}.", args);
                 }
                 else return;
             });
@@ -252,35 +259,35 @@ namespace Scanner
 
         private async void ButtonLeftPaneSettings_Click(object sender, RoutedEventArgs e)
         {
-            #if DEBUG
-                var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+#if DEBUG
+            var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
 
-                if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
+            if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
+            {
+                // show debug menu when CTRL key is pressed
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
                 {
-                    // show debug menu when CTRL key is pressed
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
-                    {
-                        ComboBoxDebugFormat_SelectionChanged(null, null);
-                        await ContentDialogDebug.ShowAsync();
-                    });
-                }
-                else
-                {
-                    Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-                    {
-                        SplitViewLeftPane.IsPaneOpen = false;
-                        ButtonScanOptions.IsChecked = false;
-                    });
-                }
-            #else
-                Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());     // navigate to settings
+                    FindName("ContentDialogDebug");
+                    await ContentDialogDebug.ShowAsync();
+                });
+            }
+            else
+            {
+                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     SplitViewLeftPane.IsPaneOpen = false;
                     ButtonScanOptions.IsChecked = false;
                 });
-            #endif
+            }
+#else
+                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    SplitViewLeftPane.IsPaneOpen = false;
+                    ButtonScanOptions.IsChecked = false;
+                });
+#endif
         }
 
         private async void HyperlinkSettings_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
@@ -337,16 +344,10 @@ namespace Scanner
                 {
                     // first app launch after an update
                     log.Information("MainPage loaded after first launch with this version.");
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                    //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
 
-                // initialize debug menu
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.TIF);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.BMP);
-                ComboBoxDebugFormat.Items.Add(SupportedFormat.PDF);
-                ComboBoxDebugFormat.SelectedIndex = 0;
+                await InitializeAutomationPropertiesAsync();
             }
 
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
@@ -586,13 +587,13 @@ namespace Scanner
                 }
 
                 // resolution
-                if (RadioButtonSourceFlatbed.IsChecked == true && !selectedScanner.isFake)
+                if (RadioButtonSourceFlatbed.IsChecked == true)
                 {
-                    GenerateResolutions(selectedScanner.scanner.FlatbedConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, SourceMode.Flatbed, ComboBoxResolution, resolutions);
                 }
-                else if (RadioButtonSourceFeeder.IsChecked == true && !selectedScanner.isFake)
+                else if (RadioButtonSourceFeeder.IsChecked == true)
                 {
-                    GenerateResolutions(selectedScanner.scanner.FeederConfiguration, ComboBoxResolution, resolutions);
+                    GenerateResolutionItems(selectedScanner, SourceMode.Feeder, ComboBoxResolution, resolutions);
                 }
 
                 // file formats
@@ -671,6 +672,39 @@ namespace Scanner
             TeachingTipEmpty.CloseButtonContent = LocalizedString("ButtonCloseText");
         }
 
+        private void ChangeUIColors(UIstate state)
+        {
+            switch (state)
+            {
+                case UIstate.small:
+                    GridLeftPaneFooterContent.Background = new SolidColorBrush(Colors.Transparent);
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
+                    GridLeftPaneManageHeaderControls.Background = new SolidColorBrush(Colors.Transparent);
+                    FrameLeftPaneScanHeader.Background = new SolidColorBrush(Colors.Transparent);
+                    break;
+                case UIstate.normal:
+                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    break;
+                case UIstate.wide:
+                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
+                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlBackgroundAltMediumHighBrush"];
+                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlBackgroundAltMediumHighBrush"];
+                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High,
@@ -690,12 +724,6 @@ namespace Scanner
                     RightPane.Children.Clear();
                     try { SplitViewLeftPaneContent.Children.Add(LeftPaneScanOptions); } catch (Exception) { }
                     try { SplitViewRightPaneContent.Children.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = new SolidColorBrush(Colors.Transparent);
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["SystemControlAcrylicElementBrush"];
-                    GridLeftPaneManageHeaderControls.Background = new SolidColorBrush(Colors.Transparent);
-                    FrameLeftPaneScanHeader.Background = new SolidColorBrush(Colors.Transparent);
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(0);
@@ -707,6 +735,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Visible;
                     SplitViewRightPane.Visibility = Visibility.Visible;
                     ContentPane.BorderThickness = new Thickness(0);
+                    ChangeUIColors(UIstate.small);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 750 && width < 1750 && uiState != UIstate.normal)       // normal window
@@ -722,12 +751,6 @@ namespace Scanner
                     RightPane.Children.Clear();
                     try { FlipViewLeftPane.Items.Insert(0, LeftPaneScanOptions); } catch (Exception) { }
                     try { FlipViewLeftPane.Items.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    GridLeftPaneManageHeaderControls.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
@@ -738,6 +761,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                     ContentPane.BorderThickness = new Thickness(1, 0, 0, 0);
+                    ChangeUIColors(UIstate.normal);
                     if (flowState == FlowState.select && ButtonLeftPaneManageSelect.IsEnabled == true) TransitionFromSelectMode();
                 }
                 else if (width >= 1750 && uiState != UIstate.wide)      // wide window
@@ -753,11 +777,6 @@ namespace Scanner
                     try { FlipViewLeftPane.Items.Remove(LeftPaneManage); } catch (Exception) { }
                     try { FlipViewLeftPane.Items.Insert(0, LeftPaneScanOptions); } catch (Exception) { }
                     try { RightPane.Children.Add(LeftPaneManage); } catch (Exception) { }
-                    GridLeftPaneFooterContent.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
-                    RectangleGridLeftPaneScanOptions.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneFooter.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    RectangleGridLeftPaneManage.Fill = (Brush)Resources["ApplicationPageBackgroundThemeBrush"];
-                    FrameLeftPaneScanHeader.Background = (Brush)Resources["SystemControlAcrylicWindowBrush"];
                     DropShadowPanelGridLeftPaneScanHeader.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneFooter.Margin = new Thickness(16, 0, 16, 0);
                     DropShadowPanelGridLeftPaneManage.Margin = new Thickness(16, 0, 16, 0);
@@ -768,17 +787,7 @@ namespace Scanner
                     SplitViewLeftPane.Visibility = Visibility.Collapsed;
                     SplitViewRightPane.Visibility = Visibility.Collapsed;
                     ContentPane.BorderThickness = new Thickness(1, 0, 1, 0);
-                }
-
-                if ((GridContentPaneTopToolbar.ActualWidth - StackPanelContentPaneTopToolbarText.ActualWidth) / 2
-                    <= currentTitleBarButtonWidth
-                || uiState == UIstate.small)
-                {
-                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
-                }
-                else
-                {
-                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
+                    ChangeUIColors(UIstate.wide);
                 }
 
                 RectangleGeometry rectangleClipToolbarButtons = new RectangleGeometry();
@@ -904,6 +913,7 @@ namespace Scanner
             try
             {
                 isScanCanceled = false;
+                int pagesScanned = 0;
 
                 // disable controls and show progress bar
                 log.Information("Preparing UI for scan.");
@@ -933,7 +943,7 @@ namespace Scanner
                 ImageScannerScanSource scanSource;
 
                 bool askedForFolder = false;
-                if (settingSaveLocationAsk && ( scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF))
+                if (settingSaveLocationAsk && (scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF))
                 {
                     // ask user for save location
                     log.Information("Asking user for save location.");
@@ -960,8 +970,6 @@ namespace Scanner
 
                 if (debugFiles == null)
                 {
-                    int pagesScanned = 0;
-
                     // no debug files provided, commence actual scan
                     // get selected format
                     selectedFormat = await PrepareScanConfigAsync();
@@ -1039,7 +1047,7 @@ namespace Scanner
                     }
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
-                        folderToScanTo = await folderTemp.GetFolderAsync("conversion");
+                        folderToScanTo = folderConversion;
                     }
                     else
                     {
@@ -1065,6 +1073,7 @@ namespace Scanner
                             ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanScannerErrorHeading"),
                             LocalizedString("ErrorMessageScanScannerErrorBody") + "\n" + exc.HResult));
                         await CancelScanAsync();
+                        await NarratorAnnounceAsync(LocalizedString("TextScanFailAccessibility"), TextBlockNarratorStatus);
                         return false;
                     }
 
@@ -1092,8 +1101,9 @@ namespace Scanner
                                     (SupportedFormat)selectedFormat.Item2, futureAccessListIndex, askedForFolder);
                             }
 
-                            FlipViewScan.ItemsSource = scanResult.elements;
+                            scanResult.SetItemsSourceForControl(FlipViewScan);
                             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
+                            scanResult.PagesChanged += async (x, y) => await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshPageIndicator());
                         }
                         else
                         {
@@ -1130,6 +1140,7 @@ namespace Scanner
                 {
                     log.Information("'Scanning' from provided debug files.");
                     SupportedFormat selectedDebugFormat = (SupportedFormat)ComboBoxDebugFormat.SelectedItem;
+                    pagesScanned = debugFiles.Count;
 
                     // debug files provided, create scanResult from these
                     List<StorageFile> copiedDebugFiles = new List<StorageFile>();
@@ -1152,9 +1163,10 @@ namespace Scanner
                         }
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                         {
-                            FlipViewScan.ItemsSource = scanResult.elements;
+                            scanResult.SetItemsSourceForControl(FlipViewScan);
                             InitializePaneManage();
                         });
+                        scanResult.PagesChanged += async (x, y) => await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshPageIndicator());
                     }
                     else
                     {
@@ -1193,7 +1205,19 @@ namespace Scanner
                     TextBlockContentPaneGridProgressRingScan.Text = "";
                     RefreshScanButton();
                     ButtonLeftPaneScanFolder.IsEnabled = true;
+                    RefreshZoomUIForFactor(1);
+                    OverlayScan.Visibility = Visibility.Visible;
                 });
+
+                // request narrator announcement
+                if (pagesScanned > 1)
+                {
+                    await NarratorAnnounceAsync(String.Format(LocalizedString("TextScanCompleteMultipleAccessibility"), pagesScanned), TextBlockNarratorStatus);
+                }
+                else
+                {
+                    await NarratorAnnounceAsync(LocalizedString("TextScanCompleteSingleAccessibility"), TextBlockNarratorStatus);
+                }
 
                 // send toast if the app is minimized
                 if (settingNotificationScanComplete && !isInForeground) SendToastNotification(LocalizedString("HeadingNotificationScanComplete"),
@@ -1218,6 +1242,7 @@ namespace Scanner
                     ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessageScanErrorHeading"),
                     LocalizedString("ErrorMessageScanErrorBody")));
                 await CancelScanAsync();
+                await NarratorAnnounceAsync(LocalizedString("TextScanFailAccessibility"), TextBlockNarratorStatus);
                 return false;
             }
         }
@@ -1240,14 +1265,14 @@ namespace Scanner
                 {
                     LeftPaneListViewManage.ItemsSource = null;
                     LeftPaneListViewManage.Visibility = Visibility.Collapsed;
-                    LeftPaneGridViewManage.ItemsSource = scanResult.elements;
+                    scanResult.SetItemsSourceForControl(LeftPaneGridViewManage);
                     LeftPaneGridViewManage.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     LeftPaneGridViewManage.ItemsSource = null;
                     LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
-                    LeftPaneListViewManage.ItemsSource = scanResult.elements;
+                    scanResult.SetItemsSourceForControl(LeftPaneListViewManage);
                     LeftPaneListViewManage.Visibility = Visibility.Visible;
                 }
             }
@@ -1451,11 +1476,29 @@ namespace Scanner
             () =>
             {
                 RefreshFileName();
+                RefreshPageIndicator();
                 if (flowState != FlowState.select)
                 {
                     PaneManageSelectIndex(FlipViewScan.SelectedIndex);
                 }
+                try { RefreshZoomUIForFactor(GetCurrentScanScrollViewer().ZoomFactor); } catch (Exception) { }
+                try { if (e.RemovedItems.Count != 0) TryZoomScanAsync(1, lastFlipViewIndex, true); } catch (Exception) { }
+                lastFlipViewIndex = FlipViewScan.SelectedIndex;
             });
+        }
+
+        private void RefreshPageIndicator()
+        {
+            if (FlipViewScan.Items != null)
+            {
+                if (FlipViewScan.SelectedIndex == -1) return;
+
+                TextBlockPageIndicator.Text = String.Format(LocalizedString("TextPageIndicator"), FlipViewScan.SelectedIndex + 1, FlipViewScan.Items.Count);
+            }
+            else
+            {
+                TextBlockPageIndicator.Text = "-";
+            }
         }
 
         private void PaneManageSelectIndex(int index)
@@ -1583,11 +1626,14 @@ namespace Scanner
             {
                 scannerList.Insert(ComboBoxScanners.Items.Count - 1, CreateComboBoxItem(fakeScanner.scannerName, fakeScanner));
 
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "pdf,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,native"));
-                formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,native"));
+                if (formats.Count == 0)
+                {
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "JPG", "jpg,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "PNG", "png,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatPdf, "PDF", "pdf,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "TIF", "tif,native"));
+                    formats.Add(CreateComboBoxItem(glyphFormatImage, "BMP", "bmp,native"));
+                }
                 ComboBoxFormat.SelectedIndex = 0;
 
                 if (ComboBoxScanners.SelectedIndex == -1 && flowState != FlowState.scanning) ComboBoxScanners.SelectedIndex = 0;
@@ -1606,16 +1652,16 @@ namespace Scanner
             {
                 FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
                 FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
-                isNextScanFresh = false;
+                isNextScanFresh = true;
                 MenuFlyoutItemButtonScan.IsEnabled = true;
-                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.SemiBold;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = false;
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
                 return;
             }
             else if (scanResult != null &&
-                        ((settingSaveLocationAsk && String.IsNullOrEmpty(scanResult.elements[0].DisplayedFolder)) ||    // switched from set location
+                        ((settingSaveLocationAsk && scanResult.HasDisplayedFolder(0)) ||                                // switched from set location
                             (!settingSaveLocationAsk && scanResult.originalTargetFolder.Path != scanFolder.Path)))      // switched to set location or changed location
             {
                 // save location has changed
@@ -1626,7 +1672,7 @@ namespace Scanner
                 MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.SemiBold;
                 return;
             }
 
@@ -1650,7 +1696,7 @@ namespace Scanner
                 FontIconButtonScanStartFresh.Visibility = Visibility.Collapsed;
                 isNextScanFresh = false;
                 MenuFlyoutItemButtonScan.IsEnabled = true;
-                MenuFlyoutItemButtonScan.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScan.FontWeight = FontWeights.SemiBold;
                 if (selectedFormat == SupportedFormat.PDF) MenuFlyoutItemButtonScan.Icon = new SymbolIcon(Symbol.Add);
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
                 MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Normal;
@@ -1664,7 +1710,7 @@ namespace Scanner
                 MenuFlyoutItemButtonScan.FontWeight = FontWeights.Normal;
                 MenuFlyoutItemButtonScan.Icon = null;
                 MenuFlyoutItemButtonScanFresh.IsEnabled = true;
-                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.Bold;
+                MenuFlyoutItemButtonScanFresh.FontWeight = FontWeights.SemiBold;
             }
         }
 
@@ -1728,7 +1774,9 @@ namespace Scanner
                     break;
                 case SummonToolbar.Draw:
                     log.Information("Transitioning to editing mode (draw).");
+                    TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
                     flowState = FlowState.draw;
+                    RefreshZoomUIForFactor(1);
                     StoryboardToolbarTransitionToDraw.Begin();
                     ImageEditDraw.Source = ((ScanResultElement)FlipViewScan.SelectedItem).CachedImage;
                     Tuple<double, double> imageMeasurements = GetImageMeasurements(((ScanResultElement)FlipViewScan.SelectedItem).CachedImage);
@@ -1764,7 +1812,9 @@ namespace Scanner
             UnlockPaneManage(false);
             StoryboardToolbarTransitionFromSpecial.Begin();
             try { ImageCropperScan.Source = null; } catch (Exception) { }
+            ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
             ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+            RefreshZoomUIForFactor(1);
         }
 
         private void LockPaneManage(bool completely)
@@ -1838,10 +1888,25 @@ namespace Scanner
             ButtonLeftPaneManageSelect.IsChecked = false;
             if (scanResult != null && scanResult.GetTotalNumberOfPages() > 0)
             {
-                FlipViewScan.SelectedIndex = 0;
-                PaneManageSelectIndex(0);
+                if (lastFlipViewIndex == -1)
+                {
+                    FlipViewScan.SelectedIndex = 0;
+                    PaneManageSelectIndex(0);
+                }
+                else if (lastFlipViewIndex >= scanResult.GetTotalNumberOfPages())
+                {
+                    int newIndex = scanResult.GetTotalNumberOfPages() - 1;
+                    FlipViewScan.SelectedIndex = newIndex;
+                    PaneManageSelectIndex(newIndex);
+                }
+                else
+                {
+                    FlipViewScan.SelectedIndex = lastFlipViewIndex;
+                    PaneManageSelectIndex(lastFlipViewIndex);
+                }
                 UnlockToolbar();
             }
+            ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
             ProgressBarLeftPaneManage.IsIndeterminate = false;
         }
 
@@ -2046,6 +2111,7 @@ namespace Scanner
                     LockPaneManage(true);
                     LockToolbar();
                     LockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                     ProgressBarLeftPaneManage.IsIndeterminate = true;
                 });
 
@@ -2057,6 +2123,7 @@ namespace Scanner
                     UnlockPaneManage(false);
                     UnlockToolbar();
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                     ProgressBarLeftPaneManage.IsIndeterminate = false;
                 });
             }
@@ -2181,8 +2248,6 @@ namespace Scanner
                     List<StorageFile> list = new List<StorageFile>();
                     list.Add(scanResult.GetImageFile(FlipViewScan.SelectedIndex));
                     args.Data.SetStorageItems(list);
-
-                    args.DragUI.SetContentFromBitmapImage(scanResult.GetThumbnail(FlipViewScan.SelectedIndex));
                 });
             }
             catch (Exception) { }
@@ -2435,7 +2500,11 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = false;
                     ButtonDiscard.IsEnabled = false;
                     ImageCropperScan.IsEnabled = false;
-                    if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                    if (format == SupportedFormat.PDF)
+                    {
+                        ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                        ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                    }
                 });
 
                 switch (flowState)
@@ -2470,13 +2539,16 @@ namespace Scanner
                         break;
                 }
 
-                if (asCopy) await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
-
-                await RunOnUIThreadAsync(CoreDispatcherPriority.High,
-                () =>
+                if (asCopy)
                 {
-                    if (!asCopy) TransitionFromEditingMode();
-                });
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardIconSaveCopyDone1.Begin());
+                    await NarratorAnnounceAsync(LocalizedString("TextSavedChangesCopyAccessibility"), TextBlockNarratorStatus);
+                }
+                else
+                {
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => TransitionFromEditingMode());
+                    await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
+                }
             }
             catch (Exception exc)
             {
@@ -2498,6 +2570,7 @@ namespace Scanner
                     ButtonSaveCopy.IsEnabled = true;
                     ButtonDiscard.IsEnabled = true;
                     ImageCropperScan.IsEnabled = true;
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                     ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
             }
@@ -2556,12 +2629,6 @@ namespace Scanner
             });
         }
 
-        private async void HyperlinkFeedbackHub_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
-            Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
-        {
-            await LaunchFeedbackHubAsync();
-        }
-
         private async void HyperlinkRate_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
             Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
         {
@@ -2591,7 +2658,11 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
-                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                if (format == SupportedFormat.PDF)
+                {
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                }
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2604,6 +2675,7 @@ namespace Scanner
 
                 // generate image
                 await scanResult.GetImageAsync(index);
+                await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
             }
             catch (Exception exc)
             {
@@ -2623,6 +2695,7 @@ namespace Scanner
                     if (lockToolbar) UnlockToolbar();
                     UnlockPaneManage(false);
                     UnlockPaneScanOptions();
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                     ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 });
             }
@@ -2640,6 +2713,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                 ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
@@ -2675,6 +2749,7 @@ namespace Scanner
                     }
                 }
                 await Task.WhenAll(tasksPreview);
+                await NarratorAnnounceAsync(LocalizedString("TextSavedChangesAccessibility"), TextBlockNarratorStatus);
             }
             catch (Exception exc)
             {
@@ -2691,6 +2766,7 @@ namespace Scanner
                     if (lockToolbar) UnlockToolbar();
                     UnlockPaneManage(true);
                     UnlockPaneScanOptions();
+                    ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                     ProgressBarLeftPaneManage.IsIndeterminate = false;
                     if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                 });
@@ -2736,7 +2812,11 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
-                if (format == SupportedFormat.PDF) ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                if (format == SupportedFormat.PDF)
+                {
+                    ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                    ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+                }
             });
 
             int index = FlipViewScan.SelectedIndex;
@@ -2771,6 +2851,7 @@ namespace Scanner
                         if (lockToolbar) UnlockToolbar();
                         UnlockPaneManage(false);
                         UnlockPaneScanOptions();
+                        ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                         ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                     });
                 }
@@ -2789,6 +2870,7 @@ namespace Scanner
                 if (lockToolbar) LockToolbar();
                 LockPaneManage(true);
                 LockPaneScanOptions();
+                ProgressBarLeftPaneManage.Visibility = Visibility.Visible;
                 ProgressBarLeftPaneManage.IsIndeterminate = true;
             });
 
@@ -2832,6 +2914,7 @@ namespace Scanner
                         if (lockToolbar) UnlockToolbar();
                         UnlockPaneManage(true);
                         UnlockPaneScanOptions();
+                        ProgressBarLeftPaneManage.Visibility = Visibility.Collapsed;
                         ProgressBarLeftPaneManage.IsIndeterminate = false;
                         if (uiState != UIstate.wide && ButtonManage.IsChecked == false) TransitionFromSelectMode();
                     });
@@ -2908,8 +2991,11 @@ namespace Scanner
                 TextBlockContentPaneGridProgressRingScan.Visibility = Visibility.Collapsed;
                 TextBlockContentPaneGridProgressRingScan.Text = "";
                 RefreshFileName();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
                 ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
                 RefreshScanButton();
+                OverlayScan.Visibility = Visibility.Collapsed;
+                lastFlipViewIndex = -1;
             });
             flowState = FlowState.initial;
         }
@@ -2945,7 +3031,7 @@ namespace Scanner
         private async void TeachingTipTutorialSaveLocation_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TeachingTipTutorialSaveLocation.IsOpen = false);
-            Frame.Navigate(typeof(SettingsPage), null, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());
         }
 
         private async void TeachingTipUpdated_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
@@ -3015,6 +3101,405 @@ namespace Scanner
             log.Information(exc, "Throwing debug exception.");
             Serilog.Log.CloseAndFlush();
             throw exc;
+        }
+
+        private void ContentDialogDebug_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+            if (ComboBoxDebugFormat.Items.Count == 0)
+            {
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.JPG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PNG);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.TIF);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.BMP);
+                ComboBoxDebugFormat.Items.Add(SupportedFormat.PDF);
+                ComboBoxDebugFormat.SelectedIndex = 0;
+            }
+            ComboBoxDebugFormat_SelectionChanged(null, null);
+        }
+
+        private async void LeftPaneGridViewManage_DragOver(object sender, DragEventArgs e)
+        {
+            if (scanResult != null && scanResult.GetFileFormat() == SupportedFormat.PDF && flowState == FlowState.initial
+                && e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => LeftPaneGridViewManage.CanReorderItems = false);
+            }
+            else
+            {
+                e.AcceptedOperation = DataPackageOperation.None;
+                return;
+            }
+        }
+
+        private async void LeftPaneGridViewManage_Drop(object sender, DragEventArgs e)
+        {
+            if (scanResult == null || scanResult.GetFileFormat() != SupportedFormat.PDF || flowState != FlowState.initial) return;
+            log.Information("Data dropped onto GridView.");
+
+            // lock UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                LockToolbar();
+                LockPaneManage(true);
+                LockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Visible;
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = true;
+            });
+
+            // collect valid files that can be added
+            List<StorageFile> newFilesTemp = new List<StorageFile>();
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+                foreach (IStorageItem item in items)
+                {
+                    if (item.IsOfType(StorageItemTypes.File))
+                    {
+                        // file among dropped stuff
+                        StorageFile file = (StorageFile)item;
+                        SupportedFormat? format = ConvertFormatStringToSupportedFormat(file.FileType);
+
+                        if (format != null && IsImageFormat((SupportedFormat)format)) newFilesTemp.Add(file);
+                    }
+                }
+            }
+
+            // move files to correct folder and add them to the scanResult
+            List<StorageFile> conversionFiles = new List<StorageFile>();
+            for (int i = 0; i < newFilesTemp.Count; i++)
+            {
+                StorageFile conversionFile = null;
+                try
+                {
+                    conversionFile = await newFilesTemp[i].CopyAsync(folderConversion, newFilesTemp[i].Name, NameCollisionOption.GenerateUniqueName);
+                }
+                catch (Exception exc)
+                {
+                    log.Error(exc, "Copying a dropped file to the conversion folder failed.");
+                }
+
+                if (conversionFile != null) conversionFiles.Add(conversionFile);
+            }
+
+            IReadOnlyList<StorageFile> filesToAdd = conversionFiles;
+
+            if (filesToAdd.Count != 0) await scanResult.AddFiles(filesToAdd, scanResult.GetFileFormat(), futureAccessListIndex);
+
+            // restore UI
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                UnlockToolbar();
+                UnlockPaneManage(false);
+                UnlockPaneScanOptions();
+                ProgressBarContentPaneTopToolbar.Visibility = Visibility.Collapsed;
+                ProgressBarContentPaneTopToolbar.IsIndeterminate = false;
+            });
+        }
+
+        private async void LeftPaneGridViewManage_DragLeave(object sender, DragEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => LeftPaneGridViewManage.CanReorderItems = true);
+        }
+
+        private async void TextBoxRename_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBoxRename.Focus(FocusState.Programmatic));
+        }
+
+        private async void Page_Loading(FrameworkElement sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                if (flowDirectionSetting == "LTR")
+                {
+                    GridRoot.FlowDirection = FlowDirection.LeftToRight;
+                    ContentPane.FlowDirection = FlowDirection.LeftToRight;
+                    ContentDialogChangelog.FlowDirection = FlowDirection.LeftToRight;
+                }
+                else
+                {
+                    GridRoot.FlowDirection = FlowDirection.RightToLeft;
+                    ContentPane.FlowDirection = FlowDirection.RightToLeft;
+                    ContentDialogChangelog.FlowDirection = FlowDirection.RightToLeft;
+                }
+            });
+        }
+
+        private async void ButtonDebugRemoveFakeScanners_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                List<ComboBoxItem> fakes = new List<ComboBoxItem>();
+                foreach (var scanner in scannerList)
+                {
+                    RecognizedScanner recognizedScanner = (RecognizedScanner)scanner.Tag;
+
+                    if (scanner != ComboBoxItemScannerIndicator && recognizedScanner.isFake)
+                    {
+                        fakes.Add(scanner);
+                    }
+                }
+
+                foreach (var fake in fakes)
+                {
+                    scannerList.Remove(fake);
+                }
+            });
+        }
+
+        private async void StoryboardScannerAdded1_Completed(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => StoryboardScannerAdded2.Begin());
+        }
+
+        private void TryZoomScanAsync(float factor, int index, bool animate)
+        {
+            if (factor < 1.02) factor = 1;
+            ScrollViewer scrollViewer = null;
+
+            switch (flowState)
+            {
+                case FlowState.initial:
+                case FlowState.scanning:
+                case FlowState.select:
+                    if (index == -1 || index >= FlipViewScan.Items.Count) return;
+                    FlipViewItem flipViewItem = (FlipViewItem)FlipViewScan.ContainerFromIndex(index);
+                    scrollViewer = (ScrollViewer)flipViewItem.ContentTemplateRoot;
+                    break;
+                case FlowState.draw:
+                    scrollViewer = ScrollViewerEditDraw;
+                    break;
+                case FlowState.crop:
+                default:
+                    return;
+            }
+
+            double horizontalOffset = scrollViewer.ViewportWidth / 2 * (factor - 1);
+            if (scrollViewer.ZoomFactor > 1)
+            {
+                double previousHorizontalOffset = scrollViewer.HorizontalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                if (previousHorizontalOffset < horizontalOffset) horizontalOffset = horizontalOffset - (horizontalOffset - previousHorizontalOffset);
+                else horizontalOffset = horizontalOffset + (previousHorizontalOffset - horizontalOffset);
+            }
+
+            double verticalOffset = scrollViewer.ViewportHeight / 2 * (factor - 1);
+            if (scrollViewer.ZoomFactor > 1)
+            {
+                double previousVerticalOffset = scrollViewer.VerticalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                if (previousVerticalOffset < verticalOffset) verticalOffset = verticalOffset - (verticalOffset - previousVerticalOffset);
+                else verticalOffset = verticalOffset + (previousVerticalOffset - verticalOffset);
+            }
+
+            scrollViewer.ChangeView(horizontalOffset, verticalOffset, factor, !animate);
+        }
+
+        private async void ScrollViewerFlipViewScanDataTemplate_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (flowState == FlowState.initial || flowState == FlowState.select || flowState == FlowState.scanning)
+                {
+                    RefreshZoomUIForFactor(e.NextView.ZoomFactor);
+                }
+            });
+        }
+
+        private ScrollViewer GetCurrentScanScrollViewer()
+        {
+            switch (flowState)
+            {
+                case FlowState.initial:
+                case FlowState.scanning:
+                case FlowState.select:
+                    if (FlipViewScan.SelectedIndex == -1) return null;
+                    FlipViewItem flipViewItem = (FlipViewItem)FlipViewScan.ContainerFromIndex(FlipViewScan.SelectedIndex);
+                    ScrollViewer scrollViewer = (ScrollViewer)flipViewItem.ContentTemplateRoot;
+                    return scrollViewer;
+                case FlowState.draw:
+                    return ScrollViewerEditDraw;
+                case FlowState.crop:
+                default:
+                    return null;
+            }
+        }
+
+        private async void ButtonZoomInOut_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (sender == ButtonZoomIn)
+                {
+                    ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
+
+                    if (scrollViewer.ZoomFactor >= 2.45) return;
+
+                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync((float)2.5, FlipViewScan.SelectedIndex, true);
+                }
+                else if (sender == ButtonZoomOut)
+                {
+                    ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
+
+                    if (scrollViewer.ZoomFactor == 1) return;
+
+                    if (scrollViewer.ZoomFactor >= 2.45) TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
+                }
+            });
+        }
+
+        private async void ScrollViewerEditDraw_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (flowState == FlowState.draw) RefreshZoomUIForFactor(e.NextView.ZoomFactor);
+            });
+        }
+
+        private void RefreshZoomUIForFactor(float factor)
+        {
+            TextBlockZoomFactor.Text = String.Format(LocalizedString("TextZoomFactor"), factor * 100);
+            if (factor < (float)1.05)
+            {
+                ButtonZoomOut.IsEnabled = false;
+                ButtonZoomIn.IsEnabled = true;
+                ZoomFactorAccent.Visibility = Visibility.Collapsed;
+                TextBlockZoomFactor.FontWeight = FontWeights.Normal;
+            }
+            else if (factor < 2.45)
+            {
+                ButtonZoomOut.IsEnabled = true;
+                ButtonZoomIn.IsEnabled = true;
+                ZoomFactorAccent.Visibility = Visibility.Visible;
+                TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+            }
+            else
+            {
+                ButtonZoomOut.IsEnabled = true;
+                ButtonZoomIn.IsEnabled = false;
+                ZoomFactorAccent.Visibility = Visibility.Visible;
+                TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+            }
+        }
+
+        private void ScrollViewerFlipViewScanDataTemplate_Loading(FrameworkElement sender, object args)
+        {
+            IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+            snapPoints.Add(1);
+            float value = (float)1.05;
+            while (value <= 2.5)
+            {
+                snapPoints.Add(value);
+                value = (float)(value + 0.01);
+            }
+        }
+
+        private async void ButtonDebugResolution_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ComboBoxScanners.SelectedItem == null) return;
+
+                RecognizedScanner scanner = (RecognizedScanner)((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag;
+
+                IImageScannerSourceConfiguration config = null;
+                if (RadioButtonDebugResolutionFlatbed.IsChecked == true) config = scanner.scanner.FlatbedConfiguration;
+                else if (RadioButtonDebugResolutionFeeder.IsChecked == true) config = scanner.scanner.FeederConfiguration;
+
+                if (config != null)
+                {
+                    float value;
+                    float.TryParse(NumberBoxDebugResolution.Text, out value);
+
+                    config.DesiredResolution = new ImageScannerResolution { DpiX = value, DpiY = value };
+                    TextBlockDebugResolutionMinX.Text = String.Format("MinX = {0:0}", config.MinResolution.DpiX);
+                    TextBlockDebugResolutionMinY.Text = String.Format("MinY = {0:0}", config.MinResolution.DpiY);
+                    TextBlockDebugResolutionMaxX.Text = String.Format("MaxX = {0:0}", config.MaxResolution.DpiX);
+                    TextBlockDebugResolutionMaxY.Text = String.Format("MaxY = {0:0}", config.MaxResolution.DpiY);
+                    TextBlockDebugResolutionActualX.Text = String.Format("ActualX = {0:0}", config.ActualResolution.DpiX);
+                    TextBlockDebugResolutionActualY.Text = String.Format("ActualY = {0:0}", config.ActualResolution.DpiY);
+                }
+            });
+        }
+
+        private async Task InitializeAutomationPropertiesAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneSettings);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneScanFolder);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneCancel);
+                CopyToolTipToAutomationPropertiesName(ButtonDevices);
+                CopyToolTipToAutomationPropertiesName(ButtonScanOptions);
+                CopyToolTipToAutomationPropertiesName(ButtonManage);
+                CopyToolTipToAutomationPropertiesName(ButtonCrop);
+                CopyToolTipToAutomationPropertiesName(ButtonRotate);
+                CopyToolTipToAutomationPropertiesName(ButtonDraw);
+                CopyToolTipToAutomationPropertiesName(ButtonRename);
+                CopyToolTipToAutomationPropertiesName(ButtonDelete);
+                CopyToolTipToAutomationPropertiesName(ButtonCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonOpenWith);
+                CopyToolTipToAutomationPropertiesName(ButtonShare);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageSelect);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageRotate);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonLeftPaneManageShare);
+                CopyToolTipToAutomationPropertiesName(ButtonZoomIn);
+                CopyToolTipToAutomationPropertiesName(ButtonZoomOut);
+                CopyToolTipToAutomationPropertiesName(ButtonCropAspectRatio);
+                CopyToolTipToAutomationPropertiesName(ButtonSave);
+                CopyToolTipToAutomationPropertiesName(ButtonSaveCopy);
+                CopyToolTipToAutomationPropertiesName(ButtonDiscard);
+            });
+        }
+
+        private async void ButtonDialogFeedbackDonate_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(true), new DrillInNavigationTransitionInfo());     // navigate to settings
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TeachingTipFeedback.IsOpen = false;
+                SplitViewLeftPane.IsPaneOpen = false;
+                ButtonScanOptions.IsChecked = false;
+            });
+        }
+
+        private async void ContentDialogChangelog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(true), new DrillInNavigationTransitionInfo());     // navigate to settings
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                SplitViewLeftPane.IsPaneOpen = false;
+                ButtonScanOptions.IsChecked = false;
+            });
+        }
+
+        private async void GridContentPaneTopToolbar_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                double newMaxWidth;
+                if (GridContentPaneTopToolbar.ActualWidth < 750
+                || uiState == UIstate.small)
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Left;
+                    newMaxWidth = GridContentPaneTopToolbar.ActualWidth - currentTitleBarButtonWidth - 24;
+                }
+                else
+                {
+                    StackPanelContentPaneTopToolbarText.HorizontalAlignment = HorizontalAlignment.Center;
+                    newMaxWidth = GridContentPaneTopToolbar.ActualWidth - 2 * currentTitleBarButtonWidth - 24;
+                }
+
+                if (newMaxWidth > 500) newMaxWidth = 500;
+                else if (newMaxWidth <= 0) newMaxWidth = 0;
+
+                TextBlockContentPaneTopToolbarFileName.MaxWidth = newMaxWidth;
+            });
         }
     }
 }
