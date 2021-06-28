@@ -1,5 +1,6 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -259,35 +260,12 @@ namespace Scanner
 
         private async void ButtonLeftPaneSettings_Click(object sender, RoutedEventArgs e)
         {
-#if DEBUG
-            var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-
-            if (ctrlKey.HasFlag(CoreVirtualKeyStates.Down))
+            Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                // show debug menu when CTRL key is pressed
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
-                {
-                    FindName("ContentDialogDebug");
-                    await ContentDialogDebug.ShowAsync();
-                });
-            }
-            else
-            {
-                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    SplitViewLeftPane.IsPaneOpen = false;
-                    ButtonScanOptions.IsChecked = false;
-                });
-            }
-#else
-                Frame.Navigate(typeof(SettingsPage), new SettingsPageIntent(false), new DrillInNavigationTransitionInfo());     // navigate to settings
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    SplitViewLeftPane.IsPaneOpen = false;
-                    ButtonScanOptions.IsChecked = false;
-                });
-#endif
+                SplitViewLeftPane.IsPaneOpen = false;
+                ButtonScanOptions.IsChecked = false;
+            });
         }
 
         private async void HyperlinkSettings_Click(Windows.UI.Xaml.Documents.Hyperlink sender,
@@ -344,7 +322,7 @@ namespace Scanner
                 {
                     // first app launch after an update
                     log.Information("MainPage loaded after first launch with this version.");
-                    //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
 
                 await InitializeAutomationPropertiesAsync();
@@ -3337,16 +3315,14 @@ namespace Scanner
                     ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
 
                     if (scrollViewer.ZoomFactor >= 2.45) return;
-
-                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync((float)2.5, FlipViewScan.SelectedIndex, true);
+                    else TryZoomScanAsync((float)2.5, FlipViewScan.SelectedIndex, true);
                 }
                 else if (sender == ButtonZoomOut)
                 {
                     ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
 
                     if (scrollViewer.ZoomFactor == 1) return;
-
-                    if (scrollViewer.ZoomFactor >= 2.45) TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
+                    else TryZoomScanAsync(1, FlipViewScan.SelectedIndex, true);
                 }
             });
         }
@@ -3500,6 +3476,19 @@ namespace Scanner
 
                 TextBlockContentPaneTopToolbarFileName.MaxWidth = newMaxWidth;
             });
+        }
+
+        private async void ButtonLeftPaneSettings_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+#if DEBUG
+            // show debug menu    
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, async () =>
+            {
+                FindName("ContentDialogDebug");
+                await ContentDialogDebug.ShowAsync();
+            });
+#endif
+
         }
     }
 }

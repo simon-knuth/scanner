@@ -120,11 +120,15 @@
 
             <RelativePanel x:Name="RelativePanelPreview">
                 <ScrollViewer x:Name="ScrollViewerPreview" MinZoomFactor="1" MaxZoomFactor="2.5" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" ZoomMode="Enabled" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True"
-                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource TopThicknessConverter}}"
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource TopThicknessConverter}}" ZoomSnapPointsType="Mandatory"
                               Padding="{Binding ElementName=GridPreviewHeader, Path=ActualHeight, Converter={StaticResource NegativeTopThicknessConverter}}" ViewChanging="ScrollViewerPreview_ViewChanging" Loading="ScrollViewerPreview_Loading">
-                    <Image  x:Name="ImagePreview" Margin="{Binding ActualHeight, ElementName=GridPreviewHeader, Converter={StaticResource TopThicknessConverter}}"
+                    <controls:ImageEx  x:Name="ImagePreview" Margin="{Binding ActualHeight, ElementName=GridPreviewHeader, Converter={StaticResource TopThicknessConverter}}"
                             MaxWidth="{Binding ViewportWidth, ElementName=ScrollViewerDummy}"
-                            MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}"/>
+                            MaxHeight="{Binding ViewportHeight, ElementName=ScrollViewerDummy}">
+                        <controls:ImageEx.RenderTransform>
+                            <CompositeTransform/>
+                        </controls:ImageEx.RenderTransform>
+                    </controls:ImageEx>
                 </ScrollViewer>
 
                 <controls:DropShadowPanel x:Name="OverlayPreview" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" Margin="24" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20" Visibility="Collapsed">

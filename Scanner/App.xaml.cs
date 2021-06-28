@@ -190,8 +190,15 @@ namespace Scanner
 
             object result;
             args.Request.Message.TryGetValue("RESULT", out result);
-            if ((string)result == "SUCCESS") taskCompletionSource.TrySetResult(true);
-            else taskCompletionSource.TrySetResult(false);
+            if ((string)result == "SUCCESS")
+            {
+                taskCompletionSource.TrySetResult(true);
+            }
+            else
+            {
+                log.Error("FullTrustProcess returned an error. (" + ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"] + ")");
+                taskCompletionSource.TrySetResult(false);
+            }
         }
     }
 }

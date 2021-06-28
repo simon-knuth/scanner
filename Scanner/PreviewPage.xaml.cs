@@ -1,4 +1,5 @@
 ﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -181,16 +183,14 @@ namespace Scanner
                     ScrollViewer scrollViewer = ScrollViewerPreview;
 
                     if (scrollViewer.ZoomFactor >= 2.45) return;
-
-                    if (scrollViewer.ZoomFactor < 1.95) TryZoomScanAsync((float)2.5, true);
+                    else TryZoomScanAsync((float)2.5, true);
                 }
                 else if (sender == ButtonZoomOut)
                 {
                     ScrollViewer scrollViewer = ScrollViewerPreview;
 
                     if (scrollViewer.ZoomFactor == 1) return;
-
-                    if (scrollViewer.ZoomFactor >= 2.45) TryZoomScanAsync(1, true);
+                    else TryZoomScanAsync(1, true);
                 }
             });
         }

@@ -377,6 +377,7 @@
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\Simon.jpg" />
     <Content Include="License Texts\LicenseSerilogSinksFile.txt" />
     <Content Include="License Texts\LicenseSerilogSinksAsync.txt" />
     <Content Include="License Texts\LicenseSerilogExceptions.txt" />
@@ -512,6 +513,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\ru\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\pt-br\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -126,7 +126,7 @@
 
             <Storyboard x:Name="StoryboardProgressBarScanBegin">
                 <DoubleAnimation Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Opacity" To="1.0"
-                                 Duration="0:0:0.5"/>
+                                 Duration="0:0:0.4"/>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
                     <DiscreteObjectKeyFrame KeyTime="0:0:0">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
@@ -136,14 +136,14 @@
 
             <Storyboard x:Name="StoryboardProgressBarScanEnd">
                 <DoubleAnimation Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Opacity" To="0.0"
-                                 Duration="0:0:0.5"/>
+                                 Duration="0:0:0.4"/>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.4">
                         <DiscreteObjectKeyFrame.Value>Collapsed</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextBlockContentPaneGridProgressRingScan" Storyboard.TargetProperty="Visibility">
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0.4">
                         <DiscreteObjectKeyFrame.Value>Visible</DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
@@ -683,7 +683,7 @@
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform/>
                                 </StackPanel.RenderTransform>
-                                <Button x:Name="ButtonLeftPaneSettings" x:Uid="ButtonScanOptionsSettings" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneSettings_Click">
+                                <Button x:Name="ButtonLeftPaneSettings" x:Uid="ButtonScanOptionsSettings" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneSettings_Click" RightTapped="ButtonLeftPaneSettings_RightTapped">
                                     <SymbolIcon Symbol="Setting" Margin="8,8,8,8"/>
                                 </Button>
                                 <Button x:Name="ButtonLeftPaneScanFolder" x:Uid="ButtonScanOptionsSaveLocation" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Style="{ThemeResource TextBlockButtonStyle}" Padding="0,0,0,0" Margin="0,0,12,0" Click="ButtonLeftPaneScanFolder_Click">

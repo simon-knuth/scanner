@@ -1417,22 +1417,29 @@ namespace Scanner
                 // save the source and target name
                 ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
 
-                // call win32 app and wait for result
-                log.Information("Launching full trust process.");
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                await win32ResultAsync.ConfigureAwait(false);
-                log.Information("Full trust process is done.");
+                int attempt = 1;
+                while (attempt >= 0)
+                {                    
+                    // call win32 app and wait for result
+                    log.Information("Launching full trust process.");
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    await win32ResultAsync.ConfigureAwait(false);
+                    log.Information("Full trust process is done.");
 
-                // get result file and move it to its correct folder
-                newPdf = null;
-                try
-                {
-                    newPdf = await folderTemp.GetFileAsync(newName);
-                }
-                catch (Exception)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                    newPdf = await folderTemp.GetFileAsync(newName);
+                    // get result file and move it to its correct folder
+                    try
+                    {
+                        newPdf = null;
+                        newPdf = await folderTemp.GetFileAsync(newName);
+                        attempt = -1;
+                    }
+                    catch (Exception)
+                    {
+                        if (attempt == 3) throw;
+
+                        attempt++;
+                        await Task.Delay(TimeSpan.FromSeconds(3));
+                    }
                 }
 
                 // move PDF file to target folder

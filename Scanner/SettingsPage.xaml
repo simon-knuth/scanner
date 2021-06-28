@@ -253,9 +253,17 @@
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                 <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                             </StackPanel>
-                            <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,12,0,0">
-                            <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2021 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run></Span>
-                            </TextBlock>
+                            <Grid Margin="0,12,0,0" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <PersonPicture Grid.Column="0" ProfilePicture="/Assets/Simon.jpg" Initials="SK" DisplayName="Simon Knuth" Width="65"/>
+                                <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0">
+                                    <Span><Run FontWeight="Medium">Scanner for Windows 10</Run><LineBreak/><Run>Copyright © 2021 Simon Knuth</Run><LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run></Span>
+                                </TextBlock>
+                            </Grid>
                             <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" Margin="0,18,0,0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite"/>
@@ -328,7 +336,7 @@
                 <Frame x:Name="FrameDialogLicenses" Height="350" Width="350" Navigated="FrameDialogLicenses_Navigated">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-
+                            
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -343,15 +351,15 @@
                 </StackPanel>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
                     <TextBlock LineHeight="28">
-                        <Run FontWeight="Bold">Astreptocoque</Run> - French
-                        <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
-                        <LineBreak/><Run FontWeight="Bold">David</Run> - British English
-                        <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
-                        <LineBreak/><Run FontWeight="Bold">Brendo Paulino dos Santos</Run> - Portuguese
-                        <LineBreak/><Run FontWeight="Bold">Brunotiago633</Run> - Portuguese
-                        <LineBreak/><Run FontWeight="Bold">João Tavares</Run> - Portuguese
-                        <LineBreak/><Run FontWeight="Bold">Андрей</Run> - Russian
-                        <LineBreak/><Run FontWeight="Bold">00000051</Run> - Russian
+                        <Run FontWeight="Bold">😁 David</Run> - British English
+                        <LineBreak/><Run FontWeight="Bold">😏 Astreptocoque</Run> - French                        
+                        <LineBreak/><Run FontWeight="Bold">🤗 Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="Bold">😇 Damian Czupryn</Run> - Polish
+                        <LineBreak/><Run FontWeight="Bold">🤯 Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
+                        <LineBreak/><Run FontWeight="Bold">😎 Brunotiago633</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="Bold">🤠 João Tavares</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="Bold">☺ Андрей</Run> - Russian
+                        <LineBreak/><Run FontWeight="Bold">😜 00000051</Run> - Russian
                     </TextBlock>
                 </ScrollViewer>
             </StackPanel>

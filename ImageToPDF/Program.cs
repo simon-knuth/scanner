@@ -70,7 +70,7 @@ namespace ImageToPDF
         ///     Converts the source file to a PDF file format.
         /// </summary>
         private static async Task Conversion()
-        {
+        {           
             try
             {
                 // get files to construct PDF from
@@ -122,9 +122,11 @@ namespace ImageToPDF
 
                 document.Save(resultStream, true);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 // notify UWP container that conversion failed
+                try { ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"] = exc.Message + " | " + exc.StackTrace; }
+                catch (Exception) { }
                 await SendMessageAsync("RESULT", "FAILURE");
             }
 
