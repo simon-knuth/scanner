@@ -351,15 +351,15 @@
                 </StackPanel>
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
                     <TextBlock LineHeight="28">
-                        <Run FontWeight="Bold">😁 David</Run> - British English
-                        <LineBreak/><Run FontWeight="Bold">😏 Astreptocoque</Run> - French                        
-                        <LineBreak/><Run FontWeight="Bold">🤗 Francesco</Run> - Italian
-                        <LineBreak/><Run FontWeight="Bold">😇 Damian Czupryn</Run> - Polish
-                        <LineBreak/><Run FontWeight="Bold">🤯 Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
-                        <LineBreak/><Run FontWeight="Bold">😎 Brunotiago633</Run> - Portuguese (Portugal)
-                        <LineBreak/><Run FontWeight="Bold">🤠 João Tavares</Run> - Portuguese (Portugal)
-                        <LineBreak/><Run FontWeight="Bold">☺ Андрей</Run> - Russian
-                        <LineBreak/><Run FontWeight="Bold">😜 00000051</Run> - Russian
+                        <Run FontWeight="Bold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="Bold">Astreptocoque</Run> - French                        
+                        <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
+                        <LineBreak/><Run FontWeight="Bold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
+                        <LineBreak/><Run FontWeight="Bold">Brunotiago633</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="Bold">João Tavares</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="Bold">Андрей</Run> - Russian
+                        <LineBreak/><Run FontWeight="Bold">00000051</Run> - Russian
                     </TextBlock>
                 </ScrollViewer>
             </StackPanel>
