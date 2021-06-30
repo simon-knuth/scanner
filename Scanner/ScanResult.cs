@@ -1593,16 +1593,45 @@ namespace Scanner
             }
         }
 
-        public void SetItemsSourceForControl(ItemsControl flipView)
+
+        /// <summary>
+        ///     Connects an <see cref="ItemsControl"/>'s source to the ScanResult.
+        /// </summary>
+        public void SetItemsSourceForControl(ItemsControl itemsControl)
         {
-            flipView.ItemsSource = elements;
+            itemsControl.ItemsSource = elements;
         }
 
+
+        /// <summary>
+        ///     Returns whether a page has a folder that shall be displayed.
+        /// </summary>
         public bool HasDisplayedFolder(int index)
         {
             if (!IsValidIndex(index)) throw new ApplicationException("Invalid index " + index + " for HasDisplayedFolder().");
 
             return !String.IsNullOrEmpty(elements[index].DisplayedFolder);
+        }
+
+
+        /// <summary>
+        ///     Removes all items in <see cref="folderConversion"/> that don't belong to a page.
+        /// </summary>
+        public async Task CleanUpConversionFolder()
+        {
+            var filesFolder = await folderConversion.GetFilesAsync();
+            var filesScanResult = elements.Select(e => e.ScanFile).ToList();
+
+            foreach (StorageFile fileFolder in filesFolder)
+            {
+                bool delete = true;
+                foreach (StorageFile fileScanResult in filesScanResult)
+                {
+                    if (fileFolder.IsEqual(fileScanResult)) delete = false;
+                }
+
+                if (delete == true) await fileFolder.DeleteAsync();
+            }
         }
     }
 }

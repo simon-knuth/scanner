@@ -1026,6 +1026,9 @@ namespace Scanner
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
                         folderToScanTo = folderConversion;
+
+                        // delete rogue files from conversion folder
+                        if (scanResult != null) await scanResult.CleanUpConversionFolder();
                     }
                     else
                     {
