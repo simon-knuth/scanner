@@ -322,7 +322,7 @@ namespace Scanner
                 {
                     // first app launch after an update
                     log.Information("MainPage loaded after first launch with this version.");
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
+                    //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipUpdated));
                 }
 
                 await InitializeAutomationPropertiesAsync();
@@ -1026,9 +1026,6 @@ namespace Scanner
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
                         folderToScanTo = folderConversion;
-
-                        // delete rogue files from conversion folder
-                        if (scanResult != null) await scanResult.CleanUpConversionFolder();
                     }
                     else
                     {
@@ -1642,7 +1639,7 @@ namespace Scanner
                 return;
             }
             else if (scanResult != null &&
-                        ((settingSaveLocationAsk && scanResult.HasDisplayedFolder(0)) ||                                // switched from set location
+                        ((settingSaveLocationAsk && !scanResult.HasDisplayedFolder(0)) ||                               // switched from set location
                             (!settingSaveLocationAsk && scanResult.originalTargetFolder.Path != scanFolder.Path)))      // switched to set location or changed location
             {
                 // save location has changed

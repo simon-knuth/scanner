@@ -1414,8 +1414,11 @@ namespace Scanner
                 taskCompletionSource = new TaskCompletionSource<bool>();
                 var win32ResultAsync = taskCompletionSource.Task;
 
-                // save the source and target name
+                // save the target name
                 ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
+
+                // delete rogue files from conversion folder
+                await CleanUpConversionFolder();
 
                 int attempt = 1;
                 while (attempt >= 0)
@@ -1617,7 +1620,7 @@ namespace Scanner
         /// <summary>
         ///     Removes all items in <see cref="folderConversion"/> that don't belong to a page.
         /// </summary>
-        public async Task CleanUpConversionFolder()
+        private async Task CleanUpConversionFolder()
         {
             var filesFolder = await folderConversion.GetFilesAsync();
             var filesScanResult = elements.Select(e => e.ScanFile).ToList();
@@ -1630,6 +1633,7 @@ namespace Scanner
                     if (fileFolder.IsEqual(fileScanResult)) delete = false;
                 }
 
+                log.Information("Removing rogue {File} from conversion folder.", fileFolder.Name);
                 if (delete == true) await fileFolder.DeleteAsync();
             }
         }
