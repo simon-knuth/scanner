@@ -88,7 +88,7 @@ namespace Scanner
             if (targetFormat == SupportedFormat.PDF)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
-                await NumberNewConversionFilesAsync(fileList, 0);
+                await NumberConversionFilesAsync(fileList, 0);
                 await result.GeneratePDFAsync(pdfName);
             }
             else
@@ -759,7 +759,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberNewConversionFilesAsync(filesNumbering, index + 1);
+                    await NumberConversionFilesAsync(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -807,7 +807,17 @@ namespace Scanner
             // if necessary, update or delete PDF
             if (scanResultFormat == SupportedFormat.PDF)
             {
-                if (GetTotalNumberOfPages() > 0) await GeneratePDF();
+                if (GetTotalNumberOfPages() > 0)
+                {
+                    // assign temporary names and then reinstate the file order prior to generation
+                    for (int i = 0; i < elements.Count; i++)
+                    {
+                        await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
+                    }
+                    await NumberConversionFilesAsync(elements.Select(e => e.ScanFile).ToList(), 0);
+
+                    await GeneratePDF();
+                }
                 else await pdf.DeleteAsync();
             }
         }
@@ -850,7 +860,17 @@ namespace Scanner
             // if necessary, update or delete PDF
             if (scanResultFormat == SupportedFormat.PDF)
             {
-                if (GetTotalNumberOfPages() > 0) await GeneratePDF();
+                if (GetTotalNumberOfPages() > 0)
+                {
+                    // assign temporary names and then reinstate the file order prior to generation
+                    for (int i = 0; i < elements.Count; i++)
+                    {
+                        await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
+                    }
+                    await NumberConversionFilesAsync(elements.Select(e => e.ScanFile).ToList(), 0);
+                    
+                    await GeneratePDF();
+                }
                 else await pdf.DeleteAsync();
             }
         }
@@ -993,7 +1013,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberNewConversionFilesAsync(filesNumbering, index + 1);
+                    await NumberConversionFilesAsync(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -1233,7 +1253,7 @@ namespace Scanner
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == SupportedFormat.PDF) await NumberNewConversionFilesAsync(files, GetTotalNumberOfPages());
+                if (targetFormat == SupportedFormat.PDF) await NumberConversionFilesAsync(files, GetTotalNumberOfPages());
 
                 foreach (StorageFile file in files)
                 {
@@ -1480,7 +1500,7 @@ namespace Scanner
         /// </summary>
         /// <param name="files">The files to be numbered.</param>
         /// <param name="startIndex">The first number.</param>
-        private static async Task NumberNewConversionFilesAsync(IEnumerable<StorageFile> files, int startIndex)
+        private static async Task NumberConversionFilesAsync(IEnumerable<StorageFile> files, int startIndex)
         {
             try
             {
@@ -1493,7 +1513,7 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Number new conversion files with startIndex {Index} failed.", startIndex);
+                log.Error(exc, "Number conversion files with startIndex {Index} failed.", startIndex);
                 throw;
             }
         }
