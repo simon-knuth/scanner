@@ -939,7 +939,7 @@ namespace Scanner
                     }
                     askedForFolder = true;
                 }
-                else scanFolderTemp = null;
+                else if (!settingSaveLocationAsk) scanFolderTemp = null;
 
                 // determine where final files are saved to
                 StorageFolder folderToSaveTo;
