@@ -426,7 +426,11 @@ static class Utilities
             AppCenter.SetEnabledAsync(true);
         }
         else AppCenter.SetEnabledAsync(false);
-        RegisterWithMicrosoftAppCenter();
+        try
+        {
+            RegisterWithMicrosoftAppCenter();
+        }
+        catch (Exception) { }
 
         PackageVersion version = Package.Current.Id.Version;
         string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
