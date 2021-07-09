@@ -1653,8 +1653,11 @@ namespace Scanner
                     if (fileFolder.IsEqual(fileScanResult)) delete = false;
                 }
 
-                log.Information("Removing rogue {File} from conversion folder.", fileFolder.Name);
-                if (delete == true) await fileFolder.DeleteAsync();
+                if (delete == true)
+                {
+                    log.Information("Removing rogue {File} from conversion folder.", fileFolder.Name);
+                    await fileFolder.DeleteAsync();
+                }
             }
         }
     }
