@@ -73,6 +73,7 @@ The currently supported languages are:
   <li>Italian (IT)</li>
   <li>Polish (PL)</li>
   <li>Portuguese (PT)</li>
+  <li>Portuguese (PT-BR)</li>
   <li>Russian (RU)</li>
 </ul>  
 
