@@ -903,6 +903,13 @@ static class Utilities
         }
         catch (Exception exc) { log.Error(exc, "Actively deleting folder 'withoutRotation' in temp folder failed."); }
 
+        try
+        {
+            StorageFolder folder = await folderTemp.GetFolderAsync("receivedPagesPDF");
+            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        }
+        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'receivedPagesPDF' in temp folder failed."); }
+
         // replace/create folders
         try
         {
@@ -921,6 +928,16 @@ static class Utilities
         catch (Exception exc)
         {
             log.Error(exc, "Couldn't create/replace folder 'withoutRotation' in temp folder.");
+            throw;
+        }
+
+        try
+        {
+            folderReceivedPagesPDF = await folderTemp.CreateFolderAsync("receivedPagesPDF", CreationCollisionOption.ReplaceExisting);
+        }
+        catch (Exception exc)
+        {
+            log.Error(exc, "Couldn't create/replace folder 'receivedPagesPDF' in temp folder.");
             throw;
         }
 

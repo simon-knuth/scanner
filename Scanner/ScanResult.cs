@@ -88,7 +88,7 @@ namespace Scanner
             if (targetFormat == SupportedFormat.PDF)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
-                await NumberConversionFilesAsync(fileList, 0);
+                await PrepareNewConversionFiles(fileList, 0);
                 await result.GeneratePDFAsync(pdfName);
             }
             else
@@ -759,7 +759,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberConversionFilesAsync(filesNumbering, index + 1);
+                    await PrepareNewConversionFiles(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -814,7 +814,7 @@ namespace Scanner
                     {
                         await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
                     }
-                    await NumberConversionFilesAsync(elements.Select(e => e.ScanFile).ToList(), 0);
+                    await PrepareNewConversionFiles(elements.Select(e => e.ScanFile).ToList(), 0);
 
                     await GeneratePDF();
                 }
@@ -867,7 +867,7 @@ namespace Scanner
                     {
                         await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
                     }
-                    await NumberConversionFilesAsync(elements.Select(e => e.ScanFile).ToList(), 0);
+                    await PrepareNewConversionFiles(elements.Select(e => e.ScanFile).ToList(), 0);
                     
                     await GeneratePDF();
                 }
@@ -1013,7 +1013,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
                         filesNumbering.Add(elements[i].ScanFile);
                     }
-                    await NumberConversionFilesAsync(filesNumbering, index + 1);
+                    await PrepareNewConversionFiles(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
@@ -1253,7 +1253,7 @@ namespace Scanner
             if (targetFormat == null || targetFormat == SupportedFormat.PDF)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == SupportedFormat.PDF) await NumberConversionFilesAsync(files, GetTotalNumberOfPages());
+                if (targetFormat == SupportedFormat.PDF) await PrepareNewConversionFiles(files, GetTotalNumberOfPages());
 
                 foreach (StorageFile file in files)
                 {
@@ -1437,8 +1437,8 @@ namespace Scanner
                 // save the target name
                 ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
 
-                // delete rogue files from conversion folder
-                await CleanUpConversionFolder();
+                // delete potential rogue files
+                await CleanUpReceivedPagesFolder();
 
                 int attempt = 1;
                 while (attempt >= 0)
@@ -1500,20 +1500,20 @@ namespace Scanner
         /// </summary>
         /// <param name="files">The files to be numbered.</param>
         /// <param name="startIndex">The first number.</param>
-        private static async Task NumberConversionFilesAsync(IEnumerable<StorageFile> files, int startIndex)
+        private static async Task PrepareNewConversionFiles(IEnumerable<StorageFile> files, int startIndex)
         {
             try
             {
                 int nextNumber = startIndex;
                 foreach (StorageFile file in files)
                 {
-                    await file.RenameAsync(nextNumber + file.FileType);
+                    await file.MoveAsync(folderConversion, nextNumber + file.FileType);
                     nextNumber++;
                 }
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Number conversion files with startIndex {Index} failed.", startIndex);
+                log.Error(exc, "Preparing conversion files with startIndex {Index} failed.", startIndex);
                 throw;
             }
         }
@@ -1638,26 +1638,15 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Removes all items in <see cref="folderConversion"/> that don't belong to a page.
+        ///     Removes all items in <see cref="folderReceivedPagesPDF"/>.
         /// </summary>
-        private async Task CleanUpConversionFolder()
+        private async Task CleanUpReceivedPagesFolder()
         {
-            var filesFolder = await folderConversion.GetFilesAsync();
-            var filesScanResult = elements.Select(e => e.ScanFile).ToList();
+            var files = await folderReceivedPagesPDF.GetFilesAsync();
 
-            foreach (StorageFile fileFolder in filesFolder)
+            foreach (StorageFile file in files)
             {
-                bool delete = true;
-                foreach (StorageFile fileScanResult in filesScanResult)
-                {
-                    if (fileFolder.IsEqual(fileScanResult)) delete = false;
-                }
-
-                if (delete == true)
-                {
-                    log.Information("Removing rogue {File} from conversion folder.", fileFolder.Name);
-                    await fileFolder.DeleteAsync();
-                }
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
         }
     }

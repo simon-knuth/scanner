@@ -1025,7 +1025,7 @@ namespace Scanner
                     }
                     else if (selectedFormat.Item2 == SupportedFormat.PDF)
                     {
-                        folderToScanTo = folderConversion;
+                        folderToScanTo = folderReceivedPagesPDF;
                     }
                     else
                     {
@@ -1124,7 +1124,7 @@ namespace Scanner
                     List<StorageFile> copiedDebugFiles = new List<StorageFile>();
                     foreach (StorageFile file in debugFiles)
                     {
-                        if (selectedDebugFormat == SupportedFormat.PDF) copiedDebugFiles.Add(await file.CopyAsync(folderConversion));
+                        if (selectedDebugFormat == SupportedFormat.PDF) copiedDebugFiles.Add(await file.CopyAsync(folderReceivedPagesPDF));
                         else copiedDebugFiles.Add(await file.CopyAsync(folderTemp));
                     }
 
