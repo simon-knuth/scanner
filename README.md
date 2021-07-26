@@ -75,6 +75,7 @@ The currently supported languages are:
   <li>Portuguese (PT)</li>
   <li>Portuguese (PT-BR)</li>
   <li>Russian (RU)</li>
+  <li>Ukrainian (UK)</li>
 </ul>  
 
 See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
