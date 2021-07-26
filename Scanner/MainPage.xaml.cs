@@ -1152,7 +1152,7 @@ namespace Scanner
                         {
                             foreach (StorageFile file in copiedDebugFiles)
                             {
-                                await file.MoveAsync(folderConversion, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
+                                await file.MoveAsync(folderReceivedPagesPDF, RemoveNumbering(file.Name), NameCollisionOption.GenerateUniqueName);
                             }
                         }
 
