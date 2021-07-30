@@ -1,0 +1,171 @@
+﻿<Page
+    x:Class="Scanner.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridMain">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainEdit" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    
+                    <VisualState.Setters>
+                        <Setter Target="ColumnMainContentFirst.MaxWidth" Value="775"/>
+                        <Setter Target="ColumnMainContentSecond.Width" Value="0"/>
+                        <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
+                        <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
+                        <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
+                        <Setter Target="GridMainContent.Padding" Value="0"/>
+                        <Setter Target="NavigationViewItemMainEdit.IsEnabled" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="775"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="ColumnMainContentSecond.Width" Value="7*"/>
+                        <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
+                        <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
+                        <Setter Target="NavigationViewItemMainEdit.(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Value="50"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1750"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainEdit" Duration="0:0:0.15" To="50">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseIn"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="50">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="NavigationViewItemMainPages.IsEnabled" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TitlebarGridMain" Height="32"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="TextBlockTitlebar" Grid.Row="0" Text="Scanner" VerticalAlignment="Center" Margin="12,0,0,0" Style="{StaticResource CaptionTextBlockStyle}"/>
+
+        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" Icon="Add"/>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainPages">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE81E;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+
+                    <muxc:NavigationViewItem.RenderTransform>
+                        <CompositeTransform TranslateX="0"/>
+                    </muxc:NavigationViewItem.RenderTransform>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEdit" IsEnabled="False">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE70F;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+
+                    <muxc:NavigationViewItem.RenderTransform>
+                        <CompositeTransform TranslateX="0"/>
+                    </muxc:NavigationViewItem.RenderTransform>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+
+            <muxc:NavigationView.FooterMenuItems>
+                <muxc:NavigationViewItem SelectsOnInvoked="False">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE838;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Icon="Help"/>
+            </muxc:NavigationView.FooterMenuItems>
+
+            <Grid x:Name="GridMainContent" Padding="0,0,6,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="ColumnMainContentFirst" Width="3*" MinWidth="300" MaxWidth="350"/>
+                    <ColumnDefinition x:Name="ColumnMainContentSecond" Width="7*"/>
+                    <ColumnDefinition x:Name="ColumnMainContentThird" Width="3*" MinWidth="300" MaxWidth="350"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+                    <muxc:InfoBar Grid.Row="1" IsOpen="False" Margin="0,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Severity="Informational"/>
+                </Grid>
+                
+                <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+                <Frame x:Name="FrameMainContentThird" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+            </Grid>
+        </muxc:NavigationView>
+    </Grid>
+</Page>

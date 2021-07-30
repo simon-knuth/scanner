@@ -106,7 +106,7 @@ namespace Scanner
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(Views.MainPage), e.Arguments);
                 }
                 // Set minimum width and height
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));

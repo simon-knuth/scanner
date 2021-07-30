@@ -17,8 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateThumbprint>11E659DAFA42853369811DAF8803116C1934C61B</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile />
+    <PackageCertificateThumbprint>892CE81309DB3CDA4D7675A0EE125CE573369DAF</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>Scanner_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -150,6 +150,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditorPage.xaml.cs">
+      <DependentUpon>EditorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PageListPage.xaml.cs">
+      <DependentUpon>PageListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScanOptionsPage.xaml.cs">
+      <DependentUpon>ScanOptionsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="XAML Converters\SliderThumbToolTipPercentageConverter.cs" />
     <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
@@ -425,6 +437,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EditorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PageListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ScanOptionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AppCenter">
@@ -455,7 +483,7 @@
       <Version>7.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.5.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="QueryString.NET">
       <Version>1.0.0</Version>
@@ -519,6 +547,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\uk\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scanner_TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

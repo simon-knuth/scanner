@@ -61,8 +61,9 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>11E659DAFA42853369811DAF8803116C1934C61B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>374A8DDBB36AEB6B1817F67490BC8D892D75A443</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <PackageCertificateKeyFile>Scanner.Package_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefaultLanguage>en</DefaultLanguage>
@@ -317,6 +318,7 @@
     <Content Include="Assets\contrast-white\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-white\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-white\Wide310x150Logo.scale-400.png" />
+    <None Include="Scanner.Package_TemporaryKey.pfx" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

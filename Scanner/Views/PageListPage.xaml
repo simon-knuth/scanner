@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="Scanner.Views.PageListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Background="Transparent">
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <AppBarToggleButton LabelPosition="Collapsed" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonWidth}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarSeparator/>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonWidth}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AD;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonWidth}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74D;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonWidth}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonWidth}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="GridContent" Grid.Row="1">
+            <StackPanel x:Name="StackPanelInitialText" Orientation="Vertical" Opacity="0.75" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
+                <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
