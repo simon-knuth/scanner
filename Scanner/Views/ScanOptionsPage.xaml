@@ -23,19 +23,94 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid>
+    <Grid AutomationProperties.LandmarkType="Form">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="NormalState">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+                                                    Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                    
+                    <VisualState.Setters>
+                        
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <VisualState x:Name="DisabledState">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+                                                    Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                    
+                    <VisualState.Setters>
+                        <Setter Target="ComboBoxScanners.IsEnabled" Value="False"/>
+                        <Setter Target="FrameSourceMode.IsEnabled" Value="False"/>
+                        <Setter Target="FrameColorMode.IsEnabled" Value="False"/>
+                        <Setter Target="FrameResolution.IsEnabled" Value="False"/>
+                        <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonCancelScan.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonScan.IsEnabled" Value="False"/>
+                        <Setter Target="HyperlinkButtonHelpScanners.IsEnabled" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="ScanningState">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15" To="1">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    
+                    <VisualState.Setters>
+                        <Setter Target="ComboBoxScanners.IsEnabled" Value="False"/>
+                        <Setter Target="FrameSourceMode.IsEnabled" Value="False"/>
+                        <Setter Target="FrameColorMode.IsEnabled" Value="False"/>
+                        <Setter Target="FrameResolution.IsEnabled" Value="False"/>
+                        <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonCancelScan.Visibility" Value="Visible"/>
+                        <Setter Target="ButtonCancelScan.IsEnabled" Value="True"/>
+                        <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonScan.IsEnabled" Value="False"/>
+                        <Setter Target="HyperlinkButtonHelpScanners.IsEnabled" Value="False"/>
+                        <Setter Target="StackPanelButtonScan.Visibility" Value="Collapsed"/>
+                        <Setter Target="ProgressRingScan.IsActive" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" CornerRadius="0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="18,0,38,0" TabIndex="0" AutomationProperties.Name="{Binding ElementName=TextBlockSource, Path=Text}" AutomationProperties.IsRequiredForForm="True">
+        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" CornerRadius="0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,0,38,0" TabIndex="0" AutomationProperties.Name="{x:Bind TextBlockSourceMode.Text}" AutomationProperties.IsRequiredForForm="True">
             <ComboBoxItem IsSelected="True" VerticalContentAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE749;" FontSize="20"/>
-                    <TextBlock Text="Canon PIXMA MG5700" Style="{StaticResource BaseTextBlockStyle}" Margin="12,0,0,3"/>
-                </StackPanel>
+                <TextBlock Text="Canon PIXMA MG5700" Style="{StaticResource BaseTextBlockStyle}"/>
             </ComboBoxItem>
             <ComboBoxItem x:Name="ComboBoxItemScannerIndicator" IsEnabled="False" VerticalContentAlignment="Bottom" Visibility="Visible">
                 <StackPanel Orientation="Vertical">
@@ -44,26 +119,26 @@
                 </StackPanel>
             </ComboBoxItem>
         </ComboBox>
-        <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}">
+        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}">
             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16" Margin="0,3,0,3"/>
         </HyperlinkButton>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" AutomationProperties.LandmarkType="Form" HorizontalContentAlignment="Stretch">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
             <StackPanel Orientation="Vertical" Padding="24,0,24,24">
                 <Frame x:Name="FrameSourceMode" Margin="0,8,0,0">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="TextBlockSourceMode" x:Uid="HeadingScanOptionsSource" Margin="0,8,0,6" Style="{StaticResource BaseTextBlockStyle}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" AutomationProperties.HeadingLevel="Level2"/>
-                        <Grid>
-                            <RadioButton x:Name="RadioButtonSourceModeAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
+                        <Grid Margin="0,3,0,0">
+                            <RadioButton x:Name="RadioButtonSourceModeAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
+                            <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
                         </Grid>
-                        <Grid>
-                            <RadioButton x:Name="RadioButtonSourceModeFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
+                        <Grid Margin="0,3,0,0">
+                            <RadioButton x:Name="RadioButtonSourceModeFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
+                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
                         </Grid>
-                        <Grid>
-                            <RadioButton x:Name="RadioButtonSourceModeFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="False" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontSize="16" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" HorizontalAlignment="Right" Opacity="0.3" Visibility="Collapsed"/>
+                        <Grid Margin="0,3,0,0">
+                            <RadioButton x:Name="RadioButtonSourceModeFeeder" x:Uid="OptionScanOptionsSourceFeeder" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
+                            <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
                         </Grid>
                     </StackPanel>
                 </Frame>
@@ -71,32 +146,32 @@
                 <Frame x:Name="FrameColorMode" Margin="0,48,0,0" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
-                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" IsEnabled="False" HorizontalAlignment="Stretch"/>
+                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                     </StackPanel>
                 </Frame>
 
                 <Frame x:Name="FrameResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <ComboBox x:Name="ComboBoxResolution" Margin="0,6,0,0" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding ElementName=HeadingScanOptionsResolution, Path=Text}"/>
+                        <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                        <ComboBox x:Name="ComboBoxResolution" Margin="0,3,0,0" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}"/>
                     </StackPanel>
                 </Frame>
 
                 <Frame x:Name="FrameMoreOptions" Margin="0,48,0,0" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <CheckBox x:Name="CheckBoxMoreOptionsAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" IsEnabled="True"/>
-                        <CheckBox x:Name="CheckBoxMoreOptionsDuplex" x:Uid="OptionScanOptionsDuplex" IsChecked="False" IsEnabled="False"/>
+                        <CheckBox x:Name="CheckBoxMoreOptionsAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <CheckBox x:Name="CheckBoxMoreOptionsDuplex" x:Uid="OptionScanOptionsDuplex" IsChecked="False" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                     </StackPanel>
                 </Frame>
 
                 <Frame x:Name="FrameFileFormat" Margin="0,48,0,0">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <Grid Margin="0,6,0,0">
-                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding ElementName=HeadingScanOptionsFormat, Path=Text}"/>
+                        <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                        <Grid Margin="0,3,0,0">
+                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}"/>
                             <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}">
                                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16"/>
                             </HyperlinkButton>
@@ -113,13 +188,29 @@
         </ScrollViewer>
         
         <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0">
-            <muxc:SplitButton x:Name="ButtonLeftPaneScan" Style="{StaticResource SplitButtonStyleAccent}" Padding="12,8,12,8" MinHeight="40" MinWidth="100" IsEnabled="True" Margin="24,16,24,16" AutomationProperties.Name="{Binding ElementName=TextBlockButtonScan, Path=Text}" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="{x:Bind ButtonScan.Margin}">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+
+                <Button x:Name="ButtonCancelScan" x:Uid="ButtonScanOptionsCancel" Height="{x:Bind ButtonScan.Height}" Margin="0,0,12,0" Opacity="0" Visibility="Collapsed">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;" FontSize="16"/>
+                </Button>
+                <Button x:Name="ButtonPreview" Height="{x:Bind ButtonScan.Height}">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" FontSize="16"/>
+                </Button>
+            </StackPanel>
+
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right">
                 <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe Fluent Icons" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
-                        <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe Fluent Icons" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="12" Height="{Binding ActualHeight, ElementName=TextBlockButtonScan}" Opacity="{Binding Opacity, ElementName=TextBlockButtonScan}" Visibility="Collapsed"/>
+                    <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
+                        <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe Fluent Icons" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="Collapsed"/>
+                        <FontIcon x:Name="FontIconButtonScanStartFresh" FontFamily="Segoe Fluent Icons" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="Collapsed"/>
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
+                    <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="False" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24"/>
                 </Grid>
 
                 <muxc:SplitButton.Flyout>
@@ -130,18 +221,9 @@
                                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanPreview" x:Uid="ButtonScanOptionsPreview" IsEnabled="False">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE773;"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </muxc:SplitButton.Flyout>
             </muxc:SplitButton>
-
-            <Button VerticalContentAlignment="Center" Height="{Binding ElementName=ButtonLeftPaneScan, Path=ActualHeight}" Margin="{Binding ElementName=ButtonLeftPaneScan, Path=Margin}" Visibility="Collapsed">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;"/>
-            </Button>
         </Grid>
     </Grid>
 </Page>

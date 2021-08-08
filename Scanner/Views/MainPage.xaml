@@ -55,6 +55,8 @@
                         <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
                         <Setter Target="GridMainContent.Padding" Value="0"/>
                         <Setter Target="NavigationViewItemMainEdit.IsEnabled" Value="True"/>
+                        <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
+                        <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -116,7 +118,11 @@
 
         <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed">
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" Icon="Add"/>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE749;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainPages">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE81E;" FontSize="16"/>

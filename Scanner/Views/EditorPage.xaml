@@ -28,48 +28,49 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
+            <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
 
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
-                    <AppBarButton.Icon>
+                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                    <AppBarToggleButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7A8;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
-                    <AppBarButton.Icon>
+                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                    <AppBarToggleButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEDC6;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
                 <AppBarSeparator/>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
-                    <AppBarButton.Icon>
+                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                    <AppBarToggleButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8AC;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
-                    <AppBarButton.Icon>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                    <AppBarToggleButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74D;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
                 <AppBarSeparator/>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AC;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;"/>
                     </AppBarButton.Icon>
@@ -87,30 +88,55 @@
                                 VerticalScrollBarVisibility="Auto"
                                 ZoomSnapPointsType="Mandatory">
                     <controls:ImageEx Source="/Assets/Simon.jpg" 
-                                      MinWidth="{Binding ElementName=ScrollViewerFlipViewPages, Path=ViewportWidth}"
-                                      MaxWidth="{Binding ElementName=ScrollViewerFlipViewPages, Path=ViewportWidth}"
-                                      MinHeight="{Binding ElementName=ScrollViewerFlipViewPages, Path=ViewportHeight}"
-                                      MaxHeight="{Binding ElementName=ScrollViewerFlipViewPages, Path=ViewportHeight}"/>
+                                      MinWidth="{x:Bind ScrollViewerFlipViewPages.ViewportWidth, Mode=OneWay}"
+                                      MaxWidth="{x:Bind ScrollViewerFlipViewPages.ViewportWidth, Mode=OneWay}"
+                                      MinHeight="{x:Bind ScrollViewerFlipViewPages.ViewportHeight, Mode=OneWay}"
+                                      MaxHeight="{x:Bind ScrollViewerFlipViewPages.ViewportHeight, Mode=OneWay}"/>
                 </ScrollViewer>
-                <controls:ImageEx Source="/Assets/Simon.jpg" />
-                <controls:ImageEx Source="/Assets/Simon.jpg" />
+                <controls:ImageEx Source="/Assets/Simon.jpg"/>
+                <controls:ImageEx Source="/Assets/Simon.jpg"/>
             </FlipView>
+        </Grid>
 
-            <controls:DropShadowPanel x:Name="OverlayScan" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16" Style="{ThemeResource DropShadowPanelThemedStyle}" BlurRadius="20" Visibility="Visible">
-                <Frame Background="{ThemeResource SystemControlAcrylicElementBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}">
-                    <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderThickness="1" Padding="4,0,4,0">
-                        <TextBlock x:Name="TextBlockPageIndicator" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Right" VerticalAlignment="Center" MaxLines="1" Padding="12,0,12,0" Visibility="{Binding ElementName=FlipViewPages, Path=Visibility}"/>
-                        <AppBarSeparator Visibility="{Binding ElementName=FlipViewPages, Path=Visibility}"/>
-                        <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
-                        </AppBarButton>
-                        <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
-                        <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Width="{StaticResource MTCMediaButtonWidth}" Height="{StaticResource MTCMediaButtonHeight}">
+        <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Stretch">
+                <TextBlock x:Name="TextBlockPageIndicator" Text="1 of 3" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextAlignment="Left" MaxLines="1" Padding="12,0,12,0" Visibility="{x:Bind FlipViewPages.Visibility, Mode=OneWay}"/>
+                <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
+            </StackPanel>
+
+            <controls:Carousel Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" ItemMargin="16" Margin="3" ItemDepth="128">
+                <controls:Carousel.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </controls:Carousel.EasingFunction>
+
+                <controls:CarouselItem>
+                    <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}" BorderBrush="{ThemeResource SystemColorControlAccentBrush}" BorderThickness="2"/>
+                </controls:CarouselItem>
+                
+                <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}"/>
+                <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}"/>
+            </controls:Carousel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
+                <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                    <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
                         </AppBarButton>
+                        <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                        </AppBarButton>
                     </StackPanel>
-                </Frame>
-            </controls:DropShadowPanel>
+                </StackPanel>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
