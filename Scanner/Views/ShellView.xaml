@@ -1,14 +1,25 @@
 ﻿<Page
-    x:Class="Scanner.Views.MainPage"
+    x:Class="Scanner.Views.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Scanner.Views"
+    xmlns:local="using:Scanner"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:converters="using:Scanner.Views.Converters"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    d:DesignWidth="800"
+    d:DesignHeight="600"
+    
+    Loaded="Page_Loaded">
+
+    <Page.DataContext>
+        <viewModels:ShellViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -18,6 +29,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:WindowStateOpacityConverter x:Key="WindowStateOpacityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -25,8 +39,9 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridMain">
+        <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
+            <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanging="VisualStateGroup_CurrentStateChanging">
                 <VisualState x:Name="NarrowState">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0"/>
@@ -34,19 +49,19 @@
 
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainEdit" Duration="0:0:0.15" To="0">
+                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="0">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="0">
+                             Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="0">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                     </Storyboard>
-                    
+
                     <VisualState.Setters>
                         <Setter Target="ColumnMainContentFirst.MaxWidth" Value="775"/>
                         <Setter Target="ColumnMainContentSecond.Width" Value="0"/>
@@ -54,9 +69,10 @@
                         <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
                         <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
                         <Setter Target="GridMainContent.Padding" Value="0"/>
-                        <Setter Target="NavigationViewItemMainEdit.IsEnabled" Value="True"/>
+                        <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
                         <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
+                        <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -67,7 +83,7 @@
 
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="0">
+                             Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="0">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
@@ -78,7 +94,8 @@
                         <Setter Target="ColumnMainContentSecond.Width" Value="7*"/>
                         <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
                         <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
-                        <Setter Target="NavigationViewItemMainEdit.(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Value="50"/>
+                        <Setter Target="NavigationViewItemMainEditor.(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Value="50"/>
+                        <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -89,13 +106,13 @@
 
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainEdit" Duration="0:0:0.15" To="50">
+                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="50">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseIn"/>
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainPages" Duration="0:0:0.15" To="50">
+                             Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="50">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
                             </DoubleAnimation.EasingFunction>
@@ -103,7 +120,7 @@
                     </Storyboard>
 
                     <VisualState.Setters>
-                        <Setter Target="NavigationViewItemMainPages.IsEnabled" Value="False"/>
+                        <Setter Target="NavigationViewItemMainPageList.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -114,16 +131,24 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TextBlockTitlebar" Grid.Row="0" Text="Scanner" VerticalAlignment="Center" Margin="12,0,0,0" Style="{StaticResource CaptionTextBlockStyle}"/>
+        <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 
-        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed">
+        <!-- Titlebar -->
+        <TextBlock x:Name="TextBlockTitlebar" Grid.Row="0" Text="Scanner" VerticalAlignment="Center" Margin="12,0,0,0" Style="{StaticResource CaptionTextBlockStyle}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}"/>
+
+        <!-- Content -->
+        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="NavigationViewMain_SelectionChanged">
+            <muxc:NavigationView.Triggers>
+                
+            </muxc:NavigationView.Triggers>
+            
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE749;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainPages">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainPageList" x:Uid="ButtonManage" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE81E;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -132,24 +157,38 @@
                         <CompositeTransform TranslateX="0"/>
                     </muxc:NavigationViewItem.RenderTransform>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEdit" IsEnabled="False">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" IsEnabled="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE70F;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
 
                     <muxc:NavigationViewItem.RenderTransform>
-                        <CompositeTransform TranslateX="0"/>
+                        <CompositeTransform TranslateX="50"/>
                     </muxc:NavigationViewItem.RenderTransform>
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.FooterMenuItems>
-                <muxc:NavigationViewItem SelectsOnInvoked="False">
+                <muxc:NavigationViewItem SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE838;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Icon="Help"/>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xED56;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSettings" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
 
             <Grid x:Name="GridMainContent" Padding="0,0,6,6">
@@ -165,7 +204,13 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+                    <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <PopupThemeTransition/>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
                     <muxc:InfoBar Grid.Row="1" IsOpen="False" Margin="0,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Severity="Informational"/>
                 </Grid>
                 

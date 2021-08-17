@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Scanner.Views.ScanOptionsPage"
+    x:Class="Scanner.Views.ScanOptionsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Scanner.Views"
@@ -7,8 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    Background="Transparent">
+    xmlns:viewModels="using:Scanner.ViewModels"
+    Background="Transparent"
+    d:DesignWidth="350"
+    d:DesignHeight="600"
+    NavigationCacheMode="Required">
 
+    <Page.DataContext>
+        <viewModels:ScanOptionsViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+    
+    
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -24,6 +33,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid AutomationProperties.LandmarkType="Form">
+        <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="NormalState">
@@ -108,7 +118,8 @@
             <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" CornerRadius="0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,0,38,0" TabIndex="0" AutomationProperties.Name="{x:Bind TextBlockSourceMode.Text}" AutomationProperties.IsRequiredForForm="True">
+        <!-- Toolbar -->
+        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,0,38,0" TabIndex="0" AutomationProperties.Name="{x:Bind TextBlockSourceMode.Text}" AutomationProperties.IsRequiredForForm="True">
             <ComboBoxItem IsSelected="True" VerticalContentAlignment="Center">
                 <TextBlock Text="Canon PIXMA MG5700" Style="{StaticResource BaseTextBlockStyle}"/>
             </ComboBoxItem>
@@ -119,15 +130,16 @@
                 </StackPanel>
             </ComboBoxItem>
         </ComboBox>
-        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}">
+        <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}">
             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16" Margin="0,3,0,3"/>
         </HyperlinkButton>
 
+        <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
-            <StackPanel Orientation="Vertical" Padding="24,0,24,24">
-                <Frame x:Name="FrameSourceMode" Margin="0,8,0,0">
+            <StackPanel Orientation="Vertical" Padding="24,16,24,24">
+                <Frame x:Name="FrameSourceMode">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="TextBlockSourceMode" x:Uid="HeadingScanOptionsSource" Margin="0,8,0,6" Style="{StaticResource BaseTextBlockStyle}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" AutomationProperties.HeadingLevel="Level2"/>
+                        <TextBlock x:Name="TextBlockSourceMode" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                         <Grid Margin="0,3,0,0">
                             <RadioButton x:Name="RadioButtonSourceModeAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
                             <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" FontFamily="Segoe Fluent Icons" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
@@ -155,7 +167,12 @@
                 <Frame x:Name="FrameResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <ComboBox x:Name="ComboBoxResolution" Margin="0,3,0,0" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}"/>
+                        <Grid Margin="0,3,0,0">
+                            <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" Padding="0,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}"/>
+                            <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16"/>
+                            </HyperlinkButton>
+                        </Grid>
                     </StackPanel>
                 </Frame>
 
@@ -171,8 +188,8 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                         <Grid Margin="0,3,0,0">
-                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}"/>
-                            <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}">
+                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" Padding="0,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}"/>
+                            <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
                                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE897;" FontSize="16"/>
                             </HyperlinkButton>
                         </Grid>
@@ -186,7 +203,8 @@
                 </Frame>
             </StackPanel>
         </ScrollViewer>
-        
+
+        <!-- Footer -->
         <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="{x:Bind ButtonScan.Margin}">
                 <StackPanel.ChildrenTransitions>
@@ -203,7 +221,7 @@
                 </Button>
             </StackPanel>
 
-            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right">
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="True" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right">
                 <Grid>
                     <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                         <FontIcon x:Name="FontIconButtonScanAdd" FontFamily="Segoe Fluent Icons" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="Collapsed"/>

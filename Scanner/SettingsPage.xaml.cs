@@ -299,7 +299,7 @@ namespace Scanner
                 ScrollViewerSettings.Margin = new Thickness(0, GridSettingsHeader.ActualHeight, 0, 0);
                 ScrollViewerSettings.Padding = new Thickness(0, -GridSettingsHeader.ActualHeight, 0, 0);
 
-                if (intent.scrollToDonateSection)
+                if (intent != null && intent.scrollToDonateSection)
                 {
                     GridSettingsDonate.StartBringIntoView();
                     StoryboardScrollingToDonate.Begin();

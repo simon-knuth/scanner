@@ -16,15 +16,14 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Scanner.Views
 {
-    public sealed partial class MainPage : Page
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class EditorView : Page
     {
-        public MainPage()
+        public EditorView()
         {
             this.InitializeComponent();
-
-            FrameMainContentFirst.Navigate(typeof(Views.ScanOptionsPage));
-            FrameMainContentSecond.Navigate(typeof(Views.EditorPage));
-            FrameMainContentThird.Navigate(typeof(Views.PageListPage));
         }
     }
 }

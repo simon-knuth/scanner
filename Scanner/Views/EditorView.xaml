@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Scanner.Views.EditorPage"
+    x:Class="Scanner.Views.EditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Scanner.Views"
@@ -8,7 +8,10 @@
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent">
+    Background="Transparent"
+    d:DesignWidth="350"
+    d:DesignHeight="600"
+    NavigationCacheMode="Required">
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -31,6 +34,7 @@
             <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
 
+        <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
@@ -78,6 +82,7 @@
             </StackPanel>
         </Grid>
 
+        <!-- Content -->
         <Grid x:Name="GridContent" Grid.Row="1">
             <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}">
                 <ScrollViewer   x:Name="ScrollViewerFlipViewPages"
@@ -98,6 +103,7 @@
             </FlipView>
         </Grid>
 
+        <!-- Footer -->
         <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -109,19 +115,6 @@
                 <TextBlock x:Name="TextBlockPageIndicator" Text="1 of 3" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextAlignment="Left" MaxLines="1" Padding="12,0,12,0" Visibility="{x:Bind FlipViewPages.Visibility, Mode=OneWay}"/>
                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
             </StackPanel>
-
-            <controls:Carousel Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" ItemMargin="16" Margin="3" ItemDepth="128">
-                <controls:Carousel.EasingFunction>
-                    <CubicEase EasingMode="EaseOut"/>
-                </controls:Carousel.EasingFunction>
-
-                <controls:CarouselItem>
-                    <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}" BorderBrush="{ThemeResource SystemColorControlAccentBrush}" BorderThickness="2"/>
-                </controls:CarouselItem>
-                
-                <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}"/>
-                <controls:ImageEx Source="/Assets/Simon.jpg" CornerRadius="{ThemeResource ControlCornerRadius}"/>
-            </controls:Carousel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
