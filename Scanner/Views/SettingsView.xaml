@@ -67,7 +67,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Save location" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Choose where scans are saved" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
@@ -99,7 +99,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE7AD;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Automatically determine the correct orientation of scanned pages" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
@@ -130,7 +130,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="File naming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -149,7 +149,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE793;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE793;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Theme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -170,7 +170,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Editor orientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -184,7 +184,7 @@
 
                 <!-- Feedback -->
                 <StackPanel x:Name="StackPanelSettingsHeadingFeedback" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
                     <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -202,7 +202,7 @@
 
                 <!-- Translations -->
                 <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -218,7 +218,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -238,7 +238,7 @@
 
                 <!-- About -->
                 <StackPanel x:Name="StackPanelSettingsHeadingAbout" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE946;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
                     <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <Grid HorizontalAlignment="Stretch">

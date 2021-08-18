@@ -39,44 +39,44 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7A8;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AD;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEDC6;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8AC;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74D;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AC;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AC;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
             </StackPanel>

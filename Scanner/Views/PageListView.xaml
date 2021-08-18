@@ -37,28 +37,28 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <AppBarToggleButton LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE762;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7AD;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74D;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72D;"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
             </StackPanel>
@@ -67,7 +67,7 @@
         <!-- Content -->
         <Grid x:Name="GridContent" Grid.Row="1">
             <StackPanel x:Name="StackPanelInitialText" Orientation="Vertical" Opacity="0.75" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
+                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
                 <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
             </StackPanel>
         </Grid>

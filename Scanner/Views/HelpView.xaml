@@ -70,7 +70,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE721;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE721;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Scanner is not available" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -88,7 +88,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE749;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Scanner is not working properly" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -106,7 +106,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE744;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Choose a resolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -126,7 +126,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Show the scan folder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -144,7 +144,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Change the folder that scans are saved to" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -162,7 +162,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xEB9F;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB9F;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Choose a file format" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -178,7 +178,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xEA90;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Start a new PDF" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -196,7 +196,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" FontFamily="Segoe Fluent Icons" Glyph="&#xE8CB;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8CB;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock Grid.Column="1" Text="Reorder PDF pages" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
