@@ -19,7 +19,7 @@ namespace Scanner.Models
         public bool FeederDuplex;
 
         [Required(ErrorMessage = "Format is required")]
-        public FileFormat Format;
+        public ScannerFileFormat Format;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

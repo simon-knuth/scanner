@@ -166,12 +166,17 @@
                             <TextBlock Grid.Column="1" Text="Theme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
-                            <ComboBoxItem Content="System setting"/>
-                            <ComboBoxItem Content="Light"/>
-                            <ComboBoxItem Content="Dark"/>
-                        </ComboBox>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
+                                <ComboBoxItem Content="Use system setting"/>
+                                <ComboBoxItem Content="Light"/>
+                                <ComboBoxItem Content="Dark"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <TextBlock Text="Changes to this setting are applied once the app has been restarted." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Editor Orientation -->
@@ -261,7 +266,7 @@
                     </Grid.ColumnDefinitions>
 
                     <PersonPicture Grid.Column="0" ProfilePicture="/Assets/Simon.jpg" Initials="SK" DisplayName="Simon Knuth" Width="65"/>
-                    <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0">
+                    <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="Medium">Scanner for Windows</Run>
                             <LineBreak/><Run>Copyright © 2021 Simon Knuth</Run>

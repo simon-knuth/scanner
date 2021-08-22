@@ -22,19 +22,4 @@
         Grayscale = 2,
         Monochrome = 3
     }
-
-
-    /// <summary>
-    ///     The possible file formats.
-    /// </summary>
-    public enum FileFormat
-    {
-        JPG = 0,
-        PNG = 1,
-        TIF = 2,
-        BMP = 3,
-        PDF = 4,
-        XPS = 5,
-        OpenXPS = 6,
-    }
 }

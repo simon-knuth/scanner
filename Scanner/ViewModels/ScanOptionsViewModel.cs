@@ -47,28 +47,31 @@ namespace Scanner.ViewModels
         public ScannerSource ScannerSource
         {
             get => _ScannerSource;
-            set => SetProperty(ref _ScannerSource, value);
-        }
+            set
+            {
+                SetProperty(ref _ScannerSource, value);
 
-        private bool _IsAutoPreviewAllowed = false;
-        public bool IsAutoPreviewAllowed
-        {
-            get => _IsAutoPreviewAllowed;
-            set => SetProperty(ref _IsAutoPreviewAllowed, value);
-        }
-
-        private bool _IsFlatbedPreviewAllowed = false;
-        public bool IsFlatbedPreviewAllowed
-        {
-            get => _IsFlatbedPreviewAllowed;
-            set => SetProperty(ref _IsFlatbedPreviewAllowed, value);
-        }
-
-        private bool _IsFeederPreviewAllowed = false;
-        public bool IsFeederPreviewAllowed
-        {
-            get => _IsFeederPreviewAllowed;
-            set => SetProperty(ref _IsFeederPreviewAllowed, value);
+                // show applicable resolutions and file formats
+                switch (value)
+                {
+                    case ScannerSource.Auto:
+                        ScannerResolutions = null;
+                        FileFormats = SelectedScanner?.AutoFormats;
+                        break;
+                    case ScannerSource.Flatbed:
+                        ScannerResolutions = SelectedScanner?.FlatbedResolutions;
+                        FileFormats = SelectedScanner?.FlatbedFormats;
+                        break;
+                    case ScannerSource.Feeder:
+                        ScannerResolutions = SelectedScanner?.FeederResolutions;
+                        FileFormats = SelectedScanner?.FeederFormats;
+                        break;
+                    case ScannerSource.None:
+                    default:
+                        ScannerResolutions = null;
+                        break;
+                }
+            }
         }
 
         private ScannerColorMode _ScannerColorMode = ScannerColorMode.None;
@@ -85,6 +88,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _ScannerResolutions, value);
         }
 
+        private ScanResolution _SelectedResolution;
+        public ScanResolution SelectedResolution
+        {
+            get => _SelectedResolution;
+            set => SetProperty(ref _SelectedResolution, value);
+        }
+
         private bool _FeederMultiplePages = false;
         public bool FeederMultiplePages
         {
@@ -99,11 +109,18 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _FeederDuplex, value);
         }
 
-        private ObservableCollection<FileFormat> _FileFormats;
-        public ObservableCollection<FileFormat> FileFormats
+        private ObservableCollection<ScannerFileFormat> _FileFormats;
+        public ObservableCollection<ScannerFileFormat> FileFormats
         {
             get => _FileFormats;
             set => SetProperty(ref _FileFormats, value);
+        }
+
+        private ScannerFileFormat _SelectedFileFormat;
+        public ScannerFileFormat SelectedFileFormat
+        {
+            get => _SelectedFileFormat;
+            set => SetProperty(ref _SelectedFileFormat, value);
         }
 
         public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();

@@ -15,6 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using static Globals;
+using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner
@@ -41,20 +42,21 @@ namespace Scanner
                 //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
                 .BuildServiceProvider());
 
-            // quickly load theme
-            if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
+            // apply theme
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
+
+            switch (theme)
             {
-                switch ((int)ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        this.RequestedTheme = ApplicationTheme.Light;
-                        break;
-                    case 2:
-                        this.RequestedTheme = ApplicationTheme.Dark;
-                        break;
-                }
+                case SettingAppTheme.Light:
+                    this.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                case SettingAppTheme.Dark:
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+                case SettingAppTheme.System:
+                default:
+                    break;
             }
 
             _ = InitializeSerilogAsync();

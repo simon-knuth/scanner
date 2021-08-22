@@ -21,7 +21,7 @@ namespace Scanner.Views
 #if DEBUG
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+                FlyoutBase.ShowAttachedFlyout(ComboBoxScanners);
             });
 #endif
         }
@@ -34,6 +34,16 @@ namespace Scanner.Views
                 FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
             });
 #endif
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            // fix ProgressRing getting stuck when navigating back to cached page
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                ProgressRingScanners.IsActive = false;
+                ProgressRingScanners.IsActive = true;
+            });
         }
     }
 }

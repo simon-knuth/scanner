@@ -137,6 +137,7 @@
       <DependentUpon>LicensePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DiscoveredScanner.cs" />
+    <Compile Include="Models\ScannerFileFormat.cs" />
     <Compile Include="Models\ScanResolution.cs" />
     <Compile Include="Models\ScanOptions.cs" />
     <Compile Include="PreviewPageIntent.cs" />
@@ -169,6 +170,8 @@
     <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\Converters\RadioButtonsScannerColorModeConverter.cs" />
+    <Compile Include="Views\Converters\ScannerFileFormatGlyphConverter.cs" />
+    <Compile Include="Views\Converters\ScannerSourceIntConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsScannerSourceConverter.cs" />
     <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
