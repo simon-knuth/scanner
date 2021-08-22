@@ -15,7 +15,10 @@ namespace Scanner.ViewModels
 {
     public class SettingsViewModel : ObservableRecipient, IDisposable
     {
-        private ISettingsService SettingsService => Ioc.Default.GetService<ISettingsService>();
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private ISettingsService SettingsService => Ioc.Default.GetRequiredService<ISettingsService>();
 
         public int SettingSaveLocationType
         {
@@ -29,23 +32,10 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingAppTheme, value);
         }
 
-        public object SettingAutoRotate
+        public int SettingAutoRotate
         {
             get => (int)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
-            set
-            {
-                if (value.GetType() == Type.GetType("System.Boolean"))
-                {
-                    if ((bool)value == false)
-                    {
-                        SettingsService.SetSetting(AppSetting.SettingAutoRotate, SettingsEnums.SettingAutoRotate.Off);
-                    }
-                }
-                else
-                {
-                    SettingsService.SetSetting(AppSetting.SettingAutoRotate, value);
-                }
-            }
+            set => SettingsService.SetSetting(AppSetting.SettingAutoRotate, value);
         }
 
         public bool SettingAppendTime
@@ -60,17 +50,29 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingEditorOrientation, value);
         }
 
+        public bool SettingRememberScanOptions
+        {
+            get => (bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions);
+            set => SettingsService.SetSetting(AppSetting.SettingRememberScanOptions, value);
+        }
+
         public bool SettingErrorStatistics
         {
             get => (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
             set => SettingsService.SetSetting(AppSetting.SettingErrorStatistics, value);
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsViewModel()
         {
-            
+            SettingAutoRotate = (int)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Dispose()
         {
             Messenger.UnregisterAll(this);

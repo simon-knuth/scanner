@@ -33,7 +33,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using static Enums;
+using static Enums_old;
 using static Globals;
 
 static class Utilities

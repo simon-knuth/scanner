@@ -6,7 +6,7 @@ using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml.Controls;
 
-using static Enums;
+using static Enums_old;
 using static Globals;
 using static Utilities;
 

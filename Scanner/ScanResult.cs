@@ -21,7 +21,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-using static Enums;
+using static Enums_old;
 using static Globals;
 using static Utilities;
 

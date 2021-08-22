@@ -4,10 +4,18 @@ using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.Services
 {
-    class SettingsService : ISettingsService
+    public sealed class SettingsService : ISettingsService
     {
-        private ApplicationDataContainer SettingsContainer => ApplicationData.Current.LocalSettings;
-        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private ApplicationDataContainer SettingsContainer = ApplicationData.Current.LocalSettings;
+
+        public event EventHandler<AppSetting> SettingChanged;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         ///     Retrieve a setting's value and substitute null values with default ones.
         /// </summary>
@@ -30,6 +38,9 @@ namespace Scanner.Services
                 case AppSetting.SettingEditorOrientation:
                     return SettingsContainer.Values["SettingEditorOrientation"] ?? SettingEditorOrientation.Horizontal;
 
+                case AppSetting.SettingRememberScanOptions:
+                    return SettingsContainer.Values["SettingRememberScanOptions"] ?? true;
+
                 case AppSetting.SettingErrorStatistics:
                     return SettingsContainer.Values["SettingErrorStatistics"] ?? false;
 
@@ -43,35 +54,43 @@ namespace Scanner.Services
         /// </summary>
         public void SetSetting(AppSetting setting, object value)
         {
+            string name = setting.ToString().ToUpper();
+            
             switch (setting)
             {
                 case AppSetting.SettingSaveLocationType:
-                    SettingsContainer.Values["SettingSaveLocationType"] = (int)value;
+                    SettingsContainer.Values[name] = (int)value;
                     break;
 
                 case AppSetting.SettingAppTheme:
-                    SettingsContainer.Values["SettingAppTheme"] = (int)value;
+                    SettingsContainer.Values[name] = (int)value;
                     break;
 
                 case AppSetting.SettingAutoRotate:
-                    SettingsContainer.Values["SettingAutoRotate"] = (int)value;
+                    SettingsContainer.Values[name] = (int)value;
                     break;
 
                 case AppSetting.SettingAppendTime:
-                    SettingsContainer.Values["SettingAppendTime"] = (bool)value;
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 case AppSetting.SettingEditorOrientation:
-                    SettingsContainer.Values["SettingEditorOrientation"] = (int)value;
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.SettingRememberScanOptions:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 case AppSetting.SettingErrorStatistics:
-                    SettingsContainer.Values["SettingErrorStatistics"] = (bool)value;
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:
                     throw new ArgumentException("Can not save value for unknown setting " + setting + ".");
             }
+
+            SettingChanged?.Invoke(this, setting);
         }
     }
 }

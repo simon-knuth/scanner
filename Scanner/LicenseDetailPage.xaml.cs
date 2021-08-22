@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Navigation;
 
-using static Enums;
+using static Enums_old;
 
 
 namespace Scanner

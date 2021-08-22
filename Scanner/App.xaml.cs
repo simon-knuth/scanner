@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Services;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -28,6 +32,15 @@ namespace Scanner
         /// </summary>
         public App()
         {
+            Ioc.Default.ConfigureServices(new ServiceCollection()
+                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
+                .AddSingleton<ISettingsService, SettingsService>()
+                .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                //    .AddSingleton<IDatabaseService, DatabaseService>()
+                //    .AddSingleton<IPdfService, PdfService>()
+                //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
+                .BuildServiceProvider());
+
             // quickly load theme
             if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
             {

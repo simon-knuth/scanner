@@ -9,6 +9,7 @@
             SettingAutoRotate,
             SettingAppendTime,
             SettingEditorOrientation,
+            SettingRememberScanOptions,
             SettingErrorStatistics
         }
 
@@ -34,8 +35,8 @@
 
         public enum SettingEditorOrientation
         {
-            Horizontal = 0,
-            Vertical = 1
+            Vertical = 1,
+            Horizontal = 0
         }
     }
 }

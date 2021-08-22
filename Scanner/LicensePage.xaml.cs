@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-using static Enums;
+using static Enums_old;
 
 
 namespace Scanner

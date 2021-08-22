@@ -128,6 +128,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums.cs" />
     <Compile Include="ErrorMessage.cs" />
     <Compile Include="LicenseDetailPage.xaml.cs">
       <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
@@ -135,19 +136,24 @@
     <Compile Include="LicensePage.xaml.cs">
       <DependentUpon>LicensePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DiscoveredScanner.cs" />
+    <Compile Include="Models\ScanResolution.cs" />
+    <Compile Include="Models\ScanOptions.cs" />
     <Compile Include="PreviewPageIntent.cs" />
-    <Compile Include="Services\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\IScannerDiscoveryService.cs" />
+    <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestShellMessage.cs" />
     <Compile Include="Services\Messenger\MessengerEnums.cs" />
     <Compile Include="Services\SettingsEnums.cs" />
+    <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="SettingsPageIntent.cs" />
     <Compile Include="RecognizedScanner.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="ScanResultElement.cs" />
     <Compile Include="ScanResult.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Enums_old.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ScannerOperation.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -157,12 +163,14 @@
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\HelpViewModel.cs" />
     <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Views\Converters\SettingAutoRotateRadioButtonsConverter.cs" />
-    <Compile Include="Views\Converters\SettingAutoRotateSwitchConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsScannerColorModeConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsScannerSourceConverter.cs" />
+    <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
     <Compile Include="Views\EditorView.xaml.cs">
       <DependentUpon>EditorView.xaml</DependentUpon>
@@ -514,7 +522,7 @@
       <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Lottie">
-      <Version>7.0.3</Version>
+      <Version>7.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.6.1</Version>
@@ -588,9 +596,7 @@
   <ItemGroup>
     <None Include="Scanner_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

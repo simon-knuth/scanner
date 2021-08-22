@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using static Enums;
+using static Enums_old;
 using static Globals;
 using static Utilities;
 

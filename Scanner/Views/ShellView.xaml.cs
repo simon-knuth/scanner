@@ -1,16 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using WinUI = Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
 using Scanner.ViewModels;
 using Scanner.Services;
@@ -22,15 +16,6 @@ namespace Scanner.Views
         public ShellView()
         {
             this.InitializeComponent();
-
-            Ioc.Default.ConfigureServices(new ServiceCollection()
-                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
-                .AddSingleton<ISettingsService, SettingsService>()
-            //    .AddSingleton<IDatabaseService, DatabaseService>()
-            //    .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
-            //    .AddSingleton<IPdfService, PdfService>()
-            //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
-                .BuildServiceProvider());
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }

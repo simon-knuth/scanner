@@ -3,16 +3,26 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Scanner.Views"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:viewModels="using:Scanner.ViewModels"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
-    NavigationCacheMode="Required">
+    NavigationCacheMode="Required"
     
+    Loaded="Page_Loaded">
+
+    <Page.DataContext>
+        <viewModels:EditorViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+    
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -31,7 +41,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
-            <RowDefinition Height="64"/>
+            <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->

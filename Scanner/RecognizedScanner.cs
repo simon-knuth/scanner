@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 
-using static Enums;
+using static Enums_old;
 using static Globals;
 
 

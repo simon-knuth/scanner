@@ -28,10 +28,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- XAML Converters -->
-            <converters:SettingAutoRotateSwitchConverter x:Key="SettingAutoRotateSwitchConverter"/>
-            <converters:SettingAutoRotateRadioButtonsConverter x:Key="SettingAutoRotateRadioButtonsConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -76,18 +72,20 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <muxc:RadioButtons MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
-                                <RadioButton Content="Use a set location" Margin="0,0,12,0"/>
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
+                                <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" Content="Use a set location" Margin="0,0,12,0"/>
                                 <RadioButton Content="Ask every time"/>
                             </muxc:RadioButtons>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                            <TextBlock Text="C:\Users\bablabla" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
-                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">
-                                <Button Content="Choose folder"/>
-                                <Button Content="Reset to default" IsEnabled="False"/>
-                            </controls:WrapPanel>
-                        </StackPanel>
+                        <Frame IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}">
+                            <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                                <TextBlock Text="C:\Users\bablabla" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
+                                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">
+                                    <Button Content="Choose folder"/>
+                                    <Button Content="Reset to default" IsEnabled="False"/>
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Frame>
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Auto-Rotate -->
@@ -108,12 +106,10 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <ToggleSwitch x:Name="ToggleSwitchAutoRotate" IsOn="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay, Converter={StaticResource SettingAutoRotateSwitchConverter}}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <muxc:RadioButtons MaxColumns="2" IsEnabled="{x:Bind ToggleSwitchAutoRotate.IsOn, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay, Converter={StaticResource SettingAutoRotateRadioButtonsConverter}}">
-                                <RadioButton Content="Rotate pages automatically" IsChecked="True" Margin="0,0,12,0"/>
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
+                                <RadioButton Content="Off" IsChecked="True" Margin="0,0,12,0"/>
                                 <RadioButton Content="Ask every time" Margin="0,0,12,0"/>
+                                <RadioButton Content="Rotate pages automatically" IsChecked="True"/>
                             </muxc:RadioButtons>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16">
@@ -136,6 +132,23 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                         <CheckBox Content="Append time to file name" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting Remember Scan Options -->
+                <muxc:Expander x:Name="ExpanderRememberScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock Grid.Column="1" Text="Scan options" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox Content="Remember scan options" IsChecked="{x:Bind ViewModel.SettingRememberScanOptions, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
 
@@ -175,7 +188,7 @@
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <muxc:RadioButtons MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
+                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
                             <RadioButton Content="Horizontal" Margin="0,0,12,0"/>
                             <RadioButton Content="Vertical"/>
                         </muxc:RadioButtons>
@@ -184,7 +197,7 @@
 
                 <!-- Feedback -->
                 <StackPanel x:Name="StackPanelSettingsHeadingFeedback" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -202,7 +215,7 @@
 
                 <!-- Translations -->
                 <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -238,7 +251,7 @@
 
                 <!-- About -->
                 <StackPanel x:Name="StackPanelSettingsHeadingAbout" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE946;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,16,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE946;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <Grid HorizontalAlignment="Stretch">
@@ -276,7 +289,7 @@
                         <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
                     </muxc:Expander.Header>
                     <TextBlock TextWrapping="WrapWholeWords">
-                        <Hyperlink FontWeight="SemiBold" NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink>
                         -
                         <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink>
                     </TextBlock>

@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using static Utilities;
 
 
 namespace Scanner.Views
@@ -24,6 +16,30 @@ namespace Scanner.Views
         public EditorView()
         {
             this.InitializeComponent();
+
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        private async Task ApplyFlipViewOrientation(Orientation orientation)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                VirtualizingStackPanel panel = (VirtualizingStackPanel)FlipViewPages.ItemsPanelRoot;
+                panel.Orientation = orientation;
+            });
+        }
+
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.Orientation))
+            {
+                await ApplyFlipViewOrientation(ViewModel.Orientation);
+            }
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await ApplyFlipViewOrientation(ViewModel.Orientation);
         }
     }
 }

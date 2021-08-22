@@ -8,6 +8,10 @@
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:models="using:Scanner.Models"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
@@ -16,8 +20,14 @@
     <Page.DataContext>
         <viewModels:ScanOptionsViewModel x:Name="ViewModel"/>
     </Page.DataContext>
-    
-    
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadedCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -26,6 +36,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:RadioButtonsScannerSourceConverter x:Key="RadioButtonsScannerSourceConverter"/>
+            <converters:RadioButtonsScannerColorModeConverter x:Key="RadioButtonsScannerColorModeConverter"/>
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -115,20 +130,61 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
-            <RowDefinition Height="64"/>
+            <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,0,38,0" TabIndex="0" AutomationProperties.Name="{x:Bind TextBlockSourceMode.Text}" AutomationProperties.IsRequiredForForm="True">
-            <ComboBoxItem IsSelected="True" VerticalContentAlignment="Center">
-                <TextBlock Text="Canon PIXMA MG5700" Style="{StaticResource BaseTextBlockStyle}"/>
-            </ComboBoxItem>
-            <ComboBoxItem x:Name="ComboBoxItemScannerIndicator" IsEnabled="False" VerticalContentAlignment="Bottom" Visibility="Visible">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Uid="TextScannerIndicator" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,3"/>
-                    <muxc:ProgressBar IsIndeterminate="True"/>
-                </StackPanel>
-            </ComboBoxItem>
+        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" ItemsSource="{x:Bind ViewModel.ScannerDiscoveryService.DiscoveredScanners, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedScanner, Mode=TwoWay}" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,0,38,0" TabIndex="0" AutomationProperties.IsRequiredForForm="True" RightTapped="ComboBoxScanners_RightTapped">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="models:DiscoveredScanner">
+                    <TextBlock Text="{x:Bind Name}" Style="{StaticResource BaseTextBlockStyle}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+            
+            <!-- Debug Flyout -->
+            <FlyoutBase.AttachedFlyout>
+                <Flyout>
+                    <StackPanel Orientation="Vertical" MaxWidth="400">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                            <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
+                        </StackPanel>
+                        <TextBox Text="{x:Bind ViewModel.DebugScannerName, Mode=TwoWay}"/>
+                        <Grid Margin="0,12,0,12" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="{x:Bind ViewModel.DebugScannerAutoEnabled, Mode=TwoWay}"/>
+                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerAuto.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerAutoPreviewEnabled, Mode=TwoWay}" Margin="0,0,0,12"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="{x:Bind ViewModel.DebugScannerFlatbedEnabled, Mode=TwoWay}"/>
+                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFlatbedPreviewEnabled, Mode=TwoWay}" Margin="0,0,0,12"/>
+                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFlatbedColorEnabled, Mode=TwoWay}"/>
+                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFlatbedGrayscaleEnabled, Mode=TwoWay}"/>
+                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFlatbedMonochromeEnabled, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="{x:Bind ViewModel.DebugScannerFeederEnabled, Mode=TwoWay}"/>
+                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.DebugScannerFeederPreviewEnabled, Mode=TwoWay}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFeederColorEnabled, Mode=TwoWay}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederGrayscale" Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFeederGrayscaleEnabled, Mode=TwoWay}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederMonochrome" Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFeederMonochromeEnabled, Mode=TwoWay}"/>
+                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederDuplex" Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerFeederDuplexEnabled, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                            <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Flyout>
+            </FlyoutBase.AttachedFlyout>
         </ComboBox>
         <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}">
             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="0,3,0,3"/>
@@ -138,29 +194,46 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
             <StackPanel Orientation="Vertical" Padding="24,16,24,24">
                 <Frame x:Name="FrameSourceMode">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="TextBlockSourceMode" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <Grid Margin="0,3,0,0">
-                            <RadioButton x:Name="RadioButtonSourceModeAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconAutoPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
-                        </Grid>
-                        <Grid Margin="0,3,0,0">
-                            <RadioButton x:Name="RadioButtonSourceModeFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconFlatbedPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
-                        </Grid>
-                        <Grid Margin="0,3,0,0">
-                            <RadioButton x:Name="RadioButtonSourceModeFeeder" x:Uid="OptionScanOptionsSourceFeeder" GroupName="RadioButtonGroupSource" HorizontalAlignment="Stretch"/>
-                            <FontIcon x:Name="FontIconFeederPreviewSupported" x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" HorizontalAlignment="Right"/>
-                        </Grid>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+
+                        <muxc:RadioButtons Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
+                            <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
+                            <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, FallbackValue=False, Mode=OneWay}"/>
+                            <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, FallbackValue=False, Mode=OneWay}"/>
+                        </muxc:RadioButtons>
+
+                        <Frame Grid.Row="1" Grid.Column="1" Height="18">
+                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                        </Frame>
+                        <Frame Grid.Row="2" Grid.Column="1" Height="18">
+                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                        </Frame>
+                        <Frame Grid.Row="3" Grid.Column="1" Height="18">
+                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                        </Frame>
+                    </Grid>
                 </Frame>
 
                 <Frame x:Name="FrameColorMode" Margin="0,48,0,0" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <RadioButton x:Name="RadioButtonColorModeColor" x:Uid="OptionScanOptionsColorColor" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                        <RadioButton x:Name="RadioButtonColorModeGrayscale" x:Uid="OptionScanOptionsColorGrayscale" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                        <RadioButton x:Name="RadioButtonColorModeMonochrome" x:Uid="OptionScanOptionsColorMonochrome" GroupName="RadioButtonGroupColor" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
+                            <RadioButton x:Uid="OptionScanOptionsColorColor"/>
+                            <RadioButton x:Uid="OptionScanOptionsColorGrayscale"/>
+                            <RadioButton x:Uid="OptionScanOptionsColorMonochrome"/>
+                        </muxc:RadioButtons>
                     </StackPanel>
                 </Frame>
 
@@ -168,7 +241,9 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                         <Grid Margin="0,3,0,0">
-                            <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" Padding="0,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}"/>
+                            <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" Padding="14,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
+                                <ComboBoxItem Content="300 DPI (Best for documents)"/>
+                            </ComboBox>
                             <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>
                             </HyperlinkButton>
@@ -179,8 +254,8 @@
                 <Frame x:Name="FrameMoreOptions" Margin="0,48,0,0" Visibility="Visible" Opacity="1">
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <CheckBox x:Name="CheckBoxMoreOptionsAllPages" x:Uid="OptionScanOptions10Pages" IsChecked="True" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                        <CheckBox x:Name="CheckBoxMoreOptionsDuplex" x:Uid="OptionScanOptionsDuplex" IsChecked="False" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                     </StackPanel>
                 </Frame>
 
@@ -188,7 +263,14 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                         <Grid Margin="0,3,0,0">
-                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" Padding="0,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}"/>
+                            <ComboBox x:Name="ComboBoxFileFormat" HorizontalAlignment="Stretch" Padding="14,0,38,0" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}">
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="16" Margin="0,0,12,0"/>
+                                        <TextBlock Text="PDF"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+                            </ComboBox>
                             <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,32,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>
                             </HyperlinkButton>
@@ -221,7 +303,7 @@
                 </Button>
             </StackPanel>
 
-            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="True" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right">
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="True" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
                 <Grid>
                     <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                         <FontIcon x:Name="FontIconButtonScanAdd" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="Collapsed"/>
@@ -241,6 +323,23 @@
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </muxc:SplitButton.Flyout>
+
+                <!-- Debug Flyout -->
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout>
+                        <StackPanel Orientation="Vertical" MaxWidth="400">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                                <TextBlock Text="Debug scanning" Style="{StaticResource BaseTextBlockStyle}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,12">
+                                <ComboBox Header="Target format" Width="150"/>
+                                <CheckBox  Content="Start fresh" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
+                            </StackPanel>
+                            <Button Content="Select files" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
             </muxc:SplitButton>
         </Grid>
     </Grid>

@@ -6,7 +6,7 @@ using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
-using static Enums;
+using static Enums_old;
 
 public static class Globals
 {

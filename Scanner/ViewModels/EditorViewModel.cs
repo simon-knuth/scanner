@@ -8,37 +8,61 @@ using static Scanner.Services.Messenger.MessengerEnums;
 using Windows.UI.Xaml.Controls;
 using static HelpViewEnums;
 using Microsoft.Toolkit.Mvvm.Input;
+using Scanner.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.ViewModels
 {
-    public class HelpViewModel : ObservableRecipient, IDisposable
+    public class EditorViewModel : ObservableObject
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public event EventHandler<HelpTopic> HelpTopicRequested;
-        public RelayCommand DisposeCommand;
+        private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+
+        private Orientation _Orientation;
+        public Orientation Orientation
+        {
+            get => _Orientation;
+            set => SetProperty(ref _Orientation, value);
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public HelpViewModel()
+        public EditorViewModel()
         {
-            WeakReferenceMessenger.Default.Register<HelpRequestMessage>(this, (r, m) => HelpRequestMessage_Received(r, m));
-            DisposeCommand = new RelayCommand(Dispose);
+            RefreshOrientationSetting();
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void Dispose()
+        private void RefreshOrientationSetting()
         {
-            Messenger.UnregisterAll(this);
-        }
+            int orientationValue = (int) SettingsService.GetSetting(AppSetting.SettingEditorOrientation);
 
-        private void HelpRequestMessage_Received(object r, HelpRequestMessage m)
+            switch (orientationValue)
+            {
+                case 0:
+                    Orientation = Orientation.Horizontal;
+                    break;
+                case 1:
+                    Orientation = Orientation.Vertical;
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
-            HelpTopicRequested?.Invoke(this, m.HelpTopic);
+            if (e == AppSetting.SettingEditorOrientation)
+            {
+                RefreshOrientationSetting();
+            }
         }
     }
 }
