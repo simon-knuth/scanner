@@ -1174,4 +1174,14 @@ static class Utilities
         string toolTip = (string)ToolTipService.GetToolTip(element);
         Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
     }
+
+
+    /// <summary>
+    ///    Returns the current package version as a friendly string. 
+    /// </summary>
+    public static string GetCurrentVersion()
+    {
+        PackageVersion version = Package.Current.Id.Version;
+        return String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+    }
 }

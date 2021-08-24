@@ -11,7 +11,7 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:muxcWindows11Present="using:Microsoft.UI.Xaml.Controls?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
-    xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
+    xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)" xmlns:dialogs="using:Scanner.Views.Dialogs"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource SystemControlAcrylicWindowBrush}"
     d:DesignWidth="800"
@@ -140,11 +140,11 @@
         <TextBlock x:Name="TextBlockTitlebar" Grid.Row="0" Text="Scanner" VerticalAlignment="Center" Margin="12,0,0,0" Style="{StaticResource CaptionTextBlockStyle}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}"/>
 
         <!-- Content -->
-        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="NavigationViewMain_SelectionChanged">
+        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="NavigationViewMain_SelectionChanged" ItemInvoked="NavigationViewMain_ItemInvoked">
             <muxc:NavigationView.Triggers>
-                
+
             </muxc:NavigationView.Triggers>
-            
+
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
@@ -172,7 +172,7 @@
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.FooterMenuItems>
-                <muxc:NavigationViewItem SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -182,7 +182,7 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -216,7 +216,7 @@
                     </Frame>
                     <muxc:InfoBar Grid.Row="1" IsOpen="False" Margin="0,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Severity="Informational"/>
                 </Grid>
-                
+
                 <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
                 <Frame x:Name="FrameMainContentThird" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
             </Grid>

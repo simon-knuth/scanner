@@ -37,6 +37,8 @@ namespace Scanner
                 .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
                 .AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                .AddSingleton<ILogService, LogService>()
+                .AddSingleton<IAppCenterService, AppCenterService>()
                 //    .AddSingleton<IDatabaseService, DatabaseService>()
                 //    .AddSingleton<IPdfService, PdfService>()
                 //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()

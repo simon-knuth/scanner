@@ -1,0 +1,135 @@
+﻿<ContentDialog
+    x:Class="Scanner.Views.Dialogs.DonateDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    DefaultButton="Primary"
+    PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
+    PrimaryButtonText="Donate"
+    SecondaryButtonText="No thanks"
+    PrimaryButtonClick="DonateDialog_PrimaryButtonClick"
+    Loaded="ContentDialog_Loaded">
+
+    <ContentDialog.Transitions>
+        <TransitionCollection>
+            <PopupThemeTransition/>
+        </TransitionCollection>
+    </ContentDialog.Transitions>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   DIALOG CONTENT   - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Title>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBlock x:Uid="HeadingSettingsDonate" Text="Support the development"/>
+        </StackPanel>
+    </ContentDialog.Title>
+
+    <ScrollViewer Padding="0,0,18,0" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="GridContent" Margin="0,6,0,12" x:DeferLoadStrategy="Lazy">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition IsStaggeringEnabled="True"/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                <PersonPicture ProfilePicture="/Assets/Simon.jpg" Initials="SK" DisplayName="Simon Knuth" VerticalAlignment="Center" Width="80"/>
+                <HyperlinkButton HorizontalAlignment="Center" Margin="0,6,0,0" NavigateUri="https://github.com/simon-knuth">
+                    <TextBlock Text="Simon Knuth" Style="{StaticResource CaptionTextBlockStyle}"/>
+                </HyperlinkButton>
+            </StackPanel>
+        
+            <Grid Grid.Row="0" Grid.Column="1" UseLayoutRounding="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-3,0" Stroke="{ThemeResource SystemChromeMediumHighColor}" StrokeThickness="3"/>
+                <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Padding="16" BorderBrush="{ThemeResource SystemChromeMediumHighColor}" BorderThickness="1">
+                    <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <Span>
+                            <Run FontWeight="SemiBold">This app is available at no cost for everyone to use.</Run>
+                            <Run>If you like it, you can directly support the development with a donation.</Run>
+                            <LineBreak/><LineBreak/><Run>Thank you! ❤️</Run>
+                        </Span>
+                    </TextBlock>
+                </Frame>
+                <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-4,0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,32,0,0">
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition IsStaggeringEnabled="True"/>
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MaxWidth="350"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">
+                    <Ellipse Fill="Green"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                </Grid>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="No ads" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+
+                <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
+                    <Ellipse Fill="Green"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                </Grid>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="No subscriptions" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+
+                <Grid Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
+                    <Ellipse Fill="Green"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                </Grid>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="No collection of personal data" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+
+                <Grid Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
+                    <Ellipse Fill="Green"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                </Grid>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Free updates" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+    
+</ContentDialog>

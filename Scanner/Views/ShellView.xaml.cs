@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Scanner.ViewModels;
 using Scanner.Services;
+using Scanner.Views.Dialogs;
+using static Utilities;
+using Windows.UI.Core;
 
 namespace Scanner.Views
 {
@@ -151,6 +154,19 @@ namespace Scanner.Views
             else throw new ArgumentException(String.Format(
                 "Unable to convert NavigationViewItem {1} to ShellNavigationSelectableItem.",
                 item.Name));
+        }
+
+        private async void NavigationViewMain_ItemInvoked(WinUI.NavigationView sender, WinUI.NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.InvokedItemContainer == NavigationViewItemMainSaveLocation)
+            {
+                
+            }
+            else if (args.InvokedItemContainer == NavigationViewItemMainDonate)
+            {
+                DonateDialog dialog = new DonateDialog();
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+            }
         }
     }
 }

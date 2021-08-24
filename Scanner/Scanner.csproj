@@ -11,7 +11,7 @@
     <AssemblyName>Scanner</AssemblyName>
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.20348.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -141,11 +141,15 @@
     <Compile Include="Models\ScanResolution.cs" />
     <Compile Include="Models\ScanOptions.cs" />
     <Compile Include="PreviewPageIntent.cs" />
+    <Compile Include="Services\Interfaces\IAppCenterService.cs" />
     <Compile Include="Services\Interfaces\IScannerDiscoveryService.cs" />
+    <Compile Include="Services\Interfaces\ILogService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\AppCenterService.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestShellMessage.cs" />
     <Compile Include="Services\Messenger\MessengerEnums.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\SettingsEnums.cs" />
     <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
@@ -175,6 +179,9 @@
     <Compile Include="Views\Converters\RadioButtonsScannerSourceConverter.cs" />
     <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\DonateDialog.xaml.cs">
+      <DependentUpon>DonateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditorView.xaml.cs">
       <DependentUpon>EditorView.xaml</DependentUpon>
     </Compile>
@@ -468,6 +475,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\DonateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -528,7 +539,7 @@
       <Version>7.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.6.1</Version>
+      <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
@@ -556,7 +567,7 @@
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
     </SDKReference>
-    <SDKReference Include="WindowsDesktop, Version=10.0.19041.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.20348.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>

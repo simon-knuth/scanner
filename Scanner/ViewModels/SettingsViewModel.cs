@@ -1,15 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using WinUI = Microsoft.UI.Xaml.Controls;
-using Scanner.Services.Messenger;
-using System;
-using System.Collections.Generic;
-using static Scanner.Services.Messenger.MessengerEnums;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.Input;
-using Scanner.Services;
-using static Scanner.Services.SettingsEnums;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Services;
+using System;
+using static Scanner.Services.SettingsEnums;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
@@ -19,6 +13,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ISettingsService SettingsService => Ioc.Default.GetRequiredService<ISettingsService>();
+        private ILogService _LogService = Ioc.Default.GetService<ILogService>();
 
         public int SettingSaveLocationType
         {
@@ -61,6 +56,8 @@ namespace Scanner.ViewModels
             get => (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
             set => SettingsService.SetSetting(AppSetting.SettingErrorStatistics, value);
         }
+
+        public string CurrentVersion => GetCurrentVersion();
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////

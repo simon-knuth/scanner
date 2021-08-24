@@ -214,7 +214,7 @@
                     <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
                 </CheckBox>
                 <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                <Button x:Name="HyperlinkSettingsExportLog" Margin="0,16,0,0">
+                <Button Margin="0,16,0,0">
                     <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
                 </Button>
 
@@ -236,10 +236,27 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
+                            <Grid Grid.Column="0">
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Foreground="Red" Glyph="&#xEB52;" FontSize="16" Margin="0,0,16,0" Opacity="0">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ExpanderTranslationsContributors.IsExpanded, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ExpanderTranslationsContributors.IsExpanded, Mode=OneWay}" ComparisonCondition="NotEqual" Value="True">
+                                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                    
+                                    <FontIcon.OpacityTransition>
+                                        <ScalarTransition Duration="0:0:0.25"/>
+                                    </FontIcon.OpacityTransition>
+                                </FontIcon>
+                            </Grid>
                             <TextBlock Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
+                    
                     <TextBlock LineHeight="28" TextWrapping="WrapWholeWords">
                     <Run FontWeight="SemiBold">David</Run> - British English
                     <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French                        
@@ -269,8 +286,10 @@
                     <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="Medium">Scanner for Windows</Run>
-                            <LineBreak/><Run>Copyright © 2021 Simon Knuth</Run>
-                            <LineBreak/><Run x:Name="RunSettingsVersion">Version ?.?.?.?</Run>
+                            <LineBreak/><Run>Copyright © 2021</Run>
+                            <Hyperlink UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth">Simon Knuth</Hyperlink>
+                            <LineBreak/><Run>Version</Run>
+                            <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
                         </Span>
                     </TextBlock>
                 </Grid>
