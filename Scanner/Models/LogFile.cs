@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-
-namespace Scanner
+namespace Scanner.Models
 {
     public class LogFile : INotifyPropertyChanged
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private StorageFile _File;
         public StorageFile File
         {
-            get
-            {
-                return _File;
-            }
+            get => _File;
             set
             {
                 _File = value;
@@ -29,10 +26,7 @@ namespace Scanner
         private string _FileSize;
         public string FileSize
         {
-            get
-            {
-                return _FileSize;
-            }
+            get => _FileSize;
             set
             {
                 _FileSize = value;
@@ -43,17 +37,13 @@ namespace Scanner
         private DateTimeOffset _LastModified;
         public DateTimeOffset LastModified
         {
-            get
-            {
-                return _LastModified;
-            }
+            get => _LastModified;
             set
             {
                 _LastModified = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_LastModified)));
             }
         }
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,18 +57,11 @@ namespace Scanner
         {
             LogFile logFile = new LogFile(file);
             var properties = await file.GetBasicPropertiesAsync();
-            logFile.FileSize = Math.Ceiling((double) properties.Size / 1000).ToString() + " KB";
+            logFile.FileSize = Math.Ceiling((double)properties.Size / 1000).ToString() + " KB";
             logFile.LastModified = properties.DateModified;
 
             return logFile;
         }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // EVENTS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public event PropertyChangedEventHandler PropertyChanged;
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////

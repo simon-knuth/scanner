@@ -63,16 +63,16 @@
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
-                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
-                    <AppBarToggleButton.Icon>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarToggleButtonStyleCompact}">
-                    <AppBarToggleButton.Icon>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarSeparator/>
                 <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>

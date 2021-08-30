@@ -164,7 +164,7 @@ namespace Scanner.Views
             }
             else if (args.InvokedItemContainer == NavigationViewItemMainDonate)
             {
-                DonateDialog dialog = new DonateDialog();
+                DonateDialogView dialog = new DonateDialogView();
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
             }
         }

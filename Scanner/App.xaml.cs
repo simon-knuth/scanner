@@ -27,22 +27,17 @@ namespace Scanner
     {
         private UISettings uISettings;
 
+        private IAppCenterService AppCenterService;
+        private ILogService LogService;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            Ioc.Default.ConfigureServices(new ServiceCollection()
-                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
-                .AddSingleton<ISettingsService, SettingsService>()
-                .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
-                .AddSingleton<ILogService, LogService>()
-                .AddSingleton<IAppCenterService, AppCenterService>()
-                //    .AddSingleton<IDatabaseService, DatabaseService>()
-                //    .AddSingleton<IPdfService, PdfService>()
-                //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
-                .BuildServiceProvider());
+            // register and setup services
+            PrepareServices();
 
             // apply theme
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -65,6 +60,24 @@ namespace Scanner
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        private void PrepareServices()
+        {
+            Ioc.Default.ConfigureServices(new ServiceCollection()
+                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
+                .AddSingleton<ISettingsService, SettingsService>()
+                .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                .AddSingleton<IScanService, ScanService>()
+                .AddSingleton<ILogService, LogService>()
+                .AddSingleton<IAppCenterService, AppCenterService>()
+                .AddTransient<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
+                //    .AddSingleton<IPdfService, PdfService>()
+                //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
+                .BuildServiceProvider());
+
+            AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+            LogService = Ioc.Default.GetService<ILogService>();
         }
 
 

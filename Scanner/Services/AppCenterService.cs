@@ -69,7 +69,7 @@ namespace Scanner.Services
         public AppCenterService()
         {
             // prepare service
-            AppCenter.SetEnabledAsync(false).RunSynchronously();
+            Task.Run(async () => await AppCenter.SetEnabledAsync(false));
             Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report).Result;
             AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
 
@@ -160,6 +160,14 @@ namespace Scanner.Services
         public void TrackEvent(AppCenterEvent appCenterEvent, IDictionary<string, string> properties = null)
         {
             Analytics.TrackEvent(EventStrings[appCenterEvent], properties);
+        }
+
+        /// <summary>
+        ///     Track an Error in AppCenter.
+        /// </summary>
+        public void TrackError(Exception exception, IDictionary<string, string> properties = null, params ErrorAttachmentLog[] attachments)
+        {
+            Crashes.TrackError(exception, properties, attachments);
         }
     }
 

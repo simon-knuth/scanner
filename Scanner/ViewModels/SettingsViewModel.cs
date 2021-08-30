@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using Scanner.Services;
 using System;
 using static Scanner.Services.SettingsEnums;
@@ -12,8 +13,11 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ISettingsService SettingsService => Ioc.Default.GetRequiredService<ISettingsService>();
-        private ILogService _LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+
+        public RelayCommand ExportLogCommand;
 
         public int SettingSaveLocationType
         {
@@ -59,12 +63,14 @@ namespace Scanner.ViewModels
 
         public string CurrentVersion => GetCurrentVersion();
 
+        public event EventHandler LogExportDialogRequested;
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsViewModel()
         {
-            SettingAutoRotate = (int)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
+            ExportLogCommand = new RelayCommand(DisplayLogExportDialog);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +79,11 @@ namespace Scanner.ViewModels
         public void Dispose()
         {
             Messenger.UnregisterAll(this);
+        }
+
+        private void DisplayLogExportDialog()
+        {
+            LogExportDialogRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

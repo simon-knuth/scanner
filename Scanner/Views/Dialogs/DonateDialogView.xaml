@@ -1,5 +1,5 @@
 ﻿<ContentDialog
-    x:Class="Scanner.Views.Dialogs.DonateDialog"
+    x:Class="Scanner.Views.Dialogs.DonateDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Scanner.Views.Dialogs"
@@ -14,12 +14,6 @@
     SecondaryButtonText="No thanks"
     PrimaryButtonClick="DonateDialog_PrimaryButtonClick"
     Loaded="ContentDialog_Loaded">
-
-    <ContentDialog.Transitions>
-        <TransitionCollection>
-            <PopupThemeTransition/>
-        </TransitionCollection>
-    </ContentDialog.Transitions>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -37,7 +31,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <ContentDialog.Title>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock x:Uid="HeadingSettingsDonate" Text="Support the development"/>
+            <TextBlock x:Uid="HeadingSettingsDonate"/>
         </StackPanel>
     </ContentDialog.Title>
 
@@ -61,7 +55,7 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
                 <PersonPicture ProfilePicture="/Assets/Simon.jpg" Initials="SK" DisplayName="Simon Knuth" VerticalAlignment="Center" Width="80"/>
-                <HyperlinkButton HorizontalAlignment="Center" Margin="0,6,0,0" NavigateUri="https://github.com/simon-knuth">
+                <HyperlinkButton HorizontalAlignment="Center" Margin="0,6,0,0" NavigateUri="https://simon-knuth.github.io/">
                     <TextBlock Text="Simon Knuth" Style="{StaticResource CaptionTextBlockStyle}"/>
                 </HyperlinkButton>
             </StackPanel>

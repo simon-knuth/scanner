@@ -79,9 +79,13 @@ namespace Scanner.Services
                 }
 
                 // add scanner
-                ImageScanner imageScanner = await ImageScanner.FromIdAsync(args.Id);
-                DiscoveredScanner newScanner = new DiscoveredScanner(imageScanner, args.Name);
-                DiscoveredScanners.Add(newScanner);
+                try
+                {
+                    ImageScanner imageScanner = await ImageScanner.FromIdAsync(args.Id);
+                    DiscoveredScanner newScanner = new DiscoveredScanner(imageScanner, args.Name);
+                    DiscoveredScanners.Add(newScanner);
+                }
+                catch (Exception) { }
             });
         }
 

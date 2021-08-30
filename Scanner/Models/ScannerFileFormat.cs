@@ -12,12 +12,11 @@ namespace Scanner.Models
         [Required(ErrorMessage = "TargetFormat is required")]
         public readonly ImageScannerFormat TargetFormat;
 
-        [Required(ErrorMessage = "OriginalFormat is required")]
-        public readonly ImageScannerFormat OriginalFormat;
+        public readonly ImageScannerFormat? OriginalFormat;
 
         public readonly string FriendlyName;
 
-        public readonly bool RequiresConversion;
+        public bool RequiresConversion => TargetFormat == OriginalFormat;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +25,12 @@ namespace Scanner.Models
         {
             TargetFormat = targetFormat;
             OriginalFormat = originalFormat;
-            RequiresConversion = TargetFormat == OriginalFormat ? false : true;
+            FriendlyName = GenerateFriendlyName(TargetFormat);
+        }
+
+        public ScannerFileFormat(ImageScannerFormat targetFormat)
+        {
+            TargetFormat = targetFormat;
             FriendlyName = GenerateFriendlyName(TargetFormat);
         }
 

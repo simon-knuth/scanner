@@ -13,7 +13,7 @@
     xmlns:muxcWindows11Present="using:Microsoft.UI.Xaml.Controls?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)" xmlns:dialogs="using:Scanner.Views.Dialogs"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
-    windows11NotPresent:Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+    windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
     d:DesignHeight="600"
     
@@ -133,6 +133,8 @@
             <RowDefinition x:Name="TitlebarGridMain" Height="32"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <Frame x:Name="FrameFallbackBackground" Grid.Row="0" Grid.RowSpan="2" windows11NotPresent:Background="{ThemeResource SystemAccentColor}" Opacity="0.05" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
         <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Scanner.Models
 {
@@ -163,6 +166,11 @@ namespace Scanner.Models
             return result;
         }
 
+        /// <summary>
+        ///     Generates the available file formats for the given <paramref name="config"/>, including
+        ///     formats available using conversion. The formats are generated in the following order:
+        ///     JPG -> PNG -> PDF -> TIF -> BMP
+        /// </summary>
         private ObservableCollection<ScannerFileFormat> GenerateFormats(IImageScannerFormatConfiguration config)
         {
             ObservableCollection<ScannerFileFormat> result = new ObservableCollection<ScannerFileFormat>();
@@ -222,6 +230,31 @@ namespace Scanner.Models
             }
 
             return result;
+        }
+
+        /// <summary>
+        ///     Returns a scan preview as <see cref="BitmapImage"/> using <paramref name="config"/>.
+        /// </summary>
+        /// <exception cref="Exception">
+        ///     Occurs when the scanner sends an error message.
+        /// </exception>
+        public async Task<BitmapImage> GetPreviewAsync(ImageScannerScanSource config)
+        {
+            using (IRandomAccessStream previewStream = new InMemoryRandomAccessStream())
+            {
+                var previewResult = await Device.ScanPreviewToStreamAsync(config, previewStream);
+
+                if (previewResult.Succeeded)
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.SetSource(previewStream);
+                    return bitmapImage;
+                }
+                else
+                {
+                    throw new ApplicationException("Preview unsuccessful.");
+                }
+            }
         }
     }
 }

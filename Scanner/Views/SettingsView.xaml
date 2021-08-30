@@ -210,11 +210,29 @@
                         <Run x:Uid="TextSettingsFeedback1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None"><Run x:Uid="HyperlinkSettingsFeedbackRate" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback2" xml:space="preserve"/><Hyperlink UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="HyperlinkSettingsFeedbackGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback3" xml:space="preserve"/>
                     </Span>
                 </TextBlock>
-                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,0,0,0" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{Binding ElementName=OptionSettingsErrorStatistics, Path=Text}">
+                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,0,0,0" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                        </core:DataTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                    
                     <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
                 </CheckBox>
                 <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                <Button Margin="0,16,0,0">
+                <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.ExportLogCommand}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                        </core:DataTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                    
                     <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
                 </Button>
 
@@ -287,7 +305,7 @@
                         <Span>
                             <Run FontWeight="Medium">Scanner for Windows</Run>
                             <LineBreak/><Run>Copyright © 2021</Run>
-                            <Hyperlink UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth">Simon Knuth</Hyperlink>
+                            <Hyperlink UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/">Simon Knuth</Hyperlink>
                             <LineBreak/><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
                         </Span>
@@ -296,13 +314,13 @@
                 <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutWebsite, Path=FontSize}"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center">

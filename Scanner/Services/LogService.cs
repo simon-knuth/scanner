@@ -2,6 +2,8 @@
 using Serilog;
 using Serilog.Exceptions;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -27,21 +29,10 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public LogService()
         {
-            _Log = Task.Run(Initialize).Result;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        ///     Initializes the service and prepares a log file.
-        /// </summary>
-        private async Task<ILogger> Initialize()
-        {
             Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
 
-            StorageFolder folder = await ApplicationData.Current.RoamingFolder
-                .CreateFolderAsync(LogFolder, CreationCollisionOption.OpenIfExists);
+            StorageFolder folder = Task.Run(async () => await ApplicationData.Current.RoamingFolder
+                .CreateFolderAsync(LogFolder, CreationCollisionOption.OpenIfExists)).Result;
             string logPath = Path.Combine(folder.Path, "log.txt");
 
             ILogger log;
@@ -66,7 +57,35 @@ namespace Scanner.Services
                 SystemInformation.Instance.DeviceFamily, SystemInformation.Instance.DeviceModel,
                 SystemInformation.Instance.DeviceManufacturer);
 
-            return log;
+            _Log = log;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<List<Models.LogFile>> GetLogFiles()
+        {
+            // flush log
+            Serilog.Log.CloseAndFlush();
+
+            // populate file list
+            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync(LogFolder);
+            var files = await logFolder.GetFilesAsync();
+
+            List<Models.LogFile> sortedFiles = new List<Models.LogFile>();
+            foreach (var file in files)
+            {
+                sortedFiles.Add(await Models.LogFile.CreateLogFile(file));
+            }
+            sortedFiles.Sort(delegate (Models.LogFile x, Models.LogFile y)
+            {
+                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
+            });
+            sortedFiles.Reverse();
+
+            await InitializeSerilogAsync();
+
+            return sortedFiles;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Scanner.Views.Converters
             switch ((int)value)
             {
                 case -1:
-                    return ScannerSource.None;
+                    return null;
                 case 0:
                     return ScannerSource.Auto;
                 case 1:

@@ -946,11 +946,27 @@ static class Utilities
 
 
     /// <summary>
-    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/> .
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>.
     /// </summary>
     public static IAsyncAction RunOnUIThreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
     {
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
+    }
+
+
+    /// <summary>
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running.
+    /// </summary>
+    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
+    {
+        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, () =>
+        {
+            agileCallback();
+            taskCompleted.SetResult(true);
+        });
+        await taskCompleted.Task;
     }
 
 
@@ -1183,5 +1199,59 @@ static class Utilities
     {
         PackageVersion version = Package.Current.Id.Version;
         return String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+    }
+
+
+    public async static Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file)
+    {
+        BitmapImage bmp = null;
+        int attempt = 0;
+
+        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
+        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+        {
+            using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                switch (ConvertFormatStringToSupportedFormat(file.FileType))
+                {
+                    case SupportedFormat.JPG:
+                    case SupportedFormat.PNG:
+                    case SupportedFormat.TIF:
+                    case SupportedFormat.BMP:
+                        while (attempt != -1)
+                        {
+                            try
+                            {
+                                bmp = new BitmapImage();
+                                await bmp.SetSourceAsync(sourceStream);
+                                attempt = -1;
+                            }
+                            catch (Exception e)
+                            {
+                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
+
+                                log.Warning(e, "Opening the file stream of image failed, retrying in 500ms.");
+                                await Task.Delay(500);
+                                attempt++;
+                            }
+                        }
+                        break;
+
+                    case SupportedFormat.PDF:
+                        throw new NotImplementedException("Can not generate bitmap from PDF.");
+
+                    case SupportedFormat.XPS:
+                    case SupportedFormat.OpenXPS:
+                        throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
+
+                    default:
+                        throw new ApplicationException("Could not determine file type for generating a bitmap.");
+                }
+            }
+            taskCompleted.SetResult(true);
+        });
+
+        await taskCompleted.Task;
+        return bmp;
     }
 }

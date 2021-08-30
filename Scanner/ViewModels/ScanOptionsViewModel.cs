@@ -15,6 +15,10 @@ using Scanner.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using static Utilities;
 using System.Threading.Tasks;
+using Windows.Devices.Scanners;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Collections.Generic;
+using Windows.Storage;
 
 namespace Scanner.ViewModels
 {
@@ -23,11 +27,28 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public AsyncRelayCommand ViewLoadedCommand => new AsyncRelayCommand(ViewLoaded);
+        public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+        private readonly IScanOptionsDatabaseService ScanOptionsDatabaseService = Ioc.Default.GetService<IScanOptionsDatabaseService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
 
-        public RelayCommand HelpRequestScannerDiscoveryCommand => new RelayCommand(HelpRequestScannerDiscovery);
-        public RelayCommand HelpRequestChooseResolutionCommand => new RelayCommand(HelpRequestChooseResolution);
-        public RelayCommand HelpRequestChooseFileFormatCommand => new RelayCommand(HelpRequestChooseFileFormat);
+        public AsyncRelayCommand ViewLoadedCommand;
+
+        public RelayCommand HelpRequestScannerDiscoveryCommand;
+        public RelayCommand HelpRequestChooseResolutionCommand;
+        public RelayCommand HelpRequestChooseFileFormatCommand;
+
+        public AsyncRelayCommand<string> PreviewScanCommand;
+        public RelayCommand DismissPreviewScanCommand;
+
+        public event EventHandler PreviewRunning;
+
+        private bool _PreviewFailed;
+        public bool PreviewFailed
+        {
+            get => _PreviewFailed;
+            set => SetProperty(ref _PreviewFailed, value);
+        }
 
         private ObservableCollection<DiscoveredScanner> _Scanners;
         public ObservableCollection<DiscoveredScanner> Scanners
@@ -40,37 +61,64 @@ namespace Scanner.ViewModels
         public DiscoveredScanner SelectedScanner
         {
             get => _SelectedScanner;
-            set => SetProperty(ref _SelectedScanner, value);
+            set
+            {
+                SetProperty(ref _SelectedScanner, value);
+
+                if (SettingsService != null && ScanOptionsDatabaseService != null)
+                {
+                    bool useRemembered = (bool) SettingsService.GetSetting
+                        (SettingsEnums.AppSetting.SettingRememberScanOptions);
+
+                    if (useRemembered) ApplyInitialScanOptionsForScanner(SelectedScanner);
+                    else ApplyDefaultSourceModeForScanner(SelectedScanner);
+                }
+                else
+                {
+                    ApplyDefaultSourceModeForScanner(SelectedScanner);
+                }
+            }
         }
 
-        private ScannerSource _ScannerSource = ScannerSource.None;
-        public ScannerSource ScannerSource
+        private ScannerSource _ScannerSource = Enums.ScannerSource.None;
+        public ScannerSource? ScannerSource
         {
             get => _ScannerSource;
             set
             {
-                SetProperty(ref _ScannerSource, value);
+                // check intermittent value
+                if (value == null) return;
+                
+                // get previously selected scan options
+                ScanOptions previousScanOptions = CreateScanOptions();
 
-                // show applicable resolutions and file formats
+                SetProperty(ref _ScannerSource, (Enums.ScannerSource)value);
+
+                // enable applicable resolutions and file formats
                 switch (value)
                 {
-                    case ScannerSource.Auto:
+                    case Enums.ScannerSource.Auto:
                         ScannerResolutions = null;
                         FileFormats = SelectedScanner?.AutoFormats;
                         break;
-                    case ScannerSource.Flatbed:
+                    case Enums.ScannerSource.Flatbed:
                         ScannerResolutions = SelectedScanner?.FlatbedResolutions;
                         FileFormats = SelectedScanner?.FlatbedFormats;
                         break;
-                    case ScannerSource.Feeder:
+                    case Enums.ScannerSource.Feeder:
                         ScannerResolutions = SelectedScanner?.FeederResolutions;
                         FileFormats = SelectedScanner?.FeederFormats;
                         break;
-                    case ScannerSource.None:
+                    case Enums.ScannerSource.None:
+                        ScannerResolutions = null;
+                        FileFormats = null;
+                        break;
                     default:
                         ScannerResolutions = null;
                         break;
                 }
+
+                ApplyDefaultScanOptionsForSourceMode((ScannerSource)value, previousScanOptions);
             }
         }
 
@@ -123,9 +171,17 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _SelectedFileFormat, value);
         }
 
-        public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+        private BitmapImage _PreviewImage;
+        public BitmapImage PreviewImage
+        {
+            get => _PreviewImage;
+            set => SetProperty(ref _PreviewImage, value);
+        }
 
-        // Debug properties
+        // Debug stuff
+        public AsyncRelayCommand DebugAddScannerCommand;
+        public RelayCommand DebugRestartScannerDiscoveryCommand;
+
         private string _DebugScannerName = "Some scanner";
         public string DebugScannerName
         {
@@ -224,15 +280,19 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _DebugScannerFeederDuplexEnabled, value);
         }
 
-        public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(DebugAddScanner);
-        public RelayCommand DebugRestartScannerDiscoveryCommand => new RelayCommand(DebugRestartScannerDiscovery);
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanOptionsViewModel()
         {
-            
+            ViewLoadedCommand = new AsyncRelayCommand(ViewLoaded);
+            HelpRequestScannerDiscoveryCommand = new RelayCommand(HelpRequestScannerDiscovery);
+            HelpRequestChooseResolutionCommand = new RelayCommand(HelpRequestChooseResolution);
+            HelpRequestChooseFileFormatCommand = new RelayCommand(HelpRequestChooseFileFormat);
+            PreviewScanCommand = new AsyncRelayCommand<string>(PreviewScanAsync);
+            DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
+            DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
+            DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,9 +302,12 @@ namespace Scanner.ViewModels
         {
             await ScannerDiscoveryService.RestartSearchAsync();
             Scanners = ScannerDiscoveryService.DiscoveredScanners;
-            Scanners.CollectionChanged += Scanners_CollectionChanged;
+            Scanners.CollectionChanged += Scanners_CollectionChangedAsync;
         }
         
+        /// <summary>
+        ///     Restarts the <see cref="ScannerDiscoveryService"/>.
+        /// </summary>
         private void RestartScannerDiscovery()
         {
             ScannerDiscoveryService.RestartSearchAsync();
@@ -254,7 +317,7 @@ namespace Scanner.ViewModels
         ///     Selects the first <see cref="DiscoveredScanner"/> added to <see cref="Scanners"/>,
         ///     if none is selected yet.
         /// </summary>
-        private async void Scanners_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Scanners_CollectionChangedAsync(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add
                 && e.NewItems.Count > 0
@@ -264,21 +327,208 @@ namespace Scanner.ViewModels
             }
         }
 
-        private async Task DebugAddScanner()
+        /// <summary>
+        ///     Applies the initial scan options values for <paramref name="scanner"/> as defined
+        ///     by <see cref="ScanOptionsDatabaseService"/>.
+        ///     If no initial values are available, default values are applied by
+        ///     <see cref="ApplyDefaultSourceModeForScanner(DiscoveredScanner)"/>.
+        ///     If values are found but they are not plausible, the database entry is removed and
+        ///     default values are applied by <see cref="ApplyDefaultSourceModeForScanner(DiscoveredScanner)"/>.
+        /// </summary>
+        private void ApplyInitialScanOptionsForScanner(DiscoveredScanner scanner)
+        {
+            ScannerSource = Enums.ScannerSource.None;
+            if (scanner == null) return;
+
+            ScanOptions scanOptions = ScanOptionsDatabaseService.GetScanOptionsForScanner(scanner);
+
+            if (scanOptions != null)
+            {
+                // scan options found, check integrity and delete from database if necessary
+                throw new NotImplementedException();
+            }
+            else
+            {
+                // no scan options found, apply default
+                ApplyDefaultSourceModeForScanner(scanner);
+            }
+        }
+
+        /// <summary>
+        ///     Applies default (first available) source mode for a scanner.
+        /// </summary>
+        private void ApplyDefaultSourceModeForScanner(DiscoveredScanner scanner)
+        {
+            ScannerSource = Enums.ScannerSource.None;
+            if (scanner == null) return;
+
+            if (scanner.IsAutoAllowed)
+            {
+                ScannerSource = Enums.ScannerSource.Auto;
+            }
+            else if (scanner.IsFlatbedAllowed)
+            {
+                ScannerSource = Enums.ScannerSource.Flatbed;
+            }
+            else if (scanner.IsFeederAllowed)
+            {
+                ScannerSource = Enums.ScannerSource.Feeder;
+            }
+            else
+            {
+                AppCenterService.TrackError(new ApplicationException("No default source mode for given scanner."));
+            }
+        }
+
+        /// <summary>
+        ///     Applies default scan options for a <paramref name="sourceMode"/> while taking 
+        ///     <paramref name="previousScanOptions"/> into account for a more comprehensible change.
+        /// </summary>
+        private void ApplyDefaultScanOptionsForSourceMode(ScannerSource sourceMode, ScanOptions previousScanOptions)
+        {
+            switch (sourceMode)
+            {
+                case Enums.ScannerSource.Auto:
+                    ScannerColorMode = ScannerColorMode.None;
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.AutoFormats, previousScanOptions.Format);
+                    break;
+                case Enums.ScannerSource.Flatbed:
+                    ScannerColorMode = GetDefaultColorMode
+                        (SelectedScanner.IsFlatbedColorAllowed,
+                        SelectedScanner.IsFlatbedGrayscaleAllowed,
+                        SelectedScanner.IsFlatbedMonochromeAllowed,
+                        previousScanOptions.ColorMode);
+
+                    foreach (ScanResolution resolution in SelectedScanner.FlatbedResolutions)
+                    {
+                        if (resolution.Annotation == ResolutionAnnotation.Default
+                            || resolution.Annotation == ResolutionAnnotation.Documents)
+                        {
+                            SelectedResolution = resolution;
+                        }
+                    }
+
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FlatbedFormats, previousScanOptions.Format);
+                    break;
+                case Enums.ScannerSource.Feeder:
+                    ScannerColorMode = GetDefaultColorMode
+                        (SelectedScanner.IsFeederColorAllowed,
+                        SelectedScanner.IsFeederGrayscaleAllowed,
+                        SelectedScanner.IsFeederMonochromeAllowed,
+                        previousScanOptions.ColorMode);
+
+                    foreach (ScanResolution resolution in SelectedScanner.FeederResolutions)
+                    {
+                        if (resolution.Annotation == ResolutionAnnotation.Default
+                            || resolution.Annotation == ResolutionAnnotation.Documents)
+                        {
+                            SelectedResolution = resolution;
+                        }
+                    }
+
+                    FeederMultiplePages = true;
+
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FeederFormats, previousScanOptions.Format);
+                    break;
+                case Enums.ScannerSource.None:
+                default:
+                    AppCenterService.TrackError(new ApplicationException
+                        ("Unable to apply default scan options for ScannerSource.None."));
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the default file format from <paramref name="newList"/> while also taking
+        ///     <paramref name="previousFormat"/> into consideration.
+        /// </summary>
+        private ScannerFileFormat GetDefaultFileFormat(ObservableCollection<ScannerFileFormat> newList,
+            ScannerFileFormat previousFormat)
+        {
+            if (previousFormat == null)
+            {
+                return newList[0];
+            }
+            else
+            {
+                foreach (ScannerFileFormat availableFormat in newList)
+                {
+                    if (availableFormat.TargetFormat == previousFormat.TargetFormat)
+                    {
+                        return availableFormat;
+                    }
+                }
+                return newList[0];
+            }
+        }
+
+        /// <summary>
+        ///     Gets the default color mode while also taking <paramref name="previousColorMode"/>
+        ///     into consideration.
+        /// </summary>
+        private ScannerColorMode GetDefaultColorMode(bool colorAllowed, bool grayscaleAllowed,
+            bool monochromeAllowed, ScannerColorMode previousColorMode)
+        {
+            switch (previousColorMode)
+            {
+                
+                case ScannerColorMode.Color:
+                    if (colorAllowed) return ScannerColorMode.Color;
+                    break;
+                case ScannerColorMode.Grayscale:
+                    if (grayscaleAllowed) return ScannerColorMode.Grayscale;
+                    break;
+                case ScannerColorMode.Monochrome:
+                    if (monochromeAllowed) return ScannerColorMode.Monochrome;
+                    break;
+                case ScannerColorMode.None:
+                default:
+                    break;
+            }
+
+            if (colorAllowed) return ScannerColorMode.Color;
+            if (grayscaleAllowed) return ScannerColorMode.Grayscale;
+            if (monochromeAllowed) return ScannerColorMode.Monochrome;
+
+            throw new ArgumentException("Unable to select default color mode when none is available.");
+        }
+
+        /// <summary>
+        ///     Compiles <see cref="ScanOptions"/> based on the current selections.
+        /// </summary>
+        private ScanOptions CreateScanOptions()
+        {
+            ScanOptions result = new ScanOptions()
+            {
+                Source = _ScannerSource,
+                ColorMode = ScannerColorMode,
+                FeederMultiplePages = FeederMultiplePages,
+                FeederDuplex = FeederDuplex,
+                Format = SelectedFileFormat
+            };
+
+            if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Instructs the <see cref="ScannerDiscoveryService"/> to add a debug scanner.
+        /// </summary>
+        private async Task DebugAddScannerAsync()
         {
             DiscoveredScanner debugScanner = new DiscoveredScanner(DebugScannerName)
             {
                 IsAutoAllowed = DebugScannerAutoEnabled,
-                IsFlatbedAllowed = DebugScannerFlatbedEnabled,
-                IsFeederAllowed = DebugScannerFeederEnabled,
-
                 IsAutoPreviewAllowed = DebugScannerAutoPreviewEnabled,
 
+                IsFlatbedAllowed = DebugScannerFlatbedEnabled,
                 IsFlatbedPreviewAllowed = DebugScannerFlatbedPreviewEnabled,
                 IsFlatbedColorAllowed = DebugScannerFlatbedColorEnabled,
                 IsFlatbedGrayscaleAllowed = DebugScannerFlatbedGrayscaleEnabled,
                 IsFlatbedMonochromeAllowed = DebugScannerFlatbedMonochromeEnabled,
-
+                
+                IsFeederAllowed = DebugScannerFeederEnabled,
                 IsFeederPreviewAllowed = DebugScannerFeederPreviewEnabled,
                 IsFeederColorAllowed = DebugScannerFeederColorEnabled,
                 IsFeederGrayscaleAllowed = DebugScannerFeederGrayscaleEnabled,
@@ -286,27 +536,174 @@ namespace Scanner.ViewModels
                 IsFeederDuplexAllowed = DebugScannerFeederDuplexEnabled
             };
 
+            if (debugScanner.IsAutoAllowed)
+            {
+                debugScanner.AutoFormats = CreateDebugFileFormatList();
+            }
+
+            if (debugScanner.IsFlatbedAllowed)
+            {
+                debugScanner.FlatbedResolutions = CreateDebugResolutionList();
+                debugScanner.FlatbedFormats = CreateDebugFileFormatList();
+            }
+
+            if (debugScanner.IsFeederAllowed)
+            {
+                debugScanner.FeederResolutions = CreateDebugResolutionList();
+                debugScanner.FeederFormats = CreateDebugFileFormatList();
+            }
+
             await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
         }
 
+        /// <summary>
+        ///     Creates a debug scanner's resolution list and fills it with some resolutions.
+        /// </summary>
+        private ObservableCollection<ScanResolution> CreateDebugResolutionList()
+        {
+            return new ObservableCollection<ScanResolution>()
+            {
+                new ScanResolution(150, ResolutionAnnotation.None),
+                new ScanResolution(350, ResolutionAnnotation.Documents),
+                new ScanResolution(600, ResolutionAnnotation.Photos),
+                new ScanResolution(800, ResolutionAnnotation.None)
+            };
+        }
+
+        /// <summary>
+        ///     Creates a debug scanner's file format and fills it with some file formats.
+        /// </summary>
+        private ObservableCollection<ScannerFileFormat> CreateDebugFileFormatList()
+        {
+            return new ObservableCollection<ScannerFileFormat>()
+            {
+                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Jpeg),
+                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Png),
+                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Pdf),
+                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.DeviceIndependentBitmap)
+            };
+        }
+
+        /// <summary>
+        ///     Restarts the <see cref="ScannerDiscoveryService"/> when instructed to do so while
+        ///     debugging.
+        /// </summary>
         private void DebugRestartScannerDiscovery()
         {
             RestartScannerDiscovery();
         }
 
+        /// <summary>
+        ///     Asks the shell to display the help on scanner discovery.
+        /// </summary>
         private void HelpRequestScannerDiscovery()
         {
             Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ScannerDiscovery));
         }
 
+        /// <summary>
+        ///     Asks the shell to display the help on choosing a resolution.
+        /// </summary>
         private void HelpRequestChooseResolution()
         {
             Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ChooseResolution));
         }
 
+        /// <summary>
+        ///     Asks the shell to display the help on choosing a file format.
+        /// </summary>
         private void HelpRequestChooseFileFormat()
         {
             Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ChooseFileFormat));
+        }
+
+        /// <summary>
+        ///     Requests a preview scan for the <see cref="SelectedScanner"/> and
+        ///     <see cref="ScannerSource"/> and updates <see cref="PreviewImage"/> and
+        ///     <see cref="PreviewFailed"/>.
+        /// </summary>
+        private async Task PreviewScanAsync(string parameter)
+        {
+            if (PreviewScanCommand.IsRunning) return;   // preview already running?
+
+            BitmapImage debugImage = null;
+            if (parameter == "File")
+            {
+                // debug preview with file
+                var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".tif");
+                picker.FileTypeFilter.Add(".tiff");
+                picker.FileTypeFilter.Add(".bmp");
+
+                StorageFile file = await picker.PickSingleFileAsync();
+                debugImage = await GenerateBitmapFromFileAsync(file);
+            }
+            
+            PreviewRunning?.Invoke(this, EventArgs.Empty);
+            
+            // reset properties
+            PreviewImage = null;
+            PreviewFailed = false;
+
+            // get source mode
+            ImageScannerScanSource source;
+            switch (_ScannerSource)
+            {
+                case Enums.ScannerSource.Auto:
+                    source = ImageScannerScanSource.AutoConfigured;
+                    break;
+                case Enums.ScannerSource.Flatbed:
+                    source = ImageScannerScanSource.Flatbed;
+                    break;
+                case Enums.ScannerSource.Feeder:
+                    source = ImageScannerScanSource.Feeder;
+                    break;
+                case Enums.ScannerSource.None:
+                default:
+                    return;
+            }
+
+            // get preview
+            if (debugImage != null)
+            {
+                await Task.Delay(2000);
+                PreviewImage = debugImage;
+            }
+            else if (parameter == "Fail" || SelectedScanner.Debug)
+            {
+                await Task.Delay(2000);
+                PreviewFailed = true;
+                PreviewScanCommand?.Cancel();
+            }
+            else
+            {
+                try
+                {
+                    BitmapImage image = await SelectedScanner.GetPreviewAsync(source);
+                    PreviewImage = image;
+                }
+                catch (Exception)
+                {
+                    PreviewFailed = true;
+                    PreviewScanCommand?.Cancel();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Signals that any preview scans are not needed any longer by getting rid of
+        ///     <see cref="PreviewImage"/> and canceling any previews in progress.
+        /// </summary>
+        private void DismissPreviewScanAsync()
+        {
+            try { PreviewImage = null; }
+            catch { }
+
+            PreviewScanCommand?.Cancel();
         }
     }
 }

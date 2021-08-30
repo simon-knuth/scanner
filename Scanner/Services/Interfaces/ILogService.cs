@@ -1,4 +1,6 @@
 ﻿using Serilog;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Scanner.Services
 {
@@ -13,5 +15,7 @@ namespace Scanner.Services
         {
             get;
         }
+
+        Task<List<Models.LogFile>> GetLogFiles();
     }
 }

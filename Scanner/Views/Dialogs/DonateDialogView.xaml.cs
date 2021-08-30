@@ -4,9 +4,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Scanner.Views.Dialogs
 {
-    public sealed partial class DonateDialog : ContentDialog
+    public sealed partial class DonateDialogView : ContentDialog
     {
-        public DonateDialog()
+        public DonateDialogView()
         {
             this.InitializeComponent();
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace Scanner
+namespace Scanner.Views.Converters
 {
     public class NegativeBoolConverter : IValueConverter
     {
@@ -14,9 +14,13 @@ namespace Scanner
             else return true;
         }
 
+        /// <summary>
+        ///     Inverts the given bool value.
+        /// </summary>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            if ((bool)value == true) return false;
+            else return true;
         }
     }
 }
