@@ -10,5 +10,10 @@ namespace Scanner.Views.Dialogs
         {
             this.InitializeComponent();
         }
+
+        private void Button_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ((Button)sender).Command = ViewModel.LogExportCommand;
+        }
     }
 }

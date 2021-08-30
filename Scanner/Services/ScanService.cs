@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Models;
 using Serilog;
@@ -15,14 +16,19 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    class ScanService : IScanService
+    class ScanService : ObservableObject, IScanService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
-        
-        public bool IsScanInProgress => throw new NotImplementedException();
+
+        private bool _IsScanInProgress;
+        public bool IsScanInProgress
+        {
+            get => _IsScanInProgress;
+            set => SetProperty(ref _IsScanInProgress, value);
+        }
 
         public event EventHandler ScanStarted;
         public event EventHandler ScanCompleted;

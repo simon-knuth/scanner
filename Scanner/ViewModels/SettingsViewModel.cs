@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Scanner.Services;
 using System;
+using System.Threading.Tasks;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
@@ -14,10 +15,11 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
-        public RelayCommand ExportLogCommand;
+        public RelayCommand DisplayLogExportDialogCommand;
 
         public int SettingSaveLocationType
         {
@@ -70,7 +72,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsViewModel()
         {
-            ExportLogCommand = new RelayCommand(DisplayLogExportDialog);
+            DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

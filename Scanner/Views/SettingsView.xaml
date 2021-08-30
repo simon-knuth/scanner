@@ -28,6 +28,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -55,7 +59,7 @@
                 </StackPanel.ChildrenTransitions>
                 
                 <!-- Setting Save Location -->
-                <muxc:Expander x:Name="ExpanderSaveLocation" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -67,6 +71,10 @@
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Save location" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Choose where scans are saved" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
@@ -89,7 +97,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Auto-Rotate -->
-                <muxc:Expander x:Name="ExpanderAutoRotate" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -101,6 +109,10 @@
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Automatically determine the correct orientation of scanned pages" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
@@ -118,7 +130,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting File Naming -->
-                <muxc:Expander x:Name="ExpanderFileName" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -127,7 +139,13 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="File naming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock Text="File naming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
@@ -223,7 +241,7 @@
                     <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
                 </CheckBox>
                 <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.ExportLogCommand}">
+                <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
