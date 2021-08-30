@@ -118,7 +118,7 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
                                 <RadioButton Content="Off" IsChecked="True" Margin="0,0,12,0"/>
                                 <RadioButton Content="Ask every time" Margin="0,0,12,0"/>
                                 <RadioButton Content="Rotate pages automatically" IsChecked="True"/>
@@ -225,10 +225,19 @@
                 </StackPanel>
                 <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
                     <Span>
-                        <Run x:Uid="TextSettingsFeedback1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkRate" UnderlineStyle="None"><Run x:Uid="HyperlinkSettingsFeedbackRate" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback2" xml:space="preserve"/><Hyperlink UnderlineStyle="None" NavigateUri="https://github.com/simon-knuth/scanner"><Run x:Uid="HyperlinkSettingsFeedbackGithub" xml:space="preserve"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsFeedback3" xml:space="preserve"/>
+                        <Run>You can rate Scanner in the Microsoft Store to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on GitHub.</Run>
                     </Span>
                 </TextBlock>
-                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,0,0,0" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                <HyperlinkButton HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.StoreRatingCommand}">
+                    <TextBlock Text="Rate in the Microsoft Store" TextWrapping="WrapWholeWords"/>
+                </HyperlinkButton>
+                <HyperlinkButton NavigateUri="https://github.com/simon-knuth/scanner" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="GitHub" TextWrapping="WrapWholeWords"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                    </StackPanel>
+                </HyperlinkButton>
+                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,24,0,0" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -259,11 +268,13 @@
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
-                <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <Span>
-                        <Run x:Uid="TextSettingsTranslations1" xml:space="preserve"/><Hyperlink x:Name="HyperlinkTranslate" UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html"><Run x:Uid="HyperlinkSettingsTranslations"/><Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12" xml:space="preserve"/></Hyperlink><Run x:Uid="TextSettingsTranslations2" xml:space="preserve"/>
-                    </Span>
-                </TextBlock>
+                <TextBlock Text="Windows offers support for over 100 languages - you can help make this app accessible for everyone." TextWrapping="WrapWholeWords"/>
+                <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html" HorizontalAlignment="Center" Margin="0,12,0,12">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Help translate" TextWrapping="WrapWholeWords"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                    </StackPanel>
+                </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderTranslationsContributors" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
@@ -331,18 +342,18 @@
                 </Grid>
                 <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                        <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite" TextWrapping="WrapWholeWords"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
+                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" TextWrapping="WrapWholeWords"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center">
-                    <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses"/>
+                    <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses" TextWrapping="WrapWholeWords"/>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderAboutCredits" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,12,0,0">
                     <muxc:Expander.Header>

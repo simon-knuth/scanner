@@ -20,6 +20,7 @@ namespace Scanner.ViewModels
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         public RelayCommand DisplayLogExportDialogCommand;
+        public AsyncRelayCommand StoreRatingCommand;
 
         public int SettingSaveLocationType
         {
@@ -73,6 +74,7 @@ namespace Scanner.ViewModels
         public SettingsViewModel()
         {
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
+            StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +88,14 @@ namespace Scanner.ViewModels
         private void DisplayLogExportDialog()
         {
             LogExportDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task DisplayStoreRatingDialogAsync()
+        {
+            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                await ShowRatingDialogAsync();
+            });
         }
     }
 }
