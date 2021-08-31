@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
@@ -21,6 +22,7 @@ namespace Scanner.ViewModels
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
+        public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -42,12 +44,20 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsDefaultSaveLocation, value);
         }
 
+        private AppWideMessage _StatusMessage;
+        public AppWideMessage StatusMessage
+        {
+            get => _StatusMessage;
+            set => SetProperty(ref _StatusMessage, value);
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ShellViewModel()
         {
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
+            Messenger.Register<AppWideMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
 
@@ -91,13 +101,23 @@ namespace Scanner.ViewModels
             }
             catch (Exception exc)
             {
-                LogService?.Error(exc, "Couldn't display save location.");
+                LogService?.Log.Error(exc, "Couldn't display save location.");
             }
         }
 
         private void SettingsService_ScanSaveLocationChanged(object sender, EventArgs e)
         {
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
+        }
+
+        private void ReceiveAppWideMessage(object r, AppWideMessage m)
+        {
+            StatusMessage = m;
+        }
+
+        private void StatusMessageDismissed()
+        {
+            StatusMessage = null;
         }
     }
 

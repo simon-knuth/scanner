@@ -61,7 +61,7 @@ namespace Scanner.Services
                 }
                 catch (Exception exc)
                 {
-                    LogService?.Error(exc, "Loading scan save location from futureAccessList failed.");
+                    LogService?.Log.Error(exc, "Loading scan save location from futureAccessList failed.");
                     try
                     {
                         _ScanSaveLocation = await KnownFolders.PicturesLibrary.CreateFolderAsync
@@ -69,7 +69,7 @@ namespace Scanner.Services
                     }
                     catch (Exception exc2)
                     {
-                        LogService?.Error(exc2, "Creating a new scan save location in PicturesLibrary failed as well.");
+                        LogService?.Log.Error(exc2, "Creating a new scan save location in PicturesLibrary failed as well.");
                         ShowMessageDialogAsync(LocalizedString("ErrorMessageLoadScanFolderHeader"),
                             LocalizedString("ErrorMessageLoadScanFolderBody"));
                     }
@@ -85,13 +85,13 @@ namespace Scanner.Services
                 }
                 catch (UnauthorizedAccessException exc)
                 {
-                    LogService?.Error(exc, "Creating a new scan save location in PicturesLibrary failed. (Unauthorized)");
+                    LogService?.Log.Error(exc, "Creating a new scan save location in PicturesLibrary failed. (Unauthorized)");
                     ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
                     return;
                 }
                 catch (Exception exc)
                 {
-                    LogService?.Error(exc, "Creating a new scan save location in PicturesLibrary failed.");
+                    LogService?.Log.Error(exc, "Creating a new scan save location in PicturesLibrary failed.");
                     ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
                     return;
                 }
@@ -217,13 +217,13 @@ namespace Scanner.Services
             }
             catch (UnauthorizedAccessException exc)
             {
-                LogService?.Error(exc, "Resetting the scan save location failed. (Unauthorized)");
+                LogService?.Log.Error(exc, "Resetting the scan save location failed. (Unauthorized)");
                 AppCenterService?.TrackError(exc);
                 throw;
             }
             catch (Exception exc)
             {
-                LogService?.Error(exc, "Resetting the scan save location failed.");
+                LogService?.Log.Error(exc, "Resetting the scan save location failed.");
                 AppCenterService?.TrackError(exc);
                 throw;
             }

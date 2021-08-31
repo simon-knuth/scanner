@@ -18,17 +18,5 @@ namespace Scanner.Services
         }
 
         Task<List<Models.LogFile>> GetLogFiles();
-
-        void Error(Exception exception);
-        void Error(string text);
-        void Error(Exception exception, string text);
-
-        void Warning(Exception exception);
-        void Warning(string text);
-        void Warning(Exception exception, string text);
-
-        void Information(Exception exception);
-        void Information(string text);
-        void Information(Exception exception, string text);
     }
 }

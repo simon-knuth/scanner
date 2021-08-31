@@ -1,7 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
+using Scanner.Services.Messenger;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -139,10 +141,14 @@ namespace Scanner.ViewModels
             }
             catch (Exception exc)
             {
-                LogService?.Warning(exc, "Picking a new save location failed.");
-                // TODO: Display error
-                //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
-                //    LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
+                LogService?.Log.Warning(exc, "Picking a new save location failed.");
+                Messenger.Send(new AppWideMessage
+                {
+                    Title = LocalizedString("ErrorMessagePickFolderHeading"),
+                    MessageText = LocalizedString("ErrorMessagePickFolderBody"),
+                    AdditionalText = exc.Message,
+                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                });
                 return;
             }
 
@@ -151,14 +157,39 @@ namespace Scanner.ViewModels
 
             await SettingsService.SetScanSaveLocationAsync(folder);
 
-            LogService?.Information("Successfully selected new save location.");
+            LogService?.Log.Information("Successfully selected new save location.");
         }
 
         private async Task ResetSaveLocationAsync()
         {
             if (ResetSaveLocationCommand.IsRunning) return;     // already running?
 
-            await SettingsService.ResetScanSaveLocationAsync();
+            try
+            {
+                await SettingsService.ResetScanSaveLocationAsync();
+            }
+            catch (UnauthorizedAccessException exc)
+            {
+                Messenger.Send(new AppWideMessage
+                {
+                    Title = LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
+                    MessageText = LocalizedString("ErrorMessageResetFolderUnauthorizedBody"),
+                    AdditionalText = exc.Message,
+                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                });
+                return;
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideMessage
+                {
+                    Title = LocalizedString("ErrorMessageResetFolderHeading"),
+                    MessageText = LocalizedString("ErrorMessageResetFolderBody"),
+                    AdditionalText = exc.Message,
+                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                });
+                return;
+            }
         }
 
         private void SettingsService_ScanSaveLocationChanged(object sender, EventArgs e)

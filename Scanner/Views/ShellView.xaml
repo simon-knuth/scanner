@@ -14,7 +14,7 @@
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:dialogs="using:Scanner.Views.Dialogs"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" xmlns:messenger="using:Scanner.Services.Messenger"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
@@ -39,6 +39,8 @@
             <!-- XAML Converters -->
             <converters:WindowStateOpacityConverter x:Key="WindowStateOpacityConverter"/>
             <converters:ScanSaveLocationGlyphConverter x:Key="ScanSaveLocationGlyphConverter"/>
+            <converters:AppWideMessageSeverityInfoBarConverter x:Key="AppWideMessageSeverityInfoBarConverter"/>
+            <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -80,6 +82,9 @@
                         <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="InfoBarAppWideMessages.Margin" Value="0,-1,0,0"/>
+                        <Setter Target="InfoBarAppWideMessages.BorderThickness" Value="0,1,0,0"/>
+                        <Setter Target="InfoBarAppWideMessages.CornerRadius" Value="0,0,8,8"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -220,7 +225,20 @@
                             </TransitionCollection>
                         </Frame.ContentTransitions>
                     </Frame>
-                    <muxc:InfoBar Grid.Row="1" IsOpen="False" Margin="0,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Severity="Informational"/>
+                    <muxc:InfoBar x:Name="InfoBarAppWideMessages" Grid.Row="1" Title="{x:Bind ViewModel.StatusMessage.Title, Mode=OneWay}" Message="{x:Bind ViewModel.StatusMessage.MessageText, Mode=OneWay}" Severity="{x:Bind ViewModel.StatusMessage.Severity, Mode=OneWay, Converter={StaticResource AppWideMessageSeverityInfoBarConverter}}" Margin="0,6,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Visibility="{x:Bind InfoBarAppWideMessages.IsOpen, Mode=OneWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Closed">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
+                            </core:EventTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                <core:ChangePropertyAction PropertyName="IsOpen" Value="True"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+
+                        <ScrollViewer Margin="0,0,0,16" Visibility="{x:Bind ViewModel.StatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" MaxHeight="64" Padding="0,0,12,0">
+                            <TextBlock Text="{x:Bind ViewModel.StatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
+                        </ScrollViewer>
+                    </muxc:InfoBar>
                 </Grid>
 
                 <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>

@@ -87,50 +87,5 @@ namespace Scanner.Services
 
             return sortedFiles;
         }
-
-        public void Error(Exception exception, string text)
-        {
-            Log.Error(exception, text);
-        }
-
-        public void Error(Exception exception)
-        {
-            Error(exception, "");
-        }
-
-        public void Error(string text)
-        {
-            Error(null, "");
-        }
-
-        public void Warning(Exception exception, string text)
-        {
-            Log.Error(exception, text);
-        }
-
-        public void Warning(Exception exception)
-        {
-            Warning(exception, "");
-        }
-
-        public void Warning(string text)
-        {
-            Warning(null, "");
-        }
-
-        public void Information(Exception exception, string text)
-        {
-            Log.Information(exception, text);
-        }
-
-        public void Information(Exception exception)
-        {
-            Information(exception, "");
-        }
-
-        public void Information(string text)
-        {
-            Information(null, "");
-        }
     }
 }

@@ -143,6 +143,7 @@
     <Compile Include="Models\ScanOptions.cs" />
     <Compile Include="PreviewPageIntent.cs" />
     <Compile Include="Services\Interfaces\IScanService.cs" />
+    <Compile Include="Services\Messenger\Messages\AppWideMessage.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\ScanOptionsDatabaseService.cs" />
     <Compile Include="Services\Interfaces\IScanOptionsDatabaseService.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="ViewModels\HelpViewModel.cs" />
     <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\Converters\AppWideMessageSeverityInfoBarConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsScannerColorModeConverter.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="Views\Converters\ScannerSourceIntConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsScannerSourceConverter.cs" />
     <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\StringNotEmptyVisibilityConverter.cs" />
     <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
     <Compile Include="Views\Dialogs\LogExportDialogView.xaml.cs">
       <DependentUpon>LogExportDialogView.xaml</DependentUpon>
