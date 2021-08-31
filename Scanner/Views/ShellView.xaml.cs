@@ -160,7 +160,7 @@ namespace Scanner.Views
         {
             if (args.InvokedItemContainer == NavigationViewItemMainSaveLocation)
             {
-                
+                await ViewModel.ShowScanSaveLocationCommand.ExecuteAsync(null);
             }
             else if (args.InvokedItemContainer == NavigationViewItemMainDonate)
             {

@@ -41,10 +41,6 @@ namespace Scanner.Views.Converters
             return (int)value;
         }
 
-
-        /// <summary>
-        ///     Converts the given integer into a <see cref="ScannerSource"/>.
-        /// </summary>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

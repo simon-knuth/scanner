@@ -11,7 +11,10 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:muxcWindows11Present="using:Microsoft.UI.Xaml.Controls?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
-    xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)" xmlns:dialogs="using:Scanner.Views.Dialogs"
+    xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
+    xmlns:dialogs="using:Scanner.Views.Dialogs"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
@@ -35,6 +38,7 @@
 
             <!-- XAML Converters -->
             <converters:WindowStateOpacityConverter x:Key="WindowStateOpacityConverter"/>
+            <converters:ScanSaveLocationGlyphConverter x:Key="ScanSaveLocationGlyphConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -176,7 +180,7 @@
             <muxc:NavigationView.FooterMenuItems>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource ScanSaveLocationGlyphConverter}}"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">

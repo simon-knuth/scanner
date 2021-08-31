@@ -1,8 +1,12 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
 using System.Threading.Tasks;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
@@ -13,6 +17,11 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+
+        public AsyncRelayCommand ShowScanSaveLocationCommand;
+
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
         private ShellNavigationSelectableItem _DisplayedView;
@@ -26,6 +35,13 @@ namespace Scanner.ViewModels
             }
         }
 
+        private bool _IsDefaultSaveLocation;
+        public bool IsDefaultSaveLocation
+        {
+            get => _IsDefaultSaveLocation;
+            set => SetProperty(ref _IsDefaultSaveLocation, value);
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +49,10 @@ namespace Scanner.ViewModels
         {
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
             Window.Current.Activated += Window_Activated;
+            ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
+
+            SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
+            IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +81,23 @@ namespace Scanner.ViewModels
         {
             get => windowActivationState;
             set => SetProperty(ref windowActivationState, value, true);
+        }
+
+        private async Task ShowScanSaveLocation()
+        {
+            try
+            {
+                await Launcher.LaunchFolderAsync(SettingsService.ScanSaveLocation);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Error(exc, "Couldn't display save location.");
+            }
+        }
+
+        private void SettingsService_ScanSaveLocationChanged(object sender, EventArgs e)
+        {
+            IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
         }
     }
 

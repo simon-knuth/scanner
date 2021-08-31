@@ -742,7 +742,7 @@ static class Utilities
     ///     Returns the default name of the folder that scans are saved to. This varies depending on the system language.
     ///     The fallback name is "Scans".
     /// </summary>
-    private static string GetDefaultScanFolderName()
+    public static string GetDefaultScanFolderName()
     {
         string defaultScanFolderName = LocalizedString("DefaultScanFolderName");
         bool validName = true;

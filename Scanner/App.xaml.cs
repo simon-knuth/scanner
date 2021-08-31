@@ -71,7 +71,7 @@ namespace Scanner
                 .AddSingleton<IScanService, ScanService>()
                 .AddSingleton<ILogService, LogService>()
                 .AddSingleton<IAppCenterService, AppCenterService>()
-                .AddTransient<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
+                .AddSingleton<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
                 //    .AddSingleton<IPdfService, PdfService>()
                 //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
                 .BuildServiceProvider());

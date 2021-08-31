@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Scanner.Services;
 using System;
 using System.Threading.Tasks;
+using Windows.Storage;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
@@ -21,6 +22,22 @@ namespace Scanner.ViewModels
 
         public RelayCommand DisplayLogExportDialogCommand;
         public AsyncRelayCommand StoreRatingCommand;
+        public AsyncRelayCommand ChooseSaveLocationCommand;
+        public AsyncRelayCommand ResetSaveLocationCommand;
+
+        private string _SaveLocationPath;
+        public string SaveLocationPath
+        {
+            get => _SaveLocationPath;
+            set => SetProperty(ref _SaveLocationPath, value);
+        }
+
+        private bool _IsDefaultSaveLocation;
+        public bool IsDefaultSaveLocation
+        {
+            get => _IsDefaultSaveLocation;
+            set => SetProperty(ref _IsDefaultSaveLocation, value);
+        }
 
         public int SettingSaveLocationType
         {
@@ -73,8 +90,14 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsViewModel()
         {
+            SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
+            SaveLocationPath = SettingsService.ScanSaveLocation?.Path;
+            IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
+
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
             StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
+            ChooseSaveLocationCommand = new AsyncRelayCommand(ChooseSaveLocation);
+            ResetSaveLocationCommand = new AsyncRelayCommand(ResetSaveLocationAsync);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +119,52 @@ namespace Scanner.ViewModels
             {
                 await ShowRatingDialogAsync();
             });
+        }
+
+        private async Task ChooseSaveLocation()
+        {
+            if (ChooseSaveLocationCommand.IsRunning) return;    // already running?
+
+            // prepare folder picker
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            folderPicker.FileTypeFilter.Add("*");
+
+            // pick folder and check it
+            StorageFolder folder;
+            try
+            {
+                folder = await folderPicker.PickSingleFolderAsync();
+                if (folder == null) throw new ApplicationException("New save location was null.");
+            }
+            catch (Exception exc)
+            {
+                LogService?.Warning(exc, "Picking a new save location failed.");
+                // TODO: Display error
+                //await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ErrorMessage.ShowErrorMessage(TeachingTipEmpty, LocalizedString("ErrorMessagePickFolderHeading"),
+                //    LocalizedString("ErrorMessagePickFolderBody") + "\n" + exc.Message));
+                return;
+            }
+
+            // check same folder as before
+            if (folder.Path == SettingsService.ScanSaveLocation.Path) return;
+
+            await SettingsService.SetScanSaveLocationAsync(folder);
+
+            LogService?.Information("Successfully selected new save location.");
+        }
+
+        private async Task ResetSaveLocationAsync()
+        {
+            if (ResetSaveLocationCommand.IsRunning) return;     // already running?
+
+            await SettingsService.ResetScanSaveLocationAsync();
+        }
+
+        private void SettingsService_ScanSaveLocationChanged(object sender, EventArgs e)
+        {
+            SaveLocationPath = SettingsService.ScanSaveLocation?.Path;
+            IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
         }
     }
 }

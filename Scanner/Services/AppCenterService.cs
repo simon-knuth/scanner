@@ -19,8 +19,8 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-        private ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         private bool _IsAppCenterAllowed;
         private bool IsAppCenterAllowed

@@ -87,10 +87,10 @@
                         </StackPanel>
                         <Frame IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}">
                             <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                                <TextBlock Text="C:\Users\bablabla" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
+                                <TextBlock Text="{x:Bind ViewModel.SaveLocationPath, Mode=OneWay}" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
                                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">
-                                    <Button Content="Choose folder"/>
-                                    <Button Content="Reset to default" IsEnabled="False"/>
+                                    <Button Content="Choose folder" Command="{x:Bind ViewModel.ChooseSaveLocationCommand}" Style="{ThemeResource AccentButtonStyle}"/>
+                                    <Button Content="Reset to default" Command="{x:Bind ViewModel.ResetSaveLocationCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
                                 </controls:WrapPanel>
                             </StackPanel>
                         </Frame>
