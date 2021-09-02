@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging.Messages;
-using static Scanner.Services.Messenger.MessengerEnums;
+﻿using static Scanner.Services.Messenger.MessengerEnums;
 
 namespace Scanner.Services.Messenger
 {

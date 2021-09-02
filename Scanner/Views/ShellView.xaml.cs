@@ -11,6 +11,7 @@ using Scanner.Services;
 using Scanner.Views.Dialogs;
 using static Utilities;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Scanner.Views
 {
@@ -167,6 +168,21 @@ namespace Scanner.Views
                 DonateDialogView dialog = new DonateDialogView();
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
             }
+        }
+
+        private async void NavigationViewItemMainSettings_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+#if DEBUG
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            });
+#endif
+        }
+
+        private void InfoBarAppWideMessages_Closing(WinUI.InfoBar sender, WinUI.InfoBarClosingEventArgs args)
+        {
+            args.Cancel = true;
         }
     }
 }

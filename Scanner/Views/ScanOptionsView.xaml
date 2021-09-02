@@ -164,7 +164,7 @@
                             <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
                         <TextBox Text="{x:Bind ViewModel.DebugScannerName, Mode=TwoWay}"/>
-                        <Grid Margin="0,12,0,12" HorizontalAlignment="Stretch">
+                        <Grid Margin="0,12,0,0" HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -192,7 +192,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
                             <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
                             <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
                         </StackPanel>
@@ -424,19 +424,19 @@
 
                 <!-- File Format -->
                 <Frame x:Name="FrameFileFormat" Margin="0,48,0,0">
+                    <interactivity:Interaction.Behaviors>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                        </core:DataTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+
                     <StackPanel Orientation="Vertical">
                         <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                         <Grid Margin="0,3,0,0">
                             <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}" IsEnabled="False">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="models:ScannerFileFormat">
                                         <StackPanel Orientation="Horizontal">

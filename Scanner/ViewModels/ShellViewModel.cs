@@ -5,11 +5,13 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using static Scanner.Services.Messenger.MessengerEnums;
 
 namespace Scanner.ViewModels
 {
@@ -23,6 +25,7 @@ namespace Scanner.ViewModels
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
+        public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -44,12 +47,45 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsDefaultSaveLocation, value);
         }
 
-        private AppWideMessage _StatusMessage;
-        public AppWideMessage StatusMessage
+        private ObservableCollection<AppWideMessage> _StatusMessages = new ObservableCollection<AppWideMessage>();
+        public ObservableCollection<AppWideMessage> StatusMessages
         {
-            get => _StatusMessage;
-            set => SetProperty(ref _StatusMessage, value);
+            get => _StatusMessages;
+            set => SetProperty(ref _StatusMessages, value);
         }
+
+        private AppWideMessage _SelectedStatusMessage;
+        public AppWideMessage SelectedStatusMessage
+        {
+            get => _SelectedStatusMessage;
+            set => SetProperty(ref _SelectedStatusMessage, value);
+        }
+
+        private int _SelectedStatusMessageIndex;
+        public int SelectedStatusMessageIndex
+        {
+            get => _SelectedStatusMessageIndex;
+            set
+            {
+                try { SelectedStatusMessage = StatusMessages[value]; } catch { }
+                SetProperty(ref _SelectedStatusMessageIndex, value);
+            }
+        }
+
+        private AppWideMessage _DebugStatusMessage = new AppWideMessage();
+        public AppWideMessage DebugStatusMessage
+        {
+            get => _DebugStatusMessage;
+            set => SetProperty(ref _DebugStatusMessage, value);
+        }
+
+        public List<AppWideMessageSeverity> DebugStatusMessageSeverities = new List<AppWideMessageSeverity>()
+        {
+            AppWideMessageSeverity.Error,
+            AppWideMessageSeverity.Informational,
+            AppWideMessageSeverity.Success,
+            AppWideMessageSeverity.Warning
+        };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,12 +148,20 @@ namespace Scanner.ViewModels
 
         private void ReceiveAppWideMessage(object r, AppWideMessage m)
         {
-            StatusMessage = m;
+            StatusMessages.Insert(0, m);
+            SelectedStatusMessageIndex = 0;
         }
 
         private void StatusMessageDismissed()
         {
-            StatusMessage = null;
+            StatusMessages.Remove(SelectedStatusMessage);
+            SelectedStatusMessageIndex = SelectedStatusMessageIndex;
+        }
+
+        private void DebugBroadcastStatusMessage()
+        {
+            Messenger.Send(DebugStatusMessage);
+            DebugStatusMessage = new AppWideMessage();
         }
     }
 

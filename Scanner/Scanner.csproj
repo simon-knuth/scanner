@@ -181,6 +181,7 @@
     <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\Converters\AppWideMessageSeverityInfoBarConverter.cs" />
+    <Compile Include="Views\Converters\NotZeroVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsScannerColorModeConverter.cs" />

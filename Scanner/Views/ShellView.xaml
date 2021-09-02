@@ -41,6 +41,7 @@
             <converters:ScanSaveLocationGlyphConverter x:Key="ScanSaveLocationGlyphConverter"/>
             <converters:AppWideMessageSeverityInfoBarConverter x:Key="AppWideMessageSeverityInfoBarConverter"/>
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
+            <converters:NotZeroVisibilityConverter x:Key="NotZeroVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -198,10 +199,31 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSettings" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSettings" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" RightTapped="NavigationViewItemMainSettings_RightTapped">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE713;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
+
+                    <!-- Debug Flyout -->
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout>
+                            <StackPanel Orientation="Vertical" MaxWidth="400">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Debug status messages" Style="{StaticResource BaseTextBlockStyle}"/>
+                                </StackPanel>
+
+                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.Title, Mode=TwoWay}" PlaceholderText="Title" Margin="0,0,0,6" Width="300"/>
+                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.MessageText, Mode=TwoWay}" PlaceholderText="Message text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
+                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.AdditionalText, Mode=TwoWay}" PlaceholderText="Additional text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
+                                <ComboBox ItemsSource="{x:Bind ViewModel.DebugStatusMessageSeverities, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.DebugStatusMessage.Severity, Mode=TwoWay}" MinWidth="150"/>
+
+                                <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
+                                    <Button Content="Broadcast status message" Command="{x:Bind ViewModel.DebugBroadcastStatusMessageCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
 
@@ -225,19 +247,24 @@
                             </TransitionCollection>
                         </Frame.ContentTransitions>
                     </Frame>
-                    <muxc:InfoBar x:Name="InfoBarAppWideMessages" Grid.Row="1" Title="{x:Bind ViewModel.StatusMessage.Title, Mode=OneWay}" Message="{x:Bind ViewModel.StatusMessage.MessageText, Mode=OneWay}" Severity="{x:Bind ViewModel.StatusMessage.Severity, Mode=OneWay, Converter={StaticResource AppWideMessageSeverityInfoBarConverter}}" Margin="0,6,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Visibility="{x:Bind InfoBarAppWideMessages.IsOpen, Mode=OneWay}">
+                    <muxc:InfoBar x:Name="InfoBarAppWideMessages" Grid.Row="1" IsOpen="True" Title="{x:Bind ViewModel.SelectedStatusMessage.Title, Mode=OneWay}" Message="{x:Bind ViewModel.SelectedStatusMessage.MessageText, Mode=OneWay}" Severity="{x:Bind ViewModel.SelectedStatusMessage.Severity, Mode=OneWay, Converter={StaticResource AppWideMessageSeverityInfoBarConverter}}" Margin="0,6,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Visibility="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}, FallbackValue=Collapsed}" Closing="InfoBarAppWideMessages_Closing">
                         <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Closed">
+                            <core:EventTriggerBehavior EventName="Closing">
                                 <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
                             </core:EventTriggerBehavior>
-                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                <core:ChangePropertyAction PropertyName="IsOpen" Value="True"/>
-                            </core:DataTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
+                        
+                        <Grid Margin="0,0,0,12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" MaxHeight="64"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <ScrollViewer Margin="0,0,0,16" Visibility="{x:Bind ViewModel.StatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" MaxHeight="64" Padding="0,0,12,0">
-                            <TextBlock Text="{x:Bind ViewModel.StatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
-                        </ScrollViewer>
+                            <ScrollViewer Grid.Row="0" Margin="0,0,0,12" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Padding="0,0,12,0">
+                                <TextBlock Text="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
+                            </ScrollViewer>
+                            <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>
+                        </Grid>
                     </muxc:InfoBar>
                 </Grid>
 
