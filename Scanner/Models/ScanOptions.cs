@@ -15,6 +15,7 @@ namespace Scanner.Models
         public ScannerColorMode ColorMode;
 
         public float Resolution;
+        public ScannerAutoCropMode AutoCropMode;
         public bool FeederMultiplePages;
         public bool FeederDuplex;
 

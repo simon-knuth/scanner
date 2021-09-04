@@ -54,5 +54,10 @@ namespace Scanner.Services
 
             return await scanner.GetPreviewAsync(config);
         }
+
+        public void TryCancelScan()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

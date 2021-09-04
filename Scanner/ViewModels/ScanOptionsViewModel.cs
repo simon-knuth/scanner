@@ -94,11 +94,12 @@ namespace Scanner.ViewModels
 
                 SetProperty(ref _ScannerSource, (Enums.ScannerSource)value);
 
-                // enable applicable resolutions and file formats
+                // enable applicable auto crop mode, resolutions and file formats
                 switch (value)
                 {
                     case Enums.ScannerSource.Auto:
                         ScannerResolutions = null;
+                        SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
                         FileFormats = SelectedScanner?.AutoFormats;
                         break;
                     case Enums.ScannerSource.Flatbed:
@@ -115,6 +116,7 @@ namespace Scanner.ViewModels
                         break;
                     default:
                         ScannerResolutions = null;
+                        SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
                         break;
                 }
 
@@ -127,6 +129,13 @@ namespace Scanner.ViewModels
         {
             get => _ScannerColorMode;
             set => SetProperty(ref _ScannerColorMode, value);
+        }
+
+        private ScannerAutoCropMode _SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
+        public ScannerAutoCropMode SelectedScannerAutoCropMode
+        {
+            get => _SelectedScannerAutoCropMode;
+            set => SetProperty(ref _SelectedScannerAutoCropMode, value);
         }
 
         private ObservableCollection<ScanResolution> _ScannerResolutions;
@@ -182,102 +191,11 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
 
-        private string _DebugScannerName = "Some scanner";
-        public string DebugScannerName
+        private DiscoveredScanner _DebugScanner;
+        public DiscoveredScanner DebugScanner
         {
-            get => _DebugScannerName;
-            set => SetProperty(ref _DebugScannerName, value);
-        }
-
-        private bool _DebugScannerAutoEnabled = true;
-        public bool DebugScannerAutoEnabled
-        {
-            get => _DebugScannerAutoEnabled;
-            set => SetProperty(ref _DebugScannerAutoEnabled, value);
-        }
-
-        private bool _DebugScannerFlatbedEnabled = true;
-        public bool DebugScannerFlatbedEnabled
-        {
-            get => _DebugScannerFlatbedEnabled;
-            set => SetProperty(ref _DebugScannerFlatbedEnabled, value);
-        }
-
-        private bool _DebugScannerFeederEnabled = true;
-        public bool DebugScannerFeederEnabled
-        {
-            get => _DebugScannerFeederEnabled;
-            set => SetProperty(ref _DebugScannerFeederEnabled, value);
-        }
-
-        private bool _DebugScannerAutoPreviewEnabled = true;
-        public bool DebugScannerAutoPreviewEnabled
-        {
-            get => _DebugScannerAutoPreviewEnabled;
-            set => SetProperty(ref _DebugScannerAutoPreviewEnabled, value);
-        }
-
-        private bool _DebugScannerFlatbedPreviewEnabled = true;
-        public bool DebugScannerFlatbedPreviewEnabled
-        {
-            get => _DebugScannerFlatbedPreviewEnabled;
-            set => SetProperty(ref _DebugScannerFlatbedPreviewEnabled, value);
-        }
-
-        private bool _DebugScannerFeederPreviewEnabled = true;
-        public bool DebugScannerFeederPreviewEnabled
-        {
-            get => _DebugScannerFeederPreviewEnabled;
-            set => SetProperty(ref _DebugScannerFeederPreviewEnabled, value);
-        }
-
-        private bool _DebugScannerFlatbedColorEnabled = true;
-        public bool DebugScannerFlatbedColorEnabled
-        {
-            get => _DebugScannerFlatbedColorEnabled;
-            set => SetProperty(ref _DebugScannerFlatbedColorEnabled, value);
-        }
-
-        private bool _DebugScannerFlatbedGrayscaleEnabled = true;
-        public bool DebugScannerFlatbedGrayscaleEnabled
-        {
-            get => _DebugScannerFlatbedGrayscaleEnabled;
-            set => SetProperty(ref _DebugScannerFlatbedGrayscaleEnabled, value);
-        }
-
-        private bool _DebugScannerFlatbedMonochromeEnabled = false;
-        public bool DebugScannerFlatbedMonochromeEnabled
-        {
-            get => _DebugScannerFlatbedMonochromeEnabled;
-            set => SetProperty(ref _DebugScannerFlatbedMonochromeEnabled, value);
-        }
-
-        private bool _DebugScannerFeederColorEnabled = true;
-        public bool DebugScannerFeederColorEnabled
-        {
-            get => _DebugScannerFeederColorEnabled;
-            set => SetProperty(ref _DebugScannerFeederColorEnabled, value);
-        }
-
-        private bool _DebugScannerFeederGrayscaleEnabled = true;
-        public bool DebugScannerFeederGrayscaleEnabled
-        {
-            get => _DebugScannerFeederGrayscaleEnabled;
-            set => SetProperty(ref _DebugScannerFeederGrayscaleEnabled, value);
-        }
-
-        private bool _DebugScannerFeederMonochromeEnabled = false;
-        public bool DebugScannerFeederMonochromeEnabled
-        {
-            get => _DebugScannerFeederMonochromeEnabled;
-            set => SetProperty(ref _DebugScannerFeederMonochromeEnabled, value);
-        }
-
-        private bool _DebugScannerFeederDuplexEnabled = false;
-        public bool DebugScannerFeederDuplexEnabled
-        {
-            get => _DebugScannerFeederDuplexEnabled;
-            set => SetProperty(ref _DebugScannerFeederDuplexEnabled, value);
+            get => _DebugScanner;
+            set => SetProperty(ref _DebugScanner, value);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,6 +221,7 @@ namespace Scanner.ViewModels
             await ScannerDiscoveryService.RestartSearchAsync();
             Scanners = ScannerDiscoveryService.DiscoveredScanners;
             Scanners.CollectionChanged += Scanners_CollectionChangedAsync;
+            PrepareDebugScanner();
         }
         
         /// <summary>
@@ -398,6 +317,10 @@ namespace Scanner.ViewModels
                         SelectedScanner.IsFlatbedGrayscaleAllowed,
                         SelectedScanner.IsFlatbedMonochromeAllowed,
                         previousScanOptions.ColorMode);
+                    SelectedScannerAutoCropMode = GetDefaultAutoCropMode(
+                        SelectedScanner.IsFlatbedAutoCropSingleRegionAllowed,
+                        SelectedScanner.IsFlatbedAutoCropMultiRegionAllowed,
+                        previousScanOptions.AutoCropMode);
 
                     foreach (ScanResolution resolution in SelectedScanner.FlatbedResolutions)
                     {
@@ -416,6 +339,10 @@ namespace Scanner.ViewModels
                         SelectedScanner.IsFeederGrayscaleAllowed,
                         SelectedScanner.IsFeederMonochromeAllowed,
                         previousScanOptions.ColorMode);
+                    SelectedScannerAutoCropMode = GetDefaultAutoCropMode(
+                        SelectedScanner.IsFeederAutoCropSingleRegionAllowed,
+                        SelectedScanner.IsFeederAutoCropMultiRegionAllowed,
+                        previousScanOptions.AutoCropMode);
 
                     foreach (ScanResolution resolution in SelectedScanner.FeederResolutions)
                     {
@@ -471,7 +398,6 @@ namespace Scanner.ViewModels
         {
             switch (previousColorMode)
             {
-                
                 case ScannerColorMode.Color:
                     if (colorAllowed) return ScannerColorMode.Color;
                     break;
@@ -494,6 +420,32 @@ namespace Scanner.ViewModels
         }
 
         /// <summary>
+        ///     Gets the default auto crop mode.
+        /// </summary>
+        private ScannerAutoCropMode GetDefaultAutoCropMode(bool autoCropSingleAllowed,
+            bool autoCropMultiAllowed, ScannerAutoCropMode previousAutoCropMode)
+        {
+            switch (previousAutoCropMode)
+            {
+                case ScannerAutoCropMode.Disabled:
+                    return ScannerAutoCropMode.Disabled;
+                case ScannerAutoCropMode.SingleRegion:
+                    if (autoCropSingleAllowed) return ScannerAutoCropMode.SingleRegion;
+                    break;
+                case ScannerAutoCropMode.MultipleRegions:
+                    if (autoCropMultiAllowed) return ScannerAutoCropMode.MultipleRegions;
+                    break;
+                case ScannerAutoCropMode.None:
+                default:
+                    break;
+            }
+
+            if (autoCropSingleAllowed) return ScannerAutoCropMode.SingleRegion;
+            if (autoCropMultiAllowed) return ScannerAutoCropMode.MultipleRegions;
+            return ScannerAutoCropMode.Disabled;
+        }
+
+        /// <summary>
         ///     Compiles <see cref="ScanOptions"/> based on the current selections.
         /// </summary>
         private ScanOptions CreateScanOptions()
@@ -502,6 +454,7 @@ namespace Scanner.ViewModels
             {
                 Source = _ScannerSource,
                 ColorMode = ScannerColorMode,
+                AutoCropMode = SelectedScannerAutoCropMode,
                 FeederMultiplePages = FeederMultiplePages,
                 FeederDuplex = FeederDuplex,
                 Format = SelectedFileFormat
@@ -517,43 +470,25 @@ namespace Scanner.ViewModels
         /// </summary>
         private async Task DebugAddScannerAsync()
         {
-            DiscoveredScanner debugScanner = new DiscoveredScanner(DebugScannerName)
+            if (DebugScanner.IsAutoAllowed)
             {
-                IsAutoAllowed = DebugScannerAutoEnabled,
-                IsAutoPreviewAllowed = DebugScannerAutoPreviewEnabled,
-
-                IsFlatbedAllowed = DebugScannerFlatbedEnabled,
-                IsFlatbedPreviewAllowed = DebugScannerFlatbedPreviewEnabled,
-                IsFlatbedColorAllowed = DebugScannerFlatbedColorEnabled,
-                IsFlatbedGrayscaleAllowed = DebugScannerFlatbedGrayscaleEnabled,
-                IsFlatbedMonochromeAllowed = DebugScannerFlatbedMonochromeEnabled,
-                
-                IsFeederAllowed = DebugScannerFeederEnabled,
-                IsFeederPreviewAllowed = DebugScannerFeederPreviewEnabled,
-                IsFeederColorAllowed = DebugScannerFeederColorEnabled,
-                IsFeederGrayscaleAllowed = DebugScannerFeederGrayscaleEnabled,
-                IsFeederMonochromeAllowed = DebugScannerFeederMonochromeEnabled,
-                IsFeederDuplexAllowed = DebugScannerFeederDuplexEnabled
-            };
-
-            if (debugScanner.IsAutoAllowed)
-            {
-                debugScanner.AutoFormats = CreateDebugFileFormatList();
+                DebugScanner.AutoFormats = CreateDebugFileFormatList();
             }
 
-            if (debugScanner.IsFlatbedAllowed)
+            if (DebugScanner.IsFlatbedAllowed)
             {
-                debugScanner.FlatbedResolutions = CreateDebugResolutionList();
-                debugScanner.FlatbedFormats = CreateDebugFileFormatList();
+                DebugScanner.FlatbedResolutions = CreateDebugResolutionList();
+                DebugScanner.FlatbedFormats = CreateDebugFileFormatList();
             }
 
-            if (debugScanner.IsFeederAllowed)
+            if (DebugScanner.IsFeederAllowed)
             {
-                debugScanner.FeederResolutions = CreateDebugResolutionList();
-                debugScanner.FeederFormats = CreateDebugFileFormatList();
+                DebugScanner.FeederResolutions = CreateDebugResolutionList();
+                DebugScanner.FeederFormats = CreateDebugFileFormatList();
             }
 
-            await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
+            await ScannerDiscoveryService.AddDebugScannerAsync(DebugScanner);
+            PrepareDebugScanner();
         }
 
         /// <summary>
@@ -704,6 +639,26 @@ namespace Scanner.ViewModels
             catch { }
 
             PreviewScanCommand?.Cancel();
+        }
+
+        private void PrepareDebugScanner()
+        {
+            DebugScanner = new DiscoveredScanner("Debug scanner")
+            {
+                IsAutoAllowed = true,
+                IsAutoPreviewAllowed = true,
+                IsFlatbedAllowed = true,
+                IsFlatbedPreviewAllowed = true,
+                IsFlatbedColorAllowed = true,
+                IsFlatbedGrayscaleAllowed = true,
+                IsFlatbedMonochromeAllowed = false,
+                IsFeederAllowed = true,
+                IsFeederPreviewAllowed = true,
+                IsFeederColorAllowed = true,
+                IsFeederGrayscaleAllowed = true,
+                IsFeederMonochromeAllowed = false,
+                IsFeederDuplexAllowed = false
+            };
         }
     }
 }

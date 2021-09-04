@@ -17,5 +17,6 @@ namespace Scanner.Services
         }
         
         Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ImageScannerScanSource config);
+        void TryCancelScan();
     }
 }

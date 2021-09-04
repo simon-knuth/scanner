@@ -9,8 +9,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
     d:DesignWidth="350"
-    d:DesignHeight="600"
-    NavigationCacheMode="Required">
+    d:DesignHeight="600">
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->

@@ -33,6 +33,10 @@ namespace Scanner.Models
         public bool IsFlatbedGrayscaleAllowed;
         public bool IsFlatbedMonochromeAllowed;
         public bool IsFlatbedPreviewAllowed;
+        public bool IsFlatbedAutoCropSingleRegionAllowed;
+        public bool IsFlatbedAutoCropMultiRegionAllowed;
+        public bool IsFlatbedAutoCropPossible =>
+            IsFlatbedAutoCropSingleRegionAllowed || IsFlatbedAutoCropMultiRegionAllowed;
         public ObservableCollection<ScanResolution> FlatbedResolutions;
         public ObservableCollection<ScannerFileFormat> FlatbedFormats;
 
@@ -43,6 +47,10 @@ namespace Scanner.Models
         public bool IsFeederMonochromeAllowed;
         public bool IsFeederDuplexAllowed;
         public bool IsFeederPreviewAllowed;
+        public bool IsFeederAutoCropSingleRegionAllowed;
+        public bool IsFeederAutoCropMultiRegionAllowed;
+        public bool IsFeederAutoCropPossible =>
+            IsFeederAutoCropSingleRegionAllowed || IsFeederAutoCropMultiRegionAllowed;
         public ObservableCollection<ScanResolution> FeederResolutions;
         public ObservableCollection<ScannerFileFormat> FeederFormats;
 
@@ -75,6 +83,11 @@ namespace Scanner.Models
 
                 IsFlatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
 
+                IsFlatbedAutoCropSingleRegionAllowed = device.FlatbedConfiguration
+                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
+                IsFlatbedAutoCropMultiRegionAllowed = device.FlatbedConfiguration
+                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
+
                 FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
 
                 FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
@@ -88,6 +101,11 @@ namespace Scanner.Models
 
                 IsFeederDuplexAllowed = device.FeederConfiguration.CanScanDuplex;
                 IsFeederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
+
+                IsFeederAutoCropSingleRegionAllowed = device.FeederConfiguration
+                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
+                IsFeederAutoCropMultiRegionAllowed = device.FeederConfiguration
+                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
 
                 FeederResolutions = GenerateResolutions(device.FeederConfiguration);
 

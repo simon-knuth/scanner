@@ -22,4 +22,16 @@
         Grayscale = 2,
         Monochrome = 3
     }
+
+
+    /// <summary>
+    ///     The possible scanner auto crop modes.
+    /// </summary>
+    public enum ScannerAutoCropMode
+    {
+        None = 0,
+        Disabled = 1,
+        SingleRegion = 2,
+        MultipleRegions = 3
+    }
 }
