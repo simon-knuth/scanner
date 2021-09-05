@@ -388,7 +388,22 @@ namespace Scanner
                         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                         SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                         Guid encoderId = GetBitmapEncoderId(targetFormat);
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+
+                        BitmapEncoder encoder = null;
+                        if (targetFormat == SupportedFormat.JPG)
+                        {
+                            // Fix large JPG size
+                            var propertySet = new BitmapPropertySet();
+                            var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
+                            propertySet.Add("ImageQuality", qualityValue);
+
+                            stream.Size = 0;
+                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream, propertySet);
+                        }
+                        else
+                        {
+                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                        }
                         encoder.SetSoftwareBitmap(softwareBitmap);
 
                         // save/encode the file in the target format
@@ -868,7 +883,7 @@ namespace Scanner
                         await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
                     }
                     await PrepareNewConversionFiles(elements.Select(e => e.ScanFile).ToList(), 0);
-                    
+
                     await GeneratePDF();
                 }
                 else await pdf.DeleteAsync();
@@ -1442,7 +1457,7 @@ namespace Scanner
 
                 int attempt = 1;
                 while (attempt >= 0)
-                {                    
+                {
                     // call win32 app and wait for result
                     log.Information("Launching full trust process.");
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
