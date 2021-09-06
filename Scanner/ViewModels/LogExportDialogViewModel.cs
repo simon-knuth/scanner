@@ -15,6 +15,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
 
         public AsyncRelayCommand ViewLoadedCommand;
         public AsyncRelayCommand<StorageFile> LogExportCommand;

@@ -20,7 +20,8 @@
         None = 0,
         Color = 1,
         Grayscale = 2,
-        Monochrome = 3
+        Monochrome = 3,
+        Automatic = 4
     }
 
 

@@ -40,7 +40,7 @@
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{ThemeResource AppBarButtonStyleChevron}">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>

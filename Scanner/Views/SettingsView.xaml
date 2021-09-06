@@ -12,13 +12,20 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:helpers="using:Scanner.Helpers"
     d:DesignWidth="350"
     d:DesignHeight="600">
 
     <Page.DataContext>
         <viewModels:SettingsViewModel x:Name="ViewModel"/>
     </Page.DataContext>
-    
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -59,7 +66,7 @@
                 </StackPanel.ChildrenTransitions>
                 
                 <!-- Setting Save Location -->
-                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -71,10 +78,15 @@
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Save location" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Choose where scans are saved" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
-                                </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
@@ -97,7 +109,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Auto-Rotate -->
-                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -109,10 +121,15 @@
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock Text="Automatically determine the correct orientation of scanned pages" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
-                                </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
@@ -130,7 +147,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting File Naming -->
-                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.ScanService.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -141,10 +158,15 @@
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock Text="File naming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
-                                </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
@@ -231,7 +253,7 @@
                 <HyperlinkButton HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.StoreRatingCommand}">
                     <TextBlock Text="Rate in the Microsoft Store" TextWrapping="WrapWholeWords"/>
                 </HyperlinkButton>
-                <HyperlinkButton NavigateUri="https://github.com/simon-knuth/scanner" HorizontalAlignment="Center">
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriGithub}" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="GitHub" TextWrapping="WrapWholeWords"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
@@ -269,7 +291,7 @@
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock Text="Windows offers support for over 100 languages - you can help make this app accessible for everyone." TextWrapping="WrapWholeWords"/>
-                <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/help-translate.html" HorizontalAlignment="Center" Margin="0,12,0,12">
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,12">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Help translate" TextWrapping="WrapWholeWords"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
@@ -334,19 +356,19 @@
                         <Span>
                             <Run FontWeight="Medium">Scanner for Windows</Run>
                             <LineBreak/><Run>Copyright © 2021</Run>
-                            <Hyperlink UnderlineStyle="None" NavigateUri="https://simon-knuth.github.io/">Simon Knuth</Hyperlink>
+                            <Hyperlink UnderlineStyle="None" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">Simon Knuth</Hyperlink>
                             <LineBreak/><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
                         </Span>
                     </TextBlock>
                 </Grid>
-                <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner" HorizontalAlignment="Center" Margin="0,12,0,0">
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriWebsite}" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite" TextWrapping="WrapWholeWords"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <HyperlinkButton NavigateUri="https://simon-knuth.github.io/scanner/privacy-policy" HorizontalAlignment="Center">
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" TextWrapping="WrapWholeWords"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>

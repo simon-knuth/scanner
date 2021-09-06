@@ -16,6 +16,20 @@ namespace Scanner.Views
         {
             this.InitializeComponent();
             ViewModel.PreviewRunning += ViewModel_PreviewRunning;
+            ViewModel.ScanService.ScanStarted += ViewModel_ScanStarted;
+            ViewModel.ScanService.ScanEnded += ViewModel_ScanEnded;
+        }
+
+        private async void ViewModel_ScanEnded(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                VisualStateManager.GoToState(this, NormalState.Name, true));
+        }
+
+        private async void ViewModel_ScanStarted(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                VisualStateManager.GoToState(this, ScanningState.Name, true));
         }
 
         private async void ViewModel_PreviewRunning(object sender, EventArgs e)
@@ -48,9 +62,27 @@ namespace Scanner.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // fix ProgressRing getting stuck when navigating back to cached page
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
+                // fix RadioButtons losing index value when navigating to multiple different pages
+                try
+                {
+                    int index;
+                    index = RadioButtonsSource.SelectedIndex;
+                    RadioButtonsSource.SelectedIndex = -1;
+                    RadioButtonsSource.SelectedIndex = index;
+
+                    index = RadioButtonsColorMode.SelectedIndex;
+                    RadioButtonsColorMode.SelectedIndex = -1;
+                    RadioButtonsColorMode.SelectedIndex = index;
+
+                    index = RadioButtonsAutoCropMode.SelectedIndex;
+                    RadioButtonsAutoCropMode.SelectedIndex = -1;
+                    RadioButtonsAutoCropMode.SelectedIndex = index;
+                }
+                catch { }
+
+                // fix ProgressRing getting stuck when navigating back to cached page
                 ProgressRingScanners.IsActive = false;
                 ProgressRingScanners.IsActive = true;
             });

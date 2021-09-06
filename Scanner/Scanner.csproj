@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="ErrorMessage.cs" />
+    <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="LicenseDetailPage.xaml.cs">
       <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
     </Compile>
@@ -142,6 +143,10 @@
     <Compile Include="Models\ScanResolution.cs" />
     <Compile Include="Models\ScanOptions.cs" />
     <Compile Include="PreviewPageIntent.cs" />
+    <Compile Include="Services\AccessibilityService.cs" />
+    <Compile Include="Services\AppDataService.cs" />
+    <Compile Include="Services\Interfaces\IAccessibilityService.cs" />
+    <Compile Include="Services\Interfaces\IAppDataService.cs" />
     <Compile Include="Services\Interfaces\IScanService.cs" />
     <Compile Include="Services\Messenger\Messages\AppWideMessage.cs" />
     <Compile Include="Services\ScanService.cs" />
@@ -174,6 +179,7 @@
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\DonateDialogViewModel.cs" />
     <Compile Include="ViewModels\LogExportDialogViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -25,10 +26,8 @@ namespace Scanner
     /// </summary>
     sealed partial class App : Application
     {
-        private UISettings uISettings;
-
-        private IAppCenterService AppCenterService;
         private ILogService LogService;
+        private UISettings uISettings;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -56,7 +55,7 @@ namespace Scanner
                     break;
             }
 
-            _ = InitializeSerilogAsync();
+            //Task.Run(async () => await InitializeSerilogAsync());
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
@@ -64,6 +63,7 @@ namespace Scanner
 
         private void PrepareServices()
         {
+            // configure service landscape
             Ioc.Default.ConfigureServices(new ServiceCollection()
                 .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
                 .AddSingleton<ISettingsService, SettingsService>()
@@ -72,11 +72,16 @@ namespace Scanner
                 .AddSingleton<ILogService, LogService>()
                 .AddSingleton<IAppCenterService, AppCenterService>()
                 .AddSingleton<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
+                .AddSingleton<IAppDataService, AppDataService>()
+                .AddSingleton<IAccessibilityService, AccessibilityService>()
+                //    .AddSingleton<IScanResultService, ScanResultService>()
                 //    .AddSingleton<IPdfService, PdfService>()
                 //    .AddSingleton<IAutoRotatorService, AutoRotatorService>()
                 .BuildServiceProvider());
 
-            AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+            // intialize essential singleton services
+            Ioc.Default.GetService<IAppCenterService>();
+            Ioc.Default.GetService<IAppDataService>();
             LogService = Ioc.Default.GetService<ILogService>();
         }
 
@@ -123,12 +128,6 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UpdateTheme;
 
-            // load settings from local app data
-            LoadSettings();
-
-            // update theme once to ensure that the titlebar buttons are correct
-            UpdateTheme(null, null);
-
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
@@ -152,8 +151,8 @@ namespace Scanner
         /// </summary>
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            log.Fatal(e.Exception, "CRASH");
-            Serilog.Log.CloseAndFlush();
+            LogService.Log.Fatal(e.Exception, "CRASH");
+            LogService.CloseAndFlush();
         }
 
 

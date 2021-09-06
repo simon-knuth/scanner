@@ -1,44 +1,67 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Models;
-using Serilog;
-using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using static Utilities;
 
 namespace Scanner.Services
 {
-    class ScanService : ObservableObject, IScanService
+    /// <summary>
+    ///     Interfaces with <see cref="DiscoveredScanner"/>s to request scans and previews.
+    /// </summary>
+    internal class ScanService : ObservableObject, IScanService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         private bool _IsScanInProgress;
         public bool IsScanInProgress
         {
             get => _IsScanInProgress;
-            set => SetProperty(ref _IsScanInProgress, value);
+            set
+            {
+                bool oldValue = _IsScanInProgress;
+                SetProperty(ref _IsScanInProgress, value);
+
+                if (!oldValue && value == true)
+                {
+                    ScanStarted?.Invoke(this, EventArgs.Empty);
+                }
+                else if (oldValue && value == false)
+                {
+                    ScanEnded?.Invoke(this, EventArgs.Empty);
+                }
+            }
+
         }
 
+        private Progress<uint> _ScanProgress;
+        public Progress<uint> ScanProgress
+        {
+            get => ScanProgress;
+            set => ScanProgress = value;
+        }
+
+        private CancellationTokenSource ScanCancellationToken;
+
         public event EventHandler ScanStarted;
-        public event EventHandler ScanCompleted;
+        public event EventHandler ScanEnded;
+        public event EventHandler<uint> PageScanned;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanService()
         {
-
+            
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +70,7 @@ namespace Scanner.Services
         public async Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ImageScannerScanSource config)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.Preview,
-                new Dictionary<string, string> 
+                new Dictionary<string, string>
                 {
                         { "Source", config.ToString() },
                 });
@@ -55,9 +78,39 @@ namespace Scanner.Services
             return await scanner.GetPreviewAsync(config);
         }
 
-        public void TryCancelScan()
+        public async Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner,
+            ScanOptions options, StorageFolder targetFolder)
         {
-            throw new NotImplementedException();
+            IsScanInProgress = true;
+            ImageScannerScanResult result = null;
+
+            if (!scanner.Debug)
+            {
+                // real scanner ~> configure scanner and commence scan
+                scanner.ConfigureForScanOptions(options);
+
+                ScanCancellationToken = new CancellationTokenSource();
+                _ScanProgress = new Progress<uint>();
+                _ScanProgress.ProgressChanged += (x, y) => PageScanned?.Invoke(this, y);
+                result = await scanner.Device.ScanFilesToFolderAsync
+                    ((ImageScannerScanSource)((int)options.Source - 1), targetFolder)
+                    .AsTask(ScanCancellationToken.Token, _ScanProgress);
+            }
+            else
+            {
+                // debug scanner
+                await Task.Delay(5000);
+            }
+
+            IsScanInProgress = false;
+            return result;
+        }
+
+        public void CancelScan()
+        {
+            ScanEnded?.Invoke(this, EventArgs.Empty);
+            ScanCancellationToken.Cancel();
+            ScanCancellationToken = null;
         }
     }
 }

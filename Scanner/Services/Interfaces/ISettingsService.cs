@@ -5,6 +5,9 @@ using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Manages app settings and other persistent values.
+    /// </summary>
     public interface ISettingsService
     {
         event EventHandler<AppSetting> SettingChanged;

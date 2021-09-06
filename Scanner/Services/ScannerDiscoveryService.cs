@@ -8,7 +8,10 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    class ScannerDiscoveryService : IScannerDiscoveryService
+    /// <summary>
+    ///     Searches for and lists discovered wired/wireless scanners.
+    /// </summary>
+    internal class ScannerDiscoveryService : IScannerDiscoveryService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,13 +37,10 @@ namespace Scanner.Services
         {
             Watcher?.Stop();
 
-            TaskCompletionSource<bool> clearList = new TaskCompletionSource<bool>();
-            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAndWaitAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 DiscoveredScanners.Clear();
-                clearList.SetResult(true);
             });
-            await clearList.Task;
             Watcher = DeviceInformation.CreateWatcher(DeviceClass.ImageScanner);
 
             Watcher.Added += Watcher_ScannerFound;
@@ -71,7 +71,7 @@ namespace Scanner.Services
                 // check for duplicate
                 foreach (DiscoveredScanner scanner in DiscoveredScanners)
                 {
-                    if (scanner.Id.ToLower() == args.Id.ToLower())
+                    if (!scanner.Debug && scanner.Id.ToLower() == args.Id.ToLower())
                     {
                         // duplicate detected ~> ignore
                         return;

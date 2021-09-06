@@ -18,10 +18,11 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-        public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
+        private readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
+        public RelayCommand DisposeCommand;
         public RelayCommand DisplayLogExportDialogCommand;
         public AsyncRelayCommand StoreRatingCommand;
         public AsyncRelayCommand ChooseSaveLocationCommand;
@@ -83,6 +84,13 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingErrorStatistics, value);
         }
 
+        private bool _IsScanInProgress;
+        public bool IsScanInProgress
+        {
+            get => _IsScanInProgress;
+            set => SetProperty(ref _IsScanInProgress, value);
+        }
+
         public string CurrentVersion => GetCurrentVersion();
 
         public event EventHandler LogExportDialogRequested;
@@ -95,7 +103,11 @@ namespace Scanner.ViewModels
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
             SaveLocationPath = SettingsService.ScanSaveLocation?.Path;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
+            ScanService.ScanStarted += ScanService_ScanStartedOrCompleted;
+            ScanService.ScanEnded += ScanService_ScanStartedOrCompleted;
+            IsScanInProgress = ScanService.IsScanInProgress;
 
+            DisposeCommand = new RelayCommand(Dispose);
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
             StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
             ChooseSaveLocationCommand = new AsyncRelayCommand(ChooseSaveLocation);
@@ -107,7 +119,13 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Dispose()
         {
+            // clean up messenger
             Messenger.UnregisterAll(this);
+
+            // clean up event handlers
+            SettingsService.ScanSaveLocationChanged -= SettingsService_ScanSaveLocationChanged;
+            ScanService.ScanStarted -= ScanService_ScanStartedOrCompleted;
+            ScanService.ScanEnded -= ScanService_ScanStartedOrCompleted;
         }
 
         private void DisplayLogExportDialog()
@@ -137,7 +155,7 @@ namespace Scanner.ViewModels
             try
             {
                 folder = await folderPicker.PickSingleFolderAsync();
-                if (folder == null) throw new ApplicationException("New save location was null.");
+                if (folder == null) return;
             }
             catch (Exception exc)
             {
@@ -196,6 +214,11 @@ namespace Scanner.ViewModels
         {
             SaveLocationPath = SettingsService.ScanSaveLocation?.Path;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
+        }
+
+        private void ScanService_ScanStartedOrCompleted(object sender, EventArgs e)
+        {
+            IsScanInProgress = ScanService.IsScanInProgress;
         }
     }
 }

@@ -54,7 +54,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid AutomationProperties.LandmarkType="Form">
+    <Grid AutomationProperties.LandmarkType="Form" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -79,16 +79,7 @@
 
                 <VisualState x:Name="DisabledState">
                     <Storyboard>
-                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                        Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15" To="0">
-                            <DoubleAnimation.EasingFunction>
-                                <CubicEase EasingMode="EaseOut"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
-                                                    Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
+                        
                     </Storyboard>
 
                     <VisualState.Setters>
@@ -98,6 +89,7 @@
                         <Setter Target="FrameResolution.IsEnabled" Value="False"/>
                         <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
                         <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
+                        <Setter Target="FrameAutoCrop.IsEnabled" Value="False"/>
                         <Setter Target="ButtonCancelScan.IsEnabled" Value="False"/>
                         <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
                         <Setter Target="ButtonScan.IsEnabled" Value="False"/>
@@ -107,12 +99,7 @@
 
                 <VisualState x:Name="ScanningState">
                     <Storyboard>
-                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                             Storyboard.TargetName="ButtonCancelScan" Duration="0:0:0.15" To="1">
-                            <DoubleAnimation.EasingFunction>
-                                <CubicEase EasingMode="EaseOut"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
+
                     </Storyboard>
 
                     <VisualState.Setters>
@@ -122,6 +109,7 @@
                         <Setter Target="FrameResolution.IsEnabled" Value="False"/>
                         <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
                         <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
+                        <Setter Target="FrameAutoCrop.IsEnabled" Value="False"/>
                         <Setter Target="ButtonCancelScan.Visibility" Value="Visible"/>
                         <Setter Target="ButtonCancelScan.IsEnabled" Value="True"/>
                         <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
@@ -190,7 +178,8 @@
                             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
                                 <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedColorAllowed, Mode=TwoWay}"/>
                                 <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedGrayscaleAllowed, Mode=TwoWay}"/>
-                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedMonochromeAllowed, Mode=TwoWay}" Margin="0,0,0,12"/>
+                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedMonochromeAllowed, Mode=TwoWay}"/>
+                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12"/>
                             </StackPanel>
                             <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
                                 <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFlatbedAutoCropSingleRegionAllowed, Mode=TwoWay}"/>
@@ -201,14 +190,15 @@
                                 <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederPreviewAllowed, Mode=TwoWay}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederColor" Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederColorAllowed, Mode=TwoWay}"/>
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederGrayscale" Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederGrayscaleAllowed, Mode=TwoWay}"/>
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederMonochrome" Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederMonochromeAllowed, Mode=TwoWay}" Margin="0,0,0,12"/>
+                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederColorAllowed, Mode=TwoWay}"/>
+                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederGrayscaleAllowed, Mode=TwoWay}"/>
+                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederMonochromeAllowed, Mode=TwoWay}"/>
+                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12"/>
                             </StackPanel>
                             <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
                                 <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederAutoCropSingleRegionAllowed, Mode=TwoWay}"/>
                                 <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederAutoCropMultiRegionAllowed, Mode=TwoWay}"/>
-                                <CheckBox x:Name="CheckBoxDebugFakeScannerFeederDuplex" Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederDuplexAllowed, Mode=TwoWay}"/>
+                                <CheckBox Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederDuplexAllowed, Mode=TwoWay}"/>
                             </StackPanel>
                         </Grid>
 
@@ -243,327 +233,335 @@
         </Grid>
 
         <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
-            <StackPanel Orientation="Vertical" Padding="24,16,24,24">
-                <!-- Source Mode -->
-                <Frame x:Name="FrameSourceMode">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Frame Padding="24,16,24,24" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" MaxWidth="450">
+                    <!-- Source Mode -->
+                    <Frame x:Name="FrameSourceMode">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
-                        <muxc:RadioButtons Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
-                            <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
-                            <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, FallbackValue=False, Mode=OneWay}"/>
-                            <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, FallbackValue=False, Mode=OneWay}"/>
-                        </muxc:RadioButtons>
+                            <muxc:RadioButtons x:Name="RadioButtonsSource" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
+                                <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
+                                <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, FallbackValue=False, Mode=OneWay}"/>
+                                <RadioButton x:Name="RadioButtonSourceFeeder" x:Uid="OptionScanOptionsSourceFeeder" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, FallbackValue=False, Mode=OneWay}"/>
+                            </muxc:RadioButtons>
 
-                        <Frame Grid.Row="1" Grid.Column="1" Height="18">
-                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
-                        </Frame>
-                        <Frame Grid.Row="2" Grid.Column="1" Height="18">
-                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
-                        </Frame>
-                        <Frame Grid.Row="3" Grid.Column="1" Height="18">
-                            <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
-                        </Frame>
-                    </Grid>
-                </Frame>
-                
-                <!-- File Format -->
-                <Frame x:Name="FrameFileFormat" Margin="0,48,0,0">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <Grid Margin="0,3,0,0">
-                            <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}" IsEnabled="False">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="models:ScannerFileFormat">
-                                        <StackPanel Orientation="Horizontal">
-                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind TargetFormat, Converter={StaticResource ScannerFileFormatGlyphConverter}}" FontSize="16" Margin="0,0,12,0"/>
-                                            <TextBlock Text="{x:Bind FriendlyName}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
-                            </HyperlinkButton>
+                            <Frame Grid.Row="1" Grid.Column="1" Height="18">
+                                <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                            </Frame>
+                            <Frame Grid.Row="2" Grid.Column="1" Height="18">
+                                <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                            </Frame>
+                            <Frame Grid.Row="3" Grid.Column="1" Height="18">
+                                <FontIcon x:Uid="TextScanOptionsSourcePreviewSupported" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontSize="16" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}"/>
+                            </Frame>
                         </Grid>
-                    </StackPanel>
-                </Frame>
-                
-                <!-- Color Mode -->
-                <Frame x:Name="FrameColorMode" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
-                    <Frame.OpacityTransition>
-                        <ScalarTransition Duration="0:0:0.3"/>
-                    </Frame.OpacityTransition>
+                    </Frame>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                    <!-- File Format -->
+                    <Frame x:Name="FrameFileFormat" Margin="0,48,0,0" IsEnabled="False">
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
 
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
-                            <RadioButton x:Uid="OptionScanOptionsColorColor">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedColorAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederColorAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                            <RadioButton x:Uid="OptionScanOptionsColorGrayscale">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedGrayscaleAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederGrayscaleAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                            <RadioButton x:Uid="OptionScanOptionsColorMonochrome">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedMonochromeAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederMonochromeAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                        </muxc:RadioButtons>
-                    </StackPanel>
-                </Frame>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <Grid Margin="0,3,0,0">
+                                <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ScannerFileFormat">
+                                            <StackPanel Orientation="Horizontal">
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind TargetFormat, Converter={StaticResource ScannerFileFormatGlyphConverter}}" FontSize="16" Margin="0,0,12,0"/>
+                                                <TextBlock Text="{x:Bind FriendlyName}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
+                                </HyperlinkButton>
+                            </Grid>
+                        </StackPanel>
+                    </Frame>
 
-                <!-- Resolution -->
-                <Frame x:Name="FrameResolution" Margin="0,48,0,0" IsEnabled="True" Visibility="Collapsed" Opacity="0">
-                    <Frame.OpacityTransition>
-                        <ScalarTransition Duration="0:0:0.3"/>
-                    </Frame.OpacityTransition>
+                    <!-- Color Mode -->
+                    <Frame x:Name="FrameColorMode" Margin="0,48,0,0" Opacity="{x:Bind FrameColorMode.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <Frame.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </Frame.OpacityTransition>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
 
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <Grid Margin="0,3,0,0">
-                            <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="models:ScanResolution">
-                                        <TextBlock Text="{x:Bind FriendlyText}" Style="{StaticResource BodyTextBlockStyle}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
-                            </HyperlinkButton>
-                        </Grid>
-                    </StackPanel>
-                </Frame>
-                
-                <!-- Automatic crop -->
-                <Frame x:Name="FrameAutoCrop" Margin="0,48,0,0" Visibility="Collapsed" Opacity="{x:Bind FrameAutoCrop.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
-                    <Frame.OpacityTransition>
-                        <ScalarTransition Duration="0:0:0.3"/>
-                    </Frame.OpacityTransition>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
+                                <RadioButton x:Uid="OptionScanOptionsColorColor">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedColorAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederColorAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                                <RadioButton x:Uid="OptionScanOptionsColorGrayscale">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedGrayscaleAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederGrayscaleAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                                <RadioButton x:Uid="OptionScanOptionsColorMonochrome">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedMonochromeAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederMonochromeAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                                <RadioButton Content="Automatic">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoColorAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoColorAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                            </muxc:RadioButtons>
+                        </StackPanel>
+                    </Frame>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropPossible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropPossible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                    <!-- Resolution -->
+                    <Frame x:Name="FrameResolution" Margin="0,48,0,0" IsEnabled="True" Opacity="{x:Bind FrameResolution.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <Frame.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </Frame.OpacityTransition>
 
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Automatic crop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SelectedScannerAutoCropMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerAutoCropModeConverter}}">
-                            <RadioButton Content="Disabled">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                            <RadioButton Content="Single region">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropSingleRegionAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropSingleRegionAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                            <RadioButton Content="Multiple regions">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropMultiRegionAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropMultiRegionAllowed, Mode=OneWay}"/>
-                                    </core:DataTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </RadioButton>
-                        </muxc:RadioButtons>
-                    </StackPanel>
-                </Frame>
-                
-                <!-- More Options -->
-                <Frame x:Name="FrameMoreOptions" Margin="0,48,0,0" Visibility="Collapsed" Opacity="0">
-                    <Frame.OpacityTransition>
-                        <ScalarTransition Duration="0:0:0.3"/>
-                    </Frame.OpacityTransition>
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
-                            <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <Grid Margin="0,3,0,0">
+                                <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ScanResolution">
+                                            <TextBlock Text="{x:Bind FriendlyText}" Style="{StaticResource BodyTextBlockStyle}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
+                                </HyperlinkButton>
+                            </Grid>
+                        </StackPanel>
+                    </Frame>
 
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                        <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                        <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                    </StackPanel>
-                </Frame>
-            </StackPanel>
+                    <!-- Automatic crop -->
+                    <Frame x:Name="FrameAutoCrop" Margin="0,48,0,0" Opacity="{x:Bind FrameAutoCrop.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <Frame.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </Frame.OpacityTransition>
+
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropPossible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropPossible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Automatic crop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <muxc:RadioButtons x:Name="RadioButtonsAutoCropMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SelectedScannerAutoCropMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerAutoCropModeConverter}}">
+                                <RadioButton Content="Disabled">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                                <RadioButton Content="Single region">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropSingleRegionAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropSingleRegionAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                                <RadioButton Content="Multiple regions">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFlatbedAutoCropMultiRegionAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederAutoCropMultiRegionAllowed, Mode=OneWay}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </RadioButton>
+                            </muxc:RadioButtons>
+                        </StackPanel>
+                    </Frame>
+
+                    <!-- More Options -->
+                    <Frame x:Name="FrameMoreOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameMoreOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <Frame.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </Frame.OpacityTransition>
+
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="0">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="1">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="2">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerSource, Mode=OneWay, Converter={StaticResource ScannerSourceIntConverter}}" ComparisonCondition="Equal" Value="3">
+                                <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                            <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Frame>
+                </StackPanel>
+            </Frame>
+            
         </ScrollViewer>
 
         <!-- Footer -->
         <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="{x:Bind ButtonScan.Margin}">
-                <StackPanel.ChildrenTransitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition/>
-                    </TransitionCollection>
-                </StackPanel.ChildrenTransitions>
-
-                <Button x:Name="ButtonCancelScan" x:Uid="ButtonScanOptionsCancel" Height="{x:Bind ButtonScan.Height}" Margin="0,0,12,0" Opacity="0" Visibility="Collapsed">
+                <Button x:Name="ButtonCancelScan" x:Uid="ButtonScanOptionsCancel" Command="{x:Bind ViewModel.CancelScanCommand}" Height="{x:Bind ButtonScan.Height}" IsEnabled="False" Margin="0,0,12,0" Opacity="{x:Bind ButtonCancelScan.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Visibility="Collapsed">
+                    <Button.OpacityTransition>
+                        <ScalarTransition Duration="0:0:0.3"/>
+                    </Button.OpacityTransition>
+                    
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                 </Button>
-                <Button x:Name="ButtonPreview" Height="{x:Bind ButtonScan.Height}" Command="{x:Bind ViewModel.PreviewScanCommand}" RightTapped="ButtonPreview_RightTapped">
+                <Button x:Name="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:ChangePropertyAction TargetObject="{x:Bind TeachingTipPreview}" PropertyName="IsOpen" Value="True"/>
@@ -584,6 +582,12 @@
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}"/>
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
+
+                    <Button.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition/>
+                        </TransitionCollection>
+                    </Button.Transitions>
 
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" FontSize="16"/>
 
@@ -617,7 +621,7 @@
                 </Button>
             </StackPanel>
 
-            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}" >
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -638,7 +642,7 @@
 
                 <muxc:SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="Bold" IsEnabled="True"/>
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" Command="{x:Bind ViewModel.ScanCommand}" FontWeight="Bold" IsEnabled="True"/>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>

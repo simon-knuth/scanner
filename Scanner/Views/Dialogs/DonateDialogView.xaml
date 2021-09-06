@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:viewModels="using:Scanner.ViewModels"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     DefaultButton="Primary"
@@ -13,7 +15,13 @@
     PrimaryButtonText="Donate"
     SecondaryButtonText="No thanks"
     PrimaryButtonClick="DonateDialog_PrimaryButtonClick"
-    Loaded="ContentDialog_Loaded">
+    Loaded="ContentDialog_Loaded"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
+
+    <ContentDialog.DataContext>
+        <viewModels:DonateDialogViewModel x:Name="ViewModel"/>
+    </ContentDialog.DataContext>
+    
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -55,7 +63,7 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
                 <PersonPicture ProfilePicture="/Assets/Simon.jpg" Initials="SK" DisplayName="Simon Knuth" VerticalAlignment="Center" Width="80"/>
-                <HyperlinkButton HorizontalAlignment="Center" Margin="0,6,0,0" NavigateUri="https://simon-knuth.github.io/">
+                <HyperlinkButton HorizontalAlignment="Center" Margin="0,6,0,0" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">
                     <TextBlock Text="Simon Knuth" Style="{StaticResource CaptionTextBlockStyle}"/>
                 </HyperlinkButton>
             </StackPanel>

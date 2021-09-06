@@ -11,7 +11,7 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    class LogService : ILogService
+    internal class LogService : ILogService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +86,11 @@ namespace Scanner.Services
             await InitializeSerilogAsync();
 
             return sortedFiles;
+        }
+
+        public void CloseAndFlush()
+        {
+            Serilog.Log.CloseAndFlush();
         }
     }
 }

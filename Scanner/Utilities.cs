@@ -1207,8 +1207,7 @@ static class Utilities
         BitmapImage bmp = null;
         int attempt = 0;
 
-        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
-        await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+        await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, async () =>
         {
             using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
             {
@@ -1248,10 +1247,8 @@ static class Utilities
                         throw new ApplicationException("Could not determine file type for generating a bitmap.");
                 }
             }
-            taskCompleted.SetResult(true);
         });
 
-        await taskCompleted.Task;
         return bmp;
     }
 }

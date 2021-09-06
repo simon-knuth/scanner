@@ -14,7 +14,8 @@
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     CloseButtonText="Close"
-    DefaultButton="Close">
+    DefaultButton="Close"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
 
     <ContentDialog.DataContext>
         <viewModels:LogExportDialogViewModel x:Name="ViewModel"/>

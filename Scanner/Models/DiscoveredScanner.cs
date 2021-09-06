@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
@@ -15,7 +18,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImageScanner Device;
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+
+        public ImageScanner Device;
         public string Id;
         public bool Debug;
 
@@ -32,6 +37,7 @@ namespace Scanner.Models
         public bool IsFlatbedColorAllowed;
         public bool IsFlatbedGrayscaleAllowed;
         public bool IsFlatbedMonochromeAllowed;
+        public bool IsFlatbedAutoColorAllowed;
         public bool IsFlatbedPreviewAllowed;
         public bool IsFlatbedAutoCropSingleRegionAllowed;
         public bool IsFlatbedAutoCropMultiRegionAllowed;
@@ -45,6 +51,7 @@ namespace Scanner.Models
         public bool IsFeederColorAllowed;
         public bool IsFeederGrayscaleAllowed;
         public bool IsFeederMonochromeAllowed;
+        public bool IsFeederAutoColorAllowed;
         public bool IsFeederDuplexAllowed;
         public bool IsFeederPreviewAllowed;
         public bool IsFeederAutoCropSingleRegionAllowed;
@@ -80,6 +87,7 @@ namespace Scanner.Models
                 IsFlatbedColorAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
                 IsFlatbedGrayscaleAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                 IsFlatbedMonochromeAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                IsFlatbedAutoColorAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.AutoColor);
 
                 IsFlatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
 
@@ -98,6 +106,7 @@ namespace Scanner.Models
                 IsFeederColorAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Color);
                 IsFeederGrayscaleAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Grayscale);
                 IsFeederMonochromeAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
+                IsFeederAutoColorAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.AutoColor);
 
                 IsFeederDuplexAllowed = device.FeederConfiguration.CanScanDuplex;
                 IsFeederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
@@ -186,12 +195,12 @@ namespace Scanner.Models
 
         /// <summary>
         ///     Generates the available file formats for the given <paramref name="config"/>, including
-        ///     formats available using conversion. The formats are generated in the following order:
-        ///     JPG -> PNG -> PDF -> TIF -> BMP
+        ///     formats available using conversion. The formats are generated in the following order
+        ///     used in the formatArray.
         /// </summary>
         private ObservableCollection<ScannerFileFormat> GenerateFormats(IImageScannerFormatConfiguration config)
         {
-            ObservableCollection<ScannerFileFormat> result = new ObservableCollection<ScannerFileFormat>();
+            List<ScannerFileFormat> unsortedResult = new List<ScannerFileFormat>();
             ImageScannerFormat[] formatArray =
             {
                 ImageScannerFormat.Jpeg,
@@ -212,28 +221,28 @@ namespace Scanner.Models
             ImageScannerFormat? baseFormat = null;
             if (config.IsFormatSupported(ImageScannerFormat.Jpeg))
             {
-                result.Add(new ScannerFileFormat(ImageScannerFormat.Jpeg, ImageScannerFormat.Jpeg));
+                unsortedResult.Add(new ScannerFileFormat(ImageScannerFormat.Jpeg, ImageScannerFormat.Jpeg));
                 if (baseFormat == null) baseFormat = ImageScannerFormat.Jpeg;
                 formatList.Remove(ImageScannerFormat.Jpeg);
             }
 
             if (config.IsFormatSupported(ImageScannerFormat.Png))
             {
-                result.Add(new ScannerFileFormat(ImageScannerFormat.Png, ImageScannerFormat.Png));
+                unsortedResult.Add(new ScannerFileFormat(ImageScannerFormat.Png, ImageScannerFormat.Png));
                 if (baseFormat == null) baseFormat = ImageScannerFormat.Png;
                 formatList.Remove(ImageScannerFormat.Png);
             }
 
             if (config.IsFormatSupported(ImageScannerFormat.Tiff))
             {
-                result.Add(new ScannerFileFormat(ImageScannerFormat.Tiff, ImageScannerFormat.Tiff));
+                unsortedResult.Add(new ScannerFileFormat(ImageScannerFormat.Tiff, ImageScannerFormat.Tiff));
                 if (baseFormat == null) baseFormat = ImageScannerFormat.Tiff;
                 formatList.Remove(ImageScannerFormat.Tiff);
             }
 
             if (config.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
             {
-                result.Add(new ScannerFileFormat(ImageScannerFormat.DeviceIndependentBitmap, ImageScannerFormat.DeviceIndependentBitmap));
+                unsortedResult.Add(new ScannerFileFormat(ImageScannerFormat.DeviceIndependentBitmap, ImageScannerFormat.DeviceIndependentBitmap));
                 if (baseFormat == null) baseFormat = ImageScannerFormat.DeviceIndependentBitmap;
                 formatList.Remove(ImageScannerFormat.DeviceIndependentBitmap);
             }
@@ -243,8 +252,16 @@ namespace Scanner.Models
             {
                 foreach (ImageScannerFormat targetFormat in formatList)
                 {
-                    result.Add(new ScannerFileFormat(targetFormat, (ImageScannerFormat)baseFormat));
+                    unsortedResult.Add(new ScannerFileFormat(targetFormat, (ImageScannerFormat)baseFormat));
                 }
+            }
+
+            // apply desired order
+            ObservableCollection<ScannerFileFormat> result = new ObservableCollection<ScannerFileFormat>();
+            foreach (ImageScannerFormat format in formatArray)
+            {
+                ScannerFileFormat found = unsortedResult.FirstOrDefault(x => x.TargetFormat == format);
+                if (found != null) result.Add(found);
             }
 
             return result;
@@ -272,6 +289,97 @@ namespace Scanner.Models
                 {
                     throw new ApplicationException("Preview unsuccessful.");
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Prepares the scanner for a scan with the options given in <paramref name="options"/>.
+        /// </summary>
+        public void ConfigureForScanOptions(ScanOptions options)
+        {
+            switch (options.Source)
+            {
+                case Enums.ScannerSource.Auto:
+                    // file format
+                    if (options.Format.OriginalFormat == null)
+                    {
+                        Device.AutoConfiguration.Format = options.Format.TargetFormat;
+                    }
+                    else
+                    {
+                        Device.AutoConfiguration.Format = (ImageScannerFormat)options.Format.OriginalFormat;
+                    }
+                    break;
+
+                case Enums.ScannerSource.Flatbed:
+                    // file format
+                    if (options.Format.OriginalFormat == null)
+                    {
+                        Device.FlatbedConfiguration.Format = options.Format.TargetFormat;
+                    }
+                    else
+                    {
+                        Device.FlatbedConfiguration.Format = (ImageScannerFormat)options.Format.OriginalFormat;
+                    }
+
+                    // color mode
+                    Device.FlatbedConfiguration.ColorMode = options.GetColorModeForScanning();
+
+                    // resolution
+                    Device.FlatbedConfiguration.DesiredResolution = new ImageScannerResolution
+                    {
+                        DpiX = options.Resolution,
+                        DpiY = options.Resolution
+                    };
+
+                    // auto crop mode
+                    if (IsFlatbedAutoCropPossible)
+                    {
+                        // prevents exception when only "Disabled" is available
+                        Device.FlatbedConfiguration.AutoCroppingMode = options.GetAutoCropModeForScanner();
+                    }
+                    break;
+
+                case Enums.ScannerSource.Feeder:
+                    // file format
+                    if (options.Format.OriginalFormat == null)
+                    {
+                        Device.FeederConfiguration.Format = options.Format.TargetFormat;
+                    }
+                    else
+                    {
+                        Device.FeederConfiguration.Format = (ImageScannerFormat)options.Format.OriginalFormat;
+                    }
+
+                    // color mode
+                    Device.FeederConfiguration.ColorMode = options.GetColorModeForScanning();
+
+                    // resolution
+                    Device.FeederConfiguration.DesiredResolution = new ImageScannerResolution
+                    {
+                        DpiX = options.Resolution,
+                        DpiY = options.Resolution
+                    };
+
+                    // auto crop mode
+                    if (IsFeederAutoCropPossible)
+                    {
+                        // prevents exception when only "Disabled" is available
+                        Device.FeederConfiguration.AutoCroppingMode = options.GetAutoCropModeForScanner();
+                    }
+
+                    // max number of pages
+                    if (options.FeederMultiplePages) Device.FeederConfiguration.MaxNumberOfPages = 10;
+                    else Device.FeederConfiguration.MaxNumberOfPages = 1;
+
+                    // duplex
+                    Device.FeederConfiguration.Duplex = options.FeederDuplex;
+                    break;
+
+                case Enums.ScannerSource.None:
+                default:
+                    LogService?.Log.Error("Unable to get scan for unknown {source}.", options.Source);
+                    throw new ArgumentException("No source selected.");
             }
         }
     }

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
@@ -42,13 +43,26 @@
             <converters:AppWideMessageSeverityInfoBarConverter x:Key="AppWideMessageSeverityInfoBarConverter"/>
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:NotZeroVisibilityConverter x:Key="NotZeroVisibilityConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            
+            <!-- Storyboards -->
+            <Storyboard x:Key="StoryboardInfoBarEnter">
+                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                                 From="100" To="0" Duration="0:0:0.3" BeginTime="0:0:0">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="Opacity"
+                                 From="0.0" To="1.0" Duration="0:0:0.3" BeginTime="0:0:0"/>
+            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridMain">
+    <Grid x:Name="GridMain" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanging="VisualStateGroup_CurrentStateChanging">
@@ -206,7 +220,7 @@
 
                     <!-- Debug Flyout -->
                     <FlyoutBase.AttachedFlyout>
-                        <Flyout>
+                        <Flyout Placement="Left">
                             <StackPanel Orientation="Vertical" MaxWidth="400">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
@@ -252,8 +266,15 @@
                             <core:EventTriggerBehavior EventName="Closing">
                                 <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
                             </core:EventTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind InfoBarAppWideMessages.Visibility, Mode=OneWay}" ComparisonCondition="Equal" Value="Visible">
+                                <Media:ControlStoryboardAction Storyboard="{StaticResource StoryboardInfoBarEnter}" ControlStoryboardOption="Play"/>
+                            </core:DataTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        
+
+                        <muxc:InfoBar.RenderTransform>
+                            <CompositeTransform/>
+                        </muxc:InfoBar.RenderTransform>
+
                         <Grid Margin="0,0,0,12">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" MaxHeight="64"/>

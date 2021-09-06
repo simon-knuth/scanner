@@ -52,7 +52,7 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleCompact}">
+                <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{ThemeResource AppBarButtonStyleChevron}">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
@@ -125,6 +125,8 @@
                 <TextBlock x:Name="TextBlockPageIndicator" Text="1 of 3" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextAlignment="Left" MaxLines="1" Padding="12,0,12,0" Visibility="{x:Bind FlipViewPages.Visibility, Mode=OneWay}"/>
                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
             </StackPanel>
+
+            <muxc:PipsPager Grid.Column="1" MaxVisiblePips="10" NumberOfPages="20" SelectedPageIndex="{x:Bind FlipViewPages.SelectedIndex, Mode=TwoWay}" Margin="6,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>

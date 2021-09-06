@@ -28,6 +28,10 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+        public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
+        public readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+        public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IScanOptionsDatabaseService ScanOptionsDatabaseService = Ioc.Default.GetService<IScanOptionsDatabaseService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
@@ -41,7 +45,12 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<string> PreviewScanCommand;
         public RelayCommand DismissPreviewScanCommand;
 
+        public AsyncRelayCommand ScanCommand;
+        public RelayCommand CancelScanCommand;
+
         public event EventHandler PreviewRunning;
+        public event EventHandler ScanStarted;
+        public event EventHandler ScanEnded;
 
         private bool _PreviewFailed;
         public bool PreviewFailed
@@ -211,6 +220,8 @@ namespace Scanner.ViewModels
             DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
+            ScanCommand = new AsyncRelayCommand(Scan);
+            CancelScanCommand = new RelayCommand(CancelScan);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -659,6 +670,59 @@ namespace Scanner.ViewModels
                 IsFeederMonochromeAllowed = false,
                 IsFeederDuplexAllowed = false
             };
+        }
+
+        private async Task Scan()
+        {
+            if (ScanCommand.IsRunning) return;      // already running?
+
+            try
+            {
+                await ScanService?.GetScanAsync(SelectedScanner, CreateScanOptions(), AppDataService.FolderReceivedPages);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Unhandled exception occurred during scan.");
+                AppCenterService?.TrackError(exc);
+                Messenger.Send(new AppWideMessage
+                {
+                    Title = LocalizedString("ErrorMessageScanErrorHeading"),
+                    MessageText = LocalizedString("ErrorMessageScanErrorBody"),
+                    Severity = AppWideMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                
+                try { CancelScan(true); }
+                catch { }
+            }
+        }
+
+        private void CancelScan(bool suppressErrors)
+        {
+            try
+            {
+                ScanService?.CancelScan();
+            }
+            catch (Exception exc)
+            {
+                if (!suppressErrors)
+                {
+                    Messenger.Send(new AppWideMessage
+                    {
+                        Title = LocalizedString("ErrorMessageScanCancelHeading"),
+                        MessageText = LocalizedString("ErrorMessageScanCancelBody"),
+                        Severity = AppWideMessageSeverity.Warning,
+                        AdditionalText = exc.Message
+                    });
+                }
+            }
+
+            ScanEnded?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void CancelScan()
+        {
+            CancelScan(false);
         }
     }
 }

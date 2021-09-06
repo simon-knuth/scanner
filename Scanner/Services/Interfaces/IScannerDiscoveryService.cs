@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Searches for and lists discovered wired/wireless scanners.
+    /// </summary>
     public interface IScannerDiscoveryService
     {
         event EventHandler InitialCrawlCompleted;

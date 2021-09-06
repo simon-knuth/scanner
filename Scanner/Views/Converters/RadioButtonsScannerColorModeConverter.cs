@@ -32,6 +32,8 @@ namespace Scanner.Views.Converters
                     return ScannerColorMode.Grayscale;
                 case 2:
                     return ScannerColorMode.Monochrome;
+                case 3:
+                    return ScannerColorMode.Automatic;
                 default:
                     throw new ApplicationException("Can't convert " + (int)value + " to ScannerColorMode.");
             }

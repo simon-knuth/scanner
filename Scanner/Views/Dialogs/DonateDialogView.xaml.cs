@@ -2,6 +2,8 @@
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 
+using static Scanner.Helpers.AppConstants;
+
 namespace Scanner.Views.Dialogs
 {
     public sealed partial class DonateDialogView : ContentDialog
@@ -13,7 +15,7 @@ namespace Scanner.Views.Dialogs
 
         private async void DonateDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url"));
+            await Launcher.LaunchUriAsync(UriDonation);
         }
 
         private void ContentDialog_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)

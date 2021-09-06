@@ -1,25 +1,17 @@
-﻿using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.Data.Sqlite;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.Data.Sqlite;
 using Scanner.Models;
-using Serilog;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using static Scanner.Services.SettingsEnums;
-using static Enums;
-using static Utilities;
 using Windows.Devices.Scanners;
+using Windows.Storage;
+using static Enums;
 
 namespace Scanner.Services
 {
-    class ScanOptionsDatabaseService : IScanOptionsDatabaseService
+    /// <summary>
+    ///     Manages remembered <see cref="ScanOptions"/> on a per-scanner basis.
+    /// </summary>
+    internal class ScanOptionsDatabaseService : IScanOptionsDatabaseService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +28,7 @@ namespace Scanner.Services
         public ScanOptionsDatabaseService()
         {
             // get database folder
-            StorageFolder folder = Task.Run(async () => 
+            StorageFolder folder = Task.Run(async () =>
                 await ApplicationData.Current.LocalFolder.CreateFolderAsync(dbFolderName,
                     CreationCollisionOption.OpenIfExists)).Result;
 
@@ -55,7 +47,8 @@ namespace Scanner.Services
                 + "RESOLUTION INTEGER,"         // 3
                 + "MULTIPLE_PAGES BOOLEAN,"     // 4
                 + "DUPLEX BOOLEAN,"             // 5
-                + "FILE_FORMAT INTEGER"         // 6
+                + "FILE_FORMAT INTEGER,"        // 6
+                + "AUTO_CROP_MODE INTEGER"      // 7
                 + ")";
 
             SqliteCommand createTable = new SqliteCommand(tableCommand, db);
@@ -73,10 +66,10 @@ namespace Scanner.Services
         {
             // check if just debug scanner
             if (scanner.Debug) return null;
-            
+
             // read database
             string id = scanner.Id;
-           
+
             Connection.Open();
             SqliteCommand selectCommand = new SqliteCommand
                 ("SELECT * FROM " + tableName.ToUpper() + " WHERE ID = \"" + id + "\"", Connection);
@@ -99,6 +92,7 @@ namespace Scanner.Services
                 {
                     case ScannerSource.Flatbed:
                         result.Resolution = float.Parse(query.GetString(3));
+                        result.AutoCropMode = (ScannerAutoCropMode)int.Parse(query.GetString(7));
                         break;
                     case ScannerSource.Feeder:
                         result.Resolution = float.Parse(query.GetString(3));

@@ -175,7 +175,7 @@ namespace Scanner.Views
 #if DEBUG
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+                FlyoutBase.GetAttachedFlyout((FrameworkElement)sender).ShowAt(NavigationViewMain);
             });
 #endif
         }

@@ -22,6 +22,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
@@ -148,6 +149,10 @@ namespace Scanner.ViewModels
 
         private void ReceiveAppWideMessage(object r, AppWideMessage m)
         {
+            m.Title?.Trim();
+            m.MessageText?.Trim();
+            m.AdditionalText?.Trim();
+
             StatusMessages.Insert(0, m);
             SelectedStatusMessageIndex = 0;
         }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Manages the Microsoft AppCenter integration.
+    /// </summary>
     public interface IAppCenterService
     {
         void TrackEvent(AppCenterEvent appCenterEvent, IDictionary<string, string> properties = null);

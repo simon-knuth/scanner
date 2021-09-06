@@ -9,7 +9,10 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    public sealed class SettingsService : ObservableObject, ISettingsService
+    /// <summary>
+    ///     Manages app settings and other persistent values.
+    /// </summary>
+    internal class SettingsService : ObservableObject, ISettingsService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
