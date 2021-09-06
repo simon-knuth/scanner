@@ -1459,8 +1459,23 @@ namespace Scanner
                 {
                     PaneManageSelectIndex(FlipViewScan.SelectedIndex);
                 }
-                try { RefreshZoomUIForFactor(GetCurrentScanScrollViewer().ZoomFactor); } catch (Exception) { }
-                try { if (e.RemovedItems.Count != 0) TryZoomScanAsync(1, lastFlipViewIndex, true); } catch (Exception) { }
+
+                try
+                {
+                    var ssv = GetCurrentScanScrollViewer();
+                    if (ssv != null) RefreshZoomUIForFactor(ssv.ZoomFactor);
+                } 
+                catch (Exception) { }
+
+                if (e != null)
+                {
+                    try
+                    {
+                        if (e.RemovedItems.Count != 0) TryZoomScanAsync(1, lastFlipViewIndex, true);
+                    } 
+                    catch (Exception) { }
+                }
+                
                 lastFlipViewIndex = FlipViewScan.SelectedIndex;
             });
         }
@@ -1490,7 +1505,7 @@ namespace Scanner
                 try
                 {
                     GridViewItem itemContainer = (GridViewItem)LeftPaneGridViewManage.ContainerFromItem(LeftPaneGridViewManage.SelectedItem);
-                    itemContainer.StartBringIntoView();
+                    itemContainer?.StartBringIntoView();
                 }
                 catch (Exception) { }
             }
@@ -1502,7 +1517,7 @@ namespace Scanner
                 try
                 {
                     ListViewItem itemContainer = (ListViewItem)LeftPaneListViewManage.ContainerFromItem(LeftPaneListViewManage.SelectedItem);
-                    itemContainer.StartBringIntoView();
+                    itemContainer?.StartBringIntoView();
                 }
                 catch (Exception) { }
             }
@@ -3247,7 +3262,7 @@ namespace Scanner
                 case FlowState.select:
                     if (index == -1 || index >= FlipViewScan.Items.Count) return;
                     FlipViewItem flipViewItem = (FlipViewItem)FlipViewScan.ContainerFromIndex(index);
-                    scrollViewer = (ScrollViewer)flipViewItem.ContentTemplateRoot;
+                    scrollViewer = (ScrollViewer)flipViewItem?.ContentTemplateRoot;
                     break;
                 case FlowState.draw:
                     scrollViewer = ScrollViewerEditDraw;
@@ -3257,23 +3272,26 @@ namespace Scanner
                     return;
             }
 
-            double horizontalOffset = scrollViewer.ViewportWidth / 2 * (factor - 1);
-            if (scrollViewer.ZoomFactor > 1)
+            if (null != scrollViewer)
             {
-                double previousHorizontalOffset = scrollViewer.HorizontalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
-                if (previousHorizontalOffset < horizontalOffset) horizontalOffset = horizontalOffset - (horizontalOffset - previousHorizontalOffset);
-                else horizontalOffset = horizontalOffset + (previousHorizontalOffset - horizontalOffset);
-            }
+                double horizontalOffset = scrollViewer.ViewportWidth / 2 * (factor - 1);
+                if (scrollViewer.ZoomFactor > 1)
+                {
+                    double previousHorizontalOffset = scrollViewer.HorizontalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                    if (previousHorizontalOffset < horizontalOffset) horizontalOffset = horizontalOffset - (horizontalOffset - previousHorizontalOffset);
+                    else horizontalOffset = horizontalOffset + (previousHorizontalOffset - horizontalOffset);
+                }
 
-            double verticalOffset = scrollViewer.ViewportHeight / 2 * (factor - 1);
-            if (scrollViewer.ZoomFactor > 1)
-            {
-                double previousVerticalOffset = scrollViewer.VerticalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
-                if (previousVerticalOffset < verticalOffset) verticalOffset = verticalOffset - (verticalOffset - previousVerticalOffset);
-                else verticalOffset = verticalOffset + (previousVerticalOffset - verticalOffset);
-            }
+                double verticalOffset = scrollViewer.ViewportHeight / 2 * (factor - 1);
+                if (scrollViewer.ZoomFactor > 1)
+                {
+                    double previousVerticalOffset = scrollViewer.VerticalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                    if (previousVerticalOffset < verticalOffset) verticalOffset = verticalOffset - (verticalOffset - previousVerticalOffset);
+                    else verticalOffset = verticalOffset + (previousVerticalOffset - verticalOffset);
+                }
 
-            scrollViewer.ChangeView(horizontalOffset, verticalOffset, factor, !animate);
+                scrollViewer.ChangeView(horizontalOffset, verticalOffset, factor, !animate);
+            }
         }
 
         private async void ScrollViewerFlipViewScanDataTemplate_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
@@ -3296,7 +3314,7 @@ namespace Scanner
                 case FlowState.select:
                     if (FlipViewScan.SelectedIndex == -1) return null;
                     FlipViewItem flipViewItem = (FlipViewItem)FlipViewScan.ContainerFromIndex(FlipViewScan.SelectedIndex);
-                    ScrollViewer scrollViewer = (ScrollViewer)flipViewItem.ContentTemplateRoot;
+                    ScrollViewer scrollViewer = (ScrollViewer)flipViewItem?.ContentTemplateRoot;
                     return scrollViewer;
                 case FlowState.draw:
                     return ScrollViewerEditDraw;
