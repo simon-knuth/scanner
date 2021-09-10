@@ -1,22 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
+﻿using Scanner.ViewModels;
+using Scanner.Views.Dialogs;
 using System;
-using WinUI = Microsoft.UI.Xaml.Controls;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
-using Scanner.ViewModels;
-using Scanner.Services;
-using Scanner.Views.Dialogs;
-using static Utilities;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Animation;
+using static Utilities;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace Scanner.Views
 {
     public sealed partial class ShellView : Page
-    {       
+    {
         public ShellView()
         {
             this.InitializeComponent();
@@ -24,12 +20,25 @@ namespace Scanner.Views
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(ViewModel.DisplayedView):
                     ViewModel_DisplayedViewChanged(sender, e);
+                    break;
+                case nameof(ViewModel.WindowActivationState):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                    {
+                        if (ViewModel.WindowActivationState == CoreWindowActivationState.Deactivated)
+                        {
+                            ((WinUI.NavigationViewItem) NavigationViewMain.SettingsItem).Opacity = 0.5;
+                        }
+                        else
+                        {
+                            ((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).Opacity = 1;
+                        }
+                    });
                     break;
                 default:
                     break;
@@ -58,6 +67,9 @@ namespace Scanner.Views
 
             FrameMainContentSecond.Navigate(typeof(EditorView));
             FrameMainContentThird.Navigate(typeof(PageListView));
+
+            ((WinUI.NavigationViewItem)(NavigationViewMain.SettingsItem)).RightTapped +=
+                NavigationViewItemMainSettings_RightTapped;
         }
 
         private void NavigationViewMain_SelectionChanged(WinUI.NavigationView sender, WinUI.NavigationViewSelectionChangedEventArgs args)
@@ -79,7 +91,7 @@ namespace Scanner.Views
             {
                 FrameMainContentFirst.Navigate(typeof(HelpView));
             }
-            else if (args.SelectedItem == NavigationViewItemMainSettings)
+            else if (args.SelectedItem == NavigationViewMain.SettingsItem)
             {
                 FrameMainContentFirst.Navigate(typeof(SettingsView));
             }
@@ -132,7 +144,7 @@ namespace Scanner.Views
                 case ShellNavigationSelectableItem.Donate:
                     return NavigationViewItemMainDonate;
                 case ShellNavigationSelectableItem.Settings:
-                    return NavigationViewItemMainSettings;
+                    return (WinUI.NavigationViewItem)NavigationViewMain.SettingsItem;
                 default:
                     throw new ArgumentException(String.Format(
                         "Unable to convert ShellNavigationSelectableItem {1} to NavigationViewItem.",
@@ -151,7 +163,7 @@ namespace Scanner.Views
             else if (item == NavigationViewItemMainEditor) return ShellNavigationSelectableItem.Editor;
             else if (item == NavigationViewItemMainHelp) return ShellNavigationSelectableItem.Help;
             else if (item == NavigationViewItemMainDonate) return ShellNavigationSelectableItem.Donate;
-            else if (item == NavigationViewItemMainSettings) return ShellNavigationSelectableItem.Settings;
+            else if (item == NavigationViewMain.SettingsItem) return ShellNavigationSelectableItem.Settings;
             else throw new ArgumentException(String.Format(
                 "Unable to convert NavigationViewItem {1} to ShellNavigationSelectableItem.",
                 item.Name));
@@ -175,7 +187,7 @@ namespace Scanner.Views
 #if DEBUG
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                FlyoutBase.GetAttachedFlyout((FrameworkElement)sender).ShowAt(NavigationViewMain);
+                FlyoutBase.ShowAttachedFlyout(NavigationViewMain);
             });
 #endif
         }

@@ -660,10 +660,10 @@
                                 <TextBlock Text="Debug scanning" Style="{StaticResource BaseTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,12">
-                                <ComboBox Header="Target format" Width="150"/>
-                                <CheckBox  Content="Start fresh" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
+                                <ComboBox Header="Target format" Width="150" ItemsSource="{x:Bind ViewModel.DebugScanFormats}" SelectedItem="{x:Bind ViewModel.DebugSelectedScanFormat, Mode=TwoWay}"/>
+                                <CheckBox Content="Start fresh" IsChecked="{x:Bind ViewModel.DebugScanStartFresh, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
                             </StackPanel>
-                            <Button Content="Select files" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>

@@ -30,6 +30,7 @@ namespace Scanner.ViewModels
         public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+        private readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IScanOptionsDatabaseService ScanOptionsDatabaseService = Ioc.Default.GetService<IScanOptionsDatabaseService>();
@@ -199,6 +200,7 @@ namespace Scanner.ViewModels
         // Debug stuff
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
+        public AsyncRelayCommand DebugScanCommand;
 
         private DiscoveredScanner _DebugScanner;
         public DiscoveredScanner DebugScanner
@@ -206,6 +208,20 @@ namespace Scanner.ViewModels
             get => _DebugScanner;
             set => SetProperty(ref _DebugScanner, value);
         }
+
+        public List<ImageScannerFormat> DebugScanFormats = new List<ImageScannerFormat>
+        {
+            ImageScannerFormat.Jpeg,
+            ImageScannerFormat.Png,
+            ImageScannerFormat.Pdf,
+            ImageScannerFormat.Tiff,
+            ImageScannerFormat.DeviceIndependentBitmap
+        };
+
+        public ImageScannerFormat DebugSelectedScanFormat;
+
+        public bool DebugScanStartFresh;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +236,8 @@ namespace Scanner.ViewModels
             DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
-            ScanCommand = new AsyncRelayCommand(Scan);
+            ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false));
+            DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(true));
             CancelScanCommand = new RelayCommand(CancelScan);
         }
 
@@ -672,13 +689,50 @@ namespace Scanner.ViewModels
             };
         }
 
-        private async Task Scan()
+        private async Task ScanAsync(bool debug)
         {
             if (ScanCommand.IsRunning) return;      // already running?
 
             try
             {
-                await ScanService?.GetScanAsync(SelectedScanner, CreateScanOptions(), AppDataService.FolderReceivedPages);
+                if (!debug)
+                {
+                    // real scan
+                    var result = await ScanService?.GetScanAsync(SelectedScanner, CreateScanOptions(),
+                    AppDataService.FolderReceivedPages);
+                    await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
+                        SettingsService.ScanSaveLocation, true);
+                }
+                else
+                {
+                    // debug scan
+                    var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                    picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                    picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                    picker.FileTypeFilter.Add(".jpg");
+                    picker.FileTypeFilter.Add(".jpeg");
+                    picker.FileTypeFilter.Add(".png");
+                    picker.FileTypeFilter.Add(".tif");
+                    picker.FileTypeFilter.Add(".tiff");
+                    picker.FileTypeFilter.Add(".bmp");
+
+                    IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+                    if (files != null)
+                    {
+                        List<StorageFile> copiedFiles = new List<StorageFile>();
+                        foreach (StorageFile file in files)
+                        {
+                            copiedFiles.Add(await file.CopyAsync(AppDataService.FolderReceivedPages));
+                        }
+
+                        await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                            SettingsService.ScanSaveLocation, true);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("No debug file(s) selected");
+                    }
+                }
             }
             catch (Exception exc)
             {

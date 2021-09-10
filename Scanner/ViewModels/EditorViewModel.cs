@@ -11,21 +11,55 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Scanner.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using static Scanner.Services.SettingsEnums;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
-    public class EditorViewModel : ObservableObject
+    public class EditorViewModel : ObservableRecipient
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
 
         private Orientation _Orientation;
         public Orientation Orientation
         {
             get => _Orientation;
             set => SetProperty(ref _Orientation, value);
+        }
+
+        private ScanResult _ScanResult;
+        public ScanResult ScanResult
+        {
+            get => _ScanResult;
+            set => SetProperty(ref _ScanResult, value);
+        }
+
+        private ScanResultElement _SelectedPage;
+        public ScanResultElement SelectedPage
+        {
+            get => _SelectedPage;
+            set => SetProperty(ref _SelectedPage, value);
+        }
+
+        private int _SelectedPageIndex;
+        public int SelectedPageIndex
+        {
+            get => _SelectedPageIndex;
+            set
+            {
+                SetProperty(ref _SelectedPageIndex, value);
+                RefreshSelectedPageText();
+            }
+        }
+
+        private string _SelectedPageText;
+        public string SelectedPageText
+        {
+            get => _SelectedPageText;
+            set => SetProperty(ref _SelectedPageText, value);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +69,8 @@ namespace Scanner.ViewModels
         {
             RefreshOrientationSetting();
             SettingsService.SettingChanged += SettingsService_SettingChanged;
+            ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
+            ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +98,29 @@ namespace Scanner.ViewModels
             if (e == AppSetting.SettingEditorOrientation)
             {
                 RefreshOrientationSetting();
+            }
+        }
+
+        private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
+        {
+            ScanResult = null;
+        }
+
+        private void ScanResultService_ScanResultCreated(object sender, ScanResult scanResult)
+        {
+            ScanResult = scanResult;
+        }
+
+        private void RefreshSelectedPageText()
+        {
+            if (SelectedPageIndex >= 0 && ScanResult != null)
+            {
+                SelectedPageText = String.Format(LocalizedString("TextPageIndicator"),
+                    SelectedPageIndex + 1, ScanResult.NumberOfPages);
+            }
+            else
+            {
+                SelectedPageText = "";
             }
         }
     }

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,15 +31,24 @@ using static Utilities;
 
 namespace Scanner
 {
-    class ScanResult
+    public class ScanResult : ObservableObject
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ObservableCollection<ScanResultElement> elements = new ObservableCollection<ScanResultElement>();
-        public SupportedFormat scanResultFormat;
-        public StorageFile pdf = null;
-        public readonly StorageFolder originalTargetFolder;
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+
+        private ObservableCollection<ScanResultElement> _Elements = new ObservableCollection<ScanResultElement>();
+        public ObservableCollection<ScanResultElement> Elements
+        {
+            get => _Elements;
+        }
+
+        public SupportedFormat ScanResultFormat;
+        public StorageFile Pdf = null;
+        public readonly StorageFolder OriginalTargetFolder;
+
+        public int NumberOfPages => _Elements.Count;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,27 +56,30 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
-            log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart, displayFolder);
+            LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart, displayFolder);
             int futureAccessListIndex = futureAccessListIndexStart;
             foreach (StorageFile file in fileList)
             {
                 if (file == null) continue;
 
-                if (displayFolder) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                if (displayFolder) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                 futureAccessListIndex += 1;
             }
-            scanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(elements[0].ScanFile.FileType);
-            originalTargetFolder = targetFolder;
+            ScanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(_Elements[0].ScanFile.FileType);
+            OriginalTargetFolder = targetFolder;
             RefreshItemDescriptors();
-            elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
+            _Elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
         }
 
-        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
+            StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
-            log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
+            ILogService logService = Ioc.Default.GetService<ILogService>();
+
+            logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
             Task[] moveTasks = new Task[fileList.Count];
             for (int i = 0; i < fileList.Count; i++)
             {
@@ -75,13 +90,17 @@ namespace Scanner
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
             if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             await result.GetImagesAsync();
-            log.Information("ScanResult created.");
+            logService?.Log.Information("ScanResult created.");
             return result;
         }
 
-        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, SupportedFormat targetFormat, int futureAccessListIndexStart, bool displayFolder)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
+            StorageFolder targetFolder, SupportedFormat targetFormat, int futureAccessListIndexStart,
+            bool displayFolder)
         {
-            log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
+            ILogService logService = Ioc.Default.GetService<ILogService>();
+
+            logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
 
@@ -101,10 +120,10 @@ namespace Scanner
                 await Task.WhenAll(conversionTasks);
             }
 
-            result.scanResultFormat = targetFormat;
+            result.ScanResultFormat = targetFormat;
             if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             await result.GetImagesAsync();
-            log.Information("ScanResult created.");
+            logService?.Log.Information("ScanResult created.");
             return result;
         }
 
@@ -123,7 +142,7 @@ namespace Scanner
         /// </summary>
         public int GetTotalNumberOfPages()
         {
-            return elements.Count;
+            return _Elements.Count;
         }
 
 
@@ -132,9 +151,9 @@ namespace Scanner
         /// </summary>
         public List<StorageFile> GetImageFiles()
         {
-            log.Information("All image files of the scan result have been requested.");
+            LogService?.Log.Information("All image files of the scan result have been requested.");
             List<StorageFile> files = new List<StorageFile>();
-            foreach (ScanResultElement element in elements)
+            foreach (ScanResultElement element in _Elements)
             {
                 files.Add(element.ScanFile);
             }
@@ -151,10 +170,10 @@ namespace Scanner
         {
             if (!IsValidIndex(index))
             {
-                log.Error("Image file for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Image file for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for getting file.");
             }
-            else return elements.ElementAt(index).ScanFile;
+            else return _Elements.ElementAt(index).ScanFile;
         }
 
 
@@ -167,10 +186,10 @@ namespace Scanner
         {
             if (!IsValidIndex(index))
             {
-                log.Error("Thumbnail for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Thumbnail for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for getting file.");
             }
-            else return elements.ElementAt(index).Thumbnail;
+            else return _Elements.ElementAt(index).Thumbnail;
         }
 
 
@@ -182,12 +201,12 @@ namespace Scanner
         /// <exception cref="NotImplementedException">Attempted to generate an image of an (O)XPS file.</exception>
         public async Task<List<BitmapImage>> GetImagesAsync()
         {
-            log.Information("BitmapImages of all pages have been requested.");
+            LogService?.Log.Information("BitmapImages of all pages have been requested.");
             List<BitmapImage> previews = new List<BitmapImage>();
             List<Task<BitmapImage>> tasks = new List<Task<BitmapImage>>();
 
             // kick off conversion for all files
-            for (int i = 0; i < elements.Count; i++)
+            for (int i = 0; i < _Elements.Count; i++)
             {
                 tasks.Add(GetImageAsync(i));
             }
@@ -215,22 +234,22 @@ namespace Scanner
         /// <exception cref="NotImplementedException">Attempted to generate an image of an (O)XPS file.</exception>
         public async Task<BitmapImage> GetImageAsync(int index)
         {
-            log.Information("Image for index {Index} requested.", index);
+            LogService?.Log.Information("Image for index {Index} requested.", index);
             if (!IsValidIndex(index))
             {
-                log.Error("Image for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Image for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for preview.");
             }
 
             // use cached image if possible
-            if (elements[index].CachedImage != null)
+            if (_Elements[index].CachedImage != null)
             {
-                log.Information("Returning a cached image.");
-                return elements[index].CachedImage;
+                LogService?.Log.Information("Returning a cached image.");
+                return _Elements[index].CachedImage;
             }
 
             // create new bitmap
-            StorageFile sourceFile = elements[index].ScanFile;
+            StorageFile sourceFile = _Elements[index].ScanFile;
             BitmapImage bmp = null;
             int attempt = 0;
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
@@ -255,7 +274,7 @@ namespace Scanner
                                 {
                                     if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
 
-                                    log.Warning(e, "Opening the file stream of page at index {Index} failed, retrying in 500ms.", index);
+                                    LogService?.Log.Warning(e, "Opening the file stream of page at index {Index} failed, retrying in 500ms.", index);
                                     await Task.Delay(500);
                                     attempt++;
                                 }
@@ -282,7 +301,7 @@ namespace Scanner
                                 {
                                     if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of PDF page.", e);
 
-                                    log.Warning(e, "Opening the file stream of page at index {Index} failed, retrying in 500ms.", index);
+                                    LogService?.Log.Warning(e, "Opening the file stream of page at index {Index} failed, retrying in 500ms.", index);
                                     await Task.Delay(500);
                                     attempt++;
                                 }
@@ -298,7 +317,7 @@ namespace Scanner
                     }
 
                     // save image to cache
-                    elements[index].CachedImage = bmp;
+                    _Elements[index].CachedImage = bmp;
 
                     // generate thumbnail
                     BitmapImage thumbnail = new BitmapImage();
@@ -331,25 +350,25 @@ namespace Scanner
 
                             await bitmapEncoder.FlushAsync();
                             await thumbnail.SetSourceAsync(imageStream);
-                            elements[index].Thumbnail = thumbnail;
+                            _Elements[index].Thumbnail = thumbnail;
                             break;
                         }
                         catch (Exception e)
                         {
                             if (attempt >= 4)
                             {
-                                log.Error(e, "Couldn't generate thumbnail of page at index {Index}", index);
+                                LogService?.Log.Error(e, "Couldn't generate thumbnail of page at index {Index}", index);
                                 return;
                             }
 
-                            log.Warning(e, "Generating the thumbnail of page at index {Index} failed, retrying in 500ms.", index);
+                            LogService?.Log.Warning(e, "Generating the thumbnail of page at index {Index} failed, retrying in 500ms.", index);
                             await Task.Delay(500);
                             attempt++;
                         }
                     }
                 }
             });
-            log.Information("Returning a newly generated image.");
+            LogService?.Log.Information("Returning a newly generated image.");
             return bmp;
         }
 
@@ -365,16 +384,16 @@ namespace Scanner
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
         public async Task ConvertScanAsync(int index, SupportedFormat targetFormat, StorageFolder targetFolder)
         {
-            log.Information("Conversion of index {Index} into {TargetFormat} requested.", index, targetFormat);
+            LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} requested.", index, targetFormat);
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Conversion of index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Conversion of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for conversion.");
             }
 
             // convert
-            StorageFile sourceFile = elements[index].ScanFile;
+            StorageFile sourceFile = _Elements[index].ScanFile;
             string newName, newNameWithoutNumbering;
             switch (targetFormat)
             {
@@ -396,7 +415,7 @@ namespace Scanner
                         catch (Exception exc)
                         {
                             Crashes.TrackError(exc);
-                            log.Error(exc, "Conversion of the scan failed.");
+                            LogService?.Log.Error(exc, "Conversion of the scan failed.");
                             throw;
                         }
                     }
@@ -413,16 +432,16 @@ namespace Scanner
                 case SupportedFormat.PDF:
                 case SupportedFormat.XPS:
                 case SupportedFormat.OpenXPS:
-                    log.Error("Requested conversion for unsupported format.");
+                    LogService?.Log.Error("Requested conversion for unsupported format.");
                     throw new NotImplementedException("Can not convert to (O)XPS.");
 
                 default:
-                    log.Error("Requested conversion without sepcifying format.");
+                    LogService?.Log.Error("Requested conversion without sepcifying format.");
                     throw new ApplicationException("Could not determine target file type for conversion.");
             }
 
             // refresh file
-            elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
+            _Elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
         }
 
 
@@ -437,7 +456,9 @@ namespace Scanner
         /// <returns>The final name of the file.</returns>
         private static async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
         {
-            log.Information("Requested to move file to folder. [desiredName={Name}|replaceExisting={Replace}]", desiredName, replaceExisting);
+            ILogService logService = Ioc.Default.GetService<ILogService>();
+
+            logService?.Log.Information("Requested to move file to folder. [desiredName={Name}|replaceExisting={Replace}]", desiredName, replaceExisting);
             try
             {
                 if (replaceExisting) await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.ReplaceExisting);
@@ -467,21 +488,21 @@ namespace Scanner
             Analytics.TrackEvent("Rotate pages", new Dictionary<string, string> {
                             { "Rotation", instructions[0].Item2.ToString() },
                         });
-            log.Information("Received {@Instructions} for rotations.", instructions);
+            LogService?.Log.Information("Received {@Instructions} for rotations.", instructions);
 
             // check indices and rotations
             foreach (var instruction in instructions)
             {
                 if (!IsValidIndex(instruction.Item1))
                 {
-                    log.Error("Rotation for index {Index} requested, but there are only {Num} pages. Aborting all rotations.", instruction.Item1, elements.Count);
+                    LogService?.Log.Error("Rotation for index {Index} requested, but there are only {Num} pages. Aborting all rotations.", instruction.Item1, _Elements.Count);
                     throw new ArgumentOutOfRangeException("Invalid index " + instruction.Item1 + " for rotation.");
                 }
                 if (instruction.Item2 == BitmapRotation.None) return;
             }
 
             // rotate and make sure that consecutive rotations are lossless
-            switch (scanResultFormat)
+            switch (ScanResultFormat)
             {
                 case SupportedFormat.JPG:
                 case SupportedFormat.PNG:
@@ -492,18 +513,18 @@ namespace Scanner
                     {
                         try
                         {
-                            using (IRandomAccessStream fileStream = await elements[instruction.Item1].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
+                            using (IRandomAccessStream fileStream = await _Elements[instruction.Item1].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                             {
                                 BitmapDecoder decoder;
-                                if (elements[instruction.Item1].ImageWithoutRotation == null)
+                                if (_Elements[instruction.Item1].ImageWithoutRotation == null)
                                 {
-                                    elements[instruction.Item1].ImageWithoutRotation = await GetImageFile(instruction.Item1)
+                                    _Elements[instruction.Item1].ImageWithoutRotation = await GetImageFile(instruction.Item1)
                                         .CopyAsync(folderWithoutRotation, GetImageFile(instruction.Item1).Name, NameCollisionOption.ReplaceExisting);
                                     decoder = await BitmapDecoder.CreateAsync(fileStream);
                                 }
                                 else
                                 {
-                                    using (IRandomAccessStream bitmapStream = await elements[instruction.Item1].ImageWithoutRotation.OpenReadAsync())
+                                    using (IRandomAccessStream bitmapStream = await _Elements[instruction.Item1].ImageWithoutRotation.OpenReadAsync())
                                     {
                                         decoder = await BitmapDecoder.CreateAsync(bitmapStream);
                                     }
@@ -511,15 +532,15 @@ namespace Scanner
 
                                 SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                                Guid encoderId = GetBitmapEncoderId(elements[instruction.Item1].ScanFile.Name.Split(".")[1]);
+                                Guid encoderId = GetBitmapEncoderId(_Elements[instruction.Item1].ScanFile.Name.Split(".")[1]);
 
                                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
                                 encoder.SetSoftwareBitmap(softwareBitmap);
 
-                                encoder.BitmapTransform.Rotation = CombineRotations(instruction.Item2, elements[instruction.Item1].CurrentRotation);
+                                encoder.BitmapTransform.Rotation = CombineRotations(instruction.Item2, _Elements[instruction.Item1].CurrentRotation);
 
                                 await encoder.FlushAsync();
-                                elements[instruction.Item1].CurrentRotation = encoder.BitmapTransform.Rotation;
+                                _Elements[instruction.Item1].CurrentRotation = encoder.BitmapTransform.Rotation;
                             }
                         }
                         catch (Exception e)
@@ -529,20 +550,20 @@ namespace Scanner
                         finally
                         {
                             // delete image from cache
-                            elements[instruction.Item1].CachedImage = null;
+                            _Elements[instruction.Item1].CachedImage = null;
                         }
                     }
 
-                    if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+                    if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
                     break;
 
                 case SupportedFormat.XPS:
                 case SupportedFormat.OpenXPS:
-                    log.Error("Requested rotation for unsupported format {Format}.", scanResultFormat);
+                    LogService?.Log.Error("Requested rotation for unsupported format {Format}.", ScanResultFormat);
                     throw new ArgumentException("Rotation not supported for PDF, XPS or OXPS.");
 
                 default:
-                    log.Error("Requested rotation for unknown file type.");
+                    LogService?.Log.Error("Requested rotation for unknown file type.");
                     throw new ApplicationException("Could not determine source file type for rotation.");
             }
         }
@@ -614,20 +635,20 @@ namespace Scanner
         public async Task RenameScanAsync(int index, string newName)
         {
             Analytics.TrackEvent("Rename page");
-            log.Information("Renaming index {Index} to {Name}.", index, newName);
+            LogService?.Log.Information("Renaming index {Index} to {Name}.", index, newName);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Rename for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Rename for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for rename.");
             }
 
             // check name is different
-            if (elements[index].ScanFile.Name == newName) return;
+            if (_Elements[index].ScanFile.Name == newName) return;
 
             // rename
-            await elements[index].RenameFileAsync(newName);
+            await _Elements[index].RenameFileAsync(newName);
         }
 
 
@@ -642,17 +663,17 @@ namespace Scanner
             Analytics.TrackEvent("Rename PDF");
 
             // check type
-            if (scanResultFormat != SupportedFormat.PDF)
+            if (ScanResultFormat != SupportedFormat.PDF)
             {
-                log.Error("Attempted to rename entire file for non-PDF.");
+                LogService?.Log.Error("Attempted to rename entire file for non-PDF.");
                 throw new ApplicationException("ScanResult represents more than one file.");
             }
 
             // check name is different
-            if (pdf.Name == newName) return;
+            if (Pdf.Name == newName) return;
 
             // rename
-            await pdf.RenameAsync(newName, NameCollisionOption.FailIfExists);
+            await Pdf.RenameAsync(newName, NameCollisionOption.FailIfExists);
         }
 
 
@@ -666,12 +687,12 @@ namespace Scanner
         public async Task CropScanAsync(int index, ImageCropper imageCropper)
         {
             Analytics.TrackEvent("Crop");
-            log.Information("Requested crop for index {Index}.", index);
+            LogService?.Log.Information("Requested crop for index {Index}.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Crop for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Crop for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for crop.");
             }
 
@@ -679,8 +700,8 @@ namespace Scanner
             IRandomAccessStream stream = null;
             try
             {
-                stream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
+                stream = await _Elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite);
+                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(_Elements[index].ScanFile), true);
             }
             catch (Exception)
             {
@@ -691,16 +712,16 @@ namespace Scanner
             stream.Dispose();
 
             // delete cached image, delete image without rotation and reset rotation
-            elements[index].CachedImage = null;
-            if (elements[index].ImageWithoutRotation != null)
+            _Elements[index].CachedImage = null;
+            if (_Elements[index].ImageWithoutRotation != null)
             {
-                await elements[index].ImageWithoutRotation.DeleteAsync();
+                await _Elements[index].ImageWithoutRotation.DeleteAsync();
             }
-            elements[index].ImageWithoutRotation = null;
-            elements[index].CurrentRotation = BitmapRotation.None;
+            _Elements[index].ImageWithoutRotation = null;
+            _Elements[index].CurrentRotation = BitmapRotation.None;
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -714,12 +735,12 @@ namespace Scanner
         public async Task CropScanAsCopyAsync(int index, ImageCropper imageCropper)
         {
             Analytics.TrackEvent("Crop as copy");
-            log.Information("Requested crop as copy for index {Index}.", index);
+            LogService?.Log.Information("Requested crop as copy for index {Index}.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Crop as copy index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Crop as copy index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for crop.");
             }
 
@@ -729,12 +750,12 @@ namespace Scanner
             try
             {
                 StorageFolder folder = null;
-                if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
-                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + elements[index].FutureAccessListIndex.ToString());
+                if (ScanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
-                file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
+                file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(elements[index].ScanFile), true);
+                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(_Elements[index].ScanFile), true);
             }
             catch (Exception)
             {
@@ -743,30 +764,30 @@ namespace Scanner
             }
             stream.Dispose();
 
-            elements.Insert(index + 1, new ScanResultElement(file, elements[index].FutureAccessListIndex, elements[index].DisplayedFolder));
+            _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
 
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == SupportedFormat.PDF)
             {
 
                 try
                 {
                     List<StorageFile> filesNumbering = new List<StorageFile>();
-                    for (int i = index + 1; i < elements.Count; i++)
+                    for (int i = index + 1; i < _Elements.Count; i++)
                     {
-                        await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
-                        filesNumbering.Add(elements[i].ScanFile);
+                        await _Elements[i].ScanFile.RenameAsync("_" + _Elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                        filesNumbering.Add(_Elements[i].ScanFile);
                     }
                     await PrepareNewConversionFiles(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
-                    log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
+                    LogService?.Log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
                     Crashes.TrackError(exc);
-                    elements.RemoveAt(index + 1);
-                    try { await file.DeleteAsync(); } catch (Exception e) { log.Error(e, "Undo failed as well."); }
+                    _Elements.RemoveAt(index + 1);
+                    try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
                     RefreshItemDescriptors();
                     throw;
                 }
@@ -783,7 +804,7 @@ namespace Scanner
         public async Task DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
         {
             Analytics.TrackEvent("Delete pages");
-            log.Information("Requested Deletion of indices {@Indices} with option {Option}.", indices, deleteOption);
+            LogService?.Log.Information("Requested Deletion of indices {@Indices} with option {Option}.", indices, deleteOption);
 
             List<int> sortedIndices = new List<int>(indices);
             sortedIndices.Sort();
@@ -794,31 +815,31 @@ namespace Scanner
                 // check index
                 if (!IsValidIndex(index))
                 {
-                    log.Error("Deletion of index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                    LogService?.Log.Error("Deletion of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                     throw new ArgumentOutOfRangeException("Invalid index for mass deletion.");
                 }
 
-                await elements[index].ScanFile.DeleteAsync(deleteOption);
-                elements.RemoveAt(index);
+                await _Elements[index].ScanFile.DeleteAsync(deleteOption);
+                _Elements.RemoveAt(index);
             }
 
             RefreshItemDescriptors();
 
             // if necessary, update or delete PDF
-            if (scanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == SupportedFormat.PDF)
             {
                 if (GetTotalNumberOfPages() > 0)
                 {
                     // assign temporary names and then reinstate the file order prior to generation
-                    for (int i = 0; i < elements.Count; i++)
+                    for (int i = 0; i < _Elements.Count; i++)
                     {
-                        await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
+                        await _Elements[i].ScanFile.RenameAsync("_" + i + _Elements[i].ScanFile.FileType);
                     }
-                    await PrepareNewConversionFiles(elements.Select(e => e.ScanFile).ToList(), 0);
+                    await PrepareNewConversionFiles(_Elements.Select(e => e.ScanFile).ToList(), 0);
 
                     await GeneratePDF();
                 }
-                else await pdf.DeleteAsync();
+                else await Pdf.DeleteAsync();
             }
         }
 
@@ -843,35 +864,35 @@ namespace Scanner
         public async Task DeleteScanAsync(int index, StorageDeleteOption deleteOption)
         {
             Analytics.TrackEvent("Delete page");
-            log.Information("Requested Deletion of index {Index} with option {Option}.", index, deleteOption);
+            LogService?.Log.Information("Requested Deletion of index {Index} with option {Option}.", index, deleteOption);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Deletion of index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Deletion of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for deletion.");
             }
 
-            await elements[index].ScanFile.DeleteAsync(deleteOption);
+            await _Elements[index].ScanFile.DeleteAsync(deleteOption);
 
-            elements.RemoveAt(index);
+            _Elements.RemoveAt(index);
             RefreshItemDescriptors();
 
             // if necessary, update or delete PDF
-            if (scanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == SupportedFormat.PDF)
             {
                 if (GetTotalNumberOfPages() > 0)
                 {
                     // assign temporary names and then reinstate the file order prior to generation
-                    for (int i = 0; i < elements.Count; i++)
+                    for (int i = 0; i < _Elements.Count; i++)
                     {
-                        await elements[i].ScanFile.RenameAsync("_" + i + elements[i].ScanFile.FileType);
+                        await _Elements[i].ScanFile.RenameAsync("_" + i + _Elements[i].ScanFile.FileType);
                     }
-                    await PrepareNewConversionFiles(elements.Select(e => e.ScanFile).ToList(), 0);
+                    await PrepareNewConversionFiles(_Elements.Select(e => e.ScanFile).ToList(), 0);
                     
                     await GeneratePDF();
                 }
-                else await pdf.DeleteAsync();
+                else await Pdf.DeleteAsync();
             }
         }
 
@@ -897,12 +918,12 @@ namespace Scanner
         public async Task DrawOnScanAsync(int index, InkCanvas inkCanvas)
         {
             Analytics.TrackEvent("Draw on page");
-            log.Information("Drawing on index {Index} requested.", index);
+            LogService?.Log.Information("Drawing on index {Index} requested.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Drawing on index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Drawing on index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for drawing.");
             }
 
@@ -912,7 +933,7 @@ namespace Scanner
             {
                 CanvasDevice device = CanvasDevice.GetSharedDevice();
                 CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight, 96);
-                using (fileStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (fileStream = await _Elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, fileStream);
 
@@ -923,26 +944,26 @@ namespace Scanner
                         ds.DrawImage(canvasBitmap);
                         ds.DrawInk(inkCanvas.InkPresenter.StrokeContainer.GetStrokes());
                     }
-                    await renderTarget.SaveAsync(fileStream, GetCanvasBitmapFileFormat(elements[index].ScanFile), 1f);
+                    await renderTarget.SaveAsync(fileStream, GetCanvasBitmapFileFormat(_Elements[index].ScanFile), 1f);
                 }
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Saving draw changes failed.");
+                LogService?.Log.Error(exc, "Saving draw changes failed.");
                 throw;
             }
 
             // delete cached image, delete image without rotation and reset rotation
-            elements[index].CachedImage = null;
-            if (elements[index].ImageWithoutRotation != null)
+            _Elements[index].CachedImage = null;
+            if (_Elements[index].ImageWithoutRotation != null)
             {
-                await elements[index].ImageWithoutRotation.DeleteAsync();
+                await _Elements[index].ImageWithoutRotation.DeleteAsync();
             }
-            elements[index].ImageWithoutRotation = null;
-            elements[index].CurrentRotation = BitmapRotation.None;
+            _Elements[index].ImageWithoutRotation = null;
+            _Elements[index].CurrentRotation = BitmapRotation.None;
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
         }
 
 
@@ -955,12 +976,12 @@ namespace Scanner
         public async Task DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas)
         {
             Analytics.TrackEvent("Draw on page as copy");
-            log.Information("Drawing as copy on index {Index} requested.", index);
+            LogService?.Log.Information("Drawing as copy on index {Index} requested.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Drawing as copy on index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Drawing as copy on index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for drawing.");
             }
 
@@ -971,7 +992,7 @@ namespace Scanner
             {
                 CanvasDevice device = CanvasDevice.GetSharedDevice();
                 CanvasRenderTarget renderTarget = new CanvasRenderTarget(device, (int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight, Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi);
-                using (sourceStream = await elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (sourceStream = await _Elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     CanvasBitmap canvasBitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
                     using (var ds = renderTarget.CreateDrawingSession())
@@ -984,43 +1005,43 @@ namespace Scanner
                 }
 
                 StorageFolder folder = null;
-                if (scanResultFormat == SupportedFormat.PDF) folder = folderConversion;
-                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + elements[index].FutureAccessListIndex.ToString());
+                if (ScanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
-                file = await folder.CreateFileAsync(elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
+                file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    await renderTarget.SaveAsync(targetStream, GetCanvasBitmapFileFormat(elements[index].ScanFile), 1f);
+                    await renderTarget.SaveAsync(targetStream, GetCanvasBitmapFileFormat(_Elements[index].ScanFile), 1f);
                 }
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Saving draw as copy changes failed.");
+                LogService?.Log.Error(exc, "Saving draw as copy changes failed.");
                 throw;
             }
 
-            elements.Insert(index + 1, new ScanResultElement(file, elements[index].FutureAccessListIndex, elements[index].DisplayedFolder));
+            _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
-            if (scanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == SupportedFormat.PDF)
             {
                 try
                 {
                     List<StorageFile> filesNumbering = new List<StorageFile>();
-                    for (int i = index + 1; i < elements.Count; i++)
+                    for (int i = index + 1; i < _Elements.Count; i++)
                     {
-                        await elements[i].ScanFile.RenameAsync("_" + elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
-                        filesNumbering.Add(elements[i].ScanFile);
+                        await _Elements[i].ScanFile.RenameAsync("_" + _Elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                        filesNumbering.Add(_Elements[i].ScanFile);
                     }
                     await PrepareNewConversionFiles(filesNumbering, index + 1);
                 }
                 catch (Exception exc)
                 {
-                    log.Error(exc, "Failed to generate PDF after drawing on index {Index} as copy. Attempting to get rid of copy.", index);
+                    LogService?.Log.Error(exc, "Failed to generate PDF after drawing on index {Index} as copy. Attempting to get rid of copy.", index);
                     Crashes.TrackError(exc);
-                    elements.RemoveAt(index + 1);
-                    try { await file.DeleteAsync(); } catch (Exception e) { log.Error(e, "Undo failed as well."); }
+                    _Elements.RemoveAt(index + 1);
+                    try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
                     RefreshItemDescriptors();
                     throw;
                 }
@@ -1031,7 +1052,7 @@ namespace Scanner
 
         private bool IsValidIndex(int index)
         {
-            if (0 <= index && index < elements.Count)
+            if (0 <= index && index < _Elements.Count)
             {
                 return true;
             }
@@ -1052,11 +1073,11 @@ namespace Scanner
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("ImageProperties for index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("ImageProperties for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for getting properties.");
             }
 
-            SupportedFormat? format = ConvertFormatStringToSupportedFormat(elements[index].ScanFile.FileType);
+            SupportedFormat? format = ConvertFormatStringToSupportedFormat(_Elements[index].ScanFile.FileType);
             switch (format)
             {
                 case SupportedFormat.JPG:
@@ -1064,7 +1085,7 @@ namespace Scanner
                 case SupportedFormat.TIF:
                 case SupportedFormat.BMP:
                 case SupportedFormat.PDF:
-                    return (await elements[index].ScanFile.Properties.GetImagePropertiesAsync());
+                    return (await _Elements[index].ScanFile.Properties.GetImagePropertiesAsync());
                 default:
                     throw new ArgumentException("Invalid file format for getting image properties.");
             }
@@ -1094,11 +1115,11 @@ namespace Scanner
         public async Task CopyImagesAsync(IList<int> indices)
         {
             Analytics.TrackEvent("Copy pages");
-            log.Information("Copying indices {@Indices} requested.", indices);
+            LogService?.Log.Information("Copying indices {@Indices} requested.", indices);
 
             if (GetTotalNumberOfPages() == 0)
             {
-                log.Error("Copying requested, but there are no pages.");
+                LogService?.Log.Error("Copying requested, but there are no pages.");
                 throw new ApplicationException("No scans left to copy.");
             }
 
@@ -1111,14 +1132,14 @@ namespace Scanner
             {
                 if (index < 0 || index > GetTotalNumberOfPages() - 1)
                 {
-                    log.Error("Copying index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                    LogService?.Log.Error("Copying index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                     throw new ApplicationException("Invalid index for copying scan file.");
                 }
 
-                try { await elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
+                try { await _Elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
                 catch (Exception e)
                 {
-                    log.Error(e, "Copying failed because the element at index {Index} is not available anymore.", index);
+                    LogService?.Log.Error(e, "Copying failed because the element at index {Index} is not available anymore.", index);
                     throw new ApplicationException("At least one scan file is not available anymore.", e);
                 }
             }
@@ -1129,14 +1150,14 @@ namespace Scanner
                 List<StorageFile> list = new List<StorageFile>();
                 foreach (int index in indices)
                 {
-                    list.Add(elements[index].ScanFile);
+                    list.Add(_Elements[index].ScanFile);
                 }
                 dataPackage.SetStorageItems(list);
                 Clipboard.SetContent(dataPackage);
             }
             catch (Exception e)
             {
-                log.Error(e, "Copying pages failed.");
+                LogService?.Log.Error(e, "Copying pages failed.");
                 throw new ApplicationException("Something went wrong while copying the scans.", e);
             }
         }
@@ -1152,12 +1173,12 @@ namespace Scanner
         public async Task CopyImageAsync(int index)
         {
             Analytics.TrackEvent("Copy page");
-            log.Information("Copying index {Index} requested.", index);
+            LogService?.Log.Information("Copying index {Index} requested.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Copying index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Copying index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for copying file.");
             }
 
@@ -1166,15 +1187,15 @@ namespace Scanner
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
             // check whether the file is still available
-            try { await elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
+            try { await _Elements[index].ScanFile.OpenAsync(FileAccessMode.Read); }
             catch (Exception e)
             {
-                log.Error("Copying index {Index} requested, but the file is not available anymore.", index);
+                LogService?.Log.Error("Copying index {Index} requested, but the file is not available anymore.", index);
                 throw new ApplicationException("Selected scan file is not available anymore.", e);
             }
 
             // set contents according to file type and copy to clipboard
-            SupportedFormat format = scanResultFormat;
+            SupportedFormat format = ScanResultFormat;
 
             try
             {
@@ -1184,12 +1205,12 @@ namespace Scanner
                     case SupportedFormat.PNG:
                     case SupportedFormat.TIF:
                     case SupportedFormat.BMP:
-                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(elements[index].ScanFile));
+                        dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(_Elements[index].ScanFile));
                         Clipboard.SetContent(dataPackage);
                         break;
                     default:
                         List<StorageFile> list = new List<StorageFile>();
-                        list.Add(elements[index].ScanFile);
+                        list.Add(_Elements[index].ScanFile);
                         dataPackage.SetStorageItems(list);
                         Clipboard.SetContent(dataPackage);
                         break;
@@ -1197,7 +1218,7 @@ namespace Scanner
             }
             catch (Exception e)
             {
-                log.Error(e, "Copying the page failed.");
+                LogService?.Log.Error(e, "Copying the page failed.");
                 throw new ApplicationException("Something went wrong while copying the scan.", e);
             }
         }
@@ -1210,30 +1231,30 @@ namespace Scanner
         public async Task CopyAsync()
         {
             Analytics.TrackEvent("Copy document");
-            log.Information("Copying document requested.");
+            LogService?.Log.Information("Copying document requested.");
 
             // create DataPackage for clipboard
             DataPackage dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
 
             // check whether the file is still available
-            try { await pdf.OpenAsync(FileAccessMode.Read); }
+            try { await Pdf.OpenAsync(FileAccessMode.Read); }
             catch (Exception e)
             {
-                log.Error(e, "Copying document failed.");
+                LogService?.Log.Error(e, "Copying document failed.");
                 throw new ApplicationException("File is not available anymore.", e);
             }
 
             try
             {
                 List<StorageFile> list = new List<StorageFile>();
-                list.Add(pdf);
+                list.Add(Pdf);
                 dataPackage.SetStorageItems(list);
                 Clipboard.SetContent(dataPackage);
             }
             catch (Exception e)
             {
-                log.Error(e, "Copying document failed.");
+                LogService?.Log.Error(e, "Copying document failed.");
                 throw new ApplicationException("Something went wrong while copying the scan.", e);
             }
         }
@@ -1246,7 +1267,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public async Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
-            log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
+            LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
 
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
@@ -1257,8 +1278,8 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    if (displayFolder && targetFolder != null) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                    if (displayFolder && targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
                     if (targetFolder != null)
                     {
@@ -1266,7 +1287,7 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(elements[elements.Count - 1], append);
+                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
                 }
             }
             else
@@ -1278,8 +1299,8 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    if (displayFolder && targetFolder != null) elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                    if (displayFolder && targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
 
                     if (targetFolder != null)
                     {
@@ -1287,7 +1308,7 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if (settingAppendTime) await SetInitialNameAsync(elements[elements.Count - 1], append);
+                    if (settingAppendTime) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
                 }
 
                 Task[] conversionTasks = new Task[files.Count()];
@@ -1301,7 +1322,7 @@ namespace Scanner
                 }
                 catch (Exception exc)
                 {
-                    log.Error(exc, "Failed to convert at least one new page. All new pages will be discarded.");
+                    LogService?.Log.Error(exc, "Failed to convert at least one new page. All new pages will be discarded.");
 
                     // wait until all tasks are completed, the result is irrelevant
                     Task[] actualConversionTasks = conversionTasks.Where(task => task != null).ToArray();
@@ -1326,13 +1347,13 @@ namespace Scanner
             }
 
             // if necessary, generate PDF now
-            if (scanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
 
             // generate new previews and descriptors
             for (int i = GetTotalNumberOfPages() - files.Count(); i < GetTotalNumberOfPages(); i++)
             {
                 await GetImageAsync(i);
-                elements[i].ItemDescriptor = GetDescriptorForIndex(i);
+                _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
             }
         }
 
@@ -1343,7 +1364,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
         {
-            return AddFiles(files, targetFormat, originalTargetFolder, futureAccessListIndexStart, false);
+            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, false);
         }
 
 
@@ -1352,7 +1373,7 @@ namespace Scanner
         /// </summary>
         public bool IsImage()
         {
-            return IsImageFormat(scanResultFormat);
+            return IsImageFormat(ScanResultFormat);
         }
 
 
@@ -1363,19 +1384,19 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong.</exception>
         public async Task OpenImageWithAsync(int index)
         {
-            log.Information("Requested opening with of index {Index}.", index);
+            LogService?.Log.Information("Requested opening with of index {Index}.", index);
 
             // check index
             if (!IsValidIndex(index))
             {
-                log.Error("Opening with of index {Index} requested, but there are only {Num} pages.", index, elements.Count);
+                LogService?.Log.Error("Opening with of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for copying file.");
             }
 
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
 
-            await Launcher.LaunchFileAsync(elements[index].ScanFile, options);
+            await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
         }
 
 
@@ -1386,12 +1407,12 @@ namespace Scanner
         public async Task OpenWithAsync()
         {
             Analytics.TrackEvent("Open with");
-            log.Information("Requested opening with of document.");
+            LogService?.Log.Information("Requested opening with of document.");
 
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
 
-            await Launcher.LaunchFileAsync(pdf, options);
+            await Launcher.LaunchFileAsync(Pdf, options);
         }
 
 
@@ -1400,31 +1421,31 @@ namespace Scanner
         /// </summary>
         public SupportedFormat? GetFileFormat()
         {
-            return scanResultFormat;
+            return ScanResultFormat;
         }
 
 
         /// <summary>
-        ///     Generates the PDF file in the temp folder and then moves it to the <see cref="originalTargetFolder"/> of
+        ///     Generates the PDF file in the temp folder and then moves it to the <see cref="OriginalTargetFolder"/> of
         ///     this scanResult. The pages are constructed using all images found in the temp folder's subfolder "conversion".
         /// </summary>
         /// <param name="fileName"></param>
         private async Task GeneratePDFAsync(string fileName)
         {
-            log.Information("Requested PDF generation.");
+            LogService?.Log.Information("Requested PDF generation.");
 
             string newName;
             StorageFile newPdf;
 
-            if (pdf == null)
+            if (Pdf == null)
             {
-                log.Information("PDF doesn't exist yet.");
+                LogService?.Log.Information("PDF doesn't exist yet.");
                 newPdf = await folderTemp.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             }
             else
             {
-                log.Information("PDF already exists.");
-                newPdf = pdf;
+                LogService?.Log.Information("PDF already exists.");
+                newPdf = Pdf;
             }
 
             newName = newPdf.Name;
@@ -1444,10 +1465,10 @@ namespace Scanner
                 while (attempt >= 0)
                 {                    
                     // call win32 app and wait for result
-                    log.Information("Launching full trust process.");
+                    LogService?.Log.Information("Launching full trust process.");
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                     await win32ResultAsync.ConfigureAwait(false);
-                    log.Information("Full trust process is done.");
+                    LogService?.Log.Information("Full trust process is done.");
 
                     // get result file and move it to its correct folder
                     try
@@ -1466,24 +1487,24 @@ namespace Scanner
                 }
 
                 // move PDF file to target folder
-                if (pdf == null)
+                if (Pdf == null)
                 {
                     // PDF generated in target folder for the first time
-                    await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, false);
+                    await MoveFileToFolderAsync(newPdf, OriginalTargetFolder, newName, false);
                 }
                 else
                 {
                     // PDF updated ~> replace old file
-                    await MoveFileToFolderAsync(newPdf, originalTargetFolder, newName, true);
+                    await MoveFileToFolderAsync(newPdf, OriginalTargetFolder, newName, true);
                 }
-                pdf = newPdf;
+                Pdf = newPdf;
                 return;
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
+                LogService?.Log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
                 var files = await folderTemp.GetFilesAsync();
-                log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
+                LogService?.Log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
                 Crashes.TrackError(exc);
                 throw;
             }
@@ -1491,7 +1512,7 @@ namespace Scanner
 
         public Task GeneratePDF()
         {
-            return GeneratePDFAsync(pdf.Name);
+            return GeneratePDFAsync(Pdf.Name);
         }
 
 
@@ -1502,6 +1523,8 @@ namespace Scanner
         /// <param name="startIndex">The first number.</param>
         private static async Task PrepareNewConversionFiles(IEnumerable<StorageFile> files, int startIndex)
         {
+            ILogService logService = Ioc.Default.GetService<ILogService>();
+
             try
             {
                 int nextNumber = startIndex;
@@ -1513,20 +1536,20 @@ namespace Scanner
             }
             catch (Exception exc)
             {
-                log.Error(exc, "Preparing conversion files with startIndex {Index} failed.", startIndex);
+                logService?.Log.Error(exc, "Preparing conversion files with startIndex {Index} failed.", startIndex);
                 throw;
             }
         }
 
 
         /// <summary>
-        ///     Applies the order of <see cref="elements"/> to the PDF file.
+        ///     Applies the order of <see cref="_Elements"/> to the PDF file.
         /// </summary>
         public async Task ApplyElementOrderToFilesAsync()
         {
             if (GetFileFormat() != SupportedFormat.PDF)
             {
-                log.Error("Attempted to apply element order to non-PDF file.");
+                LogService?.Log.Error("Attempted to apply element order to non-PDF file.");
                 throw new ApplicationException("Can only reorder source files for PDF.");
             }
 
@@ -1536,7 +1559,7 @@ namespace Scanner
             List<ScanResultElement> changedElements = new List<ScanResultElement>();
 
             // first rename all affected files to a temporary name to free up the file names
-            foreach (ScanResultElement element in elements)
+            foreach (ScanResultElement element in _Elements)
             {
                 if (element.ScanFile.DisplayName != nextNumber.ToString())
                 {
@@ -1555,13 +1578,13 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Refreshes all item descriptors of <see cref="elements"/>.
+        ///     Refreshes all item descriptors of <see cref="_Elements"/>.
         /// </summary>
         private void RefreshItemDescriptors()
         {
-            for (int i = 0; i < elements.Count; i++)
+            for (int i = 0; i < _Elements.Count; i++)
             {
-                elements[i].ItemDescriptor = GetDescriptorForIndex(i);
+                _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
             }
         }
 
@@ -1603,26 +1626,17 @@ namespace Scanner
         {
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
 
-            if (scanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == SupportedFormat.PDF)
             {
-                await SetInitialNameAsync(pdf, append);
+                await SetInitialNameAsync(Pdf, append);
             }
             else
             {
-                foreach (ScanResultElement element in elements)
+                foreach (ScanResultElement element in _Elements)
                 {
                     await SetInitialNameAsync(element, append);
                 }
             }
-        }
-
-
-        /// <summary>
-        ///     Connects an <see cref="ItemsControl"/>'s source to the ScanResult.
-        /// </summary>
-        public void SetItemsSourceForControl(ItemsControl itemsControl)
-        {
-            itemsControl.ItemsSource = elements;
         }
 
 
@@ -1633,7 +1647,7 @@ namespace Scanner
         {
             if (!IsValidIndex(index)) throw new ApplicationException("Invalid index " + index + " for HasDisplayedFolder().");
 
-            return !String.IsNullOrEmpty(elements[index].DisplayedFolder);
+            return !String.IsNullOrEmpty(_Elements[index].DisplayedFolder);
         }
 
 

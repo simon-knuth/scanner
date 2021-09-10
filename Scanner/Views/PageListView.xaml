@@ -34,28 +34,36 @@
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <AppBarToggleButton LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}">
                     <AppBarToggleButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
                 <AppBarSeparator/>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{ThemeResource AppBarButtonStyleChevron}">
+                <AppBarButton x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" RightTapped="AppBarButtonRotate_RightTapped">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
+
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
+                            <MenuFlyoutItem x:Uid="ButtonManageRotate90" FontWeight="Bold"/>
+                            <MenuFlyoutItem x:Uid="ButtonManageRotate180"/>
+                            <MenuFlyoutItem x:Uid="ButtonManageRotate270"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
                 </AppBarButton>
-                <AppBarToggleButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarToggleButtonStyleCompact}">
-                    <AppBarToggleButton.Icon>
+                <AppBarButton x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton LabelPosition="Collapsed" IsEnabled="False" Style="{StaticResource AppBarButtonStyleCompact}">
+                <AppBarButton x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                     </AppBarButton.Icon>

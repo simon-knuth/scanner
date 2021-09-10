@@ -2184,6 +2184,7 @@
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundDisabled}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushDisabled}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundDisabled}" />
+                                        <Setter Target="SubItemChevron.Foreground" Value="{ThemeResource AppBarButtonForegroundDisabled}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundDisabled}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundDisabled}" />
                                         <Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundDisabled}" />

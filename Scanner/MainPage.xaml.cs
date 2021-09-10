@@ -160,9 +160,9 @@ namespace Scanner
             if (shareIndexes == null && scanResult.GetFileFormat() == SupportedFormat.PDF)
             {
                 List<StorageFile> files = new List<StorageFile>();
-                files.Add(scanResult.pdf);
+                files.Add(scanResult.Pdf);
                 args.Request.Data.SetStorageItems(files);
-                args.Request.Data.Properties.Title = scanResult.pdf.Name;
+                args.Request.Data.Properties.Title = scanResult.Pdf.Name;
             }
             else if (shareIndexes != null)
             {
@@ -1079,7 +1079,7 @@ namespace Scanner
                                     (SupportedFormat)selectedFormat.Item2, futureAccessListIndex, askedForFolder);
                             }
 
-                            scanResult.SetItemsSourceForControl(FlipViewScan);
+                            //scanResult.SetItemsSourceForControl(FlipViewScan);
                             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => InitializePaneManage());
                             scanResult.PagesChanged += async (x, y) => await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshPageIndicator());
                         }
@@ -1141,7 +1141,7 @@ namespace Scanner
                         }
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                         {
-                            scanResult.SetItemsSourceForControl(FlipViewScan);
+                            //scanResult.SetItemsSourceForControl(FlipViewScan);
                             InitializePaneManage();
                         });
                         scanResult.PagesChanged += async (x, y) => await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshPageIndicator());
@@ -1243,14 +1243,14 @@ namespace Scanner
                 {
                     LeftPaneListViewManage.ItemsSource = null;
                     LeftPaneListViewManage.Visibility = Visibility.Collapsed;
-                    scanResult.SetItemsSourceForControl(LeftPaneGridViewManage);
+                    //scanResult.SetItemsSourceForControl(LeftPaneGridViewManage);
                     LeftPaneGridViewManage.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     LeftPaneGridViewManage.ItemsSource = null;
                     LeftPaneGridViewManage.Visibility = Visibility.Collapsed;
-                    scanResult.SetItemsSourceForControl(LeftPaneListViewManage);
+                    //scanResult.SetItemsSourceForControl(LeftPaneListViewManage);
                     LeftPaneListViewManage.Visibility = Visibility.Visible;
                 }
             }
@@ -1427,10 +1427,10 @@ namespace Scanner
             {
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
-                    if (scanResult.pdf == null) return;
+                    if (scanResult.Pdf == null) return;
 
-                    TextBlockContentPaneTopToolbarFileName.Text = scanResult.pdf.DisplayName.Replace(scanResult.pdf.FileType, "");
-                    TextBlockContentPaneTopToolbarFileExtension.Text = scanResult.pdf.FileType;
+                    TextBlockContentPaneTopToolbarFileName.Text = scanResult.Pdf.DisplayName.Replace(scanResult.Pdf.FileType, "");
+                    TextBlockContentPaneTopToolbarFileExtension.Text = scanResult.Pdf.FileType;
                 }
                 else
                 {
@@ -1640,7 +1640,7 @@ namespace Scanner
             }
             else if (scanResult != null &&
                         ((settingSaveLocationAsk && !scanResult.HasDisplayedFolder(0)) ||                               // switched from set location
-                            (!settingSaveLocationAsk && scanResult.originalTargetFolder.Path != scanFolder.Path)))      // switched to set location or changed location
+                            (!settingSaveLocationAsk && scanResult.OriginalTargetFolder.Path != scanFolder.Path)))      // switched to set location or changed location
             {
                 // save location has changed
                 FontIconButtonScanAdd.Visibility = Visibility.Collapsed;
@@ -2132,7 +2132,7 @@ namespace Scanner
                     if (index == null && scanResult.GetFileFormat() == SupportedFormat.PDF)
                     {
                         // rename PDF
-                        await scanResult.RenameScanAsync(newName + scanResult.pdf.FileType);
+                        await scanResult.RenameScanAsync(newName + scanResult.Pdf.FileType);
                         await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () => RefreshFileName());
                     }
                     else if (scanResult.GetTotalNumberOfPages() - 1 >= index || newName.Length > 0)
@@ -2170,7 +2170,7 @@ namespace Scanner
                 if (scanResult.GetFileFormat() == SupportedFormat.PDF)
                 {
                     // use PDF name
-                    TextBoxRename.Text = scanResult.pdf.DisplayName;
+                    TextBoxRename.Text = scanResult.Pdf.DisplayName;
                 }
                 else
                 {

@@ -163,16 +163,24 @@
         <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 
         <!-- Titlebar -->
-        <TextBlock x:Name="TextBlockTitlebar" Grid.Row="0" Text="Scanner" VerticalAlignment="Center" Margin="12,0,0,0" Style="{StaticResource CaptionTextBlockStyle}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}"/>
+        <Grid Grid.Row="0" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <Image Grid.Column="0" Source="/Assets/Logo.svg" HorizontalAlignment="Center" Margin="0,8,0,8"/>
+            <TextBlock x:Name="TextBlockTitlebar" Grid.Column="1" Text="Scanner" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}"/>
+        </Grid>
 
         <!-- Content -->
-        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="NavigationViewMain_SelectionChanged" ItemInvoked="NavigationViewMain_ItemInvoked">
+        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="True" SelectionChanged="NavigationViewMain_SelectionChanged" ItemInvoked="NavigationViewMain_ItemInvoked">
             <muxc:NavigationView.Triggers>
 
             </muxc:NavigationView.Triggers>
 
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Foreground="{ThemeResource NavigationViewItemForeground}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -213,32 +221,6 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSettings" SelectsOnInvoked="True" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" RightTapped="NavigationViewItemMainSettings_RightTapped">
-                    <muxc:NavigationViewItem.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE713;" FontSize="16"/>
-                    </muxc:NavigationViewItem.Icon>
-
-                    <!-- Debug Flyout -->
-                    <FlyoutBase.AttachedFlyout>
-                        <Flyout Placement="Left">
-                            <StackPanel Orientation="Vertical" MaxWidth="400">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Debug status messages" Style="{StaticResource BaseTextBlockStyle}"/>
-                                </StackPanel>
-
-                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.Title, Mode=TwoWay}" PlaceholderText="Title" Margin="0,0,0,6" Width="300"/>
-                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.MessageText, Mode=TwoWay}" PlaceholderText="Message text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
-                                <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.AdditionalText, Mode=TwoWay}" PlaceholderText="Additional text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
-                                <ComboBox ItemsSource="{x:Bind ViewModel.DebugStatusMessageSeverities, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.DebugStatusMessage.Severity, Mode=TwoWay}" MinWidth="150"/>
-
-                                <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
-                                    <Button Content="Broadcast status message" Command="{x:Bind ViewModel.DebugBroadcastStatusMessageCommand}" Style="{StaticResource AccentButtonStyle}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Flyout>
-                    </FlyoutBase.AttachedFlyout>
-                </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
 
             <Grid x:Name="GridMainContent" Padding="0,0,6,6">
@@ -275,16 +257,16 @@
                             <CompositeTransform/>
                         </muxc:InfoBar.RenderTransform>
 
-                        <Grid Margin="0,0,0,12">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" MaxHeight="64"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="58"/>
                             </Grid.RowDefinitions>
 
-                            <ScrollViewer Grid.Row="0" Margin="0,0,0,12" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Padding="0,0,12,0">
+                            <ScrollViewer Grid.Row="0" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Padding="0,0,12,0">
                                 <TextBlock Text="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
                             </ScrollViewer>
-                            <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>
+                            <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>
                         </Grid>
                     </muxc:InfoBar>
                 </Grid>
@@ -292,6 +274,27 @@
                 <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
                 <Frame x:Name="FrameMainContentThird" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
             </Grid>
+            
+            <!-- Debug Flyout -->
+            <FlyoutBase.AttachedFlyout>
+                <Flyout Placement="Left">
+                    <StackPanel Orientation="Vertical" MaxWidth="400">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                            <TextBlock Text="Debug status messages" Style="{StaticResource BaseTextBlockStyle}"/>
+                        </StackPanel>
+
+                        <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.Title, Mode=TwoWay}" PlaceholderText="Title" Margin="0,0,0,6" Width="300"/>
+                        <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.MessageText, Mode=TwoWay}" PlaceholderText="Message text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
+                        <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.AdditionalText, Mode=TwoWay}" PlaceholderText="Additional text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
+                        <ComboBox ItemsSource="{x:Bind ViewModel.DebugStatusMessageSeverities, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.DebugStatusMessage.Severity, Mode=TwoWay}" MinWidth="150"/>
+
+                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
+                            <Button Content="Broadcast status message" Command="{x:Bind ViewModel.DebugBroadcastStatusMessageCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Flyout>
+            </FlyoutBase.AttachedFlyout>
         </muxc:NavigationView>
     </Grid>
 </Page>

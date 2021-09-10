@@ -84,25 +84,36 @@ namespace Scanner.Services
             IsScanInProgress = true;
             ImageScannerScanResult result = null;
 
-            if (!scanner.Debug)
+            try
             {
-                // real scanner ~> configure scanner and commence scan
-                scanner.ConfigureForScanOptions(options);
+                if (!scanner.Debug)
+                {
+                    // real scanner ~> configure scanner and commence scan
+                    scanner.ConfigureForScanOptions(options);
 
-                ScanCancellationToken = new CancellationTokenSource();
-                _ScanProgress = new Progress<uint>();
-                _ScanProgress.ProgressChanged += (x, y) => PageScanned?.Invoke(this, y);
-                result = await scanner.Device.ScanFilesToFolderAsync
-                    ((ImageScannerScanSource)((int)options.Source - 1), targetFolder)
-                    .AsTask(ScanCancellationToken.Token, _ScanProgress);
+                    ScanCancellationToken = new CancellationTokenSource();
+                    _ScanProgress = new Progress<uint>();
+                    _ScanProgress.ProgressChanged += (x, y) => PageScanned?.Invoke(this, y);
+                    result = await scanner.Device.ScanFilesToFolderAsync
+                        ((ImageScannerScanSource)((int)options.Source - 1), targetFolder)
+                        .AsTask(ScanCancellationToken.Token, _ScanProgress);
+                }
+                else
+                {
+                    // debug scanner ~> throw exception
+                    await Task.Delay(2000);
+                    throw new ArgumentException("Can't scan with a debug scanner, duh");
+                }
             }
-            else
+            catch (Exception)
             {
-                // debug scanner
-                await Task.Delay(5000);
+                throw;
+            }
+            finally
+            {
+                IsScanInProgress = false;
             }
 
-            IsScanInProgress = false;
             return result;
         }
 

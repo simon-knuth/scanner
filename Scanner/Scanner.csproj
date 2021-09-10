@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateThumbprint>892CE81309DB3CDA4D7675A0EE125CE573369DAF</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>F12ACAE6579EA39C1BD73AFBF5A55D0488517D1E</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>Scanner_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -147,8 +147,10 @@
     <Compile Include="Services\AppDataService.cs" />
     <Compile Include="Services\Interfaces\IAccessibilityService.cs" />
     <Compile Include="Services\Interfaces\IAppDataService.cs" />
+    <Compile Include="Services\Interfaces\IScanResultService.cs" />
     <Compile Include="Services\Interfaces\IScanService.cs" />
     <Compile Include="Services\Messenger\Messages\AppWideMessage.cs" />
+    <Compile Include="Services\ScanResultService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\ScanOptionsDatabaseService.cs" />
     <Compile Include="Services\Interfaces\IScanOptionsDatabaseService.cs" />
@@ -187,6 +189,8 @@
     <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\Converters\AppWideMessageSeverityInfoBarConverter.cs" />
+    <Compile Include="Views\Converters\NotNullVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\NotNullBoolConverter.cs" />
     <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
     <Compile Include="Views\Converters\NotZeroVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolVisibilityConverter.cs" />
@@ -256,6 +260,7 @@
     <Content Include="Assets\contrast-black\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-black\Logo.svg" />
     <Content Include="Assets\contrast-black\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-150.png" />
@@ -301,11 +306,13 @@
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\contrast-high\Logo.svg" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-125.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-standard\Logo.svg" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-150.png" />
@@ -356,6 +363,7 @@
     <Content Include="Assets\contrast-white\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-white\Logo.svg" />
     <Content Include="Assets\contrast-white\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-150.png" />

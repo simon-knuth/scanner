@@ -18,12 +18,20 @@ namespace Scanner.Views.Converters
             if (windowActivationState == CoreWindowActivationState.Deactivated)
             {
                 // window deactivated
-                return 0.5;
+                return 0.4;
             }
             else
             {
                 // window activated
-                return 1.0;
+                if (parameter != null)
+                {
+                    // allow override of default value
+                    return Double.Parse((string)parameter);
+                }
+                else
+                {
+                    return 1.0;
+                }
             }
         }
 
