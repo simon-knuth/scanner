@@ -79,7 +79,7 @@ namespace Scanner.Views
 
             FrameMainContentSecond.Navigate(typeof(EditorView));
 
-            ((WinUI.NavigationViewItem)(NavigationViewMain.SettingsItem)).RightTapped +=
+            ((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).RightTapped +=
                 NavigationViewItemMainSettings_RightTapped;
         }
 
@@ -95,8 +95,7 @@ namespace Scanner.Views
             }
             else if (args.SelectedItem == NavigationViewItemMainEditor)
             {
-                FrameMainContentSecond.Content = null;
-                FrameMainContentFirst.Navigate(typeof(EditorView));
+                
             }
             else if (args.SelectedItem == NavigationViewItemMainHelp)
             {
@@ -115,10 +114,11 @@ namespace Scanner.Views
             // ensure expected layout when the app is resized
             if (e.OldState == NarrowState)
             {
-                FrameMainContentSecond.Navigate(typeof(EditorView), null, new SuppressNavigationTransitionInfo());
+                FrameMainContentSecond.Navigate(typeof(EditorView));
             }
 
-            if (e.OldState == NarrowState && NavigationViewMain.SelectedItem == null || NavigationViewItemMainEditor.IsSelected)
+            if (e.OldState == NarrowState && NavigationViewMain.SelectedItem == null
+                || e.OldState != NarrowState && NavigationViewItemMainEditor.IsSelected)
             {
                 NavigationViewItemMainScanOptions.IsSelected = true;
             }
@@ -206,6 +206,16 @@ namespace Scanner.Views
         private void InfoBarAppWideMessages_Closing(WinUI.InfoBar sender, WinUI.InfoBarClosingEventArgs args)
         {
             args.Cancel = true;
+        }
+
+        private void GridMain_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // allow transition from NarrowStateEditor when window size is changed
+            if (GridMain.ActualWidth >= AdaptiveTriggerDefaultState.MinWindowWidth
+                && VisualStateGroup.CurrentState == NarrowStateEditor)
+            {
+                VisualStateManager.GoToState(this, nameof(NarrowState), true);
+            }
         }
     }
 }

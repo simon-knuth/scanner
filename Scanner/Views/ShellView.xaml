@@ -62,10 +62,50 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridMain" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
+    <Grid x:Name="GridMain" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}" SizeChanged="GridMain_SizeChanged">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanging="VisualStateGroup_CurrentStateChanging">
+                <VisualState x:Name="NarrowStateEditor">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind NavigationViewItemMainEditor.IsSelected, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="ColumnMainContentSecond.MaxWidth" Value="775"/>
+                        <Setter Target="ColumnMainContentFirst.Width" Value="0"/>
+                        <Setter Target="ColumnMainContentFirst.MinWidth" Value="0"/>
+                        <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
+                        <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
+                        <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
+                        <Setter Target="GridMainContent.Padding" Value="0"/>
+                        <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
+                        <Setter Target="FrameMainContentFirst.Content" Value="{x:Null}"/>
+                        <Setter Target="FrameMainContentSecond.CornerRadius" Value="8,8,0,0"/>
+                        <Setter Target="FrameMainContentSecond.BorderThickness" Value="0,1,0,0"/>
+                        <Setter Target="FrameMainContentSecond.Margin" Value="0"/>
+                        <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="InfoBarAppWideMessages.Margin" Value="0,-1,0,0"/>
+                        <Setter Target="InfoBarAppWideMessages.BorderThickness" Value="0,1,0,0"/>
+                        <Setter Target="InfoBarAppWideMessages.CornerRadius" Value="0,0,8,8"/>
+                    </VisualState.Setters>
+                </VisualState>
+                
                 <VisualState x:Name="NarrowState">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0"/>
@@ -96,6 +136,7 @@
                         <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
                         <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
+                        <Setter Target="FrameMainContentSecond.Content" Value="{x:Null}"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
                         <Setter Target="InfoBarAppWideMessages.Margin" Value="0,-1,0,0"/>
                         <Setter Target="InfoBarAppWideMessages.BorderThickness" Value="0,1,0,0"/>
@@ -105,7 +146,7 @@
 
                 <VisualState x:Name="DefaultState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="775"/>
+                        <AdaptiveTrigger x:Name="AdaptiveTriggerDefaultState" MinWindowWidth="775"/>
                     </VisualState.StateTriggers>
 
                     <Storyboard>
@@ -276,7 +317,13 @@
                     </muxc:InfoBar>
                 </Grid>
 
-                <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+                <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <PopupThemeTransition/>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
                 <Frame x:Name="FrameMainContentThird" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
             </Grid>
             

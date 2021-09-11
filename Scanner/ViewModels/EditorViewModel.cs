@@ -36,7 +36,11 @@ namespace Scanner.ViewModels
         public ScanResultElement SelectedPage
         {
             get => _SelectedPage;
-            set => SetProperty(ref _SelectedPage, value);
+            set
+            {
+                SetProperty(ref _SelectedPage, value);
+                BroadcastSelectedPageTitle();
+            }
         }
 
         private int _SelectedPageIndex;
@@ -50,10 +54,10 @@ namespace Scanner.ViewModels
                 if (old != value)
                 {
                     SetProperty(ref _SelectedPageIndex, value);
-                    RefreshSelectedPageText();
-                    BroadcastSelectedPageTitle();
                     Messenger.Send(new EditorCurrentIndexChangedMessage(value));
                 }
+
+                RefreshSelectedPageText();
             }
         }
 
