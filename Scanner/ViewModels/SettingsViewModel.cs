@@ -160,12 +160,12 @@ namespace Scanner.ViewModels
             catch (Exception exc)
             {
                 LogService?.Log.Warning(exc, "Picking a new save location failed.");
-                Messenger.Send(new AppWideMessage
+                Messenger.Send(new AppWideStatusMessage
                 {
                     Title = LocalizedString("ErrorMessagePickFolderHeading"),
                     MessageText = LocalizedString("ErrorMessagePickFolderBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
                 });
                 return;
             }
@@ -188,23 +188,23 @@ namespace Scanner.ViewModels
             }
             catch (UnauthorizedAccessException exc)
             {
-                Messenger.Send(new AppWideMessage
+                Messenger.Send(new AppWideStatusMessage
                 {
                     Title = LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
                     MessageText = LocalizedString("ErrorMessageResetFolderUnauthorizedBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
                 });
                 return;
             }
             catch (Exception exc)
             {
-                Messenger.Send(new AppWideMessage
+                Messenger.Send(new AppWideStatusMessage
                 {
                     Title = LocalizedString("ErrorMessageResetFolderHeading"),
                     MessageText = LocalizedString("ErrorMessageResetFolderBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideMessageSeverity.Error
+                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
                 });
                 return;
             }

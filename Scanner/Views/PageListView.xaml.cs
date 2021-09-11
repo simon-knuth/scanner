@@ -1,25 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using static Utilities;
 
 namespace Scanner.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class PageListView : Page
     {
         public PageListView()
@@ -32,6 +20,46 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
                 FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
+            });
+        }
+
+        private async void ItemsWrapGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                ItemsWrapGrid grid = (ItemsWrapGrid)sender;
+
+                // set number of columns and apply correct sizing to items
+                if (e.NewSize.Width > 350)
+                {
+                    grid.MaximumRowsOrColumns = 4;
+
+                    if (grid.ActualWidth == 0) return;
+                    double size = grid.ActualWidth / 4;
+
+                    grid.ItemWidth = grid.ItemHeight = size;
+                }
+                else
+                {
+                    grid.MaximumRowsOrColumns = 2;
+
+                    if (grid.ActualWidth == 0) return;
+                    double size = grid.ActualWidth / 2;
+
+                    grid.ItemWidth = grid.ItemHeight = size;
+                }
+            });
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                // fix GridView initially fails to select item by binding
+                if (GridViewPages.Items.Count >= 1)
+                {
+                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                }
             });
         }
     }

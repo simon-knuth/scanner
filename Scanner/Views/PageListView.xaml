@@ -7,10 +7,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:scanner="using:Scanner"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="Transparent"
     d:DesignWidth="350"
-    d:DesignHeight="600">
+    d:DesignHeight="600"
     
+    Loaded="Page_Loaded">
+
+    <Page.DataContext>
+        <viewModels:PageListViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -19,6 +38,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -34,7 +58,7 @@
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}">
+                <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                     <AppBarToggleButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
                     </AppBarToggleButton.Icon>
@@ -72,11 +96,70 @@
         </Grid>
 
         <!-- Content -->
-        <Grid x:Name="GridContent" Grid.Row="1">
-            <StackPanel x:Name="StackPanelInitialText" Orientation="Vertical" Opacity="0.75" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
-                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="96"/>
-                <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}"/>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
+                        <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                        <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+                
+                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
+                <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
             </StackPanel>
+
+            <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
+                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" IsItemClickEnabled="True" SelectionMode="Single" CanReorderItems="True" CanDragItems="True" AllowDrop="True">
+                    <interactivity:Interaction.Behaviors>
+                        <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                            <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
+                        </core:DataTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                            <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid MaximumRowsOrColumns="2" Orientation="Horizontal" SizeChanged="ItemsWrapGrid_SizeChanged"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+
+                    <GridView.ItemContainerTransitions>
+                        <TransitionCollection>
+                            <AddDeleteThemeTransition/>
+                            <ReorderThemeTransition/>
+                            <EntranceThemeTransition FromHorizontalOffset="0" FromVerticalOffset="0"/>
+                        </TransitionCollection>
+                    </GridView.ItemContainerTransitions>
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="scanner:ScanResultElement">
+                            <GridViewItem x:Name="GridViewItemPage" Margin="4" Style="{ThemeResource DefaultGridViewItemStyle}" AutomationProperties.Name="{Binding ItemDescriptor}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                <Grid>
+                                    <!-- Selected Item Background -->
+                                    <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>
+
+                                    <Image Source="{x:Bind Thumbnail}"/>
+                                    
+                                    <!-- Selected Item -->
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <TextBlock Text="{x:Bind ItemDescriptor}" Margin="6,3,6,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiBold"/>
+                                    </Border>
+                                    
+                                    <!-- Normal Item -->
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                        <TextBlock Text="{x:Bind ItemDescriptor}" Margin="6,3,6,6" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                    </Border>
+                                </Grid>
+                            </GridViewItem>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

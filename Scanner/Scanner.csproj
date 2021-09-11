@@ -149,7 +149,11 @@
     <Compile Include="Services\Interfaces\IAppDataService.cs" />
     <Compile Include="Services\Interfaces\IScanResultService.cs" />
     <Compile Include="Services\Interfaces\IScanService.cs" />
-    <Compile Include="Services\Messenger\Messages\AppWideMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\PageListCurrentIndexChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorCurrentIndexChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorCurrentIndexRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorSelectionTitleChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\AppWideStatusMessage.cs" />
     <Compile Include="Services\ScanResultService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\ScanOptionsDatabaseService.cs" />
@@ -182,6 +186,7 @@
       <DependentUpon>PreviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DonateDialogViewModel.cs" />
+    <Compile Include="ViewModels\PageListViewModel.cs" />
     <Compile Include="ViewModels\LogExportDialogViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

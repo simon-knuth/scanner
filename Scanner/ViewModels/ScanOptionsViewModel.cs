@@ -738,11 +738,11 @@ namespace Scanner.ViewModels
             {
                 LogService?.Log.Error(exc, "Unhandled exception occurred during scan.");
                 AppCenterService?.TrackError(exc);
-                Messenger.Send(new AppWideMessage
+                Messenger.Send(new AppWideStatusMessage
                 {
                     Title = LocalizedString("ErrorMessageScanErrorHeading"),
                     MessageText = LocalizedString("ErrorMessageScanErrorBody"),
-                    Severity = AppWideMessageSeverity.Error,
+                    Severity = AppWideStatusMessageSeverity.Error,
                     AdditionalText = exc.Message
                 });
                 
@@ -761,11 +761,11 @@ namespace Scanner.ViewModels
             {
                 if (!suppressErrors)
                 {
-                    Messenger.Send(new AppWideMessage
+                    Messenger.Send(new AppWideStatusMessage
                     {
                         Title = LocalizedString("ErrorMessageScanCancelHeading"),
                         MessageText = LocalizedString("ErrorMessageScanCancelBody"),
-                        Severity = AppWideMessageSeverity.Warning,
+                        Severity = AppWideStatusMessageSeverity.Warning,
                         AdditionalText = exc.Message
                     });
                 }

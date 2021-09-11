@@ -10,8 +10,10 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using static Scanner.Services.Messenger.MessengerEnums;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
@@ -48,15 +50,15 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsDefaultSaveLocation, value);
         }
 
-        private ObservableCollection<AppWideMessage> _StatusMessages = new ObservableCollection<AppWideMessage>();
-        public ObservableCollection<AppWideMessage> StatusMessages
+        private ObservableCollection<AppWideStatusMessage> _StatusMessages = new ObservableCollection<AppWideStatusMessage>();
+        public ObservableCollection<AppWideStatusMessage> StatusMessages
         {
             get => _StatusMessages;
             set => SetProperty(ref _StatusMessages, value);
         }
 
-        private AppWideMessage _SelectedStatusMessage;
-        public AppWideMessage SelectedStatusMessage
+        private AppWideStatusMessage _SelectedStatusMessage;
+        public AppWideStatusMessage SelectedStatusMessage
         {
             get => _SelectedStatusMessage;
             set => SetProperty(ref _SelectedStatusMessage, value);
@@ -73,19 +75,26 @@ namespace Scanner.ViewModels
             }
         }
 
-        private AppWideMessage _DebugStatusMessage = new AppWideMessage();
-        public AppWideMessage DebugStatusMessage
+        private string _TitlebarText;
+        public string TitlebarText
+        {
+            get => _TitlebarText;
+            set => SetProperty(ref _TitlebarText, value);
+        }
+
+        private AppWideStatusMessage _DebugStatusMessage = new AppWideStatusMessage();
+        public AppWideStatusMessage DebugStatusMessage
         {
             get => _DebugStatusMessage;
             set => SetProperty(ref _DebugStatusMessage, value);
         }
 
-        public List<AppWideMessageSeverity> DebugStatusMessageSeverities = new List<AppWideMessageSeverity>()
+        public List<AppWideStatusMessageSeverity> DebugStatusMessageSeverities = new List<AppWideStatusMessageSeverity>()
         {
-            AppWideMessageSeverity.Error,
-            AppWideMessageSeverity.Informational,
-            AppWideMessageSeverity.Success,
-            AppWideMessageSeverity.Warning
+            AppWideStatusMessageSeverity.Error,
+            AppWideStatusMessageSeverity.Informational,
+            AppWideStatusMessageSeverity.Success,
+            AppWideStatusMessageSeverity.Warning
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +103,8 @@ namespace Scanner.ViewModels
         public ShellViewModel()
         {
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
-            Messenger.Register<AppWideMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
+            Messenger.Register<AppWideStatusMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
+            Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
 
@@ -147,7 +157,7 @@ namespace Scanner.ViewModels
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
         }
 
-        private void ReceiveAppWideMessage(object r, AppWideMessage m)
+        private void ReceiveAppWideMessage(object r, AppWideStatusMessage m)
         {
             m.Title?.Trim();
             m.MessageText?.Trim();
@@ -166,7 +176,15 @@ namespace Scanner.ViewModels
         private void DebugBroadcastStatusMessage()
         {
             Messenger.Send(DebugStatusMessage);
-            DebugStatusMessage = new AppWideMessage();
+            DebugStatusMessage = new AppWideStatusMessage();
+        }
+
+        private void RefreshAppTitle(string title)
+        {
+            TitlebarText = title;
+            
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            view.Title = TitlebarText;
         }
     }
 

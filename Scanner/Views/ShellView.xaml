@@ -154,7 +154,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="TitlebarGridMain" Height="32"/>
+            <RowDefinition Height="32"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -163,14 +163,19 @@
         <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 
         <!-- Titlebar -->
-        <Grid Grid.Row="0" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
+        <Grid Grid.Row="0" HorizontalAlignment="Left" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition x:Name="ColumnTitlebarButtons"/>
             </Grid.ColumnDefinitions>
             
             <Image Grid.Column="0" Source="/Assets/Logo.svg" HorizontalAlignment="Center" Margin="0,8,0,8"/>
-            <TextBlock x:Name="TextBlockTitlebar" Grid.Column="1" Text="Scanner" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}"/>
+            <TextBlock Grid.Column="1" x:Uid="HeadingScanner" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Column="2" Text="-" Margin="6,0,6,0" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.TitlebarText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
+            <TextBlock Grid.Column="3" Text="{x:Bind ViewModel.TitlebarText, Mode=OneWay}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
         </Grid>
 
         <!-- Content -->

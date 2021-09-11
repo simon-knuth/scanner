@@ -1,15 +1,10 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using WinUI = Microsoft.UI.Xaml.Controls;
+using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
-using System.Collections.Generic;
-using static Scanner.Services.Messenger.MessengerEnums;
 using Windows.UI.Xaml.Controls;
-using static HelpViewEnums;
-using Microsoft.Toolkit.Mvvm.Input;
-using Scanner.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
@@ -50,8 +45,15 @@ namespace Scanner.ViewModels
             get => _SelectedPageIndex;
             set
             {
-                SetProperty(ref _SelectedPageIndex, value);
-                RefreshSelectedPageText();
+                int old = _SelectedPageIndex;
+                
+                if (old != value)
+                {
+                    SetProperty(ref _SelectedPageIndex, value);
+                    RefreshSelectedPageText();
+                    BroadcastSelectedPageTitle();
+                    Messenger.Send(new EditorCurrentIndexChangedMessage(value));
+                }
             }
         }
 
@@ -71,6 +73,9 @@ namespace Scanner.ViewModels
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+
+            Messenger.Register<EditorCurrentIndexRequestMessage>(this, (r, m) => m.Reply(SelectedPageIndex));
+            Messenger.Register<PageListCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +83,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void RefreshOrientationSetting()
         {
-            int orientationValue = (int) SettingsService.GetSetting(AppSetting.SettingEditorOrientation);
+            int orientationValue = (int)SettingsService.GetSetting(AppSetting.SettingEditorOrientation);
 
             switch (orientationValue)
             {
@@ -92,7 +97,7 @@ namespace Scanner.ViewModels
                     break;
             }
         }
-        
+
         private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
             if (e == AppSetting.SettingEditorOrientation)
@@ -122,6 +127,16 @@ namespace Scanner.ViewModels
             {
                 SelectedPageText = "";
             }
+        }
+
+        private void BroadcastSelectedPageTitle()
+        {
+            if (SelectedPage == null || SelectedPage.ScanFile == null) return;
+
+            Messenger.Send(new EditorSelectionTitleChangedMessage
+            {
+                Title = SelectedPage?.ScanFile?.Name
+            });
         }
     }
 }

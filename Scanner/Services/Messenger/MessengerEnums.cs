@@ -2,7 +2,7 @@
 {
     public static class MessengerEnums
     {
-        public enum AppWideMessageSeverity
+        public enum AppWideStatusMessageSeverity
         {
             Informational = 0,
             Success = 1,

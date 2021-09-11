@@ -1,6 +1,7 @@
 ﻿using Scanner.ViewModels;
 using Scanner.Views.Dialogs;
 using System;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,6 +19,17 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+        }
+
+        private async void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                // prevent titlebar from bleeding into buttons area
+                ColumnTitlebarButtons.Width = 
+                    new GridLength(sender.SystemOverlayLeftInset + sender.SystemOverlayRightInset);
+            });
         }
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -66,7 +78,6 @@ namespace Scanner.Views
             NavigationViewMain.SelectedItem = NavigationViewItemMainScanOptions;
 
             FrameMainContentSecond.Navigate(typeof(EditorView));
-            FrameMainContentThird.Navigate(typeof(PageListView));
 
             ((WinUI.NavigationViewItem)(NavigationViewMain.SettingsItem)).RightTapped +=
                 NavigationViewItemMainSettings_RightTapped;
