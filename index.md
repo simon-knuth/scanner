@@ -10,6 +10,11 @@
 
 
 &nbsp;
+## 👀 A sneak peek at what's next for *Scanner* on Windows 11
+<image src='https://user-images.githubusercontent.com/50021001/132959064-f7416ae9-0a3b-4530-b3e2-3eabfdc2f6aa.jpg'/>
+
+
+&nbsp;
 ## Features
 <ul>
   <li>See result after scanning</li>
@@ -31,11 +36,11 @@
 ## Screenshots
 <table>
   <tr>
-    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png"><image src='https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png'/></a></td>
-    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png"><image src='https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png'/></a></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540264-436f6100-8db2-11eb-824e-900825ab6b9c.png'/></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540315-52561380-8db2-11eb-9b4f-8b6c02a9f27c.png'/></td>
   </tr>
   <tr>
-    <td width="50%"><a href="https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png"><image src='https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png'/></a></td>
+    <td width="50%"><image src='https://user-images.githubusercontent.com/50021001/112540363-60a42f80-8db2-11eb-9e9b-2604195fa18f.png'/></td>
     <td width="50%"></td>
   </tr>
 </table>
@@ -66,6 +71,8 @@ Screenshots (background wallpaper): <a href="https://unsplash.com/@willianjusten
 ## Translations
 The currently supported languages are:
 <ul>
+  <li>Catalan (CA)</li>
+  <li>Chinese Simplified (ZH-HANS, ZH-CN, ZH-HANS-CN, ZH-SG, ZH-HANS-SG)</li>
   <li>English (EN)</li>
   <li>English (EN-GB)</li>
   <li>French (FR)</li>
