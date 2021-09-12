@@ -1172,6 +1172,9 @@ static class Utilities
     public static void CopyToolTipToAutomationPropertiesName(UIElement element)
     {
         string toolTip = (string)ToolTipService.GetToolTip(element);
-        Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
+        if (toolTip != null)
+        {
+            Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
+        }
     }
 }
