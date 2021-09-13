@@ -166,53 +166,53 @@ static class Utilities
 
 
     /// <summary>
-    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
     /// <param name="format">An image format.</param>
     /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static Guid GetBitmapEncoderId(SupportedFormat? format)
+    public static Guid GetBitmapEncoderId(ImageScannerFormat? format)
     {
         switch (format)
         {
-            case SupportedFormat.JPG:
+            case ImageScannerFormat.Jpeg:
                 return BitmapEncoder.JpegEncoderId;
-            case SupportedFormat.PNG:
+            case ImageScannerFormat.Png:
                 return BitmapEncoder.PngEncoderId;
-            case SupportedFormat.TIF:
+            case ImageScannerFormat.Tiff:
                 return BitmapEncoder.TiffEncoderId;
-            case SupportedFormat.BMP:
+            case ImageScannerFormat.DeviceIndependentBitmap:
                 return BitmapEncoder.BmpEncoderId;
             default:
-                throw new ApplicationException("GetBitmapEncoderId received invalid SupportedFormat '" + format + "'.");
+                throw new ApplicationException("GetBitmapEncoderId received invalid ImageScannerFormat '" + format + "'.");
         }
     }
 
 
     /// <summary>
-    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
     /// <param name="format">An image format.</param>
     /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static SupportedFormat ConvertImageScannerFormatToSupportedFormat(ImageScannerFormat format)
+    public static ImageScannerFormat ConvertImageScannerFormatToImageScannerFormat(ImageScannerFormat format)
     {
         switch (format)
         {
             case ImageScannerFormat.Jpeg:
-                return SupportedFormat.JPG;
+                return ImageScannerFormat.Jpeg;
             case ImageScannerFormat.Png:
-                return SupportedFormat.PNG;
+                return ImageScannerFormat.Png;
             case ImageScannerFormat.DeviceIndependentBitmap:
-                return SupportedFormat.BMP;
+                return ImageScannerFormat.DeviceIndependentBitmap;
             case ImageScannerFormat.Tiff:
-                return SupportedFormat.TIF;
+                return ImageScannerFormat.Tiff;
             case ImageScannerFormat.Xps:
-                return SupportedFormat.XPS;
+                return ImageScannerFormat.Xps;
             case ImageScannerFormat.OpenXps:
-                return SupportedFormat.OpenXPS;
+                return ImageScannerFormat.OpenXps;
             case ImageScannerFormat.Pdf:
-                return SupportedFormat.PDF;
+                return ImageScannerFormat.Pdf;
             default:
-                throw new ApplicationException("ConvertImageScannerFormatToSupportedFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
+                throw new ApplicationException("ConvertImageScannerFormatToImageScannerFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
         }
     }
 
@@ -794,14 +794,14 @@ static class Utilities
 
 
     /// <summary>
-    ///     Converts a string to to a <see cref="SupportedFormat"/>.
+    ///     Converts a string to to a <see cref="ImageScannerFormat"/>.
     /// </summary>
     /// <param name="formatString">
     ///     The source format string, case-insensitive and with or without dot.
     ///     E.g. "png" / "PNG" / ".png" / ".PNG"
     /// </param>
-    /// <returns>The corresponding <see cref="SupportedFormat"/>.</returns>
-    public static SupportedFormat? ConvertFormatStringToSupportedFormat(string formatString)
+    /// <returns>The corresponding <see cref="ImageScannerFormat"/>.</returns>
+    public static ImageScannerFormat? ConvertFormatStringToImageScannerFormat(string formatString)
     {
         switch (formatString.ToLower())
         {
@@ -809,33 +809,33 @@ static class Utilities
             case "jpeg":
             case ".jpg":
             case ".jpeg":
-                return SupportedFormat.JPG;
+                return ImageScannerFormat.Jpeg;
 
             case "png":
             case ".png":
-                return SupportedFormat.PNG;
+                return ImageScannerFormat.Png;
 
             case "tif":
             case "tiff":
             case ".tif":
             case ".tiff":
-                return SupportedFormat.TIF;
+                return ImageScannerFormat.Tiff;
 
             case "bmp":
             case ".bmp":
-                return SupportedFormat.BMP;
+                return ImageScannerFormat.DeviceIndependentBitmap;
 
             case "pdf":
             case ".pdf":
-                return SupportedFormat.PDF;
+                return ImageScannerFormat.Pdf;
 
             case "xps":
             case ".xps":
-                return SupportedFormat.XPS;
+                return ImageScannerFormat.Xps;
 
             case "oxps":
             case ".oxps":
-                return SupportedFormat.OpenXPS;
+                return ImageScannerFormat.OpenXps;
 
             default:
                 return null;
@@ -1192,15 +1192,18 @@ static class Utilities
     /// <summary>
     ///     Checks whether the given format is an image format.
     /// </summary>
-    public static bool IsImageFormat(SupportedFormat format)
+    public static bool IsImageFormat(ImageScannerFormat format)
     {
         switch (format)
         {
-            case SupportedFormat.JPG:
-            case SupportedFormat.PNG:
-            case SupportedFormat.TIF:
-            case SupportedFormat.BMP:
+            case ImageScannerFormat.Jpeg:
+            case ImageScannerFormat.Png:
+            case ImageScannerFormat.DeviceIndependentBitmap:
+            case ImageScannerFormat.Tiff:
                 return true;
+            case ImageScannerFormat.Xps:
+            case ImageScannerFormat.OpenXps:
+            case ImageScannerFormat.Pdf:
             default:
                 return false;
         }
@@ -1266,12 +1269,12 @@ static class Utilities
         {
             using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
             {
-                switch (ConvertFormatStringToSupportedFormat(file.FileType))
+                switch (ConvertFormatStringToImageScannerFormat(file.FileType))
                 {
-                    case SupportedFormat.JPG:
-                    case SupportedFormat.PNG:
-                    case SupportedFormat.TIF:
-                    case SupportedFormat.BMP:
+                    case ImageScannerFormat.Jpeg:
+                    case ImageScannerFormat.Png:
+                    case ImageScannerFormat.Tiff:
+                    case ImageScannerFormat.DeviceIndependentBitmap:
                         while (attempt != -1)
                         {
                             try
@@ -1291,11 +1294,11 @@ static class Utilities
                         }
                         break;
 
-                    case SupportedFormat.PDF:
+                    case ImageScannerFormat.Pdf:
                         throw new NotImplementedException("Can not generate bitmap from PDF.");
 
-                    case SupportedFormat.XPS:
-                    case SupportedFormat.OpenXPS:
+                    case ImageScannerFormat.Xps:
+                    case ImageScannerFormat.OpenXps:
                         throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
 
                     default:

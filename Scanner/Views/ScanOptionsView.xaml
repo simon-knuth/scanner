@@ -634,8 +634,8 @@
 
                 <Grid>
                     <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
-                        <FontIcon x:Name="FontIconButtonScanAdd" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="Collapsed"/>
-                        <FontIcon x:Name="FontIconButtonScanStartFresh" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,8,0" FontSize="14" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="Collapsed"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="{x:Bind ViewModel.CanAddToScanResult, Mode=OneWay, FallbackValue=Collapsed}"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="{x:Bind ViewModel.CanAddToScanResult, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}"/>
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
                     <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="False" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24"/>

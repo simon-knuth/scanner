@@ -177,10 +177,6 @@
     <Compile Include="ScanResult.cs" />
     <Compile Include="Enums_old.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="ScannerOperation.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PreviewPage.xaml.cs">
       <DependentUpon>PreviewPage.xaml</DependentUpon>
@@ -503,10 +499,6 @@
     <Page Include="StylesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>

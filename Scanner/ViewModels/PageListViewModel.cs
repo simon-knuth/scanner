@@ -15,8 +15,13 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+        public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
 
         public RelayCommand DisposeCommand;
+
+        public event EventHandler ScanStarted;
+        public event EventHandler ScanEnded;
+
 
         private ScanResult _ScanResult;
         public ScanResult ScanResult
@@ -37,6 +42,28 @@ namespace Scanner.ViewModels
             }
         }
 
+        private IList<ScanResultElement> _SelectedPages;
+        public IList<ScanResultElement> SelectedPages
+        {
+            get => _SelectedPages;
+            set => SetProperty(ref _SelectedPages, value);
+        }
+
+        private bool _IsScanRunning;
+        public bool IsScanRunning
+        {
+            get => _IsScanRunning;
+            set
+            {
+                bool old = _IsScanRunning;
+                
+                SetProperty(ref _IsScanRunning, value);
+
+                if (old != value && value == true) ScanStarted?.Invoke(this, EventArgs.Empty);
+                else if (old != value && value == false) ScanEnded?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +72,9 @@ namespace Scanner.ViewModels
             ScanResult = ScanResultService.Result;
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            IsScanRunning = ScanService.IsScanInProgress;
+            ScanService.ScanStarted += (x, y) => IsScanRunning = true;
+            ScanService.ScanEnded += (x, y) => IsScanRunning = false;
 
             DisposeCommand = new RelayCommand(Dispose);
 

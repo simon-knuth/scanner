@@ -228,7 +228,7 @@
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Foreground="{ThemeResource NavigationViewItemForeground}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="16"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE80F;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainPageList" x:Uid="ButtonManage" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">

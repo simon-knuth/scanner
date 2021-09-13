@@ -50,49 +50,86 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid>
+        <!-- VisualStates -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="NormalState">
+                    <Storyboard>
+                        
+                    </Storyboard>
+
+                    <VisualState.Setters>
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="DisabledState">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanRunning, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>
+                    
+                    <Storyboard>
+
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="GridViewPages.IsEnabled" Value="False"/>
+                        <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator/>
-                <AppBarButton x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" RightTapped="AppBarButtonRotate_RightTapped">
-                    <AppBarButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
-                    </AppBarButton.Icon>
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
+            <Frame x:Name="FrameToolbar">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarSeparator/>
+                    <AppBarButton x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" RightTapped="AppBarButtonRotate_RightTapped">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
+                        </AppBarButton.Icon>
 
-                    <FlyoutBase.AttachedFlyout>
-                        <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
-                            <MenuFlyoutItem x:Uid="ButtonManageRotate90" FontWeight="Bold"/>
-                            <MenuFlyoutItem x:Uid="ButtonManageRotate180"/>
-                            <MenuFlyoutItem x:Uid="ButtonManageRotate270"/>
-                        </MenuFlyout>
-                    </FlyoutBase.AttachedFlyout>
-                </AppBarButton>
-                <AppBarButton x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
-                    <AppBarButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
-                    <AppBarButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind (x:Boolean)AppBarToggleButtonSelect.IsChecked, Mode=OneWay, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
-                    <AppBarButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-            </StackPanel>
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate90" FontWeight="Bold"/>
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate180"/>
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate270"/>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="ButtonManagePrint" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                </StackPanel>
+            </Frame>
         </Grid>
 
         <!-- Content -->
@@ -116,10 +153,12 @@
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
                             <core:ChangePropertyAction PropertyName="SelectedIndex" Value="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}"/>
+                            <!--<core:ChangePropertyAction PropertyName="SelectedItems" Value="{x:Null}"/>-->
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
                         </core:DataTriggerBehavior>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                             <core:ChangePropertyAction PropertyName="SelectedIndex" Value=""/>
+                            <!--<core:ChangePropertyAction PropertyName="SelectedItems" Value="{x:Bind ViewModel.SelectedPages, Mode=TwoWay}"/>-->
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>

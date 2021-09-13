@@ -58,7 +58,7 @@
 
         <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
-            <StackPanel Orientation="Vertical" Padding="24,16,24,24">
+            <StackPanel Orientation="Vertical" Margin="24,16,24,24" MaxWidth="450">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition IsStaggeringEnabled="False"/>

@@ -187,7 +187,11 @@ namespace Scanner.ViewModels
         public ScannerFileFormat SelectedFileFormat
         {
             get => _SelectedFileFormat;
-            set => SetProperty(ref _SelectedFileFormat, value);
+            set
+            {
+                SetProperty(ref _SelectedFileFormat, value);
+                if (value != null) RefreshCanAddToScanResult();
+            }
         }
 
         private BitmapImage _PreviewImage;
@@ -195,6 +199,13 @@ namespace Scanner.ViewModels
         {
             get => _PreviewImage;
             set => SetProperty(ref _PreviewImage, value);
+        }
+
+        private bool? _CanAddToScanResult;
+        public bool? CanAddToScanResult
+        {
+            get => _CanAddToScanResult;
+            set => SetProperty(ref _CanAddToScanResult, value);
         }
 
         // Debug stuff
@@ -239,7 +250,12 @@ namespace Scanner.ViewModels
             ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false));
             DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(true));
             CancelScanCommand = new RelayCommand(CancelScan);
+            ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
+            ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            ScanService.ScanStarted += (x, y) => ScanStarted?.Invoke(this, EventArgs.Empty);
+            ScanService.ScanEnded += (x, y) => ScanEnded?.Invoke(this, EventArgs.Empty);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -770,13 +786,43 @@ namespace Scanner.ViewModels
                     });
                 }
             }
-
-            ScanEnded?.Invoke(this, EventArgs.Empty);
         }
 
         private void CancelScan()
         {
             CancelScan(false);
+        }
+
+        private void RefreshCanAddToScanResult()
+        {
+            if (ScanResultService.Result == null)
+            {
+                // no result exists
+                CanAddToScanResult = null;
+            }
+            else
+            {
+                if (ScanResultService.Result.ScanResultFormat == SelectedFileFormat.TargetFormat)
+                {
+                    // same format as existing result
+                    CanAddToScanResult = true;
+                }
+                else
+                {
+                    // different format
+                    CanAddToScanResult = false;
+                }
+            }
+        }
+
+        private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
+        {
+            RefreshCanAddToScanResult();
+        }
+
+        private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
+        {
+            RefreshCanAddToScanResult();
         }
     }
 }

@@ -73,14 +73,24 @@ namespace Scanner.Views
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            NavigationViewMain.SelectedItem = NavigationViewItemMainScanOptions;
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                NavigationViewMain.SelectedItem = NavigationViewItemMainScanOptions;
 
-            FrameMainContentSecond.Navigate(typeof(EditorView));
+                FrameMainContentSecond.Navigate(typeof(EditorView));
 
-            ((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).RightTapped +=
-                NavigationViewItemMainSettings_RightTapped;
+                ((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).RightTapped +=
+                    NavigationViewItemMainSettings_RightTapped;
+
+                if (VisualStateGroup.CurrentState == WideState)
+                {
+                    // load page list if app is launched in wide state
+                    FrameMainContentThird.Navigate(typeof(PageListView), null,
+                        new SuppressNavigationTransitionInfo());
+                }
+            });
         }
 
         private void NavigationViewMain_SelectionChanged(WinUI.NavigationView sender, WinUI.NavigationViewSelectionChangedEventArgs args)

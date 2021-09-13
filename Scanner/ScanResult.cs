@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
+using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -44,7 +45,7 @@ namespace Scanner
             get => _Elements;
         }
 
-        public SupportedFormat ScanResultFormat;
+        public ImageScannerFormat ScanResultFormat;
         public StorageFile Pdf = null;
         public readonly StorageFolder OriginalTargetFolder;
 
@@ -68,7 +69,7 @@ namespace Scanner
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                 futureAccessListIndex += 1;
             }
-            ScanResultFormat = (SupportedFormat)ConvertFormatStringToSupportedFormat(_Elements[0].ScanFile.FileType);
+            ScanResultFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(_Elements[0].ScanFile.FileType);
             OriginalTargetFolder = targetFolder;
             RefreshItemDescriptors();
             _Elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
@@ -95,7 +96,7 @@ namespace Scanner
         }
 
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, SupportedFormat targetFormat, int futureAccessListIndexStart,
+            StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart,
             bool displayFolder)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
@@ -104,7 +105,7 @@ namespace Scanner
                 fileList[0].FileType, targetFormat, fileList.Count);
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
 
-            if (targetFormat == SupportedFormat.PDF)
+            if (targetFormat == ImageScannerFormat.Pdf)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
                 await PrepareNewConversionFiles(fileList, 0);
@@ -256,12 +257,12 @@ namespace Scanner
             {
                 using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
                 {
-                    switch (ConvertFormatStringToSupportedFormat(sourceFile.FileType))
+                    switch (ConvertFormatStringToImageScannerFormat(sourceFile.FileType))
                     {
-                        case SupportedFormat.JPG:
-                        case SupportedFormat.PNG:
-                        case SupportedFormat.TIF:
-                        case SupportedFormat.BMP:
+                        case ImageScannerFormat.Jpeg:
+                        case ImageScannerFormat.Png:
+                        case ImageScannerFormat.Tiff:
+                        case ImageScannerFormat.DeviceIndependentBitmap:
                             while (attempt != -1)
                             {
                                 try
@@ -281,7 +282,7 @@ namespace Scanner
                             }
                             break;
 
-                        case SupportedFormat.PDF:
+                        case ImageScannerFormat.Pdf:
                             while (attempt != -1)
                             {
                                 try
@@ -308,8 +309,8 @@ namespace Scanner
                             }
                             break;
 
-                        case SupportedFormat.XPS:
-                        case SupportedFormat.OpenXPS:
+                        case ImageScannerFormat.Xps:
+                        case ImageScannerFormat.OpenXps:
                             throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
 
                         default:
@@ -382,7 +383,7 @@ namespace Scanner
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="NotImplementedException">Attempted to convert to PDF or (O)XPS.</exception>
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
-        public async Task ConvertScanAsync(int index, SupportedFormat targetFormat, StorageFolder targetFolder)
+        public async Task ConvertScanAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
         {
             LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} requested.", index, targetFormat);
             // check index
@@ -397,10 +398,10 @@ namespace Scanner
             string newName, newNameWithoutNumbering;
             switch (targetFormat)
             {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
+                case ImageScannerFormat.Jpeg:
+                case ImageScannerFormat.Png:
+                case ImageScannerFormat.Tiff:
+                case ImageScannerFormat.DeviceIndependentBitmap:
                     // open image file, decode it and prepare an encoder with the target image format
                     using (IRandomAccessStream stream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
@@ -429,9 +430,9 @@ namespace Scanner
                     newName = await MoveFileToFolderAsync(sourceFile, targetFolder, newName, false);
                     break;
 
-                case SupportedFormat.PDF:
-                case SupportedFormat.XPS:
-                case SupportedFormat.OpenXPS:
+                case ImageScannerFormat.Pdf:
+                case ImageScannerFormat.Xps:
+                case ImageScannerFormat.OpenXps:
                     LogService?.Log.Error("Requested conversion for unsupported format.");
                     throw new NotImplementedException("Can not convert to (O)XPS.");
 
@@ -504,11 +505,11 @@ namespace Scanner
             // rotate and make sure that consecutive rotations are lossless
             switch (ScanResultFormat)
             {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
-                case SupportedFormat.PDF:
+                case ImageScannerFormat.Jpeg:
+                case ImageScannerFormat.Png:
+                case ImageScannerFormat.Tiff:
+                case ImageScannerFormat.DeviceIndependentBitmap:
+                case ImageScannerFormat.Pdf:
                     foreach (var instruction in instructions)
                     {
                         try
@@ -554,11 +555,11 @@ namespace Scanner
                         }
                     }
 
-                    if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+                    if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
                     break;
 
-                case SupportedFormat.XPS:
-                case SupportedFormat.OpenXPS:
+                case ImageScannerFormat.Xps:
+                case ImageScannerFormat.OpenXps:
                     LogService?.Log.Error("Requested rotation for unsupported format {Format}.", ScanResultFormat);
                     throw new ArgumentException("Rotation not supported for PDF, XPS or OXPS.");
 
@@ -663,7 +664,7 @@ namespace Scanner
             Analytics.TrackEvent("Rename PDF");
 
             // check type
-            if (ScanResultFormat != SupportedFormat.PDF)
+            if (ScanResultFormat != ImageScannerFormat.Pdf)
             {
                 LogService?.Log.Error("Attempted to rename entire file for non-PDF.");
                 throw new ApplicationException("ScanResult represents more than one file.");
@@ -721,7 +722,7 @@ namespace Scanner
             _Elements[index].CurrentRotation = BitmapRotation.None;
 
             // if necessary, generate PDF
-            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
         }
 
 
@@ -750,7 +751,7 @@ namespace Scanner
             try
             {
                 StorageFolder folder = null;
-                if (ScanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
                 else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
@@ -769,7 +770,7 @@ namespace Scanner
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
-            if (ScanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
 
                 try
@@ -826,7 +827,7 @@ namespace Scanner
             RefreshItemDescriptors();
 
             // if necessary, update or delete PDF
-            if (ScanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
                 if (GetTotalNumberOfPages() > 0)
                 {
@@ -879,7 +880,7 @@ namespace Scanner
             RefreshItemDescriptors();
 
             // if necessary, update or delete PDF
-            if (ScanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
                 if (GetTotalNumberOfPages() > 0)
                 {
@@ -889,7 +890,7 @@ namespace Scanner
                         await _Elements[i].ScanFile.RenameAsync("_" + i + _Elements[i].ScanFile.FileType);
                     }
                     await PrepareNewConversionFiles(_Elements.Select(e => e.ScanFile).ToList(), 0);
-                    
+
                     await GeneratePDF();
                 }
                 else await Pdf.DeleteAsync();
@@ -963,7 +964,7 @@ namespace Scanner
             _Elements[index].CurrentRotation = BitmapRotation.None;
 
             // if necessary, generate PDF
-            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
         }
 
 
@@ -1005,7 +1006,7 @@ namespace Scanner
                 }
 
                 StorageFolder folder = null;
-                if (ScanResultFormat == SupportedFormat.PDF) folder = folderConversion;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
                 else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
@@ -1024,7 +1025,7 @@ namespace Scanner
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
-            if (ScanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
                 try
                 {
@@ -1077,14 +1078,14 @@ namespace Scanner
                 throw new ArgumentOutOfRangeException("Invalid index for getting properties.");
             }
 
-            SupportedFormat? format = ConvertFormatStringToSupportedFormat(_Elements[index].ScanFile.FileType);
+            ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(_Elements[index].ScanFile.FileType);
             switch (format)
             {
-                case SupportedFormat.JPG:
-                case SupportedFormat.PNG:
-                case SupportedFormat.TIF:
-                case SupportedFormat.BMP:
-                case SupportedFormat.PDF:
+                case ImageScannerFormat.Jpeg:
+                case ImageScannerFormat.Png:
+                case ImageScannerFormat.Tiff:
+                case ImageScannerFormat.DeviceIndependentBitmap:
+                case ImageScannerFormat.Pdf:
                     return (await _Elements[index].ScanFile.Properties.GetImagePropertiesAsync());
                 default:
                     throw new ArgumentException("Invalid file format for getting image properties.");
@@ -1195,16 +1196,16 @@ namespace Scanner
             }
 
             // set contents according to file type and copy to clipboard
-            SupportedFormat format = ScanResultFormat;
+            ImageScannerFormat format = ScanResultFormat;
 
             try
             {
                 switch (format)
                 {
-                    case SupportedFormat.JPG:
-                    case SupportedFormat.PNG:
-                    case SupportedFormat.TIF:
-                    case SupportedFormat.BMP:
+                    case ImageScannerFormat.Jpeg:
+                    case ImageScannerFormat.Png:
+                    case ImageScannerFormat.Tiff:
+                    case ImageScannerFormat.DeviceIndependentBitmap:
                         dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(_Elements[index].ScanFile));
                         Clipboard.SetContent(dataPackage);
                         break;
@@ -1265,16 +1266,16 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
 
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
-            if (targetFormat == null || targetFormat == SupportedFormat.PDF)
+            if (targetFormat == null || targetFormat == ImageScannerFormat.Pdf)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == SupportedFormat.PDF) await PrepareNewConversionFiles(files, GetTotalNumberOfPages());
+                if (targetFormat == ImageScannerFormat.Pdf) await PrepareNewConversionFiles(files, GetTotalNumberOfPages());
 
                 foreach (StorageFile file in files)
                 {
@@ -1287,7 +1288,7 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if (settingAppendTime && targetFormat != SupportedFormat.PDF) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                    if (settingAppendTime && targetFormat != ImageScannerFormat.Pdf) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
                 }
             }
             else
@@ -1316,7 +1317,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
                     {
-                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (SupportedFormat)targetFormat, targetFolder);
+                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
                     }
                     await Task.WhenAll(conversionTasks);
                 }
@@ -1347,7 +1348,7 @@ namespace Scanner
             }
 
             // if necessary, generate PDF now
-            if (ScanResultFormat == SupportedFormat.PDF) await GeneratePDF();
+            if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
 
             // generate new previews and descriptors
             for (int i = GetTotalNumberOfPages() - files.Count(); i < GetTotalNumberOfPages(); i++)
@@ -1362,7 +1363,7 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public Task AddFiles(IEnumerable<StorageFile> files, SupportedFormat? targetFormat, int futureAccessListIndexStart)
+        public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart)
         {
             return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, false);
         }
@@ -1419,7 +1420,7 @@ namespace Scanner
         /// <summary>
         ///     Returns the file format of the scan result (assumes that there can't be a mix).
         /// </summary>
-        public SupportedFormat? GetFileFormat()
+        public ImageScannerFormat? GetFileFormat()
         {
             return ScanResultFormat;
         }
@@ -1463,7 +1464,7 @@ namespace Scanner
 
                 int attempt = 1;
                 while (attempt >= 0)
-                {                    
+                {
                     // call win32 app and wait for result
                     LogService?.Log.Information("Launching full trust process.");
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
@@ -1547,7 +1548,7 @@ namespace Scanner
         /// </summary>
         public async Task ApplyElementOrderToFilesAsync()
         {
-            if (GetFileFormat() != SupportedFormat.PDF)
+            if (GetFileFormat() != ImageScannerFormat.Pdf)
             {
                 LogService?.Log.Error("Attempted to apply element order to non-PDF file.");
                 throw new ApplicationException("Can only reorder source files for PDF.");
@@ -1626,7 +1627,7 @@ namespace Scanner
         {
             string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
 
-            if (ScanResultFormat == SupportedFormat.PDF)
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
                 await SetInitialNameAsync(Pdf, append);
             }
