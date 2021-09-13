@@ -1,9 +1,11 @@
 ﻿using System;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using static Utilities;
 
 namespace Scanner.Views
@@ -55,10 +57,39 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
-                // fix GridView initially fails to select item by binding
                 if (GridViewPages.Items.Count >= 1)
                 {
-                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                    int index = ViewModel.SelectedPageIndex;
+
+                    // fix GridView initially fails to select item by binding
+                    GridViewPages.SelectedIndex = index;
+
+                    // scroll to selected item
+                    GridViewItem item = (GridViewItem)GridViewPages.ContainerFromIndex(index);
+                    BringIntoViewOptions options = new BringIntoViewOptions
+                    {
+                        AnimationDesired = false,
+                    };
+                    item.StartBringIntoView(options);
+                }
+            });
+        }
+
+        private async void GridViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (GridViewPages.SelectionMode == ListViewSelectionMode.Single
+                    && e.AddedItems != null & e.AddedItems.Count != 0)
+                {
+                    // scroll to newly selected item
+                    GridViewItem item = (GridViewItem)GridViewPages.ContainerFromItem(e.AddedItems[0]);
+
+                    BringIntoViewOptions options = new BringIntoViewOptions
+                    {
+                        AnimationDesired = true,
+                    };
+                    item.StartBringIntoView(options);
                 }
             });
         }

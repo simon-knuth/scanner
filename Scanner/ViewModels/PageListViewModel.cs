@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
+using System.Collections.Generic;
 
 namespace Scanner.ViewModels
 {
@@ -32,7 +33,7 @@ namespace Scanner.ViewModels
             {
                 int old = _SelectedPageIndex;
                 SetProperty(ref _SelectedPageIndex, value);
-                if (old != value) Messenger.Send(new PageListCurrentIndexChangedMessage(value));
+                if (old != value && value != -1) Messenger.Send(new PageListCurrentIndexChangedMessage(value));
             }
         }
 

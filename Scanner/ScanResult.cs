@@ -252,7 +252,7 @@ namespace Scanner
             StorageFile sourceFile = _Elements[index].ScanFile;
             BitmapImage bmp = null;
             int attempt = 0;
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, async () =>
             {
                 using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
                 {

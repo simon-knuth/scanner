@@ -112,12 +112,14 @@
             </StackPanel>
 
             <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
-                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" IsItemClickEnabled="True" SelectionMode="Single" CanReorderItems="True" CanDragItems="True" AllowDrop="True">
+                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" IsItemClickEnabled="True" SelectionMode="Single" CanReorderItems="True" CanDragItems="True" AllowDrop="True" SelectionChanged="GridViewPages_SelectionChanged">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}"/>
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
                         </core:DataTriggerBehavior>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value=""/>
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>

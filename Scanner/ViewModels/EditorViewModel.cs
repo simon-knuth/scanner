@@ -54,7 +54,7 @@ namespace Scanner.ViewModels
                 if (old != value)
                 {
                     SetProperty(ref _SelectedPageIndex, value);
-                    Messenger.Send(new EditorCurrentIndexChangedMessage(value));
+                    if (value != -1) Messenger.Send(new EditorCurrentIndexChangedMessage(value));
                 }
 
                 RefreshSelectedPageText();

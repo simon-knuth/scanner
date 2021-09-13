@@ -74,8 +74,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="3,0,-7,0" Stroke="{ThemeResource SystemChromeMediumHighColor}" StrokeThickness="6"/>
-                <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Padding="16" BorderBrush="{ThemeResource SystemChromeMediumHighColor}" BorderThickness="1">
+                <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Padding="16">
                     <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                         <Span>
                             <Run FontWeight="SemiBold">This app is available at no cost for everyone to use.</Run>

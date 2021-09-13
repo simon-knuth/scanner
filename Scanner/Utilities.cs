@@ -958,15 +958,70 @@ static class Utilities
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
     ///     which waits for the code to finish running.
     /// </summary>
-    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
+    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, Action action)
     {
         TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
         await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, () =>
         {
-            agileCallback();
-            taskCompleted.SetResult(true);
+            try
+            {
+                action();
+                taskCompleted.SetResult(true);
+            }
+            catch (Exception exc)
+            {
+                taskCompleted.SetException(exc);
+                throw;
+            }
         });
         await taskCompleted.Task;
+    }
+
+
+    /// <summary>
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running.
+    /// </summary>
+    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, Func<Task> func)
+    {
+        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, async () =>
+        {
+            try
+            {
+                await func();
+                taskCompleted.SetResult(true);
+            }
+            catch (Exception exc)
+            {
+                taskCompleted.SetException(exc);
+                throw;
+            }
+        });
+        await taskCompleted.Task;
+    }
+
+
+    /// <summary>
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running and returns its result.
+    /// </summary>
+    public static async Task<T> RunOnUIThreadAndWaitAsync<T>(CoreDispatcherPriority priority, Func<Task<T>> func)
+    {
+        TaskCompletionSource<T> taskCompleted = new TaskCompletionSource<T>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, async () =>
+        {
+            try
+            {
+                taskCompleted.SetResult(await func());
+            }
+            catch (Exception exc)
+            {
+                taskCompleted.SetException(exc);
+                throw;
+            }
+        });
+        return await taskCompleted.Task;
     }
 
 
