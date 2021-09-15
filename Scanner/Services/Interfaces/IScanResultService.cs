@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 
 namespace Scanner.Services
@@ -12,6 +13,13 @@ namespace Scanner.Services
     {
         event EventHandler<ScanResult> ScanResultCreated;
         event EventHandler ScanResultDismissed;
+        event EventHandler ScanResultChanging;
+        event EventHandler ScanResultChanged;
+
+        bool IsScanResultChanging
+        {
+            get;
+        }
 
         ScanResult Result
         {
@@ -21,5 +29,7 @@ namespace Scanner.Services
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             bool fixedFolder);
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files);
+
+        Task RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
     }
 }

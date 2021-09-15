@@ -58,16 +58,16 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;"/>
                     </AppBarToggleButton.Icon>
                 </AppBarToggleButton>
-                <AppBarButton x:Uid="ButtonEditRotate" LabelPosition="Collapsed" Style="{ThemeResource AppBarButtonStyleChevron}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" RightTapped="AppBarButtonRotate_RightTapped">
+                <AppBarButton x:Uid="ButtonEditRotate" LabelPosition="Collapsed" Style="{ThemeResource AppBarButtonStyleChevron}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="1" RightTapped="AppBarButtonRotate_RightTapped">
                     <AppBarButton.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                     </AppBarButton.Icon>
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom">
-                            <MenuFlyoutItem x:Uid="ButtonEditRotate90" FontWeight="Bold"/>
-                            <MenuFlyoutItem x:Uid="ButtonEditRotate180"/>
-                            <MenuFlyoutItem x:Uid="ButtonEditRotate270"/>
+                            <MenuFlyoutItem x:Uid="ButtonEditRotate90" FontWeight="Bold" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="1"/>
+                            <MenuFlyoutItem x:Uid="ButtonEditRotate180" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="2"/>
+                            <MenuFlyoutItem x:Uid="ButtonEditRotate270" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="3"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </AppBarButton>

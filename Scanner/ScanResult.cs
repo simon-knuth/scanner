@@ -37,7 +37,8 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
 
         private ObservableCollection<ScanResultElement> _Elements = new ObservableCollection<ScanResultElement>();
         public ObservableCollection<ScanResultElement> Elements
@@ -113,8 +114,8 @@ namespace Scanner
             }
             else
             {
-                Task[] conversionTasks = new Task[result.GetTotalNumberOfPages()];
-                for (int i = 0; i < result.GetTotalNumberOfPages(); i++)
+                Task[] conversionTasks = new Task[result.NumberOfPages];
+                for (int i = 0; i < result.NumberOfPages; i++)
                 {
                     conversionTasks[i] = result.ConvertScanAsync(i, targetFormat, targetFolder);
                 }
@@ -138,15 +139,6 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        ///     Gets the number of individual scans in this instance.
-        /// </summary>
-        public int GetTotalNumberOfPages()
-        {
-            return _Elements.Count;
-        }
-
-
         /// <summary>
         ///     Gets all files of the individual scans in this instance.
         /// </summary>
@@ -490,7 +482,7 @@ namespace Scanner
                             { "Rotation", instructions[0].Item2.ToString() },
                         });
             LogService?.Log.Information("Received {@Instructions} for rotations.", instructions);
-
+            await Task.Delay(3000);
             // check indices and rotations
             foreach (var instruction in instructions)
             {
@@ -520,7 +512,7 @@ namespace Scanner
                                 if (_Elements[instruction.Item1].ImageWithoutRotation == null)
                                 {
                                     _Elements[instruction.Item1].ImageWithoutRotation = await GetImageFile(instruction.Item1)
-                                        .CopyAsync(folderWithoutRotation, GetImageFile(instruction.Item1).Name, NameCollisionOption.ReplaceExisting);
+                                        .CopyAsync(AppDataService.FolderWithoutRotation, GetImageFile(instruction.Item1).Name, NameCollisionOption.ReplaceExisting);
                                     decoder = await BitmapDecoder.CreateAsync(fileStream);
                                 }
                                 else
@@ -829,7 +821,7 @@ namespace Scanner
             // if necessary, update or delete PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
-                if (GetTotalNumberOfPages() > 0)
+                if (NumberOfPages > 0)
                 {
                     // assign temporary names and then reinstate the file order prior to generation
                     for (int i = 0; i < _Elements.Count; i++)
@@ -882,7 +874,7 @@ namespace Scanner
             // if necessary, update or delete PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
-                if (GetTotalNumberOfPages() > 0)
+                if (NumberOfPages > 0)
                 {
                     // assign temporary names and then reinstate the file order prior to generation
                     for (int i = 0; i < _Elements.Count; i++)
@@ -1100,7 +1092,7 @@ namespace Scanner
         public Task CopyImagesAsync()
         {
             List<int> indices = new List<int>();
-            for (int i = 0; i < GetTotalNumberOfPages(); i++)
+            for (int i = 0; i < NumberOfPages; i++)
             {
                 indices.Add(i);
             }
@@ -1118,7 +1110,7 @@ namespace Scanner
             Analytics.TrackEvent("Copy pages");
             LogService?.Log.Information("Copying indices {@Indices} requested.", indices);
 
-            if (GetTotalNumberOfPages() == 0)
+            if (NumberOfPages == 0)
             {
                 LogService?.Log.Error("Copying requested, but there are no pages.");
                 throw new ApplicationException("No scans left to copy.");
@@ -1131,7 +1123,7 @@ namespace Scanner
             // check indices and whether the corresponding files are still available
             foreach (int index in indices)
             {
-                if (index < 0 || index > GetTotalNumberOfPages() - 1)
+                if (index < 0 || index > NumberOfPages - 1)
                 {
                     LogService?.Log.Error("Copying index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
                     throw new ApplicationException("Invalid index for copying scan file.");
@@ -1275,7 +1267,7 @@ namespace Scanner
             if (targetFormat == null || targetFormat == ImageScannerFormat.Pdf)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == ImageScannerFormat.Pdf) await PrepareNewConversionFiles(files, GetTotalNumberOfPages());
+                if (targetFormat == ImageScannerFormat.Pdf) await PrepareNewConversionFiles(files, NumberOfPages);
 
                 foreach (StorageFile file in files)
                 {
@@ -1293,7 +1285,7 @@ namespace Scanner
             }
             else
             {
-                int numberOfPagesOld = GetTotalNumberOfPages();
+                int numberOfPagesOld = NumberOfPages;
 
                 // immediate conversion necessary
                 foreach (StorageFile file in files)
@@ -1315,7 +1307,7 @@ namespace Scanner
                 Task[] conversionTasks = new Task[files.Count()];
                 try
                 {
-                    for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
+                    for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
                         conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
                     }
@@ -1338,7 +1330,7 @@ namespace Scanner
 
                     // discard new pages to restore the old state
                     List<int> indices = new List<int>();
-                    for (int i = numberOfPagesOld; i < GetTotalNumberOfPages(); i++)
+                    for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
                         indices.Add(i);
                     }
@@ -1351,7 +1343,7 @@ namespace Scanner
             if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
 
             // generate new previews and descriptors
-            for (int i = GetTotalNumberOfPages() - files.Count(); i < GetTotalNumberOfPages(); i++)
+            for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
             {
                 await GetImageAsync(i);
                 _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
@@ -1441,7 +1433,7 @@ namespace Scanner
             if (Pdf == null)
             {
                 LogService?.Log.Information("PDF doesn't exist yet.");
-                newPdf = await folderTemp.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                newPdf = await AppDataService.FolderTemp.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             }
             else
             {
@@ -1475,7 +1467,7 @@ namespace Scanner
                     try
                     {
                         newPdf = null;
-                        newPdf = await folderTemp.GetFileAsync(newName);
+                        newPdf = await AppDataService.FolderTemp.GetFileAsync(newName);
                         attempt = -1;
                     }
                     catch (Exception)
@@ -1504,7 +1496,7 @@ namespace Scanner
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
-                var files = await folderTemp.GetFilesAsync();
+                var files = await AppDataService.FolderTemp.GetFilesAsync();
                 LogService?.Log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
                 Crashes.TrackError(exc);
                 throw;

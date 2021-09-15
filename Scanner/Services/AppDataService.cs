@@ -15,6 +15,13 @@ namespace Scanner.Services
 
         private const string FolderReceivedPagesName = "ReceivedPages";
         private const string FolderConversionName = "Conversion";
+        private const string FolderWithoutRotationName = "WithoutRotation";
+
+        private StorageFolder _FolderTemp;
+        public StorageFolder FolderTemp
+        {
+            get => _FolderTemp;
+        }
 
         private StorageFolder _FolderReceivedPages;
         public StorageFolder FolderReceivedPages
@@ -26,6 +33,12 @@ namespace Scanner.Services
         public StorageFolder FolderConversion
         {
             get => _FolderConversion;
+        }
+
+        private StorageFolder _FolderWithoutRotation;
+        public StorageFolder FolderWithoutRotation
+        {
+            get => _FolderWithoutRotation;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,9 +55,9 @@ namespace Scanner.Services
         public async Task Initialize()
         {
             // clean up temp folder
-            StorageFolder folderTemp = ApplicationData.Current.TemporaryFolder;
+            _FolderTemp = ApplicationData.Current.TemporaryFolder;
 
-            IReadOnlyList<StorageFile> files = await folderTemp.GetFilesAsync();
+            IReadOnlyList<StorageFile> files = await FolderTemp.GetFilesAsync();
             foreach (StorageFile file in files)
             {
                 await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
@@ -53,22 +66,29 @@ namespace Scanner.Services
             // attempt to actively delete folders first, replacing is not terribly reliable
             try
             {
-                StorageFolder folder = await folderTemp.GetFolderAsync(FolderConversionName);
+                StorageFolder folder = await FolderTemp.GetFolderAsync(FolderConversionName);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
             catch (Exception exc) { LogService?.Log.Error(exc, "Actively deleting folder 'Conversion' in temp folder failed."); }
 
             try
             {
-                StorageFolder folder = await folderTemp.GetFolderAsync(FolderReceivedPagesName);
+                StorageFolder folder = await FolderTemp.GetFolderAsync(FolderReceivedPagesName);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
             catch (Exception exc) { LogService?.Log.Error(exc, "Actively deleting folder 'ReceivedPages' in temp folder failed."); }
 
+            try
+            {
+                StorageFolder folder = await FolderTemp.GetFolderAsync(FolderWithoutRotationName);
+                await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            catch (Exception exc) { LogService?.Log.Error(exc, "Actively deleting folder 'WithoutRotation' in temp folder failed."); }
+
             // replace/create folders
             try
             {
-                _FolderConversion = await folderTemp.CreateFolderAsync(FolderConversionName, CreationCollisionOption.ReplaceExisting);
+                _FolderConversion = await FolderTemp.CreateFolderAsync(FolderConversionName, CreationCollisionOption.ReplaceExisting);
             }
             catch (Exception exc)
             {
@@ -78,11 +98,21 @@ namespace Scanner.Services
 
             try
             {
-                _FolderReceivedPages = await folderTemp.CreateFolderAsync(FolderReceivedPagesName, CreationCollisionOption.ReplaceExisting);
+                _FolderReceivedPages = await FolderTemp.CreateFolderAsync(FolderReceivedPagesName, CreationCollisionOption.ReplaceExisting);
             }
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Couldn't create/replace folder 'ReceivedPages' in temp folder.");
+                throw;
+            }
+
+            try
+            {
+                _FolderWithoutRotation = await FolderTemp.CreateFolderAsync(FolderWithoutRotationName, CreationCollisionOption.ReplaceExisting);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Couldn't create/replace folder 'WithoutRotation' in temp folder.");
                 throw;
             }
 

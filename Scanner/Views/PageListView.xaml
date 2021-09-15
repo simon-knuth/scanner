@@ -66,6 +66,7 @@
                 <VisualState x:Name="DisabledState">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind ViewModel.IsScanRunning, Mode=OneWay}"/>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
                     
                     <Storyboard>

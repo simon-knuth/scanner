@@ -19,10 +19,6 @@ namespace Scanner.ViewModels
 
         public RelayCommand DisposeCommand;
 
-        public event EventHandler ScanStarted;
-        public event EventHandler ScanEnded;
-
-
         private ScanResult _ScanResult;
         public ScanResult ScanResult
         {
@@ -53,16 +49,16 @@ namespace Scanner.ViewModels
         public bool IsScanRunning
         {
             get => _IsScanRunning;
-            set
-            {
-                bool old = _IsScanRunning;
-                
-                SetProperty(ref _IsScanRunning, value);
-
-                if (old != value && value == true) ScanStarted?.Invoke(this, EventArgs.Empty);
-                else if (old != value && value == false) ScanEnded?.Invoke(this, EventArgs.Empty);
-            }
+            set => SetProperty(ref _IsScanRunning, value);
         }
+
+        private bool _IsScanResultChanging;
+        public bool IsScanResultChanging
+        {
+            get => _IsScanResultChanging;
+            set => SetProperty(ref _IsScanResultChanging, value);
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,15 +68,19 @@ namespace Scanner.ViewModels
             ScanResult = ScanResultService.Result;
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            IsScanResultChanging = ScanResultService.IsScanResultChanging;
+            ScanResultService.ScanResultChanging += ScanResultService_ScanResultChanging;
+            ScanResultService.ScanResultChanged += ScanResultService_ScanResultChanged;
             IsScanRunning = ScanService.IsScanInProgress;
-            ScanService.ScanStarted += (x, y) => IsScanRunning = true;
-            ScanService.ScanEnded += (x, y) => IsScanRunning = false;
+            ScanService.ScanStarted += ScanService_ScanStarted;
+            ScanService.ScanEnded += ScanService_ScanEnded;
 
             DisposeCommand = new RelayCommand(Dispose);
 
             Messenger.Register<EditorCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +93,10 @@ namespace Scanner.ViewModels
             // clean up event handlers
             ScanResultService.ScanResultCreated -= ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed -= ScanResultService_ScanResultDismissed;
+            ScanResultService.ScanResultChanging -= ScanResultService_ScanResultChanging;
+            ScanResultService.ScanResultChanged -= ScanResultService_ScanResultChanged;
+            ScanService.ScanStarted -= ScanService_ScanStarted;
+            ScanService.ScanEnded -= ScanService_ScanEnded;
         }
 
         private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
@@ -103,6 +107,26 @@ namespace Scanner.ViewModels
         private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
         {
             ScanResult = e;
+        }
+
+        private void ScanResultService_ScanResultChanged(object sender, EventArgs e)
+        {
+            IsScanResultChanging = false;
+        }
+
+        private void ScanResultService_ScanResultChanging(object sender, EventArgs e)
+        {
+            IsScanResultChanging = true;
+        }
+
+        private void ScanService_ScanEnded(object sender, EventArgs e)
+        {
+            IsScanRunning = false;
+        }
+
+        private void ScanService_ScanStarted(object sender, EventArgs e)
+        {
+            IsScanRunning = true;
         }
     }
 }

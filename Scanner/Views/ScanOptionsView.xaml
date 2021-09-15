@@ -79,22 +79,17 @@
                 </VisualState>
 
                 <VisualState x:Name="DisabledState">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>
+                    
                     <Storyboard>
                         
                     </Storyboard>
 
                     <VisualState.Setters>
-                        <Setter Target="ComboBoxScanners.IsEnabled" Value="False"/>
-                        <Setter Target="FrameSourceMode.IsEnabled" Value="False"/>
-                        <Setter Target="FrameColorMode.IsEnabled" Value="False"/>
-                        <Setter Target="FrameResolution.IsEnabled" Value="False"/>
-                        <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
-                        <Setter Target="FrameAutoCrop.IsEnabled" Value="False"/>
-                        <Setter Target="ButtonCancelScan.IsEnabled" Value="False"/>
                         <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
                         <Setter Target="ButtonScan.IsEnabled" Value="False"/>
-                        <Setter Target="HyperlinkButtonHelpScanners.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -251,7 +246,16 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameSourceMode.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameSourceMode.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
 
                             <muxc:RadioButtons x:Name="RadioButtonsSource" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
                                 <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
@@ -283,7 +287,16 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameFileFormat.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameFileFormat.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <Grid Margin="0,3,0,0">
                                 <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}">
                                     <ComboBox.ItemTemplate>
@@ -324,7 +337,16 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameColorMode.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameColorMode.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
                                 <RadioButton x:Uid="OptionScanOptionsColorColor">
                                     <interactivity:Interaction.Behaviors>
@@ -428,7 +450,16 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameResolution.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameResolution.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <Grid Margin="0,3,0,0">
                                 <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
                                     <ComboBox.ItemTemplate>
@@ -466,7 +497,16 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Automatic crop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock Text="Automatic crop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameAutoCrop.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameAutoCrop.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <muxc:RadioButtons x:Name="RadioButtonsAutoCropMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SelectedScannerAutoCropMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerAutoCropModeConverter}}">
                                 <RadioButton Content="Disabled">
                                     <interactivity:Interaction.Behaviors>
@@ -542,7 +582,16 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameMoreOptions.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind FrameMoreOptions.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                             <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                         </StackPanel>

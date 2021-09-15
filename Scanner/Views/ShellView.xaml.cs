@@ -227,5 +227,24 @@ namespace Scanner.Views
                 VisualStateManager.GoToState(this, nameof(NarrowState), true);
             }
         }
+
+        private void InfoBarAppWideMessages_PointerWheelChanged(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            // only handle mouse wheel
+            if (e.Pointer.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse) return;
+            
+            // change selected status message
+            e.Handled = true;
+            if (e.GetCurrentPoint((UIElement)sender).Properties.MouseWheelDelta < 0)
+            {
+                if (ViewModel.StatusMessages.Count <= ViewModel.SelectedStatusMessageIndex + 1) return;
+                ViewModel.SelectedStatusMessageIndex = ViewModel.SelectedStatusMessageIndex + 1;
+            }
+            else
+            {
+                if (ViewModel.SelectedStatusMessageIndex - 1 < 0) return;
+                ViewModel.SelectedStatusMessageIndex = ViewModel.SelectedStatusMessageIndex - 1;
+            }
+        }
     }
 }

@@ -208,6 +208,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _CanAddToScanResult, value);
         }
 
+        private bool _IsScanResultChanging;
+        public bool IsScanResultChanging
+        {
+            get => _IsScanResultChanging;
+            set => SetProperty(ref _IsScanResultChanging, value);
+        }
+
         // Debug stuff
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
@@ -252,6 +259,8 @@ namespace Scanner.ViewModels
             CancelScanCommand = new RelayCommand(CancelScan);
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
+            ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
             ScanService.ScanStarted += (x, y) => ScanStarted?.Invoke(this, EventArgs.Empty);
             ScanService.ScanEnded += (x, y) => ScanEnded?.Invoke(this, EventArgs.Empty);
         }

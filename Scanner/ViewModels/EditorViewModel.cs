@@ -1,9 +1,13 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Controls;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
@@ -17,6 +21,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+
+        public AsyncRelayCommand<string> RotatePageCommand;
 
         private Orientation _Orientation;
         public Orientation Orientation
@@ -80,6 +86,8 @@ namespace Scanner.ViewModels
 
             Messenger.Register<EditorCurrentIndexRequestMessage>(this, (r, m) => m.Reply(SelectedPageIndex));
             Messenger.Register<PageListCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
+
+            RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +149,16 @@ namespace Scanner.ViewModels
             {
                 Title = SelectedPage?.ScanFile?.Name
             });
+        }
+
+        private async Task RotatePageAsync(BitmapRotation rotation)
+        {
+            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>
+            {
+                new Tuple<int, BitmapRotation>(SelectedPageIndex, rotation)
+            };
+
+            await ScanResultService.RotatePagesAsync(instructions);
         }
     }
 }
