@@ -402,7 +402,7 @@ namespace Scanner
                         Guid encoderId = GetBitmapEncoderId(targetFormat);
 
                         BitmapEncoder encoder = null;
-                        if (targetFormat == SupportedFormat.JPG)
+                        if (targetFormat == ImageScannerFormat.Jpeg)
                         {
                             // Fix large JPG size
                             var propertySet = new BitmapPropertySet();

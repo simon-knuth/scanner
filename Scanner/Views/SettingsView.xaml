@@ -327,16 +327,18 @@
                     </muxc:Expander.Header>
                     
                     <TextBlock LineHeight="28" TextWrapping="WrapWholeWords">
-                    <Run FontWeight="SemiBold">David</Run> - British English
-                    <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French                        
-                    <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
-                    <LineBreak/><Run FontWeight="SemiBold">Damian Czupryn</Run> - Polish
-                    <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
-                    <LineBreak/><Run FontWeight="SemiBold">Brunotiago633</Run> - Portuguese (Portugal)
-                    <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Portugal)
-                    <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
-                    <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
-                    <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
+                        <Run FontWeight="SemiBold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
+                        <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French                        
+                        <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="SemiBold">Damian Czupryn</Run> - Polish
+                        <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
+                        <LineBreak/><Run FontWeight="SemiBold">Brunotiago633</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
                     </TextBlock>
                 </muxc:Expander>
 
