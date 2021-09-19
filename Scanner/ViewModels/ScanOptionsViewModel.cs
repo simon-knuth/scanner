@@ -215,6 +215,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsScanResultChanging, value);
         }
 
+        private bool _IsEditorEditing;
+        public bool IsEditorEditing
+        {
+            get => _IsEditorEditing;
+            set => SetProperty(ref _IsEditorEditing, value);
+        }
+
         // Debug stuff
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
@@ -263,6 +270,8 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
             ScanService.ScanStarted += (x, y) => ScanStarted?.Invoke(this, EventArgs.Empty);
             ScanService.ScanEnded += (x, y) => ScanEnded?.Invoke(this, EventArgs.Empty);
+
+            Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
         }
 
 

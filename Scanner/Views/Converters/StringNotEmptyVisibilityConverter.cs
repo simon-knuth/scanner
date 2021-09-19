@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace Scanner
+namespace Scanner.Views.Converter
 {
     public class StringNotEmptyVisibilityConverter : IValueConverter
     {

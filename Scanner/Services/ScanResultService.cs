@@ -71,8 +71,11 @@ namespace Scanner.Services
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             bool fixedFolder)
         {
-            _Result = null;
-            if (Result != null) ScanResultDismissed?.Invoke(this, EventArgs.Empty);
+            if (Result != null)
+            {
+                _Result = null;
+                ScanResultDismissed?.Invoke(this, EventArgs.Empty);
+            }
 
             futureAccessListIndex = 0;
             _Result = await ScanResult.CreateAsync(files, targetFolder, futureAccessListIndex, fixedFolder);

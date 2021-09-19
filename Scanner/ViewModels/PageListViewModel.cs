@@ -59,6 +59,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsScanResultChanging, value);
         }
 
+        private bool _IsEditorEditing;
+        public bool IsEditorEditing
+        {
+            get => _IsEditorEditing;
+            set => SetProperty(ref _IsEditorEditing, value);
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +86,9 @@ namespace Scanner.ViewModels
 
             Messenger.Register<EditorCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
+
+            Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
+            IsEditorEditing = Messenger.Send(new EditorIsEditingRequestMessage());
         }
 
 

@@ -204,19 +204,21 @@
         <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 
         <!-- Titlebar -->
-        <Grid Grid.Row="0" HorizontalAlignment="Left" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
                 <ColumnDefinition x:Name="ColumnTitlebarButtons"/>
             </Grid.ColumnDefinitions>
             
             <Image Grid.Column="0" Source="/Assets/Logo.svg" HorizontalAlignment="Center" Margin="0,8,0,8"/>
             <TextBlock Grid.Column="1" x:Uid="HeadingScanner" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             <TextBlock Grid.Column="2" Text="-" Margin="6,0,6,0" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.TitlebarText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
-            <TextBlock Grid.Column="3" Text="{x:Bind ViewModel.TitlebarText, Mode=OneWay}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+            <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="8,3,8,3" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Visibility="{x:Bind ViewModel.TitlebarText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
+                <TextBlock Text="{x:Bind ViewModel.TitlebarText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+            </Border>
         </Grid>
 
         <!-- Content -->

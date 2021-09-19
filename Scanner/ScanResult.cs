@@ -482,7 +482,6 @@ namespace Scanner
                             { "Rotation", instructions[0].Item2.ToString() },
                         });
             LogService?.Log.Information("Received {@Instructions} for rotations.", instructions);
-            await Task.Delay(3000);
             // check indices and rotations
             foreach (var instruction in instructions)
             {
@@ -544,6 +543,7 @@ namespace Scanner
                         {
                             // delete image from cache
                             _Elements[instruction.Item1].CachedImage = null;
+                            await _Elements[instruction.Item1].RefreshImageAsync();
                         }
                     }
 

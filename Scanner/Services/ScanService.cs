@@ -120,7 +120,11 @@ namespace Scanner.Services
         public void CancelScan()
         {
             ScanEnded?.Invoke(this, EventArgs.Empty);
-            ScanCancellationToken.Cancel();
+            try
+            {
+                if (ScanCancellationToken != null) ScanCancellationToken.Cancel();
+            }
+            catch (Exception) { }
             ScanCancellationToken = null;
         }
     }

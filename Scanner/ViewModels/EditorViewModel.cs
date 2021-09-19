@@ -20,9 +20,14 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
 
         public AsyncRelayCommand<string> RotatePageCommand;
+        public RelayCommand EnterCropModeCommand;
+        public RelayCommand LeaveCropModeCommand;
+        public RelayCommand EnterDrawModeCommand;
+        public RelayCommand LeaveDrawModeCommand;
 
         private Orientation _Orientation;
         public Orientation Orientation
@@ -74,6 +79,48 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _SelectedPageText, value);
         }
 
+        private EditorMode _EditorMode = EditorMode.Initial;
+        public EditorMode EditorMode
+        {
+            get => _EditorMode;
+            set
+            {
+                SetProperty(ref _EditorMode, value);
+                if (value == EditorMode.Initial) IsEditing = false;
+                else IsEditing = true;
+            }
+        }
+
+        private bool _IsScanResultChanging;
+        public bool IsScanResultChanging
+        {
+            get => _IsScanResultChanging;
+            set => SetProperty(ref _IsScanResultChanging, value);
+        }
+
+        private bool _IsScanning;
+        public bool IsScanning
+        {
+            get => _IsScanning;
+            set => SetProperty(ref _IsScanning, value);
+        }
+
+        private bool _IsEditing;
+        public bool IsEditing
+        {
+            get => _IsEditing;
+            set
+            {
+                bool old = _IsEditing;
+
+                if (old != value)
+                {
+                    SetProperty(ref _IsEditing, value);
+                    Messenger.Send(new EditorIsEditingChangedMessage(value));
+                }
+            }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,13 +128,26 @@ namespace Scanner.ViewModels
         {
             RefreshOrientationSetting();
             SettingsService.SettingChanged += SettingsService_SettingChanged;
+
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            IsScanResultChanging = ScanResultService.IsScanResultChanging;
+            ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
+            ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
+
+            IsScanning = ScanService.IsScanInProgress;
+            ScanService.ScanStarted += (x, y) => IsScanning = true;
+            ScanService.ScanEnded += (x, y) => IsScanning = false;
 
             Messenger.Register<EditorCurrentIndexRequestMessage>(this, (r, m) => m.Reply(SelectedPageIndex));
             Messenger.Register<PageListCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
+            Messenger.Register<EditorIsEditingRequestMessage>(this, (r, m) => m.Reply(IsEditing));
 
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
+            EnterCropModeCommand = new RelayCommand(EnterCropMode);
+            LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
+            EnterDrawModeCommand = new RelayCommand(EnterDrawMode);
+            LeaveDrawModeCommand = new RelayCommand(LeaveDrawMode);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,5 +220,32 @@ namespace Scanner.ViewModels
 
             await ScanResultService.RotatePagesAsync(instructions);
         }
+
+        private void EnterCropMode()
+        {
+            EditorMode = EditorMode.Crop;
+        }
+
+        private void LeaveCropMode()
+        {
+            EditorMode = EditorMode.Initial;
+        }
+
+        private void EnterDrawMode()
+        {
+            EditorMode = EditorMode.Draw;
+        }
+
+        private void LeaveDrawMode()
+        {
+            EditorMode = EditorMode.Initial;
+        }
+    }
+
+    public enum EditorMode
+    {
+        Initial = 0,
+        Crop = 1,
+        Draw = 2,
     }
 }
