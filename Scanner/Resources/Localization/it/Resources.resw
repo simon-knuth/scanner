@@ -701,7 +701,8 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
     <value>Usa le impostazioni di sistema</value>
-    <comment>The system theme option in the settings.</comment>
+    <comment>The system theme option in the settings.
+Fuzzy</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
     <value>Chiudi</value>

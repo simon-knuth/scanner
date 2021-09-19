@@ -400,7 +400,22 @@ namespace Scanner
                         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                         SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                         Guid encoderId = GetBitmapEncoderId(targetFormat);
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+
+                        BitmapEncoder encoder = null;
+                        if (targetFormat == SupportedFormat.JPG)
+                        {
+                            // Fix large JPG size
+                            var propertySet = new BitmapPropertySet();
+                            var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
+                            propertySet.Add("ImageQuality", qualityValue);
+
+                            stream.Size = 0;
+                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream, propertySet);
+                        }
+                        else
+                        {
+                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
+                        }
                         encoder.SetSoftwareBitmap(softwareBitmap);
 
                         // save/encode the file in the target format

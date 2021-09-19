@@ -118,51 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Por favor, tente novamente.</value>
+    <value>请重试</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copiar página para a área de transferência (Ctrl+C)</value>
+    <value>复制到剪切板(Ctrl + C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Recortar página</value>
+    <value>裁剪页面</value>
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Proporção</value>
+    <value>缩放比</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>Proporção</value>
+    <value>缩放比</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
-    <value>Kai 4</value>
+    <value>4 开</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
-    <value>Kai 8</value>
+    <value>8 开</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
-    <value>Kai 16</value>
+    <value>16 开</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
-    <value>Kai 32</value>
+    <value>32 开</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>Personalizada</value>
+    <value>自定义</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>Inverter</value>
+    <value>水平翻转</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
@@ -170,682 +170,681 @@
     <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
-    <value>ANSI A - Letter</value>
+    <value>ANSI A - 信件</value>
     <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
-    <value>ANSI B - Ledger/Tabloid</value>
+    <value>ANSI B - 账本</value>
     <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
-    <value>ANSI C - Broadsheet</value>
+    <value>ANSI C - 对开大报</value>
     <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
-    <value>Quadrado</value>
+    <value>方形</value>
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Eliminar página</value>
+    <value>删除页面</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Descartar alterações</value>
+    <value>放弃修改</value>
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Desenhar e realçar com o Windows Ink</value>
+    <value>使用 Windows Ink 绘制及高亮标记</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Desenhar com toque</value>
+    <value>使用触控屏绘制</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Abrir noutra aplicação</value>
+    <value>在其他应用中打开</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mudar o nome do ficheiro</value>
+    <value>重命名文件</value>
     <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
-    <value>Rodar 90º</value>
+    <value>翻转 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
-    <value>Rodar 180º</value>
+    <value>翻转 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
-    <value>Rodar 270º</value>
+    <value>翻转 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rodar página (clique com o botão direito para mais opções)</value>
+    <value>翻转页面 (右键查看更多选项)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Guardar alterações</value>
+    <value>保存修改</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Guardar alterações como cópia</value>
+    <value></value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Partilhar</value>
+    <value>分享</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostrar páginas digitalizadas</value>
+    <value>显示扫描的页面</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copiar páginas selecionadas</value>
+    <value>复制选中的页面</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Eliminar páginas selecionadas</value>
+    <value>删除选中的页面</value>
     <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
-    <value>Rodar páginas selecionadas 90º</value>
+    <value>翻转选中页面 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
-    <value>Rodar páginas selecionadas 180º</value>
+    <value>翻转选中页面 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
-    <value>Rodar páginas selecionadas 270º</value>
+    <value>翻转选中页面 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rodar páginas selecionadas (clique com o botão direito para mais opções)</value>
+    <value>翻转选中页面 (右键查看更多选项)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Selecionar páginas</value>
+    <value>选择页面</value>
     <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Partilhar páginas selecionadas</value>
+    <value>分享选中页面</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostrar opções de digitalização</value>
+    <value>显示扫描选项</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cancelar a digitalização em execução</value>
+    <value>取消正在进行的扫描</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gerir scanners</value>
+    <value>管理扫描仪</value>
     <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>Pré-visualizar</value>
+    <value>预览</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostrar pasta de destino no Explorador de Ficheiros</value>
+    <value>在资源管理器中显示保存位置</value>
     <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
-    <value>Digitalizar</value>
+    <value>扫描</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>Digitalizar e começar de novo</value>
+    <value>重新开始扫描</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Definições</value>
+    <value>设置</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
   <data name="DialogDelete.Title" xml:space="preserve">
-    <value>Deseja prosseguir?</value>
+    <value>你确定吗？</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.Subtitle" xml:space="preserve">
-    <value>A página será eliminada permanentemente.</value>
+    <value>该页面会被永久删除</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
-    <value>Eliminar</value>
+    <value>删除</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.CloseButtonContent" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>取消</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDeleteSelect.Title" xml:space="preserve">
-    <value>Deseja prosseguir?</value>
+    <value>你确定吗？</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
-    <value>As páginas selecionadas serão eliminadas permanentemente.</value>
+    <value>选中的页面会被永久删除</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
-    <value>Eliminar</value>
+    <value>删除</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.CloseButtonContent" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>取消</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDevices.Title" xml:space="preserve">
-    <value>Selecione um scanner</value>
+    <value>选择扫描仪</value>
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>Se o seu scanner não aparecer dentro de três minutos, poderá ter de o adicionar primeiro nas definições do sistema.</value>
+    <value>如果你的扫描仪在3分钟内没有显示，你可能需要在系统设置中添加</value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="ButtonDialogDevices.Text" xml:space="preserve">
-    <value>Abrir as definições</value>
+    <value>启动设置</value>
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>Está a gostar da aplicação?</value>
+    <value>您对此应用满意吗？</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>Eu gostaria de saber a sua opinião:</value>
+    <value>我很愿意倾听您的意见</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogRename.Title" xml:space="preserve">
-    <value>Mudar o nome</value>
+    <value>重命名</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.Subtitle" xml:space="preserve">
-    <value>Insira um novo nome para o ficheiro:</value>
+    <value>输入新文件名</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.ActionButtonContent" xml:space="preserve">
-    <value>Confirmar</value>
+    <value>确定</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogRename.CloseButtonContent" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>取消</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="DialogScope.ActionButtonContent" xml:space="preserve">
-    <value>Documento inteiro</value>
+    <value>整个文档</value>
     <comment>The button text of the dialog that allows the user to apply an action to an entire document.</comment>
   </data>
   <data name="DialogScope.CloseButtonContent" xml:space="preserve">
-    <value>Apenas esta página</value>
+    <value>仅该页</value>
     <comment>The button text of the dialog that allows the user to apply an action to a single page in a document.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
-    <value>A cópia para a área de transferência falhou.</value>
+    <value>复制到剪切板失败</value>
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
-    <value>A opção de recortar não está disponível de momento.</value>
+    <value>现在无法裁剪</value>
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>De momento, não é possível eliminar.</value>
+    <value>现在无法删除该项</value>
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>Ups!</value>
+    <value>卧槽！</value>
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>Por favor, selecione um formato de ficheiro.</value>
+    <value>请选择文件格式</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>De momento, não é possível mudar o nome deste ficheiro. Será que já existe um ficheiro com o mesmo nome?</value>
+    <value>现在无法重命名该项。可能已有相同名字的文件存在？</value>
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>De momento, não é possível rodar. Por favor, tente novamente.</value>
+    <value>现在无法翻转该项。请重试。</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>Não foi possível guardar estas alterações. Por favor, certifique-se de que o ficheiro ainda está disponível e tente novamente.</value>
+    <value>保存更改失败。请确保文件仍有效并重试。</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>De momento, o scanner não está a aceitar o pedido de cancelamento emitido pela aplicação.</value>
+    <value>扫描仪目前不接受应用请求的取消扫描操作。</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>A digitalização falhou devido a um erro desconhecido.</value>
+    <value>由于未知错误扫描失败。</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when a scan fails with more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
-    <value>A digitalização falhou com o seguinte erro:</value>
+    <value>由于以下错误扫描失败：</value>
     <comment>The error message body that appears when a scan fails with more information.</comment>
   </data>
   <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
-    <value>Selecione um scanner</value>
+    <value>选择一个扫描仪</value>
     <comment>The heading that tells the user to select a scanner.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
-    <value>Chinês</value>
+    <value>中文</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
-    <value>Internacional</value>
+    <value>国际通用</value>
     <comment>The heading for international aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
-    <value>Norte-americano</value>
+    <value>北美</value>
     <comment>The heading for North American aspect ratio options.</comment>
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
-    <value>Scanner</value>
+    <value>扫描仪</value>
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>Modo de cor</value>
+    <value>色彩模式</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
-    <value>Guardar como</value>
+    <value>另存为</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsMoreOptions.Text" xml:space="preserve">
-    <value>Opções adicionais</value>
+    <value>其他选项</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
-    <value>Resolução</value>
+    <value>分辨率</value>
     <comment>The heading for resolution options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
-    <value>Origem</value>
+    <value>来源</value>
     <comment>The heading for source options in the scan options section.</comment>
   </data>
   <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
-    <value>Digitalizar consecutivamente até 10 páginas</value>
+    <value>依次扫描10页</value>
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>Cores</value>
+    <value>彩色</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>Tons de cinzento</value>
+    <value>灰度</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>Monocromático</value>
+    <value>黑白</value>
     <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
-    <value>Duplex (frente e verso)</value>
+    <value>双向（正&amp;反）</value>
     <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
-    <value>Configuração automática</value>
+    <value>自动配置</value>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>Alimentador</value>
+    <value>源</value>
     <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Vidro</value>
+    <value>平面</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>Se o seu scanner não aparecer dentro de três minutos, certifique-se de que este foi adicionado nas </value>
+    <value>如果你的扫描仪在3分钟内还未显示，请确保其已被添加到</value>
     <comment>The first part of the body of the text that tells the user to select a scanner.
 | -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>As páginas digitalizadas vão aparecer aqui</value>
+    <value>扫描的页面会在此显示</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
   <data name="TextScannerIndicator.Text" xml:space="preserve">
-    <value>A procurar em permanência scanners disponíveis</value>
+    <value>总是查找可用的扫描仪</value>
     <comment>The placeholder text in the scanner selection list.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Suporta pré-visualização</value>
+    <value>支持预览</value>
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>Pré-visualizar</value>
+    <value>预览</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Ocorreu algo de errado. Por favor, certifique-se de que uma página foi inserida e tente novamente.</value>
+    <value>有东西出错了。请确插入纸张并重试。</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Escolher pasta</value>
+    <value>选择文件夹</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>Repor predefinição</value>
+    <value>还原默认</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>Licenças de terceiros</value>
+    <value>三方许可协议</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubHeading" xml:space="preserve">
-    <value>Ups!</value>
+    <value>卧槽！</value>
     <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>Não foi possível abrir o Hub de Comentários.</value>
+    <value>无法打开反馈中心</value>
     <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>A pasta selecionada não está disponível. Por favor, tente selecionar outra pasta.</value>
+    <value>选择的文件夹不可用。请选择另一个。</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>Ocorreu algo de errado</value>
+    <value>有东西出错了</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>A reposição da pasta de destino original falhou. A mensagem de erro é:</value>
+    <value>重置文件夹位置失败。错误消息：</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
-    <value>Acesso negado</value>
+    <value>拒绝访问</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>A aplicação não está autorizada a usar esta pasta. Por favor, tente selecionar outra pasta.</value>
+    <value>该应用未被允许使用该文件夹。请选择另一个。</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>Acerca desta aplicação</value>
+    <value>关于该应用</value>
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Dar feedback</value>
+    <value>提交反馈</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
-    <value>Ajuda e configuração</value>
+    <value>帮助&amp;安装</value>
     <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Pasta de destino</value>
+    <value>保存位置</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTheme.Header" xml:space="preserve">
-    <value>Tema</value>
+    <value>主题</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Traduções</value>
+    <value>翻译</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
-    <value>reinicie a aplicação</value>
+    <value>重启应用</value>
     <comment>The hyperlink text for restarting the app to apply changes.
 TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>Anexar hora e minuto ao nome do ficheiro</value>
+    <value>在文件名前附加时间</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="OptionSettingsBackgroundNotification.Content" xml:space="preserve">
-    <value>Apresentar uma notificação quando uma digitalização terminar em segundo plano</value>
+    <value>当扫描任务在后台结束时弹出通知</value>
     <comment>The text for the option for sending a notification when a scan ends in the background.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
-    <value>Licenças de terceiros</value>
+    <value>三方许可协议</value>
     <comment>The hyperlink text for viewing third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
-    <value>Política de privacidade</value>
+    <value>隐私政策</value>
     <comment>The hyperlink text for viewing the privacy policy.</comment>
   </data>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
-    <value>Site</value>
+    <value>网站</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
-    <value>Aprender como instalar e utilizar um scanner no Windows 10</value>
+    <value>了解如何在 Windows 10 中安装及使用扫描仪</value>
     <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
-    <value>Por favor, </value>
+    <value>请</value>
     <comment>The first part of the text for restarting the app to apply changes.
 | -&gt; HyperlinkSettingsRestart.Text</comment>
   </data>
   <data name="TextSettingsRestart2.Text" xml:space="preserve">
-    <value> para que as alterações surtam efeito.</value>
+    <value>以让更改生效</value>
     <comment>The second part of the text for restarting the app to apply changes.
 HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>O Windows 10 oferece suporte a mais de 100 idiomas – pode ajudar a tornar esta aplicação acessível a todos. Aceda a </value>
+    <value>Windows 10 支持超过 100 种语言，您可以帮助该应用为所有人可得。查看</value>
     <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
-    <value> para mais informações.</value>
+    <value>获取更多信息</value>
     <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>esta página</value>
+    <value>该页</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> e de que não aparece como offline lá.</value>
+    <value>且在那边看上去并不在线。</value>
     <comment>The second part of the body of the text that tells the user to select a scanner.
 HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
-    <value>Definições</value>
+    <value>设置</value>
     <comment>The heading for the settings.</comment>
   </data>
   <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
-    <value>Escuro</value>
+    <value>黑暗</value>
     <comment>The dark theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
-    <value>Claro</value>
+    <value>明亮</value>
     <comment>The light theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
-    <value>Utilizar a definição do sistema</value>
-    <comment>The system theme option in the settings.
-Fuzzy</comment>
+    <value>系统设置</value>
+    <comment>The system theme option in the settings.</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
-    <value>aplicação Definições</value>
+    <value>设置 App</value>
     <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
 TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
-    <value>Aceder às definições de impressoras e scanners</value>
+    <value>转到扫描仪设置</value>
     <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="DialogScopeQuestionCopyHeading" xml:space="preserve">
-    <value>O que deverá ser copiado?</value>
+    <value>要复制个啥？</value>
     <comment>The heading for the dialog that asks whether the user wants to copy an entire document or just a single page.</comment>
   </data>
   <data name="DialogScopeQuestionOpenWithHeading" xml:space="preserve">
-    <value>O que deverá ser aberto?</value>
+    <value>要打开个啥？</value>
     <comment>The heading for the dialog that asks whether the user wants to open an entire document or just a single page.</comment>
   </data>
   <data name="DialogScopeQuestionShareHeading" xml:space="preserve">
-    <value>O que deverá ser partilhado?</value>
+    <value>要分享个啥？</value>
     <comment>The heading for the dialog that asks whether the user wants to share an entire document or just a single page.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
-    <value>Digitalização finalizada</value>
+    <value>扫描完成</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
-    <value>Várias páginas</value>
+    <value>多页</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>Regresse à aplicação para ver e editar o resultado.</value>
+    <value>返回应用以查看及修改结果</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>A aplicação coleta todas as páginas que digitalizar, desde que não altere o formato do ficheiro ou &quot;comece de novo&quot;. Se está a criar um ficheiro PDF, também pode reordenar as páginas aqui.</value>
+    <value>应用收集您扫描的所有页面，只要你不在扫描过程中更改文件格式或“重新开始”。如果您正在创建PDF文件，您也可以在此重新排序页面。</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
-    <value>As suas páginas estão aqui</value>
+    <value>你的页面在此</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
-    <value>Contribuidores</value>
+    <value>贡献者</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
-    <value>Contribuidores</value>
+    <value>贡献者</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>Definições</value>
+    <value>设置</value>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>As digitalizações são guardadas na pasta de destino predefinida. Pode selecionar outra pasta nas definições.</value>
+    <value>扫描已被保存到默认位置。您可以从设置中选择其他文件夹。</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>Pasta de destino</value>
+    <value>保存位置</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
-    <value>Registo de alterações</value>
+    <value>更新日志</value>
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>Pode consultar as novidades no registo de alterações (pode não estar disponível em todos os idiomas).</value>
+    <value>您可以在更新日志（可能不涵盖任何语言）中看看有哪些新功能及改进。</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
-    <value>Aplicação atualizada</value>
+    <value>应用已更新</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>O que há de novo?</value>
+    <value>有哪些新功能？</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Créditos</value>
+    <value>功劳</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Enviar relatórios de erro e estatísticas de uso</value>
+    <value>发送使用统计数据及错误报告</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Isto permite-me investigar erros na aplicação e identificar as funcionalidades mais valiosas para os utilizadores. As páginas que digitalizar nunca são incluídas nestes relatórios.</value>
+    <value>这将让我可以调查应用崩溃并了解对用户最有价值的功能。您扫描的页面绝对不会包含在这些报告里。</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Privacidade em primeiro lugar</value>
+    <value>隐私优先</value>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>Pode sempre alterar as suas opções mais tarde, nas definições da aplicação.</value>
+    <value>您随时可以在设置中更改主意。</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Exportar registo de eventos</value>
+    <value>导出事件日志</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Exportar registo de eventos</value>
+    <value>导出事件日志</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
-    <value>Exportar</value>
+    <value>导出</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>Nenhuma das páginas que digitalizar são incluídas nestes relatórios.</value>
+    <value>您扫描的页面没有被包含在这些日志里。</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
-    <value>Confirmar</value>
+    <value>确定</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Por favor, confirme as seguintes definições.</value>
+    <value>请确认以下设置。</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Créditos</value>
+    <value>功劳</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -857,43 +856,43 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
   </data>
   <data name="TextEditSave.Text" xml:space="preserve">
-    <value>Guardar</value>
+    <value>保存</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
-    <value>Scanner</value>
+    <value>扫描仪</value>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Scanner para Windows 10</value>
+    <value>Windows 10 扫描仪</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
-    <value>Scanner</value>
+    <value>扫描仪</value>
     <comment>App name as displayed on tile.</comment>
   </data>
   <data name="TextPageListDescriptor" xml:space="preserve">
-    <value>Página {0}</value>
+    <value>第 {0} 页</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
-    <value>Scans</value>
+    <value>扫描</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>Perguntar sempre</value>
+    <value>每次都询问</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Utilizar uma localização predefinida</value>
+    <value>使用一个设定的位置</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Voltar</value>
+    <value>后退</value>
     <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
   </data>
   <data name="TextScannerCount" xml:space="preserve">
-    <value>{0} disponível</value>
+    <value>{0} 可用</value>
     <comment>The number of currently available scanners. The placeholder {0} is replaced with the actual number itself.</comment>
   </data>
   <data name="TextZoomFactor" xml:space="preserve">
@@ -901,15 +900,15 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
   </data>
   <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ampliar (Ctrl + Roda do rato para cima)</value>
+    <value>放大  (Ctrl + 鼠标滚轮向上)</value>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reduzir (Ctrl + Roda do rato para baixo)</value>
+    <value>缩小  (Ctrl + 鼠标滚轮向下)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
-    <value>{0} de {1}</value>
+    <value>{0} 项共 {1}</value>
     <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
   </data>
   <data name="OptionScanOptionsResolution" xml:space="preserve">
@@ -917,71 +916,71 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
-    <value>{0:0} DPI (Padrão)</value>
+    <value>{0:0} DPI (默认)</value>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0:0} DPI (Melhor para documentos)</value>
+    <value>{0:0} DPI (文档最优化)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (Melhor para fotos)</value>
+    <value>{0:0} DPI (照片最优化)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
-    <value>Digitalização completa, adicionadas {0} páginas</value>
+    <value>扫描完成，已添加 {0} 页</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
   </data>
   <data name="TextScanFailAccessibility" xml:space="preserve">
-    <value>Digitalização falhada</value>
+    <value>扫描失败</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
   </data>
   <data name="TextSavedChangesAccessibility" xml:space="preserve">
-    <value>Alterações guardadas</value>
+    <value>已保存更改</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
   </data>
   <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
-    <value>Digitalização completa, adicionada uma página</value>
+    <value>扫描完成，添加了一页</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
   </data>
   <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
-    <value>Alterações guardadas como uma cópia</value>
+    <value>扫描已存为复制</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
   <data name="HeadingChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>Mais opções de resolução</value>
+    <value>其他分辨率选项</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
   <data name="HeadingChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>Interface mais inteligente</value>
+    <value>智能界面</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
   <data name="HeadingChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Acessibilidade melhorada</value>
+    <value>优化可用性</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>Escolha entre mais opções de resolução para a melhor qualidade.</value>
+    <value>在更多分辨率选项中选择以达到最佳质量。</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>A interface foi melhorada para lhe oferecer uma melhor visão geral das páginas digitalizadas e dos scanners disponíveis.</value>
+    <value>界面已被优化以让您对扫描的页面及可用的扫描仪有更好的概览。</value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Adicionado suporte para leitores de ecrã e serviços de reconhecimento de voz.</value>
+    <value>添加屏幕阅读器及声音识别服务。</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
-    <value>Visão geral da página</value>
+    <value>页面概览</value>
     <comment>The name of the page management area for use by accessibility tools.</comment>
   </data>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
-    <value>Opções de digitalização</value>
+    <value>扫描选项</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>Pode </value>
+    <value>你可以</value>
     <comment>The first part of the dialog text that asks the user for feedback.
 |-&gt; DialogFeedbackHyperlinkRate.Text</comment>
   </data>
@@ -991,37 +990,37 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
 DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
   </data>
   <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> para sugerir novas funcionalidades e ajudar outras pessoas a decidir se esta é a aplicação certa para elas. Os utilizadores profissionais também podem influenciar o desenvolvimento futuro no </value>
+    <value>以建议新功能及帮助其他人决定这对他们来说是否为对的应用。专家用户也可以帮助进一步开发</value>
     <comment>The second part of the dialog text that asks the user for feedback.
 DialogFeedbackHyperlinkRate.Text &lt;-|-&gt; DialogFeedbackHyperlinkGithub.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
-    <value>classifique a aplicação na Microsoft Store</value>
+    <value>在田牌应用商店为扫描仪应用评分</value>
     <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
 DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
   </data>
   <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value>.</value>
+    <value>。</value>
     <comment>The third part of the dialog text that asks the user for feedback.
 DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Pode </value>
+    <value>你可以</value>
     <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
 |-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> para sugerir novas funcionalidades e ajudar outras pessoas a decidir se esta é a aplicação certa para elas. Os utilizadores profissionais também podem influenciar o desenvolvimento futuro no </value>
+    <value>以建议新功能及帮助其他人决定这对他们来说是否为对的应用。专家用户也可以帮助进一步开发</value>
     <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
 HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value>.</value>
+    <value>。</value>
     <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
 HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>classifique a aplicação na Microsoft Store</value>
+    <value>在田牌应用商店为扫描仪应用评分</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
 TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
   </data>
@@ -1031,30 +1030,30 @@ TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
 TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
   </data>
   <data name="HeadingSettingsDonate.Text" xml:space="preserve">
-    <value>Apoiar o desenvolvimento</value>
+    <value>支持开发</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
-    <value>apoiar-me com uma doação</value>
+    <value>施舍我</value>
     <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
 TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
   </data>
   <data name="TextSettingsDonate1.Text" xml:space="preserve">
-    <value>Esta aplicação está disponível gratuitamente para uso de todos. Se lhe poupou algum tempo e gostaria de apoiar o seu desenvolvimento, pode </value>
+    <value>该应用任何人均可免费使用。如果它帮助你提高效率并且你乐意看到更多此类应用，你可以</value>
     <comment>The first part of the text of the &quot;Donation&quot; section in settings.
 |-&gt; HyperlinkSettingsDonate.Text</comment>
   </data>
   <data name="TextSettingsDonate2.Text" xml:space="preserve">
-    <value>. Obrigado!</value>
+    <value>。谢谢您！</value>
     <comment>The second part of the text of the &quot;Donation&quot; section in settings.
 HyperlinkSettingsDonate.Text &lt;-|</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
-    <value>Apoiar o desenvolvimento</value>
+    <value>支持开发</value>
     <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
-    <value>Apoiar o desenvolvimento</value>
+    <value>支持开发</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
 </root>

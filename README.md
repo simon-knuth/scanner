@@ -10,6 +10,11 @@
 
 
 &nbsp;
+## 👀 A sneak peek at what's next for *Scanner* on Windows 11
+<image src='https://user-images.githubusercontent.com/50021001/132959064-f7416ae9-0a3b-4530-b3e2-3eabfdc2f6aa.jpg'/>
+
+
+&nbsp;
 ## Features
 <ul>
   <li>See result after scanning</li>
@@ -66,6 +71,8 @@ Screenshots (background wallpaper): <a href="https://unsplash.com/@willianjusten
 ## Translations
 The currently supported languages are:
 <ul>
+  <li>Catalan (CA)</li>
+  <li>Chinese Simplified (ZH-HANS, ZH-CN, ZH-HANS-CN, ZH-SG, ZH-HANS-SG)</li>
   <li>English (EN)</li>
   <li>English (EN-GB)</li>
   <li>French (FR)</li>

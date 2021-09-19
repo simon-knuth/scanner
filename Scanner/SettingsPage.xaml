@@ -352,6 +352,8 @@
                 <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="350" Padding="0,0,24,12">
                     <TextBlock LineHeight="28">
                         <Run FontWeight="Bold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="Bold">Martinet101</Run> - Catalan
+                        <LineBreak/><Run FontWeight="Bold">Edi</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="Bold">Astreptocoque</Run> - French                        
                         <LineBreak/><Run FontWeight="Bold">Francesco</Run> - Italian
                         <LineBreak/><Run FontWeight="Bold">Damian Czupryn</Run> - Polish
