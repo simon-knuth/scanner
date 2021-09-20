@@ -25,6 +25,7 @@ namespace Scanner.ViewModels
 
         public AsyncRelayCommand<string> RotatePageCommand;
         public AsyncRelayCommand<string> RenameCommand;
+        public AsyncRelayCommand CopyCommand;
         public RelayCommand EnterCropModeCommand;
         public RelayCommand LeaveCropModeCommand;
         public RelayCommand EnterDrawModeCommand;
@@ -153,6 +154,7 @@ namespace Scanner.ViewModels
 
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
+            CopyCommand = new AsyncRelayCommand(CopyAsync);
             EnterCropModeCommand = new RelayCommand(EnterCropMode);
             LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
             EnterDrawModeCommand = new RelayCommand(EnterDrawMode);
@@ -275,6 +277,26 @@ namespace Scanner.ViewModels
         private void LeaveDrawMode()
         {
             EditorMode = EditorMode.Initial;
+        }
+
+        private async Task CopyAsync()
+        {
+            bool success;
+
+            if (ScanResultService.Result.IsImage())
+            {
+                // copy single image file
+                success = await ScanResultService.CopyImageAsync(SelectedPageIndex);
+            }
+            else
+            {
+                // rename PDF document
+                success = await ScanResultService.CopyAsync();
+            }
+
+            if (!success) return;
+
+            CopySuccessful?.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -555,12 +555,10 @@ namespace Scanner
                         {
                             throw new ApplicationException("Rotation failed.", e);
                         }
-                        finally
-                        {
-                            // delete image from cache
-                            _Elements[instruction.Item1].CachedImage = null;
-                            await _Elements[instruction.Item1].RefreshImageAsync();
-                        }
+
+                        // delete image from cache
+                        _Elements[instruction.Item1].CachedImage = null;
+                        await _Elements[instruction.Item1].RefreshImageAsync();
                     }
 
                     if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
@@ -1125,7 +1123,7 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
         public async Task CopyImagesAsync(IList<int> indices)
         {
-            Analytics.TrackEvent("Copy pages");
+            AppCenterService?.TrackEvent(AppCenterEvent.CopyPages);
             LogService?.Log.Information("Copying indices {@Indices} requested.", indices);
 
             if (NumberOfPages == 0)
@@ -1183,7 +1181,7 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
         public async Task CopyImageAsync(int index)
         {
-            Analytics.TrackEvent("Copy page");
+            AppCenterService?.TrackEvent(AppCenterEvent.CopyPage);
             LogService?.Log.Information("Copying index {Index} requested.", index);
 
             // check index
@@ -1236,12 +1234,12 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Copies the file represented by this scanResult to the clipboard.
+        ///     Copies the file represented by this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
         public async Task CopyAsync()
         {
-            Analytics.TrackEvent("Copy document");
+            AppCenterService?.TrackEvent(AppCenterEvent.CopyDocument);
             LogService?.Log.Information("Copying document requested.");
 
             // create DataPackage for clipboard

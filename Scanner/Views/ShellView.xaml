@@ -307,11 +307,11 @@
 
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" MaxHeight="32"/>
+                                <RowDefinition Height="Auto" MaxHeight="48"/>
                                 <RowDefinition Height="58"/>
                             </Grid.RowDefinitions>
 
-                            <ScrollViewer Grid.Row="0" MaxHeight="32" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Padding="0,0,12,0">
+                            <ScrollViewer Grid.Row="0" MaxHeight="48" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Visible" VerticalScrollMode="Auto" Padding="0,0,12,0">
                                 <TextBlock Text="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
                             </ScrollViewer>
                             <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>

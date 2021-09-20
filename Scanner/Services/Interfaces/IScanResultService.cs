@@ -33,5 +33,9 @@ namespace Scanner.Services
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> RenameAsync(int index, string newName);
         Task<bool> RenameAsync(string newName);
+        Task<bool> CopyAsync();
+        Task<bool> CopyImageAsync(int index);
+        Task<bool> CopyImagesAsync();
+        Task<bool> CopyImagesAsync(IList<int> indices);
     }
 }

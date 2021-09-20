@@ -8,6 +8,7 @@
         ShowScanFolder,
         ChangeScanFolder,
         ChooseFileFormat,
+        SaveChanges,
         StartNewPdf,
         ReorderPdfPages
     }

@@ -90,11 +90,11 @@
             <VisualStateGroup>
                 <VisualState x:Name="NormalState">
                     <Storyboard>
-
+                        
                     </Storyboard>
 
                     <VisualState.Setters>
-
+                        
                     </VisualState.Setters>
                 </VisualState>
 
@@ -110,6 +110,8 @@
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
+                        <Setter Target="GridLoading.Visibility" Value="Visible"/>
+                        <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -234,7 +236,7 @@
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Copy -->
-                            <AppBarButton x:Uid="ButtonEditCopy" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <AppBarButton x:Uid="ButtonEditCopy" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.CopyCommand}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -380,6 +382,11 @@
                     </DataTemplate>
                 </FlipView.ItemTemplate>
             </FlipView>
+
+            <Grid x:Name="GridLoading" Visibility="Collapsed">
+                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60"/>
+                <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
+            </Grid>
         </Grid>
 
         <!-- Footer -->

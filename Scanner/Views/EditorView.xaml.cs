@@ -26,8 +26,12 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.CropSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Crop);
             ViewModel.RotateSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rotate);
+            ViewModel.DrawSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Draw);
             ViewModel.RenameSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rename);
+            ViewModel.DeleteSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Delete);
+            ViewModel.CopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Copy);
         }
 
         private async Task ApplyFlipViewOrientation(Orientation orientation)
@@ -50,6 +54,13 @@ namespace Scanner.Views
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             await ApplyFlipViewOrientation(ViewModel.Orientation);
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                // fix ProgressRing getting stuck when navigating back to cached page
+                ProgressRingLoading.IsActive = false;
+                ProgressRingLoading.IsActive = true;
+            });
         }
 
         private async void ImageEx_Loaded(object sender, RoutedEventArgs e)

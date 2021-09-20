@@ -168,6 +168,20 @@
                     </muxc:Expander.Header>
                     <TextBlock Text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." Style="{StaticResource BodyTextBlockStyle}"/>
                 </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock Grid.Column="1" Text="Save changes" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <TextBlock Text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." Style="{StaticResource BodyTextBlockStyle}"/>
+                </muxc:Expander>
 
                 <TextBlock Text="PDF" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">

@@ -117,6 +117,8 @@ namespace Scanner.Services
 
         public async Task<bool> RenameAsync(int index, string newDisplayName)
         {
+            IsScanResultChanging = true;
+
             try
             {
                 await Result.RenameScanAsync(index, newDisplayName);
@@ -142,6 +144,8 @@ namespace Scanner.Services
 
         public async Task<bool> RenameAsync(string newDisplayName)
         {
+            IsScanResultChanging = true;
+
             try
             {
                 await Result.RenameScanAsync(newDisplayName);
@@ -162,6 +166,94 @@ namespace Scanner.Services
             }
 
             IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> CopyAsync()
+        {
+            try
+            {
+                await Result.CopyAsync();
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCopyHeading"),
+                    MessageText = LocalizedString("ErrorMessageCopyBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> CopyImageAsync(int index)
+        {
+            try
+            {
+                await Result.CopyImageAsync(index);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCopyHeading"),
+                    MessageText = LocalizedString("ErrorMessageCopyBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> CopyImagesAsync()
+        {
+            try
+            {
+                await Result.CopyImagesAsync();
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCopyHeading"),
+                    MessageText = LocalizedString("ErrorMessageCopyBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> CopyImagesAsync(IList<int> indices)
+        {
+            try
+            {
+                await Result.CopyImagesAsync(indices);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCopyHeading"),
+                    MessageText = LocalizedString("ErrorMessageCopyBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+
+                return false;
+            }
+
             return true;
         }
     }
