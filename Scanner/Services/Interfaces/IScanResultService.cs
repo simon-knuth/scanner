@@ -30,6 +30,8 @@ namespace Scanner.Services
             bool fixedFolder);
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files);
 
-        Task RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
+        Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
+        Task<bool> RenameAsync(int index, string newName);
+        Task<bool> RenameAsync(string newName);
     }
 }

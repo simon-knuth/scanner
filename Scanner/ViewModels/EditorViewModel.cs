@@ -24,10 +24,18 @@ namespace Scanner.ViewModels
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
 
         public AsyncRelayCommand<string> RotatePageCommand;
+        public AsyncRelayCommand<string> RenameCommand;
         public RelayCommand EnterCropModeCommand;
         public RelayCommand LeaveCropModeCommand;
         public RelayCommand EnterDrawModeCommand;
         public RelayCommand LeaveDrawModeCommand;
+
+        public event EventHandler CropSuccessful;
+        public event EventHandler RotateSuccessful;
+        public event EventHandler DrawSuccessful;
+        public event EventHandler RenameSuccessful;
+        public event EventHandler DeleteSuccessful;
+        public event EventHandler CopySuccessful;
 
         private Orientation _Orientation;
         public Orientation Orientation
@@ -144,6 +152,7 @@ namespace Scanner.ViewModels
             Messenger.Register<EditorIsEditingRequestMessage>(this, (r, m) => m.Reply(IsEditing));
 
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
+            RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
             EnterCropModeCommand = new RelayCommand(EnterCropMode);
             LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
             EnterDrawModeCommand = new RelayCommand(EnterDrawMode);
@@ -218,7 +227,34 @@ namespace Scanner.ViewModels
                 new Tuple<int, BitmapRotation>(SelectedPageIndex, rotation)
             };
 
-            await ScanResultService.RotatePagesAsync(instructions);
+            bool success = await ScanResultService.RotatePagesAsync(instructions);
+
+            if (!success) return;
+
+            RotateSuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task RenameAsync(string newName)
+        {
+            bool success;
+            
+            if (ScanResultService.Result.IsImage())
+            {
+                // rename single image file
+                success = await ScanResultService.RenameAsync(SelectedPageIndex, newName);
+            }
+            else
+            {
+                // rename PDF document
+                success = await ScanResultService.RenameAsync(newName);
+            }
+
+            if (!success) return;
+
+            // broadcast new name
+            BroadcastSelectedPageTitle();
+
+            RenameSuccessful?.Invoke(this, EventArgs.Empty);
         }
 
         private void EnterCropMode()

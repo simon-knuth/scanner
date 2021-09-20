@@ -1,6 +1,9 @@
-﻿using Scanner.Models;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
@@ -16,6 +19,9 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+
         private ObservableCollection<DiscoveredScanner> _DiscoveredScanners = new ObservableCollection<DiscoveredScanner>();
         public ObservableCollection<DiscoveredScanner> DiscoveredScanners
         {
@@ -48,6 +54,7 @@ namespace Scanner.Services
             Watcher.EnumerationCompleted += Watcher_EnumerationCompleted;
 
             Watcher.Start();
+            LogService?.Log.Information("Restarted ScannerDiscoveryService.");
         }
 
         /// <summary>
@@ -66,7 +73,8 @@ namespace Scanner.Services
         /// </summary>
         private async void Watcher_ScannerFound(DeviceWatcher sender, DeviceInformation args)
         {
-            await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            DiscoveredScanner newScanner = null;
+            await RunOnUIThreadAndWaitAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 // check for duplicate
                 foreach (DiscoveredScanner scanner in DiscoveredScanners)
@@ -74,6 +82,7 @@ namespace Scanner.Services
                     if (!scanner.Debug && scanner.Id.ToLower() == args.Id.ToLower())
                     {
                         // duplicate detected ~> ignore
+                        LogService?.Log.Information("Wanted to add scanner {@Device}, but it's a duplicate.", args);
                         return;
                     }
                 }
@@ -82,11 +91,19 @@ namespace Scanner.Services
                 try
                 {
                     ImageScanner imageScanner = await ImageScanner.FromIdAsync(args.Id);
-                    DiscoveredScanner newScanner = new DiscoveredScanner(imageScanner, args.Name);
+                    newScanner = new DiscoveredScanner(imageScanner, args.Name);
                     DiscoveredScanners.Add(newScanner);
+                    LogService?.Log.Information("Added scanner {@Device}.", args);
                 }
-                catch (Exception) { }
+                catch (Exception exc)
+                {
+                    LogService?.Log.Error(exc, "Failed to add scanner {@Device} to existing {ScannerList}.", args, DiscoveredScanners);
+                    return;
+                }
             });
+
+            // send analytics
+            if (newScanner != null) SendScannerAnalytics(newScanner);
         }
 
         /// <summary>
@@ -102,9 +119,11 @@ namespace Scanner.Services
                     if (scanner.Id.ToLower() == args.Id.ToLower())
                     {
                         DiscoveredScanners.Remove(scanner);
+                        LogService?.Log.Information("Removed scanner {@Device}.", args);
                         return;
                     }
                 }
+                LogService?.Log.Warning("Attempted to remove scanner {@Device} but couldn't find it in the list.", args);
             });
         }
 
@@ -115,6 +134,79 @@ namespace Scanner.Services
                 // add debug scanner
                 DiscoveredScanners.Add(scanner);
             });
+        }
+
+        /// <summary>
+        ///     Send information on a new scanner to App Center
+        /// </summary>
+        public void SendScannerAnalytics(DiscoveredScanner scanner)
+        {
+            string formatCombination = "";
+            bool jpgSupported, pngSupported, pdfSupported, xpsSupported, oxpsSupported, tifSupported, bmpSupported;
+            jpgSupported = pngSupported = pdfSupported = xpsSupported = oxpsSupported = tifSupported = bmpSupported = false;
+
+            try
+            {
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.Jpeg) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|JPG");
+                    jpgSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.Png) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|PNG");
+                    pngSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.Pdf) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|PDF");
+                    pdfSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.Xps) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|XPS");
+                    xpsSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.OpenXps) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|OXPS");
+                    oxpsSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.Tiff) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|TIF");
+                    tifSupported = true;
+                }
+                if (scanner.AutoFormats.FirstOrDefault(format => format.TargetFormat == ImageScannerFormat.DeviceIndependentBitmap) != null)
+                {
+                    formatCombination = formatCombination.Insert(formatCombination.Length, "|BMP");
+                    bmpSupported = true;
+                }
+
+                formatCombination = formatCombination.Insert(formatCombination.Length, "|");
+
+
+                AppCenterService?.TrackEvent(AppCenterEvent.ScannerAdded, new Dictionary<string, string> {
+                            { "formatCombination", formatCombination },
+                            { "jpgSupported", jpgSupported.ToString() },
+                            { "pngSupported", pngSupported.ToString() },
+                            { "pdfSupported", pdfSupported.ToString() },
+                            { "xpsSupported", xpsSupported.ToString() },
+                            { "oxpsSupported", oxpsSupported.ToString() },
+                            { "tifSupported", tifSupported.ToString() },
+                            { "bmpSupported", bmpSupported.ToString() },
+                            { "hasAuto", scanner.IsAutoAllowed.ToString() },
+                            { "hasFlatbed", scanner.IsFlatbedAllowed.ToString() },
+                            { "hasFeeder", scanner.IsFeederAllowed.ToString() },
+                            { "autoPreviewSupported", scanner.IsAutoPreviewAllowed.ToString() },
+                            { "flatbedPreviewSupported", scanner.IsFlatbedPreviewAllowed.ToString() },
+                            { "feederPreviewSupported", scanner.IsFeederPreviewAllowed.ToString() },
+                            { "feederAutoCropPossible", scanner.IsFeederAutoCropPossible.ToString() },
+                            { "feederAutoCropSingleSupported", scanner.IsFeederAutoCropSingleRegionAllowed.ToString() },
+                            { "feederAutoCropMultiSupported", scanner.IsFeederAutoCropMultiRegionAllowed.ToString() },
+                        });
+            }
+            catch (Exception) { }
         }
     }
 }

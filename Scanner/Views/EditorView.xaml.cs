@@ -7,6 +7,8 @@ using WinUI = Microsoft.UI.Xaml.Controls;
 using static Utilities;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.System;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace Scanner.Views
 {
@@ -15,11 +17,17 @@ namespace Scanner.Views
     /// </summary>
     public sealed partial class EditorView : Page
     {
+        public string IconStoryboardToolbarIcon = "FontIconCrop";
+
+        public string IconStoryboardToolbarIconDone = "FontIconCropDone";
+        
         public EditorView()
         {
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.RotateSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rotate);
+            ViewModel.RenameSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rename);
         }
 
         private async Task ApplyFlipViewOrientation(Orientation orientation)
@@ -76,5 +84,110 @@ namespace Scanner.Views
                 FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
             });
         }
+
+        private async void TextBoxRename_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Accept || e.Key == VirtualKey.Enter)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    TeachingTipRename.IsOpen = false;
+                    TeachingTipRename.ActionButtonCommand.Execute(TeachingTipRename.ActionButtonCommandParameter);
+                });
+            }
+        }
+
+        private async void TextBoxRename_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBoxRename.Focus(FocusState.Programmatic));
+        }
+
+        private async void ButtonToolbarRename_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipRename));
+        }
+
+        private async void TeachingTipRename_ActionButtonClick(WinUI.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => sender.IsOpen = false);
+        }
+
+        private async void StoryboardToolbarIconDoneStart_Completed(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardToolbarIconDoneFinish.Begin());
+        }
+
+        private async void PlayStoryboardToolbarIconDone(ToolbarFunction function)
+        {
+            switch (function)
+            {
+                case ToolbarFunction.Crop:
+                    IconStoryboardToolbarIcon = nameof(FontIconCrop);
+                    IconStoryboardToolbarIconDone = nameof(FontIconCropDone);
+                    break;
+                case ToolbarFunction.Rotate:
+                    IconStoryboardToolbarIcon = nameof(FontIconRotate);
+                    IconStoryboardToolbarIconDone = nameof(FontIconRotateDone);
+                    break;
+                case ToolbarFunction.Draw:
+                    IconStoryboardToolbarIcon = nameof(FontIconDraw);
+                    IconStoryboardToolbarIconDone = nameof(FontIconDrawDone);
+                    break;
+                case ToolbarFunction.Rename:
+                    IconStoryboardToolbarIcon = nameof(FontIconRename);
+                    IconStoryboardToolbarIconDone = nameof(FontIconRenameDone);
+                    break;
+                case ToolbarFunction.Delete:
+                    IconStoryboardToolbarIcon = nameof(FontIconDelete);
+                    IconStoryboardToolbarIconDone = nameof(FontIconDeleteDone);
+                    break;
+                case ToolbarFunction.Copy:
+                    IconStoryboardToolbarIcon = nameof(FontIconCopy);
+                    IconStoryboardToolbarIconDone = nameof(FontIconCopyDone);
+                    break;
+                case ToolbarFunction.OpenWith:
+                case ToolbarFunction.Share:
+                default:
+                    return;
+            }
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                StoryboardToolbarIconDoneStart.SkipToFill();
+                StoryboardToolbarIconDoneStart.Stop();
+                StoryboardToolbarIconDoneFinish.SkipToFill();
+                StoryboardToolbarIconDoneFinish.Stop();
+
+                int index = 0;
+                foreach (var animation in StoryboardToolbarIconDoneStart.Children)
+                {
+                    if (index <= 2) Storyboard.SetTargetName(animation, IconStoryboardToolbarIcon);
+                    else Storyboard.SetTargetName(animation, IconStoryboardToolbarIconDone);
+                    index++;
+                }
+
+                index = 0;
+                foreach (var animation in StoryboardToolbarIconDoneFinish.Children)
+                {
+                    if (index <= 2) Storyboard.SetTargetName(animation, IconStoryboardToolbarIcon);
+                    else Storyboard.SetTargetName(animation, IconStoryboardToolbarIconDone);
+                    index++;
+                }
+
+                StoryboardToolbarIconDoneStart.Begin();
+            });
+        }
+    }
+
+    enum ToolbarFunction
+    {
+        Crop,
+        Rotate,
+        Draw,
+        Rename,
+        Delete,
+        Copy,
+        OpenWith,
+        Share
     }
 }

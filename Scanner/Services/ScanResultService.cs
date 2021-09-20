@@ -88,7 +88,7 @@ namespace Scanner.Services
             throw new NotImplementedException();
         }
 
-        public async Task RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions)
+        public async Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
             IsScanResultChanging = true;
 
@@ -105,9 +105,64 @@ namespace Scanner.Services
                     Severity = AppWideStatusMessageSeverity.Error,
                     AdditionalText = exc.Message
                 });
+                LogService?.Log.Error(exc, "Rotating pages failed.");
+
+                IsScanResultChanging = false;
+                return false;
             }
 
             IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> RenameAsync(int index, string newDisplayName)
+        {
+            try
+            {
+                await Result.RenameScanAsync(index, newDisplayName);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageRenameHeading"),
+                    MessageText = LocalizedString("ErrorMessageRenameBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Renaming failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> RenameAsync(string newDisplayName)
+        {
+            try
+            {
+                await Result.RenameScanAsync(newDisplayName);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageRenameHeading"),
+                    MessageText = LocalizedString("ErrorMessageRenameBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Renaming failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
         }
     }
 }

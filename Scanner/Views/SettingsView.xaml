@@ -141,8 +141,19 @@
                                 <RadioButton Content="Rotate pages automatically" IsChecked="True"/>
                             </muxc:RadioButtons>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <TextBlock Text="This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition MaxWidth="350"/>
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                            </Grid>
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
@@ -326,7 +337,7 @@
                         </Grid>
                     </muxc:Expander.Header>
                     
-                    <TextBlock LineHeight="28" TextWrapping="WrapWholeWords">
+                    <TextBlock LineHeight="28" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True">
                         <Run FontWeight="SemiBold">David</Run> - British English
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
                         <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)

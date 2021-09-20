@@ -142,7 +142,6 @@
     <Compile Include="Models\ScannerFileFormat.cs" />
     <Compile Include="Models\ScanResolution.cs" />
     <Compile Include="Models\ScanOptions.cs" />
-    <Compile Include="PreviewPageIntent.cs" />
     <Compile Include="Services\AccessibilityService.cs" />
     <Compile Include="Services\AppDataService.cs" />
     <Compile Include="Services\Interfaces\IAccessibilityService.cs" />
@@ -173,16 +172,12 @@
     <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="SettingsPageIntent.cs" />
-    <Compile Include="RecognizedScanner.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="ScanResultElement.cs" />
     <Compile Include="ScanResult.cs" />
     <Compile Include="Enums_old.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PreviewPage.xaml.cs">
-      <DependentUpon>PreviewPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\DonateDialogViewModel.cs" />
     <Compile Include="ViewModels\PageListViewModel.cs" />
     <Compile Include="ViewModels\LogExportDialogViewModel.cs" />
@@ -494,10 +489,6 @@
     <Page Include="LicensePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PreviewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="StylesDictionary.xaml">
       <SubType>Designer</SubType>

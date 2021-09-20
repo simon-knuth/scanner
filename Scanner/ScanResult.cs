@@ -37,6 +37,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
 
@@ -638,12 +639,12 @@ namespace Scanner
         ///     Renames the selected scan.
         /// </summary>
         /// <param name="index">The index of the scan that's to be renamed.</param>
-        /// <param name="newName">The desired full file name for the scan.</param>
+        /// <param name="newDisplayName">The desired display name (without extension) for the scan.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        public async Task RenameScanAsync(int index, string newName)
+        public async Task RenameScanAsync(int index, string newDisplayName)
         {
-            Analytics.TrackEvent("Rename page");
-            LogService?.Log.Information("Renaming index {Index} to {Name}.", index, newName);
+            AppCenterService?.TrackEvent(AppCenterEvent.RenamePage);
+            LogService?.Log.Information("Renaming index {Index} to display name {Name}.", index, newDisplayName);
 
             // check index
             if (!IsValidIndex(index))
@@ -653,22 +654,23 @@ namespace Scanner
             }
 
             // check name is different
-            if (_Elements[index].ScanFile.Name == newName) return;
+            if (Elements[index].ScanFile.DisplayName == newDisplayName) return;
 
             // rename
-            await _Elements[index].RenameFileAsync(newName);
+            string fullName = newDisplayName + Elements[index].ScanFile.FileType;
+            await Elements[index].RenameFileAsync(fullName);
         }
 
 
         /// <summary>
         ///     Renames the scan. Only for scans that are combined into a single document (e.g. PDF).
         /// </summary>
-        /// <param name="index">The index of the scan that's to be renamed.</param>
-        /// <param name="newName">The desired full file name for the scan.</param>
+        /// <param name="newDisplayName">The desired display name for the scan.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        public async Task RenameScanAsync(string newName)
+        public async Task RenameScanAsync(string newDisplayName)
         {
-            Analytics.TrackEvent("Rename PDF");
+            AppCenterService?.TrackEvent(AppCenterEvent.RenamePDF);
+            LogService?.Log.Information("Renaming PDF to display name {Name}.", newDisplayName);
 
             // check type
             if (ScanResultFormat != ImageScannerFormat.Pdf)
@@ -678,10 +680,11 @@ namespace Scanner
             }
 
             // check name is different
-            if (Pdf.Name == newName) return;
+            if (Pdf.Name == newDisplayName) return;
 
             // rename
-            await Pdf.RenameAsync(newName, NameCollisionOption.FailIfExists);
+            string fullName = newDisplayName + Pdf.FileType;
+            await Pdf.RenameAsync(fullName, NameCollisionOption.FailIfExists);
         }
 
 

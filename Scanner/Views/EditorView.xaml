@@ -39,6 +39,45 @@
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:EditorModeIntConverter x:Key="EditorModeIntConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            
+            <!-- Storyboards -->
+            <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardToolbarIconDoneFinish">
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -111,15 +150,33 @@
                         <StackPanel Orientation="Horizontal">
                             <!-- Crop -->
                             <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" Command="{x:Bind ViewModel.EnterCropModeCommand}" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;"/>
-                                </AppBarButton.Icon>
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconCrop" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconCropDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </AppBarButton>
                             <!-- Rotate -->
                             <AppBarButton x:Name="ButtonToolbarRotate" x:Uid="ButtonEditRotate" LabelPosition="Collapsed" Style="{ThemeResource AppBarButtonStyleChevron}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="1" RightTapped="AppBarButtonRotate_RightTapped">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
-                                </AppBarButton.Icon>
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconRotate" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconRotateDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
 
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout x:Name="MenuFlyoutButtonRotate" Placement="Bottom">
@@ -131,29 +188,65 @@
                             </AppBarButton>
                             <!-- Draw -->
                             <AppBarButton x:Name="ButtonToolbarDraw" x:Uid="ButtonEditDraw" LabelPosition="Collapsed" Command="{x:Bind ViewModel.EnterDrawModeCommand}" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;"/>
-                                </AppBarButton.Icon>
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconDraw" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconDrawDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Rename -->
-                            <AppBarButton x:Uid="ButtonEditRename" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;"/>
-                                </AppBarButton.Icon>
+                            <AppBarButton x:Name="ButtonToolbarRename" x:Uid="ButtonEditRename" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarRename_Click">
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconRename" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconRenameDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </AppBarButton>
                             <!-- Delete -->
                             <AppBarButton x:Uid="ButtonEditDelete" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
-                                </AppBarButton.Icon>
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconDelete" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconDeleteDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Copy -->
                             <AppBarButton x:Uid="ButtonEditCopy" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                                <AppBarButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
-                                </AppBarButton.Icon>
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </AppBarButton>
                             <!-- Open with -->
                             <AppBarButton x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
@@ -179,44 +272,8 @@
                     </controls:Case>
                 </controls:SwitchPresenter>
 
-                <!-- Dynamic content left -->
-                <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}" Padding="0,0,6,0">
-                    <controls:SwitchPresenter.ContentTransitions>
-                        <TransitionCollection>
-                            <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
-                        </TransitionCollection>
-                    </controls:SwitchPresenter.ContentTransitions>
-
-                    <!-- Initial -->
-                    <controls:Case Value="0">
-
-                    </controls:Case>
-
-                    <!-- Crop -->
-                    <controls:Case Value="1">
-                        <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,0,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
-                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" Margin="0,0,12,0"/>
-                            <TextBlock Text="Crop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </controls:Case>
-
-                    <!-- Draw -->
-                    <controls:Case Value="2">
-                        <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,0,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
-                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;" FontSize="16" Margin="0,0,12,0"/>
-                            <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </controls:Case>
-                </controls:SwitchPresenter>
-
-                <!-- Dynamic content right -->
-                <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}" Padding="3,0,0,0">
-                    <controls:SwitchPresenter.ContentTransitions>
-                        <TransitionCollection>
-                            <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
-                        </TransitionCollection>
-                    </controls:SwitchPresenter.ContentTransitions>
-
+                <!-- Dynamic content -->
+                <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}">
                     <!-- Initial -->
                     <controls:Case Value="0">
 
@@ -225,44 +282,80 @@
                     <!-- Crop -->
                     <controls:Case Value="1">
                         <StackPanel Orientation="Horizontal">
-                            <AppBarToggleButton Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
-                                <AppBarToggleButton.Icon>
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE799;" FontSize="16"/>
-                                </AppBarToggleButton.Icon>
+                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+                                
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" Margin="0,0,12,0"/>
+                                <TextBlock Text="Crop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+                                
+                                <AppBarToggleButton Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                                    <AppBarToggleButton.Icon>
+                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE799;" FontSize="16"/>
+                                    </AppBarToggleButton.Icon>
 
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Top">
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" IsChecked="True" FontWeight="SemiBold"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500"/>
-                                        <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation"/>
-                                        <MenuFlyoutSeparator/>
-                                        <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="SemiBold"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142"/>
-                                        <MenuFlyoutSeparator/>
-                                        <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="SemiBold"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941"/>
-                                        <MenuFlyoutSeparator/>
-                                        <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054"/>
-                                        <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230"/>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </AppBarToggleButton>
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Top">
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" IsChecked="True" FontWeight="SemiBold"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500"/>
+                                            <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation"/>
+                                            <MenuFlyoutSeparator/>
+                                            <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="SemiBold"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142"/>
+                                            <MenuFlyoutSeparator/>
+                                            <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="SemiBold"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941"/>
+                                            <MenuFlyoutSeparator/>
+                                            <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230"/>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </AppBarToggleButton>
+                            </StackPanel>
                         </StackPanel>
                     </controls:Case>
 
                     <!-- Draw -->
                     <controls:Case Value="2">
                         <StackPanel Orientation="Horizontal">
-                            <InkToolbar InitialControls="PensOnly">
-                                <InkToolbarEraserButton/>
-                            </InkToolbar>
+                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+                                
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;" FontSize="16" Margin="0,0,12,0"/>
+                                <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+                                
+                                <InkToolbar InitialControls="PensOnly">
+                                    <InkToolbarEraserButton/>
+                                </InkToolbar>
+                            </StackPanel>
                         </StackPanel>
                     </controls:Case>
                 </controls:SwitchPresenter>
@@ -406,5 +499,18 @@
                 </controls:Case>
             </controls:SwitchPresenter>
         </Frame>
+
+        <muxc:TeachingTip
+            x:Name="TeachingTipRename"
+            x:Uid="DialogRename"
+            IsLightDismissEnabled="True"
+            PreferredPlacement="Bottom"
+            Target="{x:Bind ButtonToolbarRename}"
+            ActionButtonStyle="{ThemeResource AccentButtonStyle}"
+            ActionButtonCommand="{x:Bind ViewModel.RenameCommand}"
+            ActionButtonCommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}"
+            ActionButtonClick="TeachingTipRename_ActionButtonClick">
+            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" MaxWidth="275" HorizontalAlignment="Stretch"/>
+        </muxc:TeachingTip>
     </Grid>
 </Page>

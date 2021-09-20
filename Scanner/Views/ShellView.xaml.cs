@@ -90,6 +90,10 @@ namespace Scanner.Views
                     FrameMainContentThird.Navigate(typeof(PageListView), null,
                         new SuppressNavigationTransitionInfo());
                 }
+
+                //WinUI.InfoBadge badge = new WinUI.InfoBadge();
+                //((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).InfoBadge = badge;
+                //badge.Style = (Style)Application.Current.Resources["AttentionIconInfoBadgeStyle"];
             });
         }
 

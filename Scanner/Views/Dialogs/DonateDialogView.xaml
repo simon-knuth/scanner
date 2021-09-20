@@ -95,7 +95,7 @@
                 </Grid.ChildrenTransitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -107,29 +107,25 @@
                     <ColumnDefinition MaxWidth="350"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">
-                    <Ellipse Fill="Green"/>
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE91C;" FontSize="20" Foreground="{StaticResource SystemAccentColor}"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="No ads" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="1" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="No ads" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="1" AutomationProperties.SizeOfSet="4"/>
 
-                <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
-                    <Ellipse Fill="Green"/>
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C7;" FontSize="20" Foreground="{StaticResource SystemAccentColor}"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="No subscriptions" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="2" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="No subscriptions" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="2" AutomationProperties.SizeOfSet="4"/>
 
-                <Grid Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
-                    <Ellipse Fill="Green"/>
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
-                </Grid>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="No collection of personal data" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
 
-                <Grid Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,12,0,0">
-                    <Ellipse Fill="Green"/>
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF78C;" FontSize="14" Margin="6" Foreground="White"/>
-                </Grid>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="Free updates" VerticalAlignment="Center" Margin="16,12,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="4" AutomationProperties.SizeOfSet="4"/>
+                <FontIcon Grid.Row="3" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF133;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Free updates" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="4" AutomationProperties.SizeOfSet="4"/>
             </Grid>
         </Grid>
     </ScrollViewer>
