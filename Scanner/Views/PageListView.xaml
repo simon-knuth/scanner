@@ -189,13 +189,13 @@
                                     <Image Source="{x:Bind Thumbnail}"/>
                                     
                                     <!-- Selected Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource OverlayCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
-                                        <TextBlock Text="{x:Bind ItemDescriptor}" Margin="8,3,8,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiBold"/>
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiBold" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                     </Border>
                                     
                                     <!-- Normal Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource OverlayCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                                        <TextBlock Text="{x:Bind ItemDescriptor}" Margin="8,3,8,6" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                     </Border>
                                 </Grid>
                             </GridViewItem>

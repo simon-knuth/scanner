@@ -657,6 +657,8 @@ namespace Scanner
             // rename
             string fullName = newDisplayName + Elements[index].ScanFile.FileType;
             await Elements[index].RenameFileAsync(fullName);
+
+            RefreshItemDescriptors();
         }
 
 
@@ -683,6 +685,8 @@ namespace Scanner
             // rename
             string fullName = newDisplayName + Pdf.FileType;
             await Pdf.RenameAsync(fullName, NameCollisionOption.FailIfExists);
+
+            RefreshItemDescriptors();
         }
 
 
@@ -1393,6 +1397,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong.</exception>
         public async Task OpenImageWithAsync(int index)
         {
+            AppCenterService?.TrackEvent(AppCenterEvent.OpenWith);
             LogService?.Log.Information("Requested opening with of index {Index}.", index);
 
             // check index
@@ -1415,7 +1420,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong.</exception>
         public async Task OpenWithAsync()
         {
-            Analytics.TrackEvent("Open with");
+            AppCenterService?.TrackEvent(AppCenterEvent.OpenWith);
             LogService?.Log.Information("Requested opening with of document.");
 
             LauncherOptions options = new LauncherOptions();
@@ -1604,7 +1609,14 @@ namespace Scanner
         /// <param name="index"></param>
         public string GetDescriptorForIndex(int index)
         {
-            return String.Format(LocalizedString("TextPageListDescriptor"), (index + 1).ToString());
+            if (IsImage())
+            {
+                return Elements[index].ScanFile.DisplayName;
+            }
+            else
+            {
+                return String.Format(LocalizedString("TextPageListDescriptor"), (index + 1).ToString());
+            }
         }
 
 

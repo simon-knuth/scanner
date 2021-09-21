@@ -37,5 +37,7 @@ namespace Scanner.Services
         Task<bool> CopyImageAsync(int index);
         Task<bool> CopyImagesAsync();
         Task<bool> CopyImagesAsync(IList<int> indices);
+        Task OpenWithAsync();
+        Task OpenImageWithAsync(int index);
     }
 }

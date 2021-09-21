@@ -251,7 +251,7 @@
                                 </Grid>
                             </AppBarButton>
                             <!-- Open with -->
-                            <AppBarButton x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.OpenWithCommand}">
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AC;"/>
                                 </AppBarButton.Icon>

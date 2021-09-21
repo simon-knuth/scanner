@@ -250,5 +250,33 @@ namespace Scanner.Services
 
             return true;
         }
+
+        public async Task OpenWithAsync()
+        {
+            try
+            {
+                await Result.OpenWithAsync();
+            }
+            catch (Exception exc)
+            {
+                return;
+            }
+
+            return;
+        }
+
+        public async Task OpenImageWithAsync(int index)
+        {
+            try
+            {
+                await Result.OpenImageWithAsync(index);
+            }
+            catch (Exception exc)
+            {
+                return;
+            }
+
+            return;
+        }
     }
 }
