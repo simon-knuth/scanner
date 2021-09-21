@@ -117,8 +117,6 @@ namespace Scanner.Services
 
         public async Task<bool> RenameAsync(int index, string newDisplayName)
         {
-            IsScanResultChanging = true;
-
             try
             {
                 await Result.RenameScanAsync(index, newDisplayName);
@@ -138,14 +136,11 @@ namespace Scanner.Services
                 return false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 
         public async Task<bool> RenameAsync(string newDisplayName)
         {
-            IsScanResultChanging = true;
-
             try
             {
                 await Result.RenameScanAsync(newDisplayName);
@@ -165,7 +160,6 @@ namespace Scanner.Services
                 return false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 

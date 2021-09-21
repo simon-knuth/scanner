@@ -9,6 +9,11 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.System;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.UI.Xaml.Media;
+using Windows.Storage;
+using System.Collections.Generic;
 
 namespace Scanner.Views
 {
@@ -20,7 +25,11 @@ namespace Scanner.Views
         public string IconStoryboardToolbarIcon = "FontIconCrop";
 
         public string IconStoryboardToolbarIconDone = "FontIconCropDone";
-        
+
+        private DataTransferManager DataTransferManager = DataTransferManager.GetForCurrentView();
+
+        private List<StorageFile> ShareFiles;
+
         public EditorView()
         {
             this.InitializeComponent();
@@ -32,6 +41,43 @@ namespace Scanner.Views
             ViewModel.RenameSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rename);
             ViewModel.DeleteSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Delete);
             ViewModel.CopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Copy);
+            ViewModel.TargetedShareUiRequested += ViewModel_TargetedShareUiRequested;
+            DataTransferManager.DataRequested += DataTransferManager_DataRequested;
+        }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            if (ShareFiles != null && ShareFiles.Count >= 1)
+            {
+                args.Request.Data.SetStorageItems(ShareFiles);
+
+                if (ShareFiles.Count == 1)
+                {
+                    args.Request.Data.Properties.Title = ShareFiles[0].Name;
+                }
+                else
+                {
+                    args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
+                }
+            }
+        }
+
+        private async void ViewModel_TargetedShareUiRequested(object sender, System.Collections.Generic.List<StorageFile> e)
+        {
+            ShareFiles = e;
+            
+            Rect rectangle;
+            ShareUIOptions shareUIOptions = new ShareUIOptions();
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                GeneralTransform transform;
+                transform = ButtonToolbarShare.TransformToVisual(null);
+                rectangle = transform.TransformBounds(new Rect(0, 0, ButtonToolbarShare.ActualWidth, ButtonToolbarShare.ActualHeight));
+                shareUIOptions.SelectionRect = rectangle;
+
+                DataTransferManager.ShowShareUI(shareUIOptions);
+            });
         }
 
         private async Task ApplyFlipViewOrientation(Orientation orientation)

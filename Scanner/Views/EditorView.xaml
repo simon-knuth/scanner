@@ -42,21 +42,21 @@
             
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="0.0" Duration="0:0:0.15"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="0.0" Duration="0:0:0.15"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                  To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                  To="1.0" Duration="0:0:0"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
                         <CubicEase EasingMode="EaseOut"/>
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
                     <DoubleAnimation.EasingFunction>
                         <CubicEase EasingMode="EaseOut"/>
@@ -65,17 +65,17 @@
             </Storyboard>
 
             <Storyboard x:Name="StoryboardToolbarIconDoneFinish">
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIcon, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                  To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="Opacity"
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                  To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
-                <DoubleAnimation Storyboard.TargetName="{x:Bind IconStoryboardToolbarIconDone, Mode=OneWay}" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
             </Storyboard>
         </ResourceDictionary>
@@ -257,7 +257,7 @@
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <!-- Share -->
-                            <AppBarButton x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <AppBarButton x:Name="ButtonToolbarShare" x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.ShareCommand}">
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                                 </AppBarButton.Icon>

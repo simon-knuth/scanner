@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
@@ -19,6 +20,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
@@ -26,6 +28,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<string> RotatePageCommand;
         public AsyncRelayCommand<string> RenameCommand;
         public AsyncRelayCommand CopyCommand;
+        public RelayCommand ShareCommand;
         public RelayCommand EnterCropModeCommand;
         public RelayCommand LeaveCropModeCommand;
         public RelayCommand EnterDrawModeCommand;
@@ -37,6 +40,8 @@ namespace Scanner.ViewModels
         public event EventHandler RenameSuccessful;
         public event EventHandler DeleteSuccessful;
         public event EventHandler CopySuccessful;
+
+        public event EventHandler<List<StorageFile>> TargetedShareUiRequested;
 
         private Orientation _Orientation;
         public Orientation Orientation
@@ -155,6 +160,7 @@ namespace Scanner.ViewModels
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
             CopyCommand = new AsyncRelayCommand(CopyAsync);
+            ShareCommand = new RelayCommand(Share);
             EnterCropModeCommand = new RelayCommand(EnterCropMode);
             LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
             EnterDrawModeCommand = new RelayCommand(EnterDrawMode);
@@ -297,6 +303,27 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             CopySuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Share()
+        {
+            // collect files
+            List<StorageFile> list = new List<StorageFile>();
+            if (ScanResultService.Result.IsImage())
+            {
+                // share single image file
+                list.Add(ScanResult.GetImageFile(SelectedPageIndex));
+            }
+            else
+            {
+                // share PDF document
+                list.Add(ScanResult.Pdf);
+            }
+
+            // request share UI
+            TargetedShareUiRequested?.Invoke(this, list);
+
+            AppCenterService?.TrackEvent(AppCenterEvent.Share);
         }
     }
 
