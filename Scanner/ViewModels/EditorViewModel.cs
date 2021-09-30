@@ -27,6 +27,7 @@ namespace Scanner.ViewModels
 
         public AsyncRelayCommand<string> RotatePageCommand;
         public AsyncRelayCommand<string> RenameCommand;
+        public AsyncRelayCommand DeleteCommand;
         public AsyncRelayCommand CopyCommand;
         public AsyncRelayCommand OpenWithCommand;
         public RelayCommand ShareCommand;
@@ -160,6 +161,7 @@ namespace Scanner.ViewModels
 
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
+            DeleteCommand = new AsyncRelayCommand(DeleteAsync);
             CopyCommand = new AsyncRelayCommand(CopyAsync);
             OpenWithCommand = new AsyncRelayCommand(OpenWithAsync);
             ShareCommand = new RelayCommand(Share);
@@ -340,6 +342,17 @@ namespace Scanner.ViewModels
                 // open PDF document
                 await ScanResultService.OpenWithAsync();
             }
+        }
+
+        private async Task DeleteAsync()
+        {
+            bool success;
+
+            success = await ScanResultService.DeleteScanAsync(SelectedPageIndex);
+
+            if (!success) return;
+
+            DeleteSuccessful?.Invoke(this, EventArgs.Empty);
         }
     }
 

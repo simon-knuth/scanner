@@ -15,7 +15,7 @@
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:dialogs="using:Scanner.Views.Dialogs"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core" xmlns:messenger="using:Scanner.Services.Messenger"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" xmlns:messenger="using:Scanner.Services.Messenger" xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
@@ -335,6 +335,14 @@
                     <StackPanel Orientation="Vertical" MaxWidth="400">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                            <TextBlock Text="Debug contextual dialogs" Style="{StaticResource BaseTextBlockStyle}"/>
+                        </StackPanel>
+
+                        <Button Content="Tutorial page list" Command="{x:Bind ViewModel.DebugShowTutorialPageListCommand}"/>
+
+
+                        <StackPanel Orientation="Horizontal" Margin="0,32,0,16">
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
                             <TextBlock Text="Debug status messages" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
 
@@ -350,5 +358,20 @@
                 </Flyout>
             </FlyoutBase.AttachedFlyout>
         </muxc:NavigationView>
+
+        <muxc:TeachingTip
+            x:Name="TeachingTipTutorialPageList"
+            x:Uid="DialogTutorialManage"
+            Target="{x:Bind NavigationViewItemMainPageList}"
+            PreferredPlacement="BottomRight"
+            IsLightDismissEnabled="False">
+            <muxc:TeachingTip.HeroContent>
+                <Frame CornerRadius="{StaticResource OverlayCornerRadius}" Padding="-50" Height="150">
+                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4">
+                        <lottie:LottieVisualSource UriSource="ms-appx:///Assets/AnimatedVisuals/lottie_19814-data-list.json"/>
+                    </muxc:AnimatedVisualPlayer>
+                </Frame>
+            </muxc:TeachingTip.HeroContent>
+        </muxc:TeachingTip>
     </Grid>
 </Page>

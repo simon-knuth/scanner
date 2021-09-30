@@ -132,7 +132,6 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Renaming failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
 
@@ -155,6 +154,101 @@ namespace Scanner.Services
                     AdditionalText = exc.Message
                 });
                 LogService?.Log.Error(exc, "Renaming failed.");
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteScanAsync(int index)
+        {
+            try
+            {
+                await Result.DeleteScanAsync(index);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageDeleteHeading"),
+                    MessageText = LocalizedString("ErrorMessageDeleteBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Deleting failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteScanAsync(int index, StorageDeleteOption deleteOption)
+        {
+            try
+            {
+                await Result.DeleteScanAsync(index);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageDeleteHeading"),
+                    MessageText = LocalizedString("ErrorMessageDeleteBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Deleting failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteScansAsync(List<int> indices)
+        {
+            try
+            {
+                await Result.DeleteScansAsync(indices);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageDeleteHeading"),
+                    MessageText = LocalizedString("ErrorMessageDeleteBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Deleting failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
+        {
+            try
+            {
+                await Result.DeleteScansAsync(indices, deleteOption);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageDeleteHeading"),
+                    MessageText = LocalizedString("ErrorMessageDeleteBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Deleting failed.");
 
                 IsScanResultChanging = false;
                 return false;

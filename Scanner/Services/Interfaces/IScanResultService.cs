@@ -33,6 +33,10 @@ namespace Scanner.Services
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> RenameAsync(int index, string newName);
         Task<bool> RenameAsync(string newName);
+        Task<bool> DeleteScanAsync(int index);
+        Task<bool> DeleteScanAsync(int index, StorageDeleteOption deleteOption);
+        Task<bool> DeleteScansAsync(List<int> indices);
+        Task<bool> DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption);
         Task<bool> CopyAsync();
         Task<bool> CopyImageAsync(int index);
         Task<bool> CopyImagesAsync();

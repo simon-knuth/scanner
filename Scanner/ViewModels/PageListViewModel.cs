@@ -6,6 +6,7 @@ using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
+using Windows.UI.Xaml.Data;
 
 namespace Scanner.ViewModels
 {
@@ -38,11 +39,11 @@ namespace Scanner.ViewModels
             }
         }
 
-        private IList<ScanResultElement> _SelectedPages;
-        public IList<ScanResultElement> SelectedPages
+        private IReadOnlyList<ItemIndexRange> _SelectedRanges;
+        public IReadOnlyList<ItemIndexRange> SelectedRanges
         {
-            get => _SelectedPages;
-            set => SetProperty(ref _SelectedPages, value);
+            get => _SelectedRanges;
+            set => SetProperty(ref _SelectedRanges, value);
         }
 
         private bool _IsScanRunning;

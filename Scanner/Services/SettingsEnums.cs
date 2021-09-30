@@ -10,7 +10,8 @@
             SettingAppendTime,
             SettingEditorOrientation,
             SettingRememberScanOptions,
-            SettingErrorStatistics
+            SettingErrorStatistics,
+            TutorialPageListShown
         }
 
         public enum SettingSaveLocationType

@@ -39,6 +39,7 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -97,7 +98,11 @@
                                 <RadioButton Content="Ask every time"/>
                             </muxc:RadioButtons>
                         </StackPanel>
-                        <Frame IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}">
+                        <Frame x:Name="FrameSaveLocationFolder" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" Visibility="{x:Bind RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay}" Opacity="{x:Bind FrameSaveLocationFolder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                            <Frame.OpacityTransition>
+                                <ScalarTransition Duration="0:0:0.3"/>
+                            </Frame.OpacityTransition>
+
                             <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                                 <TextBlock Text="{x:Bind ViewModel.SaveLocationPath, Mode=OneWay}" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">

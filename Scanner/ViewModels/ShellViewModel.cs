@@ -25,10 +25,14 @@ namespace Scanner.ViewModels
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
+
+        public event EventHandler TutorialPageListRequested;
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
         public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
+        public RelayCommand DebugShowTutorialPageListCommand => new RelayCommand(DebugShowTutorialPageList);
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -110,7 +114,10 @@ namespace Scanner.ViewModels
 
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
+            ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
+            ScanResultService.ScanResultChanged += ScanResultService_ScanResultChanged;
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,6 +192,36 @@ namespace Scanner.ViewModels
             
             ApplicationView view = ApplicationView.GetForCurrentView();
             view.Title = TitlebarText;
+        }
+
+        private void ScanResultService_ScanResultChanged(object sender, EventArgs e)
+        {
+            if (ScanResultService.Result.NumberOfPages >= 2)
+            {
+                RequestTutorialPageListIfNeeded();
+            }
+        }
+
+        private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
+        {
+            if (ScanResultService.Result.NumberOfPages >= 2)
+            {
+                RequestTutorialPageListIfNeeded();
+            }
+        }
+
+        private void RequestTutorialPageListIfNeeded()
+        {
+            if ((bool)SettingsService?.GetSetting(SettingsEnums.AppSetting.TutorialPageListShown) == false)
+            {
+                TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
+                SettingsService?.SetSetting(SettingsEnums.AppSetting.TutorialPageListShown, true);
+            }
+        }
+
+        private void DebugShowTutorialPageList()
+        {
+            TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 

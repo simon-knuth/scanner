@@ -19,7 +19,16 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.TutorialPageListRequested += ViewModel_TutorialPageListRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+        }
+
+        private async void ViewModel_TutorialPageListRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipTutorialPageList);
+            });
         }
 
         private async void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -137,17 +146,32 @@ namespace Scanner.Views
                 NavigationViewItemMainScanOptions.IsSelected = true;
             }
 
-            if (e.NewState == WideState && NavigationViewItemMainPageList.IsSelected)
+            if (e.NewState == NarrowState)
             {
-                FrameMainContentFirst.Content = null;
-                NavigationViewItemMainScanOptions.IsSelected = true;
+                TeachingTipTutorialPageList.Target = NavigationViewItemMainPageList;
+                TeachingTipTutorialPageList.PreferredPlacement = WinUI.TeachingTipPlacementMode.Bottom;
+            }
+
+            if (e.NewState == DefaultState)
+            {
+                TeachingTipTutorialPageList.Target = NavigationViewItemMainPageList;
+                TeachingTipTutorialPageList.PreferredPlacement = WinUI.TeachingTipPlacementMode.Right;
             }
 
             if (e.NewState == WideState)
             {
+                if (NavigationViewItemMainPageList.IsSelected)
+                {
+                    FrameMainContentFirst.Content = null;
+                    NavigationViewItemMainScanOptions.IsSelected = true;
+                }
+
                 FrameMainContentThird.Navigate(typeof(PageListView), null,
                     new SuppressNavigationTransitionInfo());
-            }
+
+                TeachingTipTutorialPageList.Target = FrameMainContentThird;
+                TeachingTipTutorialPageList.PreferredPlacement = WinUI.TeachingTipPlacementMode.LeftBottom;
+            }            
         }
 
         /// <summary>

@@ -43,6 +43,7 @@
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -91,13 +92,27 @@
         <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
             <Frame x:Name="FrameToolbar">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                    <StackPanel.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition/>
+                        </TransitionCollection>
+                    </StackPanel.Transitions>
+
+                    <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Unchecked="AppBarToggleButtonSelect_Unchecked">
                         <AppBarToggleButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
-                    <AppBarSeparator/>
-                    <AppBarButton x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" RightTapped="AppBarButtonRotate_RightTapped">
+                    <AppBarSeparator Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <AppBarSeparator.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarSeparator.OpacityTransition>
+                    </AppBarSeparator>
+                    <AppBarButton x:Name="AppBarButtonRotate" x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonRotate.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" RightTapped="AppBarButtonRotate_RightTapped">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+                        
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
                         </AppBarButton.Icon>
@@ -110,22 +125,43 @@
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
                     </AppBarButton>
-                    <AppBarButton x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton x:Name="AppBarButtonDelete" x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonDelete.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton x:Name="AppBarButtonCopy" x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonCopy.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton x:Name="AppBarButtonShare" x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton x:Uid="ButtonManagePrint" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}">
+                    <AppBarButton x:Name="AppBarButtonPrint" x:Uid="ButtonManagePrint" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                        <AppBarButton.Icon>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Name="AppBarButtonPrintSelect" x:Uid="ButtonManagePrint" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+                        
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
                         </AppBarButton.Icon>
@@ -155,12 +191,10 @@
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
                             <core:ChangePropertyAction PropertyName="SelectedIndex" Value="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}"/>
-                            <!--<core:ChangePropertyAction PropertyName="SelectedItems" Value="{x:Null}"/>-->
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
                         </core:DataTriggerBehavior>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value=""/>
-                            <!--<core:ChangePropertyAction PropertyName="SelectedItems" Value="{x:Bind ViewModel.SelectedPages, Mode=TwoWay}"/>-->
+                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value="-1"/>
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
@@ -189,12 +223,12 @@
                                     <Image Source="{x:Bind Thumbnail}"/>
                                     
                                     <!-- Selected Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
-                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiBold" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                     </Border>
                                     
                                     <!-- Normal Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                         <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                     </Border>
                                 </Grid>

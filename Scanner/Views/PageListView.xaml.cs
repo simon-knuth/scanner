@@ -1,11 +1,10 @@
 ﻿using System;
-using Windows.Foundation;
+using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using static Utilities;
 
 namespace Scanner.Views
@@ -91,6 +90,27 @@ namespace Scanner.Views
                     };
                     item.StartBringIntoView(options);
                 }
+                else if (GridViewPages.SelectionMode != ListViewSelectionMode.Single)
+                {
+                    // connect items to viewmodel
+                    if (GridViewPages.SelectedRanges.Count == 0)
+                    {
+                        ViewModel.SelectedRanges = null;
+                    }
+                    else
+                    {
+                        ViewModel.SelectedRanges = GridViewPages.SelectedRanges;
+                    }
+                }
+            });
+        }
+
+        private async void AppBarToggleButtonSelect_Unchecked(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // correct item connection to viewmodel
+                ViewModel.SelectedRanges = null;
             });
         }
     }

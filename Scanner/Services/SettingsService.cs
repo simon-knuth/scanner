@@ -1,7 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using static Scanner.Services.SettingsEnums;
@@ -103,34 +102,39 @@ namespace Scanner.Services
 
             _IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
         }
-        
+
         /// <summary>
         ///     Retrieve a setting's value and substitute null values with default ones.
         /// </summary>
         public object GetSetting(AppSetting setting)
         {
+            string name = setting.ToString().ToUpper();
+
             switch (setting)
             {
                 case AppSetting.SettingSaveLocationType:
-                    return SettingsContainer.Values["SettingSaveLocationType"] ?? SettingSaveLocationType.SetLocation;
+                    return SettingsContainer.Values[name] ?? SettingSaveLocationType.SetLocation;
 
                 case AppSetting.SettingAppTheme:
-                    return SettingsContainer.Values["SettingAppTheme"] ?? SettingAppTheme.System;
+                    return SettingsContainer.Values[name] ?? SettingAppTheme.System;
 
                 case AppSetting.SettingAutoRotate:
-                    return SettingsContainer.Values["SettingAutoRotate"] ?? SettingAutoRotate.AskEveryTime;
+                    return SettingsContainer.Values[name] ?? SettingAutoRotate.AskEveryTime;
 
                 case AppSetting.SettingAppendTime:
-                    return SettingsContainer.Values["SettingAppendTime"] ?? true;
+                    return SettingsContainer.Values[name] ?? true;
 
                 case AppSetting.SettingEditorOrientation:
-                    return SettingsContainer.Values["SettingEditorOrientation"] ?? SettingEditorOrientation.Horizontal;
+                    return SettingsContainer.Values[name] ?? SettingEditorOrientation.Horizontal;
 
                 case AppSetting.SettingRememberScanOptions:
-                    return SettingsContainer.Values["SettingRememberScanOptions"] ?? true;
+                    return SettingsContainer.Values[name] ?? true;
 
                 case AppSetting.SettingErrorStatistics:
-                    return SettingsContainer.Values["SettingErrorStatistics"] ?? false;
+                    return SettingsContainer.Values[name] ?? false;
+
+                case AppSetting.TutorialPageListShown:
+                    return SettingsContainer.Values[name] ?? false;
 
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
@@ -143,7 +147,7 @@ namespace Scanner.Services
         public void SetSetting(AppSetting setting, object value)
         {
             string name = setting.ToString().ToUpper();
-            
+
             switch (setting)
             {
                 case AppSetting.SettingSaveLocationType:
@@ -171,6 +175,10 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.SettingErrorStatistics:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.TutorialPageListShown:
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 

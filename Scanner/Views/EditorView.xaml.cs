@@ -148,8 +148,8 @@ namespace Scanner.Views
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    TeachingTipRename.IsOpen = false;
-                    TeachingTipRename.ActionButtonCommand.Execute(TeachingTipRename.ActionButtonCommandParameter);
+                    FlyoutRename.Hide();
+                    ViewModel.RenameCommand.Execute(TextBoxRename.Text);
                 });
             }
         }
@@ -161,12 +161,11 @@ namespace Scanner.Views
 
         private async void ButtonToolbarRename_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => ReliablyOpenTeachingTip(TeachingTipRename));
-        }
-
-        private async void TeachingTipRename_ActionButtonClick(WinUI.TeachingTip sender, object args)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => sender.IsOpen = false);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TextBoxRename.Text = "";
+                FlyoutBase.ShowAttachedFlyout(ButtonToolbarRename);
+            });
         }
 
         private async void StoryboardToolbarIconDoneStart_Completed(object sender, object e)
@@ -232,6 +231,34 @@ namespace Scanner.Views
                 }
 
                 StoryboardToolbarIconDoneStart.Begin();
+            });
+        }
+
+        private async void ButtonRename_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutRename.Hide());
+        }
+
+        private async void ButtonRenameCancel_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutRename.Hide());
+        }
+
+        private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutDelete.Hide());
+        }
+
+        private async void ButtonDeleteCancel_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutDelete.Hide());
+        }
+
+        private async void ButtonToolbarDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(ButtonToolbarDelete);
             });
         }
     }

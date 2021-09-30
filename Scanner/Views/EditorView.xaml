@@ -218,9 +218,37 @@
                                         </FontIcon.RenderTransform>
                                     </FontIcon>
                                 </Grid>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout x:Name="FlyoutRename">
+                                        <Grid MinWidth="250">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Rename" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Enter a new name for the file" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+
+                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,16" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
+
+                                            <Grid Grid.Row="3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
+                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonRenameCancel_Click"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <!-- Delete -->
-                            <AppBarButton x:Uid="ButtonEditDelete" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <AppBarButton x:Name="ButtonToolbarDelete" x:Uid="ButtonEditDelete" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarDelete_Click">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconDelete" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -233,6 +261,31 @@
                                         </FontIcon.RenderTransform>
                                     </FontIcon>
                                 </Grid>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout x:Name="FlyoutDelete">
+                                        <Grid MinWidth="250">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Delete" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Are you sure you want to delete this?" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
+
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="ButtonDelete_Click"/>
+                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonDeleteCancel_Click"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Copy -->
@@ -506,18 +559,5 @@
                 </controls:Case>
             </controls:SwitchPresenter>
         </Frame>
-
-        <muxc:TeachingTip
-            x:Name="TeachingTipRename"
-            x:Uid="DialogRename"
-            IsLightDismissEnabled="True"
-            PreferredPlacement="Bottom"
-            Target="{x:Bind ButtonToolbarRename}"
-            ActionButtonStyle="{ThemeResource AccentButtonStyle}"
-            ActionButtonCommand="{x:Bind ViewModel.RenameCommand}"
-            ActionButtonCommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}"
-            ActionButtonClick="TeachingTipRename_ActionButtonClick">
-            <TextBox x:Name="TextBoxRename" Margin="0,10,0,0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" MaxWidth="275" HorizontalAlignment="Stretch"/>
-        </muxc:TeachingTip>
     </Grid>
 </Page>
