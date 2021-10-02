@@ -7,9 +7,15 @@ using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
@@ -21,6 +27,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
@@ -29,7 +36,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<string> RenameCommand;
         public AsyncRelayCommand DeleteCommand;
         public AsyncRelayCommand CopyCommand;
-        public AsyncRelayCommand OpenWithCommand;
+        public AsyncRelayCommand<string> OpenWithCommand;
         public RelayCommand ShareCommand;
         public RelayCommand EnterCropModeCommand;
         public RelayCommand LeaveCropModeCommand;
@@ -77,7 +84,7 @@ namespace Scanner.ViewModels
             set
             {
                 int old = _SelectedPageIndex;
-                
+
                 if (old != value)
                 {
                     SetProperty(ref _SelectedPageIndex, value);
@@ -137,6 +144,13 @@ namespace Scanner.ViewModels
             }
         }
 
+        private List<OpenWithApp> _OpenWithApps;
+        public List<OpenWithApp> OpenWithApps
+        {
+            get => _OpenWithApps;
+            set => SetProperty(ref _OpenWithApps, value);
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +177,7 @@ namespace Scanner.ViewModels
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
             CopyCommand = new AsyncRelayCommand(CopyAsync);
-            OpenWithCommand = new AsyncRelayCommand(OpenWithAsync);
+            OpenWithCommand = new AsyncRelayCommand<string>((x) => OpenWithAsync(x));
             ShareCommand = new RelayCommand(Share);
             EnterCropModeCommand = new RelayCommand(EnterCropMode);
             LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
@@ -204,9 +218,10 @@ namespace Scanner.ViewModels
             ScanResult = null;
         }
 
-        private void ScanResultService_ScanResultCreated(object sender, ScanResult scanResult)
+        private async void ScanResultService_ScanResultCreated(object sender, ScanResult scanResult)
         {
             ScanResult = scanResult;
+            OpenWithApps = await GetAppsToOpenWith();
         }
 
         private void RefreshSelectedPageText()
@@ -249,7 +264,7 @@ namespace Scanner.ViewModels
         private async Task RenameAsync(string newName)
         {
             bool success;
-            
+
             if (ScanResultService.Result.IsImage())
             {
                 // rename single image file
@@ -330,17 +345,31 @@ namespace Scanner.ViewModels
             AppCenterService?.TrackEvent(AppCenterEvent.Share);
         }
 
-        private async Task OpenWithAsync()
+        private async Task OpenWithAsync(string appIndex)
         {
+            int index = int.Parse(appIndex);
+
+            if (index == -2)
+            {
+                // open the Microsoft Store to search for apps for this file extension
+                ImageScannerFormat? format = ScanResult.GetFileFormat();
+                if (format == null) return;
+
+                string formatString = ConvertImageScannerFormatToString((ImageScannerFormat)format);
+                await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://assoc/?FileExt={formatString.Substring(1)}"));
+            }
+
             if (ScanResultService.Result.IsImage())
             {
                 // open single image file
-                await ScanResultService.OpenImageWithAsync(SelectedPageIndex);
+                if (index == -1) await ScanResultService.OpenImageWithAsync(SelectedPageIndex);
+                else await ScanResultService.OpenImageWithAsync(SelectedPageIndex, OpenWithApps[index].AppInfo);
             }
             else
             {
                 // open PDF document
-                await ScanResultService.OpenWithAsync();
+                if (index == -1) await ScanResultService.OpenWithAsync();
+                else await ScanResultService.OpenWithAsync(OpenWithApps[index].AppInfo);
             }
         }
 
@@ -354,6 +383,39 @@ namespace Scanner.ViewModels
 
             DeleteSuccessful?.Invoke(this, EventArgs.Empty);
         }
+
+        private async Task<List<OpenWithApp>> GetAppsToOpenWith()
+        {
+            LogService?.Log.Information("GetAppsToOpenWith");
+            List<OpenWithApp> result = new List<OpenWithApp>();
+
+            // get format of current result
+            ImageScannerFormat? format = ScanResult.GetFileFormat();
+            if (format == null) return result;
+            string formatString = ConvertImageScannerFormatToString((ImageScannerFormat)format);
+
+            // find installed apps for this file extension
+            IReadOnlyList<AppInfo> readOnlyList = await Launcher.FindFileHandlersAsync(formatString);
+            foreach (AppInfo appInfo in readOnlyList)
+            {
+                LogService?.Log.Information($"GetAppsToOpenWith: Adding {appInfo.DisplayInfo.DisplayName}");
+                RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(64, 64));
+                IRandomAccessStreamWithContentType content = await stream.OpenReadAsync();
+
+                BitmapImage bmp = new BitmapImage();
+                await bmp.SetSourceAsync(content);
+
+                result.Add(new OpenWithApp
+                {
+                    AppInfo = appInfo,
+                    Logo = bmp
+                });
+
+                if (result.Count >= 4) break;   // 4 apps max
+            }
+
+            return result;
+        }
     }
 
     public enum EditorMode
@@ -361,5 +423,11 @@ namespace Scanner.ViewModels
         Initial = 0,
         Crop = 1,
         Draw = 2,
+    }
+
+    public class OpenWithApp
+    {
+        public AppInfo AppInfo;
+        public BitmapImage Logo;
     }
 }

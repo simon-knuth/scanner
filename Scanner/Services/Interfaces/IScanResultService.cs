@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 
@@ -42,6 +43,8 @@ namespace Scanner.Services
         Task<bool> CopyImagesAsync();
         Task<bool> CopyImagesAsync(IList<int> indices);
         Task OpenWithAsync();
+        Task OpenWithAsync(AppInfo appInfo);
         Task OpenImageWithAsync(int index);
+        Task OpenImageWithAsync(int index, AppInfo appInfo);
     }
 }

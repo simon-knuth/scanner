@@ -304,10 +304,22 @@
                                 </Grid>
                             </AppBarButton>
                             <!-- Open with -->
-                            <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.OpenWithCommand}">
+                            <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarOpenWith_Click">
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AC;"/>
                                 </AppBarButton.Icon>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout x:Name="MenuFlyoutButtonOpenWith" Placement="Bottom" Opening="MenuFlyoutButtonOpenWith_Opening">
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemStore" Text="Find more apps in the Store" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE719;" FontSize="16"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAllApps" Text="Show all apps" FontWeight="SemiBold" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-1"/>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <!-- Share -->
                             <AppBarButton x:Name="ButtonToolbarShare" x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.ShareCommand}">

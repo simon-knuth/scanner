@@ -189,28 +189,28 @@ static class Utilities
 
 
     /// <summary>
-    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding format string.
     /// </summary>
     /// <param name="format">An image format.</param>
-    /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static ImageScannerFormat ConvertImageScannerFormatToImageScannerFormat(ImageScannerFormat format)
+    /// <returns>The corresponding string.</returns>
+    public static string ConvertImageScannerFormatToString(ImageScannerFormat format)
     {
         switch (format)
         {
             case ImageScannerFormat.Jpeg:
-                return ImageScannerFormat.Jpeg;
+                return ".jpg";
             case ImageScannerFormat.Png:
-                return ImageScannerFormat.Png;
+                return ".png";
             case ImageScannerFormat.DeviceIndependentBitmap:
-                return ImageScannerFormat.DeviceIndependentBitmap;
+                return ".bmp";
             case ImageScannerFormat.Tiff:
-                return ImageScannerFormat.Tiff;
+                return ".tif";
             case ImageScannerFormat.Xps:
-                return ImageScannerFormat.Xps;
+                return ".xps";
             case ImageScannerFormat.OpenXps:
-                return ImageScannerFormat.OpenXps;
+                return ".oxps";
             case ImageScannerFormat.Pdf:
-                return ImageScannerFormat.Pdf;
+                return ".pdf";
             default:
                 throw new ApplicationException("ConvertImageScannerFormatToImageScannerFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
         }

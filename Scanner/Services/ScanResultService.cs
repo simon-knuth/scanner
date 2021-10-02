@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -359,11 +360,39 @@ namespace Scanner.Services
             return;
         }
 
+        public async Task OpenWithAsync(AppInfo appInfo)
+        {
+            try
+            {
+                await Result.OpenWithAsync(appInfo);
+            }
+            catch (Exception exc)
+            {
+                return;
+            }
+
+            return;
+        }
+
         public async Task OpenImageWithAsync(int index)
         {
             try
             {
                 await Result.OpenImageWithAsync(index);
+            }
+            catch (Exception exc)
+            {
+                return;
+            }
+
+            return;
+        }
+
+        public async Task OpenImageWithAsync(int index, AppInfo appInfo)
+        {
+            try
+            {
+                await Result.OpenImageWithAsync(index, appInfo);
             }
             catch (Exception exc)
             {

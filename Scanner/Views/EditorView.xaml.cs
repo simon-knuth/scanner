@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.UI.Xaml.Controls;
+using Scanner.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinUI = Microsoft.UI.Xaml.Controls;
-using static Utilities;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.System;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.UI.Xaml.Media;
-using Windows.Storage;
-using System.Collections.Generic;
+using Windows.UI.Xaml.Media.Animation;
+using static Utilities;
 
 namespace Scanner.Views
 {
@@ -65,7 +66,7 @@ namespace Scanner.Views
         private async void ViewModel_TargetedShareUiRequested(object sender, System.Collections.Generic.List<StorageFile> e)
         {
             ShareFiles = e;
-            
+
             Rect rectangle;
             ShareUIOptions shareUIOptions = new ShareUIOptions();
 
@@ -259,6 +260,46 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 FlyoutBase.ShowAttachedFlyout(ButtonToolbarDelete);
+            });
+        }
+
+        private async void ButtonToolbarOpenWith_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
+            });
+        }
+
+        private async void MenuFlyoutButtonOpenWith_Opening(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                MenuFlyoutButtonOpenWith.Items.Clear();
+                for (int i = 0; i < ViewModel.OpenWithApps.Count; i++)
+                {
+                    OpenWithApp app = ViewModel.OpenWithApps[i];
+
+                    var icon = new ImageIcon
+                    {
+                        Source = app.Logo,
+                        Scale = new System.Numerics.Vector3(3),
+                        CenterPoint = new System.Numerics.Vector3(app.Logo.PixelWidth / 2)
+                    };
+
+                    var item = new MenuFlyoutItem
+                    {
+                        Text = app.AppInfo.DisplayInfo.DisplayName,
+                        Icon = icon,
+                        Command = ViewModel.OpenWithCommand,
+                        CommandParameter = i.ToString()
+                    };
+
+                    MenuFlyoutButtonOpenWith.Items.Add(item);
+                }
+                MenuFlyoutButtonOpenWith.Items.Add(MenuFlyoutItemStore);
+                MenuFlyoutButtonOpenWith.Items.Add(new MenuFlyoutSeparator());
+                MenuFlyoutButtonOpenWith.Items.Add(MenuFlyoutItemAllApps);
             });
         }
     }

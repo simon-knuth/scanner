@@ -1404,11 +1404,37 @@ namespace Scanner
             if (!IsValidIndex(index))
             {
                 LogService?.Log.Error("Opening with of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
-                throw new ArgumentOutOfRangeException("Invalid index for copying file.");
+                throw new ArgumentOutOfRangeException("Invalid index for opening file.");
             }
 
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
+
+            await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
+        }
+
+
+        /// <summary>
+        ///     Launches the selected scan with the given <paramref name="appInfo"/>.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        /// <exception cref="Exception">Something went wrong.</exception>
+        public async Task OpenImageWithAsync(int index, AppInfo appInfo)
+        {
+            AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
+                            { "DisplayName", appInfo.DisplayInfo.DisplayName },
+                        });
+            LogService?.Log.Information($"Requested opening with of index {index} with app '{appInfo.DisplayInfo.DisplayName}'.");
+
+            // check index
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error($"Opening with of index {index} requested, but there are only {_Elements.Count} pages.");
+                throw new ArgumentOutOfRangeException("Invalid index for opening file.");
+            }
+
+            LauncherOptions options = new LauncherOptions();
+            options.TargetApplicationPackageFamilyName = appInfo.PackageFamilyName;
 
             await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
         }
@@ -1425,6 +1451,24 @@ namespace Scanner
 
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
+
+            await Launcher.LaunchFileAsync(Pdf, options);
+        }
+
+
+        /// <summary>
+        ///     Launches the represented file with the given <paramref name="appInfo"/>.
+        /// </summary>
+        /// <exception cref="Exception">Something went wrong.</exception>
+        public async Task OpenWithAsync(AppInfo appInfo)
+        {
+            AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
+                            { "DisplayName", appInfo.DisplayInfo.DisplayName },
+                        });
+            LogService?.Log.Information($"Requested opening with of document with app '{appInfo.DisplayInfo.DisplayName}'.");
+
+            LauncherOptions options = new LauncherOptions();
+            options.TargetApplicationPackageFamilyName = appInfo.PackageFamilyName;
 
             await Launcher.LaunchFileAsync(Pdf, options);
         }
