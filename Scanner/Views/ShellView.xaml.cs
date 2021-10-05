@@ -1,7 +1,10 @@
 ﻿using Scanner.ViewModels;
 using Scanner.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,13 +17,51 @@ namespace Scanner.Views
 {
     public sealed partial class ShellView : Page
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private DataTransferManager DataTransferManager = DataTransferManager.GetForCurrentView();
+        List<StorageFile> ShareFiles = new List<StorageFile>();
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ShellView()
         {
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ViewModel.TutorialPageListRequested += ViewModel_TutorialPageListRequested; ;
+            ViewModel.TutorialPageListRequested += ViewModel_TutorialPageListRequested;
+            ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
+            DataTransferManager.DataRequested += DataTransferManager_DataRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_ShareFilesChanged(object sender, List<Windows.Storage.StorageFile> e)
+        {
+            ShareFiles = e;
+        }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            if (ShareFiles != null && ShareFiles.Count >= 1)
+            {
+                args.Request.Data.SetStorageItems(ShareFiles);
+
+                if (ShareFiles.Count == 1)
+                {
+                    args.Request.Data.Properties.Title = ShareFiles[0].Name;
+                }
+                else
+                {
+                    args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
+                }
+            }
         }
 
         private async void ViewModel_TutorialPageListRequested(object sender, EventArgs e)

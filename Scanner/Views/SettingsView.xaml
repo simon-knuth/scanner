@@ -322,7 +322,6 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="0">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Foreground="Red" Glyph="&#xEB52;" FontSize="16" Margin="0,0,16,0" Opacity="0">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ExpanderTranslationsContributors.IsExpanded, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
@@ -337,6 +336,7 @@
                                         <ScalarTransition Duration="0:0:0.25"/>
                                     </FontIcon.OpacityTransition>
                                 </FontIcon>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
                             </Grid>
                             <TextBlock Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
@@ -392,7 +392,7 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center">
+                <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayLicensesDialogCommand}">
                     <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses" TextWrapping="WrapWholeWords"/>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderAboutCredits" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,12,0,0">

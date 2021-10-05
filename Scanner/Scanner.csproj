@@ -129,32 +129,34 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums.cs" />
-    <Compile Include="ErrorMessage.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
-    <Compile Include="LicenseDetailPage.xaml.cs">
-      <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
+      <DependentUpon>LicenseDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LicensePage.xaml.cs">
-      <DependentUpon>LicensePage.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\LicensesView.xaml.cs">
+      <DependentUpon>LicensesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\LogFile.cs" />
     <Compile Include="Models\DiscoveredScanner.cs" />
     <Compile Include="Models\ScannerFileFormat.cs" />
     <Compile Include="Models\ScanResolution.cs" />
     <Compile Include="Models\ScanOptions.cs" />
+    <Compile Include="Services\HelperService.cs" />
     <Compile Include="Services\AccessibilityService.cs" />
     <Compile Include="Services\AppDataService.cs" />
     <Compile Include="Services\Interfaces\IAccessibilityService.cs" />
     <Compile Include="Services\Interfaces\IAppDataService.cs" />
     <Compile Include="Services\Interfaces\IScanResultService.cs" />
     <Compile Include="Services\Interfaces\IScanService.cs" />
+    <Compile Include="Services\Interfaces\IHelperService.cs" />
+    <Compile Include="Services\Messenger\Messages\SetShareFilesMessage.cs" />
     <Compile Include="Services\Messenger\Messages\EditorIsEditingRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\EditorIsEditingChangedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PageListCurrentIndexChangedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\EditorCurrentIndexChangedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\EditorCurrentIndexRequestMessage.cs" />
-    <Compile Include="Services\Messenger\Messages\EditorSelectionTitleChangedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\AppWideStatusMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorSelectionTitleChangedMessage.cs" />
     <Compile Include="Services\ScanResultService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\ScanOptionsDatabaseService.cs" />
@@ -171,14 +173,13 @@
     <Compile Include="Services\SettingsEnums.cs" />
     <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="SettingsPageIntent.cs" />
-    <Compile Include="LogFile.cs" />
     <Compile Include="ScanResultElement.cs" />
     <Compile Include="ScanResult.cs" />
     <Compile Include="Enums_old.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DonateDialogViewModel.cs" />
+    <Compile Include="ViewModels\LicensesDialogViewModel.cs" />
     <Compile Include="ViewModels\PageListViewModel.cs" />
     <Compile Include="ViewModels\LogExportDialogViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
@@ -203,6 +204,9 @@
     <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\StringNotEmptyVisibilityConverter.cs" />
     <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\LicensesDialogView.xaml.cs">
+      <DependentUpon>LicensesDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\LogExportDialogView.xaml.cs">
       <DependentUpon>LogExportDialogView.xaml</DependentUpon>
     </Compile>
@@ -243,9 +247,6 @@
     <Compile Include="XAML Converters\TopThicknessConverter.cs" />
     <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverter.cs" />
     <Compile Include="XAML Converters\NegativeTopThicknessConverter.cs" />
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -482,11 +483,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="LicenseDetailPage.xaml">
+    <Page Include="Views\Dialogs\LicenseDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LicensePage.xaml">
+    <Page Include="Views\Dialogs\LicensesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -494,9 +495,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SettingsPage.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Dialogs\LicensesDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\LogExportDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>

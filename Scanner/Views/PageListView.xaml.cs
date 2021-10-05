@@ -1,19 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using static Utilities;
 
 namespace Scanner.Views
 {
     public sealed partial class PageListView : Page
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string IconStoryboardToolbarIcon = "FontIconCrop";
+        public string IconStoryboardToolbarIconDone = "FontIconCropDone";
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public PageListView()
         {
             this.InitializeComponent();
+
+            ViewModel.TargetedShareUiRequested += ViewModel_TargetedShareUiRequested;
+            ViewModel.RotateSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rotate);
+            ViewModel.DeleteSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Delete);
+            ViewModel.CopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Copy);
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private async void ViewModel_TargetedShareUiRequested(object sender, EventArgs e)
+        {
+            Rect rectangle;
+            ShareUIOptions shareUIOptions = new ShareUIOptions();
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                GeneralTransform transform;
+                transform = AppBarButtonShare.TransformToVisual(null);
+                rectangle = transform.TransformBounds(new Rect(0, 0, AppBarButtonShare.ActualWidth, AppBarButtonShare.ActualHeight));
+                shareUIOptions.SelectionRect = rectangle;
+
+                DataTransferManager.ShowShareUI(shareUIOptions);
+            });
         }
 
         private async void AppBarButtonRotate_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -81,6 +122,9 @@ namespace Scanner.Views
                 if (GridViewPages.SelectionMode == ListViewSelectionMode.Single
                     && e.AddedItems != null & e.AddedItems.Count != 0)
                 {
+                    // select page in view model
+                    ViewModel.SelectedPageIndex = GridViewPages.SelectedIndex;
+
                     // scroll to newly selected item
                     GridViewItem item = (GridViewItem)GridViewPages.ContainerFromItem(e.AddedItems[0]);
 
@@ -92,7 +136,7 @@ namespace Scanner.Views
                 }
                 else if (GridViewPages.SelectionMode != ListViewSelectionMode.Single)
                 {
-                    // connect items to viewmodel
+                    // connect items to view model
                     if (GridViewPages.SelectedRanges.Count == 0)
                     {
                         ViewModel.SelectedRanges = null;
@@ -100,6 +144,13 @@ namespace Scanner.Views
                     else
                     {
                         ViewModel.SelectedRanges = GridViewPages.SelectedRanges;
+                    }
+
+                    // select last selected item in view model
+                    if (e.AddedItems != null && e.AddedItems.Count != 0)
+                    {
+                        int index = GridViewPages.Items.IndexOf(e.AddedItems[e.AddedItems.Count - 1]);
+                        ViewModel.SelectedPageIndex = index;
                     }
                 }
             });
@@ -111,7 +162,102 @@ namespace Scanner.Views
             {
                 // correct item connection to viewmodel
                 ViewModel.SelectedRanges = null;
+
+                // select correct index after switching back to single selection mode
+                if (GridViewPages.SelectionMode == ListViewSelectionMode.Single
+                    && GridViewPages.SelectedIndex == -1)
+                {
+                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                }
             });
+        }
+
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.SelectedPageIndex))
+            {
+                // selected page changed by view model
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                {
+                    if (GridViewPages.SelectionMode == ListViewSelectionMode.Single)
+                    {
+                        // select page in GridView
+                        GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                    }
+                });
+            }
+        }
+
+        private async void StoryboardToolbarIconDoneStart_Completed(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardToolbarIconDoneFinish.Begin());
+        }
+
+        private async void PlayStoryboardToolbarIconDone(ToolbarFunction function)
+        {
+            switch (function)
+            {
+                case ToolbarFunction.Rotate:
+                    IconStoryboardToolbarIcon = nameof(FontIconRotate);
+                    IconStoryboardToolbarIconDone = nameof(FontIconRotateDone);
+                    break;
+                case ToolbarFunction.Delete:
+                    IconStoryboardToolbarIcon = nameof(FontIconDelete);
+                    IconStoryboardToolbarIconDone = nameof(FontIconDeleteDone);
+                    break;
+                case ToolbarFunction.Copy:
+                    IconStoryboardToolbarIcon = nameof(FontIconCopy);
+                    IconStoryboardToolbarIconDone = nameof(FontIconCopyDone);
+                    break;
+                case ToolbarFunction.OpenWith:
+                case ToolbarFunction.Share:
+                default:
+                    return;
+            }
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                StoryboardToolbarIconDoneStart.SkipToFill();
+                StoryboardToolbarIconDoneStart.Stop();
+                StoryboardToolbarIconDoneFinish.SkipToFill();
+                StoryboardToolbarIconDoneFinish.Stop();
+
+                int index = 0;
+                foreach (var animation in StoryboardToolbarIconDoneStart.Children)
+                {
+                    if (index <= 2) Storyboard.SetTargetName(animation, IconStoryboardToolbarIcon);
+                    else Storyboard.SetTargetName(animation, IconStoryboardToolbarIconDone);
+                    index++;
+                }
+
+                index = 0;
+                foreach (var animation in StoryboardToolbarIconDoneFinish.Children)
+                {
+                    if (index <= 2) Storyboard.SetTargetName(animation, IconStoryboardToolbarIcon);
+                    else Storyboard.SetTargetName(animation, IconStoryboardToolbarIconDone);
+                    index++;
+                }
+
+                StoryboardToolbarIconDoneStart.Begin();
+            });
+        }
+
+        private async void AppBarButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(AppBarButtonDelete);
+            });
+        }
+
+        private async void AppBarButtonDeleteDelete_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutDelete.Hide());
+        }
+
+        private async void AppBarButtonDeleteCancel_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutDelete.Hide());
         }
     }
 }

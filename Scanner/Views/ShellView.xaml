@@ -99,10 +99,13 @@
                         <Setter Target="FrameMainContentSecond.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentSecond.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentSecond.Margin" Value="0"/>
+                        <Setter Target="FrameMainContentSecond.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="FrameMainContentThird.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="InfoBarAppWideMessages.Margin" Value="0,-1,0,0"/>
                         <Setter Target="InfoBarAppWideMessages.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="InfoBarAppWideMessages.CornerRadius" Value="0,0,8,8"/>
+                        <Setter Target="InfoBarAppWideMessages.(Grid.ColumnSpan)" Value="3"/>
                     </VisualState.Setters>
                 </VisualState>
                 
@@ -137,10 +140,13 @@
                         <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentSecond.Content" Value="{x:Null}"/>
+                        <Setter Target="FrameMainContentSecond.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="FrameMainContentThird.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="InfoBarAppWideMessages.Margin" Value="0,-1,0,0"/>
                         <Setter Target="InfoBarAppWideMessages.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="InfoBarAppWideMessages.CornerRadius" Value="0,0,8,8"/>
+                        <Setter Target="InfoBarAppWideMessages.(Grid.ColumnSpan)" Value="3"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -198,6 +204,10 @@
             <RowDefinition Height="32"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <Grid.BackgroundTransition>
+            <BrushTransition/>
+        </Grid.BackgroundTransition>
 
         <Frame x:Name="FrameFallbackBackground" Grid.Row="0" Grid.RowSpan="2" windows11NotPresent:Background="{ThemeResource SystemAccentColor}" Opacity="0.05" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
@@ -272,61 +282,60 @@
             </muxc:NavigationView.FooterMenuItems>
 
             <Grid x:Name="GridMainContent" Padding="0,0,6,6">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="ColumnMainContentFirst" Width="3*" MinWidth="300" MaxWidth="350"/>
                     <ColumnDefinition x:Name="ColumnMainContentSecond" Width="7*"/>
                     <ColumnDefinition x:Name="ColumnMainContentThird" Width="3*" MinWidth="300" MaxWidth="350"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
-                        <Frame.ContentTransitions>
-                            <TransitionCollection>
-                                <PopupThemeTransition/>
-                            </TransitionCollection>
-                        </Frame.ContentTransitions>
-                    </Frame>
-                    <muxc:InfoBar x:Name="InfoBarAppWideMessages" Style="{ThemeResource InfoBarStyleCustom}" Grid.Row="1" IsOpen="True" Title="{x:Bind ViewModel.SelectedStatusMessage.Title, Mode=OneWay}" Message="{x:Bind ViewModel.SelectedStatusMessage.MessageText, Mode=OneWay}" Severity="{x:Bind ViewModel.SelectedStatusMessage.Severity, Mode=OneWay, Converter={StaticResource AppWideMessageSeverityInfoBarConverter}}" Margin="0,6,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Visibility="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}, FallbackValue=Collapsed}" Closing="InfoBarAppWideMessages_Closing" PointerWheelChanged="InfoBarAppWideMessages_PointerWheelChanged">
-                        <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Closing">
-                                <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
-                            </core:EventTriggerBehavior>
-                            <core:DataTriggerBehavior Binding="{x:Bind InfoBarAppWideMessages.Visibility, Mode=OneWay}" ComparisonCondition="Equal" Value="Visible">
-                                <Media:ControlStoryboardAction Storyboard="{StaticResource StoryboardInfoBarEnter}" ControlStoryboardOption="Play"/>
-                            </core:DataTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-
-                        <muxc:InfoBar.RenderTransform>
-                            <CompositeTransform/>
-                        </muxc:InfoBar.RenderTransform>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" MaxHeight="48"/>
-                                <RowDefinition Height="58"/>
-                            </Grid.RowDefinitions>
-
-                            <ScrollViewer Grid.Row="0" MaxHeight="48" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Visible" VerticalScrollMode="Auto" Padding="0,0,12,0">
-                                <TextBlock Text="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
-                            </ScrollViewer>
-                            <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>
-                        </Grid>
-                    </muxc:InfoBar>
-                </Grid>
-
-                <Frame x:Name="FrameMainContentSecond" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
-                <Frame x:Name="FrameMainContentThird" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+
+                <muxc:InfoBar x:Name="InfoBarAppWideMessages" Grid.Row="1" Grid.Column="0" Style="{ThemeResource InfoBarStyleCustom}" IsOpen="True" Title="{x:Bind ViewModel.SelectedStatusMessage.Title, Mode=OneWay}" Message="{x:Bind ViewModel.SelectedStatusMessage.MessageText, Mode=OneWay}" Severity="{x:Bind ViewModel.SelectedStatusMessage.Severity, Mode=OneWay, Converter={StaticResource AppWideMessageSeverityInfoBarConverter}}" Margin="0,6,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" Visibility="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}, FallbackValue=Collapsed}" Closing="InfoBarAppWideMessages_Closing" PointerWheelChanged="InfoBarAppWideMessages_PointerWheelChanged">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Closing">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
+                        </core:EventTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind InfoBarAppWideMessages.Visibility, Mode=OneWay}" ComparisonCondition="Equal" Value="Visible">
+                            <Media:ControlStoryboardAction Storyboard="{StaticResource StoryboardInfoBarEnter}" ControlStoryboardOption="Play"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+
+                    <muxc:InfoBar.RenderTransform>
+                        <CompositeTransform/>
+                    </muxc:InfoBar.RenderTransform>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" MaxHeight="48"/>
+                            <RowDefinition Height="58"/>
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer Grid.Row="0" MaxHeight="48" Visibility="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" VerticalScrollBarVisibility="Visible" VerticalScrollMode="Auto" Padding="0,0,12,0">
+                            <TextBlock Text="{x:Bind ViewModel.SelectedStatusMessage.AdditionalText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextBrush}" FontFamily="Consolas" IsTextSelectionEnabled="True"/>
+                        </ScrollViewer>
+                        <muxc:PipsPager Grid.Row="1" NumberOfPages="{x:Bind ViewModel.StatusMessages.Count, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.SelectedStatusMessageIndex, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxVisiblePips="10" PreviousButtonVisibility="Visible" NextButtonVisibility="Visible"/>
+                    </Grid>
+                </muxc:InfoBar>
+
+                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <PopupThemeTransition/>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
+                <Frame x:Name="FrameMainContentThird" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
             </Grid>
             
             <!-- Debug Flyout -->

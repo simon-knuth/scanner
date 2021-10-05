@@ -19,12 +19,9 @@ using static Enums_old;
 
 namespace Scanner
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class LicensePage : Page
+    public sealed partial class LicensesView : Page
     {
-        public LicensePage()
+        public LicensesView()
         {
             this.InitializeComponent();
         }
@@ -102,7 +99,7 @@ namespace Scanner
                 selected = ThirdPartyLicense.SerilogSinksFile;
             }
 
-            Frame.Navigate(typeof(LicenseDetailPage), selected, new SlideNavigationTransitionInfo()
+            Frame.Navigate(typeof(LicenseDetailView), selected, new SlideNavigationTransitionInfo()
             { Effect = SlideNavigationTransitionEffect.FromRight });
         }
     }

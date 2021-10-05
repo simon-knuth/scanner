@@ -51,6 +51,8 @@ namespace Scanner
         public StorageFile Pdf = null;
         public readonly StorageFolder OriginalTargetFolder;
 
+        public bool IsImage => IsImageFormat(ScanResultFormat);
+
         public int NumberOfPages => _Elements.Count;
 
 
@@ -1382,15 +1384,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Checks whether this instance represents an image file (JPG/PNG/TIF/BMP).
-        /// </summary>
-        public bool IsImage()
-        {
-            return IsImageFormat(ScanResultFormat);
-        }
-
-
-        /// <summary>
         ///     Launches the "Open with" dialog for the selected scan.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
@@ -1653,7 +1646,7 @@ namespace Scanner
         /// <param name="index"></param>
         public string GetDescriptorForIndex(int index)
         {
-            if (IsImage())
+            if (IsImage)
             {
                 return Elements[index].ScanFile.DisplayName;
             }

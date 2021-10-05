@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using static Scanner.Services.Messenger.MessengerEnums;
-using static Utilities;
+
 
 namespace Scanner.ViewModels
 {
@@ -28,6 +29,7 @@ namespace Scanner.ViewModels
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
 
         public event EventHandler TutorialPageListRequested;
+        public event EventHandler<List<StorageFile>> ShareFilesChanged;
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
@@ -109,6 +111,7 @@ namespace Scanner.ViewModels
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
             Messenger.Register<AppWideStatusMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
             Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
+            Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
 

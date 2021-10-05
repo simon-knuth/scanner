@@ -1,0 +1,59 @@
+﻿<ContentDialog
+    x:Class="Scanner.Views.Dialogs.LicensesDialogView"
+    x:Name="ContentDialogRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:models="using:Scanner.Models"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    mc:Ignorable="d"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    CloseButtonText="Close"
+    DefaultButton="Close"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}"
+    Loaded="ContentDialogRoot_Loaded">
+
+    <ContentDialog.DataContext>
+        <viewModels:LicensesDialogViewModel x:Name="ViewModel"/>
+    </ContentDialog.DataContext>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   DIALOG CONTENT   - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Title>
+        <StackPanel x:Name="StackPanelDialogLicensesHeading" Orientation="Horizontal" Margin="0,0,0,6">
+            <AppBarButton x:Name="ButtonDialogLicensesHeadingBack" x:Uid="ButtonBack" Style="{StaticResource AppBarButtonStyleCompact}" Click="ButtonDialogLicensesHeadingBack_Click" IsEnabled="False" LabelPosition="Collapsed" Margin="0,0,6,0" AutomationProperties.LandmarkType="Navigation">
+                <AppBarButton.Icon>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72B;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24" AutomationProperties.HeadingLevel="Level1" VerticalAlignment="Center"/>
+        </StackPanel>
+    </ContentDialog.Title>
+
+    <Grid x:Name="GridContent">
+        <Frame x:Name="FrameDialogLicenses" Height="325" Width="400" Navigated="FrameDialogLicenses_Navigated">
+            <Frame.ContentTransitions>
+                <TransitionCollection>
+
+                </TransitionCollection>
+            </Frame.ContentTransitions>
+        </Frame>
+    </Grid>
+</ContentDialog>

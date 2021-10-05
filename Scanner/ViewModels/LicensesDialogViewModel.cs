@@ -1,46 +1,35 @@
-﻿using WinUI = Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls;
-using Scanner.ViewModels;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
+using Scanner.Services;
 using System;
-using static HelpViewEnums;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Scanner.Views.Dialogs;
-using Windows.UI.Core;
-using static Utilities;
+using Windows.Storage;
 
-namespace Scanner.Views
+namespace Scanner.ViewModels
 {
-    public sealed partial class SettingsView : Page
+    public class LicensesDialogViewModel : ObservableObject
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsView()
+        public LicensesDialogViewModel()
         {
-            this.InitializeComponent();
-            ViewModel.LogExportDialogRequested += ViewModel_LogExportDialogRequestedAsync;
-            ViewModel.LicensesDialogRequested += ViewModel_LicensesDialogRequested;
+
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private async void ViewModel_LicensesDialogRequested(object sender, EventArgs e)
-        {
-            LicensesDialogView dialog = new LicensesDialogView();
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
-        }
 
-        private async void ViewModel_LogExportDialogRequestedAsync(object sender, EventArgs e)
-        {
-            LogExportDialogView dialog = new LogExportDialogView();
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
-        }
+
     }
 }

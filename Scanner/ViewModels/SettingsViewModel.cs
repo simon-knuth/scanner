@@ -19,11 +19,13 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         private readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
+        private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         public RelayCommand DisposeCommand;
         public RelayCommand DisplayLogExportDialogCommand;
+        public RelayCommand DisplayLicensesDialogCommand;
         public AsyncRelayCommand StoreRatingCommand;
         public AsyncRelayCommand ChooseSaveLocationCommand;
         public AsyncRelayCommand ResetSaveLocationCommand;
@@ -94,6 +96,7 @@ namespace Scanner.ViewModels
         public string CurrentVersion => GetCurrentVersion();
 
         public event EventHandler LogExportDialogRequested;
+        public event EventHandler LicensesDialogRequested;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +112,7 @@ namespace Scanner.ViewModels
 
             DisposeCommand = new RelayCommand(Dispose);
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
+            DisplayLicensesDialogCommand = new RelayCommand(DisplayLicensesDialog);
             StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
             ChooseSaveLocationCommand = new AsyncRelayCommand(ChooseSaveLocation);
             ResetSaveLocationCommand = new AsyncRelayCommand(ResetSaveLocationAsync);
@@ -133,11 +137,16 @@ namespace Scanner.ViewModels
             LogExportDialogRequested?.Invoke(this, EventArgs.Empty);
         }
 
+        private void DisplayLicensesDialog()
+        {
+            LicensesDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         private async Task DisplayStoreRatingDialogAsync()
         {
             await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                await ShowRatingDialogAsync();
+                await HelperService.ShowRatingDialogAsync();
             });
         }
 

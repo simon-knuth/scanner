@@ -1,26 +1,50 @@
-﻿namespace Scanner
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Services.Store;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Xaml;
+
+using static Scanner.Helpers.AppConstants;
+
+namespace Scanner.Services
 {
-    class SettingsPageIntent
+    internal class HelperService : IHelperService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public bool scrollToDonateSection;
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsPageIntent(bool scrollToDonateSection)
+        public HelperService()
         {
-            this.scrollToDonateSection = scrollToDonateSection;
+            
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+        public async Task ShowRatingDialogAsync()
+        {
+            try
+            {
+                LogService?.Log.Information("Displaying rating dialog.");
+                StoreContext storeContext = StoreContext.GetDefault();
+                await storeContext.RequestRateAndReviewAppAsync();
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Warning(exc, "Displaying the rating dialog failed.");
+                try { await Launcher.LaunchUriAsync(new Uri(UriStoreRating)); } catch (Exception) { }
+            }
+        }
 
     }
 }

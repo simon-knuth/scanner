@@ -42,8 +42,47 @@
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+
+            <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Name="StoryboardToolbarIconDoneFinish">
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="1.0" Duration="0:0:0" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="1.0" Duration="0:0:0.15" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="0.0" Duration="0:0:0.15" BeginTime="0:0:0"/>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
+                                 To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
+            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -108,42 +147,94 @@
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarSeparator.OpacityTransition>
                     </AppBarSeparator>
-                    <AppBarButton x:Name="AppBarButtonRotate" x:Uid="ButtonManageRotate" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonRotate.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" RightTapped="AppBarButtonRotate_RightTapped">
+                    <AppBarButton x:Name="AppBarButtonRotate" x:Uid="ButtonManageRotate" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="1" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonRotate.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" RightTapped="AppBarButtonRotate_RightTapped">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+
+                        <Grid Padding="0" Margin="0">
+                            <FontIcon x:Name="FontIconRotate" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <FontIcon x:Name="FontIconRotateDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                        </Grid>
+
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate90" FontWeight="Bold" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="1"/>
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate180" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="2"/>
+                                <MenuFlyoutItem x:Uid="ButtonManageRotate270" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="3"/>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </AppBarButton>
+                    <AppBarButton x:Name="AppBarButtonDelete" x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonDelete.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Click="AppBarButtonDelete_Click">
+                        <AppBarButton.OpacityTransition>
+                            <ScalarTransition Duration="0:0:0.3"/>
+                        </AppBarButton.OpacityTransition>
+
+                        <Grid Padding="0" Margin="0">
+                            <FontIcon x:Name="FontIconDelete" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <FontIcon x:Name="FontIconDeleteDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                        </Grid>
+
+                        <FlyoutBase.AttachedFlyout>
+                            <Flyout x:Name="FlyoutDelete">
+                                <Grid MinWidth="250" MaxWidth="250">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Delete" Style="{StaticResource BaseTextBlockStyle}"/>
+                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Are you sure you want to delete this?" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
+
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="AppBarButtonDeleteDelete_Click"/>
+                                        <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="AppBarButtonDeleteCancel_Click"/>
+                                    </Grid>
+                                </Grid>
+                            </Flyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </AppBarButton>
+                    <AppBarButton x:Name="AppBarButtonCopy" x:Uid="ButtonManageCopy" Command="{x:Bind ViewModel.CopyCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonCopy.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>
                         
-                        <AppBarButton.Icon>
-                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;"/>
-                        </AppBarButton.Icon>
-
-                        <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout x:Name="MenuFlyoutButtonLeftPaneManageRotate" Placement="Bottom">
-                                <MenuFlyoutItem x:Uid="ButtonManageRotate90" FontWeight="Bold"/>
-                                <MenuFlyoutItem x:Uid="ButtonManageRotate180"/>
-                                <MenuFlyoutItem x:Uid="ButtonManageRotate270"/>
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
+                        <Grid Padding="0" Margin="0">
+                            <FontIcon x:Name="FontIconCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <FontIcon x:Name="FontIconCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                        </Grid>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonDelete" x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonDelete.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
-                        <AppBarButton.OpacityTransition>
-                            <ScalarTransition Duration="0:0:0.3"/>
-                        </AppBarButton.OpacityTransition>
-
-                        <AppBarButton.Icon>
-                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonCopy" x:Uid="ButtonManageCopy" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonCopy.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
-                        <AppBarButton.OpacityTransition>
-                            <ScalarTransition Duration="0:0:0.3"/>
-                        </AppBarButton.OpacityTransition>
-
-                        <AppBarButton.Icon>
-                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonShare" x:Uid="ButtonManageShare" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <AppBarButton x:Name="AppBarButtonShare" x:Uid="ButtonManageShare" Command="{x:Bind ViewModel.ShareCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>
@@ -187,15 +278,20 @@
             </StackPanel>
 
             <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
-                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" IsItemClickEnabled="True" SelectionMode="Single" CanReorderItems="True" CanDragItems="True" AllowDrop="True" SelectionChanged="GridViewPages_SelectionChanged">
+                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}"/>
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
+                            <core:ChangePropertyAction PropertyName="CanReorderItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                            <core:ChangePropertyAction PropertyName="CanDragItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                            <core:ChangePropertyAction PropertyName="AllowDrop" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
                         </core:DataTriggerBehavior>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                             <core:ChangePropertyAction PropertyName="SelectedIndex" Value="-1"/>
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
+                            <core:ChangePropertyAction PropertyName="CanReorderItems" Value="False"/>
+                            <core:ChangePropertyAction PropertyName="CanDragItems" Value="False"/>
+                            <core:ChangePropertyAction PropertyName="AllowDrop" Value="False"/>
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
 
@@ -220,7 +316,7 @@
                                     <!-- Selected Item Background -->
                                     <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>
 
-                                    <Image Source="{x:Bind Thumbnail}"/>
+                                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}"/>
                                     
                                     <!-- Selected Item -->
                                     <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">

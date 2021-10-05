@@ -6,6 +6,9 @@ using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.UI.Xaml.Data;
 
 namespace Scanner.ViewModels
@@ -15,10 +18,20 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
 
+        public event EventHandler TargetedShareUiRequested;
+        public event EventHandler RotateSuccessful;
+        public event EventHandler DeleteSuccessful;
+        public event EventHandler CopySuccessful;
+
         public RelayCommand DisposeCommand;
+        public AsyncRelayCommand<string> RotateCommand;
+        public AsyncRelayCommand DeleteCommand;
+        public AsyncRelayCommand CopyCommand;
+        public RelayCommand ShareCommand;
 
         private ScanResult _ScanResult;
         public ScanResult ScanResult
@@ -34,8 +47,11 @@ namespace Scanner.ViewModels
             set
             {
                 int old = _SelectedPageIndex;
-                SetProperty(ref _SelectedPageIndex, value);
-                if (old != value && value != -1) Messenger.Send(new PageListCurrentIndexChangedMessage(value));
+                if (old != value)
+                {
+                    SetProperty(ref _SelectedPageIndex, value);
+                    if (value != -1) Messenger.Send(new PageListCurrentIndexChangedMessage(value));
+                }
             }
         }
 
@@ -84,6 +100,10 @@ namespace Scanner.ViewModels
             ScanService.ScanEnded += ScanService_ScanEnded;
 
             DisposeCommand = new RelayCommand(Dispose);
+            RotateCommand = new AsyncRelayCommand<string>((x) => RotateAsync((BitmapRotation)int.Parse(x)));
+            DeleteCommand = new AsyncRelayCommand(DeleteAsync);
+            CopyCommand = new AsyncRelayCommand(CopyAsync);
+            ShareCommand = new RelayCommand(Share);
 
             Messenger.Register<EditorCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
@@ -138,6 +158,106 @@ namespace Scanner.ViewModels
         private void ScanService_ScanStarted(object sender, EventArgs e)
         {
             IsScanRunning = true;
+        }
+
+        private List<int> GetSelectedIndices()
+        {
+            List<int> indices = new List<int>();
+            
+            foreach (ItemIndexRange range in SelectedRanges)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            return indices;
+        }
+
+        private async Task RotateAsync(BitmapRotation rotation)
+        {
+            // collect files
+            List<StorageFile> list = new List<StorageFile>();
+            List<int> indices = GetSelectedIndices();
+
+            // create instructions
+            List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+            foreach (int index in indices)
+            {
+                instructions.Add(new Tuple<int, BitmapRotation>(index, rotation));
+            }
+
+            // rotate
+            bool success = await ScanResultService.RotatePagesAsync(instructions);
+            if (!success) return;
+
+            RotateSuccessful?.Invoke(this, EventArgs.Empty);
+        }
+        private async Task DeleteAsync()
+        {
+            // collect files
+            List<StorageFile> list = new List<StorageFile>();
+            List<int> indices = GetSelectedIndices();
+
+            // delete
+            bool success;
+            success = await ScanResultService.DeleteScansAsync(indices);
+            if (!success) return;
+
+            DeleteSuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task CopyAsync()
+        {
+            // collect files
+            List<StorageFile> list = new List<StorageFile>();
+            List<int> indices = GetSelectedIndices();
+
+            // copy
+            bool success;
+            if (ScanResult.NumberOfPages == indices.Count
+                && ScanResult.IsImage == false)
+            {
+                // entire PDF document selected ~> copy as PDF
+                success = await ScanResultService.CopyAsync();
+            }
+            else
+            {
+                // copy selected images
+                success = await ScanResultService.CopyImagesAsync(indices);
+            }
+            if (!success) return;
+
+            CopySuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Share()
+        {
+            // collect files
+            List<StorageFile> list = new List<StorageFile>();
+            List<int> indices = GetSelectedIndices();
+
+            if (ScanResult.NumberOfPages == indices.Count
+                && ScanResult.IsImage == false)
+            {
+                // entire PDF document selected ~> share as PDF
+                list.Add(ScanResult.Pdf);
+            }
+            else
+            {
+                // share selected images
+                foreach (int index in indices)
+                {
+                    list.Add(ScanResult.GetImageFile(index));
+                }
+            }
+
+            // request share UI
+            Messenger.Send(new SetShareFilesMessage { Files = list });
+            TargetedShareUiRequested?.Invoke(this, EventArgs.Empty);
+
+            AppCenterService?.TrackEvent(AppCenterEvent.Share);
         }
     }
 }

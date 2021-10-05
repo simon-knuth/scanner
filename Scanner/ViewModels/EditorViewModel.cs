@@ -50,7 +50,7 @@ namespace Scanner.ViewModels
         public event EventHandler DeleteSuccessful;
         public event EventHandler CopySuccessful;
 
-        public event EventHandler<List<StorageFile>> TargetedShareUiRequested;
+        public event EventHandler TargetedShareUiRequested;
 
         private Orientation _Orientation;
         public Orientation Orientation
@@ -109,8 +109,14 @@ namespace Scanner.ViewModels
             set
             {
                 SetProperty(ref _EditorMode, value);
-                if (value == EditorMode.Initial) IsEditing = false;
-                else IsEditing = true;
+                if (value == EditorMode.Initial)
+                {
+                    IsEditing = false;
+                }
+                else
+                {
+                    IsEditing = true;
+                }
             }
         }
 
@@ -265,7 +271,7 @@ namespace Scanner.ViewModels
         {
             bool success;
 
-            if (ScanResultService.Result.IsImage())
+            if (ScanResultService.Result.IsImage)
             {
                 // rename single image file
                 success = await ScanResultService.RenameAsync(SelectedPageIndex, newName);
@@ -308,7 +314,7 @@ namespace Scanner.ViewModels
         {
             bool success;
 
-            if (ScanResultService.Result.IsImage())
+            if (ScanResultService.Result.IsImage)
             {
                 // copy single image file
                 success = await ScanResultService.CopyImageAsync(SelectedPageIndex);
@@ -328,7 +334,7 @@ namespace Scanner.ViewModels
         {
             // collect files
             List<StorageFile> list = new List<StorageFile>();
-            if (ScanResultService.Result.IsImage())
+            if (ScanResult.IsImage)
             {
                 // share single image file
                 list.Add(ScanResult.GetImageFile(SelectedPageIndex));
@@ -340,7 +346,8 @@ namespace Scanner.ViewModels
             }
 
             // request share UI
-            TargetedShareUiRequested?.Invoke(this, list);
+            Messenger.Send(new SetShareFilesMessage { Files = list });
+            TargetedShareUiRequested?.Invoke(this, EventArgs.Empty);
 
             AppCenterService?.TrackEvent(AppCenterEvent.Share);
         }
@@ -359,7 +366,7 @@ namespace Scanner.ViewModels
                 await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://assoc/?FileExt={formatString.Substring(1)}"));
             }
 
-            if (ScanResultService.Result.IsImage())
+            if (ScanResultService.Result.IsImage)
             {
                 // open single image file
                 if (index == -1) await ScanResultService.OpenImageWithAsync(SelectedPageIndex);

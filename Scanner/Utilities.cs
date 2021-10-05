@@ -843,22 +843,6 @@ static class Utilities
     }
 
 
-    public async static Task ShowRatingDialogAsync()
-    {
-        try
-        {
-            log.Information("Displaying rating dialog.");
-            StoreContext storeContext = StoreContext.GetDefault();
-            await storeContext.RequestRateAndReviewAppAsync();
-        }
-        catch (Exception exc)
-        {
-            log.Warning(exc, "Displaying the rating dialog failed.");
-            try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
-        }
-    }
-
-
     /// <summary>
     ///     Opens a teaching tip and takes care of usual pitfalls.
     /// </summary>

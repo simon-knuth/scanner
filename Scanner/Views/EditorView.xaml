@@ -129,6 +129,20 @@
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
+
+                <VisualState x:Name="EditingState">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsEditing, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
@@ -221,20 +235,35 @@
 
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout x:Name="FlyoutRename">
-                                        <Grid MinWidth="250">
+                                        <Grid MinWidth="250" MaxWidth="250">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            
-                                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Rename" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Enter a new name for the file" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,16" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
 
-                                            <Grid Grid.Row="3">
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Rename" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Enter a new name for the file" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+
+                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
+                                                <interactivity:Interaction.Behaviors>
+                                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                                        <core:ChangePropertyAction PropertyName="Text" Value="{x:Bind ViewModel.SelectedPage.ScanFile.FileType, Mode=OneWay}"/>
+                                                    </core:DataTriggerBehavior>
+                                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                                        <core:ChangePropertyAction PropertyName="Text" Value="{x:Bind ViewModel.ScanResult.Pdf.FileType, Mode=OneWay}"/>
+                                                    </core:DataTriggerBehavior>
+                                                </interactivity:Interaction.Behaviors>
+                                            </TextBlock>
+
+                                            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
@@ -264,7 +293,7 @@
 
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout x:Name="FlyoutDelete">
-                                        <Grid MinWidth="250">
+                                        <Grid MinWidth="250" MaxWidth="250">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
@@ -349,7 +378,7 @@
                     <!-- Crop -->
                     <controls:Case Value="1">
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundListLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
@@ -402,7 +431,7 @@
                     <!-- Draw -->
                     <controls:Case Value="2">
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundListLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>

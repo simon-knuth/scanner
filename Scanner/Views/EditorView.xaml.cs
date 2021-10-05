@@ -18,19 +18,18 @@ using static Utilities;
 
 namespace Scanner.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class EditorView : Page
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string IconStoryboardToolbarIcon = "FontIconCrop";
-
         public string IconStoryboardToolbarIconDone = "FontIconCropDone";
 
-        private DataTransferManager DataTransferManager = DataTransferManager.GetForCurrentView();
 
-        private List<StorageFile> ShareFiles;
-
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public EditorView()
         {
             this.InitializeComponent();
@@ -43,30 +42,14 @@ namespace Scanner.Views
             ViewModel.DeleteSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Delete);
             ViewModel.CopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Copy);
             ViewModel.TargetedShareUiRequested += ViewModel_TargetedShareUiRequested;
-            DataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
-        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private async void ViewModel_TargetedShareUiRequested(object sender, EventArgs e)
         {
-            if (ShareFiles != null && ShareFiles.Count >= 1)
-            {
-                args.Request.Data.SetStorageItems(ShareFiles);
-
-                if (ShareFiles.Count == 1)
-                {
-                    args.Request.Data.Properties.Title = ShareFiles[0].Name;
-                }
-                else
-                {
-                    args.Request.Data.Properties.Title = LocalizedString("ShareUITitleMultipleFiles");
-                }
-            }
-        }
-
-        private async void ViewModel_TargetedShareUiRequested(object sender, System.Collections.Generic.List<StorageFile> e)
-        {
-            ShareFiles = e;
-
             Rect rectangle;
             ShareUIOptions shareUIOptions = new ShareUIOptions();
 
@@ -157,7 +140,20 @@ namespace Scanner.Views
 
         private async void TextBoxRename_Loaded(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => TextBoxRename.Focus(FocusState.Programmatic));
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ViewModel.ScanResult.IsImage)
+                {
+                    TextBoxRename.Text = ViewModel.SelectedPage.ItemDescriptor;
+                }
+                else
+                {
+                    TextBoxRename.Text = ViewModel.ScanResult.Pdf.DisplayName;
+                }
+                
+                TextBoxRename.Focus(FocusState.Programmatic);
+                TextBoxRename.SelectAll();
+            });
         }
 
         private async void ButtonToolbarRename_Click(object sender, RoutedEventArgs e)
