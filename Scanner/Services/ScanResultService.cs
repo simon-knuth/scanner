@@ -56,7 +56,7 @@ namespace Scanner.Services
             }
         }
 
-        private int futureAccessListIndex;
+        private int FutureAccessListIndex;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,15 +78,18 @@ namespace Scanner.Services
                 ScanResultDismissed?.Invoke(this, EventArgs.Empty);
             }
 
-            futureAccessListIndex = 0;
-            _Result = await ScanResult.CreateAsync(files, targetFolder, futureAccessListIndex, fixedFolder);
+            FutureAccessListIndex = 0;
+            _Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, fixedFolder);
 
             ScanResultCreated?.Invoke(this, Result);
         }
 
-        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files)
+        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
+            StorageFolder targetFolder)
         {
-            throw new NotImplementedException();
+            IsScanResultChanging = true;
+            await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex);
+            IsScanResultChanging = false;
         }
 
         public async Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions)

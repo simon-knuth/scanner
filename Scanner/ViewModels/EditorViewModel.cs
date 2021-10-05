@@ -124,7 +124,11 @@ namespace Scanner.ViewModels
         public bool IsScanResultChanging
         {
             get => _IsScanResultChanging;
-            set => SetProperty(ref _IsScanResultChanging, value);
+            set
+            {
+                SetProperty(ref _IsScanResultChanging, value);
+                if (value == false) RefreshSelectedPageText();
+            }
         }
 
         private bool _IsScanning;

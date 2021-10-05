@@ -141,10 +141,11 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
-                                <RadioButton Content="Off" IsChecked="True" Margin="0,0,12,0"/>
+                                <RadioButton x:Name="RadioButtonAutoRotateOff" Content="Off" IsChecked="True" Margin="0,0,12,0"/>
                                 <RadioButton Content="Ask every time" Margin="0,0,12,0"/>
                                 <RadioButton Content="Rotate pages automatically" IsChecked="True"/>
                             </muxc:RadioButtons>
+                            <HyperlinkButton Content="Advanced settings" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind RadioButtonAutoRotateOff.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <TextBlock Text="This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>

@@ -732,10 +732,22 @@ namespace Scanner.ViewModels
                 if (!debug)
                 {
                     // real scan
-                    var result = await ScanService?.GetScanAsync(SelectedScanner, CreateScanOptions(),
+                    ScanOptions scanOptions = CreateScanOptions();
+                    var result = await ScanService?.GetScanAsync(SelectedScanner, scanOptions,
                     AppDataService.FolderReceivedPages);
-                    await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                        SettingsService.ScanSaveLocation, true);
+
+                    if (CanAddToScanResult != true)
+                    {
+                        // create new result
+                        await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
+                            SettingsService.ScanSaveLocation, true);
+                    }
+                    else
+                    {
+                        // add to existing result
+                        await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
+                            scanOptions.Format.TargetFormat, SettingsService.ScanSaveLocation);
+                    }
                 }
                 else
                 {
@@ -759,8 +771,18 @@ namespace Scanner.ViewModels
                             copiedFiles.Add(await file.CopyAsync(AppDataService.FolderReceivedPages));
                         }
 
-                        await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                            SettingsService.ScanSaveLocation, true);
+                        if (CanAddToScanResult != true)
+                        {
+                            // create new result
+                            await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                SettingsService.ScanSaveLocation, true);
+                        }
+                        else
+                        {
+                            // add to existing result
+                            await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                DebugSelectedScanFormat, SettingsService.ScanSaveLocation);
+                        }
                     }
                     else
                     {

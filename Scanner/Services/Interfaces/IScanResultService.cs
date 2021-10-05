@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 
@@ -29,7 +30,8 @@ namespace Scanner.Services
 
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             bool fixedFolder);
-        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
+            StorageFolder targetFolder);
 
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> RenameAsync(int index, string newName);
