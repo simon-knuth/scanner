@@ -53,7 +53,12 @@ namespace Scanner
 
         public bool IsImage => IsImageFormat(ScanResultFormat);
 
-        public int NumberOfPages => _Elements.Count;
+        private int _NumberOfPages;
+        public int NumberOfPages
+        {
+            get => _NumberOfPages;
+            set => SetProperty(ref _NumberOfPages, value);
+        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +74,7 @@ namespace Scanner
 
                 if (displayFolder) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
                 else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                NumberOfPages = _Elements.Count;
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                 futureAccessListIndex += 1;
@@ -801,7 +807,8 @@ namespace Scanner
                 {
                     LogService?.Log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
                     Crashes.TrackError(exc);
-                    _Elements.RemoveAt(index + 1);
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
+                    NumberOfPages = _Elements.Count;
                     try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
                     RefreshItemDescriptors();
                     throw;
@@ -835,7 +842,8 @@ namespace Scanner
                 }
 
                 await _Elements[index].ScanFile.DeleteAsync(deleteOption);
-                _Elements.RemoveAt(index);
+                await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index));
+                NumberOfPages = _Elements.Count;
             }
 
             RefreshItemDescriptors();
@@ -890,7 +898,8 @@ namespace Scanner
 
             await _Elements[index].ScanFile.DeleteAsync(deleteOption);
 
-            _Elements.RemoveAt(index);
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index));
+            NumberOfPages = _Elements.Count;
             RefreshItemDescriptors();
 
             // if necessary, update or delete PDF
@@ -1035,7 +1044,10 @@ namespace Scanner
                 throw;
             }
 
-            _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
+            {
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+            });
             RefreshItemDescriptors();
 
             // if necessary, generate PDF
@@ -1055,7 +1067,7 @@ namespace Scanner
                 {
                     LogService?.Log.Error(exc, "Failed to generate PDF after drawing on index {Index} as copy. Attempting to get rid of copy.", index);
                     Crashes.TrackError(exc);
-                    _Elements.RemoveAt(index + 1);
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
                     try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
                     RefreshItemDescriptors();
                     throw;
@@ -1280,7 +1292,7 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
@@ -1293,8 +1305,8 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    if (displayFolder && targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                    if (targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    else await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null)));
 
                     if (targetFolder != null)
                     {
@@ -1314,8 +1326,9 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    if (displayFolder && targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                    if (targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
+                    else await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null)));
+                    NumberOfPages = _Elements.Count;
 
                     if (targetFolder != null)
                     {
@@ -1379,7 +1392,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart)
         {
-            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, false);
+            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart);
         }
 
 

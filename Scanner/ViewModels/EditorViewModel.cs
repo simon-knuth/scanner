@@ -89,9 +89,8 @@ namespace Scanner.ViewModels
                 {
                     SetProperty(ref _SelectedPageIndex, value);
                     if (value != -1) Messenger.Send(new EditorCurrentIndexChangedMessage(value));
+                    RefreshSelectedPageText();
                 }
-
-                RefreshSelectedPageText();
             }
         }
 
@@ -226,6 +225,7 @@ namespace Scanner.ViewModels
         private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
         {
             ScanResult = null;
+            SelectedPageIndex = -1;
         }
 
         private async void ScanResultService_ScanResultCreated(object sender, ScanResult scanResult)

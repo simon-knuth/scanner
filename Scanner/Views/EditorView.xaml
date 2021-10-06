@@ -506,7 +506,7 @@
                             <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
                         </StackPanel>
 
-                        <muxc:PipsPager Grid.Column="1" MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver"/>
+                        <muxc:PipsPager Grid.Column="1" MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver" SelectedIndexChanged="PipsPager_SelectedIndexChanged"/>
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                             <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>

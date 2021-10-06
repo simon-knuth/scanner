@@ -298,6 +298,14 @@ namespace Scanner.Views
                 MenuFlyoutButtonOpenWith.Items.Add(MenuFlyoutItemAllApps);
             });
         }
+
+        private async void PipsPager_SelectedIndexChanged(PipsPager sender, PipsPagerSelectedIndexChangedEventArgs args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (sender.NumberOfPages != 0) ViewModel.SelectedPageIndex = sender.SelectedPageIndex;
+            });
+        }
     }
 
     enum ToolbarFunction

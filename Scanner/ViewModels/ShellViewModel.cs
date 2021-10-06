@@ -119,6 +119,7 @@ namespace Scanner.ViewModels
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultChanged += ScanResultService_ScanResultChanged;
+            ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
         }
 
 
@@ -199,7 +200,7 @@ namespace Scanner.ViewModels
 
         private void ScanResultService_ScanResultChanged(object sender, EventArgs e)
         {
-            if (ScanResultService.Result.NumberOfPages >= 2)
+            if (ScanResultService.Result?.NumberOfPages >= 2)
             {
                 RequestTutorialPageListIfNeeded();
             }
@@ -207,7 +208,7 @@ namespace Scanner.ViewModels
 
         private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
         {
-            if (ScanResultService.Result.NumberOfPages >= 2)
+            if (ScanResultService.Result?.NumberOfPages >= 2)
             {
                 RequestTutorialPageListIfNeeded();
             }
@@ -225,6 +226,11 @@ namespace Scanner.ViewModels
         private void DebugShowTutorialPageList()
         {
             TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
+        {
+            RefreshAppTitle("");
         }
     }
 

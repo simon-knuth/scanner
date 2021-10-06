@@ -1,17 +1,14 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using Scanner.Models;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.UI.Xaml.Media.Imaging;
 using static Scanner.Services.Messenger.MessengerEnums;
 using static Utilities;
 
@@ -25,7 +22,6 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         public event EventHandler<ScanResult> ScanResultCreated;
@@ -37,6 +33,11 @@ namespace Scanner.Services
         public ScanResult Result
         {
             get => _Result;
+            private set
+            {
+                SetProperty(ref _Result, value);
+                if (value == null) ScanResultDismissed?.Invoke(this, null);
+            }
         }
 
         private bool _IsScanResultChanging;
@@ -63,7 +64,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanResultService()
         {
-            
+
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,14 +73,10 @@ namespace Scanner.Services
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             bool fixedFolder)
         {
-            if (Result != null)
-            {
-                _Result = null;
-                ScanResultDismissed?.Invoke(this, EventArgs.Empty);
-            }
+            Result = null;
 
             FutureAccessListIndex = 0;
-            _Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, fixedFolder);
+            Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, fixedFolder);
 
             ScanResultCreated?.Invoke(this, Result);
         }
@@ -167,6 +164,7 @@ namespace Scanner.Services
 
         public async Task<bool> DeleteScanAsync(int index)
         {
+            IsScanResultChanging = true;
             try
             {
                 await Result.DeleteScanAsync(index);
@@ -186,11 +184,19 @@ namespace Scanner.Services
                 return false;
             }
 
+            // check if there are still pages left
+            if (Result.NumberOfPages == 0)
+            {
+                Result = null;
+            }
+
+            IsScanResultChanging = false;
             return true;
         }
 
         public async Task<bool> DeleteScanAsync(int index, StorageDeleteOption deleteOption)
         {
+            IsScanResultChanging = true;
             try
             {
                 await Result.DeleteScanAsync(index);
@@ -210,11 +216,19 @@ namespace Scanner.Services
                 return false;
             }
 
+            // check if there are still pages left
+            if (Result.NumberOfPages == 0)
+            {
+                Result = null;
+            }
+
+            IsScanResultChanging = false;
             return true;
         }
 
         public async Task<bool> DeleteScansAsync(List<int> indices)
         {
+            IsScanResultChanging = true;
             try
             {
                 await Result.DeleteScansAsync(indices);
@@ -234,11 +248,19 @@ namespace Scanner.Services
                 return false;
             }
 
+            // check if there are still pages left
+            if (Result.NumberOfPages == 0)
+            {
+                Result = null;
+            }
+
+            IsScanResultChanging = false;
             return true;
         }
 
         public async Task<bool> DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
         {
+            IsScanResultChanging = true;
             try
             {
                 await Result.DeleteScansAsync(indices, deleteOption);
@@ -258,6 +280,13 @@ namespace Scanner.Services
                 return false;
             }
 
+            // check if there are still pages left
+            if (Result.NumberOfPages == 0)
+            {
+                Result = null;
+            }
+
+            IsScanResultChanging = false;
             return true;
         }
 

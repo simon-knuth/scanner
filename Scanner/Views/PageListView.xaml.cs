@@ -126,13 +126,20 @@ namespace Scanner.Views
                     ViewModel.SelectedPageIndex = GridViewPages.SelectedIndex;
 
                     // scroll to newly selected item
-                    GridViewItem item = (GridViewItem)GridViewPages.ContainerFromItem(e.AddedItems[0]);
-
-                    BringIntoViewOptions options = new BringIntoViewOptions
+                    try
                     {
-                        AnimationDesired = true,
-                    };
-                    item.StartBringIntoView(options);
+                        GridViewItem item = (GridViewItem)GridViewPages.ContainerFromItem(e.AddedItems[0]);
+
+                        BringIntoViewOptions options = new BringIntoViewOptions
+                        {
+                            AnimationDesired = true,
+                        };
+                        item.StartBringIntoView(options);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
                 else if (GridViewPages.SelectionMode != ListViewSelectionMode.Single)
                 {
