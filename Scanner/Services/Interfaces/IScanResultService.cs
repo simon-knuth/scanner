@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -33,6 +34,8 @@ namespace Scanner.Services
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
             StorageFolder targetFolder);
 
+        Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
+        Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> RenameAsync(int index, string newName);
         Task<bool> RenameAsync(string newName);

@@ -566,7 +566,7 @@ namespace Scanner
 
                         // delete image from cache
                         _Elements[instruction.Item1].CachedImage = null;
-                        await _Elements[instruction.Item1].RefreshImageAsync();
+                        await _Elements[instruction.Item1].GetImageAsync();
                     }
 
                     if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
@@ -732,8 +732,9 @@ namespace Scanner
 
             stream.Dispose();
 
-            // delete cached image, delete image without rotation and reset rotation
+            // refresh cached image, delete image without rotation and reset rotation
             _Elements[index].CachedImage = null;
+            await _Elements[index].GetImageAsync();
             if (_Elements[index].ImageWithoutRotation != null)
             {
                 await _Elements[index].ImageWithoutRotation.DeleteAsync();
@@ -785,9 +786,14 @@ namespace Scanner
             }
             stream.Dispose();
 
-            _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+                NumberOfPages += 1;
+            });
 
             RefreshItemDescriptors();
+            await _Elements[index + 1].GetImageAsync();
 
             // if necessary, generate PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf)
@@ -1048,6 +1054,7 @@ namespace Scanner
             {
                 _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
             });
+            NumberOfPages += 1;
             RefreshItemDescriptors();
 
             // if necessary, generate PDF

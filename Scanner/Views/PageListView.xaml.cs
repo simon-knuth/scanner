@@ -141,6 +141,10 @@ namespace Scanner.Views
 
                     }
                 }
+                else if (GridViewPages.SelectionMode == ListViewSelectionMode.Single)
+                {
+                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                }
                 else if (GridViewPages.SelectionMode != ListViewSelectionMode.Single)
                 {
                     // connect items to view model
@@ -191,6 +195,14 @@ namespace Scanner.Views
                         // select page in GridView
                         GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
                     }
+                });
+            }
+            else if (e.PropertyName == nameof(ViewModel.IsEditorEditing) && ViewModel.IsEditorEditing == true)
+            {
+                // editor started editing
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    AppBarToggleButtonSelect.IsChecked = false;
                 });
             }
         }

@@ -152,7 +152,7 @@ namespace Scanner
         /// </remarks>
         /// <exception cref="ApplicationException">A file could not be accessed or a file's type could not be determined.</exception>
         /// <exception cref="NotImplementedException">Attempted to generate an image of an (O)XPS file.</exception>
-        public async Task<BitmapImage> RefreshImageAsync()
+        public async Task<BitmapImage> GetImageAsync()
         {
             // use cached image if possible
             if (CachedImage != null)

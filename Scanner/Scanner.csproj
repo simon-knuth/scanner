@@ -130,6 +130,8 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
+    <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
     <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
       <DependentUpon>LicenseDetailView.xaml</DependentUpon>
     </Compile>

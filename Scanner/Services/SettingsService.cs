@@ -119,7 +119,7 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? SettingAppTheme.System;
 
                 case AppSetting.SettingAutoRotate:
-                    return SettingsContainer.Values[name] ?? SettingAutoRotate.AskEveryTime;
+                    return SettingsContainer.Values[name] ?? true;
 
                 case AppSetting.SettingAppendTime:
                     return SettingsContainer.Values[name] ?? true;
@@ -159,7 +159,7 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.SettingAutoRotate:
-                    SettingsContainer.Values[name] = (int)value;
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 case AppSetting.SettingAppendTime:

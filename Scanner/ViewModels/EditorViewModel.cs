@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
@@ -32,6 +33,8 @@ namespace Scanner.ViewModels
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
 
+        public AsyncRelayCommand<ImageCropper> CropPageCommand;
+        public AsyncRelayCommand<ImageCropper> CropPageAsCopyCommand;
         public AsyncRelayCommand<string> RotatePageCommand;
         public AsyncRelayCommand<string> RenameCommand;
         public AsyncRelayCommand DeleteCommand;
@@ -42,8 +45,11 @@ namespace Scanner.ViewModels
         public RelayCommand LeaveCropModeCommand;
         public RelayCommand EnterDrawModeCommand;
         public RelayCommand LeaveDrawModeCommand;
+        public RelayCommand<string> AspectRatioCommand;
+        public RelayCommand<Rect> AspectRatioFlipCommand;
 
         public event EventHandler CropSuccessful;
+        public event EventHandler CropAsCopySuccessful;
         public event EventHandler RotateSuccessful;
         public event EventHandler DrawSuccessful;
         public event EventHandler RenameSuccessful;
@@ -160,6 +166,41 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _OpenWithApps, value);
         }
 
+        private AspectRatioOption _SelectedAspectRatio;
+        public AspectRatioOption SelectedAspectRatio
+        {
+            get => _SelectedAspectRatio;
+            set
+            {
+                SetProperty(ref _SelectedAspectRatio, value);
+                SelectedAspectRatioValue = ConvertAspectRatioOptionToValue(value);
+
+                if (value == AspectRatioOption.Custom)
+                {
+                    IsFixedAspectRatioSelected = false;
+                }
+                else
+                {
+                    IsFixedAspectRatioSelected = true;
+                }
+            }
+        }
+
+        private double? _SelectedAspectRatioValue;
+        public double? SelectedAspectRatioValue
+        {
+            get => _SelectedAspectRatioValue;
+            set => SetProperty(ref _SelectedAspectRatioValue, value);
+        }
+
+        private bool _IsFixedAspectRatioSelected;
+        public bool IsFixedAspectRatioSelected
+        {
+            get => _IsFixedAspectRatioSelected;
+            set => SetProperty(ref _IsFixedAspectRatioSelected, value);
+        }
+
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,12 +217,14 @@ namespace Scanner.ViewModels
 
             IsScanning = ScanService.IsScanInProgress;
             ScanService.ScanStarted += (x, y) => IsScanning = true;
-            ScanService.ScanEnded += (x, y) => IsScanning = false;
+            ScanService.ScanEnded += ScanService_ScanEnded;
 
             Messenger.Register<EditorCurrentIndexRequestMessage>(this, (r, m) => m.Reply(SelectedPageIndex));
             Messenger.Register<PageListCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             Messenger.Register<EditorIsEditingRequestMessage>(this, (r, m) => m.Reply(IsEditing));
 
+            CropPageCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsync(x));
+            CropPageAsCopyCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsCopyAsync(x));
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
@@ -192,7 +235,10 @@ namespace Scanner.ViewModels
             LeaveCropModeCommand = new RelayCommand(LeaveCropMode);
             EnterDrawModeCommand = new RelayCommand(EnterDrawMode);
             LeaveDrawModeCommand = new RelayCommand(LeaveDrawMode);
+            AspectRatioCommand = new RelayCommand<string>((x) => SelectedAspectRatio = (AspectRatioOption)int.Parse(x));
+            AspectRatioFlipCommand = new RelayCommand<Rect>((x) => FlipSelectedAspectRatio(x));
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -427,6 +473,78 @@ namespace Scanner.ViewModels
 
             return result;
         }
+
+        private void ScanService_ScanEnded(object sender, EventArgs e)
+        {
+            IsScanning = false;
+
+            if (ScanResult != null)
+            {
+                ScanResultService.ScanResultChanged += ScanResultChanged_ScrollToNewPage;
+            }
+        }
+
+        private void ScanResultChanged_ScrollToNewPage(object sender, EventArgs e)
+        {
+            ScanResultService.ScanResultChanged -= ScanResultChanged_ScrollToNewPage;
+            if (ScanResult != null) SelectedPageIndex = ScanResult.NumberOfPages - 1;
+        }
+
+        private double? ConvertAspectRatioOptionToValue(AspectRatioOption option)
+        {
+            switch (option)
+            {
+                case AspectRatioOption.Custom:
+                    return null;
+                case AspectRatioOption.Square:
+                    return 1;
+                case AspectRatioOption.ThreeByTwo:
+                    return 1.5;
+                case AspectRatioOption.FourByThree:
+                    return 1.3333;
+                case AspectRatioOption.DinA:
+                    return 0.7070;
+                case AspectRatioOption.AnsiA:
+                    return 0.7741;
+                case AspectRatioOption.AnsiB:
+                    return 0.6458;
+                case AspectRatioOption.AnsiC:
+                    return 0.7728;
+                case AspectRatioOption.Kai4:
+                    return 0.7216;
+                case AspectRatioOption.Kai8:
+                    return 0.6929;
+                case AspectRatioOption.Kai16:
+                    return 0.7216;
+                case AspectRatioOption.Kai32:
+                    return 0.6954;
+                default:
+                    throw new ArgumentException($"Can't convert AspectRatioOption {option} to value.");
+            }
+        }
+
+        private void FlipSelectedAspectRatio(Rect currentRect)
+        {
+            SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
+        }
+
+        private async Task CropAsync(ImageCropper imageCropper)
+        {
+            bool success = await ScanResultService.CropScanAsync(SelectedPageIndex, imageCropper);
+
+            if (!success) return;
+
+            LeaveCropMode();
+        }
+
+        private async Task CropAsCopyAsync(ImageCropper imageCropper)
+        {
+            bool success = await ScanResultService.CropScanAsCopyAsync(SelectedPageIndex, imageCropper);
+
+            if (!success) return;
+
+            CropAsCopySuccessful?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public enum EditorMode
@@ -434,6 +552,22 @@ namespace Scanner.ViewModels
         Initial = 0,
         Crop = 1,
         Draw = 2,
+    }
+
+    public enum AspectRatioOption
+    {
+        Custom = 0,
+        Square = 1,
+        ThreeByTwo = 2,
+        FourByThree = 3,
+        DinA = 4,
+        AnsiA = 5,
+        AnsiB = 6,
+        AnsiC = 7,
+        Kai4 = 8,
+        Kai8 = 9,
+        Kai16 = 10,
+        Kai32 = 11,
     }
 
     public class OpenWithApp

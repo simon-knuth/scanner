@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
@@ -384,7 +385,7 @@ namespace Scanner.Services
             {
                 await Result.OpenWithAsync();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return;
             }
@@ -398,7 +399,7 @@ namespace Scanner.Services
             {
                 await Result.OpenWithAsync(appInfo);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return;
             }
@@ -412,7 +413,7 @@ namespace Scanner.Services
             {
                 await Result.OpenImageWithAsync(index);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return;
             }
@@ -426,12 +427,66 @@ namespace Scanner.Services
             {
                 await Result.OpenImageWithAsync(index, appInfo);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return;
             }
 
             return;
+        }
+
+        public async Task<bool> CropScanAsync(int index, ImageCropper imageCropper)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.CropScanAsync(index, imageCropper);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCropHeading"),
+                    MessageText = LocalizedString("ErrorMessageCropBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Cropping page failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.CropScanAsCopyAsync(index, imageCropper);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCropHeading"),
+                    MessageText = LocalizedString("ErrorMessageCropBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Cropping pages failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
         }
     }
 }

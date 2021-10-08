@@ -2,11 +2,9 @@
 using Microsoft.UI.Xaml.Controls;
 using Scanner.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -35,7 +33,7 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ViewModel.CropSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Crop);
+            ViewModel.CropAsCopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.CropAsCopy);
             ViewModel.RotateSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rotate);
             ViewModel.DrawSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Draw);
             ViewModel.RenameSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rename);
@@ -150,7 +148,7 @@ namespace Scanner.Views
                 {
                     TextBoxRename.Text = ViewModel.ScanResult.Pdf.DisplayName;
                 }
-                
+
                 TextBoxRename.Focus(FocusState.Programmatic);
                 TextBoxRename.SelectAll();
             });
@@ -174,9 +172,9 @@ namespace Scanner.Views
         {
             switch (function)
             {
-                case ToolbarFunction.Crop:
-                    IconStoryboardToolbarIcon = nameof(FontIconCrop);
-                    IconStoryboardToolbarIconDone = nameof(FontIconCropDone);
+                case ToolbarFunction.CropAsCopy:
+                    IconStoryboardToolbarIcon = nameof(FontIconCropAsCopy);
+                    IconStoryboardToolbarIconDone = nameof(FontIconCropAsCopyDone);
                     break;
                 case ToolbarFunction.Rotate:
                     IconStoryboardToolbarIcon = nameof(FontIconRotate);
@@ -198,6 +196,7 @@ namespace Scanner.Views
                     IconStoryboardToolbarIcon = nameof(FontIconCopy);
                     IconStoryboardToolbarIconDone = nameof(FontIconCopyDone);
                     break;
+                case ToolbarFunction.Crop:
                 case ToolbarFunction.OpenWith:
                 case ToolbarFunction.Share:
                 default:
@@ -306,13 +305,44 @@ namespace Scanner.Views
                 if (sender.NumberOfPages != 0) ViewModel.SelectedPageIndex = sender.SelectedPageIndex;
             });
         }
+
+        private async void ImageCropper_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                ((ImageCropper)sender).LoadImageFromFile(ViewModel.SelectedPage.ScanFile);
+            });
+        }
+
+        private async void AppBarToggleButtonAspectRatio_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((AppBarToggleButton)sender);
+            });
+        }
+
+        private void ToggleMenuFlyoutItemAspectRatio_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedAspectRatio = (AspectRatioOption)int.Parse((string)((ToggleMenuFlyoutItem)sender).Tag);
+        }
+
+        private async void AppBarToggleButtonAspectRatio_IsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                ((AppBarToggleButton)sender).IsChecked = ViewModel.IsFixedAspectRatioSelected;
+            });
+        }
     }
 
     enum ToolbarFunction
     {
         Crop,
+        CropAsCopy,
         Rotate,
         Draw,
+        DrawAsCopy,
         Rename,
         Delete,
         Copy,

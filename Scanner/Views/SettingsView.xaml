@@ -92,13 +92,13 @@
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                             <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
                                 <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" Content="Use a set location" Margin="0,0,12,0"/>
                                 <RadioButton Content="Ask every time"/>
                             </muxc:RadioButtons>
                         </StackPanel>
-                        <Frame x:Name="FrameSaveLocationFolder" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" Visibility="{x:Bind RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay}" Opacity="{x:Bind FrameSaveLocationFolder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                        <Frame x:Name="FrameSaveLocationFolder" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" Visibility="{x:Bind RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay}" Opacity="{x:Bind FrameSaveLocationFolder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                             <Frame.OpacityTransition>
                                 <ScalarTransition Duration="0:0:0.3"/>
                             </Frame.OpacityTransition>
@@ -140,12 +140,8 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
-                                <RadioButton x:Name="RadioButtonAutoRotateOff" Content="Off" IsChecked="True" Margin="0,0,12,0"/>
-                                <RadioButton Content="Ask every time" Margin="0,0,12,0"/>
-                                <RadioButton Content="Rotate pages automatically" IsChecked="True"/>
-                            </muxc:RadioButtons>
-                            <HyperlinkButton Content="Advanced settings" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind RadioButtonAutoRotateOff.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                            <CheckBox x:Name="CheckBoxSettingAutoRotate" Content="Rotate pages automatically" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}"/>
+                            <HyperlinkButton Content="Advanced settings" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <TextBlock Text="This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>

@@ -34,11 +34,18 @@
                 <ResourceDictionary Source="..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Local Styles -->
+            <Style x:Name="ImageCropperThumbStyleAcrylic" TargetType="controls:ImageCropperThumb">
+                <Setter Property="Background" Value="{ThemeResource SliderThumbBackgroundThemeBrush}"/>
+            </Style>
+
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:EditorModeIntConverter x:Key="EditorModeIntConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:AspectRatioOptionBoolConverter x:Key="AspectRatioOptionBoolConverter"/>
+            <converters:AspectRatioOptionIntConverter x:Key="AspectRatioOptionIntConverter"/>
             
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
@@ -112,6 +119,7 @@
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
                         <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
+                        <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -127,6 +135,7 @@
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
+                        <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -394,33 +403,33 @@
                                         <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
-                                
-                                <AppBarToggleButton Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+
+                                <AppBarToggleButton x:Name="AppBarToggleButtonAspectRatio" Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" IsChecked="{x:Bind ViewModel.IsFixedAspectRatioSelected, Mode=OneWay}" Click="AppBarToggleButtonAspectRatio_Click" Checked="AppBarToggleButtonAspectRatio_IsCheckedChanged" Unchecked="AppBarToggleButtonAspectRatio_IsCheckedChanged">
                                     <AppBarToggleButton.Icon>
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE799;" FontSize="16"/>
                                     </AppBarToggleButton.Icon>
 
                                     <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Top">
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" IsChecked="True" FontWeight="SemiBold"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" Tag="1"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" Tag="0.6666"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" Tag="0.7500"/>
-                                            <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation"/>
+                                        <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom">
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=0}" FontWeight="SemiBold" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="0"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=1}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="1"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=2}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="2"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=3}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="3"/>
+                                            <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" IsEnabled="True" Icon="Orientation" Command="{x:Bind ViewModel.AspectRatioFlipCommand}"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="SemiBold"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" Tag="1.4142"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=4}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="4"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="SemiBold"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" Tag="1.2941"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" Tag="1.5455"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" Tag="1.2941"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="5"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="6"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="7"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" Tag="1.3894"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" Tag="1.4230"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" Tag="1.4054"/>
-                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" Tag="1.4230"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="8"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=9}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="9"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=10}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="10"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=11}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="11"/>
                                         </MenuFlyout>
                                     </FlyoutBase.AttachedFlyout>
                                 </AppBarToggleButton>
@@ -460,10 +469,18 @@
 
         <!-- Content -->
         <Grid x:Name="GridContent" Grid.Row="1">
-            <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}">
-                <FlipView.ItemTemplate>
-                    <DataTemplate x:DataType="scanner:ScanResultElement">
-                        <ScrollViewer
+            <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}">
+                <controls:SwitchPresenter.ContentTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                    </TransitionCollection>
+                </controls:SwitchPresenter.ContentTransitions>
+
+                <controls:Case Value="0">
+                    <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}">
+                        <FlipView.ItemTemplate>
+                            <DataTemplate x:DataType="scanner:ScanResultElement">
+                                <ScrollViewer
                                 x:Name="ScrollViewerFlipViewPages"
                                 ZoomMode="Enabled"
                                 MinZoomFactor="1"
@@ -471,12 +488,26 @@
                                 HorizontalScrollBarVisibility="Auto"
                                 VerticalScrollBarVisibility="Auto"
                                 ZoomSnapPointsType="Mandatory">
-                            <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
-                        </ScrollViewer>
-                    </DataTemplate>
-                </FlipView.ItemTemplate>
-            </FlipView>
+                                    <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
+                                </ScrollViewer>
+                            </DataTemplate>
+                        </FlipView.ItemTemplate>
+                    </FlipView>
+                </controls:Case>
 
+                <controls:Case Value="1">
+                    <controls:ImageCropper x:Name="ImageCropperPage" AspectRatio="{x:Bind ViewModel.SelectedAspectRatioValue, Mode=OneWay}" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32" Background="Transparent" RenderTransformOrigin="0.5,0.5" Loaded="ImageCropper_Loaded">
+                        <controls:ImageCropper.Mask>
+                            <SolidColorBrush Color="Black" Opacity="0.5"/>
+                        </controls:ImageCropper.Mask>
+                    </controls:ImageCropper>
+                </controls:Case>
+
+                <controls:Case Value="2">
+                    
+                </controls:Case>
+            </controls:SwitchPresenter>
+            
             <Grid x:Name="GridLoading" Visibility="Collapsed">
                 <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60"/>
                 <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
@@ -559,7 +590,7 @@
                                 </Grid>
                             </Button>
                             <AppBarSeparator Grid.Column="1"/>
-                            <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0">
+                            <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage, Mode=OneWay}">
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
@@ -567,8 +598,19 @@
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16"/>
+                            <Button Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage, Mode=OneWay}">
+                                <Grid Padding="0" Margin="0">
+                                    <FontIcon x:Name="FontIconCropAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                    <FontIcon x:Name="FontIconCropAsCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                        <FontIcon.RenderTransform>
+                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
                             </Button>
                             <Button Grid.Column="4" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
@@ -589,7 +631,7 @@
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">
+                            <Button x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16"/>
                             </Button>
                             <Button x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">

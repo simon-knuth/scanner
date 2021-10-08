@@ -56,9 +56,9 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingAppTheme, value);
         }
 
-        public int SettingAutoRotate
+        public bool SettingAutoRotate
         {
-            get => (int)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
+            get => (bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
             set => SettingsService.SetSetting(AppSetting.SettingAutoRotate, value);
         }
 

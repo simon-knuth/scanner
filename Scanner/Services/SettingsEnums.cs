@@ -27,13 +27,6 @@
             Dark = 2
         }
 
-        public enum SettingAutoRotate
-        {
-            Off = 0,
-            AutoRotate = 1,
-            AskEveryTime = 2
-        }
-
         public enum SettingEditorOrientation
         {
             Vertical = 1,
