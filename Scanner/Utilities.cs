@@ -2,10 +2,12 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner;
+using Scanner.Services;
 using Serilog;
 using Serilog.Exceptions;
 using System;
@@ -35,6 +37,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using static Enums_old;
 using static Globals;
+using static Scanner.Services.SettingsEnums;
 
 static class Utilities
 {
@@ -351,140 +354,6 @@ static class Utilities
 
 
     /// <summary>
-    ///     Loads all settings/data from the app's data container and initializes default data if necessary.
-    /// </summary>
-    public static void LoadSettings()
-    {
-        localSettingsContainer = ApplicationData.Current.LocalSettings;
-
-        if (localSettingsContainer.Values["settingSaveLocationAsk"] != null)
-        {
-            settingSaveLocationAsk = (bool)localSettingsContainer.Values["settingSaveLocationAsk"];
-        }
-        else
-        {
-            settingSaveLocationAsk = false;
-            localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
-        }
-
-        if (localSettingsContainer.Values["settingAppTheme"] != null)
-        {
-            switch ((int)localSettingsContainer.Values["settingAppTheme"])
-            {
-                case 0:
-                    settingAppTheme = Theme.system;
-                    break;
-                case 1:
-                    settingAppTheme = Theme.light;
-                    break;
-                case 2:
-                    settingAppTheme = Theme.dark;
-                    break;
-                default:
-                    settingAppTheme = Theme.system;
-                    break;
-            }
-        }
-        else
-        {
-            settingAppTheme = Theme.system;
-            localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
-        }
-        localSettingsContainer.Values["awaitingRestartAfterThemeChange"] = false;
-
-        if (localSettingsContainer.Values["settingAppendTime"] != null)
-        {
-            settingAppendTime = (bool)localSettingsContainer.Values["settingAppendTime"];
-        }
-        else
-        {
-            settingAppendTime = true;
-            localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
-        }
-
-        if (localSettingsContainer.Values["settingNotificationScanComplete"] != null)
-        {
-            settingNotificationScanComplete = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
-        }
-        else
-        {
-            settingNotificationScanComplete = true;
-            localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        }
-
-        if (localSettingsContainer.Values["settingErrorStatistics"] != null)
-        {
-            settingErrorStatistics = (bool)localSettingsContainer.Values["settingErrorStatistics"];
-        }
-        else
-        {
-            settingErrorStatistics = false;
-            localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
-        }
-        if (settingErrorStatistics == true)
-        {
-            AppCenter.SetEnabledAsync(true);
-        }
-        else AppCenter.SetEnabledAsync(false);
-        try
-        {
-            RegisterWithMicrosoftAppCenter();
-        }
-        catch (Exception) { }
-
-        PackageVersion version = Package.Current.Id.Version;
-        string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-        if (localSettingsContainer.Values["lastKnownVersion"] != null)
-        {
-            string lastKnownVersionNumber = (string)localSettingsContainer.Values["lastKnownVersion"];
-
-            if (currentVersionNumber != lastKnownVersionNumber) isFirstAppLaunchWithThisVersion = true;
-            else isFirstAppLaunchWithThisVersion = false;
-
-            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
-        }
-        else
-        {
-            // first launch of the app ever
-            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
-        }
-
-        if (localSettingsContainer.Values["scanNumber"] != null)
-        {
-            scanNumber = (int)localSettingsContainer.Values["scanNumber"];
-        }
-        else
-        {
-            // first launch of the app ever
-            localSettingsContainer.Values["scanNumber"] = 1;
-            scanNumber = 1;
-        }
-
-        if (localSettingsContainer.Values["lastTouchDrawState"] != null)
-        {
-            lastTouchDrawState = (bool)localSettingsContainer.Values["lastTouchDrawState"];
-        }
-        else
-        {
-            lastTouchDrawState = false;
-        }
-
-        if (localSettingsContainer.Values["manageTutorialAlreadyShown"] != null)
-        {
-            manageTutorialAlreadyShown = (bool)localSettingsContainer.Values["manageTutorialAlreadyShown"];
-        }
-        else
-        {
-            manageTutorialAlreadyShown = false;
-        }
-
-        log.Information("Settings loaded: [settingSaveLocationAsk={SettingSaveLocationAsk}|settingAppTheme={SettingAppTheme}|settingAppendTime={SettingAppendTime}|settingNotificationScanComplete={SettingNotificationScanComplete}|settingErrorStatistics={SettingErrorStatistics}" +
-            "|isFirstAppLaunchWithThisVersion={IsFirstAppLaunchWithThisVersion}|scanNumber={ScanNumber}|lastTouchDrawState={LastTouchDrawState}|manageTutorialAlreadyShown={ManageTutorialAlreadyShown}]",
-            settingSaveLocationAsk, settingAppTheme, settingAppendTime, settingNotificationScanComplete, settingErrorStatistics, isFirstAppLaunchWithThisVersion, scanNumber, lastTouchDrawState, manageTutorialAlreadyShown);
-    }
-
-
-    /// <summary>
     ///     Searches the app resources for a localized version of a string.
     /// </summary>
     /// <param name="resource">The resource name.</param>
@@ -677,7 +546,10 @@ static class Utilities
     /// </summary>
     public static void UpdateTheme(UISettings uISettings, object theObject)
     {
-        if (settingAppTheme == Theme.system)
+        ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+        SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
+
+        if (theme == SettingAppTheme.System)
         {
             if ((new UISettings()).GetColorValue(UIColorType.Background).ToString() == "#FF000000")
             {
@@ -692,25 +564,9 @@ static class Utilities
         }
         else
         {
-            if (settingAppTheme == Theme.light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+            if (theme == SettingAppTheme.Light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
             else applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
         }
-    }
-
-
-    /// <summary>
-    ///     Saves all settings to the app's data container.
-    /// </summary>
-    public static void SaveSettings()
-    {
-        localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
-        localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
-        localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
-        localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
-
-        if (settingErrorStatistics == true) AppCenter.SetEnabledAsync(true);
-        else AppCenter.SetEnabledAsync(false);
     }
 
 

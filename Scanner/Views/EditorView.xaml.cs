@@ -77,6 +77,29 @@ namespace Scanner.Views
             {
                 await ApplyFlipViewOrientation(ViewModel.Orientation);
             }
+            else if (e.PropertyName == nameof(ViewModel.EditorMode))
+            {
+                if (ViewModel.EditorMode == EditorMode.Draw)
+                {
+                    await InitializeInkCanvas();
+                }
+            }
+            else if (e.PropertyName == nameof(ViewModel.IsTouchDrawingEnabled))
+            {
+                await ApplyTouchDrawState();
+            }
+        }
+
+        private async Task InitializeInkCanvas()
+        {
+            Tuple<double, double> measurements = GetImageMeasurements(ViewModel.SelectedPage.CachedImage);
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                InkCanvasEditDraw.InkPresenter.StrokeContainer.Clear();
+                InkCanvasEditDraw.Width = measurements.Item1;
+                InkCanvasEditDraw.Height = measurements.Item2;
+            });
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -88,7 +111,11 @@ namespace Scanner.Views
                 // fix ProgressRing getting stuck when navigating back to cached page
                 ProgressRingLoading.IsActive = false;
                 ProgressRingLoading.IsActive = true;
+
+                InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
             });
+
+            await ApplyTouchDrawState();
         }
 
         private async void ImageEx_Loaded(object sender, RoutedEventArgs e)
@@ -97,6 +124,32 @@ namespace Scanner.Views
             {
                 ImageEx image = (ImageEx)sender;
                 ScrollViewer scrollViewer = (ScrollViewer)image.Parent;
+
+                image.MinWidth = scrollViewer.ViewportWidth;
+                image.MaxWidth = scrollViewer.ViewportWidth;
+                image.MinHeight = scrollViewer.ViewportHeight;
+                image.MaxHeight = scrollViewer.ViewportHeight;
+
+                scrollViewer.SizeChanged += async (x, y) =>
+                {
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                    {
+                        image.MinWidth = scrollViewer.ViewportWidth;
+                        image.MaxWidth = scrollViewer.ViewportWidth;
+                        image.MinHeight = scrollViewer.ViewportHeight;
+                        image.MaxHeight = scrollViewer.ViewportHeight;
+                    });
+                };
+            });
+        }
+
+        private async void ImageExDraw_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                ImageEx image = (ImageEx)sender;
+                Grid grid = (Grid)image.Parent;
+                ScrollViewer scrollViewer = (ScrollViewer)grid.Parent;
 
                 image.MinWidth = scrollViewer.ViewportWidth;
                 image.MaxWidth = scrollViewer.ViewportWidth;
@@ -165,7 +218,11 @@ namespace Scanner.Views
 
         private async void StoryboardToolbarIconDoneStart_Completed(object sender, object e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardToolbarIconDoneFinish.Begin());
+            try
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => StoryboardToolbarIconDoneFinish.Begin());
+            }
+            catch (Exception) { }
         }
 
         private async void PlayStoryboardToolbarIconDone(ToolbarFunction function)
@@ -180,9 +237,9 @@ namespace Scanner.Views
                     IconStoryboardToolbarIcon = nameof(FontIconRotate);
                     IconStoryboardToolbarIconDone = nameof(FontIconRotateDone);
                     break;
-                case ToolbarFunction.Draw:
-                    IconStoryboardToolbarIcon = nameof(FontIconDraw);
-                    IconStoryboardToolbarIconDone = nameof(FontIconDrawDone);
+                case ToolbarFunction.DrawAsCopy:
+                    IconStoryboardToolbarIcon = nameof(FontIconDrawAsCopy);
+                    IconStoryboardToolbarIconDone = nameof(FontIconDrawAsCopyDone);
                     break;
                 case ToolbarFunction.Rename:
                     IconStoryboardToolbarIcon = nameof(FontIconRename);
@@ -226,7 +283,11 @@ namespace Scanner.Views
                     index++;
                 }
 
-                StoryboardToolbarIconDoneStart.Begin();
+                try
+                {
+                    StoryboardToolbarIconDoneStart.Begin();
+                }
+                catch (Exception) { }
             });
         }
 
@@ -332,6 +393,39 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
                 ((AppBarToggleButton)sender).IsChecked = ViewModel.IsFixedAspectRatioSelected;
+            });
+        }
+
+        private async Task ApplyTouchDrawState()
+        {
+            if (ViewModel.IsTouchDrawingEnabled)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+                });
+            }
+            else
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+                });
+            }
+        }
+
+        private async void GridFooterDraw_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                if (e.NewSize.Width < 500)
+                {
+                    GridFooterDrawButtons.HorizontalAlignment = HorizontalAlignment.Left;
+                }
+                else
+                {
+                    GridFooterDrawButtons.HorizontalAlignment = HorizontalAlignment.Center;
+                }
             });
         }
     }

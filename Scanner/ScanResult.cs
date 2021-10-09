@@ -25,7 +25,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-using static Enums_old;
 using static Globals;
 using static Utilities;
 
@@ -40,6 +39,7 @@ namespace Scanner
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
         private ObservableCollection<ScanResultElement> _Elements = new ObservableCollection<ScanResultElement>();
         public ObservableCollection<ScanResultElement> Elements
@@ -89,6 +89,7 @@ namespace Scanner
             StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
             Task[] moveTasks = new Task[fileList.Count];
@@ -99,7 +100,10 @@ namespace Scanner
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
-            if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
+            if ((bool)settingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+            {
+                try { await result.SetInitialNamesAsync(); } catch (Exception) { }
+            }
             await result.GetImagesAsync();
             logService?.Log.Information("ScanResult created.");
             return result;
@@ -110,6 +114,7 @@ namespace Scanner
             bool displayFolder)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
             logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
@@ -132,7 +137,10 @@ namespace Scanner
             }
 
             result.ScanResultFormat = targetFormat;
-            if (settingAppendTime) try { await result.SetInitialNamesAsync(); } catch (Exception) { }
+            if ((bool)settingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+            {
+                try { await result.SetInitialNamesAsync(); } catch (Exception) { }
+            }
             await result.GetImagesAsync();
             logService?.Log.Information("ScanResult created.");
             return result;
@@ -983,8 +991,9 @@ namespace Scanner
                 throw;
             }
 
-            // delete cached image, delete image without rotation and reset rotation
+            // refresh cached image, delete image without rotation and reset rotation
             _Elements[index].CachedImage = null;
+            await _Elements[index].GetImageAsync();
             if (_Elements[index].ImageWithoutRotation != null)
             {
                 await _Elements[index].ImageWithoutRotation.DeleteAsync();
@@ -1054,6 +1063,7 @@ namespace Scanner
             {
                 _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
             });
+            await _Elements[index + 1].GetImageAsync();
             NumberOfPages += 1;
             RefreshItemDescriptors();
 
@@ -1321,7 +1331,10 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if (settingAppendTime && targetFormat != ImageScannerFormat.Pdf) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                    if ((bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)
+                    {
+                        await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                    }
                 }
             }
             else
@@ -1343,7 +1356,10 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if (settingAppendTime) await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                    if ((bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+                    {
+                        await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                    }
                 }
 
                 Task[] conversionTasks = new Task[files.Count()];

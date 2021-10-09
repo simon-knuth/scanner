@@ -162,7 +162,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Toolbar -->
-        <Frame x:Name="FrameToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <Frame x:Name="FrameToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}">
                     <controls:SwitchPresenter.ContentTransitions>
@@ -387,17 +387,17 @@
                     <!-- Crop -->
                     <controls:Case Value="1">
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundListLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
-                                
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" Margin="0,0,12,0"/>
-                                <TextBlock Text="Crop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+
+                                <TextBlock Text="Crop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <AppBarSeparator Margin="16,0,12,0"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                            <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
@@ -440,26 +440,31 @@
                     <!-- Draw -->
                     <controls:Case Value="2">
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal" Padding="12,3,12,3" Margin="0,6,6,6" Background="{ThemeResource SystemControlBackgroundListLowBrush}" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
                                 
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;" FontSize="16" Margin="0,0,12,0"/>
-                                <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                                <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                            <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
                                 
-                                <InkToolbar InitialControls="PensOnly">
+                                <InkToolbar InitialControls="PensOnly" TargetInkCanvas="{x:Bind InkCanvasEditDraw}">
                                     <InkToolbarEraserButton/>
                                 </InkToolbar>
+                                <AppBarToggleButton x:Uid="ButtonEditDrawTouch" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" Visibility="{x:Bind ViewModel.IsDeviceTouchEnabled, Mode=OneWay}" IsChecked="{x:Bind ViewModel.IsTouchDrawingEnabled, Mode=TwoWay}">
+                                    <AppBarToggleButton.Icon>
+                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED5F;"/>
+                                    </AppBarToggleButton.Icon>
+                                </AppBarToggleButton>
                             </StackPanel>
                         </StackPanel>
                     </controls:Case>
@@ -504,7 +509,14 @@
                 </controls:Case>
 
                 <controls:Case Value="2">
-                    
+                    <ScrollViewer x:Name="ScrollViewerEditDraw" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <controls:ImageEx x:Name="ImageExDraw" Source="{x:Bind ViewModel.SelectedPage.CachedImage, Mode=OneWay}" Loaded="ImageExDraw_Loaded"/>
+                            <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="{x:Bind ScrollViewerEditDraw.ViewportWidth, Mode=OneWay}" MaxWidth="{x:Bind ScrollViewerEditDraw.ViewportWidth, Mode=OneWay}" Height="{x:Bind ScrollViewerEditDraw.ViewportHeight, Mode=OneWay}" MaxHeight="{x:Bind ScrollViewerEditDraw.ViewportHeight, Mode=OneWay}">
+                                <InkCanvas x:Name="InkCanvasEditDraw"/>
+                            </Viewbox>
+                        </Grid>
+                    </ScrollViewer>
                 </controls:Case>
             </controls:SwitchPresenter>
             
@@ -515,7 +527,7 @@
         </Grid>
 
         <!-- Footer -->
-        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" CornerRadius="0,0,8,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
             <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}" HorizontalContentAlignment="Stretch">
                 <controls:SwitchPresenter.ContentTransitions>
                     <TransitionCollection>
@@ -590,7 +602,7 @@
                                 </Grid>
                             </Button>
                             <AppBarSeparator Grid.Column="1"/>
-                            <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage, Mode=OneWay}">
+                            <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage}">
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
@@ -598,7 +610,7 @@
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage, Mode=OneWay}">
+                            <Button Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCropAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -621,23 +633,65 @@
 
                 <!-- Draw -->
                 <controls:Case Value="2">
-                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" Height="40">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right">
-                            <Button x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="3,0,3,0">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
-                                        <TextBlock x:Uid="TextEditSave" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                    <Frame HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40">
+                        <Grid x:Name="GridFooterDraw" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SizeChanged="GridFooterDraw_SizeChanged">
+                            <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.DrawOnPageCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
+                                            <TextBlock x:Uid="TextEditSave" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                                <Button Grid.Column="1" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.DrawOnPageAsCopyCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}">
+                                    <Grid Padding="0" Margin="0">
+                                        <FontIcon x:Name="FontIconDrawAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <FontIcon x:Name="FontIconDrawAsCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                    </Grid>
+                                </Button>
+                                <Button Grid.Column="2" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveDrawModeCommand}">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
+                                </Button>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                                <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                    </TextBlock>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                        <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                                        </AppBarButton>
+                                        <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                                        </AppBarButton>
                                     </StackPanel>
-                                </Grid>
-                            </Button>
-                            <Button x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16"/>
-                            </Button>
-                            <Button x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
-                            </Button>
-                        </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
                     </Frame>
                 </controls:Case>
             </controls:SwitchPresenter>

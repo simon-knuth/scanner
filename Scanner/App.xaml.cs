@@ -41,7 +41,6 @@ namespace Scanner
             // apply theme
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
-
             switch (theme)
             {
                 case SettingAppTheme.Light:
@@ -55,7 +54,13 @@ namespace Scanner
                     break;
             }
 
-            //Task.Run(async () => await InitializeSerilogAsync());
+            // initialize some settings
+            PackageVersion version = Package.Current.Id.Version;
+            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
+            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;

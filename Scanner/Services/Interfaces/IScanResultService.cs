@@ -6,6 +6,7 @@ using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace Scanner.Services
 {
@@ -37,6 +38,8 @@ namespace Scanner.Services
         Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
         Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
+        Task<bool> DrawOnScanAsync(int index, InkCanvas inkCanvas);
+        Task<bool> DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas);
         Task<bool> RenameAsync(int index, string newName);
         Task<bool> RenameAsync(string newName);
         Task<bool> DeleteScanAsync(int index);

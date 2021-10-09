@@ -7,8 +7,10 @@ using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Devices.Input;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
@@ -35,6 +37,8 @@ namespace Scanner.ViewModels
 
         public AsyncRelayCommand<ImageCropper> CropPageCommand;
         public AsyncRelayCommand<ImageCropper> CropPageAsCopyCommand;
+        public AsyncRelayCommand<InkCanvas> DrawOnPageCommand;
+        public AsyncRelayCommand<InkCanvas> DrawOnPageAsCopyCommand;
         public AsyncRelayCommand<string> RotatePageCommand;
         public AsyncRelayCommand<string> RenameCommand;
         public AsyncRelayCommand DeleteCommand;
@@ -52,6 +56,7 @@ namespace Scanner.ViewModels
         public event EventHandler CropAsCopySuccessful;
         public event EventHandler RotateSuccessful;
         public event EventHandler DrawSuccessful;
+        public event EventHandler DrawAsCopySuccessful;
         public event EventHandler RenameSuccessful;
         public event EventHandler DeleteSuccessful;
         public event EventHandler CopySuccessful;
@@ -200,6 +205,24 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsFixedAspectRatioSelected, value);
         }
 
+        private bool _IsDeviceTouchEnabled;
+        public bool IsDeviceTouchEnabled
+        {
+            get => _IsDeviceTouchEnabled;
+            set => SetProperty(ref _IsDeviceTouchEnabled, value);
+        }
+
+        private bool _IsTouchDrawingEnabled;
+        public bool IsTouchDrawingEnabled
+        {
+            get => _IsTouchDrawingEnabled;
+            set
+            {
+                SetProperty(ref _IsTouchDrawingEnabled, value);
+                SettingsService.SetSetting(AppSetting.LastTouchDrawState, value);
+            }
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,6 +248,8 @@ namespace Scanner.ViewModels
 
             CropPageCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsync(x));
             CropPageAsCopyCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsCopyAsync(x));
+            DrawOnPageCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsync(x));
+            DrawOnPageAsCopyCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsCopyAsync(x));
             RotatePageCommand = new AsyncRelayCommand<string>((x) => RotatePageAsync((BitmapRotation)int.Parse(x)));
             RenameCommand = new AsyncRelayCommand<string>((x) => RenameAsync(x));
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
@@ -237,6 +262,13 @@ namespace Scanner.ViewModels
             LeaveDrawModeCommand = new RelayCommand(LeaveDrawMode);
             AspectRatioCommand = new RelayCommand<string>((x) => SelectedAspectRatio = (AspectRatioOption)int.Parse(x));
             AspectRatioFlipCommand = new RelayCommand<Rect>((x) => FlipSelectedAspectRatio(x));
+
+            IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
+            PointerDevice device = pointerDevices.FirstOrDefault((x) => x.PointerDeviceType == PointerDeviceType.Touch);
+            //IsDeviceTouchEnabled = device != null;
+            IsDeviceTouchEnabled = true;
+
+            IsTouchDrawingEnabled = (bool)SettingsService.GetSetting(AppSetting.LastTouchDrawState);
         }
 
 
@@ -353,6 +385,7 @@ namespace Scanner.ViewModels
         private void EnterDrawMode()
         {
             EditorMode = EditorMode.Draw;
+
         }
 
         private void LeaveDrawMode()
@@ -534,6 +567,7 @@ namespace Scanner.ViewModels
 
             if (!success) return;
 
+            CropSuccessful?.Invoke(this, EventArgs.Empty);
             LeaveCropMode();
         }
 
@@ -544,6 +578,25 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             CropAsCopySuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task DrawAsync(InkCanvas inkCanvas)
+        {
+            bool success = await ScanResultService.DrawOnScanAsync(SelectedPageIndex, inkCanvas);
+
+            if (!success) return;
+
+            DrawSuccessful?.Invoke(this, EventArgs.Empty);
+            LeaveDrawMode();
+        }
+
+        private async Task DrawAsCopyAsync(InkCanvas inkCanvas)
+        {
+            bool success = await ScanResultService.DrawOnScanAsCopyAsync(SelectedPageIndex, inkCanvas);
+
+            if (!success) return;
+
+            DrawAsCopySuccessful?.Invoke(this, EventArgs.Empty);
         }
     }
 

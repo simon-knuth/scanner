@@ -10,6 +10,7 @@ using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 using static Scanner.Services.Messenger.MessengerEnums;
 using static Utilities;
 
@@ -479,7 +480,61 @@ namespace Scanner.Services
                     Severity = AppWideStatusMessageSeverity.Error,
                     AdditionalText = exc.Message
                 });
-                LogService?.Log.Error(exc, "Cropping pages failed.");
+                LogService?.Log.Error(exc, "Cropping pages as copy failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> DrawOnScanAsync(int index, InkCanvas inkCanvas)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.DrawOnScanAsync(index, inkCanvas);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageHeader"),
+                    MessageText = LocalizedString("ErrorMessageBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Drawing on page failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.DrawOnScanAsCopyAsync(index, inkCanvas);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageHeader"),
+                    MessageText = LocalizedString("ErrorMessageBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Drawing on page as copy failed.");
 
                 IsScanResultChanging = false;
                 return false;

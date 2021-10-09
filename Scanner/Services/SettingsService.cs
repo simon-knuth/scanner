@@ -40,19 +40,23 @@ namespace Scanner.Services
         public event EventHandler<AppSetting> SettingChanged;
         public event EventHandler ScanSaveLocationChanged;
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsService()
         {
             Task.Run(async () => await InitializeAsync());
+            LogAllSettings();
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private async Task InitializeAsync()
         {
+            // initialize save location
             var futureAccessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 
             if (futureAccessList.Entries.Count != 0)
@@ -136,6 +140,21 @@ namespace Scanner.Services
                 case AppSetting.TutorialPageListShown:
                     return SettingsContainer.Values[name] ?? false;
 
+                case AppSetting.LastKnownVersion:
+                    return SettingsContainer.Values[name] ?? "";
+
+                case AppSetting.ScanNumber:
+                    return SettingsContainer.Values[name] ?? 0;
+
+                case AppSetting.LastTouchDrawState:
+                    return SettingsContainer.Values[name] ?? true;
+
+                case AppSetting.IsFirstAppLaunchWithThisVersion:
+                    return SettingsContainer.Values[name] ?? true;
+
+                case AppSetting.IsFirstAppLaunchEver:
+                    return SettingsContainer.Values[name] ?? true;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -179,6 +198,26 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.TutorialPageListShown:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.LastKnownVersion:
+                    SettingsContainer.Values[name] = (string)value;
+                    break;
+
+                case AppSetting.ScanNumber:
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.LastTouchDrawState:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.IsFirstAppLaunchWithThisVersion:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.IsFirstAppLaunchEver:
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 
@@ -240,6 +279,17 @@ namespace Scanner.Services
             }
 
             await SetScanSaveLocationAsync(folder);
+        }
+
+        public void LogAllSettings()
+        {
+            string logString = "Settings loaded: ";
+            foreach (AppSetting setting in Enum.GetValues(typeof(AppSetting)))
+            {
+                logString += $"{setting}={GetSetting(setting)} | ";
+            }
+            logString = logString.Remove(logString.Length - 3);
+            LogService?.Log.Information(logString);
         }
     }
 }

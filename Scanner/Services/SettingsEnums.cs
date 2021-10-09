@@ -11,7 +11,12 @@
             SettingEditorOrientation,
             SettingRememberScanOptions,
             SettingErrorStatistics,
-            TutorialPageListShown
+            TutorialPageListShown,
+            LastKnownVersion,
+            ScanNumber,
+            LastTouchDrawState,
+            IsFirstAppLaunchWithThisVersion,
+            IsFirstAppLaunchEver
         }
 
         public enum SettingSaveLocationType

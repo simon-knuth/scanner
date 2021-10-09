@@ -10,12 +10,6 @@ using static Enums_old;
 
 public static class Globals
 {
-    public static bool settingSaveLocationAsk;                      // ask user for save location after each scan
-    public static Theme settingAppTheme;                            // user theme setting
-    public static bool settingAppendTime;                           // append time to file names
-    public static bool settingNotificationScanComplete;             // notify user when scan is complete if app is in the background
-    public static bool settingErrorStatistics;                      // send reports to the Microsoft AppCenter
-
     public static ILogger log;
 
     public static StorageFolder scanFolder = null;
