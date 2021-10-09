@@ -205,6 +205,14 @@ namespace Scanner.Views
                     AppBarToggleButtonSelect.IsChecked = false;
                 });
             }
+            else if (e.PropertyName == nameof(ViewModel.ScanResult) && ViewModel.ScanResult != null)
+            {
+                // new ScanResult, make sure that item selection is correct
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                });
+            }
         }
 
         private async void StoryboardToolbarIconDoneStart_Completed(object sender, object e)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -155,6 +156,16 @@ namespace Scanner.Services
                 case AppSetting.IsFirstAppLaunchEver:
                     return SettingsContainer.Values[name] ?? true;
 
+                case AppSetting.LastUsedCropAspectRatio:
+                    if (SettingsContainer.Values[name] != null)
+                    {
+                        return (AspectRatioOption)(int)SettingsContainer.Values[name];
+                    }
+                    else
+                    {
+                        return AspectRatioOption.Custom;
+                    }
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -219,6 +230,10 @@ namespace Scanner.Services
 
                 case AppSetting.IsFirstAppLaunchEver:
                     SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.LastUsedCropAspectRatio:
+                    SettingsContainer.Values[name] = (int)value;
                     break;
 
                 default:

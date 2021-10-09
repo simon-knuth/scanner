@@ -138,6 +138,7 @@ namespace Scanner.ViewModels
         private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
         {
             ScanResult = e;
+            SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
         }
 
         private void ScanResultService_ScanResultChanged(object sender, EventArgs e)

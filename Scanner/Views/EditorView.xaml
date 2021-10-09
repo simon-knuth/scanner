@@ -46,6 +46,7 @@
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
             <converters:AspectRatioOptionBoolConverter x:Key="AspectRatioOptionBoolConverter"/>
             <converters:AspectRatioOptionIntConverter x:Key="AspectRatioOptionIntConverter"/>
+            <converters:ListNotNullOrEmptyConverter x:Key="ListNotNullOrEmptyConverter"/>
             
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
@@ -120,6 +121,7 @@
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
                         <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
+                        <Setter Target="InkCanvasEditDraw.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -136,6 +138,7 @@
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
+                        <Setter Target="InkCanvasEditDraw.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -415,7 +418,7 @@
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=1}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="1"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=2}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="2"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=3}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="3"/>
-                                            <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" IsEnabled="True" Icon="Orientation" Command="{x:Bind ViewModel.AspectRatioFlipCommand}"/>
+                                            <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" Click="MenuFlyoutItemCropAspectRatioFlip_Click"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="SemiBold"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=4}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="4"/>
@@ -501,7 +504,7 @@
                 </controls:Case>
 
                 <controls:Case Value="1">
-                    <controls:ImageCropper x:Name="ImageCropperPage" AspectRatio="{x:Bind ViewModel.SelectedAspectRatioValue, Mode=OneWay}" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32" Background="Transparent" RenderTransformOrigin="0.5,0.5" Loaded="ImageCropper_Loaded">
+                    <controls:ImageCropper x:Name="ImageCropperPage" AspectRatio="{x:Bind ViewModel.SelectedAspectRatioValue, Mode=OneWay}" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32" Background="Transparent" RenderTransformOrigin="0.5,0.5" Loaded="ImageCropper_Loaded" Unloaded="ImageCropperPage_Unloaded">
                         <controls:ImageCropper.Mask>
                             <SolidColorBrush Color="Black" Opacity="0.5"/>
                         </controls:ImageCropper.Mask>
@@ -589,8 +592,8 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            
-                            <Button Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0">
+
+                            <Button Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}">
                                 <Grid Padding="6,0,6,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

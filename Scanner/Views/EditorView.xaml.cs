@@ -375,6 +375,14 @@ namespace Scanner.Views
             });
         }
 
+        private async void ImageCropperPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                ((ImageCropper)sender).Source = null;
+            });
+        }
+
         private async void AppBarToggleButtonAspectRatio_Click(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
@@ -427,6 +435,13 @@ namespace Scanner.Views
                     GridFooterDrawButtons.HorizontalAlignment = HorizontalAlignment.Center;
                 }
             });
+        }
+
+        private void MenuFlyoutItemCropAspectRatioFlip_Click(object sender, RoutedEventArgs e)
+        {
+            // flip aspect ratio, needs to be done in code-behind because the ImageCropper
+            //  doesn't properly support a binding
+            ViewModel.AspectRatioFlipCommand.Execute(ImageCropperPage.CroppedRegion);
         }
     }
 

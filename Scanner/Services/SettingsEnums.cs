@@ -16,7 +16,8 @@
             ScanNumber,
             LastTouchDrawState,
             IsFirstAppLaunchWithThisVersion,
-            IsFirstAppLaunchEver
+            IsFirstAppLaunchEver,
+            LastUsedCropAspectRatio
         }
 
         public enum SettingSaveLocationType

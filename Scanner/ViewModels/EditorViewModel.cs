@@ -126,6 +126,11 @@ namespace Scanner.ViewModels
                 else
                 {
                     IsEditing = true;
+
+                    if (value == EditorMode.Crop)
+                    {
+                        RefreshSimilarPagesForCrop();
+                    }
                 }
             }
         }
@@ -137,7 +142,11 @@ namespace Scanner.ViewModels
             set
             {
                 SetProperty(ref _IsScanResultChanging, value);
-                if (value == false) RefreshSelectedPageText();
+                if (value == false)
+                {
+                    RefreshSelectedPageText();
+                    if (EditorMode == EditorMode.Crop) RefreshSimilarPagesForCrop();
+                }
             }
         }
 
@@ -188,6 +197,8 @@ namespace Scanner.ViewModels
                 {
                     IsFixedAspectRatioSelected = true;
                 }
+
+                SettingsService.SetSetting(AppSetting.LastUsedCropAspectRatio, value);
             }
         }
 
@@ -221,6 +232,13 @@ namespace Scanner.ViewModels
                 SetProperty(ref _IsTouchDrawingEnabled, value);
                 SettingsService.SetSetting(AppSetting.LastTouchDrawState, value);
             }
+        }
+
+        private List<int> _SimilarPagesForCrop;
+        public List<int> SimilarPagesForCrop
+        {
+            get => _SimilarPagesForCrop;
+            set => SetProperty(ref _SimilarPagesForCrop, value);
         }
 
 
@@ -265,9 +283,9 @@ namespace Scanner.ViewModels
 
             IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
             PointerDevice device = pointerDevices.FirstOrDefault((x) => x.PointerDeviceType == PointerDeviceType.Touch);
-            //IsDeviceTouchEnabled = device != null;
-            IsDeviceTouchEnabled = true;
+            IsDeviceTouchEnabled = device != null;
 
+            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
             IsTouchDrawingEnabled = (bool)SettingsService.GetSetting(AppSetting.LastTouchDrawState);
         }
 
@@ -597,6 +615,27 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             DrawAsCopySuccessful?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async void RefreshSimilarPagesForCrop()
+        {
+            SimilarPagesForCrop = null;
+
+            List<int> result = new List<int>();
+            List<BitmapImage> images = await ScanResult.GetImagesAsync();
+            for (int i = 0; i < images.Count; i++)
+            {
+                if (i == SelectedPageIndex) continue;
+                
+                if (images[i].PixelWidth == SelectedPage.CachedImage.PixelWidth
+                    && images[i].PixelHeight == SelectedPage.CachedImage.PixelHeight)
+                {
+                    // image has exact same dimensions as the currently selected one
+                    result.Add(i);
+                }
+            }
+
+            SimilarPagesForCrop = result;
         }
     }
 
