@@ -35,6 +35,8 @@ namespace Scanner.Services
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
             StorageFolder targetFolder);
 
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat);
+
         Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
         Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);

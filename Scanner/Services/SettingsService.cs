@@ -31,15 +31,29 @@ namespace Scanner.Services
             set => SetProperty(ref _ScanSaveLocation, value);
         }
 
-        private bool _IsScanSaveLocationDefault;
-        public bool IsScanSaveLocationDefault
+        private bool? _IsScanSaveLocationDefault;
+        public bool? IsScanSaveLocationDefault
         {
             get => _IsScanSaveLocationDefault;
             set => SetProperty(ref _IsScanSaveLocationDefault, value);
         }
 
+        private string _LastSaveLocationPath;
+        public string LastSaveLocationPath
+        {
+            get => _LastSaveLocationPath;
+            set
+            {
+                SetProperty(ref _LastSaveLocationPath, value);
+                LastSaveLocationPathChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private bool _IsSaveLocationFolderDefault;
+
         public event EventHandler<AppSetting> SettingChanged;
         public event EventHandler ScanSaveLocationChanged;
+        public event EventHandler LastSaveLocationPathChanged;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +120,7 @@ namespace Scanner.Services
             }
 
             _IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
+            if (IsScanSaveLocationDefault != null) _IsSaveLocationFolderDefault = (bool)IsScanSaveLocationDefault;
         }
 
         /// <summary>
@@ -182,6 +197,9 @@ namespace Scanner.Services
             {
                 case AppSetting.SettingSaveLocationType:
                     SettingsContainer.Values[name] = (int)value;
+                    if ((SettingSaveLocationType)value == SettingSaveLocationType.AskEveryTime) IsScanSaveLocationDefault = null;
+                    else IsScanSaveLocationDefault = _IsSaveLocationFolderDefault;
+                    ScanSaveLocationChanged?.Invoke(this, EventArgs.Empty);
                     break;
 
                 case AppSetting.SettingAppTheme:
@@ -250,13 +268,27 @@ namespace Scanner.Services
 
             ScanSaveLocation = folder;
 
-            IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
+            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.SetLocation)
+            {
+                IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
+                if (IsScanSaveLocationDefault != null) _IsSaveLocationFolderDefault = (bool)IsScanSaveLocationDefault;
+            }
+            else
+            {
+                IsScanSaveLocationDefault = null;
+            }
+            
             ScanSaveLocationChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private async Task<bool> CheckScanSaveLocationDefaultAsync()
+        private async Task<bool?> CheckScanSaveLocationDefaultAsync()
         {
             if (ScanSaveLocation == null) return false;
+
+            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime)
+            {
+                return null;
+            }
 
             StorageFolder folder;
             try

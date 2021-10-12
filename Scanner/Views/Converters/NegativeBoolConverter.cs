@@ -10,7 +10,7 @@ namespace Scanner.Views.Converters
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if ((bool)value == true) return false;
+            if (value != null && (bool)value == true) return false;
             else return true;
         }
 

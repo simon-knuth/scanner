@@ -44,6 +44,7 @@
             <converters:RadioButtonsScannerSourceConverter x:Key="RadioButtonsScannerSourceConverter"/>
             <converters:RadioButtonsScannerColorModeConverter x:Key="RadioButtonsScannerColorModeConverter"/>
             <converters:RadioButtonsScannerAutoCropModeConverter x:Key="RadioButtonsScannerAutoCropModeConverter"/>
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
             <converters:ScannerSourceIntConverter x:Key="ScannerSourceIntConverter"/>
             <converters:ScannerFileFormatGlyphConverter x:Key="ScannerFileFormatGlyphConverter"/>
@@ -634,10 +635,10 @@
 
             <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
                 <interactivity:Interaction.Behaviors>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}" >
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
                     </core:DataTriggerBehavior>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}" >
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                     </core:DataTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
@@ -645,7 +646,7 @@
                 <Grid>
                     <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="{x:Bind ViewModel.CanAddToScanResult, Mode=OneWay, FallbackValue=Collapsed}"/>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="{x:Bind ViewModel.CanAddToScanResult, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay}"/>
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
                     <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="False" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24"/>
@@ -653,8 +654,8 @@
 
                 <muxc:SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" Command="{x:Bind ViewModel.ScanCommand}" FontWeight="Bold" IsEnabled="True"/>
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal" Command="{x:Bind ViewModel.ScanFreshCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>

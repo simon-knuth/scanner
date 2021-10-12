@@ -37,8 +37,8 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _SaveLocationPath, value);
         }
 
-        private bool _IsDefaultSaveLocation;
-        public bool IsDefaultSaveLocation
+        private bool? _IsDefaultSaveLocation;
+        public bool? IsDefaultSaveLocation
         {
             get => _IsDefaultSaveLocation;
             set => SetProperty(ref _IsDefaultSaveLocation, value);

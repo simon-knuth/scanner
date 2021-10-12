@@ -21,9 +21,15 @@ namespace Scanner.Services
             get;
         }
 
-        bool IsScanSaveLocationDefault
+        bool? IsScanSaveLocationDefault
         {
             get;
+        }
+
+        string LastSaveLocationPath
+        {
+            get;
+            set;
         }
 
         Task SetScanSaveLocationAsync(StorageFolder folder);

@@ -15,9 +15,30 @@ namespace Scanner.Views
         public ScanOptionsView()
         {
             this.InitializeComponent();
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.PreviewRunning += ViewModel_PreviewRunning;
             ViewModel.ScanService.ScanStarted += ViewModel_ScanStarted;
             ViewModel.ScanService.ScanEnded += ViewModel_ScanEnded;
+        }
+
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.NextScanMustBeFresh))
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    if (ViewModel.NextScanMustBeFresh)
+                    {
+                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                    }
+                    else
+                    {
+                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                    }
+                });
+            }
         }
 
         private async void ViewModel_ScanEnded(object sender, EventArgs e)

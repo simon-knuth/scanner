@@ -19,6 +19,8 @@ using Windows.Devices.Scanners;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.Generic;
 using Windows.Storage;
+using static Scanner.Services.SettingsEnums;
+using Windows.Storage.Pickers;
 
 namespace Scanner.ViewModels
 {
@@ -47,6 +49,7 @@ namespace Scanner.ViewModels
         public RelayCommand DismissPreviewScanCommand;
 
         public AsyncRelayCommand ScanCommand;
+        public AsyncRelayCommand ScanFreshCommand;
         public RelayCommand CancelScanCommand;
 
         public event EventHandler PreviewRunning;
@@ -201,11 +204,18 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _PreviewImage, value);
         }
 
-        private bool? _CanAddToScanResult;
-        public bool? CanAddToScanResult
+        private bool _CanAddToScanResult;
+        public bool CanAddToScanResult
         {
             get => _CanAddToScanResult;
             set => SetProperty(ref _CanAddToScanResult, value);
+        }
+
+        private bool _NextScanMustBeFresh;
+        public bool NextScanMustBeFresh
+        {
+            get => _NextScanMustBeFresh;
+            set => SetProperty(ref _NextScanMustBeFresh, value);
         }
 
         private bool _IsScanResultChanging;
@@ -261,8 +271,9 @@ namespace Scanner.ViewModels
             DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
-            ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false));
-            DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(true));
+            ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
+            ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
+            DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
             CancelScanCommand = new RelayCommand(CancelScan);
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
@@ -723,38 +734,56 @@ namespace Scanner.ViewModels
             };
         }
 
-        private async Task ScanAsync(bool debug)
+        private async Task ScanAsync(bool startFresh, bool debug)
         {
             if (ScanCommand.IsRunning) return;      // already running?
 
+            StorageFolder targetFolder;
+            bool askForFolder = (!CanAddToScanResult || startFresh)
+                && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
+            
             try
             {
                 if (!debug)
                 {
-                    // real scan
+                    // real scan ~> get file destination
+                    if (askForFolder)
+                    {
+                        // user has to select location
+                        var pickerFolder = new FolderPicker();
+                        pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                        targetFolder = await pickerFolder.PickSingleFolderAsync();
+
+                        if (targetFolder == null) throw new ArgumentException("No folder selected");
+                    }
+                    else
+                    {
+                        targetFolder = SettingsService.ScanSaveLocation;
+                    }
+
                     ScanOptions scanOptions = CreateScanOptions();
                     var result = await ScanService?.GetScanAsync(SelectedScanner, scanOptions,
                     AppDataService.FolderReceivedPages);
 
-                    if (CanAddToScanResult != true)
+                    if (!CanAddToScanResult || startFresh)
                     {
                         // create new result
                         await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                            SettingsService.ScanSaveLocation, true);
+                            targetFolder, true);
                     }
                     else
                     {
                         // add to existing result
                         await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                            scanOptions.Format.TargetFormat, SettingsService.ScanSaveLocation);
+                            scanOptions.Format.TargetFormat);
                     }
                 }
                 else
                 {
                     // debug scan
-                    var picker = new Windows.Storage.Pickers.FileOpenPicker();
-                    picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-                    picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                    var picker = new FileOpenPicker();
+                    picker.ViewMode = PickerViewMode.Thumbnail;
+                    picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                     picker.FileTypeFilter.Add(".jpg");
                     picker.FileTypeFilter.Add(".jpeg");
                     picker.FileTypeFilter.Add(".png");
@@ -765,23 +794,38 @@ namespace Scanner.ViewModels
                     IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
                     if (files != null)
                     {
+                        // get file destination
+                        if (askForFolder)
+                        {
+                            // user has to select location
+                            var pickerFolder = new FolderPicker();
+                            pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                            targetFolder = await pickerFolder.PickSingleFolderAsync();
+
+                            if (targetFolder == null) throw new ArgumentException("No folder selected");
+                        }
+                        else
+                        {
+                            targetFolder = SettingsService.ScanSaveLocation;
+                        }
+                        
                         List<StorageFile> copiedFiles = new List<StorageFile>();
                         foreach (StorageFile file in files)
                         {
                             copiedFiles.Add(await file.CopyAsync(AppDataService.FolderReceivedPages));
                         }
 
-                        if (CanAddToScanResult != true)
+                        if (!CanAddToScanResult || startFresh)
                         {
                             // create new result
                             await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                SettingsService.ScanSaveLocation, true);
+                                targetFolder, true);
                         }
                         else
                         {
                             // add to existing result
                             await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                DebugSelectedScanFormat, SettingsService.ScanSaveLocation);
+                                DebugSelectedScanFormat);
                         }
                     }
                     else
@@ -789,6 +833,7 @@ namespace Scanner.ViewModels
                         throw new ArgumentException("No debug file(s) selected");
                     }
                 }
+                SettingsService.LastSaveLocationPath = targetFolder.Path;
             }
             catch (Exception exc)
             {
@@ -834,11 +879,12 @@ namespace Scanner.ViewModels
         }
 
         private void RefreshCanAddToScanResult()
-        {
+        {            
             if (ScanResultService.Result == null)
             {
                 // no result exists
-                CanAddToScanResult = null;
+                CanAddToScanResult = false;
+                NextScanMustBeFresh = false;
             }
             else
             {
@@ -846,11 +892,13 @@ namespace Scanner.ViewModels
                 {
                     // same format as existing result
                     CanAddToScanResult = true;
+                    NextScanMustBeFresh = false;
                 }
                 else
                 {
                     // different format
                     CanAddToScanResult = false;
+                    NextScanMustBeFresh = true;
                 }
             }
         }

@@ -14,7 +14,8 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using static Scanner.Services.Messenger.MessengerEnums;
-
+using static Scanner.Services.SettingsEnums;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
@@ -25,6 +26,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
 
@@ -49,8 +51,8 @@ namespace Scanner.ViewModels
             }
         }
 
-        private bool _IsDefaultSaveLocation;
-        public bool IsDefaultSaveLocation
+        private bool? _IsDefaultSaveLocation;
+        public bool? IsDefaultSaveLocation
         {
             get => _IsDefaultSaveLocation;
             set => SetProperty(ref _IsDefaultSaveLocation, value);
@@ -153,14 +155,26 @@ namespace Scanner.ViewModels
 
         private async Task ShowScanSaveLocation()
         {
-            try
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                await Launcher.LaunchFolderAsync(SettingsService.ScanSaveLocation);
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "Couldn't display save location.");
-            }
+                try
+                {
+                    if ((SettingSaveLocationType)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingSaveLocationType)
+                        == SettingSaveLocationType.SetLocation)
+                    {
+
+                        await Launcher.LaunchFolderAsync(SettingsService.ScanSaveLocation);
+                    }
+                    else
+                    {
+                        await Launcher.LaunchFolderPathAsync(SettingsService.LastSaveLocationPath);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    LogService?.Log.Error(exc, "Couldn't display save location.");
+                }
+            });
         }
 
         private void SettingsService_ScanSaveLocationChanged(object sender, EventArgs e)

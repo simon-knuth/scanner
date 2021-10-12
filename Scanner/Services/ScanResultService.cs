@@ -91,6 +91,13 @@ namespace Scanner.Services
             IsScanResultChanging = false;
         }
 
+        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat)
+        {
+            IsScanResultChanging = true;
+            await Result.AddFiles(files, targetFormat, FutureAccessListIndex);
+            IsScanResultChanging = false;
+        }
+
         public async Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
             IsScanResultChanging = true;
