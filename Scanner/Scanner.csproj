@@ -132,6 +132,8 @@
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
+    <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
     <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
       <DependentUpon>LicenseDetailView.xaml</DependentUpon>
@@ -176,8 +178,8 @@
     <Compile Include="Services\SettingsEnums.cs" />
     <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="ScanResultElement.cs" />
-    <Compile Include="ScanResult.cs" />
+    <Compile Include="Models\ScanResultElement.cs" />
+    <Compile Include="Models\ScanResult.cs" />
     <Compile Include="Enums_old.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -235,21 +237,6 @@
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="XAML Converters\SliderThumbToolTipPercentageConverter.cs" />
-    <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
-    <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
-    <Compile Include="XAML Converters\StringNotEmptyVisibilityConverter.cs" />
-    <Compile Include="XAML Converters\NegativeVisibilityConverter.cs" />
-    <Compile Include="XAML Converters\NegativeBoolConverter.cs" />
-    <Compile Include="XAML Converters\ButtonTextOpacityConverter.cs" />
-    <Compile Include="XAML Converters\ButtonShadowConverter.cs" />
-    <Compile Include="XAML Converters\HeaderScrollBackgroundConverter.cs" />
-    <Compile Include="XAML Converters\HeaderScrollShadowConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemDescriptorBackgroundConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemConverter.cs" />
-    <Compile Include="XAML Converters\TopThicknessConverter.cs" />
-    <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverter.cs" />
-    <Compile Include="XAML Converters\NegativeTopThicknessConverter.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

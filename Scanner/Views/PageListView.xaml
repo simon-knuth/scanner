@@ -45,6 +45,8 @@
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:FilePathFolderConverter x:Key="FilePathFolderConverter"/>
+            <converters:FilePathFolderPathConverter x:Key="FilePathFolderPathConverter"/>
 
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
@@ -263,7 +265,7 @@
 
         <!-- Content -->
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+            <StackPanel x:Name="StackPanelInitialPlaceholder" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Opacity="{x:Bind StackPanelInitialPlaceholder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                         <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
@@ -272,7 +274,11 @@
                         <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
                     </core:DataTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-                
+
+                <StackPanel.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </StackPanel.OpacityTransition>
+
                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
                 <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
             </StackPanel>
@@ -319,15 +325,58 @@
                                     <Image Source="{x:Bind Thumbnail, Mode=OneWay}"/>
                                     
                                     <!-- Selected Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
-                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,3" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                            <Border x:Name="BorderContainingFolderSelected" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Loaded="BorderContainingFolderSelected_Loaded">
+                                                <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Foreground="{ThemeResource AccentButtonForeground}" FontSize="12"/>
+                                                    <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
+                                                </Grid>
+                                            </Border>
+                                        </StackPanel>
                                     </Border>
                                     
                                     <!-- Normal Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,6" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                            <Border x:Name="BorderContainingFolderNormal" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Visibility="Collapsed" Loaded="BorderContainingFolderNormal_Loaded">
+                                                <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Opacity="0.75" FontSize="12"/>
+                                                    <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Opacity="0.75" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
+                                                </Grid>
+                                            </Border>
+                                        </StackPanel>
                                     </Border>
                                 </Grid>
+
+                                <GridViewItem.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Show in File Explorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Duplicate" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </GridViewItem.ContextFlyout>
                             </GridViewItem>
                         </DataTemplate>
                     </GridView.ItemTemplate>

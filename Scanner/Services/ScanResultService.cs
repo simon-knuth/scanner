@@ -303,7 +303,7 @@ namespace Scanner.Services
         {
             try
             {
-                await Result.CopyAsync();
+                await Result.CopyToClipboardAsync();
             }
             catch (Exception exc)
             {
@@ -325,7 +325,7 @@ namespace Scanner.Services
         {
             try
             {
-                await Result.CopyImageAsync(index);
+                await Result.CopyImageToClipboardAsync(index);
             }
             catch (Exception exc)
             {
@@ -347,7 +347,7 @@ namespace Scanner.Services
         {
             try
             {
-                await Result.CopyImagesAsync();
+                await Result.CopyImagesToClipboardAsync();
             }
             catch (Exception exc)
             {
@@ -369,7 +369,7 @@ namespace Scanner.Services
         {
             try
             {
-                await Result.CopyImagesAsync(indices);
+                await Result.CopyImagesToClipboardAsync(indices);
             }
             catch (Exception exc)
             {
@@ -542,6 +542,33 @@ namespace Scanner.Services
                     AdditionalText = exc.Message
                 });
                 LogService?.Log.Error(exc, "Drawing on page as copy failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> DuplicatePageAsync(int index)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.DuplicatePageAsync(index);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageDuplicateHeading"),
+                    MessageText = LocalizedString("ErrorMessageDuplicateBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Duplicating page failed.");
 
                 IsScanResultChanging = false;
                 return false;

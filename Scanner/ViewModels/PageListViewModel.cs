@@ -4,12 +4,15 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
+using Scanner.Views.Converters;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml.Data;
+using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.ViewModels
 {
@@ -18,9 +21,10 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
+        public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
         public event EventHandler TargetedShareUiRequested;
         public event EventHandler RotateSuccessful;
@@ -32,6 +36,8 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand DeleteCommand;
         public AsyncRelayCommand CopyCommand;
         public RelayCommand ShareCommand;
+        public AsyncRelayCommand<StorageFile> ShowInFileExplorerCommand;
+        public AsyncRelayCommand<ScanResultElement> DuplicatePageCommand;
 
         private ScanResult _ScanResult;
         public ScanResult ScanResult
@@ -83,6 +89,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsEditorEditing, value);
         }
 
+        private bool _DisplayContainingFolders;
+        public bool DisplayContainingFolders
+        {
+            get => _DisplayContainingFolders;
+            set => SetProperty(ref _DisplayContainingFolders, value);
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,12 +111,17 @@ namespace Scanner.ViewModels
             IsScanRunning = ScanService.IsScanInProgress;
             ScanService.ScanStarted += ScanService_ScanStarted;
             ScanService.ScanEnded += ScanService_ScanEnded;
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
+            DisplayContainingFolders = (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
+                == SettingSaveLocationType.AskEveryTime;
 
             DisposeCommand = new RelayCommand(Dispose);
             RotateCommand = new AsyncRelayCommand<string>((x) => RotateAsync((BitmapRotation)int.Parse(x)));
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
             CopyCommand = new AsyncRelayCommand(CopyAsync);
             ShareCommand = new RelayCommand(Share);
+            ShowInFileExplorerCommand = new AsyncRelayCommand<StorageFile>((x) => ShowFileInFileExplorerAsync(x));
+            DuplicatePageCommand = new AsyncRelayCommand<ScanResultElement>((x) => DuplicatePageAsync(x));
 
             Messenger.Register<EditorCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
@@ -128,6 +146,16 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultChanged -= ScanResultService_ScanResultChanged;
             ScanService.ScanStarted -= ScanService_ScanStarted;
             ScanService.ScanEnded -= ScanService_ScanEnded;
+            SettingsService.SettingChanged -= SettingsService_SettingChanged;
+        }
+
+        private void SettingsService_SettingChanged(object sender, SettingsEnums.AppSetting e)
+        {
+            if (e == AppSetting.SettingSaveLocationType)
+            {
+                DisplayContainingFolders = (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
+                    == SettingSaveLocationType.AskEveryTime;
+            }
         }
 
         private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
@@ -259,6 +287,26 @@ namespace Scanner.ViewModels
             TargetedShareUiRequested?.Invoke(this, EventArgs.Empty);
 
             AppCenterService?.TrackEvent(AppCenterEvent.Share);
+        }
+
+        private async Task ShowFileInFileExplorerAsync(StorageFile file)
+        {
+            try
+            {
+                FilePathFolderPathConverter converter = new FilePathFolderPathConverter();
+                string folderPath = (string)converter.Convert(file.Path, null, null, null);
+
+                FolderLauncherOptions options = new FolderLauncherOptions();
+                options.ItemsToSelect.Add(file);
+                await Launcher.LaunchFolderPathAsync(folderPath, options);
+            }
+            catch (Exception) { }
+        }
+
+        private async Task DuplicatePageAsync(ScanResultElement element)
+        {
+            int index = ScanResult.Elements.IndexOf(element);
+            await ScanResultService.DuplicatePageAsync(index);
         }
     }
 }

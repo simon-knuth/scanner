@@ -1140,7 +1140,7 @@ namespace Scanner
         ///     Copies all image files in this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public Task CopyImagesAsync()
+        public Task CopyImagesToClipboardAsync()
         {
             List<int> indices = new List<int>();
             for (int i = 0; i < NumberOfPages; i++)
@@ -1148,7 +1148,7 @@ namespace Scanner
                 indices.Add(i);
             }
 
-            return CopyImagesAsync(indices);
+            return CopyImagesToClipboardAsync(indices);
         }
 
 
@@ -1156,7 +1156,7 @@ namespace Scanner
         ///     Copies some image files in this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyImagesAsync(IList<int> indices)
+        public async Task CopyImagesToClipboardAsync(IList<int> indices)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.CopyPages);
             LogService?.Log.Information("Copying indices {@Indices} requested.", indices);
@@ -1214,7 +1214,7 @@ namespace Scanner
         /// <param name="index">The index of the scan that shall be copied.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyImageAsync(int index)
+        public async Task CopyImageToClipboardAsync(int index)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.CopyPage);
             LogService?.Log.Information("Copying index {Index} requested.", index);
@@ -1272,7 +1272,7 @@ namespace Scanner
         ///     Copies the file represented by this instance to the clipboard.
         /// </summary>
         /// <exception cref="ApplicationException">Something went wrong while copying.</exception>
-        public async Task CopyAsync()
+        public async Task CopyToClipboardAsync()
         {
             AppCenterService?.TrackEvent(AppCenterEvent.CopyDocument);
             LogService?.Log.Information("Copying document requested.");
@@ -1755,6 +1755,76 @@ namespace Scanner
             foreach (StorageFile file in files)
             {
                 await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+        }
+
+
+        /// <summary>
+        ///     Duplicates the selected page and adds it to the instance (right behind its
+        ///     parent page).
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        /// <exception cref="Exception">Duplicating the page failed.</exception>
+        public async Task DuplicatePageAsync(int index)
+        {
+            AppCenterService?.TrackEvent(AppCenterEvent.DuplicatePage);
+            LogService?.Log.Information("Requested duplication for index {Index}.", index);
+
+            // check index
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error("Duplication of index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                throw new ArgumentOutOfRangeException("Invalid index for duplication.");
+            }
+
+            // duplicate file
+            StorageFile file;
+            try
+            {
+                StorageFolder folder = null;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
+                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
+
+                file = await _Elements[index].ScanFile.CopyAsync(folder, _Elements[index].ScanFile.Name, NameCollisionOption.GenerateUniqueName);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+                NumberOfPages += 1;
+            });
+
+            RefreshItemDescriptors();
+            await _Elements[index + 1].GetImageAsync();
+
+            // if necessary, generate PDF
+            if (ScanResultFormat == ImageScannerFormat.Pdf)
+            {
+                try
+                {
+                    List<StorageFile> filesNumbering = new List<StorageFile>();
+                    for (int i = index + 1; i < _Elements.Count; i++)
+                    {
+                        await _Elements[i].ScanFile.RenameAsync("_" + _Elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                        filesNumbering.Add(_Elements[i].ScanFile);
+                    }
+                    await PrepareNewConversionFiles(filesNumbering, index + 1);
+                }
+                catch (Exception exc)
+                {
+                    LogService?.Log.Error(exc, "Failed to generate PDF after duplicating index {Index}. Attempting to get rid of copy.", index);
+                    Crashes.TrackError(exc);
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
+                    NumberOfPages = _Elements.Count;
+                    try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
+                    RefreshItemDescriptors();
+                    throw;
+                }
+                await GeneratePDF();
             }
         }
     }

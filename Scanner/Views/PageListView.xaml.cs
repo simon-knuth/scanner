@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Services;
+using Scanner.Views.Converters;
+using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -7,6 +11,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -285,6 +290,54 @@ namespace Scanner.Views
         private async void AppBarButtonDeleteCancel_Click(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutDelete.Hide());
+        }
+
+        private async void BorderContainingFolderSelected_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                Binding binding = new Binding();
+                binding.Source = ViewModel.DisplayContainingFolders;
+                binding.Mode = BindingMode.OneWay;      // this doesn't really work and causes a OneTime binding :(
+                binding.Converter = new BoolVisibilityConverter();
+
+                ((Border)sender).SetBinding(Border.VisibilityProperty, binding);
+            });
+        }
+
+        private async void BorderContainingFolderNormal_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                Binding binding = new Binding();
+                binding.Source = ViewModel.DisplayContainingFolders;
+                binding.Mode = BindingMode.OneWay;      // this doesn't really work and causes a OneTime binding :(
+                binding.Converter = new BoolVisibilityConverter();
+
+                ((Border)sender).SetBinding(Border.VisibilityProperty, binding);
+            });
+        }
+
+        private async void MenuFlyoutItemShowFileInFileExplorer_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                (sender as MenuFlyoutItem).IsEnabled = ViewModel.ScanResult.IsImage;
+                (sender as MenuFlyoutItem).Command = ViewModel.ShowInFileExplorerCommand;
+            });
+        }
+
+        private async void MenuFlyoutItemDuplicate_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                (sender as MenuFlyoutItem).Command = ViewModel.DuplicatePageCommand;
+            });
+        }
+
+        private void MenuFlyoutPage_Opening(object sender, object e)
+        {
+            
         }
     }
 }

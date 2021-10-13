@@ -64,6 +64,7 @@ namespace Scanner.Services
             { AppCenterEvent.CopyPage, "Copy page" },
             { AppCenterEvent.CopyDocument, "Copy document" },
             { AppCenterEvent.OpenWith, "Open with" },
+            { AppCenterEvent.DuplicatePage, "Duplicate page" },
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,5 +194,6 @@ namespace Scanner.Services
         CopyPage,
         CopyDocument,
         OpenWith,
+        DuplicatePage,
     }
 }

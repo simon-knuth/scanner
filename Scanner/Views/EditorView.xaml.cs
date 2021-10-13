@@ -35,6 +35,7 @@ namespace Scanner.Views
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.CropAsCopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.CropAsCopy);
             ViewModel.RotateSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rotate);
+            ViewModel.DrawAsCopySuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.DrawAsCopy);
             ViewModel.DrawSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Draw);
             ViewModel.RenameSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Rename);
             ViewModel.DeleteSuccessful += (x, y) => PlayStoryboardToolbarIconDone(ToolbarFunction.Delete);

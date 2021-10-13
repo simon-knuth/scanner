@@ -34,12 +34,4 @@ public static class Globals
 
     public static SpeechSynthesizer narratorSpeech = new SpeechSynthesizer();
     public static MediaElement narratorMediaElement = new MediaElement();
-
-    public static string storeRateUri = "ms-windows-store://review/?productid=9N438MZHD3ZF";
-
-    public static string glyphButtonRecentsDefault = "\uE838";
-    public static string glyphButtonRecentsCustom = "\uEC25";
-    public static string glyphButtonRecentsHistory = "\uE81C";
-    public static string glyphFormatImage = "\uEB9F";
-    public static string glyphFormatPdf = "\uEA90";
 }

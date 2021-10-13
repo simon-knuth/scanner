@@ -56,5 +56,6 @@ namespace Scanner.Services
         Task OpenWithAsync(AppInfo appInfo);
         Task OpenImageWithAsync(int index);
         Task OpenImageWithAsync(int index, AppInfo appInfo);
+        Task<bool> DuplicatePageAsync(int index);
     }
 }

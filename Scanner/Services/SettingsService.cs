@@ -49,6 +49,10 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Whether the set save location is the default one, regardless of
+        ///     the currently selected <see cref="SettingSaveLocationType"/>.
+        /// </summary>
         private bool _IsSaveLocationFolderDefault;
 
         public event EventHandler<AppSetting> SettingChanged;
@@ -120,7 +124,6 @@ namespace Scanner.Services
             }
 
             _IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
-            if (IsScanSaveLocationDefault != null) _IsSaveLocationFolderDefault = (bool)IsScanSaveLocationDefault;
         }
 
         /// <summary>
@@ -271,7 +274,6 @@ namespace Scanner.Services
             if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.SetLocation)
             {
                 IsScanSaveLocationDefault = await CheckScanSaveLocationDefaultAsync();
-                if (IsScanSaveLocationDefault != null) _IsSaveLocationFolderDefault = (bool)IsScanSaveLocationDefault;
             }
             else
             {
@@ -285,11 +287,6 @@ namespace Scanner.Services
         {
             if (ScanSaveLocation == null) return false;
 
-            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime)
-            {
-                return null;
-            }
-
             StorageFolder folder;
             try
             {
@@ -300,7 +297,17 @@ namespace Scanner.Services
                 return false;
             }
 
-            return folder.Path == ScanSaveLocation.Path;
+            bool result = folder.Path == ScanSaveLocation.Path;
+            _IsSaveLocationFolderDefault = result;
+
+            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime)
+            {
+                return null;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         public async Task ResetScanSaveLocationAsync()

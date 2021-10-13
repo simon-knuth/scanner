@@ -1,19 +1,22 @@
 ﻿using System;
+using System.IO;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace Scanner.Views.Converters
 {
-    public class StringNotEmptyVisibilityConverter : IValueConverter
+    public class FilePathFolderPathConverter : IValueConverter
     {
         /// <summary>
-        ///     Converts a string to a visibility, which is useful for hiding parts of the UI when
-        ///     no text is available.
+        ///     Converts a file path string to the path of the containing folder.
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (!string.IsNullOrEmpty((string)value)) return Visibility.Visible;
-            else return Visibility.Collapsed;
+            string path = (string)value;
+            int lastDirectorySeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
+
+            string result = path.Substring(0, lastDirectorySeparatorIndex);
+            return result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
