@@ -30,12 +30,14 @@ namespace Scanner.Services
             get;
         }
 
+        Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder);
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
-            bool fixedFolder);
-        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
+            ImageScannerFormat targetFormat);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
             StorageFolder targetFolder);
-
-        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat);
+        
+        void DismissScanResult();
 
         Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
         Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
@@ -52,10 +54,10 @@ namespace Scanner.Services
         Task<bool> CopyImageAsync(int index);
         Task<bool> CopyImagesAsync();
         Task<bool> CopyImagesAsync(IList<int> indices);
-        Task OpenWithAsync();
-        Task OpenWithAsync(AppInfo appInfo);
-        Task OpenImageWithAsync(int index);
-        Task OpenImageWithAsync(int index, AppInfo appInfo);
+        Task<bool> OpenWithAsync();
+        Task<bool> OpenWithAsync(AppInfo appInfo);
+        Task<bool> OpenImageWithAsync(int index);
+        Task<bool> OpenImageWithAsync(int index, AppInfo appInfo);
         Task<bool> DuplicatePageAsync(int index);
     }
 }

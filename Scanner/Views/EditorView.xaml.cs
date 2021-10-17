@@ -324,6 +324,14 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
+                if (ViewModel.ShowOpenWithWarning)
+                {
+                    FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, FlyoutOpenWithWarning);
+                }
+                else
+                {
+                    FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, MenuFlyoutOpenWith);
+                }
                 FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
             });
         }
@@ -332,7 +340,7 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
-                MenuFlyoutButtonOpenWith.Items.Clear();
+                MenuFlyoutOpenWith.Items.Clear();
                 for (int i = 0; i < ViewModel.OpenWithApps.Count; i++)
                 {
                     OpenWithApp app = ViewModel.OpenWithApps[i];
@@ -352,11 +360,11 @@ namespace Scanner.Views
                         CommandParameter = i.ToString()
                     };
 
-                    MenuFlyoutButtonOpenWith.Items.Add(item);
+                    MenuFlyoutOpenWith.Items.Add(item);
                 }
-                MenuFlyoutButtonOpenWith.Items.Add(MenuFlyoutItemStore);
-                MenuFlyoutButtonOpenWith.Items.Add(new MenuFlyoutSeparator());
-                MenuFlyoutButtonOpenWith.Items.Add(MenuFlyoutItemAllApps);
+                MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemStore);
+                MenuFlyoutOpenWith.Items.Add(new MenuFlyoutSeparator());
+                MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemAllApps);
             });
         }
 
@@ -443,6 +451,16 @@ namespace Scanner.Views
             // flip aspect ratio, needs to be done in code-behind because the ImageCropper
             //  doesn't properly support a binding
             ViewModel.AspectRatioFlipCommand.Execute(ImageCropperPage.CroppedRegion);
+        }
+
+        private async void ButtonOpenWithWarningConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                FlyoutOpenWithWarning.Hide();
+                FlyoutBase.SetAttachedFlyout(ButtonToolbarOpenWith, MenuFlyoutOpenWith);
+                FlyoutBase.ShowAttachedFlyout(ButtonToolbarOpenWith);
+            });
         }
     }
 

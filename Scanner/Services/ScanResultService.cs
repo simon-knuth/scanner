@@ -72,18 +72,27 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
-            bool fixedFolder)
+        public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder)
         {
             Result = null;
 
             FutureAccessListIndex = 0;
-            Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, fixedFolder);
+            Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex);
 
             ScanResultCreated?.Invoke(this, Result);
         }
 
-        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat,
+        public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder, ImageScannerFormat targetFormat)
+        {
+            Result = null;
+
+            FutureAccessListIndex = 0;
+            Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex);
+
+            ScanResultCreated?.Invoke(this, Result);
+        }
+
+        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
             StorageFolder targetFolder)
         {
             IsScanResultChanging = true;
@@ -91,7 +100,7 @@ namespace Scanner.Services
             IsScanResultChanging = false;
         }
 
-        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat targetFormat)
+        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat)
         {
             IsScanResultChanging = true;
             await Result.AddFiles(files, targetFormat, FutureAccessListIndex);
@@ -387,60 +396,52 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task OpenWithAsync()
+        public async Task<bool> OpenWithAsync()
         {
             try
             {
-                await Result.OpenWithAsync();
+                return await Result.OpenWithAsync();
             }
             catch (Exception)
             {
-                return;
+                return false;
             }
-
-            return;
         }
 
-        public async Task OpenWithAsync(AppInfo appInfo)
+        public async Task<bool> OpenWithAsync(AppInfo appInfo)
         {
             try
             {
-                await Result.OpenWithAsync(appInfo);
+                return await Result.OpenWithAsync(appInfo);
             }
             catch (Exception)
             {
-                return;
+                return false;
             }
-
-            return;
         }
 
-        public async Task OpenImageWithAsync(int index)
+        public async Task<bool> OpenImageWithAsync(int index)
         {
             try
             {
-                await Result.OpenImageWithAsync(index);
+                return await Result.OpenImageWithAsync(index);
             }
             catch (Exception)
             {
-                return;
+                return false;
             }
-
-            return;
         }
 
-        public async Task OpenImageWithAsync(int index, AppInfo appInfo)
+        public async Task<bool> OpenImageWithAsync(int index, AppInfo appInfo)
         {
             try
             {
-                await Result.OpenImageWithAsync(index, appInfo);
+                return await Result.OpenImageWithAsync(index, appInfo);
             }
             catch (Exception)
             {
-                return;
+                return false;
             }
-
-            return;
         }
 
         public async Task<bool> CropScanAsync(int index, ImageCropper imageCropper)
@@ -576,6 +577,11 @@ namespace Scanner.Services
 
             IsScanResultChanging = false;
             return true;
+        }
+
+        public void DismissScanResult()
+        {
+            Result = null;
         }
     }
 }

@@ -1,26 +1,23 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using WinUI = Microsoft.UI.Xaml.Controls;
+using Scanner.Models;
+using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using static Scanner.Services.Messenger.MessengerEnums;
-using Microsoft.Toolkit.Mvvm.Input;
-
-using static Enums;
-using Scanner.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Scanner.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using static Utilities;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
-using Windows.UI.Xaml.Media.Imaging;
-using System.Collections.Generic;
 using Windows.Storage;
-using static Scanner.Services.SettingsEnums;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
+using static Enums;
+using static Scanner.Services.Messenger.MessengerEnums;
+using static Scanner.Services.SettingsEnums;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
@@ -80,7 +77,7 @@ namespace Scanner.ViewModels
 
                 if (SettingsService != null && ScanOptionsDatabaseService != null)
                 {
-                    bool useRemembered = (bool) SettingsService.GetSetting
+                    bool useRemembered = (bool)SettingsService.GetSetting
                         (SettingsEnums.AppSetting.SettingRememberScanOptions);
 
                     if (useRemembered) ApplyInitialScanOptionsForScanner(SelectedScanner);
@@ -101,7 +98,7 @@ namespace Scanner.ViewModels
             {
                 // check intermittent value
                 if (value == null) return;
-                
+
                 // get previously selected scan options
                 ScanOptions previousScanOptions = CreateScanOptions();
 
@@ -296,7 +293,7 @@ namespace Scanner.ViewModels
             Scanners.CollectionChanged += Scanners_CollectionChangedAsync;
             PrepareDebugScanner();
         }
-        
+
         /// <summary>
         ///     Restarts the <see cref="ScannerDiscoveryService"/>.
         /// </summary>
@@ -650,9 +647,9 @@ namespace Scanner.ViewModels
                 StorageFile file = await picker.PickSingleFileAsync();
                 debugImage = await GenerateBitmapFromFileAsync(file);
             }
-            
+
             PreviewRunning?.Invoke(this, EventArgs.Empty);
-            
+
             // reset properties
             PreviewImage = null;
             PreviewFailed = false;
@@ -741,7 +738,7 @@ namespace Scanner.ViewModels
             StorageFolder targetFolder;
             bool askForFolder = (!CanAddToScanResult || startFresh)
                 && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
-            
+
             try
             {
                 if (!debug)
@@ -768,14 +765,30 @@ namespace Scanner.ViewModels
                     if (!CanAddToScanResult || startFresh)
                     {
                         // create new result
-                        await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                            targetFolder, true);
+                        if (scanOptions.Format.OriginalFormat != scanOptions.Format.TargetFormat)
+                        {
+                            await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
+                                targetFolder, scanOptions.Format.TargetFormat);
+                        }
+                        else
+                        {
+                            await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
+                                targetFolder);
+                        }
                     }
                     else
                     {
                         // add to existing result
-                        await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                            scanOptions.Format.TargetFormat);
+                        if (scanOptions.Format.OriginalFormat != ScanResultService.Result.ScanResultFormat)
+                        {
+                            await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
+                                scanOptions.Format.TargetFormat);
+                        }
+                        else
+                        {
+                            await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
+                                null);
+                        }
                     }
                 }
                 else
@@ -808,7 +821,7 @@ namespace Scanner.ViewModels
                         {
                             targetFolder = SettingsService.ScanSaveLocation;
                         }
-                        
+
                         List<StorageFile> copiedFiles = new List<StorageFile>();
                         foreach (StorageFile file in files)
                         {
@@ -818,14 +831,32 @@ namespace Scanner.ViewModels
                         if (!CanAddToScanResult || startFresh)
                         {
                             // create new result
-                            await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                targetFolder, true);
+                            if (ConvertFormatStringToImageScannerFormat(copiedFiles[0].FileType)
+                                != DebugSelectedScanFormat)
+                            {
+                                await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                    targetFolder, DebugSelectedScanFormat);
+                            }
+                            else
+                            {
+                                await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                    targetFolder, DebugSelectedScanFormat);
+                            }
                         }
                         else
                         {
                             // add to existing result
-                            await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                DebugSelectedScanFormat);
+                            if (ConvertFormatStringToImageScannerFormat(copiedFiles[0].FileType)
+                                != ScanResultService.Result.ScanResultFormat)
+                            {
+                                await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                    DebugSelectedScanFormat);
+                            }
+                            else
+                            {
+                                await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                    null);
+                            }
                         }
                     }
                     else
@@ -846,7 +877,7 @@ namespace Scanner.ViewModels
                     Severity = AppWideStatusMessageSeverity.Error,
                     AdditionalText = exc.Message
                 });
-                
+
                 try { CancelScan(true); }
                 catch { }
             }
@@ -879,7 +910,7 @@ namespace Scanner.ViewModels
         }
 
         private void RefreshCanAddToScanResult()
-        {            
+        {
             if (ScanResultService.Result == null)
             {
                 // no result exists

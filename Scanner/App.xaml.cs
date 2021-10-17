@@ -134,6 +134,9 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UpdateTheme;
 
+            // update theme once to ensure that the titlebar buttons are correct
+            UpdateTheme(null, null);
+
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)

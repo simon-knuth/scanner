@@ -17,7 +17,8 @@
             LastTouchDrawState,
             IsFirstAppLaunchWithThisVersion,
             IsFirstAppLaunchEver,
-            LastUsedCropAspectRatio
+            LastUsedCropAspectRatio,
+            ShowOpenWithWarning
         }
 
         public enum SettingSaveLocationType

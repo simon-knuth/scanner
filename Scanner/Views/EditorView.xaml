@@ -41,6 +41,7 @@
 
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:EditorModeIntConverter x:Key="EditorModeIntConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
@@ -86,6 +87,42 @@
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
             </Storyboard>
+            
+            <!-- Flyouts -->
+            <MenuFlyout x:Name="MenuFlyoutOpenWith" Placement="Bottom" Opening="MenuFlyoutButtonOpenWith_Opening">
+                <MenuFlyoutItem x:Name="MenuFlyoutItemStore" Text="Find more apps in the Store" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE719;" FontSize="16"/>
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator/>
+                <MenuFlyoutItem x:Name="MenuFlyoutItemAllApps" Text="Show all apps" FontWeight="SemiBold" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-1"/>
+            </MenuFlyout>
+
+            <Flyout x:Name="FlyoutOpenWithWarning">
+                <Grid MinWidth="250" MaxWidth="250">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Heads-up" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="By choosing an app in the next menu, all pages will be closed here." Style="{StaticResource BodyTextBlockStyle}"/>
+                    <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,16,0,16" IsChecked="{x:Bind ViewModel.ShowOpenWithWarning, Mode=TwoWay, Converter={StaticResource NegativeBoolConverter}}">
+                        <TextBlock Text="Don't show again" TextWrapping="WrapWholeWords"/>
+                    </CheckBox>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="Okay" Style="{StaticResource AccentButtonStyle}" Click="ButtonOpenWithWarningConfirm_Click"/>
+                    </Grid>
+                </Grid>
+            </Flyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -98,11 +135,11 @@
             <VisualStateGroup>
                 <VisualState x:Name="NormalState">
                     <Storyboard>
-                        
+
                     </Storyboard>
 
                     <VisualState.Setters>
-                        
+
                     </VisualState.Setters>
                 </VisualState>
 
@@ -112,7 +149,7 @@
                     </VisualState.StateTriggers>
 
                     <Storyboard>
-                        
+
                     </Storyboard>
 
                     <VisualState.Setters>
@@ -129,7 +166,7 @@
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind ViewModel.IsScanning, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
-                    
+
                     <Storyboard>
 
                     </Storyboard>
@@ -280,7 +317,7 @@
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                
+
                                                 <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
                                                 <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonRenameCancel_Click"/>
                                             </Grid>
@@ -349,18 +386,6 @@
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AC;"/>
                                 </AppBarButton.Icon>
-
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout x:Name="MenuFlyoutButtonOpenWith" Placement="Bottom" Opening="MenuFlyoutButtonOpenWith_Opening">
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemStore" Text="Find more apps in the Store" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE719;" FontSize="16"/>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAllApps" Text="Show all apps" FontWeight="SemiBold" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-1"/>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <!-- Share -->
                             <AppBarButton x:Name="ButtonToolbarShare" x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.ShareCommand}">
@@ -372,7 +397,7 @@
                     </controls:Case>
 
                     <controls:Case Value="1">
-                        
+
                     </controls:Case>
 
                     <controls:Case Value="2">
@@ -449,7 +474,7 @@
                                         <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
-                                
+
                                 <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                 <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
@@ -459,7 +484,7 @@
                                         <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
-                                
+
                                 <InkToolbar InitialControls="PensOnly" TargetInkCanvas="{x:Bind InkCanvasEditDraw}">
                                     <InkToolbarEraserButton/>
                                 </InkToolbar>
@@ -485,7 +510,7 @@
                 </controls:SwitchPresenter.ContentTransitions>
 
                 <controls:Case Value="0">
-                    <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}">
+                    <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="scanner:ScanResultElement">
                                 <ScrollViewer
@@ -522,7 +547,7 @@
                     </ScrollViewer>
                 </controls:Case>
             </controls:SwitchPresenter>
-            
+
             <Grid x:Name="GridLoading" Visibility="Collapsed">
                 <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60"/>
                 <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
@@ -599,7 +624,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    
+
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF168;" FontSize="16" Margin="0,0,12,0"/>
                                     <TextBlock Grid.Column="1" Text="Crop similar pages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </Grid>

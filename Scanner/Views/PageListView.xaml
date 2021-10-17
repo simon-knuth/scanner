@@ -367,7 +367,7 @@
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Text="Show in File Explorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;"/>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC50;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Duplicate" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">

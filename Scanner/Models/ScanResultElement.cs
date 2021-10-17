@@ -18,7 +18,6 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         private StorageFile _ScanFile;
@@ -95,32 +94,17 @@ namespace Scanner
 
         public int FutureAccessListIndex;
 
-        private string _DisplayedFolder;
-        public string DisplayedFolder
-        {
-            get
-            {
-                return _DisplayedFolder;
-            }
-            set
-            {
-                _DisplayedFolder = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayedFolder)));
-            }
-        }
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanResultElement(StorageFile file, int futureAccessListIndex, string displayedFolder)
+        public ScanResultElement(StorageFile file, int futureAccessListIndex)
         {
             ScanFile = file;
             CachedImage = null;
             ImageWithoutRotation = null;
             CurrentRotation = BitmapRotation.None;
             FutureAccessListIndex = futureAccessListIndex;
-            DisplayedFolder = displayedFolder;
         }
 
 

@@ -184,6 +184,9 @@ namespace Scanner.Services
                         return AspectRatioOption.Custom;
                     }
 
+                case AppSetting.ShowOpenWithWarning:
+                    return SettingsContainer.Values[name] ?? true;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -255,6 +258,10 @@ namespace Scanner.Services
 
                 case AppSetting.LastUsedCropAspectRatio:
                     SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.ShowOpenWithWarning:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:

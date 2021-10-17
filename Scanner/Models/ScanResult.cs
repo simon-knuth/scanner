@@ -64,16 +64,15 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
-            LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart, displayFolder);
+            LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart);
             int futureAccessListIndex = futureAccessListIndexStart;
             foreach (StorageFile file in fileList)
             {
                 if (file == null) continue;
 
-                if (displayFolder) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                else _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null));
+                _Elements.Add(new ScanResultElement(file, futureAccessListIndex));
                 NumberOfPages = _Elements.Count;
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
@@ -86,7 +85,7 @@ namespace Scanner
         }
 
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, int futureAccessListIndexStart, bool displayFolder)
+            StorageFolder targetFolder, int futureAccessListIndexStart)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -99,7 +98,7 @@ namespace Scanner
             }
             await Task.WhenAll(moveTasks);
 
-            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
+            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
             if ((bool)settingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
             {
                 try { await result.SetInitialNamesAsync(); } catch (Exception) { }
@@ -110,15 +109,14 @@ namespace Scanner
         }
 
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart,
-            bool displayFolder)
+            StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
             logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
-            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, displayFolder);
+            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
 
             if (targetFormat == ImageScannerFormat.Pdf)
             {
@@ -796,7 +794,7 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
                 NumberOfPages += 1;
             });
 
@@ -1061,7 +1059,7 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
             });
             await _Elements[index + 1].GetImageAsync();
             NumberOfPages += 1;
@@ -1322,8 +1320,7 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    if (targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null)));
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex)));
 
                     if (targetFolder != null)
                     {
@@ -1346,8 +1343,7 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    if (targetFolder != null) _Elements.Add(new ScanResultElement(file, futureAccessListIndex, targetFolder.DisplayName));
-                    else await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex, null)));
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex)));
                     NumberOfPages = _Elements.Count;
 
                     if (targetFolder != null)
@@ -1424,7 +1420,7 @@ namespace Scanner
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="Exception">Something went wrong.</exception>
-        public async Task OpenImageWithAsync(int index)
+        public async Task<bool> OpenImageWithAsync(int index)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith);
             LogService?.Log.Information("Requested opening with of index {Index}.", index);
@@ -1439,7 +1435,7 @@ namespace Scanner
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
 
-            await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
+            return await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
         }
 
 
@@ -1448,7 +1444,7 @@ namespace Scanner
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="Exception">Something went wrong.</exception>
-        public async Task OpenImageWithAsync(int index, AppInfo appInfo)
+        public async Task<bool> OpenImageWithAsync(int index, AppInfo appInfo)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
                             { "DisplayName", appInfo.DisplayInfo.DisplayName },
@@ -1465,7 +1461,7 @@ namespace Scanner
             LauncherOptions options = new LauncherOptions();
             options.TargetApplicationPackageFamilyName = appInfo.PackageFamilyName;
 
-            await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
+            return await Launcher.LaunchFileAsync(_Elements[index].ScanFile, options);
         }
 
 
@@ -1473,7 +1469,7 @@ namespace Scanner
         ///     Launches the "Open with" dialog for the represented file.
         /// </summary>
         /// <exception cref="Exception">Something went wrong.</exception>
-        public async Task OpenWithAsync()
+        public async Task<bool> OpenWithAsync()
         {
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith);
             LogService?.Log.Information("Requested opening with of document.");
@@ -1481,7 +1477,7 @@ namespace Scanner
             LauncherOptions options = new LauncherOptions();
             options.DisplayApplicationPicker = true;
 
-            await Launcher.LaunchFileAsync(Pdf, options);
+            return await Launcher.LaunchFileAsync(Pdf, options);
         }
 
 
@@ -1489,7 +1485,7 @@ namespace Scanner
         ///     Launches the represented file with the given <paramref name="appInfo"/>.
         /// </summary>
         /// <exception cref="Exception">Something went wrong.</exception>
-        public async Task OpenWithAsync(AppInfo appInfo)
+        public async Task<bool> OpenWithAsync(AppInfo appInfo)
         {
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
                             { "DisplayName", appInfo.DisplayInfo.DisplayName },
@@ -1499,7 +1495,7 @@ namespace Scanner
             LauncherOptions options = new LauncherOptions();
             options.TargetApplicationPackageFamilyName = appInfo.PackageFamilyName;
 
-            await Launcher.LaunchFileAsync(Pdf, options);
+            return await Launcher.LaunchFileAsync(Pdf, options);
         }
 
 
@@ -1735,17 +1731,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Returns whether a page has a folder that shall be displayed.
-        /// </summary>
-        public bool HasDisplayedFolder(int index)
-        {
-            if (!IsValidIndex(index)) throw new ApplicationException("Invalid index " + index + " for HasDisplayedFolder().");
-
-            return !String.IsNullOrEmpty(_Elements[index].DisplayedFolder);
-        }
-
-
-        /// <summary>
         ///     Removes all items in <see cref="folderReceivedPagesPDF"/>.
         /// </summary>
         private async Task CleanUpReceivedPagesFolder()
@@ -1794,7 +1779,7 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex, _Elements[index].DisplayedFolder));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
                 NumberOfPages += 1;
             });
 

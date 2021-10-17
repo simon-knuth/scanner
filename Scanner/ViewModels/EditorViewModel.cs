@@ -241,6 +241,17 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _SimilarPagesForCrop, value);
         }
 
+        private bool _ShowOpenWithWarning;
+        public bool ShowOpenWithWarning
+        {
+            get => _ShowOpenWithWarning;
+            set
+            {
+                SetProperty(ref _ShowOpenWithWarning, value);
+                SettingsService.SetSetting(AppSetting.ShowOpenWithWarning, value);
+            }
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,6 +260,7 @@ namespace Scanner.ViewModels
         {
             RefreshOrientationSetting();
             SettingsService.SettingChanged += SettingsService_SettingChanged;
+            ShowOpenWithWarning = (bool)SettingsService.GetSetting(AppSetting.ShowOpenWithWarning);
 
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
@@ -467,18 +479,21 @@ namespace Scanner.ViewModels
                 await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://assoc/?FileExt={formatString.Substring(1)}"));
             }
 
+            bool successfullyOpened;
             if (ScanResultService.Result.IsImage)
             {
                 // open single image file
-                if (index == -1) await ScanResultService.OpenImageWithAsync(SelectedPageIndex);
-                else await ScanResultService.OpenImageWithAsync(SelectedPageIndex, OpenWithApps[index].AppInfo);
+                if (index == -1) successfullyOpened = await ScanResultService.OpenImageWithAsync(SelectedPageIndex);
+                else successfullyOpened = await ScanResultService.OpenImageWithAsync(SelectedPageIndex, OpenWithApps[index].AppInfo);
             }
             else
             {
                 // open PDF document
-                if (index == -1) await ScanResultService.OpenWithAsync();
-                else await ScanResultService.OpenWithAsync(OpenWithApps[index].AppInfo);
+                if (index == -1) successfullyOpened = await ScanResultService.OpenWithAsync();
+                else successfullyOpened = await ScanResultService.OpenWithAsync(OpenWithApps[index].AppInfo);
             }
+
+            if (successfullyOpened) ScanResultService.DismissScanResult();
         }
 
         private async Task DeleteAsync()
