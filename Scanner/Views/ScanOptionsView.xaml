@@ -114,7 +114,7 @@
                         <Setter Target="ButtonScan.IsEnabled" Value="False"/>
                         <Setter Target="HyperlinkButtonHelpScanners.IsEnabled" Value="False"/>
                         <Setter Target="StackPanelButtonScan.Visibility" Value="Collapsed"/>
-                        <Setter Target="ProgressRingScan.IsActive" Value="True"/>
+                        <Setter Target="ProgressRingScan.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -199,8 +199,10 @@
                                 <CheckBox Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScanner.IsFeederDuplexAllowed, Mode=TwoWay}"/>
                             </StackPanel>
                         </Grid>
-
-                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
+                        
+                        <MenuFlyoutSeparator Margin="0,12,0,12"/>
+                        
+                        <StackPanel Orientation="Horizontal">
                             <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
                             <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
                         </StackPanel>
@@ -649,7 +651,7 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay}"/>
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
-                    <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="False" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24"/>
+                    <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="True" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24" Visibility="Collapsed"/>
                 </Grid>
 
                 <muxc:SplitButton.Flyout>
@@ -671,10 +673,11 @@
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
                                 <TextBlock Text="Debug scanning" Style="{StaticResource BaseTextBlockStyle}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
                                 <ComboBox Header="Target format" Width="150" ItemsSource="{x:Bind ViewModel.DebugScanFormats}" SelectedItem="{x:Bind ViewModel.DebugSelectedScanFormat, Mode=TwoWay}"/>
                                 <CheckBox Content="Start fresh" IsChecked="{x:Bind ViewModel.DebugScanStartFresh, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
                             </StackPanel>
+                            <MenuFlyoutSeparator Margin="0,12,0,12"/>
                             <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
                     </Flyout>

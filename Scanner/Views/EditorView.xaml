@@ -48,6 +48,7 @@
             <converters:AspectRatioOptionBoolConverter x:Key="AspectRatioOptionBoolConverter"/>
             <converters:AspectRatioOptionIntConverter x:Key="AspectRatioOptionIntConverter"/>
             <converters:ListNotNullOrEmptyConverter x:Key="ListNotNullOrEmptyConverter"/>
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
             
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
@@ -618,7 +619,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}">
+                            <Button x:Name="ButtonCropSimilarPages" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}" Click="ButtonCropSimilarPages_Click">
                                 <Grid Padding="6,0,6,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -628,6 +629,71 @@
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF168;" FontSize="16" Margin="0,0,12,0"/>
                                     <TextBlock Grid.Column="1" Text="Crop similar pages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </Grid>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout x:Name="FlyoutCropSimilarPages">
+                                        <Grid MinWidth="300" MaxWidth="300">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Crop similar pages" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Apply the current crop to multiple pages with the same measurements at once." Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+
+                                            <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8">
+                                                <ListViewItem IsSelected="True" IsEnabled="False">
+                                                    <Grid Margin="0,6,24,6" ColumnSpacing="3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <controls:ImageEx Grid.Column="0" Source="{x:Bind ViewModel.SelectedPage.Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
+                                                        <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}"/>
+                                                    </Grid>
+                                                </ListViewItem>
+                                            </ListView>
+                                            <MenuFlyoutSeparator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+                                            <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate x:DataType="scanner:ScanResultElement">
+                                                        <ListViewItem x:Name="ListViewItemCropSimilarPages">
+                                                            <Grid Margin="0,6,24,6" ColumnSpacing="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <controls:ImageEx Grid.Column="0" Source="{x:Bind Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                                            </Grid>
+                                                        </ListViewItem>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            
+                                            <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CropPagesCommand}" CommandParameter="{x:Bind ImageCropperPage}" IsEnabled="{x:Bind ViewModel.SelectedRangesCropSimilarPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Click="ButtonCropSimilarPagesSave_Click"/>
+                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonCropSimilarPagesCancel_Click"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
                             </Button>
                             <AppBarSeparator Grid.Column="1"/>
                             <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage}">

@@ -18,6 +18,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
 using static Scanner.Services.SettingsEnums;
 using static Utilities;
@@ -36,6 +37,7 @@ namespace Scanner.ViewModels
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
 
         public AsyncRelayCommand<ImageCropper> CropPageCommand;
+        public AsyncRelayCommand<ImageCropper> CropPagesCommand;
         public AsyncRelayCommand<ImageCropper> CropPageAsCopyCommand;
         public AsyncRelayCommand<InkCanvas> DrawOnPageCommand;
         public AsyncRelayCommand<InkCanvas> DrawOnPageAsCopyCommand;
@@ -234,8 +236,15 @@ namespace Scanner.ViewModels
             }
         }
 
-        private List<int> _SimilarPagesForCrop;
-        public List<int> SimilarPagesForCrop
+        private List<int> _SimilarPageIndicesForCrop;
+        public List<int> SimilarPageIndicesForCrop
+        {
+            get => _SimilarPageIndicesForCrop;
+            set => SetProperty(ref _SimilarPageIndicesForCrop, value);
+        }
+
+        private List<ScanResultElement> _SimilarPagesForCrop;
+        public List<ScanResultElement> SimilarPagesForCrop
         {
             get => _SimilarPagesForCrop;
             set => SetProperty(ref _SimilarPagesForCrop, value);
@@ -250,6 +259,13 @@ namespace Scanner.ViewModels
                 SetProperty(ref _ShowOpenWithWarning, value);
                 SettingsService.SetSetting(AppSetting.ShowOpenWithWarning, value);
             }
+        }
+
+        private IReadOnlyList<ItemIndexRange> _SelectedRangesCropSimilarPages;
+        public IReadOnlyList<ItemIndexRange> SelectedRangesCropSimilarPages
+        {
+            get => _SelectedRangesCropSimilarPages;
+            set => SetProperty(ref _SelectedRangesCropSimilarPages, value);
         }
 
 
@@ -277,6 +293,7 @@ namespace Scanner.ViewModels
             Messenger.Register<EditorIsEditingRequestMessage>(this, (r, m) => m.Reply(IsEditing));
 
             CropPageCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsync(x));
+            CropPagesCommand = new AsyncRelayCommand<ImageCropper>((x) => CropPagesAsync(x));
             CropPageAsCopyCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsCopyAsync(x));
             DrawOnPageCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsync(x));
             DrawOnPageAsCopyCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsCopyAsync(x));
@@ -604,6 +621,16 @@ namespace Scanner.ViewModels
             LeaveCropMode();
         }
 
+        private async Task CropPagesAsync(ImageCropper imageCropper)
+        {
+            List<int> indices = GetSelectedIndicesCropSimilarPages();
+            indices.Add(SelectedPageIndex);
+
+            bool success = await ScanResultService.CropScansAsync(indices, imageCropper.CroppedRegion);
+
+            LeaveCropMode();
+        }
+
         private async Task CropAsCopyAsync(ImageCropper imageCropper)
         {
             bool success = await ScanResultService.CropScanAsCopyAsync(SelectedPageIndex, imageCropper);
@@ -634,9 +661,11 @@ namespace Scanner.ViewModels
 
         private async void RefreshSimilarPagesForCrop()
         {
-            SimilarPagesForCrop = null;
+            SimilarPageIndicesForCrop = null;
 
-            List<int> result = new List<int>();
+            // get indices
+            List<int> indices = new List<int>();
+            List<ScanResultElement> pages = new List<ScanResultElement>();
             List<BitmapImage> images = await ScanResult.GetImagesAsync();
             for (int i = 0; i < images.Count; i++)
             {
@@ -646,11 +675,28 @@ namespace Scanner.ViewModels
                     && images[i].PixelHeight == SelectedPage.CachedImage.PixelHeight)
                 {
                     // image has exact same dimensions as the currently selected one
-                    result.Add(i);
+                    indices.Add(i);
+                    pages.Add(ScanResult.Elements[i]);
                 }
             }
 
-            SimilarPagesForCrop = result;
+            SimilarPagesForCrop = pages;
+            SimilarPageIndicesForCrop = indices;
+        }
+
+        private List<int> GetSelectedIndicesCropSimilarPages()
+        {
+            List<int> indices = new List<int>();
+
+            foreach (ItemIndexRange range in SelectedRangesCropSimilarPages)
+            {
+                for (int i = range.FirstIndex; i <= range.LastIndex; i++)
+                {
+                    indices.Add(SimilarPageIndicesForCrop[i]);
+                }
+            }
+
+            return indices;
         }
     }
 

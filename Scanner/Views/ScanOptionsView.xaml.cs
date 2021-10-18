@@ -105,7 +105,9 @@ namespace Scanner.Views
 
                 // fix ProgressRing getting stuck when navigating back to cached page
                 ProgressRingScanners.IsActive = false;
+                ProgressRingScan.IsActive = false;
                 ProgressRingScanners.IsActive = true;
+                ProgressRingScan.IsActive = true;
             });
         }
 

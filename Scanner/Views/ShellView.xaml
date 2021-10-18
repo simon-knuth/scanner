@@ -360,7 +360,9 @@
                         <TextBox Text="{x:Bind ViewModel.DebugStatusMessage.AdditionalText, Mode=TwoWay}" PlaceholderText="Additional text" AcceptsReturn="True" Margin="0,0,0,6" Width="300"/>
                         <ComboBox ItemsSource="{x:Bind ViewModel.DebugStatusMessageSeverities, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.DebugStatusMessage.Severity, Mode=TwoWay}" MinWidth="150"/>
 
-                        <StackPanel Orientation="Horizontal" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
+                        <MenuFlyoutSeparator Margin="0,12,0,12"/>
+
+                        <StackPanel Orientation="Horizontal">
                             <Button Content="Broadcast status message" Command="{x:Bind ViewModel.DebugBroadcastStatusMessageCommand}" Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
                     </StackPanel>

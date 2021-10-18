@@ -15,6 +15,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Pdf;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -234,7 +235,7 @@ namespace Scanner
         ///     Gets an image preview of a single individual scan in this instance.
         /// </summary>
         /// <remarks>
-        ///     Parts of this method are required run on the UI thread.
+        ///     Parts of this method are to required run on the UI thread.
         /// </remarks>
         /// <param name="index">The desired scan's index.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
@@ -750,6 +751,71 @@ namespace Scanner
 
             // if necessary, generate PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
+        }
+
+
+        /// <summary>
+        ///     Crops the selected scans.
+        /// </summary>
+        /// <param name="indices">The indices of the scan that the crop is to be applied to.</param>
+        /// <param name="cropRegion">The desired crop region.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        /// <exception cref="Exception">Applying the crop failed.</exception>
+        public async Task CropScansAsync(List<int> indices, Rect cropRegion)
+        {
+            AppCenterService?.TrackEvent(AppCenterEvent.CropMultiple);
+            LogService?.Log.Information("Requested crop for indices {@Indices}.", indices);
+
+            // check indices
+            foreach (int index in indices)
+            {
+                if (!IsValidIndex(index))
+                {
+                    LogService?.Log.Error("Crop for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                    throw new ArgumentOutOfRangeException("Invalid index for crop.");
+                }
+            }
+
+            // save changes to original files
+            foreach (int index in indices)
+            {
+                // loosely based on CropImageAsync(...) used by the ImageCropper control
+                cropRegion.X = Math.Max(cropRegion.X, 0);
+                cropRegion.Y = Math.Max(cropRegion.Y, 0);
+                var x = (uint)Math.Floor(cropRegion.X);
+                var y = (uint)Math.Floor(cropRegion.Y);
+                var width = (uint)Math.Floor(cropRegion.Width);
+                var height = (uint)Math.Floor(cropRegion.Height);
+
+                using (IRandomAccessStream stream = await GetImageFile(index).OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(ScanResultFormat), stream);
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    encoder.BitmapTransform.Bounds = new BitmapBounds
+                    {
+                        X = x,
+                        Y = y,
+                        Width = width,
+                        Height = height
+                    };
+                    await encoder.FlushAsync();
+                }
+
+                // refresh cached image, delete image without rotation and reset rotation
+                _Elements[index].CachedImage = null;
+                await _Elements[index].GetImageAsync();
+                if (_Elements[index].ImageWithoutRotation != null)
+                {
+                    await _Elements[index].ImageWithoutRotation.DeleteAsync();
+                }
+                _Elements[index].ImageWithoutRotation = null;
+                _Elements[index].CurrentRotation = BitmapRotation.None;
+
+                // if necessary, generate PDF
+                if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
+            }
         }
 
 

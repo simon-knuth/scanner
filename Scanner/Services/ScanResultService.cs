@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -462,6 +463,33 @@ namespace Scanner.Services
                     AdditionalText = exc.Message
                 });
                 LogService?.Log.Error(exc, "Cropping page failed.");
+
+                IsScanResultChanging = false;
+                return false;
+            }
+
+            IsScanResultChanging = false;
+            return true;
+        }
+
+        public async Task<bool> CropScansAsync(List<int> indices, Rect cropRegion)
+        {
+            IsScanResultChanging = true;
+
+            try
+            {
+                await Result.CropScansAsync(indices, cropRegion);
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageCropHeading"),
+                    MessageText = LocalizedString("ErrorMessageCropBody"),
+                    Severity = AppWideStatusMessageSeverity.Error,
+                    AdditionalText = exc.Message
+                });
+                LogService?.Log.Error(exc, "Cropping pages failed.");
 
                 IsScanResultChanging = false;
                 return false;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -40,6 +41,7 @@ namespace Scanner.Services
         void DismissScanResult();
 
         Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
+        Task<bool> CropScansAsync(List<int> indices, Rect cropRegion);
         Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> DrawOnScanAsync(int index, InkCanvas inkCanvas);

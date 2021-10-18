@@ -284,7 +284,7 @@
             </StackPanel>
 
             <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
-                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged">
+                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
@@ -322,7 +322,7 @@
                                     <!-- Selected Item Background -->
                                     <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>
 
-                                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                                    <controls:ImageEx Source="{x:Bind Thumbnail, Mode=OneWay}"/>
                                     
                                     <!-- Selected Item -->
                                     <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">

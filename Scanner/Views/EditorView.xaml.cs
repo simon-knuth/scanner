@@ -462,6 +462,43 @@ namespace Scanner.Views
                 FlyoutBase.ShowAttachedFlyout(ButtonToolbarOpenWith);
             });
         }
+
+        private async void ButtonCropSimilarPages_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+            });
+        }
+
+        private async void ButtonCropSimilarPagesCancel_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutCropSimilarPages.Hide());
+        }
+
+        private async void ListViewCropSimilarPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ListViewCropSimilarPages.SelectionMode != ListViewSelectionMode.Single)
+                {
+                    // connect items to view model
+                    if (ListViewCropSimilarPages.SelectedRanges.Count == 0)
+                    {
+                        ViewModel.SelectedRangesCropSimilarPages = null;
+                    }
+                    else
+                    {
+                        ViewModel.SelectedRangesCropSimilarPages = ListViewCropSimilarPages.SelectedRanges;
+                    }
+                }
+            });
+        }
+
+        private async void ButtonCropSimilarPagesSave_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutCropSimilarPages.Hide());
+        }
     }
 
     enum ToolbarFunction

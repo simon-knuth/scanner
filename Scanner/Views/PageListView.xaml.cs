@@ -148,7 +148,11 @@ namespace Scanner.Views
                 }
                 else if (GridViewPages.SelectionMode == ListViewSelectionMode.Single)
                 {
-                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                    try
+                    {
+                        GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                    }
+                    catch (Exception) { }
                 }
                 else if (GridViewPages.SelectionMode != ListViewSelectionMode.Single)
                 {
@@ -210,13 +214,24 @@ namespace Scanner.Views
                     AppBarToggleButtonSelect.IsChecked = false;
                 });
             }
-            else if (e.PropertyName == nameof(ViewModel.ScanResult) && ViewModel.ScanResult != null)
+            else if (e.PropertyName == nameof(ViewModel.ScanResult))
             {
-                // new ScanResult, make sure that item selection is correct
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                if (ViewModel.ScanResult != null)
                 {
-                    GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
-                });
+                    // new ScanResult, make sure that item selection is correct
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        GridViewPages.SelectedIndex = ViewModel.SelectedPageIndex;
+                    });
+                }
+                else
+                {
+                    // ScanResult dismissed, return from select mode if necessary
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        AppBarToggleButtonSelect.IsChecked = false;
+                    });
+                }
             }
         }
 
@@ -333,11 +348,6 @@ namespace Scanner.Views
             {
                 (sender as MenuFlyoutItem).Command = ViewModel.DuplicatePageCommand;
             });
-        }
-
-        private void MenuFlyoutPage_Opening(object sender, object e)
-        {
-            
         }
     }
 }
