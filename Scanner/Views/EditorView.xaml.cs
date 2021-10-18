@@ -499,6 +499,45 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutCropSimilarPages.Hide());
         }
+
+        private async void StackPanelFooterCrop_Loaded(object sender, RoutedEventArgs e)
+        {
+            // fix success animation may have gotten stuck when playing while this was hidden
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                try
+                {
+                    StoryboardToolbarIconDoneFinish.Begin();
+                }
+                catch (Exception) { }
+            });
+        }
+
+        private async void StackPanelFooterDraw_Loaded(object sender, RoutedEventArgs e)
+        {
+            // fix success animation may have gotten stuck when playing while this was hidden
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                try
+                {
+                    StoryboardToolbarIconDoneFinish.Begin();
+                }
+                catch (Exception) { }
+            });
+        }
+
+        private async void StackPanelToolbarInitial_Loaded(object sender, RoutedEventArgs e)
+        {
+            // fix success animation may have gotten stuck when playing while this was hidden
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                try
+                {
+                    StoryboardToolbarIconDoneFinish.Begin();
+                }
+                catch (Exception) { }
+            });
+        }
     }
 
     enum ToolbarFunction

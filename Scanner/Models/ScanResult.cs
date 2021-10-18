@@ -1776,6 +1776,7 @@ namespace Scanner
             string baseDisplayName = baseName.Split(".")[0];
 
             await file.RenameAsync(baseDisplayName + "_" + append + file.FileType, NameCollisionOption.GenerateUniqueName);
+            RefreshItemDescriptors();
         }
 
         protected async Task SetInitialNamesAsync()
@@ -1792,6 +1793,7 @@ namespace Scanner
                 {
                     await SetInitialNameAsync(element, append);
                 }
+                RefreshItemDescriptors();
             }
         }
 

@@ -213,7 +213,7 @@
                     </controls:SwitchPresenter.ContentTransitions>
 
                     <controls:Case Value="0">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="StackPanelToolbarInitial" Orientation="Horizontal" Loaded="StackPanelToolbarInitial_Loaded">
                             <!-- Crop -->
                             <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" Command="{x:Bind ViewModel.EnterCropModeCommand}" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}">
                                 <Grid Padding="0" Margin="0">
@@ -415,7 +415,7 @@
 
                     <!-- Crop -->
                     <controls:Case Value="1">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="StackPanelFooterCrop" Orientation="Horizontal" Loaded="StackPanelFooterCrop_Loaded">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
@@ -468,7 +468,7 @@
 
                     <!-- Draw -->
                     <controls:Case Value="2">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="StackPanelFooterDraw" Orientation="Horizontal" Loaded="StackPanelFooterDraw_Loaded">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
