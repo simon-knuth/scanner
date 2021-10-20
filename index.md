@@ -77,6 +77,7 @@ The currently supported languages are:
   <li>English (EN-GB)</li>
   <li>French (FR)</li>
   <li>German (DE)</li>
+  <li>Hungarian (HU)</li>
   <li>Italian (IT)</li>
   <li>Polish (PL)</li>
   <li>Portuguese (PT)</li>
