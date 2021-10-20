@@ -10,6 +10,7 @@ using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
+using static Enums;
 
 namespace Scanner.Models
 {
@@ -380,6 +381,120 @@ namespace Scanner.Models
                 default:
                     LogService?.Log.Error("Unable to get scan for unknown {source}.", options.Source);
                     throw new ArgumentException("No source selected.");
+            }
+        }
+
+        public bool SupportsColorMode(ScannerSource source, ScannerColorMode colorMode)
+        {
+            switch (source)
+            {
+                case ScannerSource.Auto:
+                    return false;
+                case ScannerSource.Flatbed:
+                    switch (colorMode)
+                    {
+                        case ScannerColorMode.Color:
+                            return IsFlatbedColorAllowed;
+                        case ScannerColorMode.Grayscale:
+                            return IsFlatbedGrayscaleAllowed;
+                        case ScannerColorMode.Monochrome:
+                            return IsFlatbedMonochromeAllowed;
+                        case ScannerColorMode.Automatic:
+                            return IsFlatbedAutoColorAllowed;
+                        case ScannerColorMode.None:
+                        default:
+                            return false;
+                    }
+                case ScannerSource.Feeder:
+                    switch (colorMode)
+                    {
+                        case ScannerColorMode.Color:
+                            return IsFeederColorAllowed;
+                        case ScannerColorMode.Grayscale:
+                            return IsFeederGrayscaleAllowed;
+                        case ScannerColorMode.Monochrome:
+                            return IsFeederMonochromeAllowed;
+                        case ScannerColorMode.Automatic:
+                            return IsFeederAutoColorAllowed;
+                        case ScannerColorMode.None:
+                        default:
+                            return false;
+                    }
+                case ScannerSource.None:
+                default:
+                    return false;
+            }
+        }
+
+        public bool SupportsFileFormat(ScannerSource source, ImageScannerFormat format)
+        {
+            switch (source)
+            {
+                case ScannerSource.Auto:
+                    return AutoFormats.Any((x) => x.TargetFormat == format);
+                case ScannerSource.Flatbed:
+                    return FlatbedFormats.Any((x) => x.TargetFormat == format);
+                case ScannerSource.Feeder:
+                    return FeederFormats.Any((x) => x.TargetFormat == format);
+                case ScannerSource.None:
+                default:
+                    return false;
+            }
+        }
+
+        public bool SupportsResolution(ScannerSource source, float resolution)
+        {
+            switch (source)
+            {
+                case ScannerSource.Auto:
+                    return false;
+                case ScannerSource.Flatbed:
+                    return FlatbedResolutions.Any((x) => x.Resolution.DpiX == resolution);
+                case ScannerSource.Feeder:
+                    return FeederResolutions.Any((x) => x.Resolution.DpiX == resolution);
+                case ScannerSource.None:
+                default:
+                    return false;
+            }
+        }
+
+        public bool SupportsAutoCropMode(ScannerSource source, ScannerAutoCropMode autoCropMode)
+        {
+            switch (source)
+            {
+                case ScannerSource.Auto:
+                    return false;
+                case ScannerSource.Flatbed:
+                    switch (autoCropMode)
+                    {
+                        case ScannerAutoCropMode.Disabled:
+                            return true;
+                        case ScannerAutoCropMode.SingleRegion:
+                            return IsFlatbedAutoCropSingleRegionAllowed;
+                        case ScannerAutoCropMode.MultipleRegions:
+                            return IsFlatbedAutoCropMultiRegionAllowed;
+                        case ScannerAutoCropMode.None:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case ScannerSource.Feeder:
+                    switch (autoCropMode)
+                    {
+                        case ScannerAutoCropMode.Disabled:
+                            return true;
+                        case ScannerAutoCropMode.SingleRegion:
+                            return IsFeederAutoCropSingleRegionAllowed;
+                        case ScannerAutoCropMode.MultipleRegions:
+                            return IsFeederAutoCropMultiRegionAllowed;
+                        case ScannerAutoCropMode.None:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case ScannerSource.None:
+                default:
+                    return false;
             }
         }
     }

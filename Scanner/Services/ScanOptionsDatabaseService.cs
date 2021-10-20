@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Scanner.Models;
 using System;
 using System.Threading.Tasks;
@@ -16,9 +17,13 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private const string dbFolderName = "db";
-        private const string dbFileName = "scanoptions.db";
-        private const string tableName = "SCAN_OPTIONS";
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+
+        private const string DbFolderName = "db";
+        private const string DbFileName = "scanoptions.db";
+        private const string TableName = "SCAN_OPTIONS";
 
         private SqliteConnection Connection;
 
@@ -27,20 +32,22 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanOptionsDatabaseService()
         {
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
+            
             // get database folder
             StorageFolder folder = Task.Run(async () =>
-                await ApplicationData.Current.LocalFolder.CreateFolderAsync(dbFolderName,
+                await ApplicationData.Current.LocalFolder.CreateFolderAsync(DbFolderName,
                     CreationCollisionOption.OpenIfExists)).Result;
 
             // create database file, if necessary
             StorageFile file = Task.Run(async () =>
-                await folder.CreateFileAsync(dbFileName, CreationCollisionOption.OpenIfExists)).Result;
+                await folder.CreateFileAsync(DbFileName, CreationCollisionOption.OpenIfExists)).Result;
 
             // configure database
             SqliteConnection db = new SqliteConnection(String.Format("Filename={0}", file.Path));
             db.Open();
 
-            String tableCommand = "CREATE TABLE IF NOT EXISTS " + tableName.ToUpper() + " ("
+            string tableCommand = "CREATE TABLE IF NOT EXISTS " + TableName.ToUpper() + " ("
                 + "ID STRING PRIMARY KEY,"      // 0
                 + "SOURCE_MODE INTEGER,"        // 1
                 + "COLOR_MODE INTEGER,"         // 2
@@ -59,56 +66,149 @@ namespace Scanner.Services
             Connection = db;
         }
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanOptions GetScanOptionsForScanner(DiscoveredScanner scanner)
+        private void SettingsService_SettingChanged(object sender, SettingsEnums.AppSetting e)
         {
-            // check if just debug scanner
-            if (scanner.Debug) return null;
-
-            // read database
-            string id = scanner.Id;
-
-            Connection.Open();
-            SqliteCommand selectCommand = new SqliteCommand
-                ("SELECT * FROM " + tableName.ToUpper() + " WHERE ID = \"" + id + "\"", Connection);
-            SqliteDataReader query = selectCommand.ExecuteReader();
-
-            // check if data for this scanner even exists
-            if (!query.HasRows) return null;
-
-            // load data
-            ScanOptions result = new ScanOptions();
-            while (query.Read())
+            if (e == SettingsEnums.AppSetting.SettingRememberScanOptions
+                && !(bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingRememberScanOptions))
             {
-                // common properties
-                result.Source = (ScannerSource)int.Parse(query.GetString(1));
-                result.ColorMode = (ScannerColorMode)int.Parse(query.GetString(2));
-                result.Format = new ScannerFileFormat((ImageScannerFormat)int.Parse(query.GetString(6)));
-
-                // source mode-dependent properties
-                switch (result.Source)
+                // database disabled, clear all values
+                try
                 {
-                    case ScannerSource.Flatbed:
-                        result.Resolution = float.Parse(query.GetString(3));
-                        result.AutoCropMode = (ScannerAutoCropMode)int.Parse(query.GetString(7));
-                        break;
-                    case ScannerSource.Feeder:
-                        result.Resolution = float.Parse(query.GetString(3));
-                        result.FeederMultiplePages = bool.Parse(query.GetString(4));
-                        result.FeederDuplex = bool.Parse(query.GetString(5));
-                        break;
-                    case ScannerSource.None:
-                    case ScannerSource.Auto:
-                    default:
-                        break;
+                    // prepare command
+                    Connection.Open();
+                    SqliteCommand clearCommand = new SqliteCommand
+                        ($"DELETE FROM {TableName.ToUpper()}", Connection);
+
+                    // execute
+                    clearCommand.ExecuteReader();
+
+                    Connection.Close();
+                }
+                catch (Exception exc)
+                {
+                    AppCenterService?.TrackError(exc);
+                    LogService.Log.Error(exc, "Clearing database failed.");
                 }
             }
+        }
 
-            Connection.Close();
+        public ScanOptions GetScanOptionsForScanner(DiscoveredScanner scanner)
+        {
+            try
+            {
+                string id;
+                if (scanner.Debug) id = "DEBUG";
+                else id = scanner.Id;
 
-            return result;
+                Connection.Open();
+                SqliteCommand selectCommand = new SqliteCommand
+                    ($"SELECT * FROM {TableName.ToUpper()} WHERE ID = \"{id}\"", Connection);
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                // check if data for this scanner even exists
+                if (!query.HasRows) return null;
+
+                // load data
+                ScanOptions result = new ScanOptions();
+                while (query.Read())
+                {
+                    // common properties
+                    result.Source = (ScannerSource)int.Parse(query.GetString(1));
+                    result.ColorMode = (ScannerColorMode)int.Parse(query.GetString(2));
+                    result.Format = new ScannerFileFormat((ImageScannerFormat)int.Parse(query.GetString(6)));
+
+                    // source mode-dependent properties
+                    switch (result.Source)
+                    {
+                        case ScannerSource.Flatbed:
+                            result.Resolution = float.Parse(query.GetString(3));
+                            result.AutoCropMode = (ScannerAutoCropMode)int.Parse(query.GetString(7));
+                            break;
+                        case ScannerSource.Feeder:
+                            result.Resolution = float.Parse(query.GetString(3));
+                            result.FeederMultiplePages = Convert.ToBoolean(int.Parse(query.GetString(4)));
+                            result.FeederDuplex = Convert.ToBoolean(int.Parse(query.GetString(5)));
+                            break;
+                        case ScannerSource.None:
+                        case ScannerSource.Auto:
+                        default:
+                            break;
+                    }
+                }
+
+                Connection.Close();
+
+                return result;
+            }
+            catch (Exception exc)
+            {
+                AppCenterService?.TrackError(exc);
+                LogService.Log.Error(exc, "Getting scan options for scanner failed.");
+                return null;
+            }
+        }
+
+        public void SaveScanOptionsForScanner(DiscoveredScanner scanner, ScanOptions scanOptions)
+        {
+            try
+            {
+                string id;
+                if (scanner.Debug) id = "DEBUG";
+                else id = scanner.Id;
+
+                // prepare command
+                Connection.Open();
+                SqliteCommand upsertCommand = new SqliteCommand
+                    ($"INSERT INTO {TableName.ToUpper()} VALUES" +
+                    $"(\"{id}\", {(int)scanOptions.Source}, {(int)scanOptions.ColorMode}, {(int)scanOptions.Resolution}, " +
+                    $"{scanOptions.FeederMultiplePages}, {scanOptions.FeederDuplex}, {(int)scanOptions.Format.TargetFormat}, " +
+                    $"{(int)scanOptions.AutoCropMode}) " +
+                    $"ON CONFLICT(id) DO UPDATE SET source_mode={(int)scanOptions.Source}, color_mode={(int)scanOptions.ColorMode}, " +
+                    $"resolution={(int)scanOptions.Resolution}, multiple_pages={scanOptions.FeederMultiplePages}, " +
+                    $"duplex={scanOptions.FeederDuplex}, file_format={(int)scanOptions.Format.TargetFormat}, " +
+                    $"auto_crop_mode={(int)scanOptions.AutoCropMode}", Connection);
+
+                // execute
+                upsertCommand.ExecuteReader();
+
+                Connection.Close();
+            }
+            catch (Exception exc)
+            {
+                AppCenterService?.TrackError(exc);
+                LogService.Log.Error(exc, "Saving scan options for scanner failed.");
+                return;
+            }
+            
+        }
+
+        public void DeleteScanOptionsForScanner(DiscoveredScanner scanner)
+        {
+            try
+            {
+                string id;
+                if (scanner.Debug) id = "DEBUG";
+                else id = scanner.Id;
+
+                // prepare command
+                Connection.Open();
+                SqliteCommand deleteCommand = new SqliteCommand
+                    ($"DELETE FROM {TableName.ToUpper()} WHERE id = \"{id}\"", Connection);
+
+                // execute
+                deleteCommand.ExecuteReader();
+
+                Connection.Close();
+            }
+            catch (Exception exc)
+            {
+                LogService.Log.Warning(exc, "Deleting scan options for scanner failed.");
+                return;
+            }
         }
     }
 }

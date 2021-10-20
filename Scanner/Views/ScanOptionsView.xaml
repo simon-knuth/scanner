@@ -46,6 +46,7 @@
             <converters:RadioButtonsScannerAutoCropModeConverter x:Key="RadioButtonsScannerAutoCropModeConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:ScannerSourceIntConverter x:Key="ScannerSourceIntConverter"/>
             <converters:ScannerFileFormatGlyphConverter x:Key="ScannerFileFormatGlyphConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
@@ -201,10 +202,13 @@
                         </Grid>
                         
                         <MenuFlyoutSeparator Margin="0,12,0,12"/>
-                        
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
-                            <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
+
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                                <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
+                            </StackPanel>
+                            <Button Content="Delete current scanner's scan options from database" Margin="0,8,0,0" Command="{x:Bind ViewModel.DebugDeleteScanOptionsFromDatabaseCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"/>
                         </StackPanel>
                     </StackPanel>
                 </Flyout>

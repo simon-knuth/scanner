@@ -8,6 +8,7 @@ using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
@@ -78,7 +79,7 @@ namespace Scanner.ViewModels
                 if (SettingsService != null && ScanOptionsDatabaseService != null)
                 {
                     bool useRemembered = (bool)SettingsService.GetSetting
-                        (SettingsEnums.AppSetting.SettingRememberScanOptions);
+                        (AppSetting.SettingRememberScanOptions);
 
                     if (useRemembered) ApplyInitialScanOptionsForScanner(SelectedScanner);
                     else ApplyDefaultSourceModeForScanner(SelectedScanner);
@@ -96,13 +97,14 @@ namespace Scanner.ViewModels
             get => _ScannerSource;
             set
             {
-                // check intermittent value
-                if (value == null) return;
+                // check intermittent or old value
+                ScannerSource? old = ScannerSource;
+                if (value == null || (ScannerSource)value == ScannerSource) return;
 
                 // get previously selected scan options
                 ScanOptions previousScanOptions = CreateScanOptions();
 
-                SetProperty(ref _ScannerSource, (Enums.ScannerSource)value);
+                SetProperty(ref _ScannerSource, (ScannerSource)value);
 
                 // enable applicable auto crop mode, resolutions and file formats
                 switch (value)
@@ -130,7 +132,15 @@ namespace Scanner.ViewModels
                         break;
                 }
 
-                ApplyDefaultScanOptionsForSourceMode((ScannerSource)value, previousScanOptions);
+                if (old == Enums.ScannerSource.None
+                    && (bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions))
+                {
+                    ApplyInitialScanOptionsForSourceMode((ScannerSource)value);
+                }
+                else
+                {
+                    ApplyDefaultScanOptionsForSourceMode((ScannerSource)value, previousScanOptions);
+                }
             }
         }
 
@@ -232,6 +242,7 @@ namespace Scanner.ViewModels
         // Debug stuff
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
+        public RelayCommand DebugDeleteScanOptionsFromDatabaseCommand;
         public AsyncRelayCommand DebugScanCommand;
 
         private DiscoveredScanner _DebugScanner;
@@ -268,6 +279,7 @@ namespace Scanner.ViewModels
             DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
+            DebugDeleteScanOptionsFromDatabaseCommand = new RelayCommand(DebugDeleteScanOptionsFromDatabase);
             ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
             ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
             DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
@@ -329,12 +341,42 @@ namespace Scanner.ViewModels
             ScannerSource = Enums.ScannerSource.None;
             if (scanner == null) return;
 
-            ScanOptions scanOptions = ScanOptionsDatabaseService.GetScanOptionsForScanner(scanner);
+            ScanOptions scanOptions = ScanOptionsDatabaseService?.GetScanOptionsForScanner(scanner);
 
             if (scanOptions != null)
             {
-                // scan options found, check integrity and delete from database if necessary
-                throw new NotImplementedException();
+                // scan options found, check integrity of source mode and delete from database if necessary
+                switch (scanOptions.Source)
+                {
+                    case Enums.ScannerSource.Auto:
+                        if (!scanner.IsAutoAllowed)
+                        {
+                            ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
+                            ApplyDefaultSourceModeForScanner(scanner);
+                        }
+                        ScannerSource = Enums.ScannerSource.Auto;
+                        break;
+                    case Enums.ScannerSource.Flatbed:
+                        if (!scanner.IsFlatbedAllowed)
+                        {
+                            ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
+                            ApplyDefaultSourceModeForScanner(scanner);
+                        }
+                        ScannerSource = Enums.ScannerSource.Flatbed;
+                        break;
+                    case Enums.ScannerSource.Feeder:
+                        if (!scanner.IsFeederAllowed)
+                        {
+                            ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
+                            ApplyDefaultSourceModeForScanner(scanner);
+                        }
+                        ScannerSource = Enums.ScannerSource.Feeder;
+                        break;
+                    case Enums.ScannerSource.None:
+                    default:
+                        ApplyDefaultSourceModeForScanner(scanner);
+                        break;
+                }
             }
             else
             {
@@ -370,6 +412,149 @@ namespace Scanner.ViewModels
         }
 
         /// <summary>
+        ///     Applies initial scan options based the on database for a <paramref name="sourceMode"/>.
+        /// </summary>
+        private void ApplyInitialScanOptionsForSourceMode(ScannerSource sourceMode)
+        {
+            ScanOptions scanOptions = ScanOptionsDatabaseService?.GetScanOptionsForScanner(SelectedScanner);
+
+            if (scanOptions != null)
+            {
+                try
+                {
+                    switch (sourceMode)
+                    {
+                        case Enums.ScannerSource.Auto:
+                            // file format
+                            if (SelectedScanner.SupportsFileFormat(sourceMode, scanOptions.Format.TargetFormat))
+                            {
+                                SelectedFileFormat = FileFormats.First((x) => x.TargetFormat == scanOptions.Format.TargetFormat);
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Target file format {scanOptions.Format.TargetFormat} not supported.");
+                            }
+                            break;
+
+                        case Enums.ScannerSource.Flatbed:
+                            // color mode
+                            if (SelectedScanner.SupportsColorMode(sourceMode, scanOptions.ColorMode))
+                            {
+                                ScannerColorMode = scanOptions.ColorMode;
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Color mode {scanOptions.ColorMode} not supported.");
+                            }
+
+                            // file format
+                            if (SelectedScanner.SupportsFileFormat(sourceMode, scanOptions.Format.TargetFormat))
+                            {
+                                SelectedFileFormat = FileFormats.First((x) => x.TargetFormat == scanOptions.Format.TargetFormat);
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Target file format {scanOptions.Format.TargetFormat} not supported.");
+                            }
+
+                            // resolution
+                            if (SelectedScanner.SupportsResolution(sourceMode, scanOptions.Resolution))
+                            {
+                                SelectedResolution = ScannerResolutions.First((x) => x.Resolution.DpiX == scanOptions.Resolution);
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Resolution {scanOptions.Resolution} not supported.");
+                            }
+
+                            // auto crop mode
+                            if (SelectedScanner.SupportsAutoCropMode(sourceMode, scanOptions.AutoCropMode))
+                            {
+                                SelectedScannerAutoCropMode = scanOptions.AutoCropMode;
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Auto crop mode {scanOptions.AutoCropMode} not supported.");
+                            }
+
+                            break;
+
+                        case Enums.ScannerSource.Feeder:
+                            // color mode
+                            if (SelectedScanner.SupportsColorMode(sourceMode, scanOptions.ColorMode))
+                            {
+                                ScannerColorMode = scanOptions.ColorMode;
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Color mode {scanOptions.ColorMode} not supported.");
+                            }
+
+
+                            // file format
+                            if (SelectedScanner.SupportsFileFormat(sourceMode, scanOptions.Format.TargetFormat))
+                            {
+                                SelectedFileFormat = FileFormats.First((x) => x.TargetFormat == scanOptions.Format.TargetFormat);
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Target file format {scanOptions.Format.TargetFormat} not supported.");
+                            }
+
+                            // resolution
+                            if (SelectedScanner.SupportsResolution(sourceMode, scanOptions.Resolution))
+                            {
+                                SelectedResolution = ScannerResolutions.First((x) => x.Resolution.DpiX == scanOptions.Resolution);
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Resolution {scanOptions.Resolution} not supported.");
+                            }
+
+                            // auto crop mode
+                            if (SelectedScanner.SupportsAutoCropMode(sourceMode, scanOptions.AutoCropMode))
+                            {
+                                SelectedScannerAutoCropMode = scanOptions.AutoCropMode;
+                            }
+                            else
+                            {
+                                throw new ArgumentException($"Auto crop mode {scanOptions.AutoCropMode} not supported.");
+                            }
+
+                            // feeder options
+                            if (scanOptions.FeederDuplex)
+                            {
+                                if (SelectedScanner.IsFeederDuplexAllowed)
+                                {
+                                    FeederDuplex = true;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException($"Duplex not supported.");
+                                }
+                            }
+                            FeederMultiplePages = scanOptions.FeederMultiplePages;
+                            break;
+
+                        case Enums.ScannerSource.None:
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    AppCenterService?.TrackError(exc);
+                    ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
+                    ApplyDefaultScanOptionsForSourceMode(sourceMode, null);
+                }
+            }
+            else
+            {
+                ApplyDefaultScanOptionsForSourceMode(sourceMode, null);
+            }
+        }
+
+        /// <summary>
         ///     Applies default scan options for a <paramref name="sourceMode"/> while taking 
         ///     <paramref name="previousScanOptions"/> into account for a more comprehensible change.
         /// </summary>
@@ -379,18 +564,18 @@ namespace Scanner.ViewModels
             {
                 case Enums.ScannerSource.Auto:
                     ScannerColorMode = ScannerColorMode.None;
-                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.AutoFormats, previousScanOptions.Format);
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.AutoFormats, previousScanOptions?.Format);
                     break;
                 case Enums.ScannerSource.Flatbed:
                     ScannerColorMode = GetDefaultColorMode
                         (SelectedScanner.IsFlatbedColorAllowed,
                         SelectedScanner.IsFlatbedGrayscaleAllowed,
                         SelectedScanner.IsFlatbedMonochromeAllowed,
-                        previousScanOptions.ColorMode);
+                        previousScanOptions?.ColorMode);
                     SelectedScannerAutoCropMode = GetDefaultAutoCropMode(
                         SelectedScanner.IsFlatbedAutoCropSingleRegionAllowed,
                         SelectedScanner.IsFlatbedAutoCropMultiRegionAllowed,
-                        previousScanOptions.AutoCropMode);
+                        previousScanOptions?.AutoCropMode);
 
                     foreach (ScanResolution resolution in SelectedScanner.FlatbedResolutions)
                     {
@@ -401,18 +586,18 @@ namespace Scanner.ViewModels
                         }
                     }
 
-                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FlatbedFormats, previousScanOptions.Format);
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FlatbedFormats, previousScanOptions?.Format);
                     break;
                 case Enums.ScannerSource.Feeder:
                     ScannerColorMode = GetDefaultColorMode
                         (SelectedScanner.IsFeederColorAllowed,
                         SelectedScanner.IsFeederGrayscaleAllowed,
                         SelectedScanner.IsFeederMonochromeAllowed,
-                        previousScanOptions.ColorMode);
+                        previousScanOptions?.ColorMode);
                     SelectedScannerAutoCropMode = GetDefaultAutoCropMode(
                         SelectedScanner.IsFeederAutoCropSingleRegionAllowed,
                         SelectedScanner.IsFeederAutoCropMultiRegionAllowed,
-                        previousScanOptions.AutoCropMode);
+                        previousScanOptions?.AutoCropMode);
 
                     foreach (ScanResolution resolution in SelectedScanner.FeederResolutions)
                     {
@@ -425,7 +610,7 @@ namespace Scanner.ViewModels
 
                     FeederMultiplePages = true;
 
-                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FeederFormats, previousScanOptions.Format);
+                    SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FeederFormats, previousScanOptions?.Format);
                     break;
                 case Enums.ScannerSource.None:
                 default:
@@ -464,7 +649,7 @@ namespace Scanner.ViewModels
         ///     into consideration.
         /// </summary>
         private ScannerColorMode GetDefaultColorMode(bool colorAllowed, bool grayscaleAllowed,
-            bool monochromeAllowed, ScannerColorMode previousColorMode)
+            bool monochromeAllowed, ScannerColorMode? previousColorMode)
         {
             switch (previousColorMode)
             {
@@ -478,6 +663,7 @@ namespace Scanner.ViewModels
                     if (monochromeAllowed) return ScannerColorMode.Monochrome;
                     break;
                 case ScannerColorMode.None:
+                case null:
                 default:
                     break;
             }
@@ -493,7 +679,7 @@ namespace Scanner.ViewModels
         ///     Gets the default auto crop mode.
         /// </summary>
         private ScannerAutoCropMode GetDefaultAutoCropMode(bool autoCropSingleAllowed,
-            bool autoCropMultiAllowed, ScannerAutoCropMode previousAutoCropMode)
+            bool autoCropMultiAllowed, ScannerAutoCropMode? previousAutoCropMode)
         {
             switch (previousAutoCropMode)
             {
@@ -506,6 +692,7 @@ namespace Scanner.ViewModels
                     if (autoCropMultiAllowed) return ScannerAutoCropMode.MultipleRegions;
                     break;
                 case ScannerAutoCropMode.None:
+                case null:
                 default:
                     break;
             }
@@ -596,6 +783,14 @@ namespace Scanner.ViewModels
         private void DebugRestartScannerDiscovery()
         {
             RestartScannerDiscovery();
+        }
+
+        /// <summary>
+        ///     Deletes all scan options for the currently selected scanner from the database.
+        /// </summary>
+        private void DebugDeleteScanOptionsFromDatabase()
+        {
+            ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
         }
 
         /// <summary>
@@ -741,6 +936,14 @@ namespace Scanner.ViewModels
 
             try
             {
+                ScanOptions scanOptions = CreateScanOptions();
+
+                // save scan options
+                if ((bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions))
+                {
+                    ScanOptionsDatabaseService?.SaveScanOptionsForScanner(SelectedScanner, scanOptions);
+                }
+
                 if (!debug)
                 {
                     // real scan ~> get file destination
@@ -758,7 +961,7 @@ namespace Scanner.ViewModels
                         targetFolder = SettingsService.ScanSaveLocation;
                     }
 
-                    ScanOptions scanOptions = CreateScanOptions();
+                    // scan
                     var result = await ScanService?.GetScanAsync(SelectedScanner, scanOptions,
                     AppDataService.FolderReceivedPages);
 
