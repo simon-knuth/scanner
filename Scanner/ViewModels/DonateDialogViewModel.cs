@@ -1,11 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Input;
 using Scanner.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace Scanner.ViewModels
 {

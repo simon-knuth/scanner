@@ -70,10 +70,10 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void SettingsService_SettingChanged(object sender, SettingsEnums.AppSetting e)
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
-            if (e == SettingsEnums.AppSetting.SettingRememberScanOptions
-                && !(bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingRememberScanOptions))
+            if (e == AppSetting.SettingRememberScanOptions
+                && !(bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions))
             {
                 // database disabled, clear all values
                 try

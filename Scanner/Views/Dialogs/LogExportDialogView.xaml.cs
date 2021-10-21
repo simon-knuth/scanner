@@ -1,6 +1,4 @@
-﻿using System;
-using Windows.System;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 namespace Scanner.Views.Dialogs
 {

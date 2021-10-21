@@ -20,7 +20,6 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
-using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels

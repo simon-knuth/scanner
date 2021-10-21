@@ -233,7 +233,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Editor Orientation -->
-                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -272,31 +272,62 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" Margin="0,24,0,0" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                    
-                    <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
-                </CheckBox>
-                <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                    
-                    <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
-                </Button>
+                <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE9D9;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock Grid.Column="1" Text="Error reports and logs" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                            <interactivity:Interaction.Behaviors>
+                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                </core:DataTriggerBehavior>
+                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                </core:DataTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+
+                            <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
+                        </CheckBox>
+                        <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                        <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
+                            <interactivity:Interaction.Behaviors>
+                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                </core:DataTriggerBehavior>
+                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                </core:DataTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+
+                            <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
+                        </Button>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderFeedbackSurveys" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE789;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock Grid.Column="1" Text="Surveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox Content="Take part in occasional surveys" IsChecked="{x:Bind ViewModel.SettingShowSurveys, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
 
                 <!-- Translations -->
                 <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
@@ -304,13 +335,13 @@
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock Text="Windows offers support for over 100 languages - you can help make this app accessible for everyone." TextWrapping="WrapWholeWords"/>
-                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,12">
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Help translate" TextWrapping="WrapWholeWords"/>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <muxc:Expander x:Name="ExpanderTranslationsContributors" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -343,7 +374,9 @@
                         <Run FontWeight="SemiBold">David</Run> - British English
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
                         <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)
-                        <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French                        
+                        <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French
+                        <LineBreak/><Run FontWeight="SemiBold">gidano</Run> - Hungarian
+                        <LineBreak/><Run FontWeight="SemiBold">nvi9</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
                         <LineBreak/><Run FontWeight="SemiBold">Damian Czupryn</Run> - Polish
                         <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)

@@ -1,11 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using WinUI = Microsoft.UI.Xaml.Controls;
 using Scanner.Services.Messenger;
 using System;
-using System.Collections.Generic;
-using static Scanner.Services.Messenger.MessengerEnums;
-using Windows.UI.Xaml.Controls;
 using static HelpViewEnums;
 using Microsoft.Toolkit.Mvvm.Input;
 

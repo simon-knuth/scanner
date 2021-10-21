@@ -2,8 +2,6 @@
 using Windows.Devices.Scanners;
 using Windows.UI.Xaml.Data;
 
-using static Enums;
-
 namespace Scanner.Views.Converters
 {
     public class ScannerFileFormatGlyphConverter : IValueConverter

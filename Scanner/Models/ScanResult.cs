@@ -100,7 +100,7 @@ namespace Scanner
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
-            if ((bool)settingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
             {
                 try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             }
@@ -136,7 +136,7 @@ namespace Scanner
             }
 
             result.ScanResultFormat = targetFormat;
-            if ((bool)settingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
             {
                 try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             }
@@ -1394,7 +1394,7 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if ((bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)
+                    if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)
                     {
                         await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
                     }
@@ -1418,7 +1418,7 @@ namespace Scanner
                         futureAccessListIndex += 1;
                     }
 
-                    if ((bool)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingAppendTime))
+                    if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime))
                     {
                         await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
                     }

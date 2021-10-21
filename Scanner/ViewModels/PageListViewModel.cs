@@ -12,7 +12,6 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Data;
-using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.ViewModels
 {
@@ -149,7 +148,7 @@ namespace Scanner.ViewModels
             SettingsService.SettingChanged -= SettingsService_SettingChanged;
         }
 
-        private void SettingsService_SettingChanged(object sender, SettingsEnums.AppSetting e)
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
             if (e == AppSetting.SettingSaveLocationType)
             {

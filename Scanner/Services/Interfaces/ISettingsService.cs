@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.Services
 {
@@ -34,5 +33,44 @@ namespace Scanner.Services
 
         Task SetScanSaveLocationAsync(StorageFolder folder);
         Task ResetScanSaveLocationAsync();
+    }
+
+    public enum AppSetting
+    {
+        SettingSaveLocationType,
+        SettingAppTheme,
+        SettingAutoRotate,
+        SettingAppendTime,
+        SettingEditorOrientation,
+        SettingRememberScanOptions,
+        SettingErrorStatistics,
+        SettingShowSurveys,
+        TutorialPageListShown,
+        LastKnownVersion,
+        ScanNumber,
+        LastTouchDrawState,
+        IsFirstAppLaunchWithThisVersion,
+        IsFirstAppLaunchEver,
+        LastUsedCropAspectRatio,
+        ShowOpenWithWarning
+    }
+
+    public enum SettingSaveLocationType
+    {
+        SetLocation = 0,
+        AskEveryTime = 1
+    }
+
+    public enum SettingAppTheme
+    {
+        System = 0,
+        Light = 1,
+        Dark = 2
+    }
+
+    public enum SettingEditorOrientation
+    {
+        Vertical = 1,
+        Horizontal = 0
     }
 }

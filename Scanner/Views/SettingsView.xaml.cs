@@ -1,9 +1,5 @@
-﻿using WinUI = Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls;
-using Scanner.ViewModels;
+﻿using Windows.UI.Xaml.Controls;
 using System;
-using static HelpViewEnums;
-using System.Threading.Tasks;
 using Scanner.Views.Dialogs;
 using Windows.UI.Core;
 using static Utilities;

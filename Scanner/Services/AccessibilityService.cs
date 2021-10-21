@@ -1,8 +1,4 @@
 ﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace Scanner.Services

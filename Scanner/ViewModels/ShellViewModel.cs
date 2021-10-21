@@ -14,7 +14,6 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using static Scanner.Services.Messenger.MessengerEnums;
-using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -159,7 +158,7 @@ namespace Scanner.ViewModels
             {
                 try
                 {
-                    if ((SettingSaveLocationType)SettingsService.GetSetting(SettingsEnums.AppSetting.SettingSaveLocationType)
+                    if ((SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
                         == SettingSaveLocationType.SetLocation)
                     {
 
@@ -230,10 +229,10 @@ namespace Scanner.ViewModels
 
         private void RequestTutorialPageListIfNeeded()
         {
-            if ((bool)SettingsService?.GetSetting(SettingsEnums.AppSetting.TutorialPageListShown) == false)
+            if ((bool)SettingsService?.GetSetting(AppSetting.TutorialPageListShown) == false)
             {
                 TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
-                SettingsService?.SetSetting(SettingsEnums.AppSetting.TutorialPageListShown, true);
+                SettingsService?.SetSetting(AppSetting.TutorialPageListShown, true);
             }
         }
 

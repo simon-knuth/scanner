@@ -4,7 +4,6 @@ using Scanner.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner.Services
@@ -156,6 +155,9 @@ namespace Scanner.Services
                 case AppSetting.SettingErrorStatistics:
                     return SettingsContainer.Values[name] ?? false;
 
+                case AppSetting.SettingShowSurveys:
+                    return SettingsContainer.Values[name] ?? true;
+
                 case AppSetting.TutorialPageListShown:
                     return SettingsContainer.Values[name] ?? false;
 
@@ -229,6 +231,10 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.SettingErrorStatistics:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingShowSurveys:
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 

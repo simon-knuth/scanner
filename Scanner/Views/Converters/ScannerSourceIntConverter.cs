@@ -1,5 +1,4 @@
 ﻿using System;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Data;
 
 using static Enums;

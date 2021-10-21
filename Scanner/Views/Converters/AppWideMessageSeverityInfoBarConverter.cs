@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using static Scanner.Services.Messenger.MessengerEnums;
 

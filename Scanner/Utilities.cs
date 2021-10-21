@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using Scanner;
 using Scanner.Services;
 using Serilog;
 using Serilog.Exceptions;
@@ -21,7 +20,6 @@ using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media.SpeechSynthesis;
-using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
@@ -35,9 +33,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using static Enums_old;
 using static Globals;
-using static Scanner.Services.SettingsEnums;
 
 static class Utilities
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.Storage;
-using static Scanner.Services.SettingsEnums;
+﻿using System.Threading.Tasks;
 
 namespace Scanner.Services
 {

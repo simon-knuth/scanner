@@ -1,6 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging.Messages;
-using static Scanner.Services.Messenger.MessengerEnums;
-using static HelpViewEnums;
+﻿using static HelpViewEnums;
 
 namespace Scanner.Services.Messenger
 {

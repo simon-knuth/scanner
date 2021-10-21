@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using static Scanner.Services.SettingsEnums;
 
 namespace Scanner.Services
 {

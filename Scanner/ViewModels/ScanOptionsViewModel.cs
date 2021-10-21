@@ -17,7 +17,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using static Enums;
 using static Scanner.Services.Messenger.MessengerEnums;
-using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels

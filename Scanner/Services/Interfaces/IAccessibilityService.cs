@@ -1,5 +1,4 @@
-﻿using Windows.Storage;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace Scanner.Services
 {

@@ -1,11 +1,8 @@
 ﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Services.Store;
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml;
 
 using static Scanner.Helpers.AppConstants;
 

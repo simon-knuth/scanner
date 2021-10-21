@@ -7,7 +7,6 @@ using Scanner.Services.Messenger;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using static Scanner.Services.SettingsEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -84,6 +83,12 @@ namespace Scanner.ViewModels
         {
             get => (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
             set => SettingsService.SetSetting(AppSetting.SettingErrorStatistics, value);
+        }
+
+        public bool SettingShowSurveys
+        {
+            get => (bool)SettingsService.GetSetting(AppSetting.SettingShowSurveys);
+            set => SettingsService.SetSetting(AppSetting.SettingShowSurveys, value);
         }
 
         private bool _IsScanInProgress;
