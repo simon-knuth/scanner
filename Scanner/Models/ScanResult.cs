@@ -39,6 +39,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
+        private readonly IAutoRotatorService AutoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
@@ -67,7 +68,7 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart)
         {
-            LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}|displayFolder={Folder}]", futureAccessListIndexStart);
+            LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}]", futureAccessListIndexStart);
             int futureAccessListIndex = futureAccessListIndexStart;
             foreach (StorageFile file in fileList)
             {
@@ -90,8 +91,11 @@ namespace Scanner
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            IAutoRotatorService autoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
 
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
+
+            // construct ScanResult
             Task[] moveTasks = new Task[fileList.Count];
             for (int i = 0; i < fileList.Count; i++)
             {
@@ -100,10 +104,40 @@ namespace Scanner
             await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
+
+            // set initial name(s)
             if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
             {
                 try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             }
+
+            // automatic rotation
+            if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
+            {
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                for (int i = 0; i < result.Elements.Count; i++)
+                {
+                    ScanResultElement element = result.Elements[i];
+                    ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
+                    if (format != null)
+                    {
+                        BitmapRotation recommendedRotation = await autoRotatorService.TryGetRecommendedRotationAsync(
+                            element.ScanFile, (ImageScannerFormat)format);
+
+                        if (recommendedRotation != BitmapRotation.None)
+                        {
+                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
+                        }
+                    }
+                }
+
+                if (instructions.Count > 0)
+                {
+                    await result.RotateScansAsync(instructions);
+                }
+            }
+
+            // create previews
             await result.GetImagesAsync();
             logService?.Log.Information("ScanResult created.");
             return result;
@@ -114,11 +148,13 @@ namespace Scanner
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            IAutoRotatorService autoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
 
             logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
+            
+            // construct ScanResult
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
-
             if (targetFormat == ImageScannerFormat.Pdf)
             {
                 string pdfName = fileList[0].DisplayName + ".pdf";
@@ -134,13 +170,43 @@ namespace Scanner
                 }
                 await Task.WhenAll(conversionTasks);
             }
-
             result.ScanResultFormat = targetFormat;
+
+            // set initial name(s)
             if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
             {
                 try { await result.SetInitialNamesAsync(); } catch (Exception) { }
             }
+
+            // automatic rotation
+            if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
+            {
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                for (int i = 0; i < result.Elements.Count; i++)
+                {
+                    ScanResultElement element = result.Elements[i];
+                    ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
+                    if (format != null)
+                    {
+                        BitmapRotation recommendedRotation = await autoRotatorService.TryGetRecommendedRotationAsync(
+                            element.ScanFile, (ImageScannerFormat)format);
+
+                        if (recommendedRotation != BitmapRotation.None)
+                        {
+                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
+                        }
+                    }
+                }
+
+                if (instructions.Count > 0)
+                {
+                    await result.RotateScansAsync(instructions);
+                }
+            }
+
+            // create previews
             await result.GetImagesAsync();
+
             logService?.Log.Information("ScanResult created.");
             return result;
         }
@@ -513,6 +579,7 @@ namespace Scanner
                             { "Rotation", instructions[0].Item2.ToString() },
                         });
             LogService?.Log.Information("Received {@Instructions} for rotations.", instructions);
+
             // check indices and rotations
             foreach (var instruction in instructions)
             {
@@ -1461,6 +1528,32 @@ namespace Scanner
 
             // if necessary, generate PDF now
             if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
+
+            // automatic rotation
+            if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
+            {
+                List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                for (int i = 0; i < NumberOfPages; i++)
+                {
+                    ScanResultElement element = Elements[i];
+                    ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
+                    if (format != null)
+                    {
+                        BitmapRotation recommendedRotation = await AutoRotatorService.TryGetRecommendedRotationAsync(
+                            element.ScanFile, (ImageScannerFormat)format);
+
+                        if (recommendedRotation != BitmapRotation.None)
+                        {
+                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
+                        }
+                    }
+                }
+
+                if (instructions.Count > 0)
+                {
+                    await RotateScansAsync(instructions);
+                }
+            }
 
             // generate new previews and descriptors
             for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)

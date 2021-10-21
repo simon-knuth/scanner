@@ -131,6 +131,8 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Services\AutoRotatorService.cs" />
+    <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
