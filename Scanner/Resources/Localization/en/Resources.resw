@@ -143,19 +143,19 @@
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
     <value>Kai 4</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 4".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
     <value>Kai 8</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 8".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
     <value>Kai 16</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 16".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
     <value>Kai 32</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 32".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
     <value>Custom</value>
@@ -167,19 +167,19 @@
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
     <value>DIN A</value>
-    <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
+    <comment>The aspect ratio description for the international "DIN A".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
     <value>ANSI A - Letter</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI A - Letter".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
     <value>ANSI B - Ledger/Tabloid</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI B - Ledger/Tabloid".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
     <value>ANSI C - Broadsheet</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI C - Broadsheet".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
     <value>Square</value>
@@ -195,7 +195,7 @@
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
     <value>Draw and highlight using Windows Ink</value>
-    <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Draw" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
     <value>Draw with touch</value>
@@ -203,107 +203,107 @@
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
     <value>Open in another app</value>
-    <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Open with" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
     <value>Rename file</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rename" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
     <value>Rotate 90°</value>
-    <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 90°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
     <value>Rotate 180°</value>
-    <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 180°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
     <value>Rotate 270°</value>
-    <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 270°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
     <value>Rotate page (right-click for more)</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rotate" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
     <value>Save changes</value>
-    <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Save" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Save changes as copy</value>
-    <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Save as copy" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Share</value>
-    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Share" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show scanned pages</value>
-    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
+    <comment>The text of the "Manage scan" button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Copy selected pages</value>
-    <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Copy" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
     <value>Delete selected pages</value>
-    <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Delete" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
     <value>Rotate selected pages 90°</value>
-    <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 90°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
     <value>Rotate selected pages 180°</value>
-    <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 180°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
     <value>Rotate selected pages 270°</value>
-    <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 270°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
     <value>Rotate selected pages (right-click for more)</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rotate" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
     <value>Select pages</value>
-    <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Select" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Share selected pages</value>
-    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Share" button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show scan options</value>
-    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Scan Options" button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
     <value>Cancel currently running scan</value>
-    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Cancel scan" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
     <value>Manage scanners</value>
-    <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Manage scanners" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
     <value>Preview</value>
-    <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
+    <comment>The text of the "Preview" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show save location in File Explorer</value>
-    <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Show save location" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
     <value>Scan</value>
-    <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
+    <comment>The text of the "Scan" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
     <value>Scan and start fresh</value>
-    <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
+    <comment>The text of the "Scan" button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
     <value>Settings</value>
-    <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Settings" button in the scan options.</comment>
   </data>
   <data name="DialogDelete.Title" xml:space="preserve">
     <value>Are you sure?</value>
@@ -342,7 +342,7 @@
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>If your scanner doesn&apos;t show up within three minutes, you might need to add it in the settings app first.</value>
+    <value>If your scanner doesn't show up within three minutes, you might need to add it in the settings app first.</value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="ButtonDialogDevices.Text" xml:space="preserve">
@@ -442,7 +442,7 @@
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>The scanner is currently not accepting the app&apos;s request to cancel scanning.</value>
+    <value>The scanner is currently not accepting the app's request to cancel scanning.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
@@ -479,7 +479,7 @@
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
     <value>Scanner</value>
-    <comment>The heading for the app&apos;s main page.</comment>
+    <comment>The heading for the app's main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
     <value>Color mode</value>
@@ -507,34 +507,34 @@
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
     <value>Color</value>
-    <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
+    <comment>The color mode "Color" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
     <value>Grayscale</value>
-    <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
+    <comment>The color mode "Grayscale" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
     <value>Monochrome</value>
-    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
+    <comment>The color mode "Monochrome" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
     <value>Duplex (front &amp; back)</value>
-    <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
+    <comment>The "Duplex" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
     <value>Automatic configuration</value>
-    <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
+    <comment>The "Automatic" source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
     <value>Feeder</value>
-    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+    <comment>The "Feeder" source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
     <value>Flatbed</value>
-    <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
+    <comment>The "Flatbed" source option in the scan options section.</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>If your scanner doesn&apos;t show up within three minutes, ensure that it has been added in the </value>
+    <value>If your scanner doesn't show up within three minutes, ensure that it has been added in the </value>
     <comment>The first part of the body of the text that tells the user to select a scanner.
 | -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
   </data>
@@ -604,27 +604,27 @@
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
     <value>About this app</value>
-    <comment>The heading for the &quot;About&quot; section in settings.</comment>
+    <comment>The heading for the "About" section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
     <value>Give feedback</value>
-    <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The heading for the "Feedback" section in settings.</comment>
   </data>
   <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
     <value>Help &amp; setup</value>
-    <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
+    <comment>The heading for the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
     <value>Save location</value>
-    <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
+    <comment>The heading for the "Save location" option in settings.</comment>
   </data>
   <data name="HeadingSettingsTheme.Header" xml:space="preserve">
     <value>Theme</value>
-    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+    <comment>The heading for the "Theme" option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
     <value>Translations</value>
-    <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
+    <comment>The heading for the "Translations" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
     <value>restart the app</value>
@@ -653,7 +653,7 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Learn how to install and use a scanner in Windows 10</value>
-    <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
+    <comment>The hyperlink text directing the user to the scanner settings from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
     <value>Please </value>
@@ -667,18 +667,18 @@ HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
     <value>Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See </value>
-    <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
+    <comment>The first part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
     <value> for more information.</value>
-    <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
+    <comment>The second part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
     <value>this page</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> and doesn&apos;t appear as offline there.</value>
+    <value> and doesn't appear as offline there.</value>
     <comment>The second part of the body of the text that tells the user to select a scanner.
 HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
@@ -740,7 +740,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>The app collects all the pages you scan, as long as you don&apos;t change the file format or &quot;start fresh&quot; when scanning. If you are creating a PDF file, you can also reorder the pages here.</value>
+    <value>The app collects all the pages you scan, as long as you don't change the file format or "start fresh" when scanning. If you are creating a PDF file, you can also reorder the pages here.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
@@ -776,7 +776,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>You can take a look at what&apos;s new and improved in the changelog (may not be available in every language).</value>
+    <value>You can take a look at what's new and improved in the changelog (may not be available in every language).</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
@@ -788,7 +788,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>What&apos;s new?</value>
+    <value>What's new?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
@@ -877,7 +877,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
     <value>Scans</value>
-    <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+    <comment>The name of the folder that's used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
     <value>Ask every time</value>
@@ -889,7 +889,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
     <value>Back</value>
-    <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+    <comment>The tooltip for a generic "Back" button.</comment>
   </data>
   <data name="TextScannerCount" xml:space="preserve">
     <value>{0} available</value>
@@ -1006,54 +1006,62 @@ DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
     <value>You can </value>
-    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The first part of the text of the "Feedback" section in settings.
 |-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
     <value> to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
-    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The second part of the text of the "Feedback" section in settings.
 HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
     <value>.</value>
-    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The third part of the text of the "Feedback" section in settings.
 HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>rate Scanner in the Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.
 TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
     <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.
 TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
   </data>
   <data name="HeadingSettingsDonate.Text" xml:space="preserve">
     <value>Support the development</value>
-    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+    <comment>The heading for the "Donation" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
     <value>support me with a donation</value>
-    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
+    <comment>The hyperlink text allowing the user to donate from the "Donation" section in settings.
 TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
   </data>
   <data name="TextSettingsDonate1.Text" xml:space="preserve">
     <value>This app is available at no cost for everyone to use. If it saved you some time and you would like to see more like this, you can </value>
-    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
+    <comment>The first part of the text of the "Donation" section in settings.
 |-&gt; HyperlinkSettingsDonate.Text</comment>
   </data>
   <data name="TextSettingsDonate2.Text" xml:space="preserve">
     <value>. Thank you!</value>
-    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
+    <comment>The second part of the text of the "Donation" section in settings.
 HyperlinkSettingsDonate.Text &lt;-|</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
     <value>Support the development</value>
-    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+    <comment>The link to the "Donate" section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
     <value>Support the development</value>
-    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+    <comment>The text of the button that links to the "Donate" section in the changelog dialog. This is constrained in size and shouldn't be much longer than the English version.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value>One or more pages were automatically rotated. This feature can be disabled in the settings.</value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="PerformedAutoRotationHeading" xml:space="preserve">
+    <value>Automatic rotation</value>
+    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
 </root>

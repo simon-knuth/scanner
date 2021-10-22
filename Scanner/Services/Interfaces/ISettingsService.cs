@@ -52,7 +52,8 @@ namespace Scanner.Services
         IsFirstAppLaunchWithThisVersion,
         IsFirstAppLaunchEver,
         LastUsedCropAspectRatio,
-        ShowOpenWithWarning
+        ShowOpenWithWarning,
+        ShowAutoRotationMessage
     }
 
     public enum SettingSaveLocationType

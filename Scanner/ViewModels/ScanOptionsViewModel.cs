@@ -1042,7 +1042,7 @@ namespace Scanner.ViewModels
                             else
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder, DebugSelectedScanFormat);
+                                    targetFolder);
                             }
                         }
                         else

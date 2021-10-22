@@ -189,6 +189,9 @@ namespace Scanner.Services
                 case AppSetting.ShowOpenWithWarning:
                     return SettingsContainer.Values[name] ?? true;
 
+                case AppSetting.ShowAutoRotationMessage:
+                    return SettingsContainer.Values[name] ?? true;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -267,6 +270,10 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.ShowOpenWithWarning:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.ShowAutoRotationMessage:
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 

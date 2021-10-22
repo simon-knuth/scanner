@@ -26,6 +26,7 @@ namespace Scanner.Services
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
 
         public event EventHandler<ScanResult> ScanResultCreated;
         public event EventHandler ScanResultChanging;
@@ -62,13 +63,15 @@ namespace Scanner.Services
 
         private int FutureAccessListIndex;
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanResultService()
         {
-
+            ScanResult.PerformedAutomaticRotation += ScanResult_PerformedAutomaticRotation;
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -610,6 +613,21 @@ namespace Scanner.Services
         public void DismissScanResult()
         {
             Result = null;
+        }
+
+        private void ScanResult_PerformedAutomaticRotation(object sender, EventArgs e)
+        {
+            // send message, if necessary
+            if ((bool)SettingsService?.GetSetting(AppSetting.ShowAutoRotationMessage))
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("PerformedAutoRotationHeading"),
+                    MessageText = LocalizedString("PerformedAutoRotationBody"),
+                    Severity = AppWideStatusMessageSeverity.Success
+                });
+                SettingsService?.SetSetting(AppSetting.ShowAutoRotationMessage, false);
+            }
         }
     }
 }

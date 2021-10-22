@@ -14,7 +14,7 @@
     PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
     PrimaryButtonText="Donate"
     SecondaryButtonText="No thanks"
-    PrimaryButtonClick="DonateDialog_PrimaryButtonClick"
+    PrimaryButtonCommand="{x:Bind ViewModel.DonateCommand}"
     Loaded="ContentDialog_Loaded"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
 

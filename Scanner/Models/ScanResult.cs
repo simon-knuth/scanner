@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner.Services;
+using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,6 +43,8 @@ namespace Scanner
         private readonly IAutoRotatorService AutoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+
+        public static event EventHandler PerformedAutomaticRotation;
 
         private ObservableCollection<ScanResultElement> _Elements = new ObservableCollection<ScanResultElement>();
         public ObservableCollection<ScanResultElement> Elements
@@ -96,12 +99,10 @@ namespace Scanner
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
 
             // construct ScanResult
-            Task[] moveTasks = new Task[fileList.Count];
             for (int i = 0; i < fileList.Count; i++)
             {
-                moveTasks[i] = MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
+                await MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
             }
-            await Task.WhenAll(moveTasks);
 
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
 
@@ -134,6 +135,7 @@ namespace Scanner
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
+                    PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
                 }
             }
 
@@ -163,12 +165,10 @@ namespace Scanner
             }
             else
             {
-                Task[] conversionTasks = new Task[result.NumberOfPages];
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
-                    conversionTasks[i] = result.ConvertScanAsync(i, targetFormat, targetFolder);
+                    await result.ConvertScanAsync(i, targetFormat, targetFolder);
                 }
-                await Task.WhenAll(conversionTasks);
             }
             result.ScanResultFormat = targetFormat;
 
@@ -201,6 +201,7 @@ namespace Scanner
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
+                    PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
                 }
             }
 
@@ -1496,24 +1497,12 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
-                        conversionTasks[i - numberOfPagesOld] = ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
+                        await ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
                     }
-                    await Task.WhenAll(conversionTasks);
                 }
                 catch (Exception exc)
                 {
                     LogService?.Log.Error(exc, "Failed to convert at least one new page. All new pages will be discarded.");
-
-                    // wait until all tasks are completed, the result is irrelevant
-                    Task[] actualConversionTasks = conversionTasks.Where(task => task != null).ToArray();
-                    while (Array.Find(actualConversionTasks, task => task.IsCompleted != true) != null)
-                    {
-                        try
-                        {
-                            await Task.WhenAll(actualConversionTasks);
-                        }
-                        catch (Exception) { }
-                    }
 
                     // discard new pages to restore the old state
                     List<int> indices = new List<int>();
@@ -1552,6 +1541,7 @@ namespace Scanner
                 if (instructions.Count > 0)
                 {
                     await RotateScansAsync(instructions);
+                    PerformedAutomaticRotation?.Invoke(this, EventArgs.Empty);
                 }
             }
 
