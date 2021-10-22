@@ -33,6 +33,8 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.TutorialPageListRequested += ViewModel_TutorialPageListRequested;
+            ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
+            ViewModel.SetupRequested += ViewModel_SetupRequested;
             ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
             DataTransferManager.DataRequested += DataTransferManager_DataRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -314,6 +316,18 @@ namespace Scanner.Views
                 if (ViewModel.SelectedStatusMessageIndex - 1 < 0) return;
                 ViewModel.SelectedStatusMessageIndex = ViewModel.SelectedStatusMessageIndex - 1;
             }
+        }
+
+        private async void ViewModel_ChangelogRequested(object sender, EventArgs e)
+        {
+            ChangelogDialogView dialog = new ChangelogDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_SetupRequested(object sender, EventArgs e)
+        {
+            SetupDialogView dialog = new SetupDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
         }
     }
 }

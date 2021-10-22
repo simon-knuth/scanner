@@ -28,6 +28,10 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand StoreRatingCommand;
         public AsyncRelayCommand ChooseSaveLocationCommand;
         public AsyncRelayCommand ResetSaveLocationCommand;
+        public RelayCommand DisplayChangelogCommand;
+        public RelayCommand ShowDonateDialogCommand;
+
+        public event EventHandler ChangelogRequested;
 
         private string _SaveLocationPath;
         public string SaveLocationPath
@@ -118,9 +122,11 @@ namespace Scanner.ViewModels
             DisposeCommand = new RelayCommand(Dispose);
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
             DisplayLicensesDialogCommand = new RelayCommand(DisplayLicensesDialog);
+            DisplayChangelogCommand = new RelayCommand(DisplayChangelog);
             StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
             ChooseSaveLocationCommand = new AsyncRelayCommand(ChooseSaveLocation);
             ResetSaveLocationCommand = new AsyncRelayCommand(ResetSaveLocationAsync);
+            ShowDonateDialogCommand = new RelayCommand(() => Messenger.Send(new DonateDialogRequestMessage()));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,6 +239,11 @@ namespace Scanner.ViewModels
         private void ScanService_ScanStartedOrCompleted(object sender, EventArgs e)
         {
             IsScanInProgress = ScanService.IsScanInProgress;
+        }
+
+        private void DisplayChangelog()
+        {
+            ChangelogRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

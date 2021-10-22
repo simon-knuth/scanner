@@ -133,11 +133,20 @@
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
+    <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
+    <Compile Include="ViewModels\SetupDialogViewModel.cs" />
+    <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
+    <Compile Include="Views\Dialogs\SetupDialogView.xaml.cs">
+      <DependentUpon>SetupDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ChangelogDialogView.xaml.cs">
+      <DependentUpon>ChangelogDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
       <DependentUpon>LicenseDetailView.xaml</DependentUpon>
     </Compile>
@@ -475,6 +484,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\Dialogs\SetupDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\ChangelogDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Dialogs\LicenseDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -25,17 +25,22 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
-        private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
 
         public event EventHandler TutorialPageListRequested;
+        public event EventHandler ChangelogRequested;
+        public event EventHandler SetupRequested;
         public event EventHandler<List<StorageFile>> ShareFilesChanged;
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
+        public RelayCommand ViewLoadedCommand;
         public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
         public RelayCommand DebugShowTutorialPageListCommand => new RelayCommand(DebugShowTutorialPageList);
+        public RelayCommand DebugShowChangelogCommand => new RelayCommand(DebugShowChangelog);
+        public RelayCommand DebugShowSetupCommand => new RelayCommand(DebugShowSetup);
+        public RelayCommand ShowDonateDialogCommand;
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -113,8 +118,11 @@ namespace Scanner.ViewModels
             Messenger.Register<AppWideStatusMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
             Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
+            Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
+            ShowDonateDialogCommand = new RelayCommand(() => DisplayedView = ShellNavigationSelectableItem.Donate);
+            ViewLoadedCommand = new RelayCommand(ViewLoaded);
 
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
@@ -241,9 +249,33 @@ namespace Scanner.ViewModels
             TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
         }
 
+        private void DebugShowChangelog()
+        {
+            ChangelogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DebugShowSetup()
+        {
+            SetupRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
         {
             RefreshAppTitle("");
+        }
+
+        private void ViewLoaded()
+        {
+            if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == true
+                && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchEver) == false
+                && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion) == true)
+            {
+                ChangelogRequested?.Invoke(this, EventArgs.Empty);
+            }
+            else if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == false)
+            {
+                SetupRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 

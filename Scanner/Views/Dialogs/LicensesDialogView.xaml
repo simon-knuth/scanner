@@ -43,7 +43,7 @@
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72B;"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="Bold" FontSize="24" AutomationProperties.HeadingLevel="Level1" VerticalAlignment="Center"/>
+            <TextBlock x:Uid="HeadingDialogLicenses" FontWeight="SemiBold" FontSize="20" AutomationProperties.HeadingLevel="Level1" VerticalAlignment="Center"/>
         </StackPanel>
     </ContentDialog.Title>
 

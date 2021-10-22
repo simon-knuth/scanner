@@ -947,28 +947,28 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Changes saved as copy</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
-  <data name="HeadingChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>More resolution options</value>
+  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
+    <value>A stunning new interface</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>Smarter interface</value>
+  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
+    <value>Super-smart features</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
-  <data name="HeadingChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Improved accessibility</value>
+  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
+    <value>Support for even more scan options</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
-  <data name="TextChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>Choose from more resolution options for the best quality.</value>
+  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
+    <value>Enjoy the fresh and inviting look inspired by Windows 11.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
-  <data name="TextChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>The interface has been improved to give you a better overview of your scanned pages and available scanners.</value>
+  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
+    <value>Automatically rotate scans, crop multiple pages at once and quickly reuse your previous settings across app sessions.</value>
     <comment>Text for the second changelog section.</comment>
   </data>
-  <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Added support for screen readers and voice recognition services.</value>
+  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
+    <value>Added support for advanced scan options such as automatic cropping and automatic color mode selection. Requires a compatible scanner.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
@@ -1063,5 +1063,13 @@ HyperlinkSettingsDonate.Text &lt;-|</comment>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
     <value>Automatic rotation</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value>Latest changelog</value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value>And much more!</value>
+    <comment>Heading for the fourth changelog section.</comment>
   </data>
 </root>

@@ -21,6 +21,7 @@ namespace Scanner.Views
             this.InitializeComponent();
             ViewModel.LogExportDialogRequested += ViewModel_LogExportDialogRequestedAsync;
             ViewModel.LicensesDialogRequested += ViewModel_LicensesDialogRequested;
+            ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
         }
 
 
@@ -37,6 +38,19 @@ namespace Scanner.Views
         {
             LogExportDialogView dialog = new LogExportDialogView();
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_ChangelogRequested(object sender, EventArgs e)
+        {
+            ChangelogDialogView dialog = new ChangelogDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    ViewModel.ShowDonateDialogCommand.Execute(null);
+                }
+            });
         }
     }
 }

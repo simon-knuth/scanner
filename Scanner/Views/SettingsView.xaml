@@ -425,6 +425,9 @@
                 <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayLicensesDialogCommand}">
                     <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses" TextWrapping="WrapWholeWords"/>
                 </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutChangelog" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayChangelogCommand}">
+                    <TextBlock x:Name="TextBlockSettingsAboutChangelog" x:Uid="HyperlinkSettingsAboutChangelog" TextWrapping="WrapWholeWords"/>
+                </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderAboutCredits" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,12,0,0">
                     <muxc:Expander.Header>
                         <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
