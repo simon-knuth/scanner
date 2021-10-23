@@ -300,7 +300,7 @@
                     <ColumnDefinition x:Name="ColumnMainContentThird" Width="3*" MinWidth="300" MaxWidth="350"/>
                 </Grid.ColumnDefinitions>
 
-                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource NavigationViewContentBackground}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>
@@ -335,14 +335,14 @@
                     </Grid>
                 </muxc:InfoBar>
 
-                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1">
+                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
-                <Frame x:Name="FrameMainContentThird" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="{ThemeResource NavigationViewContentBackground}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="1"/>
+                <Frame x:Name="FrameMainContentThird" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"/>
             </Grid>
             
             <!-- Debug Flyout -->

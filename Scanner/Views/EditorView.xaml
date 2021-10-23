@@ -159,7 +159,6 @@
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
                         <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
-                        <Setter Target="InkCanvasEditDraw.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -176,7 +175,6 @@
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
-                        <Setter Target="InkCanvasEditDraw.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 

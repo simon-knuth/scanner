@@ -48,10 +48,12 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords" Margin="0,0,0,24"/>
-        <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12">
+        <TextBlock Grid.Row="0" x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords"/>
+        <TextBlock Grid.Row="1" x:Uid="TextDialogPrivacySetupFooter" TextWrapping="WrapWholeWords"/>
+        <ScrollViewer Grid.Row="2" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12" Margin="0,24,0,0">
             <StackPanel Orientation="Vertical">
                 <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.ProxySettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
                     <interactivity:Interaction.Behaviors>
@@ -68,8 +70,18 @@
                 <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
             </StackPanel>
         </ScrollViewer>
-        <TextBlock Grid.Row="2" x:Uid="TextDialogPrivacySetupFooter" TextWrapping="WrapWholeWords" Margin="0,18,0,0"/>
-        <HyperlinkButton Grid.Row="3" NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center" Margin="0,12,0,0">
+        <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,24,0,12">
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MaxWidth="350"/>
+                </Grid.ColumnDefinitions>
+
+                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+            </Grid>
+        </StackPanel>
+        <HyperlinkButton Grid.Row="4" NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>

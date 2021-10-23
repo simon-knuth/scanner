@@ -1455,6 +1455,7 @@ namespace Scanner
                 foreach (StorageFile file in files)
                 {
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex)));
+                    NumberOfPages = _Elements.Count;
 
                     if (targetFolder != null)
                     {
@@ -1522,7 +1523,7 @@ namespace Scanner
             if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-                for (int i = 0; i < NumberOfPages; i++)
+                for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
                 {
                     ScanResultElement element = Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);

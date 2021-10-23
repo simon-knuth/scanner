@@ -23,6 +23,8 @@ namespace Scanner.Services
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
 
+        private const int MinimumNumberOfWords = 25;
+
         private OcrEngine OcrEngine;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +97,15 @@ namespace Scanner.Services
                             bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise270Degrees, ocrResult.Text.Length);
                         }
 
-                        return bestRotation.Item1;
+                        if (bestRotation.Item2 < MinimumNumberOfWords)
+                        {
+                            // very low confidence, could just be random patterns
+                            return BitmapRotation.None;
+                        }
+                        else
+                        {
+                            return bestRotation.Item1;
+                        }
                     }
                 }
                 else
