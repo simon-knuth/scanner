@@ -28,7 +28,7 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private async void HyperlinkButtonSettingsAboutLicenses_Click(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ButtonDialogLicensesHeadingBack.IsEnabled = false;
 

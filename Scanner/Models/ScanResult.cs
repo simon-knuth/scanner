@@ -43,6 +43,8 @@ namespace Scanner
         private readonly IAutoRotatorService AutoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
+        private readonly IPdfService PdfService = Ioc.Default.GetService<IPdfService>();
 
         public static event EventHandler PerformedAutomaticRotation;
 
@@ -53,6 +55,7 @@ namespace Scanner
         }
 
         public ImageScannerFormat ScanResultFormat;
+        public ImageScannerFormat PagesFormat;
         public StorageFile Pdf = null;
         public readonly StorageFolder OriginalTargetFolder;
 
@@ -95,16 +98,18 @@ namespace Scanner
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             IAutoRotatorService autoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
+            IHelperService helperService = Ioc.Default.GetService<IHelperService>();
 
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
 
             // construct ScanResult
             for (int i = 0; i < fileList.Count; i++)
             {
-                await MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
+                await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
             }
 
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
+            result.ScanResultFormat = result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
 
             // set initial name(s)
             if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
@@ -154,7 +159,7 @@ namespace Scanner
 
             logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
-            
+
             // construct ScanResult
             ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
             if (targetFormat == ImageScannerFormat.Pdf)
@@ -171,6 +176,7 @@ namespace Scanner
                 }
             }
             result.ScanResultFormat = targetFormat;
+            result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
 
             // set initial name(s)
             if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
@@ -517,7 +523,7 @@ namespace Scanner
                     newName = newNameWithoutNumbering;
 
                     // move file to the correct folder
-                    newName = await MoveFileToFolderAsync(sourceFile, targetFolder, newName, false);
+                    newName = await HelperService.MoveFileToFolderAsync(sourceFile, targetFolder, newName, false);
                     break;
 
                 case ImageScannerFormat.Pdf:
@@ -533,37 +539,6 @@ namespace Scanner
 
             // refresh file
             _Elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
-        }
-
-
-        /// <summary>
-        ///     Moves the <paramref name="file"/> to the <paramref name="targetFolder"/>. Attempts to name
-        ///     it <paramref name="desiredName"/>.
-        /// </summary>
-        /// <param name="file">The file that's to be moved.</param>
-        /// <param name="targetFolder">The folder that the file shall be moved to.</param>
-        /// <param name="desiredName">The name that the file should ideally have when finished.</param>
-        /// <param name="replaceExisting">Replaces file if true, otherwise asks the OS to generate a unique name.</param>
-        /// <returns>The final name of the file.</returns>
-        private static async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
-        {
-            ILogService logService = Ioc.Default.GetService<ILogService>();
-
-            logService?.Log.Information("Requested to move file to folder. [desiredName={Name}|replaceExisting={Replace}]", desiredName, replaceExisting);
-            try
-            {
-                if (replaceExisting) await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.ReplaceExisting);
-                else await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.FailIfExists);
-            }
-            catch (Exception)
-            {
-                if (replaceExisting) throw;
-
-                try { await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.GenerateUniqueName); }
-                catch (Exception) { throw; }
-            }
-
-            return file.Name;
         }
 
 
@@ -623,7 +598,7 @@ namespace Scanner
 
                                 SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                                Guid encoderId = GetBitmapEncoderId(_Elements[instruction.Item1].ScanFile.Name.Split(".")[1]);
+                                Guid encoderId = GetBitmapEncoderId(PagesFormat);
 
                                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
                                 encoder.SetSoftwareBitmap(softwareBitmap);
@@ -857,7 +832,7 @@ namespace Scanner
 
                 using (IRandomAccessStream stream = await GetImageFile(index).OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(ScanResultFormat), stream);
+                    var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(PagesFormat), stream);
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                     SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                     encoder.SetSoftwareBitmap(softwareBitmap);
@@ -912,7 +887,7 @@ namespace Scanner
             try
             {
                 StorageFolder folder = null;
-                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = AppDataService.FolderConversion;
                 else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
@@ -1176,7 +1151,7 @@ namespace Scanner
                 }
 
                 StorageFolder folder = null;
-                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = AppDataService.FolderConversion;
                 else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
                 file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
@@ -1371,7 +1346,7 @@ namespace Scanner
             }
 
             // set contents according to file type and copy to clipboard
-            ImageScannerFormat format = ScanResultFormat;
+            ImageScannerFormat format = PagesFormat;
 
             try
             {
@@ -1667,79 +1642,15 @@ namespace Scanner
         {
             LogService?.Log.Information("Requested PDF generation.");
 
-            string newName;
-            StorageFile newPdf;
-
             if (Pdf == null)
             {
                 LogService?.Log.Information("PDF doesn't exist yet.");
-                newPdf = await AppDataService.FolderTemp.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                Pdf = await PdfService.GeneratePdfAsync(fileName, OriginalTargetFolder);
             }
             else
             {
                 LogService?.Log.Information("PDF already exists.");
-                newPdf = Pdf;
-            }
-
-            newName = newPdf.Name;
-
-            try
-            {
-                taskCompletionSource = new TaskCompletionSource<bool>();
-                var win32ResultAsync = taskCompletionSource.Task;
-
-                // save the target name
-                ApplicationData.Current.LocalSettings.Values["targetFileName"] = newPdf.Name;
-
-                // delete potential rogue files
-                await CleanUpReceivedPagesFolder();
-
-                int attempt = 1;
-                while (attempt >= 0)
-                {
-                    // call win32 app and wait for result
-                    LogService?.Log.Information("Launching full trust process.");
-                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-                    await win32ResultAsync.ConfigureAwait(false);
-                    LogService?.Log.Information("Full trust process is done.");
-
-                    // get result file and move it to its correct folder
-                    try
-                    {
-                        newPdf = null;
-                        newPdf = await AppDataService.FolderTemp.GetFileAsync(newName);
-                        attempt = -1;
-                    }
-                    catch (Exception)
-                    {
-                        if (attempt == 3) throw;
-
-                        attempt++;
-                        await Task.Delay(TimeSpan.FromSeconds(3));
-                    }
-                }
-
-                // move PDF file to target folder
-                if (Pdf == null)
-                {
-                    // PDF generated in target folder for the first time
-                    await MoveFileToFolderAsync(newPdf, OriginalTargetFolder, newName, false);
-                }
-                else
-                {
-                    // PDF updated ~> replace old file
-                    await MoveFileToFolderAsync(newPdf, OriginalTargetFolder, newName, true);
-                }
-                Pdf = newPdf;
-                return;
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
-                var files = await AppDataService.FolderTemp.GetFilesAsync();
-                LogService?.Log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
-                Crashes.TrackError(exc);
-                throw;
+                Pdf = await PdfService.GeneratePdfAsync(Pdf.Name, OriginalTargetFolder);
             }
         }
 
@@ -1757,13 +1668,14 @@ namespace Scanner
         private static async Task PrepareNewConversionFiles(IEnumerable<StorageFile> files, int startIndex)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
+            IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
 
             try
             {
                 int nextNumber = startIndex;
                 foreach (StorageFile file in files)
                 {
-                    await file.MoveAsync(folderConversion, nextNumber + file.FileType);
+                    await file.MoveAsync(appDataService.FolderConversion, nextNumber + file.FileType);
                     nextNumber++;
                 }
             }
@@ -1780,6 +1692,8 @@ namespace Scanner
         /// </summary>
         public async Task ApplyElementOrderToFilesAsync()
         {
+            LogService?.Log.Information("Applying element order to files.");
+            
             if (GetFileFormat() != ImageScannerFormat.Pdf)
             {
                 LogService?.Log.Error("Attempted to apply element order to non-PDF file.");
@@ -1887,7 +1801,7 @@ namespace Scanner
         /// </summary>
         private async Task CleanUpReceivedPagesFolder()
         {
-            var files = await folderReceivedPagesPDF.GetFilesAsync();
+            var files = await AppDataService.FolderReceivedPages.GetFilesAsync();
 
             foreach (StorageFile file in files)
             {
@@ -1919,7 +1833,7 @@ namespace Scanner
             try
             {
                 StorageFolder folder = null;
-                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = folderConversion;
+                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = AppDataService.FolderConversion;
                 else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
 
                 file = await _Elements[index].ScanFile.CopyAsync(folder, _Elements[index].ScanFile.Name, NameCollisionOption.GenerateUniqueName);

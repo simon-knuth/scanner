@@ -1,7 +1,11 @@
-﻿using Windows.Storage;
+﻿using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Manages the app's internal storage.
+    /// </summary>
     public interface IAppDataService
     {
         StorageFolder FolderTemp
@@ -23,5 +27,8 @@ namespace Scanner.Services
         {
             get;
         }
+
+        Task Initialize();
+        Task EmptyReceivedPagesFolderAsync();
     }
 }

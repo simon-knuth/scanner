@@ -375,10 +375,20 @@ namespace Scanner.ViewModels
         {
             if (SelectedPage == null || SelectedPage.ScanFile == null) return;
 
-            Messenger.Send(new EditorSelectionTitleChangedMessage
+            if (ScanResult.IsImage)
             {
-                Title = SelectedPage?.ScanFile?.Name
-            });
+                Messenger.Send(new EditorSelectionTitleChangedMessage
+                {
+                    Title = SelectedPage?.ScanFile?.Name
+                });
+            }
+            else
+            {
+                Messenger.Send(new EditorSelectionTitleChangedMessage
+                {
+                    Title = ScanResult?.Pdf?.Name
+                });
+            }
         }
 
         private async Task RotatePageAsync(BitmapRotation rotation)
@@ -538,18 +548,30 @@ namespace Scanner.ViewModels
             foreach (AppInfo appInfo in readOnlyList)
             {
                 LogService?.Log.Information($"GetAppsToOpenWith: Adding {appInfo.DisplayInfo.DisplayName}");
-                RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(64, 64));
-                IRandomAccessStreamWithContentType content = await stream.OpenReadAsync();
 
-                BitmapImage bmp = new BitmapImage();
-                await bmp.SetSourceAsync(content);
-
-                result.Add(new OpenWithApp
+                try
                 {
-                    AppInfo = appInfo,
-                    Logo = bmp
-                });
+                    RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(64, 64));
+                    IRandomAccessStreamWithContentType content = await stream.OpenReadAsync();
 
+                    BitmapImage bmp = new BitmapImage();
+                    await bmp.SetSourceAsync(content);
+
+                    result.Add(new OpenWithApp
+                    {
+                        AppInfo = appInfo,
+                        Logo = bmp
+                    });
+                }
+                catch (Exception)
+                {
+                    // add without logo
+                    result.Add(new OpenWithApp
+                    {
+                        AppInfo = appInfo
+                    });
+                }
+                
                 if (result.Count >= 4) break;   // 4 apps max
             }
 

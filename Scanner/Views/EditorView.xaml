@@ -300,16 +300,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Enter a new name for the file" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
                                             <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
-                                                <interactivity:Interaction.Behaviors>
-                                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                                        <core:ChangePropertyAction PropertyName="Text" Value="{x:Bind ViewModel.SelectedPage.ScanFile.FileType, Mode=OneWay}"/>
-                                                    </core:DataTriggerBehavior>
-                                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                                        <core:ChangePropertyAction PropertyName="Text" Value="{x:Bind ViewModel.ScanResult.Pdf.FileType, Mode=OneWay}"/>
-                                                    </core:DataTriggerBehavior>
-                                                </interactivity:Interaction.Behaviors>
-                                            </TextBlock>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0"/>
 
                                             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>

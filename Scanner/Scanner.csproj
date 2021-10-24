@@ -133,7 +133,9 @@
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
+    <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
+    <Compile Include="Services\PdfService.cs" />
     <Compile Include="ViewModels\SetupDialogViewModel.cs" />
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />

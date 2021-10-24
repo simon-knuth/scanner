@@ -118,5 +118,15 @@ namespace Scanner.Services
 
             LogService?.Log.Information("Initialized temp folder");
         }
+
+        public async Task EmptyReceivedPagesFolderAsync()
+        {
+            var files = await FolderReceivedPages.GetFilesAsync();
+
+            foreach (StorageFile file in files)
+            {
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+        }
     }
 }

@@ -140,7 +140,7 @@
 
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="models:DiscoveredScanner">
-                    <TextBlock Text="{x:Bind Name}" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Text="{x:Bind Name}" Style="{StaticResource BaseTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
 

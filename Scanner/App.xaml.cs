@@ -80,7 +80,7 @@ namespace Scanner
                 .AddSingleton<IScanResultService, ScanResultService>()
                 .AddSingleton<IHelperService, HelperService>()
                 .AddSingleton<IAutoRotatorService, AutoRotatorService>()
-                //    .AddSingleton<IPdfService, PdfService>()
+                .AddSingleton<IPdfService, PdfService>()
                 .BuildServiceProvider());
 
             // intialize essential singleton services

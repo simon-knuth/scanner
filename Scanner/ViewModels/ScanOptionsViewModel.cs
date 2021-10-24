@@ -943,6 +943,12 @@ namespace Scanner.ViewModels
                     ScanOptionsDatabaseService?.SaveScanOptionsForScanner(SelectedScanner, scanOptions);
                 }
 
+                // clean folders
+                if (!CanAddToScanResult || startFresh)
+                {
+                    await AppDataService.Initialize();
+                }
+
                 if (!debug)
                 {
                     // real scan ~> get file destination
@@ -1027,7 +1033,7 @@ namespace Scanner.ViewModels
                         List<StorageFile> copiedFiles = new List<StorageFile>();
                         foreach (StorageFile file in files)
                         {
-                            copiedFiles.Add(await file.CopyAsync(AppDataService.FolderReceivedPages));
+                            copiedFiles.Add(await file.CopyAsync(AppDataService.FolderReceivedPages, file.Name, NameCollisionOption.GenerateUniqueName));
                         }
 
                         if (!CanAddToScanResult || startFresh)

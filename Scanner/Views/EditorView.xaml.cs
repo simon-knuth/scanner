@@ -345,22 +345,36 @@ namespace Scanner.Views
                 {
                     OpenWithApp app = ViewModel.OpenWithApps[i];
 
-                    var icon = new ImageIcon
+                    if (app.Logo != null)
                     {
-                        Source = app.Logo,
-                        Scale = new System.Numerics.Vector3(3),
-                        CenterPoint = new System.Numerics.Vector3(app.Logo.PixelWidth / 2)
-                    };
+                        var icon = new ImageIcon
+                        {
+                            Source = app.Logo,
+                            Scale = new System.Numerics.Vector3(3),
+                            CenterPoint = new System.Numerics.Vector3(app.Logo.PixelWidth / 2)
+                        };
 
-                    var item = new MenuFlyoutItem
+                        var item = new MenuFlyoutItem
+                        {
+                            Text = app.AppInfo.DisplayInfo.DisplayName,
+                            Icon = icon,
+                            Command = ViewModel.OpenWithCommand,
+                            CommandParameter = i.ToString()
+                        };
+
+                        MenuFlyoutOpenWith.Items.Add(item);
+                    }
+                    else
                     {
-                        Text = app.AppInfo.DisplayInfo.DisplayName,
-                        Icon = icon,
-                        Command = ViewModel.OpenWithCommand,
-                        CommandParameter = i.ToString()
-                    };
+                        var item = new MenuFlyoutItem
+                        {
+                            Text = app.AppInfo.DisplayInfo.DisplayName,
+                            Command = ViewModel.OpenWithCommand,
+                            CommandParameter = i.ToString()
+                        };
 
-                    MenuFlyoutOpenWith.Items.Add(item);
+                        MenuFlyoutOpenWith.Items.Add(item);
+                    }
                 }
                 MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemStore);
                 MenuFlyoutOpenWith.Items.Add(new MenuFlyoutSeparator());

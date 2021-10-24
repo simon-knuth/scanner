@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Scanner.Services
 {
@@ -8,5 +9,6 @@ namespace Scanner.Services
     public interface IHelperService
     {
         Task ShowRatingDialogAsync();
+        Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting);
     }
 }

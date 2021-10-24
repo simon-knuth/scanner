@@ -213,7 +213,8 @@ namespace Scanner.Models
             List<ImageScannerFormat> formatList = new List<ImageScannerFormat>(formatArray);
 
             // check whether the PDF component is available
-            if (!ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            if (!ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)
+                || Ioc.Default.GetService<IPdfService>() == null)
             {
                 formatList.Remove(ImageScannerFormat.Pdf);
             }

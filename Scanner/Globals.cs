@@ -26,11 +26,6 @@ public static class Globals
     public static BackgroundTaskDeferral appServiceDeferral;
     public static TaskCompletionSource<bool> taskCompletionSource = null;
 
-    public static StorageFolder folderTemp;
-    public static StorageFolder folderConversion;
-    public static StorageFolder folderWithoutRotation;
-    public static StorageFolder folderReceivedPagesPDF;
-
     public static SpeechSynthesizer narratorSpeech = new SpeechSynthesizer();
     public static MediaElement narratorMediaElement = new MediaElement();
 }
