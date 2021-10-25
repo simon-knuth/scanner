@@ -284,7 +284,7 @@
             </StackPanel>
 
             <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
-                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged">
+                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged" DragItemsCompleted="GridViewPages_DragItemsCompleted">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
                             <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>

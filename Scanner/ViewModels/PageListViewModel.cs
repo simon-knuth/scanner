@@ -37,6 +37,7 @@ namespace Scanner.ViewModels
         public RelayCommand ShareCommand;
         public AsyncRelayCommand<StorageFile> ShowInFileExplorerCommand;
         public AsyncRelayCommand<ScanResultElement> DuplicatePageCommand;
+        public AsyncRelayCommand DragDropPage;
 
         private ScanResult _ScanResult;
         public ScanResult ScanResult
@@ -119,6 +120,7 @@ namespace Scanner.ViewModels
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
             CopyCommand = new AsyncRelayCommand(CopyAsync);
             ShareCommand = new RelayCommand(Share);
+            DragDropPage = new AsyncRelayCommand(async () => await ScanResultService.ApplyElementOrderToFilesAsync()); ;
             ShowInFileExplorerCommand = new AsyncRelayCommand<StorageFile>((x) => ShowFileInFileExplorerAsync(x));
             DuplicatePageCommand = new AsyncRelayCommand<ScanResultElement>((x) => DuplicatePageAsync(x));
 

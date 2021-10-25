@@ -344,5 +344,10 @@ namespace Scanner.Views
                 (sender as MenuFlyoutItem).Command = ViewModel.DuplicatePageCommand;
             });
         }
+
+        private void GridViewPages_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            ViewModel.DragDropPage.Execute(null);
+        }
     }
 }

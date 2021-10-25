@@ -284,32 +284,45 @@
                             <TextBlock Grid.Column="1" Text="Error reports and logs" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
-                            <interactivity:Interaction.Behaviors>
-                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
-                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                </core:DataTriggerBehavior>
-                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                </core:DataTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
 
-                            <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
-                        </CheckBox>
-                        <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-                        <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
-                            <interactivity:Interaction.Behaviors>
-                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
-                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                </core:DataTriggerBehavior>
-                                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                </core:DataTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
+                                <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
+                            </CheckBox>
+                            <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                            <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
 
-                            <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
-                        </Button>
+                                <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition MaxWidth="350"/>
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
                 <muxc:Expander x:Name="ExpanderFeedbackSurveys" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch">

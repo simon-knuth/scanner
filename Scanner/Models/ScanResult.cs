@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -121,22 +122,25 @@ namespace Scanner
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[result.Elements.Count];
                 for (int i = 0; i < result.Elements.Count; i++)
                 {
                     ScanResultElement element = result.Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    if (format != null)
-                    {
-                        BitmapRotation recommendedRotation = await autoRotatorService.TryGetRecommendedRotationAsync(
-                            element.ScanFile, (ImageScannerFormat)format);
-
-                        if (recommendedRotation != BitmapRotation.None)
-                        {
-                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
-                        }
-                    }
+                    tasks[i] = autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
                 }
 
+                // collect recommendations
+                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
+                for (int i = 0; i < recommendations.Length; i++)
+                {
+                    if (recommendations[i] != BitmapRotation.None)
+                    {
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
+                    }
+                }
+                
+                // apply recommendations
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
@@ -188,22 +192,25 @@ namespace Scanner
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[result.Elements.Count];
                 for (int i = 0; i < result.Elements.Count; i++)
                 {
                     ScanResultElement element = result.Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    if (format != null)
-                    {
-                        BitmapRotation recommendedRotation = await autoRotatorService.TryGetRecommendedRotationAsync(
-                            element.ScanFile, (ImageScannerFormat)format);
-
-                        if (recommendedRotation != BitmapRotation.None)
-                        {
-                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
-                        }
-                    }
+                    tasks[i] = autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
                 }
 
+                // collect recommendations
+                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
+                for (int i = 0; i < recommendations.Length; i++)
+                {
+                    if (recommendations[i] != BitmapRotation.None)
+                    {
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
+                    }
+                }
+                
+                // apply recommendations
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
@@ -1498,22 +1505,25 @@ namespace Scanner
             if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
+                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[files.Count()];
                 for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
                 {
                     ScanResultElement element = Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    if (format != null)
-                    {
-                        BitmapRotation recommendedRotation = await AutoRotatorService.TryGetRecommendedRotationAsync(
-                            element.ScanFile, (ImageScannerFormat)format);
+                    tasks[i] = AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
+                }
 
-                        if (recommendedRotation != BitmapRotation.None)
-                        {
-                            instructions.Add(new Tuple<int, BitmapRotation>(i, recommendedRotation));
-                        }
+                // collect recommendations
+                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
+                for (int i = 0; i < recommendations.Length; i++)
+                {
+                    if (recommendations[i] != BitmapRotation.None)
+                    {
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
                     }
                 }
 
+                // apply recommendations
                 if (instructions.Count > 0)
                 {
                     await RotateScansAsync(instructions);
@@ -1721,6 +1731,9 @@ namespace Scanner
             {
                 await element.RenameFileAsync(element.ScanFile.DisplayName.Split("_")[1] + element.ScanFile.FileType);
             }
+
+            // generate the updated PDF file
+            await GeneratePDF();
         }
 
 

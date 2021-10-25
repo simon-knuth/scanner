@@ -17,9 +17,6 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    /// <summary>
-    ///     Holds the current <see cref="ScanResult"/> and exposes it to other code.
-    /// </summary>
     internal class ScanResultService : ObservableRecipient, IScanResultService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -628,6 +625,15 @@ namespace Scanner.Services
                 });
                 SettingsService?.SetSetting(AppSetting.ShowAutoRotationMessage, false);
             }
+        }
+
+        public async Task ApplyElementOrderToFilesAsync()
+        {
+            IsScanResultChanging = true;
+
+            await Result.ApplyElementOrderToFilesAsync();
+
+            IsScanResultChanging = false;
         }
     }
 }

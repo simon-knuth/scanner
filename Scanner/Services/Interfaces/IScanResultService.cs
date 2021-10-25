@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Controls;
 namespace Scanner.Services
 {
     /// <summary>
-    ///     Holds the current <see cref="ScanResult"/>.
+    ///     Holds the current <see cref="ScanResult"/> and exposes it to the code.
     /// </summary>
     public interface IScanResultService
     {
@@ -61,5 +61,6 @@ namespace Scanner.Services
         Task<bool> OpenImageWithAsync(int index);
         Task<bool> OpenImageWithAsync(int index, AppInfo appInfo);
         Task<bool> DuplicatePageAsync(int index);
+        Task ApplyElementOrderToFilesAsync();
     }
 }

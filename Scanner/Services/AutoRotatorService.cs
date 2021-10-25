@@ -23,7 +23,7 @@ namespace Scanner.Services
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
 
-        private const int MinimumNumberOfWords = 25;
+        private const int MinimumNumberOfWords = 50;
 
         private OcrEngine OcrEngine;
 
@@ -47,54 +47,62 @@ namespace Scanner.Services
                     // get separate stream
                     using (IRandomAccessStream sourceStream = await imageFile.OpenAsync(FileAccessMode.Read))
                     {
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
                         Tuple<BitmapRotation, int> bestRotation;
 
                         // create rotated 0°
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
                         SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
                         OcrResult ocrResult = await OcrEngine.RecognizeAsync(bitmap);
                         bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.None, ocrResult.Text.Length);
 
-                        // check rotated 90°
-                        InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream();
-                        var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
-                        encoder.SetSoftwareBitmap(bitmap);
-                        encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
-                        await encoder.FlushAsync();
-                        decoder = await BitmapDecoder.CreateAsync(targetStream);
-                        bitmap = await decoder.GetSoftwareBitmapAsync();
-                        ocrResult = await OcrEngine.RecognizeAsync(bitmap);
-                        if (ocrResult.Text.Length > bestRotation.Item2)
+                        using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
-                            bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise90Degrees, ocrResult.Text.Length);
+                            // create rotated 90°
+                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            encoder.SetSoftwareBitmap(bitmap);
+                            encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                            await encoder.FlushAsync();
+                            decoder = await BitmapDecoder.CreateAsync(targetStream);
+                            bitmap = await decoder.GetSoftwareBitmapAsync();
+                            ocrResult = await OcrEngine.RecognizeAsync(bitmap);
+                            if (ocrResult.Text.Length > bestRotation.Item2)
+                            {
+                                bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise90Degrees, ocrResult.Text.Length);
+                            }
                         }
 
-                        // create rotated 180°
-                        targetStream = new InMemoryRandomAccessStream();
-                        encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
-                        encoder.SetSoftwareBitmap(bitmap);
-                        encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
-                        await encoder.FlushAsync();
-                        decoder = await BitmapDecoder.CreateAsync(targetStream);
-                        bitmap = await decoder.GetSoftwareBitmapAsync();
-                        ocrResult = await OcrEngine.RecognizeAsync(bitmap);
-                        if (ocrResult.Text.Length > bestRotation.Item2)
+                        using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
-                            bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise180Degrees, ocrResult.Text.Length);
+                            // create rotated 180°
+                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            encoder.SetSoftwareBitmap(bitmap);
+                            encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                            await encoder.FlushAsync();
+                            decoder = await BitmapDecoder.CreateAsync(targetStream);
+                            bitmap = await decoder.GetSoftwareBitmapAsync();
+                            ocrResult = await OcrEngine.RecognizeAsync(bitmap);
+                            if (ocrResult.Text.Length > bestRotation.Item2)
+                            {
+                                bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise180Degrees, ocrResult.Text.Length);
+                            }
                         }
 
-                        // create rotated 270°
-                        targetStream = new InMemoryRandomAccessStream();
-                        encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
-                        encoder.SetSoftwareBitmap(bitmap);
-                        encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
-                        await encoder.FlushAsync();
-                        decoder = await BitmapDecoder.CreateAsync(targetStream);
-                        bitmap = await decoder.GetSoftwareBitmapAsync();
-                        ocrResult = await OcrEngine.RecognizeAsync(bitmap);
-                        if (ocrResult.Text.Length > bestRotation.Item2)
+                        using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
-                            bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise270Degrees, ocrResult.Text.Length);
+                            // create rotated 270°
+                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            encoder.SetSoftwareBitmap(bitmap);
+                            encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                            await encoder.FlushAsync();
+                            decoder = await BitmapDecoder.CreateAsync(targetStream);
+                            bitmap = await decoder.GetSoftwareBitmapAsync();
+                            ocrResult = await OcrEngine.RecognizeAsync(bitmap);
+                            if (ocrResult.Text.Length > bestRotation.Item2)
+                            {
+                                bestRotation = new Tuple<BitmapRotation, int>(BitmapRotation.Clockwise270Degrees, ocrResult.Text.Length);
+                            }
                         }
 
                         if (bestRotation.Item2 < MinimumNumberOfWords)
