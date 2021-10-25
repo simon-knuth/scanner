@@ -140,8 +140,37 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <CheckBox x:Name="CheckBoxSettingAutoRotate" Content="Rotate pages automatically" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}"/>
-                            <HyperlinkButton Content="Advanced settings" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}"/>
+                            <CheckBox x:Name="CheckBoxSettingAutoRotate" Content="Rotate pages automatically" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </CheckBox>
+                            <HyperlinkButton Content="Recognizer language" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom" Opening="MenuFlyoutSettingAutoRotateLanguage_Opening">
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddLanguage" Text="Add another language" Command="{x:Bind ViewModel.LaunchLanguageSettingsCommand}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </HyperlinkButton>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <TextBlock Text="This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>

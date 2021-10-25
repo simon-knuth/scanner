@@ -3,6 +3,8 @@ using System;
 using Scanner.Views.Dialogs;
 using Windows.UI.Core;
 using static Utilities;
+using Windows.Globalization;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Scanner.Views
 {
@@ -50,6 +52,40 @@ namespace Scanner.Views
                 {
                     ViewModel.ShowDonateDialogCommand.Execute(null);
                 }
+            });
+        }
+
+        private async void MenuFlyoutSettingAutoRotateLanguage_Opening(object sender, object e)
+        {
+            string desiredLanguage = ViewModel.SettingAutoRotateLanguage;
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                MenuFlyoutSettingAutoRotateLanguage.Items.Clear();
+                for (int i = 0; i < ViewModel.AutoRotatorService.AvailableLanguages.Count; i++)
+                {
+                    Language language = ViewModel.AutoRotatorService.AvailableLanguages[i];
+
+                    var item = new ToggleMenuFlyoutItem
+                    {
+                        Text = language.DisplayName,
+                        Command = ViewModel.SetAutoRotateLanguageCommand,
+                        CommandParameter = i.ToString(),
+                        IsChecked = language.LanguageTag == desiredLanguage
+                    };
+
+                    MenuFlyoutSettingAutoRotateLanguage.Items.Add(item);
+                }
+                MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());
+            MenuFlyoutSettingAutoRotateLanguage.Items.Add(MenuFlyoutItemAddLanguage);
+            });
+        }
+
+        private async void HyperlinkButtonSettingAutoRotateLanguage_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((Windows.UI.Xaml.FrameworkElement)sender);
             });
         }
     }

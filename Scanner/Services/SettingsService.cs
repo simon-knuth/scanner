@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Scanner.ViewModels;
 using System;
 using System.Threading.Tasks;
+using Windows.Media.Ocr;
 using Windows.Storage;
 using static Utilities;
 
@@ -195,6 +196,9 @@ namespace Scanner.Services
                 case AppSetting.SetupCompleted:
                     return SettingsContainer.Values[name] ?? false;
 
+                case AppSetting.SettingAutoRotateLanguage:
+                    return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage.LanguageTag;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -282,6 +286,10 @@ namespace Scanner.Services
 
                 case AppSetting.SetupCompleted:
                     SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingAutoRotateLanguage:
+                    SettingsContainer.Values[name] = (string)value;
                     break;
 
                 default:

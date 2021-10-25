@@ -7,6 +7,7 @@ using Scanner.Services.Messenger;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -21,6 +22,7 @@ namespace Scanner.ViewModels
         private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        public readonly IAutoRotatorService AutoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
 
         public RelayCommand DisposeCommand;
         public RelayCommand DisplayLogExportDialogCommand;
@@ -30,6 +32,8 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand ResetSaveLocationCommand;
         public RelayCommand DisplayChangelogCommand;
         public RelayCommand ShowDonateDialogCommand;
+        public RelayCommand<string> SetAutoRotateLanguageCommand;
+        public AsyncRelayCommand LaunchLanguageSettingsCommand;
 
         public event EventHandler ChangelogRequested;
 
@@ -63,6 +67,12 @@ namespace Scanner.ViewModels
         {
             get => (bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate);
             set => SettingsService.SetSetting(AppSetting.SettingAutoRotate, value);
+        }
+
+        public string SettingAutoRotateLanguage
+        {
+            get => (string)SettingsService.GetSetting(AppSetting.SettingAutoRotateLanguage);
+            set => SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, value);
         }
 
         public bool SettingAppendTime
@@ -127,6 +137,8 @@ namespace Scanner.ViewModels
             ChooseSaveLocationCommand = new AsyncRelayCommand(ChooseSaveLocation);
             ResetSaveLocationCommand = new AsyncRelayCommand(ResetSaveLocationAsync);
             ShowDonateDialogCommand = new RelayCommand(() => Messenger.Send(new DonateDialogRequestMessage()));
+            SetAutoRotateLanguageCommand = new RelayCommand<string>((x) => SetAutoRotateLanguage(int.Parse(x)));
+            LaunchLanguageSettingsCommand = new AsyncRelayCommand(LaunchLanguageSettings);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,6 +256,19 @@ namespace Scanner.ViewModels
         private void DisplayChangelog()
         {
             ChangelogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task LaunchLanguageSettings()
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-settings:regionlanguage"));
+        }
+
+        private void SetAutoRotateLanguage(int language)
+        {
+            if (language < AutoRotatorService.AvailableLanguages.Count)
+            {
+                SettingAutoRotateLanguage = AutoRotatorService.AvailableLanguages[language].LanguageTag;
+            }
         }
     }
 }

@@ -54,7 +54,8 @@ namespace Scanner.Services
         LastUsedCropAspectRatio,
         ShowOpenWithWarning,
         ShowAutoRotationMessage,
-        SetupCompleted
+        SetupCompleted,
+        SettingAutoRotateLanguage
     }
 
     public enum SettingSaveLocationType

@@ -12,15 +12,11 @@ public static class Globals
     public static ILogger log;
 
     public static StorageFolder scanFolder = null;
-    public static ApplicationDataContainer localSettingsContainer;
     public static ApplicationViewTitleBar applicationViewTitlebar;
 
     public static bool possiblyDeadScanner = false;
 
-    public static bool? isFirstAppLaunchWithThisVersion;
     public static int scanNumber;
-    public static bool lastTouchDrawState;                          // whether drawing with touch was enabled last time
-    public static bool manageTutorialAlreadyShown;
 
     public static AppServiceConnection appServiceConnection;
     public static BackgroundTaskDeferral appServiceDeferral;
