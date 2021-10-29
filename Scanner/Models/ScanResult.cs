@@ -1533,9 +1533,9 @@ namespace Scanner
             {
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[files.Count()];
-                for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
+                for (int i = 0; i < files.Count(); i++)
                 {
-                    ScanResultElement element = Elements[i];
+                    ScanResultElement element = Elements[i + NumberOfPages - files.Count()];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
                     tasks[i] = AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
                 }
@@ -1546,7 +1546,7 @@ namespace Scanner
                 {
                     if (recommendations[i] != BitmapRotation.None)
                     {
-                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
+                        instructions.Add(new Tuple<int, BitmapRotation>(i + NumberOfPages - files.Count(), recommendations[i]));
                     }
                 }
 
