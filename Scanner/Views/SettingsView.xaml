@@ -297,8 +297,8 @@
                 </HyperlinkButton>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriGithub}" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                         <TextBlock Text="GitHub" TextWrapping="WrapWholeWords"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch">
@@ -379,8 +379,8 @@
                 <TextBlock Text="Windows offers support for over 100 languages - you can help make this app accessible for everyone." TextWrapping="WrapWholeWords"/>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                         <TextBlock Text="Help translate" TextWrapping="WrapWholeWords"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
@@ -454,14 +454,14 @@
                 </Grid>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriWebsite}" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                         <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite" TextWrapping="WrapWholeWords"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
                         <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" TextWrapping="WrapWholeWords"/>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayLicensesDialogCommand}">
@@ -475,9 +475,9 @@
                         <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
                     </muxc:Expander.Header>
                     <TextBlock TextWrapping="WrapWholeWords">
-                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List</Hyperlink>
                         -
-                        <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh<Run FontFamily="Segoe MDL2 Assets" Text="  &#xE71B; " FontSize="12"/></Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh</Hyperlink>
                     </TextBlock>
                 </muxc:Expander>
             </StackPanel>

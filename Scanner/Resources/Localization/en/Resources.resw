@@ -1072,4 +1072,88 @@ HyperlinkSettingsDonate.Text &lt;-|</comment>
     <value>And much more!</value>
     <comment>Heading for the fourth changelog section.</comment>
   </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>Please make sure that your scanner is switched on and either connected via Wi-Fi or a USB cable. If your scanner isn't listed in the Windows settings app, you'll first need to add it from there.
+
+Once you see your scanner in the settings app and it isn't labeled "Offline" anymore, the connection is working and you're good to go!
+
+&amp;nbsp;
+
+**Tip:** If Windows takes too long to find your wireless scanner, you can just turn off and on Wi-Fi to immediately trigger a network search. Keep in mind that this may interrupt internet access across all apps on your device.</value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>Restarting a scanner usually solves most issues that you might experience. Sometimes the Windows scanning interface itself doesn't behave as expected, which may require restarting your PC.
+
+In very rare cases, the scanner installation can be faulty and you need to remove and then add the scanner in the settings again.
+
+&amp;nbsp;
+
+Please also consult your scanner manual for additional guidance or contact the manufacturer.</value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>You can change the save location for new scans in the settings. If you like, you can also be asked every time you scan something new - great for always putting stuff right where it belongs, instead of having to organize it afterwards.</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>The resolution determines the overall sharpness of the scan and also heavily influences the file size. Scanning at a high resolution can inflate the file and increase the required time for each page to be scanned. Scanning at a low can result in a loss of detail and even produce illegible text.
+
+Selecting a resolution is possible in **flatbed or feeder** mode. The app always chooses a default resolution for you, which works great for all kinds of scans. Sometimes it even recommends a resolution for documents and a separate one for photos.
+
+As a rule of thumb, documents only require a resolution of about 300 DPI, whereas photos benefit from a higher resolution of about 500 DPI.</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>Mixed up some pages while scanning? No need to start over, you can quickly reorder the pages in your PDF file after scanning. Just drag and drop pages in the page list and put everything where it belongs.</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>If you edit your scans in the app, the changes are saved immediately in the background. Just scan some pages, edit the result and you're done!</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>If you'd like to scan to a new PDF file instead of adding pages to an existing one, you don't need to restart the app. Just select the little arrow next to the scan button and start fresh.</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>If you are unsure which file format to choose, you should concentrate on **JPG, PNG and PDF**.
+
+JPG and PNG are image formats, which means that every page will be saved as a separate file. These files can be viewed on just about every device and edited later with ease. JPGs are usually smaller than PNGs, especially at high resolutions, but PNGs offer a better overall quality, which can be important when scanning photos.
+
+PDF is a very popular document format and allows you to save multiple pages in a single file. This format can be viewed on just about every device, but editing these files later is not easy and may require advanced software.</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>Change the folder that scans are saved to</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>Choose a file format</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>Choose a resolution</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>Reorder PDF pages</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>Save changes</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>Install and use a scanner</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>Troubleshoot scanner issues</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>Start a new PDF</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
 </root>

@@ -15,6 +15,11 @@ namespace Scanner.Services
             get;
         }
 
+        Language DefaultLanguage
+        {
+            get;
+        }
+
         Task<BitmapRotation> TryGetRecommendedRotationAsync(StorageFile imageFile, ImageScannerFormat format);
     }
 }

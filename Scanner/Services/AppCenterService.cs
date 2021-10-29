@@ -65,7 +65,11 @@ namespace Scanner.Services
             { AppCenterEvent.CopyDocument, "Copy document" },
             { AppCenterEvent.OpenWith, "Open with" },
             { AppCenterEvent.DuplicatePage, "Duplicate page" },
+            { AppCenterEvent.DonationDialogOpened, "Donation dialog opened" },
             { AppCenterEvent.DonationLinkClicked, "Donation link clicked" },
+            { AppCenterEvent.HelpRequested, "Help requested" },
+            { AppCenterEvent.AutoRotatedPage, "Automatically rotated page" },
+            { AppCenterEvent.CorrectedAutoRotation, "Corrected automatically rotated page" },
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,29 +178,5 @@ namespace Scanner.Services
         {
             Crashes.TrackError(exception, properties, attachments);
         }
-    }
-
-    public enum AppCenterEvent
-    {
-        ScannerAdded,
-        ScanCompleted,
-        Share,
-        Preview,
-        RotatePages,
-        RenamePage,
-        RenamePDF,
-        Crop,
-        CropMultiple,
-        CropAsCopy,
-        DeletePages,
-        DeletePage,
-        DrawOnPage,
-        DrawOnPageAsCopy,
-        CopyPages,
-        CopyPage,
-        CopyDocument,
-        OpenWith,
-        DuplicatePage,
-        DonationLinkClicked
     }
 }

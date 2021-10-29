@@ -5,10 +5,9 @@
         ScannerDiscovery,
         ScannerNotWorking,
         ChooseResolution,
-        ShowScanFolder,
+        SaveChanges,
         ChangeScanFolder,
         ChooseFileFormat,
-        SaveChanges,
         StartNewPdf,
         ReorderPdfPages
     }

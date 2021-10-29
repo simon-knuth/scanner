@@ -598,7 +598,7 @@
 
                 <!-- Crop -->
                 <controls:Case Value="1">
-                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" Height="40">
+                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
                         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>

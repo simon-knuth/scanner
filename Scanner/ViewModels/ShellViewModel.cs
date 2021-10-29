@@ -25,6 +25,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
 
@@ -119,6 +120,7 @@ namespace Scanner.ViewModels
             Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
+            Messenger.Register<SettingsRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Settings);
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
             ShowDonateDialogCommand = new RelayCommand(() => DisplayedView = ShellNavigationSelectableItem.Donate);
@@ -146,6 +148,10 @@ namespace Scanner.ViewModels
             // relay requested topic
             var newRequest = new HelpRequestMessage(m.HelpTopic);
             Messenger.Send(newRequest);
+
+            AppCenterService.TrackEvent(AppCenterEvent.HelpRequested, new Dictionary<string, string> {
+                            { "Topic", m.HelpTopic.ToString() },
+                        });
         }
 
         private void Window_Activated(object sender, WindowActivatedEventArgs e)

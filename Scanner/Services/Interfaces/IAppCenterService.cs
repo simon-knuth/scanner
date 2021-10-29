@@ -13,4 +13,32 @@ namespace Scanner.Services
         void TrackError(Exception exception, IDictionary<string, string> properties = null,
             params ErrorAttachmentLog[] attachments);
     }
+
+    public enum AppCenterEvent
+    {
+        ScannerAdded,
+        ScanCompleted,
+        Share,
+        Preview,
+        RotatePages,
+        RenamePage,
+        RenamePDF,
+        Crop,
+        CropMultiple,
+        CropAsCopy,
+        DeletePages,
+        DeletePage,
+        DrawOnPage,
+        DrawOnPageAsCopy,
+        CopyPages,
+        CopyPage,
+        CopyDocument,
+        OpenWith,
+        DuplicatePage,
+        DonationDialogOpened,
+        DonationLinkClicked,
+        HelpRequested,
+        AutoRotatedPage,
+        CorrectedAutoRotation
+    }
 }

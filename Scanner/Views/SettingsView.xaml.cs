@@ -74,6 +74,11 @@ namespace Scanner.Views
                         IsChecked = language.LanguageTag == desiredLanguage
                     };
 
+                    if (language.LanguageTag == ViewModel.AutoRotatorService.DefaultLanguage.LanguageTag)
+                    {
+                        item.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                    }
+
                     MenuFlyoutSettingAutoRotateLanguage.Items.Add(item);
                 }
                 MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());

@@ -29,6 +29,7 @@ namespace Scanner.Services
         private OcrEngine OcrEngine;
 
         public IReadOnlyList<Language> AvailableLanguages => OcrEngine.AvailableRecognizerLanguages;
+        public Language DefaultLanguage => OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

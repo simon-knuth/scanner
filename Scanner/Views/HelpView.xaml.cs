@@ -42,8 +42,8 @@ namespace Scanner.Views
                     return ExpanderScannerNotWorking;
                 case HelpTopic.ChooseResolution:
                     return ExpanderChooseResolution;
-                case HelpTopic.ShowScanFolder:
-                    return ExpanderShowScanFolder;
+                case HelpTopic.SaveChanges:
+                    return ExpanderSaveChanges;
                 case HelpTopic.ChangeScanFolder:
                     return ExpanderChangeScanFolder;
                 case HelpTopic.ChooseFileFormat:

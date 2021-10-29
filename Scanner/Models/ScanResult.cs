@@ -100,6 +100,7 @@ namespace Scanner
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             IAutoRotatorService autoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
             IHelperService helperService = Ioc.Default.GetService<IHelperService>();
+            IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
 
@@ -146,6 +147,15 @@ namespace Scanner
                     await result.RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
                 }
+
+                // analytics
+                foreach (var instruction in instructions)
+                {
+                    result.Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    appCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
+                            { "Rotation", instruction.Item2.ToString() },
+                        });
+                }
             }
 
             // create previews
@@ -160,6 +170,7 @@ namespace Scanner
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             IAutoRotatorService autoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
+            IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
             logService?.Log.Information("Creating a ScanResult with conversion from {SourceFormat} to {TargetFormat} from {Num} pages.",
                 fileList[0].FileType, targetFormat, fileList.Count);
@@ -215,6 +226,15 @@ namespace Scanner
                 {
                     await result.RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
+                }
+
+                // analytics
+                foreach (var instruction in instructions)
+                {
+                    result.Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    appCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
+                            { "Rotation", instruction.Item2.ToString() },
+                        });
                 }
             }
 
@@ -624,6 +644,13 @@ namespace Scanner
                         // delete image from cache
                         _Elements[instruction.Item1].CachedImage = null;
                         await _Elements[instruction.Item1].GetImageAsync();
+
+                        // analytics
+                        if (Elements[instruction.Item1].AutoRotatedAndUnchanged)
+                        {
+                            Elements[instruction.Item1].AutoRotatedAndUnchanged = false;
+                            AppCenterService.TrackEvent(AppCenterEvent.CorrectedAutoRotation);
+                        }
                     }
 
                     if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
@@ -1528,6 +1555,15 @@ namespace Scanner
                 {
                     await RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(this, EventArgs.Empty);
+                }
+
+                // analytics
+                foreach (var instruction in instructions)
+                {
+                    Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    AppCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
+                            { "Rotation", instruction.Item2.ToString() },
+                        });
                 }
             }
 

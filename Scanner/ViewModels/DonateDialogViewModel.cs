@@ -26,6 +26,8 @@ namespace Scanner.ViewModels
         public DonateDialogViewModel()
         {
             DonateCommand = new AsyncRelayCommand(Donate);
+
+            AppCenterService.TrackEvent(AppCenterEvent.DonationDialogOpened);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

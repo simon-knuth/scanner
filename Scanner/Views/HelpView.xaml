@@ -62,7 +62,7 @@
                 </StackPanel.ChildrenTransitions>
 
                 <TextBlock Text="Scanner usage" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -71,34 +71,52 @@
                             </Grid.ColumnDefinitions>
                             
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE721;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Scanner is not available" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpScannerDiscovery" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpScannerDiscovery" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Scanner settings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchWifiSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE701;" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Wi-Fi settings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderScannerNotWorking" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderScannerNotWorking" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="48"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            
-                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Scanner is not working properly" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8FE;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpScannerNotWorking" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpScannerNotWorking" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Scanner settings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChooseResolution" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChooseResolution" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -107,18 +125,16 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Choose a resolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChooseResolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChooseResolution" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
                 </muxc:Expander>
 
                 <TextBlock Text="Files &amp; save location" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -127,12 +143,14 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Save changes" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpSaveChanges" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <TextBlock Text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." Style="{StaticResource BodyTextBlockStyle}"/>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpSaveChanges" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderShowScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChangeScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -141,34 +159,22 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Show the scan folder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChangeScanFolder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChangeScanFolder" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Settings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChangeScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
-                    <muxc:Expander.Header>
-                        <Grid Padding="0,12,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="48"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Change the folder that scans are saved to" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                        </Grid>
-                    </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
-                </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChooseFileFormat" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChooseFileFormat" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -177,14 +183,16 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB9F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Choose a file format" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChooseFileFormat" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <TextBlock Text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." Style="{StaticResource BodyTextBlockStyle}"/>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChooseFileFormat" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
                 </muxc:Expander>
 
                 <TextBlock Text="PDF" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -193,16 +201,14 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Start a new PDF" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpStartNewPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpStartNewPdf" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderReorderPdfPages" HorizontalAlignment="Stretch" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderReorderPdfPages" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -211,14 +217,12 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8CB;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Reorder PDF pages" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpReorderPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
-                    <controls:MarkdownTextBlock Background="Transparent">
-                        <controls:MarkdownTextBlock.Text>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </controls:MarkdownTextBlock.Text>
-                    </controls:MarkdownTextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpReorderPdf" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
                 </muxc:Expander>
             </StackPanel>
         </ScrollViewer>
