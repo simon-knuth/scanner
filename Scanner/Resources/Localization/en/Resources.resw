@@ -1156,4 +1156,16 @@ PDF is a very popular document format and allows you to save multiple pages in a
     <value>Start a new PDF</value>
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>Loading a save location failed</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
 </root>

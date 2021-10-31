@@ -35,6 +35,7 @@ namespace Scanner.Views
             ViewModel.TutorialPageListRequested += ViewModel_TutorialPageListRequested;
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
             ViewModel.SetupRequested += ViewModel_SetupRequested;
+            ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
             ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
             DataTransferManager.DataRequested += DataTransferManager_DataRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -328,6 +329,14 @@ namespace Scanner.Views
         {
             SetupDialogView dialog = new SetupDialogView();
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_FeedbackDialogRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipFeedback);
+            });
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         private readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();

@@ -25,6 +25,11 @@ namespace Scanner.Services
             get;
         }
 
+        int CompletedScans
+        {
+            get;
+        }
+
         Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ImageScannerScanSource config);
         Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner, ScanOptions options, StorageFolder targetFolder);
         void CancelScan();

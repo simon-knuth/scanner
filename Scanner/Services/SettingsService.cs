@@ -1,5 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ namespace Scanner.Services
     /// <summary>
     ///     Manages app settings and other persistent values.
     /// </summary>
-    internal class SettingsService : ObservableObject, ISettingsService
+    internal class SettingsService : ObservableRecipient, ISettingsService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +57,17 @@ namespace Scanner.Services
         /// </summary>
         private bool _IsSaveLocationFolderDefault;
 
+        private bool _IsSaveLocationUnavailable;
+        public bool IsSaveLocationUnavailable
+        {
+            get => _IsSaveLocationUnavailable;
+            private set
+            {
+                SetProperty(ref _IsSaveLocationUnavailable, value);
+                if (value == true) AppCenterService.TrackEvent(AppCenterEvent.SetSaveLocationUnavailable);
+            }
+        }
+
         public event EventHandler<AppSetting> SettingChanged;
         public event EventHandler ScanSaveLocationChanged;
         public event EventHandler LastSaveLocationPathChanged;
@@ -94,9 +107,10 @@ namespace Scanner.Services
                     }
                     catch (Exception exc2)
                     {
+                        IsSaveLocationUnavailable = true;
+                        SetSetting(AppSetting.SettingSaveLocationType, SettingSaveLocationType.AskEveryTime);
                         LogService?.Log.Error(exc2, "Creating a new scan save location in PicturesLibrary failed as well.");
-                        ShowMessageDialogAsync(LocalizedString("ErrorMessageLoadScanFolderHeader"),
-                            LocalizedString("ErrorMessageLoadScanFolderBody"));
+                        AppCenterService.TrackError(exc2);
                     }
                 }
             }
@@ -110,14 +124,32 @@ namespace Scanner.Services
                 }
                 catch (UnauthorizedAccessException exc)
                 {
+                    IsSaveLocationUnavailable = true;
+                    SetSetting(AppSetting.SettingSaveLocationType, SettingSaveLocationType.AskEveryTime);
                     LogService?.Log.Error(exc, "Creating a new scan save location in PicturesLibrary failed. (Unauthorized)");
-                    ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
+                    Messenger.Send(new AppWideStatusMessage
+                    {
+                        Title = LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
+                        MessageText = LocalizedString("ErrorMessageResetFolderUnauthorizedBody"),
+                        AdditionalText = exc.Message,
+                        Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                    });
+                    AppCenterService.TrackError(exc);
                     return;
                 }
                 catch (Exception exc)
                 {
+                    IsSaveLocationUnavailable = true;
+                    SetSetting(AppSetting.SettingSaveLocationType, SettingSaveLocationType.AskEveryTime);
                     LogService?.Log.Error(exc, "Creating a new scan save location in PicturesLibrary failed.");
-                    ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
+                    Messenger.Send(new AppWideStatusMessage
+                    {
+                        Title = LocalizedString("ErrorMessageResetFolderHeading"),
+                        MessageText = LocalizedString("ErrorMessageResetFolderBody"),
+                        AdditionalText = exc.Message,
+                        Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                    });
+                    AppCenterService.TrackError(exc);
                     return;
                 }
                 futureAccessList.AddOrReplace(FutureAccessListStringScanSaveLocation, _ScanSaveLocation);

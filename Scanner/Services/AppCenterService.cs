@@ -70,6 +70,7 @@ namespace Scanner.Services
             { AppCenterEvent.HelpRequested, "Help requested" },
             { AppCenterEvent.AutoRotatedPage, "Automatically rotated page" },
             { AppCenterEvent.CorrectedAutoRotation, "Corrected automatically rotated page" },
+            { AppCenterEvent.SetSaveLocationUnavailable, "Set save location unavailable" },
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,7 @@ namespace Scanner.Services
         DonationLinkClicked,
         HelpRequested,
         AutoRotatedPage,
-        CorrectedAutoRotation
+        CorrectedAutoRotation,
+        SetSaveLocationUnavailable
     }
 }

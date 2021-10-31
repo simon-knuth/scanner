@@ -31,6 +31,11 @@ namespace Scanner.Services
             set;
         }
 
+        bool IsSaveLocationUnavailable
+        {
+            get;
+        }
+
         Task SetScanSaveLocationAsync(StorageFolder folder);
         Task ResetScanSaveLocationAsync();
     }

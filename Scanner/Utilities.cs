@@ -530,10 +530,13 @@ static class Utilities
     /// </summary>
     /// <param name="title">The title of the <see cref="MessageDialog"/>.</param>
     /// <param name="message">The body of the <see cref="MessageDialog"/>.</param>
-    public async static void ShowMessageDialogAsync(string title, string message)
+    public async static Task ShowMessageDialogAsync(string title, string message)
     {
-        MessageDialog messageDialog = new MessageDialog(message, title);
-        await messageDialog.ShowAsync();
+        await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
+        {
+            MessageDialog messageDialog = new MessageDialog(message, title);
+            await messageDialog.ShowAsync();
+        });
     }
 
 

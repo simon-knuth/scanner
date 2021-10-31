@@ -28,10 +28,13 @@ namespace Scanner.ViewModels
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
+        public readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
+        public readonly IScanService ScanService = Ioc.Default.GetService<IScanService>();
 
         public event EventHandler TutorialPageListRequested;
         public event EventHandler ChangelogRequested;
         public event EventHandler SetupRequested;
+        public event EventHandler FeedbackDialogRequested;
         public event EventHandler<List<StorageFile>> ShareFilesChanged;
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
@@ -42,6 +45,8 @@ namespace Scanner.ViewModels
         public RelayCommand DebugShowChangelogCommand => new RelayCommand(DebugShowChangelog);
         public RelayCommand DebugShowSetupCommand => new RelayCommand(DebugShowSetup);
         public RelayCommand ShowDonateDialogCommand;
+        public RelayCommand DebugShowFeedbackDialogCommand;
+        public AsyncRelayCommand StoreRatingCommand;
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -124,6 +129,8 @@ namespace Scanner.ViewModels
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
             ShowDonateDialogCommand = new RelayCommand(() => DisplayedView = ShellNavigationSelectableItem.Donate);
+            DebugShowFeedbackDialogCommand = new RelayCommand(DebugShowFeedbackDialog);
+            StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
             ViewLoadedCommand = new RelayCommand(ViewLoaded);
 
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
@@ -131,6 +138,7 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultChanged += ScanResultService_ScanResultChanged;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
+            ScanService.ScanEnded += ScanService_ScanEnded;
         }
 
 
@@ -281,6 +289,37 @@ namespace Scanner.ViewModels
             else if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == false)
             {
                 SetupRequested?.Invoke(this, EventArgs.Empty);
+            }
+
+            if (SettingsService.IsSaveLocationUnavailable)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageLoadScanFolderHeading"),
+                    MessageText = LocalizedString("ErrorMessageLoadScanFolderBody"),
+                    Severity = AppWideStatusMessageSeverity.Error
+                });
+            }
+        }
+
+        private void DebugShowFeedbackDialog()
+        {
+            FeedbackDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task DisplayStoreRatingDialogAsync()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                await HelperService.ShowRatingDialogAsync();
+            });
+        }
+
+        private void ScanService_ScanEnded(object sender, EventArgs e)
+        {
+            if (ScanService.CompletedScans == 10)
+            {
+                FeedbackDialogRequested?.Invoke(this, EventArgs.Empty);
             }
         }
     }

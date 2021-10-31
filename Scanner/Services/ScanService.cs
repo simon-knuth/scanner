@@ -21,7 +21,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
-        private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
         private bool _IsScanInProgress;
         public bool IsScanInProgress
@@ -50,6 +50,8 @@ namespace Scanner.Services
             get => ScanProgress;
             set => ScanProgress = value;
         }
+
+        public int CompletedScans => (int)SettingsService.GetSetting(AppSetting.ScanNumber);
 
         private CancellationTokenSource ScanCancellationToken;
 
