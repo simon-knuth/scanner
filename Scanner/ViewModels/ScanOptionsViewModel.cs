@@ -35,6 +35,7 @@ namespace Scanner.ViewModels
         private readonly IScanOptionsDatabaseService ScanOptionsDatabaseService = Ioc.Default.GetService<IScanOptionsDatabaseService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
 
         public AsyncRelayCommand ViewLoadedCommand;
 
@@ -839,7 +840,7 @@ namespace Scanner.ViewModels
                 picker.FileTypeFilter.Add(".bmp");
 
                 StorageFile file = await picker.PickSingleFileAsync();
-                debugImage = await GenerateBitmapFromFileAsync(file);
+                debugImage = await HelperService.GenerateBitmapFromFileAsync(file);
             }
 
             PreviewRunning?.Invoke(this, EventArgs.Empty);

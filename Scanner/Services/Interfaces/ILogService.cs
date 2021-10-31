@@ -16,6 +16,7 @@ namespace Scanner.Services
             get;
         }
 
+        Task InitializeAsync();
         Task<List<Models.LogFile>> GetLogFiles();
         void CloseAndFlush();
     }

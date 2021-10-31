@@ -232,7 +232,7 @@ namespace Scanner
             }
             else
             {
-                log.Error("FullTrustProcess returned an error. (" + ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"] + ")");
+                LogService.Log.Error($"FullTrustProcess returned an error. ({ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"]})");
                 taskCompletionSource.TrySetResult(false);
             }
         }

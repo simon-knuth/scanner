@@ -303,53 +303,6 @@ static class Utilities
 
 
     /// <summary>
-    ///     Loads the <see cref="scanFolder"/> from the <see cref="futureAccessList"/>.
-    /// </summary>
-    public static async Task LoadScanFolderAsync()
-    {
-        StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
-        string defaultScanFolderName = GetDefaultScanFolderName();
-
-        if (futureAccessList.Entries.Count != 0)
-        {
-            try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
-            catch (Exception exc)
-            {
-                log.Error(exc, "Loading scanFolder from futureAccessList failed.");
-                try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists); }
-                catch (Exception exc2)
-                {
-                    log.Error(exc2, "Creating a new scanFolder in PicturesLibrary failed as well.");
-                    ShowMessageDialogAsync(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
-                }
-                futureAccessList.AddOrReplace("scanFolder", scanFolder);
-            }
-        }
-        else
-        {
-            // Either first app launch ever or the futureAccessList is unavailable ~> Reset it
-            try
-            {
-                scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
-            }
-            catch (UnauthorizedAccessException exc)
-            {
-                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed. (Unauthorized)");
-                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
-                return;
-            }
-            catch (Exception exc)
-            {
-                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed.");
-                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
-                return;
-            }
-            futureAccessList.AddOrReplace("scanFolder", scanFolder);
-        }
-    }
-
-
-    /// <summary>
     ///     Searches the app resources for a localized version of a string.
     /// </summary>
     /// <param name="resource">The resource name.</param>
@@ -392,92 +345,6 @@ static class Utilities
         {
             return input;
         }
-    }
-
-
-    /// <summary>
-    ///     Resets the <see cref="scanFolder"/> to "Scans" in the Pictures Library.
-    /// </summary>
-    /// <remarks>
-    ///     The folder is created if necessary.
-    /// </remarks>
-    /// <exception cref="UnauthorizedAccessException">Access to the Pictures Library has been denied.</exception>
-    /// <exception cref="Exception">Remaining errors</exception>
-    public static async Task ResetScanFolderAsync()
-    {
-        StorageFolder folder;
-        string defaultScanFolderName = GetDefaultScanFolderName();
-
-        try
-        {
-            folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
-        }
-        catch (UnauthorizedAccessException exc)
-        {
-            log.Error(exc, "Resetting the scan folder failed. (Unauthorized)");
-            Crashes.TrackError(exc);
-            throw;
-        }
-        catch (Exception exc)
-        {
-            log.Error(exc, "Resetting the scan folder failed.");
-            Crashes.TrackError(exc);
-            throw;
-        }
-
-        scanFolder = folder;
-        StorageApplicationPermissions.FutureAccessList.AddOrReplace("scanFolder", scanFolder);
-        log.Information("Resetting scan folder successful.");
-    }
-
-
-    /// <summary>
-    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/>,
-    ///     an <paramref name="expirationTime"/> (in seconds) and an image.
-    /// </summary>
-    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
-    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
-    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
-    /// <param name="imageURI">The URI pointing to the image that is displayed as part of the <see cref="ToastNotification"/>.</param>
-    public static void SendToastNotification(string title, string content, int expirationTime, string imageURI)
-    {
-        // Construct the visuals of the toast
-        ToastVisual visual = new ToastVisual()
-        {
-            BindingGeneric = new ToastBindingGeneric()
-            {
-                Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = title
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = content
-                    },
-
-                    new AdaptiveImage()
-                    {
-                        Source = imageURI
-                    }
-                },
-            }
-        };
-
-        // Construct final toast
-        ToastContent toastContent = new ToastContent()
-        {
-            Visual = visual,
-        };
-
-        var toast = new ToastNotification(toastContent.GetXml())
-        {
-            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
-        };
-
-        ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
 
@@ -590,61 +457,6 @@ static class Utilities
     public static Tuple<double, double> GetImageMeasurements(BitmapImage image)
     {
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
-    }
-
-
-    /// <summary>
-    ///     Returns the default name of the folder that scans are saved to. This varies depending on the system language.
-    ///     The fallback name is "Scans".
-    /// </summary>
-    public static string GetDefaultScanFolderName()
-    {
-        string defaultScanFolderName = LocalizedString("DefaultScanFolderName");
-        bool validName = true;
-
-        foreach (char character in defaultScanFolderName.ToCharArray())
-        {
-            if (!Char.IsLetter(character))
-            {
-                validName = false;
-                break;
-            }
-        }
-
-        if (defaultScanFolderName == "" || validName == false)
-        {
-            defaultScanFolderName = "Scans";        // fallback name if there is an issue with the localization
-            Crashes.TrackError(new ApplicationException("The localized scan folder name is invalid, using 'Scans' instead."));
-        }
-
-        return defaultScanFolderName;
-    }
-
-
-    /// <summary>
-    ///     Checks whether <see cref="scanFolder"/> is set to its default value (..\Pictures\Scans).
-    /// </summary>
-    /// <returns>
-    ///     null  - <see cref="scanFolder"/> is null
-    ///     true  - <see cref="scanFolder"/> is set to its default value
-    ///     false - <see cref="scanFolder"/> is not set to its default value or null
-    /// </returns>
-    public static async Task<bool?> IsDefaultScanFolderSetAsync()
-    {
-        if (scanFolder == null) return null;
-
-        StorageFolder folder;
-        try
-        {
-            folder = await KnownFolders.PicturesLibrary.GetFolderAsync(GetDefaultScanFolderName());
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-
-        if (folder.Path == scanFolder.Path) return true;
-        else return false;
     }
 
 
@@ -794,99 +606,6 @@ static class Utilities
 
 
     /// <summary>
-    ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds some meta
-    ///     data to the log.
-    /// </summary>
-    public static async Task InitializeSerilogAsync()
-    {
-        Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
-
-        StorageFolder folder = await ApplicationData.Current.RoamingFolder
-            .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
-        string logPath = Path.Combine(folder.Path, "log.txt");
-
-        log = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(),
-            logPath,
-            rollingInterval: RollingInterval.Day,
-            retainedFileCountLimit: 8,
-            fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
-            .Enrich.WithExceptionDetails()
-            .CreateLogger();
-        log.Information("--- Log initialized ---");
-
-        // add meta data
-        PackageVersion version = Package.Current.Id.Version;
-        log.Information("App version: {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-        log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture}",
-            SystemInformation.Instance.OperatingSystem, SystemInformation.Instance.OperatingSystemVersion, SystemInformation.Instance.OperatingSystemArchitecture);
-        log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
-            SystemInformation.Instance.DeviceFamily, SystemInformation.Instance.DeviceModel, SystemInformation.Instance.DeviceManufacturer);
-    }
-
-
-    /// <summary>
-    ///     Attaches the relevant log to the Microsoft App Center error report.
-    /// </summary>
-    public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReportAsync(ErrorReport report)
-    {
-        try
-        {
-            // close log file
-            Log.CloseAndFlush();
-            await InitializeSerilogAsync();
-
-            // get all logs
-            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
-            IReadOnlyList<StorageFile> files = await logFolder.GetFilesAsync();
-
-            // find relevant log
-            List<StorageFile> sortedLogs = new List<StorageFile>(files);
-            sortedLogs.Sort(delegate (StorageFile x, StorageFile y)
-            {
-                return DateTimeOffset.Compare(x.DateCreated, y.DateCreated);
-            });
-            sortedLogs.Reverse();
-            foreach (StorageFile log in sortedLogs)
-            {
-                if (log.DateCreated <= report.AppErrorTime)
-                {
-                    IBuffer buffer = await FileIO.ReadBufferAsync(log);
-                    return new ErrorAttachmentLog[]
-                    {
-                        ErrorAttachmentLog.AttachmentWithBinary(buffer.ToArray(), "log.json", "application/json")
-                    };
-                }
-            }
-        }
-        catch (Exception exc)
-        {
-            return new ErrorAttachmentLog[]
-            {
-                ErrorAttachmentLog.AttachmentWithText("Failed to append log. (" + exc.Message + ")", "nolog.txt")
-            };
-        }
-
-        return new ErrorAttachmentLog[]
-        {
-            ErrorAttachmentLog.AttachmentWithText("Failed to append log.", "nolog.txt")
-        };
-    }
-
-
-    /// <summary>
-    ///     Registers the app with Microsoft's App Center service. It can still be enabled/disabled
-    ///     separately from this.
-    /// </summary>
-    public static void RegisterWithMicrosoftAppCenter()
-    {
-        Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReportAsync(report).Result;
-        AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
-    }
-
-
-    /// <summary>
     ///     Checks whether the given format is an image format.
     /// </summary>
     public static bool IsImageFormat(ImageScannerFormat format)
@@ -904,20 +623,6 @@ static class Utilities
             default:
                 return false;
         }
-    }
-
-
-    /// <summary>
-    ///     Outputs text if narrator is enabled.
-    /// </summary>
-    /// <param name="text">The text that narrator shall read.</param>
-    public static async Task SayAsync(string text)
-    {
-        SpeechSynthesisStream stream = await narratorSpeech.SynthesizeTextToStreamAsync(text);
-
-        // Send the stream to the media object, then play it.
-        narratorMediaElement.SetSource(stream, stream.ContentType);
-        narratorMediaElement.Play();
     }
 
 
@@ -957,56 +662,5 @@ static class Utilities
     {
         PackageVersion version = Package.Current.Id.Version;
         return String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-    }
-
-
-    public async static Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file)
-    {
-        BitmapImage bmp = null;
-        int attempt = 0;
-
-        await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, async () =>
-        {
-            using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                switch (ConvertFormatStringToImageScannerFormat(file.FileType))
-                {
-                    case ImageScannerFormat.Jpeg:
-                    case ImageScannerFormat.Png:
-                    case ImageScannerFormat.Tiff:
-                    case ImageScannerFormat.DeviceIndependentBitmap:
-                        while (attempt != -1)
-                        {
-                            try
-                            {
-                                bmp = new BitmapImage();
-                                await bmp.SetSourceAsync(sourceStream);
-                                attempt = -1;
-                            }
-                            catch (Exception e)
-                            {
-                                if (attempt >= 4) throw new ApplicationException("Unable to open file stream for generating bitmap of image.", e);
-
-                                log.Warning(e, "Opening the file stream of image failed, retrying in 500ms.");
-                                await Task.Delay(500);
-                                attempt++;
-                            }
-                        }
-                        break;
-
-                    case ImageScannerFormat.Pdf:
-                        throw new NotImplementedException("Can not generate bitmap from PDF.");
-
-                    case ImageScannerFormat.Xps:
-                    case ImageScannerFormat.OpenXps:
-                        throw new NotImplementedException("Can not generate bitmap from (O)XPS.");
-
-                    default:
-                        throw new ApplicationException("Could not determine file type for generating a bitmap.");
-                }
-            }
-        });
-
-        return bmp;
     }
 }

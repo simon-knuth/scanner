@@ -122,7 +122,7 @@ namespace Scanner.Services
             {
                 // close log file
                 Log.CloseAndFlush();
-                await InitializeSerilogAsync();
+                await LogService.InitializeAsync();
 
                 // get all logs
                 StorageFolder logFolder = await ApplicationData.Current.RoamingFolder

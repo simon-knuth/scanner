@@ -23,15 +23,59 @@ namespace Scanner.Services
 
         public string LogFolder => "logs";
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public LogService()
         {
+            Task.Run(InitializeAsync);
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<List<Models.LogFile>> GetLogFiles()
+        {
+            // flush log
+            Serilog.Log.CloseAndFlush();
+
+            // populate file list
+            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync(LogFolder);
+            var files = await logFolder.GetFilesAsync();
+
+            List<Models.LogFile> sortedFiles = new List<Models.LogFile>();
+            foreach (var file in files)
+            {
+                sortedFiles.Add(await Models.LogFile.CreateLogFile(file));
+            }
+            sortedFiles.Sort(delegate (Models.LogFile x, Models.LogFile y)
+            {
+                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
+            });
+            sortedFiles.Reverse();
+
+            await InitializeAsync();
+
+            return sortedFiles;
+        }
+
+        public void CloseAndFlush()
+        {
+            Serilog.Log.CloseAndFlush();
+        }
+
+        /// <summary>
+        ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds some meta
+        ///     data to the log.
+        /// </summary>
+        public async Task InitializeAsync()
+        {
             Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
 
-            StorageFolder folder = Task.Run(async () => await ApplicationData.Current.RoamingFolder
-                .CreateFolderAsync(LogFolder, CreationCollisionOption.OpenIfExists)).Result;
+            StorageFolder folder = await ApplicationData.Current.RoamingFolder
+                .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
             string logPath = Path.Combine(folder.Path, "log.txt");
 
             ILogger log;
@@ -57,39 +101,6 @@ namespace Scanner.Services
                 SystemInformation.Instance.DeviceManufacturer);
 
             _Log = log;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<List<Models.LogFile>> GetLogFiles()
-        {
-            // flush log
-            Serilog.Log.CloseAndFlush();
-
-            // populate file list
-            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync(LogFolder);
-            var files = await logFolder.GetFilesAsync();
-
-            List<Models.LogFile> sortedFiles = new List<Models.LogFile>();
-            foreach (var file in files)
-            {
-                sortedFiles.Add(await Models.LogFile.CreateLogFile(file));
-            }
-            sortedFiles.Sort(delegate (Models.LogFile x, Models.LogFile y)
-            {
-                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
-            });
-            sortedFiles.Reverse();
-
-            await InitializeSerilogAsync();
-
-            return sortedFiles;
-        }
-
-        public void CloseAndFlush()
-        {
-            Serilog.Log.CloseAndFlush();
         }
     }
 }

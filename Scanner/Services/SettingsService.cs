@@ -78,8 +78,11 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsService()
         {
-            Task.Run(async () => await InitializeAsync());
-            LogAllSettings();
+            Task.Run(async () =>
+            {
+                await InitializeAsync();
+                LogAllSettings();
+            });
         }
 
 
@@ -411,6 +414,33 @@ namespace Scanner.Services
             }
             logString = logString.Remove(logString.Length - 3);
             LogService?.Log.Information(logString);
+        }
+
+        /// <summary>
+        ///     Returns the default name of the folder that scans are saved to. This varies depending on the system language.
+        ///     The fallback name is "Scans".
+        /// </summary>
+        public string GetDefaultScanFolderName()
+        {
+            string defaultScanFolderName = LocalizedString("DefaultScanFolderName");
+            bool validName = true;
+
+            foreach (char character in defaultScanFolderName.ToCharArray())
+            {
+                if (!Char.IsLetter(character))
+                {
+                    validName = false;
+                    break;
+                }
+            }
+
+            if (defaultScanFolderName == "" || validName == false)
+            {
+                defaultScanFolderName = "Scans";        // fallback name if there is an issue with the localization
+                AppCenterService.TrackError(new ApplicationException("The localized scan folder name is invalid, using 'Scans' instead."));
+            }
+
+            return defaultScanFolderName;
         }
     }
 }

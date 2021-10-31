@@ -538,7 +538,7 @@ namespace Scanner
                         try { await encoder.FlushAsync(); }
                         catch (Exception exc)
                         {
-                            Crashes.TrackError(exc);
+                            AppCenterService.TrackError(exc);
                             LogService?.Log.Error(exc, "Conversion of the scan failed.");
                             throw;
                         }
@@ -578,7 +578,7 @@ namespace Scanner
         /// <exception cref="ApplicationException">Something went wrong while rotating. Perhaps the scan format isn't supported.</exception>
         public async Task RotateScansAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
-            Analytics.TrackEvent("Rotate pages", new Dictionary<string, string> {
+            AppCenterService.TrackEvent(AppCenterEvent.RotatePages, new Dictionary<string, string> {
                             { "Rotation", instructions[0].Item2.ToString() },
                         });
             LogService?.Log.Information("Received {@Instructions} for rotations.", instructions);
@@ -791,7 +791,7 @@ namespace Scanner
         /// <exception cref="Exception">Applying the crop failed.</exception>
         public async Task CropScanAsync(int index, ImageCropper imageCropper)
         {
-            Analytics.TrackEvent("Crop");
+            AppCenterService.TrackEvent(AppCenterEvent.Crop);
             LogService?.Log.Information("Requested crop for index {Index}.", index);
 
             // check index
@@ -905,7 +905,7 @@ namespace Scanner
         /// <exception cref="Exception">Applying the crop to a copy failed.</exception>
         public async Task CropScanAsCopyAsync(int index, ImageCropper imageCropper)
         {
-            Analytics.TrackEvent("Crop as copy");
+            AppCenterService.TrackEvent(AppCenterEvent.CropAsCopy);
             LogService?.Log.Information("Requested crop as copy for index {Index}.", index);
 
             // check index
@@ -961,7 +961,7 @@ namespace Scanner
                 catch (Exception exc)
                 {
                     LogService?.Log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
-                    Crashes.TrackError(exc);
+                    AppCenterService.TrackError(exc);
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
                     NumberOfPages = _Elements.Count;
                     try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
@@ -980,7 +980,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while deleting the scans.</exception>
         public async Task DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
         {
-            Analytics.TrackEvent("Delete pages");
+            AppCenterService.TrackEvent(AppCenterEvent.DeletePages);
             LogService?.Log.Information("Requested Deletion of indices {@Indices} with option {Option}.", indices, deleteOption);
 
             List<int> sortedIndices = new List<int>(indices);
@@ -1041,7 +1041,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while delting the scan.</exception>
         public async Task DeleteScanAsync(int index, StorageDeleteOption deleteOption)
         {
-            Analytics.TrackEvent("Delete page");
+            AppCenterService.TrackEvent(AppCenterEvent.DeletePage);
             LogService?.Log.Information("Requested Deletion of index {Index} with option {Option}.", index, deleteOption);
 
             // check index
@@ -1096,7 +1096,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while applying the strokes.</exception>
         public async Task DrawOnScanAsync(int index, InkCanvas inkCanvas)
         {
-            Analytics.TrackEvent("Draw on page");
+            AppCenterService.TrackEvent(AppCenterEvent.DrawOnPage);
             LogService?.Log.Information("Drawing on index {Index} requested.", index);
 
             // check index
@@ -1155,7 +1155,7 @@ namespace Scanner
         /// <exception cref="Exception">Something went wrong while applying the strokes.</exception>
         public async Task DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas)
         {
-            Analytics.TrackEvent("Draw on page as copy");
+            AppCenterService.TrackEvent(AppCenterEvent.DrawOnPageAsCopy);
             LogService?.Log.Information("Drawing as copy on index {Index} requested.", index);
 
             // check index
@@ -1224,7 +1224,7 @@ namespace Scanner
                 catch (Exception exc)
                 {
                     LogService?.Log.Error(exc, "Failed to generate PDF after drawing on index {Index} as copy. Attempting to get rid of copy.", index);
-                    Crashes.TrackError(exc);
+                    AppCenterService.TrackError(exc);
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
                     try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
                     RefreshItemDescriptors();
@@ -1917,7 +1917,7 @@ namespace Scanner
                 catch (Exception exc)
                 {
                     LogService?.Log.Error(exc, "Failed to generate PDF after duplicating index {Index}. Attempting to get rid of copy.", index);
-                    Crashes.TrackError(exc);
+                    AppCenterService.TrackError(exc);
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
                     NumberOfPages = _Elements.Count;
                     try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }

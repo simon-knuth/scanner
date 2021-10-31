@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Scanner.Services
 {
@@ -10,5 +11,6 @@ namespace Scanner.Services
     {
         Task ShowRatingDialogAsync();
         Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting);
+        Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file);
     }
 }
