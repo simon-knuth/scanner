@@ -959,7 +959,7 @@ namespace Scanner.ViewModels
                         pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                         targetFolder = await pickerFolder.PickSingleFolderAsync();
 
-                        if (targetFolder == null) throw new ArgumentException("No folder selected");
+                        if (targetFolder == null) return;
                     }
                     else
                     {
@@ -1075,8 +1075,10 @@ namespace Scanner.ViewModels
                 SettingsService.LastSaveLocationPath = targetFolder.Path;
             }
             catch (Exception exc)
-            {
+            {                
                 LogService?.Log.Error(exc, "Unhandled exception occurred during scan.");
+                if (exc.GetType() == typeof(TaskCanceledException)) return;
+
                 AppCenterService?.TrackError(exc);
                 Messenger.Send(new AppWideStatusMessage
                 {

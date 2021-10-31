@@ -155,9 +155,9 @@
 
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
-                        <Setter Target="FlipViewPages.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFooterCrop.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFooterDraw.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -173,7 +173,9 @@
 
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFooter.IsEnabled" Value="False"/>
+                        <Setter Target="GridLoading.Visibility" Value="Visible"/>
+                        <Setter Target="FrameFooterCrop.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFooterDraw.IsEnabled" Value="False"/>
                         <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -202,6 +204,15 @@
 
         <!-- Top Toolbar -->
         <Frame x:Name="FrameToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+            <interactivity:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}">
                     <controls:SwitchPresenter.ContentTransitions>
@@ -539,6 +550,15 @@
             </controls:SwitchPresenter>
 
             <Grid x:Name="GridLoading" Visibility="Collapsed">
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                        <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                        <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
                 <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60"/>
                 <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
             </Grid>
@@ -598,7 +618,16 @@
 
                 <!-- Crop -->
                 <controls:Case Value="1">
-                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
+                    <Frame x:Name="FrameFooterCrop" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+
                         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -716,7 +745,16 @@
 
                 <!-- Draw -->
                 <controls:Case Value="2">
-                    <Frame HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40">
+                    <Frame x:Name="FrameFooterDraw" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40">
+                        <interactivity:Interaction.Behaviors>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                            </core:DataTriggerBehavior>
+                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                            </core:DataTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                        
                         <Grid x:Name="GridFooterDraw" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SizeChanged="GridFooterDraw_SizeChanged">
                             <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left">
                                 <Grid.ColumnDefinitions>
