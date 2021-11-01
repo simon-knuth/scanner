@@ -36,8 +36,24 @@ namespace Scanner
             // register and setup services
             PrepareServices();
 
-            // apply theme
+            // initialize some settings
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            PackageVersion version = Package.Current.Id.Version;
+            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
+            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
+
+            // migrate settings if necessary
+            if (!(bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchEver)
+                && (bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion)
+                && currentVersionNumber == "Version 3.0.0.0")
+            {
+                settingsService.MigrateSettingsToV3();
+            }
+
+            // apply theme
             SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
             switch (theme)
             {
@@ -51,14 +67,6 @@ namespace Scanner
                 default:
                     break;
             }
-
-            // initialize some settings
-            PackageVersion version = Package.Current.Id.Version;
-            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
-            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
-            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
-            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;

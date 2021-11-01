@@ -73,7 +73,8 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart)
+        private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart,
+            bool isDocument)
         {
             LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}]", futureAccessListIndexStart);
             int futureAccessListIndex = futureAccessListIndexStart;
@@ -81,7 +82,7 @@ namespace Scanner
             {
                 if (file == null) continue;
 
-                _Elements.Add(new ScanResultElement(file, futureAccessListIndex));
+                _Elements.Add(new ScanResultElement(file, futureAccessListIndex, isDocument));
                 NumberOfPages = _Elements.Count;
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
@@ -110,7 +111,7 @@ namespace Scanner
                 await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
             }
 
-            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
+            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
             result.ScanResultFormat = result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
 
             // set initial name(s)
@@ -151,7 +152,7 @@ namespace Scanner
                 // analytics
                 foreach (var instruction in instructions)
                 {
-                    result.Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    result.Elements[instruction.Item1].IsAutoRotatedAndUnchanged = true;
                     appCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
                             { "Rotation", instruction.Item2.ToString() },
                         });
@@ -176,15 +177,17 @@ namespace Scanner
                 fileList[0].FileType, targetFormat, fileList.Count);
 
             // construct ScanResult
-            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart);
+            ScanResult result;
             if (targetFormat == ImageScannerFormat.Pdf)
             {
+                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
                 string pdfName = fileList[0].DisplayName + ".pdf";
                 await PrepareNewConversionFiles(fileList, 0);
                 await result.GeneratePDFAsync(pdfName);
             }
             else
             {
+                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
                     await result.ConvertScanAsync(i, targetFormat, targetFolder);
@@ -231,7 +234,7 @@ namespace Scanner
                 // analytics
                 foreach (var instruction in instructions)
                 {
-                    result.Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    result.Elements[instruction.Item1].IsAutoRotatedAndUnchanged = true;
                     appCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
                             { "Rotation", instruction.Item2.ToString() },
                         });
@@ -646,9 +649,9 @@ namespace Scanner
                         await _Elements[instruction.Item1].GetImageAsync();
 
                         // analytics
-                        if (Elements[instruction.Item1].AutoRotatedAndUnchanged)
+                        if (Elements[instruction.Item1].IsAutoRotatedAndUnchanged)
                         {
-                            Elements[instruction.Item1].AutoRotatedAndUnchanged = false;
+                            Elements[instruction.Item1].IsAutoRotatedAndUnchanged = false;
                             AppCenterService.TrackEvent(AppCenterEvent.CorrectedAutoRotation);
                         }
                     }
@@ -937,7 +940,8 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex,
+                    _Elements[index].IsPartOfDocument));
                 NumberOfPages += 1;
             });
 
@@ -947,7 +951,6 @@ namespace Scanner
             // if necessary, generate PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
-
                 try
                 {
                     List<StorageFile> filesNumbering = new List<StorageFile>();
@@ -1202,7 +1205,8 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex,
+                    _Elements[index].IsPartOfDocument));
             });
             await _Elements[index + 1].GetImageAsync();
             NumberOfPages += 1;
@@ -1463,7 +1467,8 @@ namespace Scanner
 
                 foreach (StorageFile file in files)
                 {
-                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex)));
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(
+                        new ScanResultElement(file, futureAccessListIndex, targetFormat == ImageScannerFormat.Pdf)));
                     NumberOfPages = _Elements.Count;
 
                     if (targetFolder != null)
@@ -1487,7 +1492,8 @@ namespace Scanner
                 {
                     if (file == null) continue;
 
-                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(new ScanResultElement(file, futureAccessListIndex)));
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(
+                        new ScanResultElement(file, futureAccessListIndex, false)));
                     NumberOfPages = _Elements.Count;
 
                     if (targetFolder != null)
@@ -1560,7 +1566,7 @@ namespace Scanner
                 // analytics
                 foreach (var instruction in instructions)
                 {
-                    Elements[instruction.Item1].AutoRotatedAndUnchanged = true;
+                    Elements[instruction.Item1].IsAutoRotatedAndUnchanged = true;
                     AppCenterService.TrackEvent(AppCenterEvent.AutoRotatedPage, new Dictionary<string, string> {
                             { "Rotation", instruction.Item2.ToString() },
                         });
@@ -1894,7 +1900,8 @@ namespace Scanner
 
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
             {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex));
+                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex,
+                    _Elements[index].IsPartOfDocument));
                 NumberOfPages += 1;
             });
 

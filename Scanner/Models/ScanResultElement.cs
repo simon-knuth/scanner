@@ -94,19 +94,22 @@ namespace Scanner
 
         public int FutureAccessListIndex;
 
-        public bool AutoRotatedAndUnchanged;
+        public bool IsAutoRotatedAndUnchanged;
+
+        public bool IsPartOfDocument;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanResultElement(StorageFile file, int futureAccessListIndex)
+        public ScanResultElement(StorageFile file, int futureAccessListIndex, bool isPartOfDocument)
         {
             ScanFile = file;
             CachedImage = null;
             ImageWithoutRotation = null;
             CurrentRotation = BitmapRotation.None;
             FutureAccessListIndex = futureAccessListIndex;
+            IsPartOfDocument = isPartOfDocument;
         }
 
 

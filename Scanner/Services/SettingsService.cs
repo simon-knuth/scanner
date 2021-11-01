@@ -442,5 +442,73 @@ namespace Scanner.Services
 
             return defaultScanFolderName;
         }
+
+        public void MigrateSettingsToV3()
+        {
+            // hide setup
+            SetSetting(AppSetting.SetupCompleted, true);
+            
+            // save location type
+            if (SettingsContainer.Values["settingSaveLocationAsk"] != null)
+            {
+                if ((bool)SettingsContainer.Values["settingSaveLocationAsk"])
+                {
+                    SetSetting(AppSetting.SettingSaveLocationType, SettingSaveLocationType.AskEveryTime);
+                }
+            }
+
+            // theme
+            if (SettingsContainer.Values["settingAppTheme"] != null)
+            {
+                switch ((int)SettingsContainer.Values["settingAppTheme"])
+                {
+                    case 0:
+                        SetSetting(AppSetting.SettingAppTheme, SettingAppTheme.System);
+                        break;
+                    case 1:
+                        SetSetting(AppSetting.SettingAppTheme, SettingAppTheme.Light);
+                        break;
+                    case 2:
+                        SetSetting(AppSetting.SettingAppTheme, SettingAppTheme.Dark);
+                        break;
+                    default:
+                        SetSetting(AppSetting.SettingAppTheme, SettingAppTheme.System);
+                        break;
+                }
+            }
+
+            // append time
+            if (SettingsContainer.Values["settingAppendTime"] != null)
+            {
+                SetSetting(AppSetting.SettingAppendTime, SettingsContainer.Values["settingAppendTime"]);
+            }
+
+            // analytics and error reports
+            if (SettingsContainer.Values["settingErrorStatistics"] != null)
+            {
+                if ((bool)SettingsContainer.Values["settingErrorStatistics"])
+                {
+                    SetSetting(AppSetting.SettingErrorStatistics, SettingsContainer.Values["settingErrorStatistics"]);
+                }
+            }
+
+            // scan number
+            if (SettingsContainer.Values["scanNumber"] != null)
+            {
+                SetSetting(AppSetting.ScanNumber, SettingsContainer.Values["scanNumber"]);
+            }
+
+            // last touch draw state
+            if (SettingsContainer.Values["lastTouchDrawState"] != null)
+            {
+                SetSetting(AppSetting.LastTouchDrawState, SettingsContainer.Values["lastTouchDrawState"]);
+            }
+
+            // page list tutorial
+            if (SettingsContainer.Values["manageTutorialAlreadyShown"] != null)
+            {
+                SetSetting(AppSetting.TutorialPageListShown, SettingsContainer.Values["manageTutorialAlreadyShown"]);
+            }
+        }
     }
 }

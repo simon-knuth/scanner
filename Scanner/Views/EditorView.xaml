@@ -10,9 +10,11 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
@@ -559,7 +561,7 @@
                     </core:DataTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
 
-                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60"/>
+                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1"/>
                 <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
             </Grid>
         </Grid>

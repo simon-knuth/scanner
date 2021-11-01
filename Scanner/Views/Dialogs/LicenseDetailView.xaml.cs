@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Scanner.ViewModels;
+using System;
 using System.IO;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Navigation;
-
-using static Enums_old;
 
 
 namespace Scanner

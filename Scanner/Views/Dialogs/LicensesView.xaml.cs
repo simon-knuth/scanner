@@ -1,8 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using Scanner.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
-
-using static Enums_old;
 
 
 namespace Scanner

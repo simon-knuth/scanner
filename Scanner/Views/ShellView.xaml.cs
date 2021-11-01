@@ -142,6 +142,8 @@ namespace Scanner.Views
                     // load page list if app is launched in wide state
                     FrameMainContentThird.Navigate(typeof(PageListView), null,
                         new SuppressNavigationTransitionInfo());
+                    TeachingTipTutorialPageList.Target = FrameMainContentThird;
+                    TeachingTipTutorialPageList.PreferredPlacement = WinUI.TeachingTipPlacementMode.LeftBottom;
                 }
 
                 //WinUI.InfoBadge badge = new WinUI.InfoBadge();

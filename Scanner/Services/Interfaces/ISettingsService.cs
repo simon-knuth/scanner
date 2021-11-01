@@ -38,6 +38,7 @@ namespace Scanner.Services
 
         Task SetScanSaveLocationAsync(StorageFolder folder);
         Task ResetScanSaveLocationAsync();
+        void MigrateSettingsToV3();
     }
 
     public enum AppSetting

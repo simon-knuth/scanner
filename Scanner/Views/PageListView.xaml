@@ -331,6 +331,15 @@
                                     
                                     <!-- Selected Item -->
                                     <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
+                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
+                                            </core:DataTriggerBehavior>
+                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
+                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
+                                            </core:DataTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                        
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,3" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
                                             <Border x:Name="BorderContainingFolderSelected" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Loaded="BorderContainingFolderSelected_Loaded">
@@ -349,6 +358,15 @@
                                     
                                     <!-- Normal Item -->
                                     <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
+                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
+                                            </core:DataTriggerBehavior>
+                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
+                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
+                                            </core:DataTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                        
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
                                             <Border x:Name="BorderContainingFolderNormal" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Visibility="Collapsed" Loaded="BorderContainingFolderNormal_Loaded">
