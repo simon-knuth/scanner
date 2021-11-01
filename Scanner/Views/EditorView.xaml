@@ -135,7 +135,7 @@
     <Grid>
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
+            <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="NormalState">
                     <Storyboard>
 
@@ -158,9 +158,6 @@
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
-                        <Setter Target="FrameFooterCrop.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFooterDraw.IsEnabled" Value="False"/>
-                        <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -176,9 +173,6 @@
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
-                        <Setter Target="FrameFooterCrop.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFooterDraw.IsEnabled" Value="False"/>
-                        <Setter Target="ImageCropperPage.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -513,7 +507,7 @@
                 </controls:SwitchPresenter.ContentTransitions>
 
                 <controls:Case Value="0">
-                    <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}">
+                    <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" SelectionChanged="FlipViewPages_SelectionChanged">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="scanner:ScanResultElement">
                                 <ScrollViewer
@@ -523,7 +517,9 @@
                                 MaxZoomFactor="2.5"
                                 HorizontalScrollBarVisibility="Auto"
                                 VerticalScrollBarVisibility="Auto"
-                                ZoomSnapPointsType="Mandatory">
+                                ZoomSnapPointsType="Mandatory"
+                                Loading="ScrollViewerZoomable_Loading"
+                                ViewChanging="ScrollViewerFlipViewPages_ViewChanging">
                                     <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
                                 </ScrollViewer>
                             </DataTemplate>
@@ -540,7 +536,7 @@
                 </controls:Case>
 
                 <controls:Case Value="2">
-                    <ScrollViewer x:Name="ScrollViewerEditDraw" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer x:Name="ScrollViewerEditDraw" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Loading="ScrollViewerZoomable_Loading" ViewChanging="ScrollViewerEditDraw_ViewChanging">
                         <Grid>
                             <controls:ImageEx x:Name="ImageExDraw" Source="{x:Bind ViewModel.SelectedPage.CachedImage, Mode=OneWay}" Loaded="ImageExDraw_Loaded"/>
                             <Viewbox x:Name="ViewboxEditDraw" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="{x:Bind ScrollViewerEditDraw.ViewportWidth, Mode=OneWay}" MaxWidth="{x:Bind ScrollViewerEditDraw.ViewportWidth, Mode=OneWay}" Height="{x:Bind ScrollViewerEditDraw.ViewportHeight, Mode=OneWay}" MaxHeight="{x:Bind ScrollViewerEditDraw.ViewportHeight, Mode=OneWay}">
@@ -594,22 +590,13 @@
                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                             <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                                <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60">
-                                    <interactivity:Interaction.Behaviors>
-                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
-                                        </core:DataTriggerBehavior>
-                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
-                                        </core:DataTriggerBehavior>
-                                    </interactivity:Interaction.Behaviors>
-                                </TextBlock>
+                                <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                                    <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                     </AppBarButton>
-                                    <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                                    <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                     </AppBarButton>
                                 </StackPanel>
                             </StackPanel>
@@ -620,7 +607,7 @@
 
                 <!-- Crop -->
                 <controls:Case Value="1">
-                    <Frame x:Name="FrameFooterCrop" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
+                    <Frame x:Name="FrameFooterCrop" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
                         <interactivity:Interaction.Behaviors>
                             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                                 <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -630,7 +617,7 @@
                             </core:DataTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
 
-                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="40">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
@@ -747,7 +734,7 @@
 
                 <!-- Draw -->
                 <controls:Case Value="2">
-                    <Frame x:Name="FrameFooterDraw" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40">
+                    <Frame x:Name="FrameFooterDraw" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                         <interactivity:Interaction.Behaviors>
                             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                                 <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -758,14 +745,14 @@
                         </interactivity:Interaction.Behaviors>
                         
                         <Grid x:Name="GridFooterDraw" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SizeChanged="GridFooterDraw_SizeChanged">
-                            <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left">
+                            <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left" Height="40">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.DrawOnPageCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}">
+                                <Button Grid.Column="0" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.DrawOnPageCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}" Click="EditorDrawAboutToBeDismissed">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
@@ -787,29 +774,20 @@
                                         </FontIcon>
                                     </Grid>
                                 </Button>
-                                <Button Grid.Column="2" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveDrawModeCommand}">
+                                <Button Grid.Column="2" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveDrawModeCommand}" Click="EditorDrawAboutToBeDismissed">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                                 </Button>
                             </Grid>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
                                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60">
-                                    <interactivity:Interaction.Behaviors>
-                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
-                                        </core:DataTriggerBehavior>
-                                        <core:DataTriggerBehavior Binding="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                            <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
-                                        </core:DataTriggerBehavior>
-                                    </interactivity:Interaction.Behaviors>
-                                    </TextBlock>
+                                    <TextBlock x:Name="TextBlockZoomFactorDraw" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" FontSize="16"/>
+                                        <AppBarButton x:Name="ButtonZoomInDraw" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0">
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE738;" FontSize="16"/>
+                                        <AppBarButton x:Name="ButtonZoomOutDraw" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>
                                 </StackPanel>

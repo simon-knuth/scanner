@@ -2,11 +2,13 @@
 using Microsoft.UI.Xaml.Controls;
 using Scanner.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -550,6 +552,188 @@ namespace Scanner.Views
                     StoryboardToolbarIconDoneFinish.Begin();
                 }
                 catch (Exception) { }
+            });
+        }
+
+        private async void ScrollViewerZoomable_Loading(FrameworkElement sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+                snapPoints.Add(1);
+                float value = (float)1.05;
+                while (value <= 2.5)
+                {
+                    snapPoints.Add(value);
+                    value = (float)(value + 0.01);
+                }
+
+                ((ScrollViewer)sender).ChangeView(0, 0, 1);
+
+                RefreshZoomUIForFactor(1);
+            });
+        }
+
+        private async void ScrollViewerFlipViewPages_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                RefreshZoomUIForFactor(e.NextView.ZoomFactor);
+            });
+        }
+
+        private async void ScrollViewerEditDraw_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                RefreshZoomUIForFactor(e.NextView.ZoomFactor);
+            });
+        }
+
+        private void RefreshZoomUIForFactor(float factor)
+        {
+            if (ViewModel.EditorMode == EditorMode.Draw)
+            {
+                TextBlockZoomFactorDraw.Text = String.Format(LocalizedString("TextZoomFactor"), factor * 100);
+            }
+            else
+            {
+                TextBlockZoomFactor.Text = String.Format(LocalizedString("TextZoomFactor"), factor * 100);
+            }
+
+            if (factor < (float)1.05)
+            {
+                if (ViewModel.EditorMode == EditorMode.Draw)
+                {
+                    ButtonZoomOutDraw.IsEnabled = false;
+                    ButtonZoomInDraw.IsEnabled = true;
+                    TextBlockZoomFactorDraw.FontWeight = FontWeights.Normal;
+                }
+                else
+                {
+                    ButtonZoomOut.IsEnabled = false;
+                    ButtonZoomIn.IsEnabled = true;
+                    TextBlockZoomFactor.FontWeight = FontWeights.Normal;
+                }
+            }
+            else if (factor < 2.45)
+            {
+                if (ViewModel.EditorMode == EditorMode.Draw)
+                {
+                    ButtonZoomOutDraw.IsEnabled = true;
+                    ButtonZoomInDraw.IsEnabled = true;
+                    TextBlockZoomFactorDraw.FontWeight = FontWeights.SemiBold;
+                }
+                else
+                {
+                    ButtonZoomOut.IsEnabled = true;
+                    ButtonZoomIn.IsEnabled = true;
+                    TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+                }
+            }
+            else
+            {
+                if (ViewModel.EditorMode == EditorMode.Draw)
+                {
+                    ButtonZoomOutDraw.IsEnabled = true;
+                    ButtonZoomInDraw.IsEnabled = false;
+                    TextBlockZoomFactorDraw.FontWeight = FontWeights.SemiBold;
+                }
+                else
+                {
+                    ButtonZoomOut.IsEnabled = true;
+                    ButtonZoomIn.IsEnabled = false;
+                    TextBlockZoomFactor.FontWeight = FontWeights.SemiBold;
+                }
+            }
+        }
+
+        private async void ButtonZoomInOut_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (sender == ButtonZoomIn || sender == ButtonZoomInDraw)
+                {
+                    ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
+
+                    if (scrollViewer.ZoomFactor >= 2.45) return;
+                    else TryZoomScanAsync((float)2.5, scrollViewer, true);
+                }
+                else if (sender == ButtonZoomOut || sender == ButtonZoomOutDraw)
+                {
+                    ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
+
+                    if (scrollViewer.ZoomFactor == 1) return;
+                    else TryZoomScanAsync(1, scrollViewer, true);
+                }
+            });
+        }
+
+        private ScrollViewer GetCurrentScanScrollViewer()
+        {
+            if (ViewModel.EditorMode == EditorMode.Draw)
+            {
+                return ScrollViewerEditDraw;
+            }
+            else
+            {
+                if (ViewModel.SelectedPageIndex == -1) return null;
+                FlipViewItem flipViewItem = (FlipViewItem)FlipViewPages.ContainerFromIndex(ViewModel.SelectedPageIndex);
+                ScrollViewer scrollViewer = (ScrollViewer)flipViewItem?.ContentTemplateRoot;
+                return scrollViewer;
+            }
+        }
+
+        private void TryZoomScanAsync(float factor, ScrollViewer scrollViewer, bool animate)
+        {
+            if (factor < 1.02) factor = 1;
+
+            try
+            {
+                if (null != scrollViewer)
+                {
+                    double horizontalOffset = scrollViewer.ViewportWidth / 2 * (factor - 1);
+                    if (scrollViewer.ZoomFactor > 1)
+                    {
+                        double previousHorizontalOffset = scrollViewer.HorizontalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                        if (previousHorizontalOffset < horizontalOffset) horizontalOffset = horizontalOffset - (horizontalOffset - previousHorizontalOffset);
+                        else horizontalOffset = horizontalOffset + (previousHorizontalOffset - horizontalOffset);
+                    }
+
+                    double verticalOffset = scrollViewer.ViewportHeight / 2 * (factor - 1);
+                    if (scrollViewer.ZoomFactor > 1)
+                    {
+                        double previousVerticalOffset = scrollViewer.VerticalOffset / (scrollViewer.ZoomFactor - 1) * (factor - 1);
+                        if (previousVerticalOffset < verticalOffset) verticalOffset = verticalOffset - (verticalOffset - previousVerticalOffset);
+                        else verticalOffset = verticalOffset + (previousVerticalOffset - verticalOffset);
+                    }
+
+                    scrollViewer.ChangeView(horizontalOffset, verticalOffset, factor, !animate);
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private async void FlipViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ScrollViewer scrollViewer = GetCurrentScanScrollViewer();
+
+                RefreshZoomUIForFactor(1);
+
+                if (scrollViewer?.ZoomFactor == 1) return;
+                else TryZoomScanAsync(1, scrollViewer, true);
+            });
+        }
+
+        private async void EditorDrawAboutToBeDismissed(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (ScrollViewerEditDraw?.ZoomFactor == 1) return;
+                else TryZoomScanAsync(1, ScrollViewerEditDraw, true);
             });
         }
     }

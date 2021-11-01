@@ -1079,7 +1079,7 @@ Once you see your scanner in the settings app and it isn't labeled "Offline" any
 
 &amp;nbsp;
 
-**Tip:** If Windows takes too long to find your wireless scanner, you can just turn off and on Wi-Fi to immediately trigger a network search. Keep in mind that this may interrupt internet access across all apps on your device.</value>
+**Tip:** If Windows takes too long to find your already installed wireless scanner, you can just turn off and on Wi-Fi to immediately trigger a network search. Keep in mind that this may interrupt internet access across all apps on your device.</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
