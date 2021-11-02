@@ -377,6 +377,10 @@
                                         </FontIcon.RenderTransform>
                                     </FontIcon>
                                 </Grid>
+
+                                <AppBarButton.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="C" Modifiers="Control"/>
+                                </AppBarButton.KeyboardAccelerators>
                             </AppBarButton>
                             <!-- Open with -->
                             <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarOpenWith_Click">
@@ -573,34 +577,35 @@
 
                 <!-- Initial -->
                 <controls:Case Value="0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
-                            <TextBlock x:Name="TextBlockPageIndicator" Text="{x:Bind ViewModel.SelectedPageText, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextAlignment="Left" MaxLines="1" Padding="12,0,12,0" Visibility="{x:Bind FlipViewPages.Visibility, Mode=OneWay}"/>
-                            <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
-                        </StackPanel>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                                <TextBlock x:Name="TextBlockPageIndicator" Text="{x:Bind ViewModel.SelectedPageText, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextAlignment="Left" MaxLines="1" Padding="12,0,12,0" Visibility="{x:Bind FlipViewPages.Visibility, Mode=OneWay}"/>
+                                <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
+                            </StackPanel>
 
-                        <muxc:PipsPager Grid.Column="1" MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver" SelectedIndexChanged="PipsPager_SelectedIndexChanged"/>
-
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
-                            <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                                <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
-                                    </AppBarButton>
-                                    <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
-                                    </AppBarButton>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                                <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                    <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                        <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
+                                        </AppBarButton>
+                                        <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
+                                        </AppBarButton>
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
+                        
+                        <muxc:PipsPager MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver" SelectedIndexChanged="PipsPager_SelectedIndexChanged"/>
                     </Grid>
 
                 </controls:Case>

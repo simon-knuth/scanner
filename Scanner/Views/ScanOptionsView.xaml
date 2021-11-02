@@ -214,7 +214,7 @@
                 </Flyout>
             </FlyoutBase.AttachedFlyout>
         </ComboBox>
-        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}" RightTapped="ComboBoxScanners_RightTapped">
+        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" x:Uid="ButtonGetHelp" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}" RightTapped="ComboBoxScanners_RightTapped">
             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,8,10,8"/>
         </HyperlinkButton>
         <Grid Grid.Row="0" Padding="14,0,72,0" HorizontalAlignment="Stretch">
@@ -233,7 +233,7 @@
             </Grid.ColumnDefinitions>
 
             <muxc:ProgressRing x:Name="ProgressRingScanners" Grid.Column="0" Width="20" Height="20" Margin="0,0,14,0" IsActive="True"/>
-            <TextBlock Grid.Column="1" Text="Searching scanners..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="NoWrap"/>
+            <TextBlock Grid.Column="1" x:Uid="TextScannerSearchRunning" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2"/>
         </Grid>
 
         <!-- Content -->
@@ -308,7 +308,7 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
+                                <HyperlinkButton Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
                                 </HyperlinkButton>
                             </Grid>
@@ -397,7 +397,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton Content="Automatic">
+                                <RadioButton x:Uid="OptionScanOptionsColorAuto">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -452,7 +452,7 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <HyperlinkButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
+                                <HyperlinkButton Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
                                 </HyperlinkButton>
                             </Grid>
@@ -481,10 +481,10 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Automatic crop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Uid="HeadingScanOptionsAutoCrop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
                             
                             <muxc:RadioButtons x:Name="RadioButtonsAutoCropMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SelectedScannerAutoCropMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerAutoCropModeConverter}}">
-                                <RadioButton Content="Disabled">
+                                <RadioButton x:Uid="OptionScanOptionsAutoCropDisabled">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -494,7 +494,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton Content="Single region">
+                                <RadioButton x:Uid="OptionScanOptionsAutoCropSingle">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -513,7 +513,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton Content="Multiple regions">
+                                <RadioButton x:Uid="OptionScanOptionsAutoCropMultiple">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>

@@ -238,7 +238,7 @@
     <comment>The tooltip text that appears while hovering the "Share" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Show scanned pages</value>
+    <value>Page list</value>
     <comment>The text of the "Manage scan" button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
@@ -274,7 +274,7 @@
     <comment>The tooltip text that appears while hovering the "Share" button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Show scan options</value>
+    <value>Scan options</value>
     <comment>The tooltip text that appears while hovering the "Scan Options" button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
@@ -289,9 +289,9 @@
     <value>Preview</value>
     <comment>The text of the "Preview" button in the scan options.</comment>
   </data>
-  <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show save location in File Explorer</value>
-    <comment>The tooltip text that appears while hovering the "Show save location" button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Show save location" button.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
     <value>Scan</value>
@@ -460,10 +460,6 @@
   <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
     <value>The scan failed with the following error:</value>
     <comment>The error message body that appears when a scan fails with more information.</comment>
-  </data>
-  <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
-    <value>Select a scanner</value>
-    <comment>The heading that tells the user to select a scanner.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
     <value>Chinese</value>
@@ -1167,5 +1163,61 @@ PDF is a very popular document format and allows you to save multiple pages in a
   <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
     <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
     <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Support the development</value>
+    <comment>The text of the "Support the development" button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Editor</value>
+    <comment>The text of the "Editor" button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Help</value>
+    <comment>The text of the "Help" button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get help</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>Scanner settings</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>Settings</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>Wi-Fi settings</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>Help</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>Automatic crop</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>Disabled</value>
+    <comment>The auto crop setting for "Disabled" in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value>Multiple regions</value>
+    <comment>The auto crop setting for "Multiple regions" in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value>Single region</value>
+    <comment>The auto crop setting for "Single region" in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>Automatic</value>
+    <comment>The color mode "Automatic" option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>Searching scanners...</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
 </root>

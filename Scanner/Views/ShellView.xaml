@@ -260,7 +260,7 @@
                         <CompositeTransform TranslateX="0"/>
                     </muxc:NavigationViewItem.RenderTransform>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" IsEnabled="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE70F;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -272,17 +272,17 @@
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.FooterMenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" x:Uid="ButtonShowSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource ScanSaveLocationGlyphConverter}}"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" x:Uid="ButtonDonate" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>

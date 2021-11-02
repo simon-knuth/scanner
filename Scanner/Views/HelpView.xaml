@@ -49,7 +49,7 @@
         
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
-            <TextBlock x:Name="TextBlockTitlebar" Text="Help" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+            <TextBlock x:Uid="HeadingHelp" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
         </Grid>
 
         <!-- Content -->
@@ -80,13 +80,13 @@
                             <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Scanner settings" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="ButtonHelpScannerSettings" TextWrapping="WrapWholeWords"/>
                                 </StackPanel>
                             </HyperlinkButton>
                             <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchWifiSettingsCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE701;" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Wi-Fi settings" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="ButtonHelpWiFiSettings" TextWrapping="WrapWholeWords"/>
                                 </StackPanel>
                             </HyperlinkButton>
                         </StackPanel>
@@ -110,7 +110,7 @@
                             <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Scanner settings" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="ButtonHelpScannerSettings" TextWrapping="WrapWholeWords"/>
                                 </StackPanel>
                             </HyperlinkButton>
                         </StackPanel>
@@ -168,7 +168,7 @@
                             <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Settings" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
                                 </StackPanel>
                             </HyperlinkButton>
                         </StackPanel>
