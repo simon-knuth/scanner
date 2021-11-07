@@ -134,6 +134,7 @@
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
+    <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />

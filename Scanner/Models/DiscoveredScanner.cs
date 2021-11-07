@@ -46,6 +46,8 @@ namespace Scanner.Models
             IsFlatbedAutoCropSingleRegionAllowed || IsFlatbedAutoCropMultiRegionAllowed;
         public ObservableCollection<ScanResolution> FlatbedResolutions;
         public ObservableCollection<ScannerFileFormat> FlatbedFormats;
+        public BrightnessConfig FlatbedBrightnessConfig;
+        public ContrastConfig FlatbedContrastConfig;
 
         [Required(ErrorMessage = "IsFeederAllowed is required")]
         public bool IsFeederAllowed;
@@ -61,6 +63,9 @@ namespace Scanner.Models
             IsFeederAutoCropSingleRegionAllowed || IsFeederAutoCropMultiRegionAllowed;
         public ObservableCollection<ScanResolution> FeederResolutions;
         public ObservableCollection<ScannerFileFormat> FeederFormats;
+        public BrightnessConfig FeederBrightnessConfig;
+        public ContrastConfig FeederContrastConfig;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +105,28 @@ namespace Scanner.Models
                 FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
 
                 FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
+
+                if (device.FlatbedConfiguration.BrightnessStep != 0)
+                {
+                    FlatbedBrightnessConfig = new BrightnessConfig
+                    {
+                        MinBrightness = device.FlatbedConfiguration.MinBrightness,
+                        MaxBrightness = device.FlatbedConfiguration.MaxBrightness,
+                        BrightnessStep = (int)device.FlatbedConfiguration.BrightnessStep,
+                        DefaultBrightness = device.FlatbedConfiguration.DefaultBrightness,
+                    };
+                }
+
+                if (device.FlatbedConfiguration.ContrastStep != 0)
+                {
+                    FlatbedContrastConfig = new ContrastConfig
+                    {
+                        MinContrast = device.FlatbedConfiguration.MinContrast,
+                        MaxContrast = device.FlatbedConfiguration.MaxContrast,
+                        ContrastStep = (int)device.FlatbedConfiguration.ContrastStep,
+                        DefaultContrast = device.FlatbedConfiguration.DefaultContrast,
+                    };
+                }
             }
 
             if (IsFeederAllowed)
@@ -120,6 +147,28 @@ namespace Scanner.Models
                 FeederResolutions = GenerateResolutions(device.FeederConfiguration);
 
                 FeederFormats = GenerateFormats(device.FeederConfiguration);
+
+                if (device.FeederConfiguration.BrightnessStep != 0)
+                {
+                    FeederBrightnessConfig = new BrightnessConfig
+                    {
+                        MinBrightness = device.FeederConfiguration.MinBrightness,
+                        MaxBrightness = device.FeederConfiguration.MaxBrightness,
+                        BrightnessStep = (int)device.FeederConfiguration.BrightnessStep,
+                        DefaultBrightness = device.FeederConfiguration.DefaultBrightness,
+                    };
+                }
+
+                if (device.FeederConfiguration.ContrastStep != 0)
+                {
+                    FeederContrastConfig = new ContrastConfig
+                    {
+                        MinContrast = device.FeederConfiguration.MinContrast,
+                        MaxContrast = device.FeederConfiguration.MaxContrast,
+                        ContrastStep = (int)device.FeederConfiguration.ContrastStep,
+                        DefaultContrast = device.FeederConfiguration.DefaultContrast,
+                    };
+                }
             }
         }
 
@@ -128,6 +177,7 @@ namespace Scanner.Models
             Name = name;
             Debug = true;
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,5 +548,21 @@ namespace Scanner.Models
                     return false;
             }
         }
+    }
+
+    public class BrightnessConfig
+    {
+        public int MinBrightness;
+        public int MaxBrightness;
+        public int BrightnessStep;
+        public int DefaultBrightness;
+    }
+
+    public class ContrastConfig
+    {
+        public int MinContrast;
+        public int MaxContrast;
+        public int ContrastStep;
+        public int DefaultContrast;
     }
 }

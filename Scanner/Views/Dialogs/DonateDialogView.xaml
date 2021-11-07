@@ -8,12 +8,12 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:Scanner.Helpers"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     DefaultButton="Primary"
     PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
-    PrimaryButtonText="Donate"
-    SecondaryButtonText="No thanks"
+    x:Uid="DialogDonate"
     PrimaryButtonCommand="{x:Bind ViewModel.DonateCommand}"
     Loaded="ContentDialog_Loaded"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
@@ -39,7 +39,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <ContentDialog.Title>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock x:Uid="HeadingSettingsDonate"/>
+            <TextBlock x:Uid="HeadingDialogDonate"/>
         </StackPanel>
     </ContentDialog.Title>
 
@@ -76,13 +76,7 @@
 
                 <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                 <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Padding="16">
-                    <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                        <Span>
-                            <Run FontWeight="SemiBold">This app is available at no cost for everyone to use.</Run>
-                            <Run>If you like it, you can directly support the development with a donation.</Run>
-                            <LineBreak/><LineBreak/><Run>Thank you! ❤️</Run>
-                        </Span>
-                    </TextBlock>
+                    <controls:MarkdownTextBlock x:Uid="TextDonateDialog" IsTextSelectionEnabled="False" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                 </Frame>
                 <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-4,0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
             </Grid>
@@ -112,20 +106,20 @@
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="No ads" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="1" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock x:Uid="TextPromiseNoAds" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="1" AutomationProperties.SizeOfSet="4"/>
 
                 <Grid Grid.Row="1" Grid.Column="0">
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C7;" FontSize="20" Foreground="{StaticResource SystemAccentColor}"/>
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="No subscriptions" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="2" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock x:Uid="TextPromiseNoSubscriptions" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="2" AutomationProperties.SizeOfSet="4"/>
 
                 <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock x:Uid="TextPromisePrivacy" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
 
                 <FontIcon Grid.Row="3" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF133;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="Free updates" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="4" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock x:Uid="TextPromiseUpdates" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="4" AutomationProperties.SizeOfSet="4"/>
             </Grid>
         </Grid>
     </ScrollViewer>

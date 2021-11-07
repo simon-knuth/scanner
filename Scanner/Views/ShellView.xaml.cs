@@ -146,6 +146,8 @@ namespace Scanner.Views
                     TeachingTipTutorialPageList.PreferredPlacement = WinUI.TeachingTipPlacementMode.LeftBottom;
                 }
 
+                Window.Current.SetTitleBar(GridTitlebar);
+
                 //WinUI.InfoBadge badge = new WinUI.InfoBadge();
                 //((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).InfoBadge = badge;
                 //badge.Style = (Style)Application.Current.Resources["AttentionIconInfoBadgeStyle"];

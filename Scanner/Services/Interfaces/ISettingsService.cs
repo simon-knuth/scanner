@@ -61,7 +61,8 @@ namespace Scanner.Services
         ShowOpenWithWarning,
         ShowAutoRotationMessage,
         SetupCompleted,
-        SettingAutoRotateLanguage
+        SettingAutoRotateLanguage,
+        SettingShowAdvancedScanOptions
     }
 
     public enum SettingSaveLocationType

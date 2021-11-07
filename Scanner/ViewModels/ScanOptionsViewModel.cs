@@ -45,6 +45,8 @@ namespace Scanner.ViewModels
 
         public AsyncRelayCommand<string> PreviewScanCommand;
         public RelayCommand DismissPreviewScanCommand;
+        public RelayCommand ResetBrightnessCommand;
+        public RelayCommand ResetContrastCommand;
 
         public AsyncRelayCommand ScanCommand;
         public AsyncRelayCommand ScanFreshCommand;
@@ -53,6 +55,7 @@ namespace Scanner.ViewModels
         public event EventHandler PreviewRunning;
         public event EventHandler ScanStarted;
         public event EventHandler ScanEnded;
+        public event EventHandler ScannerSearchTipRequested;
 
         private bool _PreviewFailed;
         public bool PreviewFailed
@@ -113,22 +116,32 @@ namespace Scanner.ViewModels
                         ScannerResolutions = null;
                         SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
                         FileFormats = SelectedScanner?.AutoFormats;
+                        ScannerBrightnessConfig = null;
+                        ScannerContrastConfig = null;
                         break;
                     case Enums.ScannerSource.Flatbed:
                         ScannerResolutions = SelectedScanner?.FlatbedResolutions;
                         FileFormats = SelectedScanner?.FlatbedFormats;
+                        ScannerBrightnessConfig = SelectedScanner?.FlatbedBrightnessConfig;
+                        ScannerContrastConfig = SelectedScanner?.FlatbedContrastConfig;
                         break;
                     case Enums.ScannerSource.Feeder:
                         ScannerResolutions = SelectedScanner?.FeederResolutions;
                         FileFormats = SelectedScanner?.FeederFormats;
+                        ScannerBrightnessConfig = SelectedScanner?.FeederBrightnessConfig;
+                        ScannerContrastConfig = SelectedScanner?.FeederContrastConfig;
                         break;
                     case Enums.ScannerSource.None:
                         ScannerResolutions = null;
                         FileFormats = null;
+                        ScannerBrightnessConfig = null;
+                        ScannerContrastConfig = null;
                         break;
                     default:
                         ScannerResolutions = null;
                         SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
+                        ScannerBrightnessConfig = null;
+                        ScannerContrastConfig = null;
                         break;
                 }
 
@@ -204,6 +217,62 @@ namespace Scanner.ViewModels
             }
         }
 
+        private BrightnessConfig _ScannerBrightnessConfig;
+        public BrightnessConfig ScannerBrightnessConfig
+        {
+            get => _ScannerBrightnessConfig;
+            set => SetProperty(ref _ScannerBrightnessConfig, value);
+        }
+
+        private int _SelectedBrightness;
+        public int SelectedBrightness
+        {
+            get => _SelectedBrightness;
+            set
+            {
+                SetProperty(ref _SelectedBrightness, value);
+                if (ScannerBrightnessConfig != null)
+                {
+                    IsDefaultBrightnessSelected = ScannerBrightnessConfig.DefaultBrightness == value;
+                }
+            }
+        }
+
+        private bool _IsDefaultBrightnessSelected;
+        public bool IsDefaultBrightnessSelected
+        {
+            get => _IsDefaultBrightnessSelected;
+            set => SetProperty(ref _IsDefaultBrightnessSelected, value);
+        }
+
+        private ContrastConfig _ScannerContrastConfig;
+        public ContrastConfig ScannerContrastConfig
+        {
+            get => _ScannerContrastConfig;
+            set => SetProperty(ref _ScannerContrastConfig, value);
+        }
+
+        private int _SelectedContrast;
+        public int SelectedContrast
+        {
+            get => _SelectedContrast;
+            set
+            {
+                SetProperty(ref _SelectedContrast, value);
+                if (ScannerContrastConfig != null)
+                {
+                    IsDefaultContrastSelected = ScannerContrastConfig.DefaultContrast == value;
+                }
+            }
+        }
+
+        private bool _IsDefaultContrastSelected;
+        public bool IsDefaultContrastSelected
+        {
+            get => _IsDefaultContrastSelected;
+            set => SetProperty(ref _IsDefaultContrastSelected, value);
+        }
+
         private BitmapImage _PreviewImage;
         public BitmapImage PreviewImage
         {
@@ -239,11 +308,19 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsEditorEditing, value);
         }
 
+        private bool _SettingShowAdvancedScanOptions;
+        public bool SettingShowAdvancedScanOptions
+        {
+            get => _SettingShowAdvancedScanOptions;
+            set => SetProperty(ref _SettingShowAdvancedScanOptions, value);
+        }
+
         // Debug stuff
         public AsyncRelayCommand DebugAddScannerCommand;
         public RelayCommand DebugRestartScannerDiscoveryCommand;
         public RelayCommand DebugDeleteScanOptionsFromDatabaseCommand;
         public AsyncRelayCommand DebugScanCommand;
+        public RelayCommand DebugShowScannerTipCommand;
 
         private DiscoveredScanner _DebugScanner;
         public DiscoveredScanner DebugScanner
@@ -284,6 +361,9 @@ namespace Scanner.ViewModels
             ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
             DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
             CancelScanCommand = new RelayCommand(CancelScan);
+            DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
+            ResetBrightnessCommand = new RelayCommand(ResetBrightness);
+            ResetContrastCommand = new RelayCommand(ResetContrast);
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
             ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
@@ -292,6 +372,10 @@ namespace Scanner.ViewModels
             ScanService.ScanEnded += (x, y) => ScanEnded?.Invoke(this, EventArgs.Empty);
 
             Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
+            Messenger.Register<SetupCompletedMessage>(this, (r, m) => ScannerSearchTipRequested?.Invoke(this, EventArgs.Empty));
+
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
+            SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
         }
 
 
@@ -922,7 +1006,35 @@ namespace Scanner.ViewModels
                 IsFeederColorAllowed = true,
                 IsFeederGrayscaleAllowed = true,
                 IsFeederMonochromeAllowed = false,
-                IsFeederDuplexAllowed = false
+                IsFeederDuplexAllowed = false,
+                FlatbedBrightnessConfig = new BrightnessConfig
+                {
+                    MinBrightness = -1000,
+                    MaxBrightness = 1000,
+                    BrightnessStep = 10,
+                    DefaultBrightness = 0,
+                },
+                FeederBrightnessConfig = new BrightnessConfig
+                {
+                    MinBrightness = -1000,
+                    MaxBrightness = 1000,
+                    BrightnessStep = 10,
+                    DefaultBrightness = 0,
+                },
+                FlatbedContrastConfig = new ContrastConfig
+                {
+                    MinContrast = -1000,
+                    MaxContrast = 1000,
+                    ContrastStep = 10,
+                    DefaultContrast = 0,
+                },
+                FeederContrastConfig = new ContrastConfig
+                {
+                    MinContrast = -1000,
+                    MaxContrast = 1000,
+                    ContrastStep = 10,
+                    DefaultContrast = 0,
+                },
             };
         }
 
@@ -1153,6 +1265,35 @@ namespace Scanner.ViewModels
         private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
         {
             RefreshCanAddToScanResult();
+        }
+
+        private void DebugShowScannerTip()
+        {
+            ScannerSearchTipRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
+        {
+            if (e == AppSetting.SettingShowAdvancedScanOptions)
+            {
+                SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
+            }
+        }
+
+        private void ResetBrightness()
+        {
+            if (ScannerBrightnessConfig != null)
+            {
+                SelectedBrightness = ScannerBrightnessConfig.DefaultBrightness;
+            }
+        }
+
+        private void ResetContrast()
+        {
+            if (ScannerContrastConfig != null)
+            {
+                SelectedContrast = ScannerContrastConfig.DefaultContrast;
+            }
         }
     }
 }

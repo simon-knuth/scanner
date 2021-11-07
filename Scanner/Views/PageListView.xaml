@@ -202,8 +202,8 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Delete" Style="{StaticResource BaseTextBlockStyle}"/>
-                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Are you sure you want to delete this?" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
+                                    <TextBlock x:Uid="HeadingDialogDeleteSelected" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                    <TextBlock x:Uid="TextDialogDeleteSelected" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
 
                                     <Grid Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -211,8 +211,8 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="AppBarButtonDeleteDelete_Click"/>
-                                        <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="AppBarButtonDeleteCancel_Click"/>
+                                        <Button x:Uid="ButtonDialogDeleteSelectedConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="AppBarButtonDeleteDelete_Click"/>
+                                        <Button x:Uid="ButtonDialogDeleteSelectedCancel" Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="AppBarButtonDeleteCancel_Click"/>
                                     </Grid>
                                 </Grid>
                             </Flyout>
@@ -245,7 +245,7 @@
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonPrint" x:Uid="ButtonManagePrint" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                    <AppBarButton x:Name="AppBarButtonPrint" x:Uid="ButtonManagePrintSingle" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
                         </AppBarButton.Icon>
@@ -388,12 +388,21 @@
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False"/>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Text="Show in File Explorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
+                                        <MenuFlyoutItem x:Uid="ButtonManageShowinFileExplorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
+                                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                                </core:DataTriggerBehavior>
+                                                <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
+                                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                                </core:DataTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                            
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC50;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Duplicate" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
+                                        <MenuFlyoutItem x:Uid="ButtonManageDuplicatePage" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
                                             </MenuFlyoutItem.Icon>

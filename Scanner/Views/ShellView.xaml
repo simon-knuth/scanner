@@ -222,7 +222,7 @@
         <TextBlock x:Name="TextBlockNarratorStatus" Visibility="Collapsed" AutomationProperties.LiveSetting="Assertive"/>
 
         <!-- Titlebar -->
-        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}">
+        <Grid x:Name="GridTitlebar" Grid.Row="0" HorizontalAlignment="Stretch" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, ConverterParameter=1.0, FallbackValue=1.0}" Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition Width="Auto"/>

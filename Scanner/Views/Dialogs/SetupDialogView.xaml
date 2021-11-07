@@ -78,7 +78,7 @@
                 </Grid.ColumnDefinitions>
 
                 <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
             </Grid>
         </StackPanel>
         <HyperlinkButton Grid.Row="4" NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">

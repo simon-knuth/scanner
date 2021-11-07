@@ -93,6 +93,12 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingRememberScanOptions, value);
         }
 
+        public bool SettingShowAdvancedScanOptions
+        {
+            get => (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
+            set => SettingsService.SetSetting(AppSetting.SettingShowAdvancedScanOptions, value);
+        }
+
         public bool SettingErrorStatistics
         {
             get => (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);

@@ -330,16 +330,15 @@ namespace Scanner.Views
 
         private async void MenuFlyoutItemShowFileInFileExplorer_Loaded(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                (sender as MenuFlyoutItem).IsEnabled = ViewModel.ScanResult.IsImage;
                 (sender as MenuFlyoutItem).Command = ViewModel.ShowInFileExplorerCommand;
             });
         }
 
         private async void MenuFlyoutItemDuplicate_Loaded(object sender, RoutedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
                 (sender as MenuFlyoutItem).Command = ViewModel.DuplicatePageCommand;
             });

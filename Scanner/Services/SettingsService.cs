@@ -234,6 +234,9 @@ namespace Scanner.Services
                 case AppSetting.SettingAutoRotateLanguage:
                     return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage.LanguageTag;
 
+                case AppSetting.SettingShowAdvancedScanOptions:
+                    return SettingsContainer.Values[name] ?? false;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -325,6 +328,10 @@ namespace Scanner.Services
 
                 case AppSetting.SettingAutoRotateLanguage:
                     SettingsContainer.Values[name] = (string)value;
+                    break;
+
+                case AppSetting.SettingShowAdvancedScanOptions:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:

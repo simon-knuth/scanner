@@ -305,35 +305,35 @@
     <value>Settings</value>
     <comment>The tooltip text that appears while hovering the "Settings" button in the scan options.</comment>
   </data>
-  <data name="DialogDelete.Title" xml:space="preserve">
+  <data name="HeadingDialogDelete.Text" xml:space="preserve">
     <value>Are you sure?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.Subtitle" xml:space="preserve">
+  <data name="TextDialogDelete.Text" xml:space="preserve">
     <value>The page will be deleted permanently.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
     <value>Delete</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
     <value>Cancel</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDeleteSelect.Title" xml:space="preserve">
+  <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
     <value>Are you sure?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
+  <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
     <value>The selected pages will be deleted permanently.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
     <value>Delete</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
     <value>Cancel</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
@@ -357,29 +357,21 @@
     <value>I would love to hear from you:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="DialogRename.Title" xml:space="preserve">
+  <data name="HeadingDialogRename.Text" xml:space="preserve">
     <value>Rename</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="DialogRename.Subtitle" xml:space="preserve">
+  <data name="TextDialogRename.Text" xml:space="preserve">
     <value>Enter a new name for the file:</value>
-    <comment>The title of the dialog that allows the user to rename a page.</comment>
+    <comment>The subtitle of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="DialogRename.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
     <value>Confirm</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="DialogRename.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
     <value>Cancel</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
-  </data>
-  <data name="DialogScope.ActionButtonContent" xml:space="preserve">
-    <value>Entire document</value>
-    <comment>The button text of the dialog that allows the user to apply an action to an entire document.</comment>
-  </data>
-  <data name="DialogScope.CloseButtonContent" xml:space="preserve">
-    <value>Just this page</value>
-    <comment>The button text of the dialog that allows the user to apply an action to a single page in a document.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
     <value>Something went wrong</value>
@@ -485,8 +477,8 @@
     <value>Save as</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
-  <data name="HeadingScanOptionsMoreOptions.Text" xml:space="preserve">
-    <value>Additional options</value>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>Feeder options</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
@@ -710,18 +702,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   <data name="ButtonCloseText" xml:space="preserve">
     <value>Close</value>
     <comment>The button text for a generic close button.</comment>
-  </data>
-  <data name="DialogScopeQuestionCopyHeading" xml:space="preserve">
-    <value>What shall be copied?</value>
-    <comment>The heading for the dialog that asks whether the user wants to copy an entire document or just a single page.</comment>
-  </data>
-  <data name="DialogScopeQuestionOpenWithHeading" xml:space="preserve">
-    <value>What shall be opened?</value>
-    <comment>The heading for the dialog that asks whether the user wants to open an entire document or just a single page.</comment>
-  </data>
-  <data name="DialogScopeQuestionShareHeading" xml:space="preserve">
-    <value>What shall be shared?</value>
-    <comment>The heading for the dialog that asks whether the user wants to share an entire document or just a single page.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
     <value>Scan completed</value>
@@ -1025,7 +1005,7 @@ TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
     <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.
 TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
   </data>
-  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+  <data name="HeadingDialogDonate.Text" xml:space="preserve">
     <value>Support the development</value>
     <comment>The heading for the "Donation" section in settings.</comment>
   </data>
@@ -1219,5 +1199,121 @@ PDF is a very popular document format and allows you to save multiple pages in a
   <data name="TextScannerSearchRunning.Text" xml:space="preserve">
     <value>Searching scanners...</value>
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>Your scanner needs to be installed, turned on and connected to be used. Please consult the help page for more information.</value>
+    <comment>The subtitle of the dialog that quickly explains what's necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>Use a scanner</value>
+    <comment>The title of the dialog that quickly explains what's necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Crop similar pages</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>Confirm</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>Show all apps</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>Find more apps in the Store</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>Okay</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>Crop</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Crop similar pages</value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>Draw</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
+    <value>Heads-up</value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>Don't show again</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Apply the current crop to multiple pages with the same measurements at once.</value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value>By choosing an app in the next menu, all pages will be closed here.</value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Print selected pages</value>
+    <comment>The tooltip text that appears while hovering the "Print" button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Print</value>
+    <comment>The tooltip text that appears while hovering the "Print" button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Preview</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>Preview</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>Personal data stays on your device</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>Donate</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>No thanks</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>No ads</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>No subscriptions</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>Free updates</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value>This app is available at no cost for everyone to use.
+
+If you like it, you can directly support the development with a donation.
+
+Thank you! ❤️</value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>Duplicate page</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value>Show in File Explorer</value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
   </data>
 </root>

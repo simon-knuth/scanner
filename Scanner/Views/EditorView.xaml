@@ -93,13 +93,13 @@
             
             <!-- Flyouts -->
             <MenuFlyout x:Name="MenuFlyoutOpenWith" Placement="Bottom" Opening="MenuFlyoutButtonOpenWith_Opening">
-                <MenuFlyoutItem x:Name="MenuFlyoutItemStore" Text="Find more apps in the Store" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
+                <MenuFlyoutItem x:Name="MenuFlyoutItemStore" x:Uid="ButtonOpenWithStore" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE719;" FontSize="16"/>
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator/>
-                <MenuFlyoutItem x:Name="MenuFlyoutItemAllApps" Text="Show all apps" FontWeight="SemiBold" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-1"/>
+                <MenuFlyoutItem x:Name="MenuFlyoutItemAllApps" x:Uid="ButtonOpenWithAllApps" FontWeight="SemiBold" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-1"/>
             </MenuFlyout>
 
             <Flyout x:Name="FlyoutOpenWithWarning">
@@ -111,10 +111,10 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Heads-up" Style="{StaticResource BaseTextBlockStyle}"/>
-                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="By choosing an app in the next menu, all pages will be closed here." Style="{StaticResource BodyTextBlockStyle}"/>
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="HeadingOpenWithWarning" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Uid="TextOpenWithWarning" Style="{StaticResource BodyTextBlockStyle}"/>
                     <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,16,0,16" IsChecked="{x:Bind ViewModel.ShowOpenWithWarning, Mode=TwoWay, Converter={StaticResource NegativeBoolConverter}}">
-                        <TextBlock Text="Don't show again" TextWrapping="WrapWholeWords"/>
+                        <TextBlock x:Uid="OptionDontShowAgain" TextWrapping="WrapWholeWords"/>
                     </CheckBox>
                     <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
@@ -122,7 +122,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Content="Okay" Style="{StaticResource AccentButtonStyle}" Click="ButtonOpenWithWarningConfirm_Click"/>
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" x:Uid="ButtonOpenWithWarningConfirm" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Click="ButtonOpenWithWarningConfirm_Click"/>
                     </Grid>
                 </Grid>
             </Flyout>
@@ -220,7 +220,7 @@
                     <controls:Case Value="0">
                         <StackPanel x:Name="StackPanelToolbarInitial" Orientation="Horizontal" Loaded="StackPanelToolbarInitial_Loaded">
                             <!-- Crop -->
-                            <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" Command="{x:Bind ViewModel.EnterCropModeCommand}" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}">
+                            <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.EnterCropModeCommand}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCrop" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -303,8 +303,8 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Rename" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Enter a new name for the file" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+                                            <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
                                             <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
                                             <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0"/>
@@ -315,8 +315,8 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
-                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonRenameCancel_Click"/>
+                                                <Button x:Uid="ButtonDialogRenameConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
+                                                <Button x:Uid="ButtonDialogRenameCancel" Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonRenameCancel_Click"/>
                                             </Grid>
                                         </Grid>
                                     </Flyout>
@@ -346,8 +346,8 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Delete" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Are you sure you want to delete this?" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
+                                            <TextBlock x:Uid="HeadingDialogDelete" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="TextDialogDelete" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
 
                                             <Grid Grid.Row="2">
                                                 <Grid.ColumnDefinitions>
@@ -355,8 +355,8 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="ButtonDelete_Click"/>
-                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonDeleteCancel_Click"/>
+                                                <Button x:Uid="ButtonDialogDeleteConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.DeleteCommand}" Click="ButtonDelete_Click"/>
+                                                <Button x:Uid="ButtonDialogDeleteCancel" Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonDeleteCancel_Click"/>
                                             </Grid>
                                         </Grid>
                                     </Flyout>
@@ -423,7 +423,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock Text="Crop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                 <AppBarSeparator Margin="16,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -433,7 +433,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <AppBarToggleButton x:Name="AppBarToggleButtonAspectRatio" Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" IsChecked="{x:Bind ViewModel.IsFixedAspectRatioSelected, Mode=OneWay}" Click="AppBarToggleButtonAspectRatio_Click" Checked="AppBarToggleButtonAspectRatio_IsCheckedChanged" Unchecked="AppBarToggleButtonAspectRatio_IsCheckedChanged">
+                                <AppBarToggleButton x:Name="AppBarToggleButtonAspectRatio" x:Uid="ButtonEditCropAspectRatio" Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" IsChecked="{x:Bind ViewModel.IsFixedAspectRatioSelected, Mode=OneWay}" Click="AppBarToggleButtonAspectRatio_Click" Checked="AppBarToggleButtonAspectRatio_IsCheckedChanged" Unchecked="AppBarToggleButtonAspectRatio_IsCheckedChanged">
                                     <AppBarToggleButton.Icon>
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE799;" FontSize="16"/>
                                     </AppBarToggleButton.Icon>
@@ -476,7 +476,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock Text="Draw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                 <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -592,12 +592,12 @@
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                                 <AppBarSeparator Visibility="{x:Bind TextBlockPageIndicator.Visibility, Mode=OneWay}"/>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                                    <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
+                                    <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Margin="12,0,12,0" Text="100 %" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" MaxLines="1" MinWidth="40"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton x:Name="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton x:Name="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>
@@ -639,7 +639,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF168;" FontSize="16" Margin="0,0,12,0"/>
-                                    <TextBlock Grid.Column="1" Text="Crop similar pages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Grid.Column="1" x:Uid="ButtonEditCropSimilarPages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </Grid>
 
                                 <FlyoutBase.AttachedFlyout>
@@ -659,8 +659,8 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Crop similar pages" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Apply the current crop to multiple pages with the same measurements at once." Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingEditCropSimilarPages" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="TextEditCropSimilarPages" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
                                             <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8">
                                                 <ListViewItem IsSelected="True" IsEnabled="False">
@@ -700,8 +700,8 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Content="Confirm" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CropPagesCommand}" CommandParameter="{x:Bind ImageCropperPage}" IsEnabled="{x:Bind ViewModel.SelectedRangesCropSimilarPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Click="ButtonCropSimilarPagesSave_Click"/>
-                                                <Button Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Content="Cancel" Click="ButtonCropSimilarPagesCancel_Click"/>
+                                                <Button Grid.Column="0" x:Uid="ButtonEditCropSimilarPagesConfirm" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CropPagesCommand}" CommandParameter="{x:Bind ImageCropperPage}" IsEnabled="{x:Bind ViewModel.SelectedRangesCropSimilarPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Click="ButtonCropSimilarPagesSave_Click"/>
+                                                <Button Grid.Column="1" x:Uid="ButtonEditCropSimilarPagesCancel" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonCropSimilarPagesCancel_Click"/>
                                             </Grid>
                                         </Grid>
                                     </Flyout>
@@ -788,10 +788,10 @@
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <TextBlock x:Name="TextBlockZoomFactorDraw" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton x:Name="ButtonZoomInDraw" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomInDraw" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton x:Name="ButtonZoomOutDraw" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomOutDraw" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>

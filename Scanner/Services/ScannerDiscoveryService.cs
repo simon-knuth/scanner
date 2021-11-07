@@ -114,16 +114,23 @@ namespace Scanner.Services
             await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 // find and delete scanner from list
-                foreach (DiscoveredScanner scanner in DiscoveredScanners)
+                try
                 {
-                    if (scanner.Id.ToLower() == args.Id.ToLower())
+                    foreach (DiscoveredScanner scanner in DiscoveredScanners)
                     {
-                        DiscoveredScanners.Remove(scanner);
-                        LogService?.Log.Information("Removed scanner {@Device}.", args);
-                        return;
+                        if (scanner.Id.ToLower() == args.Id.ToLower())
+                        {
+                            DiscoveredScanners.Remove(scanner);
+                            LogService?.Log.Information("Removed scanner {@Device}.", args);
+                            return;
+                        }
                     }
+                    LogService?.Log.Warning("Attempted to remove scanner {@Device} but couldn't find it in the list.", args);
                 }
-                LogService?.Log.Warning("Attempted to remove scanner {@Device} but couldn't find it in the list.", args);
+                catch (Exception exc)
+                {
+                    LogService?.Log.Warning(exc, "Removing the scanner {@Device} failed.", args);
+                }
             });
         }
 

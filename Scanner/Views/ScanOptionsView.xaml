@@ -106,9 +106,11 @@
                         <Setter Target="FrameSourceMode.IsEnabled" Value="False"/>
                         <Setter Target="FrameColorMode.IsEnabled" Value="False"/>
                         <Setter Target="FrameResolution.IsEnabled" Value="False"/>
-                        <Setter Target="FrameMoreOptions.IsEnabled" Value="False"/>
+                        <Setter Target="FrameFeederOptions.IsEnabled" Value="False"/>
                         <Setter Target="FrameFileFormat.IsEnabled" Value="False"/>
                         <Setter Target="FrameAutoCrop.IsEnabled" Value="False"/>
+                        <Setter Target="FrameBrightnessOptions.IsEnabled" Value="False"/>
+                        <Setter Target="FrameContrastOptions.IsEnabled" Value="False"/>
                         <Setter Target="ButtonCancelScan.Visibility" Value="Visible"/>
                         <Setter Target="ButtonCancelScan.IsEnabled" Value="True"/>
                         <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
@@ -203,12 +205,13 @@
                         
                         <MenuFlyoutSeparator Margin="0,12,0,12"/>
 
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Spacing="8">
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
                                 <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
                             </StackPanel>
-                            <Button Content="Delete current scanner's scan options from database" Margin="0,8,0,0" Command="{x:Bind ViewModel.DebugDeleteScanOptionsFromDatabaseCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"/>
+                            <Button Content="Delete current scanner's scan options from database" Command="{x:Bind ViewModel.DebugDeleteScanOptionsFromDatabaseCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"/>
+                            <Button Content="Show scanner search tip" Command="{x:Bind ViewModel.DebugShowScannerTipCommand}"/>
                         </StackPanel>
                     </StackPanel>
                 </Flyout>
@@ -250,7 +253,7 @@
                                 <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                             </core:DataTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -264,7 +267,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+
                             <muxc:RadioButtons x:Name="RadioButtonsSource" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
                                 <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
                                 <RadioButton x:Name="RadioButtonSourceFlatbed" x:Uid="OptionScanOptionsSourceFlatbed" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, FallbackValue=False, Mode=OneWay}"/>
@@ -296,7 +299,7 @@
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock x:Name="HeadingScanOptionsFormat" x:Uid="HeadingScanOptionsFormat" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+
                             <Grid Margin="0,3,0,0">
                                 <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}">
                                     <ComboBox.ItemTemplate>
@@ -338,7 +341,7 @@
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+
                             <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
                                 <RadioButton x:Uid="OptionScanOptionsColorColor">
                                     <interactivity:Interaction.Behaviors>
@@ -443,7 +446,7 @@
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+
                             <Grid Margin="0,3,0,0">
                                 <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
                                     <ComboBox.ItemTemplate>
@@ -482,7 +485,7 @@
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock x:Uid="HeadingScanOptionsAutoCrop" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+
                             <muxc:RadioButtons x:Name="RadioButtonsAutoCropMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.SelectedScannerAutoCropMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerAutoCropModeConverter}}">
                                 <RadioButton x:Uid="OptionScanOptionsAutoCropDisabled">
                                     <interactivity:Interaction.Behaviors>
@@ -536,8 +539,8 @@
                         </StackPanel>
                     </Frame>
 
-                    <!-- More Options -->
-                    <Frame x:Name="FrameMoreOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameMoreOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <!-- Feeder Options -->
+                    <Frame x:Name="FrameFeederOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameFeederOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <Frame.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </Frame.OpacityTransition>
@@ -558,10 +561,85 @@
                         </interactivity:Interaction.Behaviors>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Uid="HeadingScanOptionsMoreOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
-                            
+                            <TextBlock x:Uid="HeadingScanOptionsFeederOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+
                             <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                             <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Frame>
+
+                    <!-- Advanced Options -->
+                    <Frame x:Name="FrameAdvancedOptions" Visibility="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=OneWay}">
+                        <StackPanel Orientation="Vertical">
+                            <!-- Brightness -->
+                            <Frame x:Name="FrameBrightnessOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameBrightnessOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                                <Frame.OpacityTransition>
+                                    <ScalarTransition Duration="0:0:0.3"/>
+                                </Frame.OpacityTransition>
+
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerBrightnessConfig, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerBrightnessConfig, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Brightness adjustment" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
+                                    <TextBlock Text="Always saved across app sessions" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
+
+                                    <Grid ColumnSpacing="12" Margin="0,12,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedBrightness, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerBrightnessConfig.MinBrightness, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerBrightnessConfig.MaxBrightness, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerBrightnessConfig.BrightnessStep, Mode=OneWay}" SnapsTo="StepValues"/>
+                                        <AppBarButton Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetBrightnessCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultBrightnessSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                                            <AppBarButton.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A7;"/>
+                                            </AppBarButton.Icon>
+                                        </AppBarButton>
+                                    </Grid>
+                                </StackPanel>
+                            </Frame>
+
+                            <!-- Contrast -->
+                            <Frame x:Name="FrameContrastOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameContrastOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                                <Frame.OpacityTransition>
+                                    <ScalarTransition Duration="0:0:0.3"/>
+                                </Frame.OpacityTransition>
+
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerContrastConfig, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerContrastConfig, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Contrast adjustment" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
+                                    <TextBlock Text="Always saved across app sessions" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
+
+                                    <Grid ColumnSpacing="12" Margin="0,12,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedContrast, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerContrastConfig.MinContrast, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerContrastConfig.MaxContrast, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerContrastConfig.ContrastStep, Mode=OneWay}" SnapsTo="StepValues"/>
+                                        <AppBarButton Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetContrastCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultContrastSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                                            <AppBarButton.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A7;"/>
+                                            </AppBarButton.Icon>
+                                        </AppBarButton>
+                                    </Grid>
+                                </StackPanel>
+                            </Frame>
                         </StackPanel>
                     </Frame>
                 </StackPanel>
@@ -579,7 +657,7 @@
                     
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                 </Button>
-                <Button x:Name="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped">
+                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:ChangePropertyAction TargetObject="{x:Bind TeachingTipPreview}" PropertyName="IsOpen" Value="True"/>
@@ -689,7 +767,7 @@
             </muxc:SplitButton>
         </Grid>
 
-        <muxc:TeachingTip x:Name="TeachingTipPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="True" Title="Preview">
+        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Closed">
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.DismissPreviewScanCommand}"/>
@@ -712,5 +790,7 @@
                 </Grid>
             </muxc:TeachingTip.HeroContent>
         </muxc:TeachingTip>
+
+        <muxc:TeachingTip x:Name="TeachingTipScannerSearchTip" x:Uid="DialogScannerSearchTip" Target="{x:Bind HyperlinkButtonHelpScanners}" PlacementMargin="3" PreferredPlacement="Bottom" IsLightDismissEnabled="False"/>
     </Grid>
 </Page>

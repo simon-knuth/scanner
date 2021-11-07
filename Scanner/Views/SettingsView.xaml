@@ -186,7 +186,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                             </Grid>
                         </StackPanel>
                     </StackPanel>
@@ -219,8 +219,8 @@
                         <CheckBox Content="Append time to file name" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
-                <!-- Setting Remember Scan Options -->
-                <muxc:Expander x:Name="ExpanderRememberScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <!-- Settings Scan Options -->
+                <muxc:Expander x:Name="ExpanderScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -234,10 +234,11 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                         <CheckBox Content="Remember scan options" IsChecked="{x:Bind ViewModel.SettingRememberScanOptions, Mode=TwoWay}"/>
+                        <CheckBox Content="Show advanced scan options supported by your scanner" Margin="0,3,0,0" IsChecked="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
 
-                <TextBlock Text="Appearance" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <TextBlock Text="Personalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <!-- Setting Theme -->
                 <muxc:Expander x:Name="ExpanderTheme" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
@@ -352,7 +353,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                                <TextBlock Grid.Column="1" Text="Personal data stays on your device" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4"/>
+                                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                             </Grid>
                         </StackPanel>
                     </StackPanel>

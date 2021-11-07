@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Globalization.NumberFormatting;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,6 +19,7 @@ namespace Scanner.Views
             ViewModel.PreviewRunning += ViewModel_PreviewRunning;
             ViewModel.ScanService.ScanStarted += ViewModel_ScanStarted;
             ViewModel.ScanService.ScanEnded += ViewModel_ScanEnded;
+            ViewModel.ScannerSearchTipRequested += ViewModel_ScannerSearchTipRequested;
         }
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -138,6 +140,14 @@ namespace Scanner.Views
                 FlyoutBase.GetAttachedFlyout(ButtonPreview).Hide();
             });
 #endif
+        }
+
+        private async void ViewModel_ScannerSearchTipRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipScannerSearchTip);
+            });
         }
     }
 }

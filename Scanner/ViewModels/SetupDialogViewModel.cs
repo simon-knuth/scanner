@@ -1,12 +1,13 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
+using Scanner.Services.Messenger;
 
 namespace Scanner.ViewModels
 {
-    public class SetupDialogViewModel : ObservableObject
+    public class SetupDialogViewModel : ObservableRecipient
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +44,8 @@ namespace Scanner.ViewModels
         {
             SettingsService.SetSetting(AppSetting.SettingErrorStatistics, ProxySettingErrorStatistics);
             SettingsService.SetSetting(AppSetting.SetupCompleted, true);
+
+            Messenger.Send(new SetupCompletedMessage());
         }
     }
 }
