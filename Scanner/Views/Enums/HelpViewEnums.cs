@@ -5,6 +5,7 @@
         ScannerDiscovery,
         ScannerNotWorking,
         ChooseResolution,
+        BrightnessContrast,
         SaveChanges,
         ChangeScanFolder,
         ChooseFileFormat,

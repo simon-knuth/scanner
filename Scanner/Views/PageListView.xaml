@@ -245,7 +245,7 @@
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonPrint" x:Uid="ButtonManagePrintSingle" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                    <!--<AppBarButton x:Name="AppBarButtonPrint" x:Uid="ButtonManagePrintSingle" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
                         </AppBarButton.Icon>
@@ -258,7 +258,7 @@
                         <AppBarButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;"/>
                         </AppBarButton.Icon>
-                    </AppBarButton>
+                    </AppBarButton>-->
                 </StackPanel>
             </Frame>
         </Grid>

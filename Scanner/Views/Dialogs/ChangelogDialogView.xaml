@@ -78,7 +78,7 @@
                     <TextBlock x:Uid="TextChangelog3_0_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                 </StackPanel>
 
-                <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE749;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC7A;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
                 <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
                     <TextBlock x:Uid="HeadingChangelog3_0_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
                     <TextBlock x:Uid="TextChangelog3_0_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>

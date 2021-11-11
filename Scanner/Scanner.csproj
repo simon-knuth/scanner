@@ -131,17 +131,21 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Models\PersistentScanOptions.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
+    <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
     <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />
+    <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
     <Compile Include="ViewModels\SetupDialogViewModel.cs" />
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\SignedIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />

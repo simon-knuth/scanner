@@ -606,7 +606,7 @@
     <value>Save location</value>
     <comment>The heading for the "Save location" option in settings.</comment>
   </data>
-  <data name="HeadingSettingsTheme.Header" xml:space="preserve">
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
     <value>Theme</value>
     <comment>The heading for the "Theme" option in settings.</comment>
   </data>
@@ -622,10 +622,6 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
     <value>Append time to file name</value>
     <comment>The text for the option for appending the time to file names.</comment>
-  </data>
-  <data name="OptionSettingsBackgroundNotification.Content" xml:space="preserve">
-    <value>Show a notification when a scan ends in the background</value>
-    <comment>The text for the option for sending a notification when a scan ends in the background.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
     <value>Third-party licenses</value>
@@ -643,26 +639,8 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
     <value>Learn how to install and use a scanner in Windows 10</value>
     <comment>The hyperlink text directing the user to the scanner settings from the "Help &amp; setup" section in settings.</comment>
   </data>
-  <data name="TextSettingsRestart1.Text" xml:space="preserve">
-    <value>Please </value>
-    <comment>The first part of the text for restarting the app to apply changes.
-| -&gt; HyperlinkSettingsRestart.Text</comment>
-  </data>
-  <data name="TextSettingsRestart2.Text" xml:space="preserve">
-    <value> for changes to take effect.</value>
-    <comment>The second part of the text for restarting the app to apply changes.
-HyperlinkSettingsRestart.Text &lt;- |</comment>
-  </data>
-  <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>Windows 10 offers support for over 100 languages - you can help make this app accessible for everyone. See </value>
-    <comment>The first part of the text for the "Translation" section in settings.</comment>
-  </data>
-  <data name="TextSettingsTranslations2.Text" xml:space="preserve">
-    <value> for more information.</value>
-    <comment>The second part of the text for the "Translation" section in settings.</comment>
-  </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>this page</value>
+    <value>Help translate</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
@@ -689,11 +667,6 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
-  </data>
-  <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
-    <value>settings app</value>
-    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
-TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
     <value>Go to scanner settings</value>
@@ -726,10 +699,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The close button text of the translation contributors dialog.</comment>
-  </data>
-  <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
-    <value>Contributors</value>
-    <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
     <value>Contributors</value>
@@ -955,74 +924,27 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Scan options</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
-  <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>You can </value>
-    <comment>The first part of the dialog text that asks the user for feedback.
-|-&gt; DialogFeedbackHyperlinkRate.Text</comment>
-  </data>
   <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
     <value>GitHub</value>
     <comment>The Feedback Hub link in the dialog that asks the user for feedback.
 DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
-  </data>
-  <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
-    <comment>The second part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkRate.Text &lt;-|-&gt; DialogFeedbackHyperlinkGithub.Text</comment>
   </data>
   <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
     <value>rate Scanner in the Microsoft Store</value>
     <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
 DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
   </data>
-  <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The third part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
-  </data>
-  <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>You can </value>
-    <comment>The first part of the text of the "Feedback" section in settings.
-|-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on </value>
-    <comment>The second part of the text of the "Feedback" section in settings.
-HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The third part of the text of the "Feedback" section in settings.
-HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>rate Scanner in the Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.
-TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
+    <value>Rate in the Microsoft Store</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
     <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.
-TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.</comment>
   </data>
   <data name="HeadingDialogDonate.Text" xml:space="preserve">
     <value>Support the development</value>
     <comment>The heading for the "Donation" section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
-    <value>support me with a donation</value>
-    <comment>The hyperlink text allowing the user to donate from the "Donation" section in settings.
-TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
-  </data>
-  <data name="TextSettingsDonate1.Text" xml:space="preserve">
-    <value>This app is available at no cost for everyone to use. If it saved you some time and you would like to see more like this, you can </value>
-    <comment>The first part of the text of the "Donation" section in settings.
-|-&gt; HyperlinkSettingsDonate.Text</comment>
-  </data>
-  <data name="TextSettingsDonate2.Text" xml:space="preserve">
-    <value>. Thank you!</value>
-    <comment>The second part of the text of the "Donation" section in settings.
-HyperlinkSettingsDonate.Text &lt;-|</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
     <value>Support the development</value>
@@ -1201,7 +1123,7 @@ PDF is a very popular document format and allows you to save multiple pages in a
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
-    <value>Your scanner needs to be installed, turned on and connected to be used. Please consult the help page for more information.</value>
+    <value>Your scanner needs to be connected, turned on and installed to be used. Please consult the help page for more information.</value>
     <comment>The subtitle of the dialog that quickly explains what's necessary to use a scanner.</comment>
   </data>
   <data name="DialogScannerSearchTip.Title" xml:space="preserve">
@@ -1315,5 +1237,119 @@ Thank you! ❤️</value>
   <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
     <value>Show in File Explorer</value>
     <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restore default</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value>Brightness adjustment</value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value>Contrast adjustment</value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value>Always saved across app sessions</value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>Adjust brightness &amp; contrast</value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>Choose where scans are saved</value>
+    <comment>The subheading for the "Save location" option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value>Unavailable while scanning</value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>Brightness and contrast are advanced scan options and can be enabled in the settings. If these options aren't supported by your scanner, they will remain hidden.
+
+Adjusting the brightness and contrast is only possible in **flatbed or feeder** mode.</value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value>You can rate Scanner in the Microsoft Store to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on GitHub.</value>
+    <comment>The text for the "Feedback" section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value>Changes to this setting are applied once the app has been restarted.</value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value>Windows offers support for over 100 languages - you can help make this app accessible for people all around the world.</value>
+    <comment>The text for the "Translation" section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>Add another language</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>Automatic rotation</value>
+    <comment>The heading for the "Automatic rotation" section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value>Editor orientation</value>
+    <comment>The heading for the "Editor orientation" section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value>Error reports and logs</value>
+    <comment>The heading for the "Error reports and logs" section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value>File naming</value>
+    <comment>The heading for the "File naming" section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>Personalization</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>Scan options</value>
+    <comment>The heading for the "Scan options" section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value>Surveys</value>
+    <comment>The heading for the "Surveys" section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>Rotate pages automatically</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+    <value>Recognizer language</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>Horizontal</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>Vertical</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>Remember last used scan options</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>Show advanced scan options supported by your scanner</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value>Take part in occasional surveys</value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>Automatically determine the correct orientation of scanned pages</value>
+    <comment>The subheading for the "Automatic rotation" section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value>This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device.</value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
   </data>
 </root>

@@ -33,6 +33,7 @@ namespace Scanner.ViewModels
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IScanOptionsDatabaseService ScanOptionsDatabaseService = Ioc.Default.GetService<IScanOptionsDatabaseService>();
+        private readonly IPersistentScanOptionsDatabaseService PersistentScanOptionsDatabaseService = Ioc.Default.GetService<IPersistentScanOptionsDatabaseService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
@@ -149,10 +150,12 @@ namespace Scanner.ViewModels
                     && (bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions))
                 {
                     ApplyInitialScanOptionsForSourceMode((ScannerSource)value);
+                    ApplyInitialPersistentScanOptionsForSourceMode((ScannerSource)value);
                 }
                 else
                 {
                     ApplyDefaultScanOptionsForSourceMode((ScannerSource)value, previousScanOptions);
+                    ApplyInitialPersistentScanOptionsForSourceMode((ScannerSource)value);
                 }
             }
         }
@@ -496,7 +499,7 @@ namespace Scanner.ViewModels
         }
 
         /// <summary>
-        ///     Applies initial scan options based the on database for a <paramref name="sourceMode"/>.
+        ///     Applies initial scan options based on the database for a <paramref name="sourceMode"/>.
         /// </summary>
         private void ApplyInitialScanOptionsForSourceMode(ScannerSource sourceMode)
         {
@@ -630,11 +633,84 @@ namespace Scanner.ViewModels
                     AppCenterService?.TrackError(exc);
                     ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
                     ApplyDefaultScanOptionsForSourceMode(sourceMode, null);
+                    ApplyInitialPersistentScanOptionsForSourceMode(sourceMode);
                 }
             }
             else
             {
                 ApplyDefaultScanOptionsForSourceMode(sourceMode, null);
+                ApplyInitialPersistentScanOptionsForSourceMode(sourceMode);
+            }
+        }
+
+        /// <summary>
+        ///     Applies initial persistent scan options based on the database for a <paramref name="sourceMode"/>.
+        /// </summary>
+        private void ApplyInitialPersistentScanOptionsForSourceMode(ScannerSource sourceMode)
+        {
+            if (SelectedScanner == null) return;
+
+            PersistentScanOptions persistentScanOptions =
+                           PersistentScanOptionsDatabaseService.GetPersistentScanOptionsForScanner(SelectedScanner);
+
+            switch (sourceMode)
+            {
+                case Enums.ScannerSource.Flatbed:
+                    if (SelectedScanner.FlatbedBrightnessConfig != null)
+                    {
+                        if (persistentScanOptions?.FlatbedBrightness != null)
+                        {
+                            SelectedBrightness = (int)persistentScanOptions.FlatbedBrightness;
+                        }
+                        else
+                        {
+                            SelectedBrightness = SelectedScanner.FlatbedBrightnessConfig.DefaultBrightness;
+                        }
+                    }
+
+                    if (SelectedScanner.FlatbedContrastConfig != null)
+                    {
+                        if (persistentScanOptions?.FlatbedContrast != null)
+                        {
+                            SelectedContrast = (int)persistentScanOptions.FlatbedContrast;
+                        }
+                        else
+                        {
+                            SelectedContrast = SelectedScanner.FlatbedContrastConfig.DefaultContrast;
+                        }
+                    }
+                    break;
+
+                case Enums.ScannerSource.Feeder:
+                    if (SelectedScanner.FeederBrightnessConfig != null)
+                    {
+                        if (persistentScanOptions?.FeederBrightness != null)
+                        {
+                            SelectedBrightness = (int)persistentScanOptions.FeederBrightness;
+                        }
+                        else
+                        {
+                            SelectedBrightness = SelectedScanner.FeederBrightnessConfig.DefaultBrightness;
+                        }
+                    }
+
+                    if (SelectedScanner.FeederContrastConfig != null)
+                    {
+                        if (persistentScanOptions?.FeederContrast != null)
+                        {
+                            SelectedContrast = (int)persistentScanOptions.FeederContrast;
+                        }
+                        else
+                        {
+                            SelectedContrast = SelectedScanner.FeederContrastConfig.DefaultContrast;
+                        }
+                    }
+                    break;
+
+                case Enums.ScannerSource.Auto:
+                case Enums.ScannerSource.None:
+                default:
+                    break;
             }
         }
 
@@ -672,6 +748,7 @@ namespace Scanner.ViewModels
 
                     SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FlatbedFormats, previousScanOptions?.Format);
                     break;
+
                 case Enums.ScannerSource.Feeder:
                     ScannerColorMode = GetDefaultColorMode
                         (SelectedScanner.IsFeederColorAllowed,
@@ -696,6 +773,7 @@ namespace Scanner.ViewModels
 
                     SelectedFileFormat = GetDefaultFileFormat(SelectedScanner.FeederFormats, previousScanOptions?.Format);
                     break;
+
                 case Enums.ScannerSource.None:
                 default:
                     AppCenterService.TrackError(new ApplicationException
@@ -803,6 +881,9 @@ namespace Scanner.ViewModels
 
             if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
 
+            if (ScannerBrightnessConfig != null) result.Brightness = SelectedBrightness;
+            if (ScannerContrastConfig != null) result.Contrast = SelectedContrast;
+
             return result;
         }
 
@@ -875,6 +956,7 @@ namespace Scanner.ViewModels
         private void DebugDeleteScanOptionsFromDatabase()
         {
             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
+            PersistentScanOptionsDatabaseService?.DeletePersistentScanOptionsForScanner(SelectedScanner);
         }
 
         /// <summary>
@@ -1054,6 +1136,43 @@ namespace Scanner.ViewModels
                 if ((bool)SettingsService.GetSetting(AppSetting.SettingRememberScanOptions))
                 {
                     ScanOptionsDatabaseService?.SaveScanOptionsForScanner(SelectedScanner, scanOptions);
+                }
+
+                // save persistent scan options
+                if (PersistentScanOptionsDatabaseService != null
+                    && (ScannerBrightnessConfig != null || ScannerContrastConfig != null))
+                {
+                    PersistentScanOptions persistentScanOptions = 
+                        PersistentScanOptionsDatabaseService.GetPersistentScanOptionsForScanner(SelectedScanner);
+
+                    if (persistentScanOptions == null) persistentScanOptions = new PersistentScanOptions();
+
+                    if (ScannerBrightnessConfig != null)
+                    {
+                        if (ScannerSource == Enums.ScannerSource.Flatbed)
+                        {
+                            persistentScanOptions.FlatbedBrightness = SelectedBrightness;
+                        }
+                        else if (ScannerSource == Enums.ScannerSource.Feeder)
+                        {
+                            persistentScanOptions.FeederBrightness = SelectedBrightness;
+                        }
+                    }
+
+                    if (ScannerContrastConfig != null)
+                    {
+                        if (ScannerSource == Enums.ScannerSource.Flatbed)
+                        {
+                            persistentScanOptions.FlatbedContrast = SelectedContrast;
+                        }
+                        else if (ScannerSource == Enums.ScannerSource.Feeder)
+                        {
+                            persistentScanOptions.FeederContrast = SelectedContrast;
+                        }
+                    }
+
+                    PersistentScanOptionsDatabaseService.SavePersistentScanOptionsForScanner(
+                        SelectedScanner, persistentScanOptions);
                 }
 
                 // clean folders

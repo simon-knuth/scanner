@@ -83,6 +83,7 @@ namespace Scanner
                 .AddSingleton<ILogService, LogService>()
                 .AddSingleton<IAppCenterService, AppCenterService>()
                 .AddSingleton<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
+                .AddSingleton<IPersistentScanOptionsDatabaseService, PersistentScanOptionsDatabaseService>()
                 .AddSingleton<IAppDataService, AppDataService>()
                 .AddSingleton<IAccessibilityService, AccessibilityService>()
                 .AddSingleton<IScanResultService, ScanResultService>()

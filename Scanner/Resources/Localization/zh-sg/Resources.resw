@@ -618,7 +618,7 @@
     <value>保存位置</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
-  <data name="HeadingSettingsTheme.Header" xml:space="preserve">
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
     <value>主题</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>

@@ -351,7 +351,7 @@ namespace Scanner.Models
         {
             switch (options.Source)
             {
-                case Enums.ScannerSource.Auto:
+                case ScannerSource.Auto:
                     // file format
                     if (options.Format.OriginalFormat == null)
                     {
@@ -363,7 +363,7 @@ namespace Scanner.Models
                     }
                     break;
 
-                case Enums.ScannerSource.Flatbed:
+                case ScannerSource.Flatbed:
                     // file format
                     if (options.Format.OriginalFormat == null)
                     {
@@ -390,9 +390,21 @@ namespace Scanner.Models
                         // prevents exception when only "Disabled" is available
                         Device.FlatbedConfiguration.AutoCroppingMode = options.GetAutoCropModeForScanner();
                     }
+
+                    // brightness
+                    if (options.Brightness != null)
+                    {
+                        Device.FlatbedConfiguration.Brightness = (int)options.Brightness;
+                    }
+
+                    // contrast
+                    if (options.Contrast != null)
+                    {
+                        Device.FlatbedConfiguration.Contrast = (int)options.Contrast;
+                    }
                     break;
 
-                case Enums.ScannerSource.Feeder:
+                case ScannerSource.Feeder:
                     // file format
                     if (options.Format.OriginalFormat == null)
                     {
@@ -426,9 +438,21 @@ namespace Scanner.Models
 
                     // duplex
                     Device.FeederConfiguration.Duplex = options.FeederDuplex;
+
+                    // brightness
+                    if (options.Brightness != null)
+                    {
+                        Device.FeederConfiguration.Brightness = (int)options.Brightness;
+                    }
+
+                    // contrast
+                    if (options.Contrast != null)
+                    {
+                        Device.FeederConfiguration.Contrast = (int)options.Contrast;
+                    }
                     break;
 
-                case Enums.ScannerSource.None:
+                case ScannerSource.None:
                 default:
                     LogService?.Log.Error("Unable to get scan for unknown {source}.", options.Source);
                     throw new ArgumentException("No source selected.");

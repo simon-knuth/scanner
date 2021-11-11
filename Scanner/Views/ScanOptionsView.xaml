@@ -51,6 +51,7 @@
             <converters:ScannerFileFormatGlyphConverter x:Key="ScannerFileFormatGlyphConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:SignedIntConverter x:Key="SignedIntConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -210,7 +211,7 @@
                                 <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}"/>
                                 <Button Content="Restart ScannerDiscoveryService" Command="{x:Bind ViewModel.DebugRestartScannerDiscoveryCommand}" Margin="8,0,0,0"/>
                             </StackPanel>
-                            <Button Content="Delete current scanner's scan options from database" Command="{x:Bind ViewModel.DebugDeleteScanOptionsFromDatabaseCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"/>
+                            <Button Content="Delete current scanner's scan options from databases" Command="{x:Bind ViewModel.DebugDeleteScanOptionsFromDatabaseCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"/>
                             <Button Content="Show scanner search tip" Command="{x:Bind ViewModel.DebugShowScannerTipCommand}"/>
                         </StackPanel>
                     </StackPanel>
@@ -587,8 +588,8 @@
                                 </interactivity:Interaction.Behaviors>
 
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Brightness adjustment" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
-                                    <TextBlock Text="Always saved across app sessions" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
+                                    <TextBlock x:Uid="HeadingScanOptionsBrightness" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
+                                    <TextBlock x:Uid="TextScanOptionsAlwaysSaved" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
 
                                     <Grid ColumnSpacing="12" Margin="0,12,0,0">
                                         <Grid.ColumnDefinitions>
@@ -596,8 +597,8 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedBrightness, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerBrightnessConfig.MinBrightness, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerBrightnessConfig.MaxBrightness, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerBrightnessConfig.BrightnessStep, Mode=OneWay}" SnapsTo="StepValues"/>
-                                        <AppBarButton Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetBrightnessCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultBrightnessSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedBrightness, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerBrightnessConfig.MinBrightness, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerBrightnessConfig.MaxBrightness, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerBrightnessConfig.BrightnessStep, Mode=OneWay}" SnapsTo="StepValues" ThumbToolTipValueConverter="{StaticResource SignedIntConverter}"/>
+                                        <AppBarButton x:Uid="ButtonScanOptionsReset" Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetBrightnessCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultBrightnessSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                                             <AppBarButton.Icon>
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A7;"/>
                                             </AppBarButton.Icon>
@@ -622,8 +623,8 @@
                                 </interactivity:Interaction.Behaviors>
 
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Contrast adjustment" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
-                                    <TextBlock Text="Always saved across app sessions" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
+                                    <TextBlock x:Uid="HeadingScanOptionsContrast" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,3" AutomationProperties.HeadingLevel="Level2"/>
+                                    <TextBlock x:Uid="TextScanOptionsAlwaysSaved" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,0,6" Opacity="0.75"/>
 
                                     <Grid ColumnSpacing="12" Margin="0,12,0,0">
                                         <Grid.ColumnDefinitions>
@@ -631,8 +632,8 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedContrast, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerContrastConfig.MinContrast, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerContrastConfig.MaxContrast, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerContrastConfig.ContrastStep, Mode=OneWay}" SnapsTo="StepValues"/>
-                                        <AppBarButton Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetContrastCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultContrastSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                                        <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{x:Bind ViewModel.SelectedContrast, Mode=TwoWay}" Minimum="{x:Bind ViewModel.ScannerContrastConfig.MinContrast, Mode=OneWay}" Maximum="{x:Bind ViewModel.ScannerContrastConfig.MaxContrast, Mode=OneWay}" TickFrequency="250" StepFrequency="{x:Bind ViewModel.ScannerContrastConfig.ContrastStep, Mode=OneWay}" SnapsTo="StepValues" ThumbToolTipValueConverter="{StaticResource SignedIntConverter}"/>
+                                        <AppBarButton x:Uid="ButtonScanOptionsReset" Grid.Column="1" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" Command="{x:Bind ViewModel.ResetContrastCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultContrastSelected, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                                             <AppBarButton.Icon>
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A7;"/>
                                             </AppBarButton.Icon>

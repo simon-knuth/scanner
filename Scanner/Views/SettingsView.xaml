@@ -54,7 +54,7 @@
         
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
-            <TextBlock x:Name="TextBlockTitlebar" Text="Settings" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+            <TextBlock x:Uid="HeadingSettings" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
         </Grid>
 
         <!-- Content -->
@@ -77,8 +77,8 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock Text="Save location" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                                <TextBlock Text="Choose where scans are saved" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="HeadingSettingsSaveLocation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="SubheadingSettingsSaveLocation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -86,7 +86,7 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
                                 </Grid>
                             </StackPanel>
                         </Grid>
@@ -94,8 +94,8 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                             <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
-                                <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" Content="Use a set location" Margin="0,0,12,0" IsEnabled="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                                <RadioButton Content="Ask every time"/>
+                                <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" x:Uid="OptionSettingsSaveLocationSet" Margin="0,0,12,0" IsEnabled="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                                <RadioButton x:Uid="OptionSettingsSaveLocationAsk"/>
                             </muxc:RadioButtons>
                         </StackPanel>
                         <Frame x:Name="FrameSaveLocationFolder" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" Visibility="{x:Bind RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay}" Opacity="{x:Bind FrameSaveLocationFolder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
@@ -106,8 +106,8 @@
                             <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                                 <TextBlock Text="{x:Bind ViewModel.SaveLocationPath, Mode=OneWay}" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">
-                                    <Button Content="Choose folder" Command="{x:Bind ViewModel.ChooseSaveLocationCommand}" Style="{ThemeResource AccentButtonStyle}"/>
-                                    <Button Content="Reset to default" Command="{x:Bind ViewModel.ResetSaveLocationCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                                    <Button x:Uid="ButtonSettingsSaveLocationChoose" Command="{x:Bind ViewModel.ChooseSaveLocationCommand}" Style="{ThemeResource AccentButtonStyle}"/>
+                                    <Button x:Uid="ButtonSettingsSaveLocationReset" Command="{x:Bind ViewModel.ResetSaveLocationCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
                                 </controls:WrapPanel>
                             </StackPanel>
                         </Frame>
@@ -127,8 +127,8 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-                                <TextBlock Text="Automatically determine the correct orientation of scanned pages" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="HeadingSettingsAutoRotation" Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="SubheadingSettingsAutoRotation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -136,14 +136,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
                                 </Grid>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <CheckBox x:Name="CheckBoxSettingAutoRotate" Content="Rotate pages automatically" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
+                            <CheckBox x:Name="CheckBoxSettingAutoRotate" x:Uid="OptionSettingsAutoRotation" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -153,7 +153,7 @@
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </CheckBox>
-                            <HyperlinkButton Content="Recognizer language" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
+                            <HyperlinkButton x:Uid="OptionSettingsAutoRotationLanguage" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -166,7 +166,7 @@
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom" Opening="MenuFlyoutSettingAutoRotateLanguage_Opening">
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddLanguage" Text="Add another language" Command="{x:Bind ViewModel.LaunchLanguageSettingsCommand}">
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddLanguage" x:Uid="ButtonSettingsAutoRotationAddLanguage" Command="{x:Bind ViewModel.LaunchLanguageSettingsCommand}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                             </MenuFlyoutItem.Icon>
@@ -176,7 +176,7 @@
                             </HyperlinkButton>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <TextBlock Text="This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                            <TextBlock x:Uid="TextSettingsAutoRotationExplanation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                             <Grid HorizontalAlignment="Center">
@@ -202,7 +202,7 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock Text="File naming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="HeadingSettingsFileNaming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -210,13 +210,13 @@
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
-                                    <TextBlock Grid.Column="1" Text="Unavailable while scanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
                                 </Grid>
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <CheckBox Content="Append time to file name" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
+                        <CheckBox x:Uid="OptionSettingsAppendTime" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Settings Scan Options -->
@@ -229,16 +229,16 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE80F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Scan options" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsScanOptions" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <CheckBox Content="Remember scan options" IsChecked="{x:Bind ViewModel.SettingRememberScanOptions, Mode=TwoWay}"/>
-                        <CheckBox Content="Show advanced scan options supported by your scanner" Margin="0,3,0,0" IsChecked="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=TwoWay}"/>
+                        <CheckBox x:Uid="OptionSettingsRememberScanOptions" IsChecked="{x:Bind ViewModel.SettingRememberScanOptions, Mode=TwoWay}"/>
+                        <CheckBox x:Uid="OptionSettingsShowAdvancedScanOptions" Margin="0,3,0,0" IsChecked="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
 
-                <TextBlock Text="Personalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <TextBlock x:Uid="HeadingSettingsPersonalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <!-- Setting Theme -->
                 <muxc:Expander x:Name="ExpanderTheme" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
                     <muxc:Expander.Header>
@@ -249,19 +249,19 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE793;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Theme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsTheme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
-                                <ComboBoxItem Content="Use system setting"/>
-                                <ComboBoxItem Content="Light"/>
-                                <ComboBoxItem Content="Dark"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeLight"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeDark"/>
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                            <TextBlock Text="Changes to this setting are applied once the app has been restarted." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                            <TextBlock x:Uid="TextSettingsRestart" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
@@ -275,13 +275,13 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Editor orientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsEditorOrientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                         <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
-                            <RadioButton Content="Horizontal" Margin="0,0,12,0"/>
-                            <RadioButton Content="Vertical"/>
+                            <RadioButton x:Uid="OptionSettingsEditorOrientationHorizontal" Margin="0,0,12,0"/>
+                            <RadioButton x:Uid="OptionSettingsEditorOrientationVertical"/>
                         </muxc:RadioButtons>
                     </StackPanel>
                 </muxc:Expander>
@@ -291,18 +291,14 @@
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
-                <TextBlock TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <Span>
-                        <Run>You can rate Scanner in the Microsoft Store to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on GitHub.</Run>
-                    </Span>
-                </TextBlock>
+                <TextBlock x:Uid="TextSettingsFeedback" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 <HyperlinkButton HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.StoreRatingCommand}">
-                    <TextBlock Text="Rate in the Microsoft Store" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Uid="HyperlinkSettingsFeedbackRate" TextWrapping="WrapWholeWords"/>
                 </HyperlinkButton>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriGithub}" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
-                        <TextBlock Text="GitHub" TextWrapping="WrapWholeWords"/>
+                        <TextBlock x:Uid="HyperlinkSettingsFeedbackGithub" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch">
@@ -314,7 +310,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE9D9;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Error reports and logs" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsErrorReports" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -367,11 +363,11 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE789;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" Text="Surveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsSurveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <CheckBox Content="Take part in occasional surveys" IsChecked="{x:Bind ViewModel.SettingShowSurveys, Mode=TwoWay}"/>
+                        <CheckBox x:Uid="OptionSettingsSurveys" IsChecked="{x:Bind ViewModel.SettingShowSurveys, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
 
@@ -380,11 +376,11 @@
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
-                <TextBlock Text="Windows offers support for over 100 languages - you can help make this app accessible for everyone." TextWrapping="WrapWholeWords"/>
+                <TextBlock x:Uid="TextSettingsTranslations" TextWrapping="WrapWholeWords"/>
                 <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
-                        <TextBlock Text="Help translate" TextWrapping="WrapWholeWords"/>
+                        <TextBlock x:Uid="HyperlinkSettingsTranslations" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
                 </HyperlinkButton>
                 <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
