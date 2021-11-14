@@ -2,11 +2,13 @@
 using Scanner.Views.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
@@ -104,6 +106,9 @@ namespace Scanner.Views
                             ((WinUI.NavigationViewItem)NavigationViewMain.SettingsItem).Opacity = 1;
                         }
                     });
+                    break;
+                case nameof(ViewModel.NarratorStatusText):
+                    await AnnounceNarratorStatus();
                     break;
                 default:
                     break;
@@ -340,6 +345,15 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ReliablyOpenTeachingTip(TeachingTipFeedback);
+            });
+        }
+
+        private async Task AnnounceNarratorStatus()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TextBlockAutomationPeer peer = new TextBlockAutomationPeer(TextBlockNarratorStatus);
+                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
             });
         }
     }

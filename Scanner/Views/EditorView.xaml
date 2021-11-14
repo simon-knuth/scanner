@@ -199,7 +199,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Toolbar -->
-        <Frame x:Name="FrameToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <Frame x:Name="FrameToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <interactivity:Interaction.Behaviors>
                 <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                     <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -567,7 +567,7 @@
         </Grid>
 
         <!-- Footer -->
-        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" CornerRadius="0,0,8,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" CornerRadius="0,0,8,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
             <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}" HorizontalContentAlignment="Stretch">
                 <controls:SwitchPresenter.ContentTransitions>
                     <TransitionCollection>

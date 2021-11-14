@@ -131,7 +131,7 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" ItemsSource="{x:Bind ViewModel.ScannerDiscoveryService.DiscoveredScanners, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedScanner, Mode=TwoWay}" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,6,48,6" TabIndex="0" AutomationProperties.IsRequiredForForm="True" RightTapped="ComboBoxScanners_RightTapped">
+        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" ItemsSource="{x:Bind ViewModel.ScannerDiscoveryService.DiscoveredScanners, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedScanner, Mode=TwoWay}" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,6,48,6" TabIndex="0" AutomationProperties.IsRequiredForForm="True" RightTapped="ComboBoxScanners_RightTapped">
             <interactivity:Interaction.Behaviors>
                 <core:DataTriggerBehavior Binding="{x:Bind ViewModel.Scanners.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
                     <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -649,7 +649,7 @@
         </ScrollViewer>
 
         <!-- Footer -->
-        <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,1,0,0">
+        <Grid Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="{x:Bind ButtonScan.Margin}">
                 <Button x:Name="ButtonCancelScan" x:Uid="ButtonScanOptionsCancel" Command="{x:Bind ViewModel.CancelScanCommand}" Height="{x:Bind ButtonScan.Height}" IsEnabled="False" Margin="0,0,12,0" Opacity="{x:Bind ButtonCancelScan.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Visibility="Collapsed">
                     <Button.OpacityTransition>

@@ -48,7 +48,7 @@
         </Grid.RowDefinitions>
         
         <!-- Toolbar -->
-        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
+        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
             <TextBlock x:Uid="HeadingHelp" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
         </Grid>
 

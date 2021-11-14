@@ -13,7 +13,6 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using static Scanner.Services.Messenger.MessengerEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -100,6 +99,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _TitlebarText, value);
         }
 
+        private string _NarratorStatusText;
+        public string NarratorStatusText
+        {
+            get => _NarratorStatusText;
+            set => SetProperty(ref _NarratorStatusText, value);
+        }
+
         private AppWideStatusMessage _DebugStatusMessage = new AppWideStatusMessage();
         public AppWideStatusMessage DebugStatusMessage
         {
@@ -126,6 +132,7 @@ namespace Scanner.ViewModels
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
             Messenger.Register<SettingsRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Settings);
+            Messenger.Register<NarratorAnnouncementMessage>(this, (r, m) => RequestNarratorAnnouncement(m));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
             ShowDonateDialogCommand = new RelayCommand(() => DisplayedView = ShellNavigationSelectableItem.Donate);
@@ -321,6 +328,11 @@ namespace Scanner.ViewModels
             {
                 FeedbackDialogRequested?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        private void RequestNarratorAnnouncement(NarratorAnnouncementMessage message)
+        {
+            NarratorStatusText = message.AnnouncementText;
         }
     }
 

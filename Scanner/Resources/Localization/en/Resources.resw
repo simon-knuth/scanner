@@ -281,10 +281,6 @@
     <value>Cancel currently running scan</value>
     <comment>The tooltip text that appears while hovering the "Cancel scan" button in the scan options.</comment>
   </data>
-  <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Manage scanners</value>
-    <comment>The tooltip text that appears while hovering the "Manage scanners" button in the scan options.</comment>
-  </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
     <value>Preview</value>
     <comment>The text of the "Preview" button in the scan options.</comment>
@@ -336,18 +332,6 @@
   <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
     <value>Cancel</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
-  </data>
-  <data name="DialogDevices.Title" xml:space="preserve">
-    <value>Select a scanner</value>
-    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
-  </data>
-  <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>If your scanner doesn't show up within three minutes, you might need to add it in the settings app first.</value>
-    <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
-  </data>
-  <data name="ButtonDialogDevices.Text" xml:space="preserve">
-    <value>Launch settings</value>
-    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
     <value>Are you enjoying the app?</value>
@@ -445,14 +429,6 @@
     <value>The scan failed due to an unknown error.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
-  <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
-    <value>Something went wrong</value>
-    <comment>The error message heading that appears when a scan fails with more information.</comment>
-  </data>
-  <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
-    <value>The scan failed with the following error:</value>
-    <comment>The error message body that appears when a scan fails with more information.</comment>
-  </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
     <value>Chinese</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
@@ -521,18 +497,9 @@
     <value>Flatbed</value>
     <comment>The "Flatbed" source option in the scan options section.</comment>
   </data>
-  <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>If your scanner doesn't show up within three minutes, ensure that it has been added in the </value>
-    <comment>The first part of the body of the text that tells the user to select a scanner.
-| -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
-  </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
     <value>Scanned pages will appear here</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
-  </data>
-  <data name="TextScannerIndicator.Text" xml:space="preserve">
-    <value>Always looking for available scanners</value>
-    <comment>The placeholder text in the scanner selection list.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
     <value>Supports preview</value>
@@ -558,14 +525,6 @@
     <value>Third-party licenses</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
-  <data name="ErrorMessageFeedbackHubHeading" xml:space="preserve">
-    <value>Oops!</value>
-    <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
-  </data>
-  <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>The Feedback Hub could not be launched.</value>
-    <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
-  </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
     <value>Something went wrong</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
@@ -579,7 +538,7 @@
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>Resetting the folder location failed. The error message is:</value>
+    <value>Resetting the folder location failed.</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
@@ -598,10 +557,6 @@
     <value>Give feedback</value>
     <comment>The heading for the "Feedback" section in settings.</comment>
   </data>
-  <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
-    <value>Help &amp; setup</value>
-    <comment>The heading for the "Help &amp; setup" section in settings.</comment>
-  </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
     <value>Save location</value>
     <comment>The heading for the "Save location" option in settings.</comment>
@@ -613,11 +568,6 @@
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
     <value>Translations</value>
     <comment>The heading for the "Translations" section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
-    <value>restart the app</value>
-    <comment>The hyperlink text for restarting the app to apply changes.
-TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
     <value>Append time to file name</value>
@@ -635,18 +585,9 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
     <value>Website</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
-  <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
-    <value>Learn how to install and use a scanner in Windows 10</value>
-    <comment>The hyperlink text directing the user to the scanner settings from the "Help &amp; setup" section in settings.</comment>
-  </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
     <value>Help translate</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
-  </data>
-  <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> and doesn't appear as offline there.</value>
-    <comment>The second part of the body of the text that tells the user to select a scanner.
-HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>Settings</value>
@@ -667,10 +608,6 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
     <value>Close</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
-  </data>
-  <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
-    <value>Go to scanner settings</value>
-    <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
     <value>Close</value>
@@ -836,10 +773,6 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
     <value>Back</value>
     <comment>The tooltip for a generic "Back" button.</comment>
   </data>
-  <data name="TextScannerCount" xml:space="preserve">
-    <value>{0} available</value>
-    <comment>The number of currently available scanners. The placeholder {0} is replaced with the actual number itself.</comment>
-  </data>
   <data name="TextZoomFactor" xml:space="preserve">
     <value>{0:000} %</value>
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
@@ -923,16 +856,6 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
     <value>Scan options</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
-DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
-    <value>rate Scanner in the Microsoft Store</value>
-    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
-DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Rate in the Microsoft Store</value>
@@ -1351,5 +1274,9 @@ Adjusting the brightness and contrast is only possible in **flatbed or feeder** 
   <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
     <value>This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device.</value>
     <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value>Scanner works best on Windows 11. Please keep your system up-to-date for an optimal experience.</value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
 </root>

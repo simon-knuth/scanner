@@ -12,7 +12,6 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
-using static Scanner.Services.Messenger.MessengerEnums;
 using static Utilities;
 
 namespace Scanner.Services

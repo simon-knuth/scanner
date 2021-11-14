@@ -292,7 +292,7 @@ namespace Scanner.ViewModels
             Messenger.Register<EditorIsEditingRequestMessage>(this, (r, m) => m.Reply(IsEditing));
 
             CropPageCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsync(x));
-            CropPagesCommand = new AsyncRelayCommand<ImageCropper>((x) => CropPagesAsync(x));
+            CropPagesCommand = new AsyncRelayCommand<ImageCropper>((x) => CropSimilarPagesAsync(x));
             CropPageAsCopyCommand = new AsyncRelayCommand<ImageCropper>((x) => CropAsCopyAsync(x));
             DrawOnPageCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsync(x));
             DrawOnPageAsCopyCommand = new AsyncRelayCommand<InkCanvas>((x) => DrawAsCopyAsync(x));
@@ -403,6 +403,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             RotateSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
 
         private async Task RenameAsync(string newName)
@@ -426,6 +430,10 @@ namespace Scanner.ViewModels
             BroadcastSelectedPageTitle();
 
             RenameSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
 
         private void EnterCropMode()
@@ -531,6 +539,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             DeleteSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
 
         private async Task<List<OpenWithApp>> GetAppsToOpenWith()
@@ -639,16 +651,24 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             CropSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
             LeaveCropMode();
         }
 
-        private async Task CropPagesAsync(ImageCropper imageCropper)
+        private async Task CropSimilarPagesAsync(ImageCropper imageCropper)
         {
             List<int> indices = GetSelectedIndicesCropSimilarPages();
             indices.Add(SelectedPageIndex);
 
             bool success = await ScanResultService.CropScansAsync(indices, imageCropper.CroppedRegion);
 
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
             LeaveCropMode();
         }
 
@@ -659,6 +679,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             CropAsCopySuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesCopyAccessibility")
+            });
         }
 
         private async Task DrawAsync(InkCanvas inkCanvas)
@@ -668,6 +692,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             DrawSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
             LeaveDrawMode();
         }
 
@@ -678,6 +706,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             DrawAsCopySuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesCopyAccessibility")
+            });
         }
 
         private async void RefreshSimilarPagesForCrop()

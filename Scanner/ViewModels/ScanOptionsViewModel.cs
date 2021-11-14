@@ -16,7 +16,6 @@ using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using static Enums;
-using static Scanner.Services.Messenger.MessengerEnums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -1127,6 +1126,7 @@ namespace Scanner.ViewModels
             StorageFolder targetFolder;
             bool askForFolder = (!CanAddToScanResult || startFresh)
                 && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
+            int numberOfScannedPages = 0;
 
             try
             {
@@ -1200,7 +1200,7 @@ namespace Scanner.ViewModels
 
                     // scan
                     var result = await ScanService?.GetScanAsync(SelectedScanner, scanOptions,
-                    AppDataService.FolderReceivedPages);
+                        AppDataService.FolderReceivedPages);
 
                     if (!CanAddToScanResult || startFresh)
                     {
@@ -1230,6 +1230,8 @@ namespace Scanner.ViewModels
                                 null);
                         }
                     }
+
+                    numberOfScannedPages = result.ScannedFiles.Count;
                 }
                 else
                 {
@@ -1298,6 +1300,8 @@ namespace Scanner.ViewModels
                                     null);
                             }
                         }
+
+                        numberOfScannedPages = copiedFiles.Count;
                     }
                     else
                     {
@@ -1319,9 +1323,29 @@ namespace Scanner.ViewModels
                     Severity = AppWideStatusMessageSeverity.Error,
                     AdditionalText = exc.Message
                 });
+                Messenger.Send(new NarratorAnnouncementMessage
+                {
+                    AnnouncementText = LocalizedString("TextScanFailAccessibility")
+                });
 
                 try { CancelScan(true); }
                 catch { }
+            }
+
+            // narrator announcement
+            if (numberOfScannedPages == 1)
+            {
+                Messenger.Send(new NarratorAnnouncementMessage
+                {
+                    AnnouncementText = LocalizedString("TextScanCompleteSingleAccessibility")
+                });
+            }
+            else if (numberOfScannedPages > 1)
+            {
+                Messenger.Send(new NarratorAnnouncementMessage
+                {
+                    AnnouncementText = String.Format(LocalizedString("TextScanCompleteMultipleAccessibility"), numberOfScannedPages)
+                });
             }
         }
 

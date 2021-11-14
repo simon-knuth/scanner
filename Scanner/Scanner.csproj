@@ -136,6 +136,7 @@
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\NarratorAnnouncementMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
@@ -193,7 +194,6 @@
     <Compile Include="Services\AppCenterService.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\HelpRequestShellMessage.cs" />
-    <Compile Include="Services\Messenger\MessengerEnums.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\ScannerDiscoveryService.cs" />
     <Compile Include="Services\SettingsService.cs" />
@@ -628,9 +628,6 @@
     <PRIResource Include="Resources\Secrets.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\de\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Resources\Localization\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -674,6 +671,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\zh-sg\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

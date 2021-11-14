@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
+using Scanner.Services.Messenger;
 using System;
 using Windows.UI.Xaml.Data;
-using static Scanner.Services.Messenger.MessengerEnums;
 
 namespace Scanner.Views.Converters
 {

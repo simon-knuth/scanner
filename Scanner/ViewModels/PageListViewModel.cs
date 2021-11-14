@@ -12,6 +12,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Data;
+using static Utilities;
 
 namespace Scanner.ViewModels
 {
@@ -223,6 +224,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             RotateSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
         private async Task DeleteAsync()
         {
@@ -236,6 +241,10 @@ namespace Scanner.ViewModels
             if (!success) return;
 
             DeleteSuccessful?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
 
         private async Task CopyAsync()

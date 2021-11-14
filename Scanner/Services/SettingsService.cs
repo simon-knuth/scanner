@@ -135,7 +135,7 @@ namespace Scanner.Services
                         Title = LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
                         MessageText = LocalizedString("ErrorMessageResetFolderUnauthorizedBody"),
                         AdditionalText = exc.Message,
-                        Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                        Severity = AppWideStatusMessageSeverity.Error
                     });
                     AppCenterService.TrackError(exc);
                     return;
@@ -150,7 +150,7 @@ namespace Scanner.Services
                         Title = LocalizedString("ErrorMessageResetFolderHeading"),
                         MessageText = LocalizedString("ErrorMessageResetFolderBody"),
                         AdditionalText = exc.Message,
-                        Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                        Severity = AppWideStatusMessageSeverity.Error
                     });
                     AppCenterService.TrackError(exc);
                     return;

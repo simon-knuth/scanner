@@ -203,7 +203,7 @@ namespace Scanner.ViewModels
                     Title = LocalizedString("ErrorMessagePickFolderHeading"),
                     MessageText = LocalizedString("ErrorMessagePickFolderBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                    Severity = AppWideStatusMessageSeverity.Error
                 });
                 return;
             }
@@ -231,7 +231,7 @@ namespace Scanner.ViewModels
                     Title = LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"),
                     MessageText = LocalizedString("ErrorMessageResetFolderUnauthorizedBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                    Severity = AppWideStatusMessageSeverity.Error
                 });
                 return;
             }
@@ -242,7 +242,7 @@ namespace Scanner.ViewModels
                     Title = LocalizedString("ErrorMessageResetFolderHeading"),
                     MessageText = LocalizedString("ErrorMessageResetFolderBody"),
                     AdditionalText = exc.Message,
-                    Severity = MessengerEnums.AppWideStatusMessageSeverity.Error
+                    Severity = AppWideStatusMessageSeverity.Error
                 });
                 return;
             }

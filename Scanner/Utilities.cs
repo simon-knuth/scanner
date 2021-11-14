@@ -627,22 +627,6 @@ static class Utilities
 
 
     /// <summary>
-    ///     Ask the narrator to announce something.
-    /// </summary>
-    /// <param name="announcement">The announcement.</param>
-    /// <param name="liveRegion">A live region on the current page.</param>
-    public static async Task NarratorAnnounceAsync(string announcement, TextBlock liveRegion)
-    {
-        await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-        {
-            liveRegion.Text = announcement;
-            TextBlockAutomationPeer peer = new TextBlockAutomationPeer(liveRegion);
-            peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-        });
-    }
-
-
-    /// <summary>
     ///     Copies the tooltip string of a <see cref="UIElement"/> to its AutomationProperties.Name.
     /// </summary>
     public static void CopyToolTipToAutomationPropertiesName(UIElement element)
