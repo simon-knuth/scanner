@@ -2,7 +2,7 @@
 &nbsp; 
 
 <p align="center">
-  <a href="https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2" title="PayPal" onclick="javascript:window.open('https://www.paypal.com/c2/webapps/mpp/paypal-popup?locale.x=en_C2','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/digitalassets/c/website/marketing/apac/C2/logos-buttons/optimize/44_Yellow_PayPal_Pill_Button.png" alt="PayPal" /></a>
+  <a href="https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2" title="PayPal"><img src="https://www.paypalobjects.com/digitalassets/c/website/marketing/apac/C2/logos-buttons/optimize/44_Yellow_PayPal_Pill_Button.png" alt="PayPal" /></a>
 </p>
 
 &nbsp; 
