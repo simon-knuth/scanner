@@ -13,8 +13,6 @@
 
 &nbsp; 
 
-&nbsp; 
-
 ## Bitcoin - BTC
 <table align="center">
   <tr>
