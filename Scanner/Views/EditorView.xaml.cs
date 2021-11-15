@@ -10,6 +10,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
@@ -516,7 +517,7 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutCropSimilarPages.Hide());
         }
 
-        private async void StackPanelFooterCrop_Loaded(object sender, RoutedEventArgs e)
+        private async void StackPanelToolbarCrop_Loaded(object sender, RoutedEventArgs e)
         {
             // fix success animation may have gotten stuck when playing while this was hidden
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
@@ -529,7 +530,7 @@ namespace Scanner.Views
             });
         }
 
-        private async void StackPanelFooterDraw_Loaded(object sender, RoutedEventArgs e)
+        private async void StackPanelToolbarDraw_Loaded(object sender, RoutedEventArgs e)
         {
             // fix success animation may have gotten stuck when playing while this was hidden
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
@@ -734,6 +735,16 @@ namespace Scanner.Views
             {
                 if (ScrollViewerEditDraw?.ZoomFactor == 1) return;
                 else TryZoomScanAsync(1, ScrollViewerEditDraw, true);
+            });
+        }
+
+        private async void ScrollViewerFlipViewPages_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                ScrollViewer scrollViewer = sender as ScrollViewer;
+                FlipView flipView = (FlipView)scrollViewer.Parent;
+                FlipViewItem flipViewItem = ((FrameworkElement)sender).Parent as FlipViewItem;
             });
         }
     }

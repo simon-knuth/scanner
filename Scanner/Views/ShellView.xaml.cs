@@ -108,7 +108,7 @@ namespace Scanner.Views
                     });
                     break;
                 case nameof(ViewModel.NarratorStatusText):
-                    await AnnounceNarratorStatus();
+                    if (ViewModel.NarratorStatusText != "") await AnnounceNarratorStatus();
                     break;
                 default:
                     break;

@@ -51,6 +51,7 @@
             <converters:AspectRatioOptionIntConverter x:Key="AspectRatioOptionIntConverter"/>
             <converters:ListNotNullOrEmptyConverter x:Key="ListNotNullOrEmptyConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
@@ -220,7 +221,7 @@
                     <controls:Case Value="0">
                         <StackPanel x:Name="StackPanelToolbarInitial" Orientation="Horizontal" Loaded="StackPanelToolbarInitial_Loaded">
                             <!-- Crop -->
-                            <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.EnterCropModeCommand}">
+                            <AppBarButton x:Name="ButtonToolbarCrop" x:Uid="ButtonEditCrop" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.EnterCropModeCommand}" AutomationProperties.Name="{x:Bind ButtonToolbarCrop, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCrop" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -235,7 +236,7 @@
                                 </Grid>
                             </AppBarButton>
                             <!-- Rotate -->
-                            <AppBarButton x:Name="ButtonToolbarRotate" x:Uid="ButtonEditRotate" LabelPosition="Collapsed" Style="{ThemeResource AppBarButtonStyleChevron}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="1" RightTapped="AppBarButtonRotate_RightTapped">
+                            <AppBarButton x:Name="ButtonToolbarRotate" x:Uid="ButtonEditRotate" LabelPosition="Collapsed" Style="{ThemeResource AppBarButtonStyleChevron}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.RotatePageCommand}" CommandParameter="1" RightTapped="AppBarButtonRotate_RightTapped"  AutomationProperties.Name="{x:Bind ButtonToolbarRotate, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconRotate" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -258,7 +259,7 @@
                                 </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <!-- Draw -->
-                            <AppBarButton x:Name="ButtonToolbarDraw" x:Uid="ButtonEditDraw" LabelPosition="Collapsed" Command="{x:Bind ViewModel.EnterDrawModeCommand}" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <AppBarButton x:Name="ButtonToolbarDraw" x:Uid="ButtonEditDraw" LabelPosition="Collapsed" Command="{x:Bind ViewModel.EnterDrawModeCommand}" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" AutomationProperties.Name="{x:Bind ButtonToolbarDraw, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconDraw" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDC6;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -274,7 +275,7 @@
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Rename -->
-                            <AppBarButton x:Name="ButtonToolbarRename" x:Uid="ButtonEditRename" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarRename_Click">
+                            <AppBarButton x:Name="ButtonToolbarRename" x:Uid="ButtonEditRename" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarRename_Click" AutomationProperties.Name="{x:Bind ButtonToolbarRename, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconRename" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -323,7 +324,7 @@
                                 </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
                             <!-- Delete -->
-                            <AppBarButton x:Name="ButtonToolbarDelete" x:Uid="ButtonEditDelete" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarDelete_Click">
+                            <AppBarButton x:Name="ButtonToolbarDelete" x:Uid="ButtonEditDelete" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarDelete_Click" AutomationProperties.Name="{x:Bind ButtonToolbarDelete, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconDelete" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74D;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -364,7 +365,7 @@
                             </AppBarButton>
                             <AppBarSeparator/>
                             <!-- Copy -->
-                            <AppBarButton x:Uid="ButtonEditCopy" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.CopyCommand}">
+                            <AppBarButton x:Name="ButtonToolbarCopy" x:Uid="ButtonEditCopy" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.CopyCommand}" AutomationProperties.Name="{x:Bind ButtonToolbarCopy, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -383,13 +384,13 @@
                                 </AppBarButton.KeyboardAccelerators>
                             </AppBarButton>
                             <!-- Open with -->
-                            <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarOpenWith_Click">
+                            <AppBarButton x:Name="ButtonToolbarOpenWith" x:Uid="ButtonEditOpenWith" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Click="ButtonToolbarOpenWith_Click" AutomationProperties.Name="{x:Bind ButtonToolbarOpenWith, Converter={StaticResource ToolTipConverter}}">
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AC;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <!-- Share -->
-                            <AppBarButton x:Name="ButtonToolbarShare" x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.ShareCommand}">
+                            <AppBarButton x:Name="ButtonToolbarShare" x:Uid="ButtonEditShare" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.ShareCommand}" AutomationProperties.Name="{x:Bind ButtonToolbarShare, Converter={StaticResource ToolTipConverter}}">
                                 <AppBarButton.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72D;"/>
                                 </AppBarButton.Icon>
@@ -415,7 +416,7 @@
 
                     <!-- Crop -->
                     <controls:Case Value="1">
-                        <StackPanel x:Name="StackPanelFooterCrop" Orientation="Horizontal" Loaded="StackPanelFooterCrop_Loaded">
+                        <StackPanel x:Name="StackPanelToolbarCrop" Orientation="Horizontal" Loaded="StackPanelToolbarCrop_Loaded">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
@@ -433,7 +434,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <AppBarToggleButton x:Name="AppBarToggleButtonAspectRatio" x:Uid="ButtonEditCropAspectRatio" Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" IsChecked="{x:Bind ViewModel.IsFixedAspectRatioSelected, Mode=OneWay}" Click="AppBarToggleButtonAspectRatio_Click" Checked="AppBarToggleButtonAspectRatio_IsCheckedChanged" Unchecked="AppBarToggleButtonAspectRatio_IsCheckedChanged">
+                                <AppBarToggleButton x:Name="AppBarToggleButtonAspectRatio" x:Uid="ButtonEditCropAspectRatio" Style="{ThemeResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" IsChecked="{x:Bind ViewModel.IsFixedAspectRatioSelected, Mode=OneWay}" Click="AppBarToggleButtonAspectRatio_Click" Checked="AppBarToggleButtonAspectRatio_IsCheckedChanged" Unchecked="AppBarToggleButtonAspectRatio_IsCheckedChanged" AutomationProperties.Name="{x:Bind AppBarToggleButtonAspectRatio, Converter={StaticResource ToolTipConverter}}">
                                     <AppBarToggleButton.Icon>
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE799;" FontSize="16"/>
                                     </AppBarToggleButton.Icon>
@@ -468,7 +469,7 @@
 
                     <!-- Draw -->
                     <controls:Case Value="2">
-                        <StackPanel x:Name="StackPanelFooterDraw" Orientation="Horizontal" Loaded="StackPanelFooterDraw_Loaded">
+                        <StackPanel x:Name="StackPanelToolbarDraw" Orientation="Horizontal" Loaded="StackPanelToolbarDraw_Loaded">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Transitions>
                                     <TransitionCollection>
@@ -489,7 +490,7 @@
                                 <InkToolbar InitialControls="PensOnly" TargetInkCanvas="{x:Bind InkCanvasEditDraw}">
                                     <InkToolbarEraserButton/>
                                 </InkToolbar>
-                                <AppBarToggleButton x:Uid="ButtonEditDrawTouch" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" Visibility="{x:Bind ViewModel.IsDeviceTouchEnabled, Mode=OneWay}" IsChecked="{x:Bind ViewModel.IsTouchDrawingEnabled, Mode=TwoWay}">
+                                <AppBarToggleButton x:Name="ButtonDrawTouch" x:Uid="ButtonEditDrawTouch" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" Visibility="{x:Bind ViewModel.IsDeviceTouchEnabled, Mode=OneWay}" IsChecked="{x:Bind ViewModel.IsTouchDrawingEnabled, Mode=TwoWay}" AutomationProperties.Name="{x:Bind ButtonDrawTouch, Converter={StaticResource ToolTipConverter}}">
                                     <AppBarToggleButton.Icon>
                                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED5F;"/>
                                     </AppBarToggleButton.Icon>
@@ -594,10 +595,10 @@
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Margin="12,0,12,0" Text="100 %" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" MaxLines="1" MinWidth="40"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomIn, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomOut, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>
@@ -631,7 +632,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button x:Name="ButtonCropSimilarPages" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}" Click="ButtonCropSimilarPages_Click">
+                            <Button x:Name="ButtonCropSimilarPages" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}" Click="ButtonCropSimilarPages_Click" AutomationProperties.Name="{x:Bind ButtonCropSimilarPages, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="6,0,6,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -716,7 +717,7 @@
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage}">
+                            <Button x:Name="ButtonFooterCropSaveCopy" Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage}" AutomationProperties.Name="{x:Bind ButtonFooterCropSaveCopy, Converter={StaticResource ToolTipConverter}}">
                                 <Grid Padding="0" Margin="0">
                                     <FontIcon x:Name="FontIconCropAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                         <FontIcon.RenderTransform>
@@ -730,7 +731,7 @@
                                     </FontIcon>
                                 </Grid>
                             </Button>
-                            <Button Grid.Column="4" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}">
+                            <Button x:Name="ButtonFooterCropDiscard" Grid.Column="4" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}" AutomationProperties.Name="{x:Bind ButtonFooterCropDiscard, Converter={StaticResource ToolTipConverter}}">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                             </Button>
                         </Grid>
@@ -765,7 +766,7 @@
                                         </StackPanel>
                                     </Grid>
                                 </Button>
-                                <Button Grid.Column="1" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.DrawOnPageAsCopyCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}">
+                                <Button x:Name="ButtonFooterDrawSaveCopy" Grid.Column="1" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.DrawOnPageAsCopyCommand}" CommandParameter="{x:Bind InkCanvasEditDraw}" AutomationProperties.Name="{x:Bind ButtonFooterDrawSaveCopy, Converter={StaticResource ToolTipConverter}}">
                                     <Grid Padding="0" Margin="0">
                                         <FontIcon x:Name="FontIconDrawAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
                                             <FontIcon.RenderTransform>
@@ -779,7 +780,7 @@
                                         </FontIcon>
                                     </Grid>
                                 </Button>
-                                <Button Grid.Column="2" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveDrawModeCommand}" Click="EditorDrawAboutToBeDismissed">
+                                <Button x:Name="ButtonFooterDrawDiscard" Grid.Column="2" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveDrawModeCommand}" Click="EditorDrawAboutToBeDismissed" AutomationProperties.Name="{x:Bind ButtonFooterDrawDiscard, Converter={StaticResource ToolTipConverter}}">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                                 </Button>
                             </Grid>
@@ -788,10 +789,10 @@
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <TextBlock x:Name="TextBlockZoomFactorDraw" Style="{StaticResource BodyTextBlockStyle}" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" MaxLines="1" MinWidth="60"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton x:Name="ButtonZoomInDraw" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomInDraw" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomInDraw, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton x:Name="ButtonZoomOutDraw" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click">
+                                        <AppBarButton x:Name="ButtonZoomOutDraw" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomOutDraw, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>

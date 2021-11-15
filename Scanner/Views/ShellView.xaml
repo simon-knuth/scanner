@@ -52,6 +52,7 @@
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:NotZeroVisibilityConverter x:Key="NotZeroVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             
             <!-- Storyboards -->
             <Storyboard x:Key="StoryboardInfoBarEnter">
@@ -81,12 +82,6 @@
 
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="0">
-                            <DoubleAnimation.EasingFunction>
-                                <CubicEase EasingMode="EaseOut"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
-                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="0">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
@@ -103,6 +98,7 @@
                         <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
                         <Setter Target="GridMainContent.Padding" Value="0"/>
                         <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
+                        <Setter Target="NavigationViewItemMainEditor.Visibility" Value="Visible"/>
                         <Setter Target="FrameMainContentFirst.Content" Value="{x:Null}"/>
                         <Setter Target="FrameMainContentSecond.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentSecond.BorderThickness" Value="0,1,0,0"/>
@@ -124,12 +120,6 @@
 
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="0">
-                            <DoubleAnimation.EasingFunction>
-                                <CubicEase EasingMode="EaseOut"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
-                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="0">
                             <DoubleAnimation.EasingFunction>
                                 <CubicEase EasingMode="EaseOut"/>
@@ -145,6 +135,7 @@
                         <Setter Target="NavigationViewMain.PaneDisplayMode" Value="Top"/>
                         <Setter Target="GridMainContent.Padding" Value="0"/>
                         <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
+                        <Setter Target="NavigationViewItemMainEditor.Visibility" Value="Visible"/>
                         <Setter Target="FrameMainContentFirst.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentFirst.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentSecond.Content" Value="{x:Null}"/>
@@ -176,7 +167,6 @@
                         <Setter Target="ColumnMainContentSecond.Width" Value="7*"/>
                         <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
                         <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
-                        <Setter Target="NavigationViewItemMainEditor.(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Value="50"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -187,12 +177,6 @@
                     </VisualState.StateTriggers>
 
                     <Storyboard>
-                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
-                             Storyboard.TargetName="NavigationViewItemMainEditor" Duration="0:0:0.15" To="50">
-                            <DoubleAnimation.EasingFunction>
-                                <CubicEase EasingMode="EaseIn"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              Storyboard.TargetName="NavigationViewItemMainPageList" Duration="0:0:0.15" To="50">
                             <DoubleAnimation.EasingFunction>
@@ -230,8 +214,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition x:Name="ColumnTitlebarButtons"/>
             </Grid.ColumnDefinitions>
-            
-            <Image Grid.Column="0" Source="/Assets/Logo.svg" HorizontalAlignment="Center" Margin="0,8,0,8"/>
+
+            <Image Grid.Column="0" x:Uid="ImageAppLogo" Source="/Assets/Logo.svg" HorizontalAlignment="Center" Margin="0,8,0,8"/>
             <TextBlock Grid.Column="1" x:Uid="HeadingScanner" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             <TextBlock Grid.Column="2" Text="-" Margin="6,0,6,0" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.TitlebarText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
             <Border Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="8,3,8,3" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Visibility="{x:Bind ViewModel.TitlebarText, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
@@ -246,12 +230,12 @@
             </muxc:NavigationView.Triggers>
 
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Foreground="{ThemeResource NavigationViewItemForeground}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainScanOptions" x:Uid="ButtonScanOptions" Foreground="{ThemeResource NavigationViewItemForeground}" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainScanOptions, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE80F;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainPageList" x:Uid="ButtonManage" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainPageList" x:Uid="ButtonManage" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainPageList, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -260,29 +244,25 @@
                         <CompositeTransform TranslateX="0"/>
                     </muxc:NavigationViewItem.RenderTransform>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Visibility="Collapsed" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainEditor, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE70F;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
-
-                    <muxc:NavigationViewItem.RenderTransform>
-                        <CompositeTransform TranslateX="50"/>
-                    </muxc:NavigationViewItem.RenderTransform>
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.FooterMenuItems>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" x:Uid="ButtonShowSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainSaveLocation" x:Uid="ButtonShowSaveLocation" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}"  AutomationProperties.Name="{x:Bind NavigationViewItemMainSaveLocation, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource ScanSaveLocationGlyphConverter}}"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainHelp, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" x:Uid="ButtonDonate" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}">
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainDonate" x:Uid="ButtonDonate" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainDonate, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
@@ -301,7 +281,7 @@
                     <ColumnDefinition x:Name="ColumnMainContentThird" Width="3*" MinWidth="300" MaxWidth="350"/>
                 </Grid.ColumnDefinitions>
 
-                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" AutomationProperties.LandmarkType="Form">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>
@@ -336,7 +316,7 @@
                     </Grid>
                 </muxc:InfoBar>
 
-                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" AutomationProperties.LandmarkType="Main">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>

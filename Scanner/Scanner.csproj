@@ -146,6 +146,7 @@
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\ToolTipConverter.cs" />
     <Compile Include="Views\Converters\SignedIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />

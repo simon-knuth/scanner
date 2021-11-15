@@ -47,6 +47,7 @@
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
             <converters:FilePathFolderConverter x:Key="FilePathFolderConverter"/>
             <converters:FilePathFolderPathConverter x:Key="FilePathFolderPathConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
 
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
@@ -139,7 +140,7 @@
                         </TransitionCollection>
                     </StackPanel.Transitions>
 
-                    <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Unchecked="AppBarToggleButtonSelect_Unchecked">
+                    <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Unchecked="AppBarToggleButtonSelect_Unchecked"  AutomationProperties.Name="{x:Bind AppBarToggleButtonSelect, Converter={StaticResource ToolTipConverter}}">
                         <AppBarToggleButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>
                         </AppBarToggleButton.Icon>
@@ -149,7 +150,7 @@
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarSeparator.OpacityTransition>
                     </AppBarSeparator>
-                    <AppBarButton x:Name="AppBarButtonRotate" x:Uid="ButtonManageRotate" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="1" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonRotate.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" RightTapped="AppBarButtonRotate_RightTapped">
+                    <AppBarButton x:Name="AppBarButtonRotate" x:Uid="ButtonManageRotate" Command="{x:Bind ViewModel.RotateCommand}" CommandParameter="1" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{ThemeResource AppBarButtonStyleChevron}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonRotate.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" RightTapped="AppBarButtonRotate_RightTapped" AutomationProperties.Name="{x:Bind AppBarButtonRotate, Converter={StaticResource ToolTipConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>
@@ -175,7 +176,7 @@
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonDelete" x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonDelete.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Click="AppBarButtonDelete_Click">
+                    <AppBarButton x:Name="AppBarButtonDelete" x:Uid="ButtonManageDelete" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonDelete.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Click="AppBarButtonDelete_Click" AutomationProperties.Name="{x:Bind AppBarButtonDelete, Converter={StaticResource ToolTipConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>
@@ -218,7 +219,7 @@
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonCopy" x:Uid="ButtonManageCopy" Command="{x:Bind ViewModel.CopyCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonCopy.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <AppBarButton x:Name="AppBarButtonCopy" x:Uid="ButtonManageCopy" Command="{x:Bind ViewModel.CopyCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonCopy.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" AutomationProperties.Name="{x:Bind AppBarButtonCopy, Converter={StaticResource ToolTipConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>
@@ -236,7 +237,7 @@
                             </FontIcon>
                         </Grid>
                     </AppBarButton>
-                    <AppBarButton x:Name="AppBarButtonShare" x:Uid="ButtonManageShare" Command="{x:Bind ViewModel.ShareCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <AppBarButton x:Name="AppBarButtonShare" x:Uid="ButtonManageShare" Command="{x:Bind ViewModel.ShareCommand}" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.SelectedRanges, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Style="{StaticResource AppBarButtonStyleCompact}" Visibility="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" Opacity="{x:Bind AppBarButtonShare.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" AutomationProperties.Name="{x:Bind AppBarButtonShare, Converter={StaticResource ToolTipConverter}}">
                         <AppBarButton.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </AppBarButton.OpacityTransition>

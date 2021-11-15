@@ -316,7 +316,13 @@ namespace Scanner.ViewModels
         private async Task DuplicatePageAsync(ScanResultElement element)
         {
             int index = ScanResult.Elements.IndexOf(element);
-            await ScanResultService.DuplicatePageAsync(index);
+            bool success = await ScanResultService.DuplicatePageAsync(index);
+
+            if (!success) return;
+            Messenger.Send(new NarratorAnnouncementMessage
+            {
+                AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
+            });
         }
     }
 }

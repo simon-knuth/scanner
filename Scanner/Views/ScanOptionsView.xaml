@@ -52,6 +52,7 @@
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
             <converters:SignedIntConverter x:Key="SignedIntConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -131,7 +132,7 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" ItemsSource="{x:Bind ViewModel.ScannerDiscoveryService.DiscoveredScanners, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedScanner, Mode=TwoWay}" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,6,48,6" TabIndex="0" AutomationProperties.IsRequiredForForm="True" RightTapped="ComboBoxScanners_RightTapped">
+        <ComboBox x:Name="ComboBoxScanners" Grid.Row="0" ItemsSource="{x:Bind ViewModel.ScannerDiscoveryService.DiscoveredScanners, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedScanner, Mode=TwoWay}" CornerRadius="8,8,0,0" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="14,6,48,6" TabIndex="0" AutomationProperties.IsRequiredForForm="True" RightTapped="ComboBoxScanners_RightTapped" AutomationProperties.Name="{x:Bind HeadingScanOptionsSource.Text}">
             <interactivity:Interaction.Behaviors>
                 <core:DataTriggerBehavior Binding="{x:Bind ViewModel.Scanners.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
                     <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -218,7 +219,7 @@
                 </Flyout>
             </FlyoutBase.AttachedFlyout>
         </ComboBox>
-        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" x:Uid="ButtonGetHelp" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}" RightTapped="ComboBoxScanners_RightTapped">
+        <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" x:Uid="ButtonGetHelp" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}" RightTapped="ComboBoxScanners_RightTapped" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpScanners, Converter={StaticResource ToolTipConverter}}">
             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,8,10,8"/>
         </HyperlinkButton>
         <Grid Grid.Row="0" Padding="14,0,72,0" HorizontalAlignment="Stretch">
@@ -267,7 +268,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
+                            <TextBlock x:Name="HeadingScanOptionsSource" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingScanOptionsSource" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
                             <muxc:RadioButtons x:Name="RadioButtonsSource" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerSource, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerSourceConverter}}">
                                 <RadioButton x:Name="RadioButtonSourceAutomatic" x:Uid="OptionScanOptionsSourceAutomatic" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, FallbackValue=False, Mode=OneWay}"/>
@@ -312,7 +313,7 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <HyperlinkButton Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}">
+                                <HyperlinkButton x:Name="HyperlinkButtonHelpFileFormat" Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpFileFormat, Converter={StaticResource ToolTipConverter}}">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
                                 </HyperlinkButton>
                             </Grid>
@@ -456,7 +457,7 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <HyperlinkButton Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}">
+                                <HyperlinkButton x:Name="HyperlinkButtonHelpResolution" Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpResolution, Converter={StaticResource ToolTipConverter}}">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
                                 </HyperlinkButton>
                             </Grid>
@@ -658,7 +659,7 @@
                     
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                 </Button>
-                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped">
+                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped" AutomationProperties.Name="{x:Bind ButtonPreview, Converter={StaticResource ToolTipConverter}}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:ChangePropertyAction TargetObject="{x:Bind TeachingTipPreview}" PropertyName="IsOpen" Value="True"/>

@@ -103,7 +103,11 @@ namespace Scanner.ViewModels
         public string NarratorStatusText
         {
             get => _NarratorStatusText;
-            set => SetProperty(ref _NarratorStatusText, value);
+            set
+            {
+                SetProperty(ref _NarratorStatusText, "");
+                SetProperty(ref _NarratorStatusText, value);
+            }
         }
 
         private AppWideStatusMessage _DebugStatusMessage = new AppWideStatusMessage();
@@ -120,6 +124,7 @@ namespace Scanner.ViewModels
             AppWideStatusMessageSeverity.Success,
             AppWideStatusMessageSeverity.Warning
         };
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
