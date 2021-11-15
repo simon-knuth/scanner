@@ -46,7 +46,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridMain">
+    <Grid x:Name="GridMain" AutomationProperties.LandmarkType="Form" AutomationProperties.Name="{x:Bind HeadingSettings.Text}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
@@ -54,7 +54,7 @@
         
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
-            <TextBlock x:Uid="HeadingSettings" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+            <TextBlock x:Name="HeadingSettings" x:Uid="HeadingSettings" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
         </Grid>
 
         <!-- Content -->
@@ -67,7 +67,7 @@
                 </StackPanel.ChildrenTransitions>
                 
                 <!-- Setting Save Location -->
-                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" AutomationProperties.Name="{x:Bind HeadingSettingsSaveLocation.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -77,7 +77,7 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock x:Uid="HeadingSettingsSaveLocation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Name="HeadingSettingsSaveLocation" x:Uid="HeadingSettingsSaveLocation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock x:Uid="SubheadingSettingsSaveLocation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
@@ -117,7 +117,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Auto-Rotate -->
-                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAutoRotation.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -127,7 +127,7 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock x:Uid="HeadingSettingsAutoRotation" Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Name="HeadingSettingsAutoRotation" x:Uid="HeadingSettingsAutoRotation" Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <TextBlock x:Uid="SubheadingSettingsAutoRotation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
@@ -192,7 +192,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting File Naming -->
-                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsFileNaming.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -202,7 +202,7 @@
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock x:Uid="HeadingSettingsFileNaming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Name="HeadingSettingsFileNaming" x:Uid="HeadingSettingsFileNaming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                                 <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -220,7 +220,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Settings Scan Options -->
-                <muxc:Expander x:Name="ExpanderScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsScanOptions.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -229,7 +229,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE80F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsScanOptions" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingSettingsScanOptions" Grid.Column="1" x:Uid="HeadingSettingsScanOptions" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
@@ -240,7 +240,7 @@
 
                 <TextBlock x:Uid="HeadingSettingsPersonalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <!-- Setting Theme -->
-                <muxc:Expander x:Name="ExpanderTheme" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderTheme" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsTheme.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -249,7 +249,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE793;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsTheme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingSettingsTheme" Grid.Column="1" x:Uid="HeadingSettingsTheme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -266,7 +266,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Editor Orientation -->
-                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsEditorOrientation.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -275,7 +275,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsEditorOrientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingSettingsEditorOrientation" Grid.Column="1" x:Uid="HeadingSettingsEditorOrientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
@@ -301,7 +301,7 @@
                         <TextBlock x:Uid="HyperlinkSettingsFeedbackGithub" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsErrorReports.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -310,7 +310,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE9D9;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsErrorReports" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingSettingsErrorReports" Grid.Column="1" x:Uid="HeadingSettingsErrorReports" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -354,7 +354,7 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderFeedbackSurveys" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderFeedbackSurveys" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsSurveys.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -363,7 +363,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE789;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingSettingsSurveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingSettingsSurveys" Grid.Column="1" x:Uid="HeadingSettingsSurveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
@@ -383,7 +383,7 @@
                         <TextBlock x:Uid="HyperlinkSettingsTranslations" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
                 </HyperlinkButton>
-                <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HyperlinkSettingsTranslationsContributors.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -408,7 +408,7 @@
                                 </FontIcon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
                             </Grid>
-                            <TextBlock Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HyperlinkSettingsTranslationsContributors" Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     

@@ -133,7 +133,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid>
+    <Grid AutomationProperties.LandmarkType="Main" AutomationProperties.Name="{x:Bind HeadingEditor.Text}">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -211,6 +211,7 @@
             </interactivity:Interaction.Behaviors>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="HeadingEditor" x:Uid="HeadingEditor" Margin="14,0,0,0" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                 <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}">
                     <controls:SwitchPresenter.ContentTransitions>
                         <TransitionCollection>

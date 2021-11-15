@@ -1279,4 +1279,20 @@ Adjusting the brightness and contrast is only possible in **flatbed or feeder** 
     <value>Scanner works best on Windows 11. Please keep your system up-to-date for an optimal experience.</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>New status message available</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>Editor</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>Page list</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>Scan options</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
 </root>

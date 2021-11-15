@@ -41,7 +41,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridMain">
+    <Grid x:Name="GridMain" AutomationProperties.LandmarkType="Custom" AutomationProperties.Name="{x:Bind HeadingHelp.Text}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition/>
@@ -49,7 +49,7 @@
         
         <!-- Toolbar -->
         <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
-            <TextBlock x:Uid="HeadingHelp" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+            <TextBlock x:Name="HeadingHelp" x:Uid="HeadingHelp" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
         </Grid>
 
         <!-- Content -->
@@ -62,7 +62,7 @@
                 </StackPanel.ChildrenTransitions>
 
                 <TextBlock Text="Scanner usage" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpScannerDiscovery.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -71,7 +71,7 @@
                             </Grid.ColumnDefinitions>
                             
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE721;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpScannerDiscovery" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpScannerDiscovery" Grid.Column="1" x:Uid="HeadingHelpScannerDiscovery" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -92,7 +92,7 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderScannerNotWorking" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderScannerNotWorking" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpScannerNotWorking.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -101,7 +101,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8FE;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpScannerNotWorking" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpScannerNotWorking" Grid.Column="1" x:Uid="HeadingHelpScannerNotWorking" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -116,7 +116,7 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChooseResolution" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChooseResolution" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChooseResolution.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -125,14 +125,14 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChooseResolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpChooseResolution" Grid.Column="1" x:Uid="HeadingHelpChooseResolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpChooseResolution" Padding="24,16,24,16" Background="Transparent"/>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderBrightnessContrast" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderBrightnessContrast" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpBrightnessContrast.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -141,7 +141,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpBrightnessContrast" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpBrightnessContrast" Grid.Column="1" x:Uid="HeadingHelpBrightnessContrast" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -158,7 +158,7 @@
                 </muxc:Expander>
 
                 <TextBlock Text="Files &amp; save location" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpSaveChanges.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -167,14 +167,14 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpSaveChanges" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpSaveChanges" Grid.Column="1" x:Uid="HeadingHelpSaveChanges" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpSaveChanges" Padding="24,16,24,16" Background="Transparent"/>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChangeScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChangeScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChangeScanFolder.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -183,7 +183,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChangeScanFolder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpChangeScanFolder" Grid.Column="1" x:Uid="HeadingHelpChangeScanFolder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -198,7 +198,7 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderChooseFileFormat" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderChooseFileFormat" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChooseFileFormat.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -207,7 +207,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB9F;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpChooseFileFormat" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpChooseFileFormat" Grid.Column="1" x:Uid="HeadingHelpChooseFileFormat" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
@@ -216,7 +216,7 @@
                 </muxc:Expander>
 
                 <TextBlock Text="PDF" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
-                <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpStartNewPdf.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -225,14 +225,14 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpStartNewPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpStartNewPdf" Grid.Column="1" x:Uid="HeadingHelpStartNewPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpStartNewPdf" Padding="24,16,24,16" Background="Transparent"/>
                     </StackPanel>
                 </muxc:Expander>
-                <muxc:Expander x:Name="ExpanderReorderPdfPages" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch">
+                <muxc:Expander x:Name="ExpanderReorderPdfPages" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpReorderPdf.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -241,7 +241,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8CB;" FontSize="16" Margin="0,0,16,0"/>
-                            <TextBlock Grid.Column="1" x:Uid="HeadingHelpReorderPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock x:Name="HeadingHelpReorderPdf" Grid.Column="1" x:Uid="HeadingHelpReorderPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">

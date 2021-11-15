@@ -92,7 +92,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid>
+    <Grid AutomationProperties.LandmarkType="Navigation" AutomationProperties.Name="{x:Bind HeadingPageList.Text}">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -140,6 +140,7 @@
                         </TransitionCollection>
                     </StackPanel.Transitions>
 
+                    <TextBlock x:Name="HeadingPageList" x:Uid="HeadingPageList" Margin="14,0,0,0" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                     <AppBarToggleButton x:Name="AppBarToggleButtonSelect" x:Uid="ButtonManageSelect" LabelPosition="Collapsed" Style="{StaticResource AppBarToggleButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Unchecked="AppBarToggleButtonSelect_Unchecked"  AutomationProperties.Name="{x:Bind AppBarToggleButtonSelect, Converter={StaticResource ToolTipConverter}}">
                         <AppBarToggleButton.Icon>
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE762;"/>

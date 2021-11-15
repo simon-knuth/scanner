@@ -224,7 +224,7 @@
         </Grid>
 
         <!-- Content -->
-        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="True" SelectionChanged="NavigationViewMain_SelectionChanged" ItemInvoked="NavigationViewMain_ItemInvoked">
+        <muxc:NavigationView x:Name="NavigationViewMain" Grid.Row="1" PaneDisplayMode="LeftCompact" Style="{StaticResource NavigationViewStyleNoContent}" VerticalAlignment="Stretch" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackButtonVisible="Collapsed" IsSettingsVisible="True" SelectionChanged="NavigationViewMain_SelectionChanged" ItemInvoked="NavigationViewMain_ItemInvoked" AutomationProperties.LandmarkType="Navigation" AutomationProperties.Name="">
             <muxc:NavigationView.Triggers>
 
             </muxc:NavigationView.Triggers>
@@ -281,7 +281,7 @@
                     <ColumnDefinition x:Name="ColumnMainContentThird" Width="3*" MinWidth="300" MaxWidth="350"/>
                 </Grid.ColumnDefinitions>
 
-                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" AutomationProperties.LandmarkType="Form">
+                <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>
@@ -316,7 +316,7 @@
                     </Grid>
                 </muxc:InfoBar>
 
-                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" AutomationProperties.LandmarkType="Main">
+                <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <PopupThemeTransition/>

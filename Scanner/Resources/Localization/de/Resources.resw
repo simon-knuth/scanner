@@ -1271,4 +1271,20 @@ Als Faustregel können Sie sich merken, dass Dokumente nur eine Auflösung von c
     <value>Scanner funktioniert am besten mit Windows 11. Bitte aktualisieren Sie regelmäßig Ihr System für eine optimale Leistung.</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>Neue Statusnachricht verfügbar</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>Editor</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>Seitenliste</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>Scan-Optionen</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
 </root>

@@ -137,7 +137,7 @@ namespace Scanner.ViewModels
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
             Messenger.Register<SettingsRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Settings);
-            Messenger.Register<NarratorAnnouncementMessage>(this, (r, m) => RequestNarratorAnnouncement(m));
+            Messenger.Register<NarratorAnnouncementMessage>(this, (r, m) => RequestNarratorAnnouncement(m.AnnouncementText));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
             ShowDonateDialogCommand = new RelayCommand(() => DisplayedView = ShellNavigationSelectableItem.Donate);
@@ -223,6 +223,8 @@ namespace Scanner.ViewModels
 
             StatusMessages.Insert(0, m);
             SelectedStatusMessageIndex = 0;
+
+            RequestNarratorAnnouncement(LocalizedString("TextNewStatusMessageAccessibility"));
         }
 
         private void StatusMessageDismissed()
@@ -335,9 +337,9 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void RequestNarratorAnnouncement(NarratorAnnouncementMessage message)
+        private void RequestNarratorAnnouncement(string announcement)
         {
-            NarratorStatusText = message.AnnouncementText;
+            NarratorStatusText = announcement;
         }
     }
 
