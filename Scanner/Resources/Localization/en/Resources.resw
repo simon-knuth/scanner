@@ -1295,4 +1295,16 @@ Adjusting the brightness and contrast is only possible in **flatbed or feeder** 
     <value>Scan options</value>
     <comment>The heading for the scan options.</comment>
   </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>Crop scans automatically</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>The options for automatic cropping are hidden by default and can be enabled in the settings. If these options aren't supported by your scanner, they will remain hidden.
+
+Automatic cropping is only possible in **flatbed or feeder** mode.
+
+"Single region" cropping creates a single image, which is especially useful for scanning documents. "Multiple regions" cropping can identify more than one element in a single scan, which is useful for putting multiple photos on a flatbed.</value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
 </root>

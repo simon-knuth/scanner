@@ -1014,7 +1014,7 @@ PDF ist ein beliebtes Format für Dokumente und kann mehrere Seiten in einer ein
     <comment>The auto crop setting for "Disabled" in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
-    <value>Multiple regions</value>
+    <value>Mehrere Regionen</value>
     <comment>The auto crop setting for "Multiple regions" in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
@@ -1286,5 +1286,17 @@ Als Faustregel können Sie sich merken, dass Dokumente nur eine Auflösung von c
   <data name="HeadingScanOptions.Text" xml:space="preserve">
     <value>Scan-Optionen</value>
     <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>Scans automatisch zuschneiden</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>Automatisches Zuschneiden ist eine fortgeschrittene Option und kann in den Einstellungen aktiviert werden. Wenn Ihr Scanner diese Option nicht unterstützt, wird sie von der App nicht angezeigt.
+
+Das automatische Zuschneiden ist nur beim Scannen vom **Flachbett oder Einzug** möglich.
+
+"Einzelne Region" erstellt ein einzelnes Bild, was inbesondere zum Scannen von Dokumenten nützlich ist. Das Zuschneiden auf "Mehrere Regionen" kann mehr als ein Element im Scan erkennen, was insbesondere zum Scannen von mehreren Fotos auf dem Flachbett nützlich ist. </value>
+    <comment>The help text on how to use automatic cropping.</comment>
   </data>
 </root>

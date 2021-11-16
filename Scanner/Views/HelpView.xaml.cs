@@ -44,6 +44,8 @@ namespace Scanner.Views
                     return ExpanderChooseResolution;
                 case HelpTopic.BrightnessContrast:
                     return ExpanderBrightnessContrast;
+                case HelpTopic.AutoCrop:
+                    return ExpanderAutoCrop;
                 case HelpTopic.SaveChanges:
                     return ExpanderSaveChanges;
                 case HelpTopic.ChangeScanFolder:

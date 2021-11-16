@@ -6,6 +6,7 @@
         ScannerNotWorking,
         ChooseResolution,
         BrightnessContrast,
+        AutoCrop,
         SaveChanges,
         ChangeScanFolder,
         ChooseFileFormat,

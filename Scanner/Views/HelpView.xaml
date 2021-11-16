@@ -156,6 +156,30 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderAutoCrop" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpAutoCrop.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpAutoCrop" Grid.Column="1" x:Uid="HeadingHelpAutoCrop" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpAutoCrop" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
 
                 <TextBlock Text="Files &amp; save location" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpSaveChanges.Text}">
