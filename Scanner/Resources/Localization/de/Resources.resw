@@ -1299,4 +1299,92 @@ Das automatische Zuschneiden ist nur beim Scannen vom **Flachbett oder Einzug** 
 "Einzelne Region" erstellt ein einzelnes Bild, was inbesondere zum Scannen von Dokumenten nützlich ist. Das Zuschneiden auf "Mehrere Regionen" kann mehr als ein Element im Scan erkennen, was insbesondere zum Scannen von mehreren Fotos auf dem Flachbett nützlich ist. </value>
     <comment>The help text on how to use automatic cropping.</comment>
   </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value>Ihre Antworten sind anonym.</value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value>Umfrage</value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value>Sie war bereits installiert</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value>Internetseite/Artikel</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>Ich weiß nicht</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>Anderes</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value>Empfehlung von jemandem</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value>Microsoft Store</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value>Anderes</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
+    <value>Privat</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageSchool" xml:space="preserve">
+    <value>Schule</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageStudy" xml:space="preserve">
+    <value>Studium</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageWork" xml:space="preserve">
+    <value>Arbeit</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
+    <value>Wie haben Sie diese App gefunden?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
+    <value>Wie einfach ist die Nutzung der App?</value>
+    <comment>The survey question on ease of use.</comment>
+  </data>
+  <data name="TextSurveyFeatures.Text" xml:space="preserve">
+    <value>Bietet die App alle Funktionen, die Sie erwartet haben?</value>
+    <comment>The survey question on the offered features.</comment>
+  </data>
+  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
+    <value>Wie zufrieden sind Sie mit der Auswahl an möglichen Dateiformaten?</value>
+    <comment>The survey question on available file formats.</comment>
+  </data>
+  <data name="TextSurveyFileSize.Text" xml:space="preserve">
+    <value>Wie zufrieden sind Sie mit der Größe der erstellten Dateien?</value>
+    <comment>The survey question on file sizes.</comment>
+  </data>
+  <data name="TextSurveyInterface.Text" xml:space="preserve">
+    <value>Wie würden Sie die Oberfläche der App bewerten?</value>
+    <comment>The survey question on the app interface.</comment>
+  </data>
+  <data name="TextSurveyPerformance.Text" xml:space="preserve">
+    <value>Wie schnell ist die App auf Ihrem Gerät?</value>
+    <comment>The survey question on performance.</comment>
+  </data>
+  <data name="TextSurveyRecommend.Text" xml:space="preserve">
+    <value>Wie wahrscheinlich würden Sie jemandem die App empfehlen, der etwas scannen möchte?</value>
+    <comment>The survey question on recommending the app to others.</comment>
+  </data>
+  <data name="TextSurveyUsage.Text" xml:space="preserve">
+    <value>Wofür nutzen Sie die App hauptsächlich?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
 </root>
