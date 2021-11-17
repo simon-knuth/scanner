@@ -516,16 +516,7 @@
                     <FlipView x:Name="FlipViewPages" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" CornerRadius="0" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}" SelectedIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=TwoWay}" SelectionChanged="FlipViewPages_SelectionChanged">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="scanner:ScanResultElement">
-                                <ScrollViewer
-                                x:Name="ScrollViewerFlipViewPages"
-                                ZoomMode="Enabled"
-                                MinZoomFactor="1"
-                                MaxZoomFactor="2.5"
-                                HorizontalScrollBarVisibility="Auto"
-                                VerticalScrollBarVisibility="Auto"
-                                ZoomSnapPointsType="Mandatory"
-                                Loading="ScrollViewerZoomable_Loading"
-                                ViewChanging="ScrollViewerFlipViewPages_ViewChanging">
+                                <ScrollViewer x:Name="ScrollViewerFlipViewPages" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ZoomSnapPointsType="Mandatory" Loading="ScrollViewerZoomable_Loading" ViewChanging="ScrollViewerFlipViewPages_ViewChanging" AutomationProperties.Name="{x:Bind ItemDescriptor}">
                                     <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
                                 </ScrollViewer>
                             </DataTemplate>

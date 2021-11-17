@@ -243,8 +243,9 @@ namespace Scanner.ViewModels
         {
             TitlebarText = title;
             
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            view.Title = TitlebarText;
+            // currently not setting app title because this doesn't behave well with narrator enabled
+            //ApplicationView view = ApplicationView.GetForCurrentView();
+            //view.Title = TitlebarText;
         }
 
         private void ScanResultService_ScanResultChanged(object sender, EventArgs e)

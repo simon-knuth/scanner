@@ -307,7 +307,7 @@
                                 <ComboBox x:Name="ComboBoxFileFormat" ItemsSource="{x:Bind ViewModel.FileFormats, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedFileFormat, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsFormat.Text}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="models:ScannerFileFormat">
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" AutomationProperties.Name="{x:Bind FriendlyName}">
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind TargetFormat, Converter={StaticResource ScannerFileFormatGlyphConverter}}" FontSize="16" Margin="0,0,12,0"/>
                                                 <TextBlock Text="{x:Bind FriendlyName}"/>
                                             </StackPanel>
