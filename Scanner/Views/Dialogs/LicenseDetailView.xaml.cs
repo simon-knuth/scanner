@@ -74,6 +74,16 @@ namespace Scanner
                     return "ms-appx:///License Texts/LicenseSerilogSinksAsync.txt";
                 case ThirdPartyLicense.SerilogSinksFile:
                     return "ms-appx:///License Texts/LicenseSerilogSinksFile.txt";
+                case ThirdPartyLicense.MicrosoftDataSqliteCore:
+                    return "ms-appx:///License Texts/LicenseMicrosoftDataSqliteCore.txt";
+                case ThirdPartyLicense.MicrosoftExtensionsDependencyInjection:
+                    return "ms-appx:///License Texts/LicenseMicrosoftExtensionsDependencyInjection.txt";
+                case ThirdPartyLicense.MicrosoftToolkitMvvm:
+                    return "ms-appx:///License Texts/LicenseMicrosoftToolkitMvvm.txt";
+                case ThirdPartyLicense.MicrosoftXamlBehaviorsUwpManaged:
+                    return "ms-appx:///License Texts/LicenseMicrosoftXamlBehaviorsUwpManaged.txt";
+                case ThirdPartyLicense.SqlitePclRawBundleWinsqlite3:
+                    return "ms-appx:///License Texts/LicenseSqlitePclRawBundleWinsqlite3.txt";
                 default:
                     throw new ArgumentException("No file path for license.");
             }

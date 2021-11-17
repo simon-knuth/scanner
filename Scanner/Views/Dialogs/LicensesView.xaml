@@ -18,11 +18,20 @@
                 <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftAppCenterCrashes" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Microsoft.AppCenter.Crashes"/>
                 </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftDataSqliteCore" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="Microsoft.Data.Sqlite.Core"/>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftExtensionsDependencyInjection" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="Microsoft.Extensions.DependencyInjection"/>
+                </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftNETCoreUniversalWindowsPlatform" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Microsoft.NETCore.UniversalWindowsPlatform"/>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftServicesStoreEngagement" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Microsoft.Services.Store.Engagement"/>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftToolkitMvvm" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="Microsoft.Toolkit.Mvvm"/>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftToolkitUwpNotifications" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Microsoft.Toolkit.Uwp.Notifications"/>
@@ -39,14 +48,14 @@
                 <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftUIXAML" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Microsoft.UI.XAML"/>
                 </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseMicrosoftXamlBehaviorsUwpManaged" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="Microsoft.Xaml.Behaviors.Uwp.Managed"/>
+                </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicensePDFsharp" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="PDFsharp"/>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseQueryStringNET" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="QueryString.NET"/>
-                </HyperlinkButton>
-                <HyperlinkButton x:Name="HyperlinkLicenseWin2Duwp" Click="HyperlinkLicenseButton_Click">
-                    <TextBlock Text="Win2D.uwp"/>
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseSerilog" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Serilog"/>
@@ -59,6 +68,12 @@
                 </HyperlinkButton>
                 <HyperlinkButton x:Name="HyperlinkLicenseSerilogSinksFile" Click="HyperlinkLicenseButton_Click">
                     <TextBlock Text="Serilog.Sinks.File"/>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseSqlitePclRawBundleWinqlite" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="SQLitePCLRaw.bundle_winsqlite3"/>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkLicenseWin2Duwp" Click="HyperlinkLicenseButton_Click">
+                    <TextBlock Text="Win2D.uwp"/>
                 </HyperlinkButton>
             </StackPanel>
         </ScrollViewer>

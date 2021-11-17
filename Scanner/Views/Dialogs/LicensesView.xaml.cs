@@ -85,6 +85,27 @@ namespace Scanner
             {
                 selected = ThirdPartyLicense.SerilogSinksFile;
             }
+            else if (sender == HyperlinkLicenseMicrosoftDataSqliteCore)
+            {
+                selected = ThirdPartyLicense.MicrosoftDataSqliteCore;
+            }
+            else if (sender == HyperlinkLicenseMicrosoftExtensionsDependencyInjection)
+            {
+                selected = ThirdPartyLicense.MicrosoftExtensionsDependencyInjection;
+            }
+            else if (sender == HyperlinkLicenseMicrosoftToolkitMvvm)
+            {
+                selected = ThirdPartyLicense.MicrosoftToolkitMvvm;
+            }
+            else if (sender == HyperlinkLicenseMicrosoftXamlBehaviorsUwpManaged)
+            {
+                selected = ThirdPartyLicense.MicrosoftXamlBehaviorsUwpManaged;
+            }
+            else if (sender == HyperlinkLicenseSqlitePclRawBundleWinqlite)
+            {
+                selected = ThirdPartyLicense.SqlitePclRawBundleWinsqlite3;
+            }
+
 
             Frame.Navigate(typeof(LicenseDetailView), selected, new SlideNavigationTransitionInfo()
             { Effect = SlideNavigationTransitionEffect.FromRight });

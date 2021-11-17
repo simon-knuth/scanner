@@ -23,6 +23,10 @@ namespace Scanner.Views.Dialogs
             {
                 args.Cancel = true;
             }
+            else
+            {
+                ViewModel.ConfirmSettingsCommand.Execute(null);
+            }
         }
     }
 }

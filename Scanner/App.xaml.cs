@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -93,9 +94,12 @@ namespace Scanner
                 .BuildServiceProvider());
 
             // intialize essential singleton services
+            Task.Run(Ioc.Default.GetService<ILogService>().InitializeAsync).Wait();
+            LogService = Ioc.Default.GetService<ILogService>();
+            Task.Run(Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync).Wait();
             Ioc.Default.GetService<IAppCenterService>();
             Ioc.Default.GetService<IAppDataService>();
-            LogService = Ioc.Default.GetService<ILogService>();
+            Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
         }
 
 

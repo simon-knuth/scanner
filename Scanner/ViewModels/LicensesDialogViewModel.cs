@@ -46,5 +46,10 @@ namespace Scanner.ViewModels
         SerilogExceptions = 13,
         SerilogSinksAsync = 14,
         SerilogSinksFile = 15,
+        MicrosoftDataSqliteCore = 16,
+        MicrosoftExtensionsDependencyInjection = 17,
+        MicrosoftToolkitMvvm = 18,
+        MicrosoftXamlBehaviorsUwpManaged = 19,
+        SqlitePclRawBundleWinsqlite3 = 20,
     }
 }

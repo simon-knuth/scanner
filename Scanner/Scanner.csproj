@@ -469,6 +469,11 @@
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\Simon.jpg" />
+    <Content Include="License Texts\LicenseMicrosoftExtensionsDependencyInjection.txt" />
+    <Content Include="License Texts\LicenseMicrosoftDataSqliteCore.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitMvvm.txt" />
+    <Content Include="License Texts\LicenseSqlitePclRawBundleWinsqlite3.txt" />
+    <Content Include="License Texts\LicenseMicrosoftXamlBehaviorsUwpManaged.txt" />
     <Content Include="License Texts\LicenseSerilogSinksFile.txt" />
     <Content Include="License Texts\LicenseSerilogSinksAsync.txt" />
     <Content Include="License Texts\LicenseSerilogExceptions.txt" />

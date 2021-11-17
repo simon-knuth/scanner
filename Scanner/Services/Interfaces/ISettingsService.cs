@@ -12,6 +12,7 @@ namespace Scanner.Services
         event EventHandler<AppSetting> SettingChanged;
         event EventHandler ScanSaveLocationChanged;
 
+        void LogAllSettings();
         void SetSetting(AppSetting setting, object value);
         object GetSetting(AppSetting setting);
 
@@ -39,6 +40,7 @@ namespace Scanner.Services
         Task SetScanSaveLocationAsync(StorageFolder folder);
         Task ResetScanSaveLocationAsync();
         void MigrateSettingsToV3();
+        Task InitializeAsync();
     }
 
     public enum AppSetting
