@@ -245,7 +245,7 @@
         <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <Frame Padding="24,16,24,24" HorizontalAlignment="Stretch">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" MaxWidth="450" Spacing="48">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" MaxWidth="450">
                     <!-- Source Mode -->
                     <Frame x:Name="FrameSourceMode" IsEnabled="False">
                         <interactivity:Interaction.Behaviors>
@@ -290,7 +290,7 @@
                     </Frame>
 
                     <!-- File Format -->
-                    <Frame x:Name="FrameFileFormat" IsEnabled="False">
+                    <Frame x:Name="FrameFileFormat" Margin="0,48,0,0" IsEnabled="False">
                         <interactivity:Interaction.Behaviors>
                             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                 <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -322,7 +322,7 @@
                     </Frame>
 
                     <!-- Color Mode -->
-                    <Frame x:Name="FrameColorMode" Opacity="{x:Bind FrameColorMode.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <Frame x:Name="FrameColorMode" Margin="0,48,0,0" Opacity="{x:Bind FrameColorMode.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <Frame.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </Frame.OpacityTransition>
@@ -427,7 +427,7 @@
                     </Frame>
 
                     <!-- Resolution -->
-                    <Frame x:Name="FrameResolution" IsEnabled="True" Opacity="{x:Bind FrameResolution.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <Frame x:Name="FrameResolution" Margin="0,48,0,0" IsEnabled="True" Opacity="{x:Bind FrameResolution.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <Frame.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </Frame.OpacityTransition>
@@ -466,7 +466,7 @@
                     </Frame>
 
                     <!-- Feeder Options -->
-                    <Frame x:Name="FrameFeederOptions" Opacity="{x:Bind FrameFeederOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                    <Frame x:Name="FrameFeederOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameFeederOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                         <Frame.OpacityTransition>
                             <ScalarTransition Duration="0:0:0.3"/>
                         </Frame.OpacityTransition>
@@ -496,9 +496,9 @@
 
                     <!-- Advanced Options -->
                     <Frame x:Name="FrameAdvancedOptions" Visibility="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=OneWay}">
-                        <StackPanel Orientation="Vertical" Spacing="48">
+                        <StackPanel Orientation="Vertical">
                             <!-- Automatic crop -->
-                            <Frame x:Name="FrameAutoCrop" Opacity="{x:Bind FrameAutoCrop.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                            <Frame x:Name="FrameAutoCrop" Margin="0,48,0,0" Opacity="{x:Bind FrameAutoCrop.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                                 <Frame.OpacityTransition>
                                     <ScalarTransition Duration="0:0:0.3"/>
                                 </Frame.OpacityTransition>
@@ -575,7 +575,7 @@
                             </Frame>
 
                             <!-- Brightness -->
-                            <Frame x:Name="FrameBrightnessOptions" Opacity="{x:Bind FrameBrightnessOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                            <Frame x:Name="FrameBrightnessOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameBrightnessOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                                 <Frame.OpacityTransition>
                                     <ScalarTransition Duration="0:0:0.3"/>
                                 </Frame.OpacityTransition>
@@ -610,7 +610,7 @@
                             </Frame>
 
                             <!-- Contrast -->
-                            <Frame x:Name="FrameContrastOptions" Opacity="{x:Bind FrameContrastOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                            <Frame x:Name="FrameContrastOptions" Margin="0,48,0,0" Opacity="{x:Bind FrameContrastOptions.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
                                 <Frame.OpacityTransition>
                                     <ScalarTransition Duration="0:0:0.3"/>
                                 </Frame.OpacityTransition>

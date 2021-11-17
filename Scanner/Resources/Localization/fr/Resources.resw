@@ -842,7 +842,7 @@ Fuzzy</comment>
     <value>Aucune de vos pages numérisées n&apos;est incluse dans ces journaux.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
+  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>Confirmer</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>

@@ -835,7 +835,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>您扫描的页面没有被包含在这些日志里。</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
+  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>确定</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>

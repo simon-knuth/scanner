@@ -7,14 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:Scanner.Helpers"
-    xmlns:viewModels="using:Scanner.ViewModels" xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     x:Uid="DialogPrivacySetup"
-    DefaultButton="Close"
-    CloseButtonStyle="{ThemeResource AccentButtonStyle}"
+    DefaultButton="Primary"
+    PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
     Loaded="ContentDialog_Loaded"
-    CloseButtonCommand="{x:Bind ViewModel.ConfirmSettingsCommand}"
+    Closing="ContentDialog_Closing"
+    CloseButtonText=""
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
 
     <ContentDialog.DataContext>

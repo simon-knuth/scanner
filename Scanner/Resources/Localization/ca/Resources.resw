@@ -134,28 +134,28 @@
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Relació d&apos;aspecte</value>
+    <value>Relació d'aspecte</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>Relació d&apos;aspecte</value>
+    <value>Relació d'aspecte</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
     <value>Kai 4</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 4".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
     <value>Kai 8</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 8".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
     <value>Kai 16</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 16".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
     <value>Kai 32</value>
-    <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
+    <comment>The aspect ratio description for the Chinese "Kai 32".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
     <value>Personalitzada</value>
@@ -167,19 +167,19 @@
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
     <value>DIN A</value>
-    <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
+    <comment>The aspect ratio description for the international "DIN A".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
     <value>ANSI A - Carta</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI A - Letter".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
     <value>ANSI B - Llibre Major/Tabloide</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI B - Ledger/Tabloid".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
     <value>ANSI C - Full de càlcul</value>
-    <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
+    <comment>The aspect ratio description for the North American "ANSI C - Broadsheet".</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
     <value>Quadrat</value>
@@ -195,122 +195,122 @@
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
     <value>Dibuixar i selecciona usant el Windows Ink</value>
-    <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Draw" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Dibuixar amb l&apos;entrada tàctil</value>
+    <value>Dibuixar amb l'entrada tàctil</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
     <value>Obre amb una altra aplicació</value>
-    <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Open with" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
     <value>Canvia el nom del fitxer</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rename" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
     <value>Gira 90º</value>
-    <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 90°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
     <value>Gira 180º</value>
-    <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 180°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
     <value>Gira 270º</value>
-    <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
+    <comment>The text of the "Rotate 270°" option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
     <value>Gira la pàgina (clic dret per a més)</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rotate" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
     <value>Desa els canvis</value>
-    <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Save" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Desa els canvis com a una còpia</value>
-    <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Save as copy" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Comparteix</value>
-    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Share" button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
     <value>Mostra les pàgines escanejades</value>
-    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
+    <comment>The text of the "Manage scan" button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Copia les pàgines selecionades</value>
-    <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Copy" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
     <value>Esborra les pàgines seleccionades</value>
-    <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Delete" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
     <value>Gira les pàgines seleccionades 90º</value>
-    <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 90°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
     <value>Gira les pàgines seleccionades 180º</value>
-    <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 180°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
     <value>Gira les pàgines seleccionades 270º</value>
-    <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
+    <comment>The text of the "Rotate 270°" option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
     <value>Gira les pàgines seleccionades (clic dret per a més)</value>
-    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Rotate" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
     <value>Selecciona pàgines</value>
-    <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Select" button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Comparteix les pàgines seleccionades</value>
-    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
+    <comment>The tooltip text that appears while hovering the "Share" button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostra les opcions de l&apos;escàner</value>
-    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
+    <value>Mostra les opcions de l'escàner</value>
+    <comment>The tooltip text that appears while hovering the "Scan Options" button in the toolbar.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cancel·la l&apos;escàner en curs</value>
-    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+    <value>Cancel·la l'escàner en curs</value>
+    <comment>The tooltip text that appears while hovering the "Cancel scan" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
     <value>Administra els escàners</value>
-    <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Manage scanners" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
     <value>Previsualitza</value>
-    <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
+    <comment>The text of the "Preview" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostra la ubicació del desat a l&apos;Explorer</value>
-    <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
+    <value>Mostra la ubicació del desat a l'Explorer</value>
+    <comment>The tooltip text that appears while hovering the "Show save location" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
     <value>Escaneja</value>
-    <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
+    <comment>The text of the "Scan" button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
     <value>Escaneja i comença de nou</value>
-    <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
+    <comment>The text of the "Scan" button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
     <value>Configuració</value>
-    <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
+    <comment>The tooltip text that appears while hovering the "Settings" button in the scan options.</comment>
   </data>
   <data name="DialogDelete.Title" xml:space="preserve">
-    <value>N&apos;esteu segur/a?</value>
+    <value>N'esteu segur/a?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.Subtitle" xml:space="preserve">
-    <value>La pàgina s&apos;esborrarà permanentment.</value>
+    <value>La pàgina s'esborrarà permanentment.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
@@ -322,11 +322,11 @@
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="DialogDeleteSelect.Title" xml:space="preserve">
-    <value>N&apos;esteu segur/a?</value>
+    <value>N'esteu segur/a?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
-    <value>Les pàgines seleccionades s&apos;esborraran permanentment.</value>
+    <value>Les pàgines seleccionades s'esborraran permanentment.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
@@ -342,7 +342,7 @@
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>si el vostre escàner no es mostra en tres minuts, podeu provar provar a afegir-lo des de la configuració de l&apos;ordinador.</value>
+    <value>si el vostre escàner no es mostra en tres minuts, podeu provar provar a afegir-lo des de la configuració de l'ordinador.</value>
     <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="ButtonDialogDevices.Text" xml:space="preserve">
@@ -350,7 +350,7 @@
     <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>Esteu gaudint de l&apos;aplicació?</value>
+    <value>Esteu gaudint de l'aplicació?</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
@@ -442,7 +442,7 @@
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>L&apos;escàner no està acceptant la petició de cancel·lar l&apos;escàner en curs.</value>
+    <value>L'escàner no està acceptant la petició de cancel·lar l'escàner en curs.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
@@ -450,7 +450,7 @@
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>L&apos;escàner ha fallat a causa d&apos;un error desconegut.</value>
+    <value>L'escàner ha fallat a causa d'un error desconegut.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
@@ -458,7 +458,7 @@
     <comment>The error message heading that appears when a scan fails with more information.</comment>
   </data>
   <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
-    <value>L&apos;escàner ha fallat amb el següent error:</value>
+    <value>L'escàner ha fallat amb el següent error:</value>
     <comment>The error message body that appears when a scan fails with more information.</comment>
   </data>
   <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
@@ -479,7 +479,7 @@
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
     <value>Escàner</value>
-    <comment>The heading for the app&apos;s main page.</comment>
+    <comment>The heading for the app's main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
     <value>Mode de color</value>
@@ -507,31 +507,31 @@
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
     <value>Color</value>
-    <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
+    <comment>The color mode "Color" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
     <value>Escala de grisos</value>
-    <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
+    <comment>The color mode "Grayscale" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
     <value>Monocrom</value>
-    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
+    <comment>The color mode "Monochrome" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
     <value>Doble (davant i darrere)</value>
-    <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
+    <comment>The "Duplex" option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
     <value>Configuració automàtica</value>
-    <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
+    <comment>The "Automatic" source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
     <value>Alimentador de documents</value>
-    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+    <comment>The "Feeder" source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Vidre de l&apos;escàner</value>
-    <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
+    <value>Vidre de l'escàner</value>
+    <comment>The "Flatbed" source option in the scan options section.</comment>
   </data>
   <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
     <value>Si el vostre escàner no es mostra en tres minuts, assegureu-vos de que ha estat afegit a la </value>
@@ -555,7 +555,7 @@
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Alguna cosa no ha funcionat. Reviseu que hi hagi una pàgina preparada a l&apos;escàner i torneu-ho a provar.</value>
+    <value>Alguna cosa no ha funcionat. Reviseu que hi hagi una pàgina preparada a l'escàner i torneu-ho a provar.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
@@ -575,7 +575,7 @@
     <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>El centre de comentaris no s&apos;ha pogut obrir.</value>
+    <value>El centre de comentaris no s'ha pogut obrir.</value>
     <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
@@ -591,7 +591,7 @@
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>No s&apos;ha pogut restablir la carpeta per defecte. El missatge d&apos;error és:</value>
+    <value>No s'ha pogut restablir la carpeta per defecte. El missatge d'error és:</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
@@ -599,35 +599,35 @@
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>L&apos;aplicació no té permís per a usar aquesta carpeta. Proveu a seleccionar-ne una altra.</value>
+    <value>L'aplicació no té permís per a usar aquesta carpeta. Proveu a seleccionar-ne una altra.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>Sobre l&apos;aplicació</value>
-    <comment>The heading for the &quot;About&quot; section in settings.</comment>
+    <value>Sobre l'aplicació</value>
+    <comment>The heading for the "About" section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
     <value>Enviar comentaris</value>
-    <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
+    <comment>The heading for the "Feedback" section in settings.</comment>
   </data>
   <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
     <value>Ajuda i Inicialització</value>
-    <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
+    <comment>The heading for the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
     <value>Desar ubicació</value>
-    <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
+    <comment>The heading for the "Save location" option in settings.</comment>
   </data>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
     <value>Tema</value>
-    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+    <comment>The heading for the "Theme" option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
     <value>Traduccions</value>
-    <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
+    <comment>The heading for the "Translations" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
-    <value>Reinicia l&apos;aplicació</value>
+    <value>Reinicia l'aplicació</value>
     <comment>The hyperlink text for restarting the app to apply changes.
 TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
@@ -653,7 +653,7 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
     <value>Aprèn a instal·lar i a utilitzar un escàner al Windows 10</value>
-    <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
+    <comment>The hyperlink text directing the user to the scanner settings from the "Help &amp; setup" section in settings.</comment>
   </data>
   <data name="TextSettingsRestart1.Text" xml:space="preserve">
     <value>Si us plau </value>
@@ -667,11 +667,11 @@ HyperlinkSettingsRestart.Text &lt;- |</comment>
   </data>
   <data name="TextSettingsTranslations1.Text" xml:space="preserve">
     <value>El Windows 10 ofereix suport per a més de 100 idiomes - Vosaltres podeu ajudar a fer aquesta app accessible per a tothom. Visita </value>
-    <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
+    <comment>The first part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="TextSettingsTranslations2.Text" xml:space="preserve">
     <value> per a més informació.</value>
-    <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
+    <comment>The second part of the text for the "Translation" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
     <value>aquesta pàgina</value>
@@ -708,7 +708,7 @@ HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
 TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
   </data>
   <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
-    <value>Aneu a la configuració de l&apos;escàner</value>
+    <value>Aneu a la configuració de l'escàner</value>
     <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
@@ -736,11 +736,11 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>Torna a l&apos;aplicació per a veure i editar el resultat.</value>
+    <value>Torna a l'aplicació per a veure i editar el resultat.</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>L&apos;aplicació recull totes les pàgines que escanegeu, sempre i quan no canvieu el format del fitxer o comenceu &quot;de nou&quot; mentre escaneges. Si esteu creant un document PDF, també pots reordenar les pàgines des d&apos;aquí.</value>
+    <value>L'aplicació recull totes les pàgines que escanegeu, sempre i quan no canvieu el format del fitxer o comenceu "de nou" mentre escaneges. Si esteu creant un document PDF, també pots reordenar les pàgines des d'aquí.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
@@ -800,11 +800,11 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Envia informes d&apos;error i estadístiques d&apos;ús</value>
+    <value>Envia informes d'error i estadístiques d'ús</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Això ens permet investigar errors de l&apos;aplicació i identificar quines característiques són més útils per als usuaris. Us assegurem que les vostres pàgines escanejades MAI seran incloses en aquests informes.</value>
+    <value>Això ens permet investigar errors de l'aplicació i identificar quines característiques són més útils per als usuaris. Us assegurem que les vostres pàgines escanejades MAI seran incloses en aquests informes.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
@@ -812,7 +812,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>Sempre podeu canviar d&apos;idea a la configuració.</value>
+    <value>Sempre podeu canviar d'idea a la configuració.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
@@ -820,11 +820,11 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Exporta el registre d&apos;events</value>
+    <value>Exporta el registre d'events</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Exporta el registre d&apos;events</value>
+    <value>Exporta el registre d'events</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
@@ -835,7 +835,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Cap de les pàgines escanejades serà inclosa en aquests informes.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
+  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>Confirma</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
@@ -877,7 +877,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
     <value>Documents escanejats</value>
-    <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+    <comment>The name of the folder that's used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
     <value>Demanar cada vegada</value>
@@ -889,7 +889,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enrere</value>
-    <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+    <comment>The tooltip for a generic "Back" button.</comment>
   </data>
   <data name="TextScannerCount" xml:space="preserve">
     <value>{0} disponible</value>
@@ -976,7 +976,7 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <comment>The name of the page management area for use by accessibility tools.</comment>
   </data>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
-    <value>Opcions d&apos;escaneig</value>
+    <value>Opcions d'escaneig</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
   <data name="DialogFeedbackText1.Text" xml:space="preserve">
@@ -1006,54 +1006,54 @@ DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
   </data>
   <data name="TextSettingsFeedback1.Text" xml:space="preserve">
     <value>Podeu </value>
-    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The first part of the text of the "Feedback" section in settings.
 |-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
   </data>
   <data name="TextSettingsFeedback2.Text" xml:space="preserve">
     <value> per a suggerir noves característiques i ajudar als altres a decidir si aquesta és la aplicació correcta per a ells. Els usuaris professionals també poden influir en el desenvolupament futur a través de </value>
-    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The second part of the text of the "Feedback" section in settings.
 HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
   </data>
   <data name="TextSettingsFeedback3.Text" xml:space="preserve">
     <value>.</value>
-    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
+    <comment>The third part of the text of the "Feedback" section in settings.
 HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>puntuar Escàner a la Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the "Help &amp; setup" section in settings.
 TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
     <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
+    <comment>The hyperlink text for navigating to the GitHub repository from the "Feedback" section in settings.
 TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
   </data>
   <data name="HeadingSettingsDonate.Text" xml:space="preserve">
     <value>Ajuda al desenvolupament</value>
-    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+    <comment>The heading for the "Donation" section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
-    <value>ajuda&apos;m amb una donació</value>
-    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
+    <value>ajuda'm amb una donació</value>
+    <comment>The hyperlink text allowing the user to donate from the "Donation" section in settings.
 TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
   </data>
   <data name="TextSettingsDonate1.Text" xml:space="preserve">
     <value>Aquesta aplicació està disponible per a tothom sense cap cost. Si us ha estalviat temps i us agradaria veure més aplicacions com aquesta, podeu </value>
-    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
+    <comment>The first part of the text of the "Donation" section in settings.
 |-&gt; HyperlinkSettingsDonate.Text</comment>
   </data>
   <data name="TextSettingsDonate2.Text" xml:space="preserve">
     <value>. Gràcies!</value>
-    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
+    <comment>The second part of the text of the "Donation" section in settings.
 HyperlinkSettingsDonate.Text &lt;-|</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
     <value>Ajuda al desenvolupament</value>
-    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+    <comment>The link to the "Donate" section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
     <value>Ajuda al desenvolupament</value>
-    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+    <comment>The text of the button that links to the "Donate" section in the changelog dialog. This is constrained in size and shouldn't be much longer than the English version.</comment>
   </data>
 </root>

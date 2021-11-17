@@ -16,5 +16,13 @@ namespace Scanner.Views.Dialogs
             // load actual content later to fix transitions
             FindName("GridContent");
         }
+
+        private void ContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        {
+            if (args.Result != ContentDialogResult.Primary)
+            {
+                args.Cancel = true;
+            }
+        }
     }
 }
