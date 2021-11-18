@@ -936,6 +936,7 @@ namespace Scanner.ViewModels
                 new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Jpeg),
                 new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Png),
                 new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Pdf),
+                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Tiff),
                 new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.DeviceIndependentBitmap)
             };
         }

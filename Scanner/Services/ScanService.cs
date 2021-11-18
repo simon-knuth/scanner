@@ -121,6 +121,15 @@ namespace Scanner.Services
                 IsScanInProgress = false;
             }
 
+            // check scan result
+            if (result == null
+                || result.ScannedFiles == null
+                || result.ScannedFiles.Count == 0
+                || result.ScannedFiles[0] == null)
+            {
+                throw new ApplicationException("Scan's result is invalid");
+            }
+
             return result;
         }
 

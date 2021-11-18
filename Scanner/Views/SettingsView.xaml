@@ -228,7 +228,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE80F;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8FE;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock x:Name="HeadingSettingsScanOptions" Grid.Column="1" x:Uid="HeadingSettingsScanOptions" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>

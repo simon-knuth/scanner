@@ -211,6 +211,8 @@ namespace Scanner.Services
                             { "feederAutoCropPossible", scanner.IsFeederAutoCropPossible.ToString() },
                             { "feederAutoCropSingleSupported", scanner.IsFeederAutoCropSingleRegionAllowed.ToString() },
                             { "feederAutoCropMultiSupported", scanner.IsFeederAutoCropMultiRegionAllowed.ToString() },
+                            { "brightnessSupported", (scanner.FlatbedBrightnessConfig != null || scanner.FeederBrightnessConfig != null).ToString() },
+                            { "contrastSupported", (scanner.FlatbedContrastConfig != null || scanner.FeederContrastConfig != null).ToString() },
                         });
             }
             catch (Exception) { }
