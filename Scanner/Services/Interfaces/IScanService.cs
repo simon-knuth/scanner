@@ -30,7 +30,7 @@ namespace Scanner.Services
             get;
         }
 
-        Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ImageScannerScanSource config);
+        Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ScanOptions options);
         Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner, ScanOptions options, StorageFolder targetFolder);
         void CancelScan();
     }

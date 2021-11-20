@@ -11,9 +11,6 @@ using static Utilities;
 
 namespace Scanner.Services
 {
-    /// <summary>
-    ///     Manages app settings and other persistent values.
-    /// </summary>
     internal class SettingsService : ObservableRecipient, ISettingsService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +82,9 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Initializes the settings and especially the save location.
+        /// </summary>
         public async Task InitializeAsync()
         {
             // initialize save location
@@ -162,6 +162,7 @@ namespace Scanner.Services
         /// </summary>
         public object GetSetting(AppSetting setting)
         {
+            LogService?.Log.Information($"GetSetting: Getting value for {setting}");
             string name = setting.ToString().ToUpper();
 
             switch (setting)
@@ -243,6 +244,7 @@ namespace Scanner.Services
         /// </summary>
         public void SetSetting(AppSetting setting, object value)
         {
+            LogService?.Log.Information($"GetSetting: Setting value for {setting} to {value}");
             string name = setting.ToString().ToUpper();
 
             switch (setting)
@@ -337,8 +339,12 @@ namespace Scanner.Services
             SettingChanged?.Invoke(this, setting);
         }
 
+        /// <summary>
+        ///     Sets the save location to given <paramref name="folder"/>.
+        /// </summary>
         public async Task SetScanSaveLocationAsync(StorageFolder folder)
         {
+            LogService?.Log.Information("SetScanSaveLocationAsync");
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList
                 .AddOrReplace(FutureAccessListStringScanSaveLocation, folder);
 
@@ -356,9 +362,23 @@ namespace Scanner.Services
             ScanSaveLocationChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        ///     Checks whether the currently active save location is the default one. Returns null, if the app is currently
+        ///     asking every time.
+        /// </summary>
         private async Task<bool?> CheckScanSaveLocationDefaultAsync()
         {
-            if (ScanSaveLocation == null) return false;
+            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime)
+            {
+                LogService?.Log.Information("CheckScanSaveLocationDefaultAsync: Asking every time ~> return null");
+                return null;
+            }
+
+            if (ScanSaveLocation == null)
+            {
+                LogService?.Log.Information("CheckScanSaveLocationDefaultAsync: Save location is null ~> return false");
+                return false;
+            }
 
             StorageFolder folder;
             try
@@ -367,22 +387,20 @@ namespace Scanner.Services
             }
             catch (Exception)
             {
+                LogService?.Log.Information("CheckScanSaveLocationDefaultAsync: Default save location doesn't exist ~> return false");
                 return false;
             }
 
             bool result = folder.Path == ScanSaveLocation.Path;
             _IsSaveLocationFolderDefault = result;
 
-            if ((SettingSaveLocationType)GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime)
-            {
-                return null;
-            }
-            else
-            {
-                return result;
-            }
+            LogService?.Log.Information($"CheckScanSaveLocationDefaultAsync: Return {result}");
+            return result;
         }
 
+        /// <summary>
+        ///     Resets the current save location regardless of whether asking every time is active.
+        /// </summary>
         public async Task ResetScanSaveLocationAsync()
         {
             StorageFolder folder;
@@ -408,6 +426,9 @@ namespace Scanner.Services
             await SetScanSaveLocationAsync(folder);
         }
 
+        /// <summary>
+        ///     Logs all current settings values.
+        /// </summary>
         public void LogAllSettings()
         {
             string logString = "Settings loaded: ";
@@ -439,13 +460,18 @@ namespace Scanner.Services
 
             if (defaultScanFolderName == "" || validName == false)
             {
-                defaultScanFolderName = "Scans";        // fallback name if there is an issue with the localization
-                AppCenterService.TrackError(new ApplicationException("The localized scan folder name is invalid, using 'Scans' instead."));
+                // use fallback name if there is an issue with the localization
+                AppCenterService.TrackError(new ApplicationException($"The localized scan folder " +
+                    $"name '{defaultScanFolderName}' is invalid, using 'Scans' instead."));
+                defaultScanFolderName = "Scans";
             }
 
             return defaultScanFolderName;
         }
 
+        /// <summary>
+        ///     Migrates all settings from versions prior to v3.0 to the new format.
+        /// </summary>
         public void MigrateSettingsToV3()
         {
             // hide setup

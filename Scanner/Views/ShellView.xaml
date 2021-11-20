@@ -332,6 +332,16 @@
                     <StackPanel Orientation="Vertical" MaxWidth="400">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                            <TextBlock Text="Get crazy" Style="{StaticResource BaseTextBlockStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Crash the app" Command="{x:Bind ViewModel.DebugCrashCommand}"/>
+                        </StackPanel>
+                        
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,32,0,16">
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
                             <TextBlock Text="Debug contextual dialogs" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
 

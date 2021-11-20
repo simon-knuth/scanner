@@ -46,8 +46,13 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Initializes the service by getting the desired language and trying to use it to create an
+        ///     <see cref="OcrEngine"/>. If that fails, a default one is created instead.
+        /// </summary>
         public void Initialize()
         {
+            LogService?.Log.Information("AutoRotatorService: Initializing");
             string desiredLanguageScript = (string)SettingsService.GetSetting(AppSetting.SettingAutoRotateLanguage);
 
             try
@@ -63,6 +68,10 @@ namespace Scanner.Services
             }
         }
         
+        /// <summary>
+        ///     Attempts to determine the <see cref="BitmapRotation"/> needed to fix the orientation of the given
+        ///     <paramref name="imageFile"/>.
+        /// </summary>
         public async Task<BitmapRotation> TryGetRecommendedRotationAsync(StorageFile imageFile, ImageScannerFormat format)
         {
             try

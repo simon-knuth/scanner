@@ -9,6 +9,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Manages the PDF conversion (kicks it off and processes the result).
+    /// </summary>
     public interface IPdfService
     {
         event EventHandler<bool> GenerationEnded;

@@ -39,6 +39,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
         public RelayCommand ViewLoadedCommand;
+        public RelayCommand DebugCrashCommand => new RelayCommand(Crash);
         public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
         public RelayCommand DebugShowTutorialPageListCommand => new RelayCommand(DebugShowTutorialPageList);
         public RelayCommand DebugShowChangelogCommand => new RelayCommand(DebugShowChangelog);
@@ -341,6 +342,11 @@ namespace Scanner.ViewModels
         private void RequestNarratorAnnouncement(string announcement)
         {
             NarratorStatusText = announcement;
+        }
+
+        private void Crash()
+        {
+            throw new ApplicationException("Crashing the app for debugging purposes.");
         }
     }
 

@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Manages and exposes the application event log.
+    /// </summary>
     public interface ILogService
     {
         ILogger Log

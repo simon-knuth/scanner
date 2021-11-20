@@ -996,9 +996,9 @@ namespace Scanner.ViewModels
             if (parameter == "File")
             {
                 // debug preview with file
-                var picker = new Windows.Storage.Pickers.FileOpenPicker();
-                picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                var picker = new FileOpenPicker();
+                picker.ViewMode = PickerViewMode.Thumbnail;
+                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                 picker.FileTypeFilter.Add(".jpg");
                 picker.FileTypeFilter.Add(".png");
                 picker.FileTypeFilter.Add(".tif");
@@ -1049,7 +1049,8 @@ namespace Scanner.ViewModels
             {
                 try
                 {
-                    BitmapImage image = await SelectedScanner.GetPreviewAsync(source);
+                    ScanOptions scanOptions = CreateScanOptions();
+                    BitmapImage image = await ScanService.GetPreviewAsync(SelectedScanner, scanOptions);
                     PreviewImage = image;
                 }
                 catch (Exception)

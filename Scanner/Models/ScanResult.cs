@@ -1852,20 +1852,6 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Removes all items in <see cref="folderReceivedPagesPDF"/>.
-        /// </summary>
-        private async Task CleanUpReceivedPagesFolder()
-        {
-            var files = await AppDataService.FolderReceivedPages.GetFilesAsync();
-
-            foreach (StorageFile file in files)
-            {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
-        }
-
-
-        /// <summary>
         ///     Duplicates the selected page and adds it to the instance (right behind its
         ///     parent page).
         /// </summary>

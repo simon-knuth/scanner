@@ -8,6 +8,9 @@ using Windows.UI.Xaml;
 
 namespace Scanner.Services
 {
+    /// <summary>
+    ///     Determines the correct rotation of an image.
+    /// </summary>
     public interface IAutoRotatorService
     {
         IReadOnlyList<Language> AvailableLanguages

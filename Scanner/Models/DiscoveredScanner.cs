@@ -320,31 +320,6 @@ namespace Scanner.Models
         }
 
         /// <summary>
-        ///     Returns a scan preview as <see cref="BitmapImage"/> using <paramref name="config"/>.
-        /// </summary>
-        /// <exception cref="Exception">
-        ///     Occurs when the scanner sends an error message.
-        /// </exception>
-        public async Task<BitmapImage> GetPreviewAsync(ImageScannerScanSource config)
-        {
-            using (IRandomAccessStream previewStream = new InMemoryRandomAccessStream())
-            {
-                var previewResult = await Device.ScanPreviewToStreamAsync(config, previewStream);
-
-                if (previewResult.Succeeded)
-                {
-                    BitmapImage bitmapImage = new BitmapImage();
-                    bitmapImage.SetSource(previewStream);
-                    return bitmapImage;
-                }
-                else
-                {
-                    throw new ApplicationException("Preview unsuccessful.");
-                }
-            }
-        }
-
-        /// <summary>
         ///     Prepares the scanner for a scan with the options given in <paramref name="options"/>.
         /// </summary>
         public void ConfigureForScanOptions(ScanOptions options)

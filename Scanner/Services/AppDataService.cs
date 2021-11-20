@@ -52,6 +52,9 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Initializes the temp directory by first cleaning it up and then creating the necessary folders.
+        /// </summary>
         public async Task Initialize()
         {
             // clean up temp folder
@@ -119,6 +122,9 @@ namespace Scanner.Services
             LogService?.Log.Information("Initialized temp folder");
         }
 
+        /// <summary>
+        ///     Removes all files from the <see cref="FolderReceivedPages"/>.
+        /// </summary>
         public async Task EmptyReceivedPagesFolderAsync()
         {
             var files = await FolderReceivedPages.GetFilesAsync();

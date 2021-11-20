@@ -13,9 +13,6 @@ using static Globals;
 
 namespace Scanner.Services
 {
-    /// <summary>
-    ///     Manages the PDF conversion (kicks it off and processes the result).
-    /// </summary>
     internal class PdfService : ObservableObject, IPdfService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +38,10 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Generates a PDF named <paramref name="name"/> based on the files in
+        ///     <see cref="AppDataService.FolderConversion"/> and moves it to <paramref name="targetFolder"/>.
+        /// </summary>
         public async Task<StorageFile> GeneratePdfAsync(string name, StorageFolder targetFolder)
         {
             taskCompletionSource = new TaskCompletionSource<bool>();

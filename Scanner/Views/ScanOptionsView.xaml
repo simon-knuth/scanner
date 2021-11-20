@@ -770,7 +770,7 @@
             </muxc:SplitButton>
         </Grid>
 
-        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="True">
+        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Closed">
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.DismissPreviewScanCommand}"/>

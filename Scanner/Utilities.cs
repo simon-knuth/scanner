@@ -38,102 +38,6 @@ using static Globals;
 static class Utilities
 {
     /// <summary>
-    ///     Creates a ComboBoxItem with the specified content string and tag string.
-    /// </summary>
-    /// <param name="content">
-    ///     The ComboBoxItem's content.
-    /// </param>
-    /// <param name="tag">
-    ///     The ComboBoxItem's tag.
-    /// </param>
-    /// <returns>
-    ///     The ComboBoxItem.
-    /// </returns>
-    public static ComboBoxItem CreateComboBoxItem(string content, object tag)
-    {
-        ComboBoxItem item = new ComboBoxItem
-        {
-            Content = content,
-            Tag = tag
-        };
-
-        return item;
-    }
-
-
-    /// <summary>
-    ///     Creates a ComboBoxItem with the specified glyph, content string and tag string.
-    /// </summary>
-    /// <param name="glyph">
-    ///     The glyph that shall be displayed to the left of the content.
-    /// </param>
-    /// <param name="content">
-    ///     The ComboBoxItem's content.
-    /// </param>
-    /// <param name="tag">
-    ///     The ComboBoxItem's tag.
-    /// </param>
-    /// <returns>
-    ///     The ComboBoxItem.
-    /// </returns>
-    public static ComboBoxItem CreateComboBoxItem(string glyph, string content, object tag)
-    {
-        StackPanel stackPanel = new StackPanel();
-        stackPanel.Orientation = Orientation.Horizontal;
-
-        stackPanel.Children.Add(new FontIcon
-        {
-            Glyph = glyph,
-            Margin = new Thickness(0, 0, 8, 0),
-            FontSize = 16,
-            Opacity = 0.9
-        });
-
-        stackPanel.Children.Add(new TextBlock
-        {
-            Text = content
-        });
-
-        ComboBoxItem item = new ComboBoxItem
-        {
-            Content = stackPanel,
-            Tag = tag,
-        };
-
-        Windows.UI.Xaml.Automation.AutomationProperties.SetName(item, content);
-
-        return item;
-    }
-
-
-    /// <summary>
-    ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
-    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/>
-    ///     is used to make the control visible once the image has been loaded.
-    /// </summary>
-    /// <remarks>
-    ///     If <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> is used, the
-    ///     <paramref name="imageControl"/> will be empty for a brief moment in order to detect when the
-    ///     new image has been loaded.
-    /// </remarks>
-    /// <param name="bitmapImage">The <see cref="BitmapImage"/> that shall be displayed.</param>
-    /// <param name="imageControl">The <see cref="Image"/> control.</param>
-    public static void DisplayImage(BitmapImage bitmapImage, Image imageControl)
-    {
-        if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
-        {
-            imageControl.Source = bitmapImage;
-            imageControl.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            imageControl.Source = null;
-            imageControl.Tag = bitmapImage;
-        }
-    }
-
-
-    /// <summary>
     ///     Converts the <paramref name="formatString"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
     /// <param name="formatString">"jpg", "jpeg", "png", "bmp" or "tiff"/"tif" (with or without dot).</param>
@@ -163,7 +67,6 @@ static class Utilities
         }
     }
 
-
     /// <summary>
     ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
@@ -185,7 +88,6 @@ static class Utilities
                 throw new ApplicationException("GetBitmapEncoderId received invalid ImageScannerFormat '" + format + "'.");
         }
     }
-
 
     /// <summary>
     ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding format string.
@@ -214,7 +116,6 @@ static class Utilities
                 throw new ApplicationException("ConvertImageScannerFormatToImageScannerFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
         }
     }
-
 
     /// <summary>
     ///     Gets the BitmapFileFormat corresponding to a file's format.
@@ -246,7 +147,6 @@ static class Utilities
         }
     }
 
-
     /// <summary>
     ///     Gets the CanvasBitmapFileFormat corresponding to a file's format.
     /// </summary>
@@ -277,31 +177,6 @@ static class Utilities
         }
     }
 
-
-    /// <summary>
-    ///     Checks whether the ctrl key is currently pressed.
-    /// </summary>
-    /// <returns>True if the ctrl key is currently pressed.</returns>
-    public static bool IsCtrlKeyPressed()
-    {
-        var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
-        return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-    }
-
-
-    /// <summary>
-    ///     Empty the <paramref name="canvas"/> and make sure that it has the correct dimensions to cover the image.
-    /// </summary>
-    /// <param name="canvas">The <see cref="InkCanvas"/> that is to be cleared and resized.</param>
-    /// <param name="properties">The <see cref="ImageProperties"/> that include the dimensions.</param>
-    public static void InitializeInkCanvas(InkCanvas canvas, double width, double height)
-    {
-        canvas.InkPresenter.StrokeContainer.Clear();
-        canvas.Width = width;
-        canvas.Height = height;
-    }
-
-
     /// <summary>
     ///     Searches the app resources for a localized version of a string.
     /// </summary>
@@ -309,10 +184,20 @@ static class Utilities
     /// <returns>The localized string.</returns>
     public static string LocalizedString(string resource)
     {
-        if (CoreWindow.GetForCurrentThread() != null) return ResourceLoader.GetForCurrentView().GetString(resource);
-        else return "{~STRING~}";
+        if (CoreWindow.GetForCurrentThread() != null)
+        {
+            return ResourceLoader.GetForCurrentView().GetString(resource);
+        }
+        else
+        {
+            string result = "{~STRING~}";
+            Task.Run(RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                result = ResourceLoader.GetForCurrentView().GetString(resource);
+            }).AsAsyncAction);
+            return result;
+        }
     }
-
 
     /// <summary>
     ///     Searches the app secrets for a localized version of a string.
@@ -324,7 +209,6 @@ static class Utilities
         var resources = new ResourceLoader("Secrets");
         return resources.GetString(secret);
     }
-
 
     /// <summary>
     ///     Removes brackets, their content and the leading whitespace from <paramref name="input"/>.
@@ -346,66 +230,6 @@ static class Utilities
             return input;
         }
     }
-
-
-    /// <summary>
-    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/> and
-    ///     an <paramref name="expirationTime"/> (in seconds).
-    /// </summary>
-    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
-    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
-    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
-    public static void SendToastNotification(string title, string content, int expirationTime)
-    {
-        // Construct the visuals of the toast
-        ToastVisual visual = new ToastVisual()
-        {
-            BindingGeneric = new ToastBindingGeneric()
-            {
-                Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = title
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = content
-                    },
-                },
-            }
-        };
-
-        // Construct final toast
-        ToastContent toastContent = new ToastContent()
-        {
-            Visual = visual,
-        };
-
-        var toast = new ToastNotification(toastContent.GetXml())
-        {
-            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
-        };
-
-        ToastNotificationManager.CreateToastNotifier().Show(toast);
-    }
-
-
-    /// <summary>
-    ///     Displays a MessageDialog consisting of a title and message.
-    /// </summary>
-    /// <param name="title">The title of the <see cref="MessageDialog"/>.</param>
-    /// <param name="message">The body of the <see cref="MessageDialog"/>.</param>
-    public async static Task ShowMessageDialogAsync(string title, string message)
-    {
-        await RunOnUIThreadAsync(CoreDispatcherPriority.High, async () =>
-        {
-            MessageDialog messageDialog = new MessageDialog(message, title);
-            await messageDialog.ShowAsync();
-        });
-    }
-
 
     /// <summary>
     ///     Adapts the titlebar buttons to the current theme.
@@ -435,19 +259,6 @@ static class Utilities
         }
     }
 
-
-    /// <summary>
-    ///     Gets the image measurements from <see cref="ImageProperties"/>.
-    /// </summary>
-    /// <returns>
-    ///     A tuple of width and height.
-    /// </returns>
-    public static Tuple<double, double> GetImageMeasurements(ImageProperties properties)
-    {
-        return new Tuple<double, double>(properties.Width, properties.Height);
-    }
-
-
     /// <summary>
     ///     Gets the image measurements from a <see cref="BitmapImage"/>.
     /// </summary>
@@ -458,7 +269,6 @@ static class Utilities
     {
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
     }
-
 
     /// <summary>
     ///     Converts a string to to a <see cref="ImageScannerFormat"/>.
@@ -509,7 +319,6 @@ static class Utilities
         }
     }
 
-
     /// <summary>
     ///     Opens a teaching tip and takes care of usual pitfalls.
     /// </summary>
@@ -524,7 +333,6 @@ static class Utilities
         }
     }
 
-
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>.
     /// </summary>
@@ -532,7 +340,6 @@ static class Utilities
     {
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
     }
-
 
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
@@ -557,7 +364,6 @@ static class Utilities
         await taskCompleted.Task;
     }
 
-
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
     ///     which waits for the code to finish running.
@@ -581,7 +387,6 @@ static class Utilities
         await taskCompleted.Task;
     }
 
-
     /// <summary>
     ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
     ///     which waits for the code to finish running and returns its result.
@@ -604,7 +409,6 @@ static class Utilities
         return await taskCompleted.Task;
     }
 
-
     /// <summary>
     ///     Checks whether the given format is an image format.
     /// </summary>
@@ -624,20 +428,6 @@ static class Utilities
                 return false;
         }
     }
-
-
-    /// <summary>
-    ///     Copies the tooltip string of a <see cref="UIElement"/> to its AutomationProperties.Name.
-    /// </summary>
-    public static void CopyToolTipToAutomationPropertiesName(UIElement element)
-    {
-        string toolTip = (string)ToolTipService.GetToolTip(element);
-        if (toolTip != null)
-        {
-            Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
-        }
-    }
-
 
     /// <summary>
     ///    Returns the current package version as a friendly string. 

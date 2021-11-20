@@ -35,6 +35,9 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Shows the dialog for rating the app. Opens the Microsoft Store, if something goes wrong.
+        /// </summary>
         public async Task ShowRatingDialogAsync()
         {
             try
@@ -80,6 +83,12 @@ namespace Scanner.Services
             return file.Name;
         }
 
+        /// <summary>
+        ///     Converts the <paramref name="file"/> to a <see cref="BitmapImage"/>.
+        /// </summary>
+        /// <remarks>
+        ///     Partially runs on the UI thread.
+        /// </remarks>
         public async Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file)
         {
             BitmapImage bmp = null;

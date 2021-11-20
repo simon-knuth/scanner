@@ -36,6 +36,12 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Gets all existing log files.
+        /// </summary>
+        /// <remarks>
+        ///     This causes the current log file to be closed and a new one to be created.
+        /// </remarks>
         public async Task<List<Models.LogFile>> GetLogFiles()
         {
             // flush log
@@ -61,6 +67,9 @@ namespace Scanner.Services
             return sortedFiles;
         }
 
+        /// <summary>
+        ///     Close the current log file.
+        /// </summary>
         public void CloseAndFlush()
         {
             Serilog.Log.CloseAndFlush();

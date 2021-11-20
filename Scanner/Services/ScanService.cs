@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Scanner.Services
@@ -70,15 +71,52 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ImageScannerScanSource config)
+        public async Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ScanOptions options)
         {
+            // analytics
             AppCenterService?.TrackEvent(AppCenterEvent.Preview,
                 new Dictionary<string, string>
                 {
-                        { "Source", config.ToString() },
+                        { "Source", options.Source.ToString() },
                 });
 
-            return await scanner.GetPreviewAsync(config);
+            // apply selected scan options
+            scanner.ConfigureForScanOptions(options);
+
+            // get preview
+            using (IRandomAccessStream previewStream = new InMemoryRandomAccessStream())
+            {
+                ImageScannerPreviewResult previewResult;
+                switch (options.Source)
+                {
+                    case Enums.ScannerSource.Auto:
+                        previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                            ImageScannerScanSource.AutoConfigured, previewStream);
+                        break;
+                    case Enums.ScannerSource.Flatbed:
+                        previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                            ImageScannerScanSource.Flatbed, previewStream);
+                        break;
+                    case Enums.ScannerSource.Feeder:
+                        previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                            ImageScannerScanSource.Feeder, previewStream);
+                        break;
+                    case Enums.ScannerSource.None:
+                    default:
+                        throw new ArgumentException($"Source mode {options.Source} not valid for preview");
+                }
+
+                if (previewResult.Succeeded)
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.SetSource(previewStream);
+                    return bitmapImage;
+                }
+                else
+                {
+                    throw new ApplicationException("Preview unsuccessful");
+                }
+            }
         }
 
         public async Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner,
