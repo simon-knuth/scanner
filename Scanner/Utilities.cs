@@ -190,12 +190,7 @@ static class Utilities
         }
         else
         {
-            string result = "{~STRING~}";
-            Task.Run(RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                result = ResourceLoader.GetForCurrentView().GetString(resource);
-            }).AsAsyncAction);
-            return result;
+            return ResourceLoader.GetForViewIndependentUse().GetString(resource);
         }
     }
 

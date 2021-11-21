@@ -1,4 +1,5 @@
 ﻿using Scanner.Models;
+using System.Threading.Tasks;
 
 namespace Scanner.Services
 {
@@ -7,6 +8,7 @@ namespace Scanner.Services
     /// </summary>
     public interface IPersistentScanOptionsDatabaseService
     {
+        Task InitializeAsync();
         PersistentScanOptions GetPersistentScanOptionsForScanner(DiscoveredScanner scanner);
         void SavePersistentScanOptionsForScanner(DiscoveredScanner scanner, PersistentScanOptions persistentScanOptions);
         

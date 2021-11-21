@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Scanner.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Storage;
@@ -29,17 +30,28 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public PersistentScanOptionsDatabaseService()
         {
+            
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Initializes the database.
+        /// </summary>
+        public async Task InitializeAsync()
+        {
             // get database folder
-            StorageFolder folder = Task.Run(async () =>
-                await ApplicationData.Current.LocalFolder.CreateFolderAsync(DbFolderName,
-                    CreationCollisionOption.OpenIfExists)).Result;
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(DbFolderName,
+                    CreationCollisionOption.OpenIfExists);
 
             // create database file, if necessary
-            StorageFile file = Task.Run(async () =>
-                await folder.CreateFileAsync(DbFileName, CreationCollisionOption.OpenIfExists)).Result;
+            await folder.CreateFileAsync(DbFileName, CreationCollisionOption.OpenIfExists);
 
             // configure database
-            SqliteConnection db = new SqliteConnection(String.Format("Filename={0}", file.Path));
+            string path = Path.Combine(folder.Path, DbFileName);
+            SqliteConnection db = new SqliteConnection(String.Format("Filename={0}", path));
             db.Open();
 
             string tableCommand = "CREATE TABLE IF NOT EXISTS " + TableName.ToUpper() + " ("
@@ -62,10 +74,6 @@ namespace Scanner.Services
             Connection = db;
         }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         ///     Gets <see cref="PersistentScanOptions"/> for the given <paramref name="scanner"/>.
         /// </summary>

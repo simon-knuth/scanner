@@ -386,6 +386,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private async Task ViewLoaded()
         {
+            await PersistentScanOptionsDatabaseService.InitializeAsync();
+            await ScanOptionsDatabaseService.InitializeAsync();
             await ScannerDiscoveryService.RestartSearchAsync();
             Scanners = ScannerDiscoveryService.DiscoveredScanners;
             Scanners.CollectionChanged += Scanners_CollectionChangedAsync;

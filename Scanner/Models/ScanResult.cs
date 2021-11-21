@@ -123,22 +123,16 @@ namespace Scanner
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[result.Elements.Count];
                 for (int i = 0; i < result.Elements.Count; i++)
                 {
                     ScanResultElement element = result.Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    tasks[i] = autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
-                }
-
-                // collect recommendations
-                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
-                for (int i = 0; i < recommendations.Length; i++)
-                {
-                    if (recommendations[i] != BitmapRotation.None)
+                    BitmapRotation recommendation = await autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
+                    if (recommendation != BitmapRotation.None)
                     {
-                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
                 }
                 
@@ -205,22 +199,16 @@ namespace Scanner
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[result.Elements.Count];
                 for (int i = 0; i < result.Elements.Count; i++)
                 {
                     ScanResultElement element = result.Elements[i];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    tasks[i] = autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
-                }
-
-                // collect recommendations
-                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
-                for (int i = 0; i < recommendations.Length; i++)
-                {
-                    if (recommendations[i] != BitmapRotation.None)
+                    BitmapRotation recommendation = await autoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
+                    if (recommendation != BitmapRotation.None)
                     {
-                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendations[i]));
+                        instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
                 }
                 
@@ -1537,22 +1525,16 @@ namespace Scanner
             // automatic rotation
             if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
-                Task<BitmapRotation>[] tasks = new Task<BitmapRotation>[files.Count()];
                 for (int i = 0; i < files.Count(); i++)
                 {
                     ScanResultElement element = Elements[i + NumberOfPages - files.Count()];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
-                    tasks[i] = AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
-                }
-
-                // collect recommendations
-                BitmapRotation[] recommendations = await Task.WhenAll(tasks);
-                for (int i = 0; i < recommendations.Length; i++)
-                {
-                    if (recommendations[i] != BitmapRotation.None)
+                    BitmapRotation recommendation = await AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
+                    if (recommendation != BitmapRotation.None)
                     {
-                        instructions.Add(new Tuple<int, BitmapRotation>(i + NumberOfPages - files.Count(), recommendations[i]));
+                        instructions.Add(new Tuple<int, BitmapRotation>(i + NumberOfPages - files.Count(), recommendation));
                     }
                 }
 
