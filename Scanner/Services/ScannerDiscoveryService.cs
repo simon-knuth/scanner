@@ -36,9 +36,13 @@ namespace Scanner.Services
 
         private DeviceWatcher Watcher;
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Clears <see cref="DiscoveredScanners"/> and restarts the search.
+        /// </summary>
         public async Task RestartSearchAsync()
         {
             Watcher?.Stop();
@@ -134,6 +138,9 @@ namespace Scanner.Services
             });
         }
 
+        /// <summary>
+        ///     Adds a <see cref="DiscoveredScanner"/> that's just for debugging.
+        /// </summary>
         public async Task AddDebugScannerAsync(DiscoveredScanner scanner)
         {
             await RunOnUIThreadAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>

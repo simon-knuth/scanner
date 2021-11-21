@@ -9,9 +9,6 @@ using static Enums;
 
 namespace Scanner.Services
 {
-    /// <summary>
-    ///     Manages <see cref="PersistentScanOptions"/> on a per-scanner basis.
-    /// </summary>
     internal class PersistentScanOptionsDatabaseService : IPersistentScanOptionsDatabaseService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +66,9 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Gets <see cref="PersistentScanOptions"/> for the given <paramref name="scanner"/>.
+        /// </summary>
         public PersistentScanOptions GetPersistentScanOptionsForScanner(DiscoveredScanner scanner)
         {
             try
@@ -122,6 +122,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Saves the <paramref name="scanOptions"/> for the given <paramref name="scanner"/>.
+        /// </summary>
         public void SavePersistentScanOptionsForScanner(DiscoveredScanner scanner, PersistentScanOptions scanOptions)
         {
             try
@@ -160,6 +163,10 @@ namespace Scanner.Services
             
         }
 
+        /// <summary>
+        ///     Deletes the saved <see cref="PersistentScanOptions"/> for the given <paramref name="scanner"/>, if any
+        ///     exist.
+        /// </summary>
         public void DeletePersistentScanOptionsForScanner(DiscoveredScanner scanner)
         {
             try

@@ -96,6 +96,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Gets <see cref="ScanOptions"/> for the given <paramref name="scanner"/>.
+        /// </summary>
         public ScanOptions GetScanOptionsForScanner(DiscoveredScanner scanner)
         {
             try
@@ -152,6 +155,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Saves the <paramref name="scanOptions"/> for the given <paramref name="scanner"/>.
+        /// </summary>
         public void SaveScanOptionsForScanner(DiscoveredScanner scanner, ScanOptions scanOptions)
         {
             try
@@ -186,6 +192,10 @@ namespace Scanner.Services
             
         }
 
+        /// <summary>
+        ///     Deletes the saved <see cref="ScanOptions"/> for the given <paramref name="scanner"/>, if any
+        ///     exist.
+        /// </summary>
         public void DeleteScanOptionsForScanner(DiscoveredScanner scanner)
         {
             try

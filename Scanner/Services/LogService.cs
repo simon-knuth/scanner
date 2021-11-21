@@ -76,8 +76,8 @@ namespace Scanner.Services
         }
 
         /// <summary>
-        ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds some meta
-        ///     data to the log.
+        ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds
+        ///     some meta data to the log.
         /// </summary>
         public async Task InitializeAsync()
         {
