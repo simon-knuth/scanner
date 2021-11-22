@@ -72,6 +72,8 @@ namespace Scanner.Services
             db.Close();
 
             Connection = db;
+
+            LogService?.Log.Information("PersistentScanOptionsDatabaseService initialized");
         }
 
         /// <summary>
@@ -120,6 +122,7 @@ namespace Scanner.Services
 
                 Connection.Close();
 
+                LogService?.Log.Information("GetPersistentScanOptionsForScanner: Returning scan options");
                 return result;
             }
             catch (Exception exc)
@@ -161,12 +164,13 @@ namespace Scanner.Services
                 upsertCommand.ExecuteReader();
 
                 Connection.Close();
+
+                LogService?.Log.Information("SaveScanOptionsForScanner: Saved scan options");
             }
             catch (Exception exc)
             {
                 AppCenterService?.TrackError(exc);
                 LogService.Log.Error(exc, "Saving persistent scan options for scanner failed.");
-                return;
             }
             
         }
@@ -192,6 +196,7 @@ namespace Scanner.Services
                 deleteCommand.ExecuteReader();
 
                 Connection.Close();
+                LogService?.Log.Information("DeletePersistentScanOptionsForScanner: Deleted scan options");
             }
             catch (Exception exc)
             {

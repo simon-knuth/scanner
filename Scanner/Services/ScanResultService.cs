@@ -72,6 +72,10 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Creates <see cref="ScanResult"/> from <paramref name="files"/> with the same file format and moves
+        ///     the files to <paramref name="targetFolder"/>.
+        /// </summary>
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder)
         {
             Result = null;
@@ -82,7 +86,16 @@ namespace Scanner.Services
             ScanResultCreated?.Invoke(this, Result);
         }
 
-        public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder, ImageScannerFormat targetFormat)
+        /// <summary>
+        ///     Creates <see cref="ScanResult"/> from <paramref name="files"/>, converting the result file(s) to the
+        ///     specified <paramref name="targetFormat"/> and moving it/them to the <paramref name="targetFolder"/>.
+        /// </summary>
+        /// <param name="files"></param>
+        /// <param name="targetFolder"></param>
+        /// <param name="targetFormat"></param>
+        /// <returns></returns>
+        public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
+            ImageScannerFormat targetFormat)
         {
             Result = null;
 
@@ -92,6 +105,10 @@ namespace Scanner.Services
             ScanResultCreated?.Invoke(this, Result);
         }
 
+        /// <summary>
+        ///     Adds <paramref name="files"/> to the existing <see cref="Result"/>, converting the file(s) to the
+        ///     specified <paramref name="targetFormat"/> and moving it/them to the <paramref name="targetFolder"/>.
+        /// </summary>
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
             StorageFolder targetFolder)
         {
@@ -100,6 +117,10 @@ namespace Scanner.Services
             IsScanResultChanging = false;
         }
 
+        /// <summary>
+        ///     Adds <paramref name="files"/> to the existing <see cref="Result"/>, converting the file(s) to the
+        ///     specified <paramref name="targetFormat"/>.
+        /// </summary>
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat)
         {
             IsScanResultChanging = true;
@@ -107,6 +128,9 @@ namespace Scanner.Services
             IsScanResultChanging = false;
         }
 
+        /// <summary>
+        ///     Rotates pages according to the <paramref name="instructions"/>.
+        /// </summary>
         public async Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions)
         {
             IsScanResultChanging = true;
@@ -134,6 +158,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Renames the page at <paramref name="index"/> to <paramref name="newDisplayName"/>.
+        /// </summary>
         public async Task<bool> RenameAsync(int index, string newDisplayName)
         {
             try
@@ -157,6 +184,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Renames the result file to <paramref name="newDisplayName"/>.
+        /// </summary>
         public async Task<bool> RenameAsync(string newDisplayName)
         {
             try
@@ -180,6 +210,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Deletes the page at <paramref name="index"/>.
+        /// </summary>
         public async Task<bool> DeleteScanAsync(int index)
         {
             IsScanResultChanging = true;
@@ -212,6 +245,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Deletes the page at <paramref name="index"/> using <paramref name="deleteOption"/>.
+        /// </summary>
         public async Task<bool> DeleteScanAsync(int index, StorageDeleteOption deleteOption)
         {
             IsScanResultChanging = true;
@@ -244,6 +280,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Deletes the page at <paramref name="indices"/>.
+        /// </summary>
         public async Task<bool> DeleteScansAsync(List<int> indices)
         {
             IsScanResultChanging = true;
@@ -276,6 +315,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Deletes the page at <paramref name="indices"/> using <paramref name="deleteOption"/>.
+        /// </summary>
         public async Task<bool> DeleteScansAsync(List<int> indices, StorageDeleteOption deleteOption)
         {
             IsScanResultChanging = true;
@@ -308,6 +350,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Copies the result file of <see cref="Result"/> to the clipboard.
+        /// </summary>
         public async Task<bool> CopyAsync()
         {
             try
@@ -330,6 +375,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Copies the page at <paramref name="index"/> to the clipboard.
+        /// </summary>
         public async Task<bool> CopyImageAsync(int index)
         {
             try
@@ -352,6 +400,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Copies all pages to the clipboard as image files.
+        /// </summary>
         public async Task<bool> CopyImagesAsync()
         {
             try
@@ -396,6 +447,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Shows the dialog for opening the result file of <see cref="Result"/> with another app.
+        /// </summary>
         public async Task<bool> OpenWithAsync()
         {
             try
@@ -408,6 +462,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Opens the result file of <see cref="Result"/> with the app specified by <paramref name="appInfo"/>.
+        /// </summary>
         public async Task<bool> OpenWithAsync(AppInfo appInfo)
         {
             try
@@ -420,6 +477,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Shows the dialog for opening the page at <paramref name="index"/> with another app.
+        /// </summary>
         public async Task<bool> OpenImageWithAsync(int index)
         {
             try
@@ -432,6 +492,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Opens the page at <paramref name="index"/> with the app specified by <paramref name="appInfo"/>.
+        /// </summary>
         public async Task<bool> OpenImageWithAsync(int index, AppInfo appInfo)
         {
             try
@@ -444,6 +507,9 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Crops the page at <paramref name="index"/> using <paramref name="imageCropper"/>.
+        /// </summary>
         public async Task<bool> CropScanAsync(int index, ImageCropper imageCropper)
         {
             IsScanResultChanging = true;
@@ -471,6 +537,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Crops the pages at <paramref name="indices"/> using <paramref name="cropRegion"/>.
+        /// </summary>
         public async Task<bool> CropScansAsync(List<int> indices, Rect cropRegion)
         {
             IsScanResultChanging = true;
@@ -498,6 +567,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Crops the page at <paramref name="index"/> using <paramref name="imageCropper"/> as copy.
+        /// </summary>
         public async Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper)
         {
             IsScanResultChanging = true;
@@ -525,6 +597,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Draws on the page at <paramref name="index"/> using <paramref name="inkCanvas"/>.
+        /// </summary>
         public async Task<bool> DrawOnScanAsync(int index, InkCanvas inkCanvas)
         {
             IsScanResultChanging = true;
@@ -552,6 +627,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Draws on the page at <paramref name="index"/> using <paramref name="inkCanvas"/> as copy.
+        /// </summary>
         public async Task<bool> DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas)
         {
             IsScanResultChanging = true;
@@ -579,6 +657,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Duplicates the page at <paramref name="index"/>.
+        /// </summary>
         public async Task<bool> DuplicatePageAsync(int index)
         {
             IsScanResultChanging = true;
@@ -606,6 +687,9 @@ namespace Scanner.Services
             return true;
         }
 
+        /// <summary>
+        ///     Clears <see cref="Result"/>.
+        /// </summary>
         public void DismissScanResult()
         {
             Result = null;
@@ -626,6 +710,10 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Applies the current element order of the pages in <see cref="Result"/> to the result file.
+        /// </summary>
+        /// <returns></returns>
         public async Task ApplyElementOrderToFilesAsync()
         {
             IsScanResultChanging = true;

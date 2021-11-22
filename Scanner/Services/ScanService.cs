@@ -12,9 +12,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Scanner.Services
 {
-    /// <summary>
-    ///     Interfaces with <see cref="DiscoveredScanner"/>s to request scans and previews.
-    /// </summary>
     internal class ScanService : ObservableObject, IScanService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +57,7 @@ namespace Scanner.Services
         public event EventHandler ScanEnded;
         public event EventHandler<uint> PageScanned;
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,12 +66,16 @@ namespace Scanner.Services
             
         }
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        ///     Gets a preview scan from <paramref name="scanner"/> using <paramref name="options"/>.
+        /// </summary>
         public async Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ScanOptions options)
         {
-            // analytics
+            LogService?.Log.Information("GetPreviewAsync");
             AppCenterService?.TrackEvent(AppCenterEvent.Preview,
                 new Dictionary<string, string>
                 {
@@ -119,9 +121,14 @@ namespace Scanner.Services
             }
         }
 
+        /// <summary>
+        ///     Gets a scan from <paramref name="scanner"/> using <paramref name="options"/> and saving the file(s) to
+        ///     <paramref name="targetFolder"/>.
+        /// </summary>
         public async Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner,
             ScanOptions options, StorageFolder targetFolder)
         {
+            LogService?.Log.Information("GetScanAsync");
             IsScanInProgress = true;
             ImageScannerScanResult result = null;
 
@@ -171,8 +178,12 @@ namespace Scanner.Services
             return result;
         }
 
+        /// <summary>
+        ///     Cancels any currently running scan.
+        /// </summary>
         public void CancelScan()
         {
+            LogService?.Log.Information("CancelScan");
             ScanEnded?.Invoke(this, EventArgs.Empty);
             try
             {

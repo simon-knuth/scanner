@@ -74,6 +74,8 @@ namespace Scanner.Services
             db.Close();
 
             Connection = db;
+
+            LogService?.Log.Information("ScanOptionsDatabaseService initialized");
         }
 
 
@@ -152,6 +154,7 @@ namespace Scanner.Services
 
                 Connection.Close();
 
+                LogService?.Log.Information("GetScanOptionsForScanner: Returning scan options");
                 return result;
             }
             catch (Exception exc)
@@ -189,14 +192,14 @@ namespace Scanner.Services
                 upsertCommand.ExecuteReader();
 
                 Connection.Close();
+
+                LogService?.Log.Information("SaveScanOptionsForScanner: Saved scan options");
             }
             catch (Exception exc)
             {
                 AppCenterService?.TrackError(exc);
                 LogService.Log.Error(exc, "Saving scan options for scanner failed.");
-                return;
             }
-            
         }
 
         /// <summary>
@@ -220,6 +223,7 @@ namespace Scanner.Services
                 deleteCommand.ExecuteReader();
 
                 Connection.Close();
+                LogService?.Log.Information("DeleteScanOptionsForScanner: Deleted scan options");
             }
             catch (Exception exc)
             {
