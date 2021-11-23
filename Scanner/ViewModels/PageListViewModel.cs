@@ -22,6 +22,8 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
@@ -193,6 +195,7 @@ namespace Scanner.ViewModels
 
         private List<int> GetSelectedIndices()
         {
+            LogService?.Log.Information("GetSelectedIndices");
             List<int> indices = new List<int>();
             
             foreach (ItemIndexRange range in SelectedRanges)
@@ -203,6 +206,7 @@ namespace Scanner.ViewModels
                 }
             }
 
+            LogService?.Log.Information($"GetSelectedIndices: {indices}");
             return indices;
         }
 
@@ -301,6 +305,7 @@ namespace Scanner.ViewModels
 
         private async Task ShowFileInFileExplorerAsync(StorageFile file)
         {
+            LogService?.Log.Information("ShowFileInFileExplorerAsync");
             try
             {
                 FilePathFolderPathConverter converter = new FilePathFolderPathConverter();
@@ -315,6 +320,7 @@ namespace Scanner.ViewModels
 
         private async Task DuplicatePageAsync(ScanResultElement element)
         {
+            LogService?.Log.Information("DuplicatePageAsync");
             int index = ScanResult.Elements.IndexOf(element);
             bool success = await ScanResultService.DuplicatePageAsync(index);
 

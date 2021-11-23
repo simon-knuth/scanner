@@ -14,6 +14,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
 
         public RelayCommand ConfirmSettingsCommand;
@@ -42,6 +43,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void ConfirmSettings()
         {
+            LogService?.Log.Information("ConfirmSettings");
+
             SettingsService.SetSetting(AppSetting.SettingErrorStatistics, ProxySettingErrorStatistics);
             SettingsService.SetSetting(AppSetting.SetupCompleted, true);
 

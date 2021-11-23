@@ -57,6 +57,8 @@ namespace Scanner.Services
         /// </summary>
         public async Task Initialize()
         {
+            LogService?.Log.Information("AppDataService: Initialize");
+            
             // clean up temp folder
             _FolderTemp = ApplicationData.Current.TemporaryFolder;
 

@@ -56,6 +56,7 @@ namespace Scanner.ViewModels
             get => _DisplayedView;
             set
             {
+                LogService?.Log.Information($"DisplayedView = {value}");
                 SetProperty(ref _DisplayedView, value, true);
                 DisplayedViewChanged.TrySetResult(true);
             }
@@ -189,6 +190,7 @@ namespace Scanner.ViewModels
 
         private async Task ShowScanSaveLocation()
         {
+            LogService?.Log.Information("ShowScanSaveLocation");
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 try
@@ -218,6 +220,7 @@ namespace Scanner.ViewModels
 
         private void ReceiveAppWideMessage(object r, AppWideStatusMessage m)
         {
+            LogService?.Log.Information($"ReceiveAppWideMessage: {m.Title} | {m.MessageText} | {m.AdditionalText}");
             m.Title?.Trim();
             m.MessageText?.Trim();
             m.AdditionalText?.Trim();

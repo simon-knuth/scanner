@@ -29,6 +29,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
@@ -438,22 +439,25 @@ namespace Scanner.ViewModels
 
         private void EnterCropMode()
         {
+            LogService?.Log.Information("EnterCropMode");
             EditorMode = EditorMode.Crop;
         }
 
         private void LeaveCropMode()
         {
+            LogService?.Log.Information("LeaveCropMode");
             EditorMode = EditorMode.Initial;
         }
 
         private void EnterDrawMode()
         {
+            LogService?.Log.Information("EnterDrawMode");
             EditorMode = EditorMode.Draw;
-
         }
 
         private void LeaveDrawMode()
         {
+            LogService?.Log.Information("LeaveDrawMode");
             EditorMode = EditorMode.Initial;
         }
 
@@ -527,7 +531,15 @@ namespace Scanner.ViewModels
                 else successfullyOpened = await ScanResultService.OpenWithAsync(OpenWithApps[index].AppInfo);
             }
 
-            if (successfullyOpened) ScanResultService.DismissScanResult();
+            if (successfullyOpened)
+            {
+                ScanResultService.DismissScanResult();
+                LogService?.Log.Information("OpenWithAsync: Success");
+            }
+            else
+            {
+                LogService?.Log.Information("OpenWithAsync: Failed to open in another app");
+            }
         }
 
         private async Task DeleteAsync()
@@ -714,6 +726,7 @@ namespace Scanner.ViewModels
 
         private async void RefreshSimilarPagesForCrop()
         {
+            LogService?.Log.Information("RefreshSimilarPagesForCrop");
             SimilarPageIndicesForCrop = null;
 
             // get indices
@@ -749,6 +762,7 @@ namespace Scanner.ViewModels
                 }
             }
 
+            LogService?.Log.Information($"GetSelectedIndicesCropSimilarPages: Indices are {indices}");
             return indices;
         }
     }

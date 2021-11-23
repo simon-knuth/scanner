@@ -154,13 +154,13 @@ namespace Scanner.Services
 
                 Connection.Close();
 
-                LogService?.Log.Information("GetScanOptionsForScanner: Returning scan options");
+                LogService?.Log.Information($"GetScanOptionsForScanner: Returning {result} for {scanner.Name}");
                 return result;
             }
             catch (Exception exc)
             {
                 AppCenterService?.TrackError(exc);
-                LogService.Log.Error(exc, "Getting scan options for scanner failed.");
+                LogService.Log.Error(exc, $"Getting scan options for {scanner.Name} failed");
                 return null;
             }
         }

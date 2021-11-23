@@ -17,6 +17,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         private readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
@@ -123,6 +124,7 @@ namespace Scanner.ViewModels
         public event EventHandler LogExportDialogRequested;
         public event EventHandler LicensesDialogRequested;
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,6 +149,7 @@ namespace Scanner.ViewModels
             LaunchLanguageSettingsCommand = new AsyncRelayCommand(LaunchLanguageSettings);
         }
 
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,11 +166,13 @@ namespace Scanner.ViewModels
 
         private void DisplayLogExportDialog()
         {
+            LogService?.Log.Information("DisplayLogExportDialog");
             LogExportDialogRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void DisplayLicensesDialog()
         {
+            LogService?.Log.Information("DisplayLicensesDialog");
             LicensesDialogRequested?.Invoke(this, EventArgs.Empty);
         }
 
@@ -182,6 +187,7 @@ namespace Scanner.ViewModels
         private async Task ChooseSaveLocation()
         {
             if (ChooseSaveLocationCommand.IsRunning) return;    // already running?
+            LogService?.Log.Information("ChooseSaveLocation");
 
             // prepare folder picker
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
@@ -219,6 +225,7 @@ namespace Scanner.ViewModels
         private async Task ResetSaveLocationAsync()
         {
             if (ResetSaveLocationCommand.IsRunning) return;     // already running?
+            LogService?.Log.Information("ResetSaveLocationAsync");
 
             try
             {

@@ -78,6 +78,7 @@ namespace Scanner.ViewModels
             set
             {
                 SetProperty(ref _SelectedScanner, value);
+                LogService?.Log.Information($"SelectedScanner = {value.Name}");
 
                 if (SettingsService != null && ScanOptionsDatabaseService != null)
                 {
@@ -103,6 +104,7 @@ namespace Scanner.ViewModels
                 // check intermittent or old value
                 ScannerSource? old = ScannerSource;
                 if (value == null || (ScannerSource)value == ScannerSource) return;
+                LogService?.Log.Information($"ScannerSource = {value}");
 
                 // get previously selected scan options
                 ScanOptions previousScanOptions = CreateScanOptions();
@@ -412,6 +414,7 @@ namespace Scanner.ViewModels
                 && e.NewItems.Count > 0
                 && SelectedScanner == null)
             {
+                LogService?.Log.Information("First scanner found, select it");
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () => SelectedScanner = Scanners[0]);
             }
         }
@@ -426,6 +429,7 @@ namespace Scanner.ViewModels
         /// </summary>
         private void ApplyInitialScanOptionsForScanner(DiscoveredScanner scanner)
         {
+            LogService?.Log.Information("ApplyInitialScanOptionsForScanner");
             ScannerSource = Enums.ScannerSource.None;
             if (scanner == null) return;
 
@@ -439,6 +443,7 @@ namespace Scanner.ViewModels
                     case Enums.ScannerSource.Auto:
                         if (!scanner.IsAutoAllowed)
                         {
+                            LogService?.Log.Information("ApplyInitialScanOptionsForScanner: Auto not allowed, delete from db");
                             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
                             ApplyDefaultSourceModeForScanner(scanner);
                         }
@@ -447,6 +452,7 @@ namespace Scanner.ViewModels
                     case Enums.ScannerSource.Flatbed:
                         if (!scanner.IsFlatbedAllowed)
                         {
+                            LogService?.Log.Information("ApplyInitialScanOptionsForScanner: Flatbed not allowed, delete from db");
                             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
                             ApplyDefaultSourceModeForScanner(scanner);
                         }
@@ -455,6 +461,7 @@ namespace Scanner.ViewModels
                     case Enums.ScannerSource.Feeder:
                         if (!scanner.IsFeederAllowed)
                         {
+                            LogService?.Log.Information("ApplyInitialScanOptionsForScanner: Feeder not allowed, delete from db");
                             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(scanner);
                             ApplyDefaultSourceModeForScanner(scanner);
                         }
@@ -478,19 +485,23 @@ namespace Scanner.ViewModels
         /// </summary>
         private void ApplyDefaultSourceModeForScanner(DiscoveredScanner scanner)
         {
+            LogService?.Log.Information("ApplyDefaultSourceModeForScanner");
             ScannerSource = Enums.ScannerSource.None;
             if (scanner == null) return;
 
             if (scanner.IsAutoAllowed)
             {
+                LogService?.Log.Information("ApplyDefaultSourceModeForScanner: Selected auto");
                 ScannerSource = Enums.ScannerSource.Auto;
             }
             else if (scanner.IsFlatbedAllowed)
             {
+                LogService?.Log.Information("ApplyDefaultSourceModeForScanner: Selected flatbed");
                 ScannerSource = Enums.ScannerSource.Flatbed;
             }
             else if (scanner.IsFeederAllowed)
             {
+                LogService?.Log.Information("ApplyDefaultSourceModeForScanner: Selected feeder");
                 ScannerSource = Enums.ScannerSource.Feeder;
             }
             else
@@ -504,6 +515,7 @@ namespace Scanner.ViewModels
         /// </summary>
         private void ApplyInitialScanOptionsForSourceMode(ScannerSource sourceMode)
         {
+            LogService?.Log.Information($"ApplyInitialScanOptionsForSourceMode: {sourceMode}");
             ScanOptions scanOptions = ScanOptionsDatabaseService?.GetScanOptionsForScanner(SelectedScanner);
 
             if (scanOptions != null)
@@ -632,6 +644,7 @@ namespace Scanner.ViewModels
                 catch (Exception exc)
                 {
                     AppCenterService?.TrackError(exc);
+                    LogService?.Log.Error(exc, "ApplyInitialScanOptionsForSourceMode: Tried to apply unsupported option");
                     ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
                     ApplyDefaultScanOptionsForSourceMode(sourceMode, null);
                     ApplyInitialPersistentScanOptionsForSourceMode(sourceMode);
@@ -721,6 +734,7 @@ namespace Scanner.ViewModels
         /// </summary>
         private void ApplyDefaultScanOptionsForSourceMode(ScannerSource sourceMode, ScanOptions previousScanOptions)
         {
+            LogService?.Log.Information($"ApplyDefaultScanOptionsForSourceMode: {sourceMode} | {previousScanOptions}");
             switch (sourceMode)
             {
                 case Enums.ScannerSource.Auto:
@@ -879,6 +893,7 @@ namespace Scanner.ViewModels
                 FeederDuplex = FeederDuplex,
                 Format = SelectedFileFormat
             };
+            LogService?.Log.Information($"CreateScanOptions: {result}");
 
             if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
 
@@ -994,6 +1009,7 @@ namespace Scanner.ViewModels
         {
             if (PreviewScanCommand.IsRunning) return;   // preview already running?
 
+            LogService?.Log.Information("PreviewScanAsync");
             BitmapImage debugImage = null;
             if (parameter == "File")
             {
@@ -1016,24 +1032,6 @@ namespace Scanner.ViewModels
             // reset properties
             PreviewImage = null;
             PreviewFailed = false;
-
-            // get source mode
-            ImageScannerScanSource source;
-            switch (_ScannerSource)
-            {
-                case Enums.ScannerSource.Auto:
-                    source = ImageScannerScanSource.AutoConfigured;
-                    break;
-                case Enums.ScannerSource.Flatbed:
-                    source = ImageScannerScanSource.Flatbed;
-                    break;
-                case Enums.ScannerSource.Feeder:
-                    source = ImageScannerScanSource.Feeder;
-                    break;
-                case Enums.ScannerSource.None:
-                default:
-                    return;
-            }
 
             // get preview
             if (debugImage != null)
@@ -1127,6 +1125,7 @@ namespace Scanner.ViewModels
         {
             if (ScanCommand.IsRunning) return;      // already running?
 
+            LogService?.Log.Information("ScanAsync");
             StorageFolder targetFolder;
             bool askForFolder = (!CanAddToScanResult || startFresh)
                 && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
@@ -1191,6 +1190,7 @@ namespace Scanner.ViewModels
                     if (askForFolder)
                     {
                         // user has to select location
+                        LogService?.Log.Information("ScanAsync: Ask for save location");
                         var pickerFolder = new FolderPicker();
                         pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                         targetFolder = await pickerFolder.PickSingleFolderAsync();
@@ -1236,6 +1236,17 @@ namespace Scanner.ViewModels
                     }
 
                     numberOfScannedPages = result.ScannedFiles.Count;
+
+                    // analytics
+                    AppCenterService?.TrackEvent(AppCenterEvent.ScanCompleted,
+                        new Dictionary<string, string>
+                        {
+                            { "Source", scanOptions.Source.ToString() },
+                            { "Pages", numberOfScannedPages.ToString() },
+                            { "AskedForSaveLocation", askForFolder.ToString() },
+                            { "FormatFlow", $"({scanOptions.Format.OriginalFormat}, {scanOptions.Format.TargetFormat})" },
+                            { "AutoCropMode", scanOptions.AutoCropMode.ToString() },
+                        });
                 }
                 else
                 {
@@ -1257,6 +1268,7 @@ namespace Scanner.ViewModels
                         if (askForFolder)
                         {
                             // user has to select location
+                            LogService?.Log.Information("ScanAsync: Ask for save location");
                             var pickerFolder = new FolderPicker();
                             pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                             targetFolder = await pickerFolder.PickSingleFolderAsync();
@@ -1384,6 +1396,7 @@ namespace Scanner.ViewModels
             if (ScanResultService.Result == null)
             {
                 // no result exists
+                LogService?.Log.Information("RefreshCanAddToScanResult: False (no result exists)");
                 CanAddToScanResult = false;
                 NextScanMustBeFresh = false;
             }
@@ -1392,12 +1405,14 @@ namespace Scanner.ViewModels
                 if (ScanResultService.Result.ScanResultFormat == SelectedFileFormat.TargetFormat)
                 {
                     // same format as existing result
+                    LogService?.Log.Information("RefreshCanAddToScanResult: True");
                     CanAddToScanResult = true;
                     NextScanMustBeFresh = false;
                 }
                 else
                 {
                     // different format
+                    LogService?.Log.Information("RefreshCanAddToScanResult: False (different format)");
                     CanAddToScanResult = false;
                     NextScanMustBeFresh = true;
                 }
@@ -1429,6 +1444,7 @@ namespace Scanner.ViewModels
 
         private void ResetBrightness()
         {
+            LogService?.Log.Information("ResetBrightness");
             if (ScannerBrightnessConfig != null)
             {
                 SelectedBrightness = ScannerBrightnessConfig.DefaultBrightness;
@@ -1437,6 +1453,7 @@ namespace Scanner.ViewModels
 
         private void ResetContrast()
         {
+            LogService?.Log.Information("ResetContrast");
             if (ScannerContrastConfig != null)
             {
                 SelectedContrast = ScannerContrastConfig.DefaultContrast;

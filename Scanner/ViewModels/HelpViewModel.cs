@@ -6,6 +6,8 @@ using static HelpViewEnums;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using Windows.System;
+using Scanner.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Scanner.ViewModels
 {
@@ -14,6 +16,9 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+
         public event EventHandler<HelpTopic> HelpTopicRequested;
         public RelayCommand DisposeCommand;
         public AsyncRelayCommand LaunchScannerSettingsCommand;
@@ -49,6 +54,7 @@ namespace Scanner.ViewModels
 
         private async Task LaunchScannerSettings()
         {
+            LogService?.Log.Information("LaunchScannerSettings");
             try
             {
                 await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
@@ -58,6 +64,7 @@ namespace Scanner.ViewModels
 
         private async Task LaunchWifiSettings()
         {
+            LogService?.Log.Information("LaunchWifiSettings");
             try
             {
                 await Launcher.LaunchUriAsync(new Uri("ms-settings:network-wifi"));
@@ -67,6 +74,7 @@ namespace Scanner.ViewModels
 
         private void SettingsRequest()
         {
+            LogService?.Log.Information("SettingsRequest");
             Messenger.Send(new SettingsRequestMessage());
         }
     }
