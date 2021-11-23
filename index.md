@@ -49,3 +49,50 @@
 
 
 &nbsp;
+## Download
+<table>
+  <tr>
+    <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>You can also view the source code of both stable and WIP versions on GitHub. Download/clone the code using the green button in the top-right corner.</td>
+    <td width="30%">
+      <a href="https://www.microsoft.com/store/apps/9N438MZHD3ZF"><img src="https://i.imgur.com/aAWYhvm.png"/></a>
+    </td>
+  </tr>
+</table>
+
+
+&nbsp;
+## Support the development
+If you like the app, you can directly [support the development with a donation](https://simon-knuth.github.io/scanner/donate.html). Thank you! ❤️
+
+
+&nbsp;
+## Credits
+Banner: <a href="https://unsplash.com/@microsoftedge">Microsoft Edge on Unsplash</a>
+
+
+&nbsp;
+## Translations
+The currently supported languages are:
+<ul>
+  <li>Catalan (CA)</li>
+  <li>Chinese Simplified (ZH-HANS, ZH-CN, ZH-HANS-CN, ZH-SG, ZH-HANS-SG)</li>
+  <li>English (EN)</li>
+  <li>English (EN-GB)</li>
+  <li>French (FR)</li>
+  <li>German (DE)</li>
+  <li>Hungarian (HU)</li>
+  <li>Italian (IT)</li>
+  <li>Polish (PL)</li>
+  <li>Portuguese (PT)</li>
+  <li>Portuguese (PT-BR)</li>
+  <li>Russian (RU)</li>
+  <li>Ukrainian (UK)</li>
+</ul>  
+
+See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
+
+
+&nbsp;
+## Privacy policy
+
+You can find the privacy policy [here](https://simon-knuth.github.io/scanner/privacy-policy.html).
