@@ -1463,6 +1463,11 @@ namespace Scanner
                     {
                         StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                         futureAccessListIndex += 1;
+                        if (targetFormat != ImageScannerFormat.Pdf)
+                        {
+                            // move file to the correct folder
+                            await HelperService.MoveFileToFolderAsync(file, targetFolder, file.Name, false);
+                        }
                     }
 
                     if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)

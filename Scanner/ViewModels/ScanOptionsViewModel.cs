@@ -291,6 +291,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _CanAddToScanResult, value);
         }
 
+        private bool _CanAddToScanResultDocument;
+        public bool CanAddToScanResultDocument
+        {
+            get => _CanAddToScanResultDocument;
+            set => SetProperty(ref _CanAddToScanResultDocument, value);
+        }
+
         private bool _NextScanMustBeFresh;
         public bool NextScanMustBeFresh
         {
@@ -1127,7 +1134,7 @@ namespace Scanner.ViewModels
 
             LogService?.Log.Information("ScanAsync");
             StorageFolder targetFolder;
-            bool askForFolder = (!CanAddToScanResult || startFresh)
+            bool askForFolder = (!CanAddToScanResultDocument || startFresh)
                 && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
             int numberOfScannedPages = 0;
 
@@ -1230,8 +1237,16 @@ namespace Scanner.ViewModels
                         }
                         else
                         {
-                            await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                null);
+                            if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
+                            {
+                                await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
+                                    null);
+                            }
+                            else
+                            {
+                                await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
+                                    null, targetFolder);
+                            }
                         }
                     }
 
@@ -1312,8 +1327,16 @@ namespace Scanner.ViewModels
                             }
                             else
                             {
-                                await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    null);
+                                if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
+                                {
+                                    await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                        null);
+                                }
+                                else
+                                {
+                                    await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
+                                        null, targetFolder);
+                                }
                             }
                         }
 
@@ -1398,6 +1421,7 @@ namespace Scanner.ViewModels
                 // no result exists
                 LogService?.Log.Information("RefreshCanAddToScanResult: False (no result exists)");
                 CanAddToScanResult = false;
+                CanAddToScanResultDocument = false;
                 NextScanMustBeFresh = false;
             }
             else
@@ -1407,6 +1431,7 @@ namespace Scanner.ViewModels
                     // same format as existing result
                     LogService?.Log.Information("RefreshCanAddToScanResult: True");
                     CanAddToScanResult = true;
+                    CanAddToScanResultDocument = ScanResultService.Result.ScanResultFormat == ImageScannerFormat.Pdf;
                     NextScanMustBeFresh = false;
                 }
                 else
@@ -1414,6 +1439,7 @@ namespace Scanner.ViewModels
                     // different format
                     LogService?.Log.Information("RefreshCanAddToScanResult: False (different format)");
                     CanAddToScanResult = false;
+                    CanAddToScanResultDocument = false;
                     NextScanMustBeFresh = true;
                 }
             }

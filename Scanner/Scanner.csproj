@@ -269,6 +269,7 @@
     <Content Include="Assets\contrast-black\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-black\Logo small.svg" />
     <Content Include="Assets\contrast-black\Logo.svg" />
     <Content Include="Assets\contrast-black\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-125.png" />
@@ -315,12 +316,14 @@
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\contrast-high\Logo small.svg" />
     <Content Include="Assets\contrast-high\Logo.svg" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-125.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-standard\Logo small.svg" />
     <Content Include="Assets\contrast-standard\Logo.svg" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-125.png" />
@@ -372,6 +375,7 @@
     <Content Include="Assets\contrast-white\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-white\Logo small.svg" />
     <Content Include="Assets\contrast-white\Logo.svg" />
     <Content Include="Assets\contrast-white\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-125.png" />
