@@ -238,7 +238,7 @@
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostrar páginas digitalizadas</value>
+    <value>Lista de páginas</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
@@ -274,24 +274,16 @@
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mostrar opções de digitalização</value>
+    <value>Opções de digitalização</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
-  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sempre procurando scanners disponíveis</value>
+  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mostrar pasta de destino no Explorador de Arquivos</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
-  </data>
-  <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gerenciar scanners</value>
-    <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
     <value>Pré-visualizar</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
-  </data>
-  <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Abrir pasta de destino no Explorador de Arquivos</value>
-    <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
     <value>Digitalizar</value>
@@ -305,49 +297,37 @@
     <value>Configurações</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
-  <data name="DialogDelete.Title" xml:space="preserve">
+  <data name="HeadingDialogDelete.Text" xml:space="preserve">
     <value>Deseja prosseguir?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.Subtitle" xml:space="preserve">
+  <data name="TextDialogDelete.Text" xml:space="preserve">
     <value>A página será apagada permanentemente.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
     <value>Apagar</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDelete.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
     <value>Cancelar</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="DialogDeleteSelect.Title" xml:space="preserve">
+  <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
     <value>Deseja prosseguir?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
+  <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
     <value>As páginas selecionadas serão apagadas permanentemente.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
     <value>Apagar</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="DialogDeleteSelect.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
     <value>Cancelar</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
-  </data>
-  <data name="DialogDevices.Title" xml:space="preserve">
-    <value>Selecione um scanner</value>
-    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
-  </data>
-  <data name="DialogDevices.Subtitle" xml:space="preserve">
-    <value>Se seu scanner não aparecer dentro de três minutos, pode ser preciso adicioná-lo primeiro nas configurações do sistema.</value>
-    <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
-  </data>
-  <data name="ButtonDialogDevices.Text" xml:space="preserve">
-    <value>Abrir as Configurações</value>
-    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
     <value>Está gostando do aplicativo?</value>
@@ -357,29 +337,23 @@
     <value>Gostaria de saber sua opinião:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="DialogRename.Title" xml:space="preserve">
+  <data name="HeadingDialogRename.Text" xml:space="preserve">
     <value>Renomear</value>
-    <comment>The title of the dialog that allows the user to rename a page.</comment>
+    <comment>The title of the dialog that allows the user to rename a page.
+Fuzzy</comment>
   </data>
-  <data name="DialogRename.Subtitle" xml:space="preserve">
+  <data name="TextDialogRename.Text" xml:space="preserve">
     <value>Insira um novo nome para o arquivo:</value>
-    <comment>The title of the dialog that allows the user to rename a page.</comment>
+    <comment>The title of the dialog that allows the user to rename a page.
+Fuzzy</comment>
   </data>
-  <data name="DialogRename.ActionButtonContent" xml:space="preserve">
+  <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
     <value>Confirmar</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="DialogRename.CloseButtonContent" xml:space="preserve">
+  <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
     <value>Cancelar</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
-  </data>
-  <data name="DialogScope.ActionButtonContent" xml:space="preserve">
-    <value>Documento inteiro</value>
-    <comment>The button text of the dialog that allows the user to apply an action to an entire document.</comment>
-  </data>
-  <data name="DialogScope.CloseButtonContent" xml:space="preserve">
-    <value>Apenas esta página</value>
-    <comment>The button text of the dialog that allows the user to apply an action to a single page in a document.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
     <value>Algo deu errado</value>
@@ -453,18 +427,6 @@
     <value>A digitalização falhou devido a um erro desconhecido.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
-  <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
-    <value>Algo deu errado</value>
-    <comment>The error message heading that appears when a scan fails with more information.</comment>
-  </data>
-  <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
-    <value>A digitalização falhou com o seguinte erro:</value>
-    <comment>The error message body that appears when a scan fails with more information.</comment>
-  </data>
-  <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
-    <value>Selecione um scanner</value>
-    <comment>The heading that tells the user to select a scanner.</comment>
-  </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
     <value>Chinês</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
@@ -489,8 +451,8 @@
     <value>Salvar como</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
-  <data name="HeadingScanOptionsMoreOptions.Text" xml:space="preserve">
-    <value>Opções adicionais</value>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>Opções de alimentador</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
@@ -533,18 +495,9 @@
     <value>Vidro</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
-  <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
-    <value>Se o seu scanner não aparecer dentro de três minutos, certifique-se de que este foi adicionado na </value>
-    <comment>The first part of the body of the text that tells the user to select a scanner.
-| -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
-  </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
     <value>As páginas digitalizadas vão aparecer aqui</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
-  </data>
-  <data name="TextScannerIndicator.Text" xml:space="preserve">
-    <value>Sempre procurando scanners disponíveis</value>
-    <comment>The placeholder text in the scanner selection list.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
     <value>Suporta pré-visualização</value>
@@ -570,14 +523,6 @@
     <value>Licenças de terceiros</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
-  <data name="ErrorMessageFeedbackHubHeading" xml:space="preserve">
-    <value>Opa!</value>
-    <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
-  </data>
-  <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
-    <value>Não foi possível abrir o Hub de Feedback.</value>
-    <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
-  </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
     <value>Algo deu errado</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
@@ -591,7 +536,7 @@
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>A reposição da pasta de destino original falhou. A mensagem de erro é:</value>
+    <value></value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
@@ -610,34 +555,17 @@
     <value>Dar feedback</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
-  <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
-    <value>Ajuda e configuração</value>
-    <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
-  </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
     <value>Pasta de destino</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
-  </data>
-  <data name="HeadingSettingsTheme.Header" xml:space="preserve">
-    <value>Tema</value>
-    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
     <value>Traduções</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
-  <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
-    <value>reinicie o aplicativo</value>
-    <comment>The hyperlink text for restarting the app to apply changes.
-TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
-  </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
     <value>Anexar hora e minuto ao nome do arquivo</value>
     <comment>The text for the option for appending the time to file names.</comment>
-  </data>
-  <data name="OptionSettingsBackgroundNotification.Content" xml:space="preserve">
-    <value>Apresentar uma notificação quando uma digitalização terminar em segundo plano</value>
-    <comment>The text for the option for sending a notification when a scan ends in the background.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
     <value>Licenças de terceiros</value>
@@ -651,36 +579,9 @@ TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
     <value>Site</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
-  <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
-    <value>Aprender como instalar e utilizar um scanner no Windows 10</value>
-    <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
-  </data>
-  <data name="TextSettingsRestart1.Text" xml:space="preserve">
-    <value>Por favor, </value>
-    <comment>The first part of the text for restarting the app to apply changes.
-| -&gt; HyperlinkSettingsRestart.Text</comment>
-  </data>
-  <data name="TextSettingsRestart2.Text" xml:space="preserve">
-    <value> para que as alterações surtam efeito.</value>
-    <comment>The second part of the text for restarting the app to apply changes.
-HyperlinkSettingsRestart.Text &lt;- |</comment>
-  </data>
-  <data name="TextSettingsTranslations1.Text" xml:space="preserve">
-    <value>O Windows 10 oferece suporte a mais de 100 idiomas – pode ajudar a tornar este aplicativo acessível a todos. Veja </value>
-    <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
-  </data>
-  <data name="TextSettingsTranslations2.Text" xml:space="preserve">
-    <value> para mais informações.</value>
-    <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
-  </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>esta página</value>
+    <value></value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
-  </data>
-  <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
-    <value> e de que não aparece como offline lá.</value>
-    <comment>The second part of the body of the text that tells the user to select a scanner.
-HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>Configurações</value>
@@ -703,30 +604,9 @@ Fuzzy</comment>
     <value>Fechar</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
-  <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
-    <value>aplicativo Configurações</value>
-    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
-TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
-  </data>
-  <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
-    <value>Aceder às configurações de impressoras e scanners</value>
-    <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
-  </data>
   <data name="ButtonCloseText" xml:space="preserve">
     <value>Fechar</value>
     <comment>The button text for a generic close button.</comment>
-  </data>
-  <data name="DialogScopeQuestionCopyHeading" xml:space="preserve">
-    <value>O que deverá ser copiado?</value>
-    <comment>The heading for the dialog that asks whether the user wants to copy an entire document or just a single page.</comment>
-  </data>
-  <data name="DialogScopeQuestionOpenWithHeading" xml:space="preserve">
-    <value>O que deverá ser aberto?</value>
-    <comment>The heading for the dialog that asks whether the user wants to open an entire document or just a single page.</comment>
-  </data>
-  <data name="DialogScopeQuestionShareHeading" xml:space="preserve">
-    <value>O que deverá ser compartilhado?</value>
-    <comment>The heading for the dialog that asks whether the user wants to share an entire document or just a single page.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
     <value>Digitalização finalizada</value>
@@ -751,10 +631,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
     <value>Fechar</value>
     <comment>The close button text of the translation contributors dialog.</comment>
-  </data>
-  <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
-    <value>Contribuidores</value>
-    <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
     <value>Contribuidores</value>
@@ -892,10 +768,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Voltar</value>
     <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
   </data>
-  <data name="TextScannerCount" xml:space="preserve">
-    <value>{0} disponível</value>
-    <comment>The number of currently available scanners. The placeholder {0} is replaced with the actual number itself.</comment>
-  </data>
   <data name="TextZoomFactor" xml:space="preserve">
     <value>{0:000} %</value>
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
@@ -948,30 +820,6 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Alterações salvas como uma cópia</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
-  <data name="HeadingChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>Mais opções de resolução</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>Interface mais inteligente</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Acessibilidade melhorada</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_2_0_0Section1.Text" xml:space="preserve">
-    <value>Escolha entre mais opções de resolução para a melhor qualidade.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_2_0_0Section2.Text" xml:space="preserve">
-    <value>A interface foi melhorada para lhe oferecer uma melhor visão geral das páginas digitalizadas e dos scanners disponíveis.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
-    <value>Adicionado suporte para leitores de ecrã e serviços de reconhecimento de voz.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
     <value>Visão geral da página</value>
     <comment>The name of the page management area for use by accessibility tools.</comment>
@@ -980,74 +828,9 @@ TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</com
     <value>Opções de digitalização</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
-  <data name="DialogFeedbackText1.Text" xml:space="preserve">
-    <value>Você pode </value>
-    <comment>The first part of the dialog text that asks the user for feedback.
-|-&gt; DialogFeedbackHyperlinkRate.Text</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
-DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
-  </data>
-  <data name="DialogFeedbackText2.Text" xml:space="preserve">
-    <value> para sugerir novas funcionalidades e ajudar outras pessoas a decidir se este é o aplicativo certo para elas. Os utilizadores profissionais também podem influenciar o desenvolvimento futuro em </value>
-    <comment>The second part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkRate.Text &lt;-|-&gt; DialogFeedbackHyperlinkGithub.Text</comment>
-  </data>
-  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
-    <value>classificar o aplicativo na Microsoft Store</value>
-    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
-DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
-  </data>
-  <data name="DialogFeedbackText3.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The third part of the dialog text that asks the user for feedback.
-DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
-  </data>
-  <data name="TextSettingsFeedback1.Text" xml:space="preserve">
-    <value>Você pode </value>
-    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
-|-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback2.Text" xml:space="preserve">
-    <value> para sugerir novas funcionalidades e ajudar outras pessoas a decidir se este é o aplicativo certo para elas. Os utilizadores profissionais também podem influenciar o desenvolvimento futuro no </value>
-    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
-HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
-  </data>
-  <data name="TextSettingsFeedback3.Text" xml:space="preserve">
-    <value>.</value>
-    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
-HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>classificar o aplicativo na Microsoft Store</value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
-TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
-TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
-  </data>
-  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+  <data name="HeadingDialogDonate.Text" xml:space="preserve">
     <value>Apoiar o desenvolvimento</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
-    <value>me apoiar com uma doação</value>
-    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
-TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
-  </data>
-  <data name="TextSettingsDonate1.Text" xml:space="preserve">
-    <value>Este aplicativo está disponível gratuitamente para uso de todos. Se lhe poupou algum tempo e gostaria de apoiar o seu desenvolvimento, pode </value>
-    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
-|-&gt; HyperlinkSettingsDonate.Text</comment>
-  </data>
-  <data name="TextSettingsDonate2.Text" xml:space="preserve">
-    <value>. Obrigado!</value>
-    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
-HyperlinkSettingsDonate.Text &lt;-|</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
     <value>Apoiar o desenvolvimento</value>
@@ -1056,5 +839,565 @@ HyperlinkSettingsDonate.Text &lt;-|</comment>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
     <value>Apoiar o desenvolvimento</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+  </data>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
+    <value></value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
+    <value></value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
+    <value></value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
+    <value></value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
+    <value></value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
+    <value></value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value></value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value></value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value></value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="PerformedAutoRotationHeading" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value></value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value></value>
+    <comment>Heading for the fourth changelog section.</comment>
+  </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>Você pode alterar a pasta de destino para novas digitalizações nas configurações. Se quiser, pode também ser questionado sempre que digitalizar algo novo – ótimo para colocar sempre as coisas no lugar certo, em vez de ter de as organizar depois.</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value></value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>Falha ao carregar uma pasta de destino</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value></value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value></value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value></value>
+    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value></value>
+    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value></value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value></value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value></value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value></value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value></value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value></value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value></value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value></value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value></value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value></value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value></value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value></value>
+    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value></value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value></value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value></value>
+    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value></value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value></value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
+  </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value></value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value></value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value></value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value></value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value></value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageSchool" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageStudy" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageWork" xml:space="preserve">
+    <value></value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on ease of use.</comment>
+  </data>
+  <data name="TextSurveyFeatures.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on the offered features.</comment>
+  </data>
+  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on available file formats.</comment>
+  </data>
+  <data name="TextSurveyFileSize.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on file sizes.</comment>
+  </data>
+  <data name="TextSurveyInterface.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on the app interface.</comment>
+  </data>
+  <data name="TextSurveyPerformance.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on performance.</comment>
+  </data>
+  <data name="TextSurveyRecommend.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on recommending the app to others.</comment>
+  </data>
+  <data name="TextSurveyUsage.Text" xml:space="preserve">
+    <value></value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="StoreDescription" xml:space="preserve">
+    <value></value>
+    <comment>The Microsoft Store description of the app.</comment>
+  </data>
+  <data name="StoreProductName" xml:space="preserve">
+    <value></value>
+    <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
+  </data>
+  <data name="StoreSearchTerms" xml:space="preserve">
+    <value>Scanner|Windows-Scan|digitalizar documento|escanear documento|Scan|Windows Scan|Scanner Windows 10</value>
+    <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
+  </data>
+  <data name="StoreShortDescription" xml:space="preserve">
+    <value></value>
+    <comment>A short and concise description of the app.</comment>
+  </data>
+  <data name="StoreShortTitle" xml:space="preserve">
+    <value>Scanner</value>
+    <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
+  </data>
+  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
+    <value></value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="StoreVoiceTitle" xml:space="preserve">
+    <value>Scanner</value>
+    <comment>App title for voice control.</comment>
+  </data>
+  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
+    <value></value>
+    <comment>The accessibility description for the app logo.</comment>
   </data>
 </root>
