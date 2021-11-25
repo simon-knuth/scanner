@@ -162,7 +162,6 @@ namespace Scanner.Services
         /// </summary>
         public object GetSetting(AppSetting setting)
         {
-            LogService?.Log.Information($"GetSetting: Getting value for {setting}");
             string name = setting.ToString().ToUpper();
 
             switch (setting)

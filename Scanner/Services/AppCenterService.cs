@@ -21,25 +21,7 @@ namespace Scanner.Services
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
-        private bool _IsAppCenterAllowed;
-        private bool IsAppCenterAllowed
-        {
-            get => _IsAppCenterAllowed;
-            set
-            {
-                if (value == true && _IsAppCenterAllowed == false)
-                {
-                    // AppCenter needs to be activated
-                    AppCenter.SetEnabledAsync(true);
-                }
-                else if (value == false && _IsAppCenterAllowed == true)
-                {
-                    // AppCenter needs to be deactivated
-                    AppCenter.SetEnabledAsync(false);
-                }
-                _IsAppCenterAllowed = value;
-            }
-        }
+        private bool IsAppCenterAllowed;
 
         private readonly Dictionary<AppCenterEvent, string> EventStrings = new Dictionary<AppCenterEvent, string>
         {
@@ -76,14 +58,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public AppCenterService()
         {
-            // prepare service
-            Task.Run(async () => await AppCenter.SetEnabledAsync(false));
-            Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report).Result;
-            AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
-
-            // get whether AppCenter is even allowed
             SettingsService.SettingChanged += SettingsService_SettingChanged;
-            IsAppCenterAllowed = (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
         }
 
 
@@ -91,13 +66,25 @@ namespace Scanner.Services
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
+        ///     Intialize the App Center connection.
+        /// </summary>
+        public async Task InitializeAsync()
+        {
+            IsAppCenterAllowed = (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
+            await AppCenter.SetEnabledAsync(IsAppCenterAllowed);
+            Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report).Result;
+            AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
+        }
+        
+        /// <summary>
         ///     Refreshes the AppCenter status when the user toggles AppCenter on or off.
         /// </summary>
-        private void SettingsService_SettingChanged(object sender, AppSetting e)
+        private async void SettingsService_SettingChanged(object sender, AppSetting e)
         {
             if (e == AppSetting.SettingErrorStatistics)
             {
                 IsAppCenterAllowed = (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
+                await AppCenter.SetEnabledAsync(IsAppCenterAllowed); 
             }
         }
 
@@ -177,6 +164,11 @@ namespace Scanner.Services
         public void TrackError(Exception exception, IDictionary<string, string> properties = null, params ErrorAttachmentLog[] attachments)
         {
             Crashes.TrackError(exception, properties, attachments);
+        }
+
+        public void GenerateTestCrash()
+        {
+            Crashes.GenerateTestCrash();
         }
     }
 }

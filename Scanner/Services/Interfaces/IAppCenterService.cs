@@ -1,6 +1,7 @@
 ﻿using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Scanner.Services
 {
@@ -12,6 +13,8 @@ namespace Scanner.Services
         void TrackEvent(AppCenterEvent appCenterEvent, IDictionary<string, string> properties = null);
         void TrackError(Exception exception, IDictionary<string, string> properties = null,
             params ErrorAttachmentLog[] attachments);
+        void GenerateTestCrash();
+        Task InitializeAsync();
     }
 
     public enum AppCenterEvent

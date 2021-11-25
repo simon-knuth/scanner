@@ -97,7 +97,7 @@ namespace Scanner
             Task.Run(Ioc.Default.GetService<ILogService>().InitializeAsync).Wait();
             LogService = Ioc.Default.GetService<ILogService>();
             Task.Run(Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync).Wait();
-            Ioc.Default.GetService<IAppCenterService>();
+            Task.Run(Ioc.Default.GetService<IAppCenterService>().InitializeAsync).Wait();
             Ioc.Default.GetService<IAppDataService>();
             Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
         }

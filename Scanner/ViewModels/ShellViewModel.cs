@@ -349,7 +349,7 @@ namespace Scanner.ViewModels
 
         private void Crash()
         {
-            throw new ApplicationException("Crashing the app for debugging purposes.");
+            AppCenterService?.GenerateTestCrash();
         }
     }
 
