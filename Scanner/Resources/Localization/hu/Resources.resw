@@ -118,51 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>请重试</value>
+    <value>Kérjük próbáld újra.</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>复制到剪切板(Ctrl + C)</value>
+    <value>Oldal vágólapra másolása (Ctrl+C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>裁剪页面</value>
+    <value>Oldal körbevágása</value>
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>缩放比</value>
+    <value>Méretarány</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>缩放比</value>
+    <value>Méretarány</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
-    <value>4 开</value>
+    <value>Kai 4</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
-    <value>8 开</value>
+    <value>Kai 8</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
-    <value>16 开</value>
+    <value>Kai 16</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
-    <value>32 开</value>
+    <value>Kai 32</value>
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>自定义</value>
+    <value>Egyéni</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>水平翻转</value>
+    <value>Felcserélés</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
@@ -170,555 +170,681 @@
     <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
-    <value>ANSI A - 信件</value>
+    <value>ANSI A - Letter</value>
     <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
-    <value>ANSI B - 账本</value>
+    <value>ANSI B - Ledger/Tabloid</value>
     <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
-    <value>ANSI C - 对开大报</value>
+    <value>ANSI C - Broadsheet</value>
     <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
-    <value>方形</value>
+    <value>Négyzet</value>
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>删除页面</value>
+    <value>Oldal törlése</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>放弃修改</value>
+    <value>Változások elvetése</value>
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>使用 Windows Ink 绘制及高亮标记</value>
+    <value>Rajzolás és kijelölés a Windows Ink használatával</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>使用触控屏绘制</value>
+    <value>Rajzolás érintéssel</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>在其他应用中打开</value>
+    <value>Társítás</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>重命名文件</value>
+    <value>Fájl átnevezése</value>
     <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
-    <value>翻转 90°</value>
+    <value>Forgatás 90°-kal</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
-    <value>翻转 180°</value>
+    <value>Forgatás 180°-kal</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
-    <value>翻转 270°</value>
+    <value>Forgatás 270°-kal</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>翻转页面 (右键查看更多选项)</value>
+    <value>Oldal forgatása (több lehetőség jobb kattintással)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>保存修改</value>
+    <value>Változások mentése</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
+    <value>Változások mentése másként</value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>分享</value>
+    <value>Megosztás</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
+    <value>Beszkennelt oldalak megjelenítése</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>复制选中的页面</value>
+    <value>Kijelölt oldalak másolása</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>删除选中的页面</value>
+    <value>Kijelölt oldalak törlése</value>
     <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
-    <value>翻转选中页面 90°</value>
+    <value>Kijelölt oldalak forgatása 90°-kal</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
-    <value>翻转选中页面 180°</value>
+    <value>Kijelölt oldalak forgatása 180°-kal</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
-    <value>翻转选中页面 270°</value>
+    <value>Kijelölt oldalak forgatása 270°-kal</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>翻转选中页面 (右键查看更多选项)</value>
+    <value>Kijelölt oldalak forgatása (több lehetőség jobb kattintással)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
-    <value>选择页面</value>
+    <value>Oldalak kijelölése</value>
     <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>分享选中页面</value>
+    <value>Kijelölt oldalak megosztása</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
+    <value>Szkennelési beállítások megjelenítése</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
-  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Szkennelés megszakítása</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
+  <data name="ButtonScanOptionsDevices.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Szkennerek kezelése</value>
+    <comment>The tooltip text that appears while hovering the &quot;Manage scanners&quot; button in the scan options.</comment>
+  </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>预览</value>
+    <value>Előnézet</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
+  <data name="ButtonScanOptionsSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mentés helyének megjelenítése a Fájlkezelőben</value>
+    <comment>The tooltip text that appears while hovering the &quot;Show save location&quot; button in the scan options.</comment>
+  </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
-    <value>扫描</value>
+    <value>Szkennelés</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>重新开始扫描</value>
+    <value>Szkennelés és kezdje újra</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>设置</value>
+    <value>Beállítások</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
-  <data name="HeadingDialogDelete.Text" xml:space="preserve">
-    <value>你确定吗？</value>
+  <data name="DialogDelete.Title" xml:space="preserve">
+    <value>Biztos vagy benne?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="TextDialogDelete.Text" xml:space="preserve">
-    <value>该页面会被永久删除</value>
+  <data name="DialogDelete.Subtitle" xml:space="preserve">
+    <value>Az oldal véglegesen törlésre kerül.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
-    <value>删除</value>
+  <data name="DialogDelete.ActionButtonContent" xml:space="preserve">
+    <value>Törlés</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
-    <value>取消</value>
+  <data name="DialogDelete.CloseButtonContent" xml:space="preserve">
+    <value>Mégse</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
-  <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
-    <value>你确定吗？</value>
+  <data name="DialogDeleteSelect.Title" xml:space="preserve">
+    <value>Biztos vagy benne?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
-    <value>选中的页面会被永久删除</value>
+  <data name="DialogDeleteSelect.Subtitle" xml:space="preserve">
+    <value>A kijelölt oldalak véglegesen törlésre kerülnek.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
-    <value>删除</value>
+  <data name="DialogDeleteSelect.ActionButtonContent" xml:space="preserve">
+    <value>Törlés</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
-  <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
-    <value>取消</value>
+  <data name="DialogDeleteSelect.CloseButtonContent" xml:space="preserve">
+    <value>Mégse</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
+  <data name="DialogDevices.Title" xml:space="preserve">
+    <value>Válassz ki egy szkennert</value>
+    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
+  </data>
+  <data name="DialogDevices.Subtitle" xml:space="preserve">
+    <value>Ha a szkennered nem jelenik meg három percen belül, akkor valószínűleg érdemes először a Gépházban hozzáadnod.</value>
+    <comment>The subtitle of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
+  </data>
+  <data name="ButtonDialogDevices.Text" xml:space="preserve">
+    <value>Gépház megnyitása</value>
+    <comment>The title of the dialog that asks the user to select a scan or check installed devices the settings app.</comment>
+  </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>您对此应用满意吗？</value>
+    <value>Tetszik az alkalmazás?</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>我很愿意倾听您的意见</value>
+    <value>Szeretném hallani tőled:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
-  <data name="HeadingDialogRename.Text" xml:space="preserve">
-    <value>重命名</value>
+  <data name="DialogRename.Title" xml:space="preserve">
+    <value>Átnevezés</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="TextDialogRename.Text" xml:space="preserve">
-    <value>输入新文件名</value>
+  <data name="DialogRename.Subtitle" xml:space="preserve">
+    <value>Adj meg egy új nevet a fájlnak:</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
-    <value>确定</value>
+  <data name="DialogRename.ActionButtonContent" xml:space="preserve">
+    <value>Megerősítés</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
-  <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
-    <value>取消</value>
+  <data name="DialogRename.CloseButtonContent" xml:space="preserve">
+    <value>Mégse</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
+  <data name="DialogScope.ActionButtonContent" xml:space="preserve">
+    <value>Az egész dokumentum</value>
+    <comment>The button text of the dialog that allows the user to apply an action to an entire document.</comment>
+  </data>
+  <data name="DialogScope.CloseButtonContent" xml:space="preserve">
+    <value>Csak ez az oldal</value>
+    <comment>The button text of the dialog that allows the user to apply an action to a single page in a document.</comment>
+  </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
-    <value>复制到剪切板失败</value>
+    <value>Nem sikerült a vágólapra másolás.</value>
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
-    <value>现在无法裁剪</value>
+    <value>A körbevágás nem sikerült.</value>
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>现在无法删除该项</value>
+    <value>A törlés nem sikerült.</value>
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>卧槽！</value>
+    <value>Hoppá!</value>
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>请选择文件格式</value>
+    <value>Válassz ki egy fájlformátumot.</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>现在无法重命名该项。可能已有相同名字的文件存在？</value>
+    <value>Az átnevezés nem sikerült. Lehet, hogy létezik már egy fájl ilyen névvel?</value>
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>现在无法翻转该项。请重试。</value>
+    <value>Az elforgatás nem sikerült. Kérjük próbáld újra.</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>保存更改失败。请确保文件仍有效并重试。</value>
+    <value>A módosítások mentése sikertelen. Győződj meg arról, hogy a fájl továbbra is elérhető és próbáld újra.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>扫描仪目前不接受应用请求的取消扫描操作。</value>
+    <value>A szkenner jelenleg nem fogadja el az alkalmazás szkennelés megszakítási kérését.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>由于未知错误扫描失败。</value>
+    <value>A szkennelés nem sikerült egy váratlan hiba miatt.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
+  <data name="ErrorMessageScanScannerErrorHeading" xml:space="preserve">
+    <value>Hiba történt</value>
+    <comment>The error message heading that appears when a scan fails with more information.</comment>
+  </data>
+  <data name="ErrorMessageScanScannerErrorBody" xml:space="preserve">
+    <value>A szkennelés nem sikerült, a következő hiba történt:</value>
+    <comment>The error message body that appears when a scan fails with more information.</comment>
+  </data>
+  <data name="HeadingScannerSelectionHint.Text" xml:space="preserve">
+    <value>Válassz ki egy szkennert</value>
+    <comment>The heading that tells the user to select a scanner.</comment>
+  </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
-    <value>中文</value>
+    <value>Kínai</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
-    <value>国际通用</value>
+    <value>Nemzetközi</value>
     <comment>The heading for international aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
-    <value>北美</value>
+    <value>Észak-Amerikai</value>
     <comment>The heading for North American aspect ratio options.</comment>
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
-    <value>扫描仪</value>
+    <value>Szkenner</value>
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>色彩模式</value>
+    <value>Színmód</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
-    <value>另存为</value>
+    <value>Mentési formátum</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
-  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
-    <value></value>
+  <data name="HeadingScanOptionsMoreOptions.Text" xml:space="preserve">
+    <value>További beállítások</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
-    <value>分辨率</value>
+    <value>Felbontás</value>
     <comment>The heading for resolution options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
-    <value>来源</value>
+    <value>Forrás</value>
     <comment>The heading for source options in the scan options section.</comment>
   </data>
   <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
-    <value>依次扫描10页</value>
+    <value>Szkennelj akár 10 oldalt egymás után</value>
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>彩色</value>
+    <value>Színes</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>灰度</value>
+    <value>Szürkeárnyalatos</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>黑白</value>
+    <value>Monokróm</value>
     <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
-    <value>双向（正&amp;反）</value>
+    <value>Duplex (eleje és hátulja)</value>
     <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
-    <value>自动配置</value>
+    <value>Automatikus</value>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>源</value>
+    <value>Adagoló</value>
     <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>平面</value>
+    <value>Síkágy</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
+  <data name="TextScannerSelectionHint1.Text" xml:space="preserve">
+    <value>Ha a szkenner nem jelenik meg három percen belül, ellenőrizd, hogy megjelenik-e a </value>
+    <comment>The first part of the body of the text that tells the user to select a scanner.
+| -&gt; HyperlinkScannerSelectionHintSettings.Text</comment>
+  </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>扫描的页面会在此显示</value>
+    <value>A beszkennelt oldalak itt fognak megjelenni</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
+  <data name="TextScannerIndicator.Text" xml:space="preserve">
+    <value>Elérhető szkennerek keresése</value>
+    <comment>The placeholder text in the scanner selection list.</comment>
+  </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
-    <value>支持预览</value>
+    <value>Előnézeti lehetőség</value>
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>预览</value>
+    <value>Előnézet</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>有东西出错了。请确插入纸张并重试。</value>
+    <value>Valami nem oké. Győződj meg róla, hogy beillesztettél egy oldalt és próbáld újra.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>选择文件夹</value>
+    <value>Mappaválasztás</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>还原默认</value>
+    <value>Visszaállítás</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>三方许可协议</value>
+    <value>Harmadik fél licencei</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
+  <data name="ErrorMessageFeedbackHubHeading" xml:space="preserve">
+    <value>Hoppá!</value>
+    <comment>The error message heading that appears when launching the Feedback Hub failed.</comment>
+  </data>
+  <data name="ErrorMessageFeedbackHubBody" xml:space="preserve">
+    <value>A Feedback Hub nem indítható el.</value>
+    <comment>The error message body that appears when launching the Feedback Hub failed.</comment>
+  </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>选择的文件夹不可用。请选择另一个。</value>
+    <value>A kiválasztott mappa nem elérhető. Kérjük válassz ki egy másikat.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>Hiba történt</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value></value>
+    <value>Nem sikerült visszaállítani a mappát. A hiba oka:</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
-    <value>拒绝访问</value>
+    <value>Hozzáférés megtagadva</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>该应用未被允许使用该文件夹。请选择另一个。</value>
+    <value>Az alkalmazásnak nem engedélyezett a mappa a használata. Válassz ki egy másikat.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>关于该应用</value>
+    <value>Az alkalmazásról</value>
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>提交反馈</value>
+    <value>Visszajelzés</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
+  <data name="HeadingSettingsHelpSetup.Text" xml:space="preserve">
+    <value>Súgó és beállítás</value>
+    <comment>The heading for the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>保存位置</value>
+    <value>Mentési hely</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
+  <data name="HeadingSettingsTheme.Header" xml:space="preserve">
+    <value>Téma</value>
+    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+  </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>翻译</value>
+    <value>Fordítások</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
+  <data name="HyperlinkSettingsRestart.Text" xml:space="preserve">
+    <value>indítsd újra az alkalmazást</value>
+    <comment>The hyperlink text for restarting the app to apply changes.
+TextSettingsRestart1.Text &lt;- | -&gt; TextSettingsRestart2.Text</comment>
+  </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>在文件名前附加时间</value>
+    <value>Idő hozzáfűzése a fájlnévhez</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
+  <data name="OptionSettingsBackgroundNotification.Content" xml:space="preserve">
+    <value>Értesítés megjelenítése, amikor a szkennelés véget ér a háttérben</value>
+    <comment>The text for the option for sending a notification when a scan ends in the background.</comment>
+  </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
-    <value>三方许可协议</value>
+    <value>Harmadik fél licencei</value>
     <comment>The hyperlink text for viewing third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
-    <value>隐私政策</value>
+    <value>Adatvédelmi irányelvek</value>
     <comment>The hyperlink text for viewing the privacy policy.</comment>
   </data>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
-    <value>网站</value>
+    <value>Honlap</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
+  <data name="HyperlinkSettingsHelpSetupInstallScanner.Text" xml:space="preserve">
+    <value>Ismerd meg a szkenner telepítését és használatát Windows 10 alatt</value>
+    <comment>The hyperlink text directing the user to the scanner settings from the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart1.Text" xml:space="preserve">
+    <value>Kérjük </value>
+    <comment>The first part of the text for restarting the app to apply changes.
+| -&gt; HyperlinkSettingsRestart.Text</comment>
+  </data>
+  <data name="TextSettingsRestart2.Text" xml:space="preserve">
+    <value> a változások életbe lépéséhez.</value>
+    <comment>The second part of the text for restarting the app to apply changes.
+HyperlinkSettingsRestart.Text &lt;- |</comment>
+  </data>
+  <data name="TextSettingsTranslations1.Text" xml:space="preserve">
+    <value>A Windows több, mint 100 nyelven elérhető - te is segíthetsz elérhetővé tenni az alkalmazást mindenki számára. Olvasd el </value>
+    <comment>The first part of the text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsTranslations2.Text" xml:space="preserve">
+    <value> további információkért.</value>
+    <comment>The second part of the text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value></value>
+    <value>ezt az oldalt</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
+  <data name="TextScannerSelectionHint2.Text" xml:space="preserve">
+    <value> és az állapota nem offline.</value>
+    <comment>The second part of the body of the text that tells the user to select a scanner.
+HyperlinkScannerSelectionHintSettings.Text &lt;- |</comment>
+  </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
-    <value>设置</value>
+    <value>Beállítások</value>
     <comment>The heading for the settings.</comment>
   </data>
   <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
-    <value>黑暗</value>
+    <value>Sötét</value>
     <comment>The dark theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
-    <value>明亮</value>
+    <value>Világos</value>
     <comment>The light theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
-    <value>系统设置</value>
+    <value>Rendszer</value>
     <comment>The system theme option in the settings.</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
+  <data name="HyperlinkScannerSelectionHintSettings.Text" xml:space="preserve">
+    <value>Gépházban</value>
+    <comment>The hyperlink to the settings app of the body of the text that tells the user to select a scanner.
+TextScannerSelectionHint1.Text &lt;- | -&gt; TextScannerSelectionHint2.Text</comment>
+  </data>
+  <data name="HyperlinkSettingsHelpSetupScannerSettings.Text" xml:space="preserve">
+    <value>Szkenner beállítások megnyitása</value>
+    <comment>The hyperlink text directing the user to the scanner page in the settings app.</comment>
+  </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The button text for a generic close button.</comment>
   </data>
+  <data name="DialogScopeQuestionCopyHeading" xml:space="preserve">
+    <value>Mit kell másolni?</value>
+    <comment>The heading for the dialog that asks whether the user wants to copy an entire document or just a single page.</comment>
+  </data>
+  <data name="DialogScopeQuestionOpenWithHeading" xml:space="preserve">
+    <value>Mit kell megnyitni?</value>
+    <comment>The heading for the dialog that asks whether the user wants to open an entire document or just a single page.</comment>
+  </data>
+  <data name="DialogScopeQuestionShareHeading" xml:space="preserve">
+    <value>Mit kell megosztani?</value>
+    <comment>The heading for the dialog that asks whether the user wants to share an entire document or just a single page.</comment>
+  </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
-    <value>扫描完成</value>
+    <value>A szkennelés véget ért</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
-    <value>多页</value>
+    <value>Több oldal</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>返回应用以查看及修改结果</value>
+    <value>A megtekintéshez és módosításhoz térj vissza az alkalmazásba.</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>应用收集您扫描的所有页面，只要你不在扫描过程中更改文件格式或“重新开始”。如果您正在创建PDF文件，您也可以在此重新排序页面。</value>
+    <value>Az alkalmazás itt gyűjti az oldalakat, amiket beszkenneltél egészen addig, amíg nem változtatsz a formátumon, vagy választod a szkennelés újraindítását. Amikor egy több oldalas PDF fájlt készítesz, szintén itt rendezheted át az oldalakat.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
-    <value>你的页面在此</value>
+    <value>Itt találod a beolvasott oldalakat</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
+  <data name="HeadingDialogTranslationsContributors.Text" xml:space="preserve">
+    <value>Közreműködők</value>
+    <comment>The title of the dialog that shows the translation contributors.</comment>
+  </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
-    <value>贡献者</value>
+    <value>Közreműködők</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>设置</value>
+    <value>Beállítások</value>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>扫描已被保存到默认位置。您可以从设置中选择其他文件夹。</value>
+    <value>A beszkennelt oldalakat az alapértelmezett mentési helyre mentjük. A beállításoknál változtathatod meg ezt a mappát.</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>保存位置</value>
+    <value>Mentési hely</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
-    <value>更新日志</value>
+    <value>Változások</value>
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>您可以在更新日志（可能不涵盖任何语言）中看看有哪些新功能及改进。</value>
+    <value>Megnézheted az újdonságokat és a fejlesztéseket a változási naplóban (lehet, hogy nem minden nyelven érhető el).</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
-    <value>应用已更新</value>
+    <value>Az alkalmazás frissítve</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>有哪些新功能？</value>
+    <value>Újdonságok</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>功劳</value>
+    <value>Elismerések</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>发送使用统计数据及错误报告</value>
+    <value>Hibajelentések és használati statisztikák küldése</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>这将让我可以调查应用崩溃并了解对用户最有价值的功能。您扫描的页面绝对不会包含在这些报告里。</value>
+    <value>Ez lehetővé teszi, hogy kivizsgáljam az alkalmazás összeomlásait és megállapítsam, hogy mely funkciók a legértékesebbek a felhasználók számára. Biztos lehetsz benne, hogy a beszkennelt oldalak soha nem szerepelnek ezekben a jelentésekben.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
-    <value>隐私优先</value>
+    <value>Először az adatvédelem</value>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>您随时可以在设置中更改主意。</value>
+    <value>Az alkalmazás beállításaiban bármikor meggondolhatod magad.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>关闭</value>
+    <value>Bezárás</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>导出事件日志</value>
+    <value>Eseménynaplók exportálása</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>导出事件日志</value>
+    <value>Eseménynaplók exportálása</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
-    <value>导出</value>
+    <value>Exportálás</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>您扫描的页面没有被包含在这些日志里。</value>
+    <value>Ezek a naplók nem tartalmazzák a beszkennelt oldalakat.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
-    <value>确定</value>
+    <value>Megerősítés</value>
     <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>请确认以下设置。</value>
+    <value>Kérjük erősítsd meg az alábbi beállításokat.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>功劳</value>
+    <value>Elismerések</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -730,55 +856,59 @@
     <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
   </data>
   <data name="TextEditSave.Text" xml:space="preserve">
-    <value>保存</value>
+    <value>Mentés</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
-    <value>扫描仪</value>
+    <value>Szkenner</value>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Windows 10 扫描仪</value>
+    <value>Scanner for Windows 10</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
-    <value>扫描仪</value>
+    <value>Szkenner</value>
     <comment>App name as displayed on tile.</comment>
   </data>
   <data name="TextPageListDescriptor" xml:space="preserve">
-    <value>第 {0} 页</value>
+    <value>{0}. oldal</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
-    <value>扫描</value>
+    <value>Scans</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>每次都询问</value>
+    <value>Kérdés minden alkalommal</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>使用一个设定的位置</value>
+    <value>Állandó</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
-    <value>后退</value>
+    <value>Vissza</value>
     <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+  </data>
+  <data name="TextScannerCount" xml:space="preserve">
+    <value>{0} elérhető</value>
+    <comment>The number of currently available scanners. The placeholder {0} is replaced with the actual number itself.</comment>
   </data>
   <data name="TextZoomFactor" xml:space="preserve">
     <value>{0:000} %</value>
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
   </data>
   <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>放大  (Ctrl + 鼠标滚轮向上)</value>
+    <value>Nagyítás (Ctrl + felfelé görgetés)</value>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>缩小  (Ctrl + 鼠标滚轮向下)</value>
+    <value>Kicsinyítés (Ctrl + lefelé görgetés)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
-    <value>{0} 项共 {1}</value>
+    <value>{0} / {1}</value>
     <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
   </data>
   <data name="OptionScanOptionsResolution" xml:space="preserve">
@@ -786,615 +916,144 @@
     <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
-    <value>{0:0} DPI (默认)</value>
+    <value>{0:0} DPI (alapértelmezett)</value>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0:0} DPI (文档最优化)</value>
+    <value>{0:0} DPI (legjobb dokumentumokhoz)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (照片最优化)</value>
+    <value>{0:0} DPI (legjobb fotókhoz)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
-    <value>扫描完成，已添加 {0} 页</value>
+    <value>A szkennelés kész, {0} oldal hozzáadva</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
   </data>
   <data name="TextScanFailAccessibility" xml:space="preserve">
-    <value>扫描失败</value>
+    <value>Nem sikerült a szkennelés</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
   </data>
   <data name="TextSavedChangesAccessibility" xml:space="preserve">
-    <value>已保存更改</value>
+    <value>Változtatások mentve</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
   </data>
   <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
-    <value>扫描完成，添加了一页</value>
+    <value>A szkennelés kész, 1 oldal hozzáadva</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
   </data>
   <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
-    <value>扫描已存为复制</value>
+    <value>A módosítások másolatként mentve</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
+  <data name="HeadingChangelog2_2_0_0Section1.Text" xml:space="preserve">
+    <value>Több felbontás opció</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2_2_0_0Section2.Text" xml:space="preserve">
+    <value>Okosabb felület</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog2_2_0_0Section3.Text" xml:space="preserve">
+    <value>Javított áttekinthetőség</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section1.Text" xml:space="preserve">
+    <value>Több felbontás opció közül választhatsz a legjobb minőség érdekében.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section2.Text" xml:space="preserve">
+    <value>A kezelőfelületet továbbfejlesztettük, hogy jobb áttekintést nyújtson a beolvasott oldalakról és az elérhető szkennerekről.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog2_2_0_0Section3.Text" xml:space="preserve">
+    <value>Hozzáadott támogatás a képernyőolvasókhoz és a hangfelismerő szolgáltatásokhoz.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
-    <value>页面概览</value>
+    <value>Oldal áttekintése</value>
     <comment>The name of the page management area for use by accessibility tools.</comment>
   </data>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
-    <value>扫描选项</value>
+    <value>Szkennelési lehetőségek</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
-  <data name="HeadingDialogDonate.Text" xml:space="preserve">
-    <value>支持开发</value>
+  <data name="DialogFeedbackText1.Text" xml:space="preserve">
+    <value>Tudsz </value>
+    <comment>The first part of the dialog text that asks the user for feedback.
+|-&gt; DialogFeedbackHyperlinkRate.Text</comment>
+  </data>
+  <data name="DialogFeedbackHyperlinkGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The Feedback Hub link in the dialog that asks the user for feedback.
+DialogFeedbackText2.Text &lt;-|-&gt; DialogFeedbackText3.Text</comment>
+  </data>
+  <data name="DialogFeedbackText2.Text" xml:space="preserve">
+    <value> új funkciókat javasolni és segíteni másoknak eldönteni, hogy ez a megfelelő alkalmazás a számukra. A professzionális felhasználók is befolyásolhatják a további fejlődést </value>
+    <comment>The second part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkRate.Text &lt;-|-&gt; DialogFeedbackHyperlinkGithub.Text</comment>
+  </data>
+  <data name="DialogFeedbackHyperlinkRate.Text" xml:space="preserve">
+    <value>értékelést adni a Scanner-re a Microsoft Store-ban</value>
+    <comment>The Microsoft Store rating link in the dialog that asks the user for feedback.
+DialogFeedbackText1.Text &lt;-|-&gt; DialogFeedbackText2.Text</comment>
+  </data>
+  <data name="DialogFeedbackText3.Text" xml:space="preserve">
+    <value>.</value>
+    <comment>The third part of the dialog text that asks the user for feedback.
+DialogFeedbackHyperlinkGithub.Text &lt;-|</comment>
+  </data>
+  <data name="TextSettingsFeedback1.Text" xml:space="preserve">
+    <value>Tudsz </value>
+    <comment>The first part of the text of the &quot;Feedback&quot; section in settings.
+|-&gt; HyperlinkSettingsFeedbackRate.Text</comment>
+  </data>
+  <data name="TextSettingsFeedback2.Text" xml:space="preserve">
+    <value> új funkciókat javasolni és segíteni másoknak eldönteni, hogy ez a megfelelő alkalmazás a számukra. A professzionális felhasználók is befolyásolhatják a további fejlődést </value>
+    <comment>The second part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackRate.Text &lt;-|-&gt; HyperlinkSettingsFeedbackGithub.Text</comment>
+  </data>
+  <data name="TextSettingsFeedback3.Text" xml:space="preserve">
+    <value>.</value>
+    <comment>The third part of the text of the &quot;Feedback&quot; section in settings.
+HyperlinkSettingsFeedbackGithub.Text &lt;-|</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>értékelést adni a Scanner-re a Microsoft Store-ban</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.
+TextSettingsFeedback1.Text &lt;-|-&gt; TextSettingsFeedback2.Text</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.
+TextSettingsFeedback2.Text &lt;-|-&gt; TextSettingsFeedback3.Text</comment>
+  </data>
+  <data name="HeadingSettingsDonate.Text" xml:space="preserve">
+    <value>Támogasd a fejlesztést</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
   </data>
+  <data name="HyperlinkSettingsDonate.Text" xml:space="preserve">
+    <value>itt támogathatod a munkámat</value>
+    <comment>The hyperlink text allowing the user to donate from the &quot;Donation&quot; section in settings.
+TextSettingsDonate1.Text &lt;-|-&gt; TextSettingsDonate2.Text</comment>
+  </data>
+  <data name="TextSettingsDonate1.Text" xml:space="preserve">
+    <value>Ez az alkalmazás bárkinek ingyenesen hozzáférhető. Ha segített időt megtakarítani és szeretnél további hasznos dolgokat látni tőlem, </value>
+    <comment>The first part of the text of the &quot;Donation&quot; section in settings.
+|-&gt; HyperlinkSettingsDonate.Text</comment>
+  </data>
+  <data name="TextSettingsDonate2.Text" xml:space="preserve">
+    <value>. Köszönöm!</value>
+    <comment>The second part of the text of the &quot;Donation&quot; section in settings.
+HyperlinkSettingsDonate.Text &lt;-|</comment>
+  </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
-    <value>支持开发</value>
+    <value>Támogasd a fejlesztést</value>
     <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
-    <value>支持开发</value>
+    <value>Támogasd a fejlesztést</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
-  </data>
-  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
-  </data>
-  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value></value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value></value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value></value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value></value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value></value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value></value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value></value>
-    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
-  </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value></value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
-  </data>
-  <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value></value>
-    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
-  </data>
-  <data name="PerformedAutoRotationHeading" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
-  </data>
-  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
-    <value></value>
-    <comment>The hyperlink text for viewing the latest changelog.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
-    <value></value>
-    <comment>Heading for the fourth changelog section.</comment>
-  </data>
-  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to install and use a scanner.</comment>
-  </data>
-  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to troubleshoot scanner issues.</comment>
-  </data>
-  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to change the folder that scans are saved to.</comment>
-  </data>
-  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on choosing the right resolution.</comment>
-  </data>
-  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to reorder the pages in a PDF file.</comment>
-  </data>
-  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to save changes made in the app.</comment>
-  </data>
-  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
-  </data>
-  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on choosing a file format.</comment>
-  </data>
-  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
-  </data>
-  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on choosing a file format.</comment>
-  </data>
-  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on choosing the right resolution.</comment>
-  </data>
-  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
-  </data>
-  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to save changes made in the app.</comment>
-  </data>
-  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to install and use a scanner.</comment>
-  </data>
-  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
-  </data>
-  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
-  </data>
-  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
-    <value></value>
-    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
-  </data>
-  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
-  </data>
-  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
-    <value></value>
-    <comment>The error message that appears when using a set save location fails.</comment>
-  </data>
-  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
-  </data>
-  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
-  </data>
-  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
-  </data>
-  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip for a button that offers help regarding some topic.</comment>
-  </data>
-  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button in the help section that opens the scanner settings.</comment>
-  </data>
-  <data name="ButtonHelpSettings.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button in the help section that opens the settings.</comment>
-  </data>
-  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
-  </data>
-  <data name="HeadingHelp.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help.</comment>
-  </data>
-  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the auto crop section in the scan options.</comment>
-  </data>
-  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
-    <value></value>
-    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
-  </data>
-  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
-    <value></value>
-    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
-  </data>
-  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
-    <value></value>
-    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
-  </data>
-  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
-    <value></value>
-    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
-  </data>
-  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text that indicates that the app is searching for installed scanners.</comment>
-  </data>
-  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
-    <value></value>
-    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
-  </data>
-  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
-    <value></value>
-    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
-  </data>
-  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
-  </data>
-  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
-  </data>
-  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
-  </data>
-  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that shows all available apps to open a file with.</comment>
-  </data>
-  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
-  </data>
-  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
-    <value></value>
-    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
-  </data>
-  <data name="HeadingEditCrop.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the crop editor.</comment>
-  </data>
-  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
-  </data>
-  <data name="HeadingEditDraw.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the draw editor.</comment>
-  </data>
-  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
-  </data>
-  <data name="OptionDontShowAgain.Text" xml:space="preserve">
-    <value></value>
-    <comment>The option that prevents something from being shown again.</comment>
-  </data>
-  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
-    <value></value>
-    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
-  </data>
-  <data name="TextOpenWithWarning.Text" xml:space="preserve">
-    <value></value>
-    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
-  </data>
-  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
-  </data>
-  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
-  </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip for the scan preview button.</comment>
-  </data>
-  <data name="DialogPreview.Title" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the scan preview.</comment>
-  </data>
-  <data name="TextPromisePrivacy.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text promising privacy.</comment>
-  </data>
-  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
-    <value></value>
-    <comment>The donation button in the dialog asking the user to support the development.</comment>
-  </data>
-  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
-    <value></value>
-    <comment>The cancel button in the dialog asking the user to support the development.</comment>
-  </data>
-  <data name="TextPromiseNoAds.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text promising an ads-free experience.</comment>
-  </data>
-  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text promising a subscription-free experience.</comment>
-  </data>
-  <data name="TextPromiseUpdates.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text promising free updates.</comment>
-  </data>
-  <data name="TextDonateDialog.Text" xml:space="preserve">
-    <value></value>
-    <comment>The body for the dialog asking the user to support the development.</comment>
-  </data>
-  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that duplicates a page.</comment>
-  </data>
-  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that shows a selected file in File Explorer.</comment>
-  </data>
-  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
-    <value></value>
-    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
-  </data>
-  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the brightness adjustment section in the scan options.</comment>
-  </data>
-  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the contrast adjustment section in the scan options.</comment>
-  </data>
-  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for scan options that are always saved across app sessions.</comment>
-  </data>
-  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
-  </data>
-  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value></value>
-    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
-  </data>
-  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
-    <value></value>
-    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
-  </data>
-  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to adjust the brightness and contrast.</comment>
-  </data>
-  <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
-  </data>
-  <data name="TextSettingsRestart.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
-  </data>
-  <data name="TextSettingsTranslations.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
-  </data>
-  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
-  </data>
-  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
-  </data>
-  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
-  </data>
-  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
-  </data>
-  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
-  </data>
-  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for personalization settings.</comment>
-  </data>
-  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
-  </data>
-  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
-  </data>
-  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for automatically rotating scanned pages.</comment>
-  </data>
-  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
-  </data>
-  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for the horizontal editor orientation in settings.</comment>
-  </data>
-  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for the vertical editor orientation in settings.</comment>
-  </data>
-  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for remembering the last used scan options.</comment>
-  </data>
-  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for showing advanced scan options.</comment>
-  </data>
-  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
-    <value></value>
-    <comment>The option for showing occasional surveys in settings.</comment>
-  </data>
-  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value></value>
-    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
-  </data>
-  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
-    <value></value>
-    <comment>The text explaining the automatic rotation of pages.</comment>
-  </data>
-  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value></value>
-    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
-  </data>
-  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
-    <value></value>
-    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
-  </data>
-  <data name="HeadingEditor.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the editor.</comment>
-  </data>
-  <data name="HeadingPageList.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the page list.</comment>
-  </data>
-  <data name="HeadingScanOptions.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the scan options.</comment>
-  </data>
-  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
-    <value></value>
-    <comment>The heading for the help text on how to use automatic cropping.</comment>
-  </data>
-  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
-    <value></value>
-    <comment>The help text on how to use automatic cropping.</comment>
-  </data>
-  <data name="DialogSurvey.Subtitle" xml:space="preserve">
-    <value></value>
-    <comment>The subtitle for the survey dialog.</comment>
-  </data>
-  <data name="DialogSurvey.Title" xml:space="preserve">
-    <value></value>
-    <comment>The title for the survey dialog.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user discovered the app.</comment>
-  </data>
-  <data name="OptionSurveyUsageOther" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user mainly uses the app.</comment>
-  </data>
-  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user mainly uses the app.</comment>
-  </data>
-  <data name="OptionSurveyUsageSchool" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user mainly uses the app.</comment>
-  </data>
-  <data name="OptionSurveyUsageStudy" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user mainly uses the app.</comment>
-  </data>
-  <data name="OptionSurveyUsageWork" xml:space="preserve">
-    <value></value>
-    <comment>A survey option for how the user mainly uses the app.</comment>
-  </data>
-  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on how the user discovered the app.</comment>
-  </data>
-  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on ease of use.</comment>
-  </data>
-  <data name="TextSurveyFeatures.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on the offered features.</comment>
-  </data>
-  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on available file formats.</comment>
-  </data>
-  <data name="TextSurveyFileSize.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on file sizes.</comment>
-  </data>
-  <data name="TextSurveyInterface.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on the app interface.</comment>
-  </data>
-  <data name="TextSurveyPerformance.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on performance.</comment>
-  </data>
-  <data name="TextSurveyRecommend.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on recommending the app to others.</comment>
-  </data>
-  <data name="TextSurveyUsage.Text" xml:space="preserve">
-    <value></value>
-    <comment>The survey question on how the user discovered the app.</comment>
-  </data>
-  <data name="StoreDescription" xml:space="preserve">
-    <value></value>
-    <comment>The Microsoft Store description of the app.</comment>
-  </data>
-  <data name="StoreProductName" xml:space="preserve">
-    <value></value>
-    <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
-  </data>
-  <data name="StoreSearchTerms" xml:space="preserve">
-    <value>扫描仪|Windows-扫描|扫描文档|扫描|Windows 扫描|扫描仪 Windows 10</value>
-    <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
-  </data>
-  <data name="StoreShortDescription" xml:space="preserve">
-    <value></value>
-    <comment>A short and concise description of the app.</comment>
-  </data>
-  <data name="StoreShortTitle" xml:space="preserve">
-    <value>扫描仪</value>
-    <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
-  </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value></value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
-  <data name="StoreVoiceTitle" xml:space="preserve">
-    <value>扫描仪</value>
-    <comment>App title for voice control.</comment>
-  </data>
-  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
-    <value></value>
-    <comment>The accessibility description for the app logo.</comment>
   </data>
 </root>
