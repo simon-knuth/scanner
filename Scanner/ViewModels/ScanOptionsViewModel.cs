@@ -369,7 +369,7 @@ namespace Scanner.ViewModels
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
             DebugDeleteScanOptionsFromDatabaseCommand = new RelayCommand(DebugDeleteScanOptionsFromDatabase);
             ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
-            ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
+            ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(true, false));
             DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
             CancelScanCommand = new RelayCommand(CancelScan);
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);

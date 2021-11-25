@@ -324,7 +324,7 @@
 
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="scanner:ScanResultElement">
-                            <GridViewItem x:Name="GridViewItemPage" Margin="4" Style="{ThemeResource DefaultGridViewItemStyle}" AutomationProperties.Name="{Binding ItemDescriptor}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <GridViewItem x:Name="GridViewItemPage" Margin="4" Style="{ThemeResource DefaultGridViewItemStyle}" AutomationProperties.Name="{Binding ItemDescriptor}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False">
                                 <Grid>
                                     <!-- Selected Item Background -->
                                     <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>

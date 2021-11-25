@@ -132,6 +132,13 @@ namespace Scanner.ViewModels
 
             Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
             IsEditorEditing = Messenger.Send(new EditorIsEditingRequestMessage());
+
+            if (ScanResultService.Result != null)
+            {
+                DisplayContainingFolders = (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
+                    == SettingSaveLocationType.AskEveryTime
+                    && IsImageFormat(ScanResultService.Result.ScanResultFormat);
+            }
         }
 
 
@@ -155,10 +162,11 @@ namespace Scanner.ViewModels
 
         private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
-            if (e == AppSetting.SettingSaveLocationType)
+            if (e == AppSetting.SettingSaveLocationType && ScanResultService.Result != null)
             {
                 DisplayContainingFolders = (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
-                    == SettingSaveLocationType.AskEveryTime;
+                    == SettingSaveLocationType.AskEveryTime
+                    && IsImageFormat(ScanResultService.Result.ScanResultFormat);
             }
         }
 
@@ -171,6 +179,9 @@ namespace Scanner.ViewModels
         {
             ScanResult = e;
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
+            DisplayContainingFolders = (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType)
+                    == SettingSaveLocationType.AskEveryTime
+                    && IsImageFormat(e.ScanResultFormat);
         }
 
         private void ScanResultService_ScanResultChanged(object sender, EventArgs e)
