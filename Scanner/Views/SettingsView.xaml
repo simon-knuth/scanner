@@ -164,7 +164,7 @@
                                 </interactivity:Interaction.Behaviors>
 
                                 <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom" Opening="MenuFlyoutSettingAutoRotateLanguage_Opening">
+                                    <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom">
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem x:Name="MenuFlyoutItemAddLanguage" x:Uid="ButtonSettingsAutoRotationAddLanguage" Command="{x:Bind ViewModel.LaunchLanguageSettingsCommand}">
                                             <MenuFlyoutItem.Icon>

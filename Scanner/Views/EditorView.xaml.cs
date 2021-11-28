@@ -333,56 +333,54 @@ namespace Scanner.Views
                 }
                 else
                 {
+                    PrepareOpenWithFlyoutApps();
                     FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, MenuFlyoutOpenWith);
                 }
                 FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
             });
         }
 
-        private async void MenuFlyoutButtonOpenWith_Opening(object sender, object e)
+        private void PrepareOpenWithFlyoutApps()
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            MenuFlyoutOpenWith.Items.Clear();
+            for (int i = 0; i < ViewModel.OpenWithApps.Count; i++)
             {
-                MenuFlyoutOpenWith.Items.Clear();
-                for (int i = 0; i < ViewModel.OpenWithApps.Count; i++)
+                OpenWithApp app = ViewModel.OpenWithApps[i];
+
+                if (app.Logo != null)
                 {
-                    OpenWithApp app = ViewModel.OpenWithApps[i];
-
-                    if (app.Logo != null)
+                    var icon = new ImageIcon
                     {
-                        var icon = new ImageIcon
-                        {
-                            Source = app.Logo,
-                            Scale = new System.Numerics.Vector3(3),
-                            CenterPoint = new System.Numerics.Vector3(app.Logo.PixelWidth / 2)
-                        };
+                        Source = app.Logo,
+                        Scale = new System.Numerics.Vector3(3),
+                        CenterPoint = new System.Numerics.Vector3(app.Logo.PixelWidth / 2)
+                    };
 
-                        var item = new MenuFlyoutItem
-                        {
-                            Text = app.AppInfo.DisplayInfo.DisplayName,
-                            Icon = icon,
-                            Command = ViewModel.OpenWithCommand,
-                            CommandParameter = i.ToString()
-                        };
-
-                        MenuFlyoutOpenWith.Items.Add(item);
-                    }
-                    else
+                    var item = new MenuFlyoutItem
                     {
-                        var item = new MenuFlyoutItem
-                        {
-                            Text = app.AppInfo.DisplayInfo.DisplayName,
-                            Command = ViewModel.OpenWithCommand,
-                            CommandParameter = i.ToString()
-                        };
+                        Text = app.AppInfo.DisplayInfo.DisplayName,
+                        Icon = icon,
+                        Command = ViewModel.OpenWithCommand,
+                        CommandParameter = i.ToString()
+                    };
 
-                        MenuFlyoutOpenWith.Items.Add(item);
-                    }
+                    MenuFlyoutOpenWith.Items.Add(item);
                 }
-                MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemStore);
-                MenuFlyoutOpenWith.Items.Add(new MenuFlyoutSeparator());
-                MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemAllApps);
-            });
+                else
+                {
+                    var item = new MenuFlyoutItem
+                    {
+                        Text = app.AppInfo.DisplayInfo.DisplayName,
+                        Command = ViewModel.OpenWithCommand,
+                        CommandParameter = i.ToString()
+                    };
+
+                    MenuFlyoutOpenWith.Items.Add(item);
+                }
+            }
+            MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemStore);
+            MenuFlyoutOpenWith.Items.Add(new MenuFlyoutSeparator());
+            MenuFlyoutOpenWith.Items.Add(MenuFlyoutItemAllApps);
         }
 
         private async void PipsPager_SelectedIndexChanged(PipsPager sender, PipsPagerSelectedIndexChangedEventArgs args)
@@ -475,6 +473,7 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
                 FlyoutOpenWithWarning.Hide();
+                PrepareOpenWithFlyoutApps();
                 FlyoutBase.SetAttachedFlyout(ButtonToolbarOpenWith, MenuFlyoutOpenWith);
                 FlyoutBase.ShowAttachedFlyout(ButtonToolbarOpenWith);
             });

@@ -55,41 +55,39 @@ namespace Scanner.Views
             });
         }
 
-        private async void MenuFlyoutSettingAutoRotateLanguage_Opening(object sender, object e)
+        private void PrepareMenuFlyoutAutoRotateLanguages()
         {
             string desiredLanguage = ViewModel.SettingAutoRotateLanguage;
 
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            MenuFlyoutSettingAutoRotateLanguage.Items.Clear();
+            for (int i = 0; i < ViewModel.AutoRotatorService.AvailableLanguages.Count; i++)
             {
-                MenuFlyoutSettingAutoRotateLanguage.Items.Clear();
-                for (int i = 0; i < ViewModel.AutoRotatorService.AvailableLanguages.Count; i++)
+                Language language = ViewModel.AutoRotatorService.AvailableLanguages[i];
+
+                var item = new ToggleMenuFlyoutItem
                 {
-                    Language language = ViewModel.AutoRotatorService.AvailableLanguages[i];
+                    Text = language.DisplayName,
+                    Command = ViewModel.SetAutoRotateLanguageCommand,
+                    CommandParameter = i.ToString(),
+                    IsChecked = language.LanguageTag == desiredLanguage
+                };
 
-                    var item = new ToggleMenuFlyoutItem
-                    {
-                        Text = language.DisplayName,
-                        Command = ViewModel.SetAutoRotateLanguageCommand,
-                        CommandParameter = i.ToString(),
-                        IsChecked = language.LanguageTag == desiredLanguage
-                    };
-
-                    if (language.LanguageTag == ViewModel.AutoRotatorService.DefaultLanguage.LanguageTag)
-                    {
-                        item.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                    }
-
-                    MenuFlyoutSettingAutoRotateLanguage.Items.Add(item);
+                if (language.LanguageTag == ViewModel.AutoRotatorService.DefaultLanguage.LanguageTag)
+                {
+                    item.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
                 }
-                MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());
+
+                MenuFlyoutSettingAutoRotateLanguage.Items.Add(item);
+            }
+            MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());
             MenuFlyoutSettingAutoRotateLanguage.Items.Add(MenuFlyoutItemAddLanguage);
-            });
         }
 
         private async void HyperlinkButtonSettingAutoRotateLanguage_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
+                PrepareMenuFlyoutAutoRotateLanguages();
                 FlyoutBase.ShowAttachedFlyout((Windows.UI.Xaml.FrameworkElement)sender);
             });
         }

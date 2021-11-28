@@ -93,7 +93,7 @@
             </Storyboard>
             
             <!-- Flyouts -->
-            <MenuFlyout x:Name="MenuFlyoutOpenWith" Placement="Bottom" Opening="MenuFlyoutButtonOpenWith_Opening">
+            <MenuFlyout x:Name="MenuFlyoutOpenWith" Placement="Bottom">
                 <MenuFlyoutItem x:Name="MenuFlyoutItemStore" x:Uid="ButtonOpenWithStore" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE719;" FontSize="16"/>
