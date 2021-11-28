@@ -38,6 +38,8 @@ namespace Scanner.ViewModels
         private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
 
         public AsyncRelayCommand ViewLoadedCommand;
+        public RelayCommand ViewNavigatedToCommand;
+        public RelayCommand ViewNavigatedFromCommand;
 
         public RelayCommand HelpRequestScannerDiscoveryCommand;
         public RelayCommand HelpRequestChooseResolutionCommand;
@@ -78,7 +80,7 @@ namespace Scanner.ViewModels
             set
             {
                 SetProperty(ref _SelectedScanner, value);
-                LogService?.Log.Information($"SelectedScanner = {value.Name}");
+                LogService?.Log.Information($"SelectedScanner = {value?.Name}");
 
                 if (SettingsService != null && ScanOptionsDatabaseService != null)
                 {
@@ -360,6 +362,8 @@ namespace Scanner.ViewModels
         public ScanOptionsViewModel()
         {
             ViewLoadedCommand = new AsyncRelayCommand(ViewLoaded);
+            ViewNavigatedToCommand = new RelayCommand(ViewNavigatedTo);
+            ViewNavigatedFromCommand = new RelayCommand(ViewNavigatedFrom);
             HelpRequestScannerDiscoveryCommand = new RelayCommand(HelpRequestScannerDiscovery);
             HelpRequestChooseResolutionCommand = new RelayCommand(HelpRequestChooseResolution);
             HelpRequestChooseFileFormatCommand = new RelayCommand(HelpRequestChooseFileFormat);
@@ -401,6 +405,16 @@ namespace Scanner.ViewModels
             Scanners = ScannerDiscoveryService.DiscoveredScanners;
             Scanners.CollectionChanged += Scanners_CollectionChangedAsync;
             PrepareDebugScanner();
+        }
+
+        private void ViewNavigatedTo()
+        {
+            ScannerDiscoveryService.ResumeSearchAsync();
+        }
+
+        private void ViewNavigatedFrom()
+        {
+            ScannerDiscoveryService.PauseSearchAsync();
         }
 
         /// <summary>

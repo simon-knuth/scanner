@@ -224,5 +224,15 @@ namespace Scanner.Services
             }
             catch (Exception) { }
         }
+
+        public void PauseSearchAsync()
+        {
+            Watcher?.Stop();
+        }
+
+        public void ResumeSearchAsync()
+        {
+            Watcher?.Start();
+        }
     }
 }

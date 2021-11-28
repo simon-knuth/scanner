@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 using static Utilities;
 
 
@@ -148,6 +149,20 @@ namespace Scanner.Views
             {
                 ReliablyOpenTeachingTip(TeachingTipScannerSearchTip);
             });
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            ViewModel.ViewNavigatedToCommand.Execute(null);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            ViewModel.ViewNavigatedFromCommand.Execute(null);
         }
     }
 }

@@ -13,6 +13,8 @@ namespace Scanner.Services
         event EventHandler InitialCrawlCompleted;
 
         Task RestartSearchAsync();
+        void PauseSearchAsync();
+        void ResumeSearchAsync();
         Task AddDebugScannerAsync(DiscoveredScanner scanner);
         ObservableCollection<DiscoveredScanner> DiscoveredScanners
         {
