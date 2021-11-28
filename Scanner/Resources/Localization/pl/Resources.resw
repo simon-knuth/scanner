@@ -715,9 +715,10 @@ Fuzzy</comment>
     <value>Żadna z zeskanowanych stron nie jest uwzględniona w tych dziennikach.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.CloseButtonText" xml:space="preserve">
+  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>Zatwierdź</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
+    <comment>The close button text of the dialog that appears when privacy settings have to be checked.
+Fuzzy</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Zapoznaj się z poniższymi ustawieiami.</value>
