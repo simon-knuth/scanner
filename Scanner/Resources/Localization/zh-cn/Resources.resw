@@ -739,7 +739,7 @@ Fuzzy</comment>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Windows 10 扫描仪</value>
+    <value>扫描仪</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
