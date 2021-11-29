@@ -238,19 +238,43 @@ static class Utilities
         {
             if ((new UISettings()).GetColorValue(UIColorType.Background).ToString() == "#FF000000")
             {
-                // Dark mode is active
-                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+                // dark mode is active
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(32, 169, 169, 211);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(96, 169, 169, 211);
             }
             else
             {
-                // Light mode is active
+                // light mode is active
                 applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(64, 169, 169, 169);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(156, 169, 169, 169);
             }
         }
         else
         {
-            if (theme == SettingAppTheme.Light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
-            else applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+            if (theme == SettingAppTheme.Light)
+            {
+                // light mode is forced
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(64, 169, 169, 169);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(156, 169, 169, 169);
+            }
+            else
+            {
+                // dark mode is forced
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(32, 169, 169, 211);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(96, 169, 169, 211);
+            }
         }
     }
 
