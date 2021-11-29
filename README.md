@@ -52,7 +52,7 @@
 ## Download
 <table>
   <tr>
-    <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>You can also view the source code of both stable and WIP versions on GitHub. Download/clone the code using the green button in the top-right corner.</td>
+    <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>Additionally, all release packages are published in the <a href="https://github.com/simon-knuth/scanner/releases">Releases</a> section.<br>You can also view the source code of both stable and WIP versions on GitHub.</td>
     <td width="30%">
       <a href="https://www.microsoft.com/store/apps/9N438MZHD3ZF"><img src="https://i.imgur.com/aAWYhvm.png"/></a>
     </td>
@@ -63,11 +63,6 @@
 &nbsp;
 ## Support the development
 If you like the app, you can directly [support the development with a donation](https://simon-knuth.github.io/scanner/donate.html). Thank you! ❤️
-
-
-&nbsp;
-## Credits
-Banner: <a href="https://unsplash.com/@microsoftedge">Microsoft Edge on Unsplash</a>
 
 
 &nbsp;
@@ -90,6 +85,11 @@ The currently supported languages are:
 </ul>  
 
 See [this page](https://simon-knuth.github.io/scanner/help-translate.html), if you'd like to help improve existing translations or add new ones.
+
+
+&nbsp;
+## Credits
+Banner: <a href="https://unsplash.com/@microsoftedge">Microsoft Edge on Unsplash</a>
 
 
 &nbsp;
