@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Services;
+using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -20,6 +25,7 @@ namespace Scanner
     /// </summary>
     sealed partial class App : Application
     {
+        private ILogService LogService;
         private UISettings uISettings;
 
         /// <summary>
@@ -28,26 +34,72 @@ namespace Scanner
         /// </summary>
         public App()
         {
-            // quickly load theme
-            if (ApplicationData.Current.LocalSettings.Values["settingAppTheme"] != null)
+            // register and setup services
+            PrepareServices();
+
+            // initialize some settings
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            PackageVersion version = Package.Current.Id.Version;
+            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
+            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
+
+            // migrate settings if necessary
+            if (!(bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchEver)
+                && (bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion)
+                && currentVersionNumber == "Version 3.0.0.0")
             {
-                switch ((int)ApplicationData.Current.LocalSettings.Values["settingAppTheme"])
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        this.RequestedTheme = ApplicationTheme.Light;
-                        break;
-                    case 2:
-                        this.RequestedTheme = ApplicationTheme.Dark;
-                        break;
-                }
+                settingsService.MigrateSettingsToV3();
             }
 
-            _ = InitializeSerilogAsync();
+            // apply theme
+            SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
+            switch (theme)
+            {
+                case SettingAppTheme.Light:
+                    this.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                case SettingAppTheme.Dark:
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+                case SettingAppTheme.System:
+                default:
+                    break;
+            }
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        private void PrepareServices()
+        {
+            // configure service landscape
+            Ioc.Default.ConfigureServices(new ServiceCollection()
+                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
+                .AddSingleton<ISettingsService, SettingsService>()
+                .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                .AddSingleton<IScanService, ScanService>()
+                .AddSingleton<ILogService, LogService>()
+                .AddSingleton<IAppCenterService, AppCenterService>()
+                .AddSingleton<IScanOptionsDatabaseService, ScanOptionsDatabaseService>()
+                .AddSingleton<IPersistentScanOptionsDatabaseService, PersistentScanOptionsDatabaseService>()
+                .AddSingleton<IAppDataService, AppDataService>()
+                .AddSingleton<IAccessibilityService, AccessibilityService>()
+                .AddSingleton<IScanResultService, ScanResultService>()
+                .AddSingleton<IHelperService, HelperService>()
+                .AddSingleton<IAutoRotatorService, AutoRotatorService>()
+                .AddSingleton<IPdfService, PdfService>()
+                .BuildServiceProvider());
+
+            // intialize essential singleton services
+            Task.Run(Ioc.Default.GetService<ILogService>().InitializeAsync).Wait();
+            LogService = Ioc.Default.GetService<ILogService>();
+            Task.Run(Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync).Wait();
+            Task.Run(Ioc.Default.GetService<IAppCenterService>().InitializeAsync).Wait();
+            Ioc.Default.GetService<IAppDataService>();
+            Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
         }
 
 
@@ -93,9 +145,6 @@ namespace Scanner
             uISettings = new UISettings();
             uISettings.ColorValuesChanged += UpdateTheme;
 
-            // load settings from local app data
-            LoadSettings();
-
             // update theme once to ensure that the titlebar buttons are correct
             UpdateTheme(null, null);
 
@@ -106,7 +155,7 @@ namespace Scanner
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(Views.ShellView), e.Arguments);
                 }
                 // Set minimum width and height
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
@@ -122,8 +171,8 @@ namespace Scanner
         /// </summary>
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            log.Fatal(e.Exception, "CRASH");
-            Serilog.Log.CloseAndFlush();
+            LogService.Log.Fatal(e.Exception, "CRASH");
+            LogService.CloseAndFlush();
         }
 
 
@@ -196,7 +245,7 @@ namespace Scanner
             }
             else
             {
-                log.Error("FullTrustProcess returned an error. (" + ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"] + ")");
+                LogService.Log.Error($"FullTrustProcess returned an error. ({ApplicationData.Current.LocalSettings.Values["fullTrustProcessError"]})");
                 taskCompletionSource.TrySetResult(false);
             }
         }

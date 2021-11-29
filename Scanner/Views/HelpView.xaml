@@ -1,0 +1,278 @@
+﻿<Page
+    x:Class="Scanner.Views.HelpView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    d:DesignWidth="350"
+    d:DesignHeight="600"
+    
+    Loaded="Page_Loaded">
+
+    <Page.DataContext>
+        <viewModels:HelpViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridMain" AutomationProperties.LandmarkType="Custom" AutomationProperties.Name="{x:Bind HeadingHelp.Text}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <!-- Toolbar -->
+        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
+            <TextBlock x:Name="HeadingHelp" x:Uid="HeadingHelp" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+            <StackPanel Orientation="Vertical" Padding="24,16,24,24">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+
+                <TextBlock Text="Scanner usage" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpScannerDiscovery.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE721;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpScannerDiscovery" Grid.Column="1" x:Uid="HeadingHelpScannerDiscovery" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpScannerDiscovery" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpScannerSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchWifiSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE701;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpWiFiSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderScannerNotWorking" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpScannerNotWorking.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8FE;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpScannerNotWorking" Grid.Column="1" x:Uid="HeadingHelpScannerNotWorking" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpScannerNotWorking" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpScannerSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderChooseResolution" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChooseResolution.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpChooseResolution" Grid.Column="1" x:Uid="HeadingHelpChooseResolution" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChooseResolution" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderBrightnessContrast" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpBrightnessContrast.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpBrightnessContrast" Grid.Column="1" x:Uid="HeadingHelpBrightnessContrast" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpBrightnessContrast" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderAutoCrop" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpAutoCrop.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7A8;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpAutoCrop" Grid.Column="1" x:Uid="HeadingHelpAutoCrop" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpAutoCrop" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <TextBlock Text="Files &amp; save location" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpSaveChanges.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpSaveChanges" Grid.Column="1" x:Uid="HeadingHelpSaveChanges" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpSaveChanges" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderChangeScanFolder" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChangeScanFolder.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpChangeScanFolder" Grid.Column="1" x:Uid="HeadingHelpChangeScanFolder" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChangeScanFolder" Padding="24,16,24,16" Background="Transparent"/>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                    <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderChooseFileFormat" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpChooseFileFormat.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB9F;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpChooseFileFormat" Grid.Column="1" x:Uid="HeadingHelpChooseFileFormat" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpChooseFileFormat" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <TextBlock Text="PDF" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpStartNewPdf.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpStartNewPdf" Grid.Column="1" x:Uid="HeadingHelpStartNewPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpStartNewPdf" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderReorderPdfPages" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpReorderPdf.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8CB;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingHelpReorderPdf" Grid.Column="1" x:Uid="HeadingHelpReorderPdf" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <controls:MarkdownTextBlock x:Uid="TextHelpReorderPdf" Padding="24,16,24,16" Background="Transparent"/>
+                    </StackPanel>
+                </muxc:Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

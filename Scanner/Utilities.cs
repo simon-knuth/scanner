@@ -2,10 +2,11 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using Scanner;
+using Scanner.Services;
 using Serilog;
 using Serilog.Exceptions;
 using System;
@@ -19,7 +20,6 @@ using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media.SpeechSynthesis;
-using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
@@ -33,107 +33,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using static Enums;
 using static Globals;
 
 static class Utilities
 {
-    /// <summary>
-    ///     Creates a ComboBoxItem with the specified content string and tag string.
-    /// </summary>
-    /// <param name="content">
-    ///     The ComboBoxItem's content.
-    /// </param>
-    /// <param name="tag">
-    ///     The ComboBoxItem's tag.
-    /// </param>
-    /// <returns>
-    ///     The ComboBoxItem.
-    /// </returns>
-    public static ComboBoxItem CreateComboBoxItem(string content, object tag)
-    {
-        ComboBoxItem item = new ComboBoxItem
-        {
-            Content = content,
-            Tag = tag
-        };
-
-        return item;
-    }
-
-
-    /// <summary>
-    ///     Creates a ComboBoxItem with the specified glyph, content string and tag string.
-    /// </summary>
-    /// <param name="glyph">
-    ///     The glyph that shall be displayed to the left of the content.
-    /// </param>
-    /// <param name="content">
-    ///     The ComboBoxItem's content.
-    /// </param>
-    /// <param name="tag">
-    ///     The ComboBoxItem's tag.
-    /// </param>
-    /// <returns>
-    ///     The ComboBoxItem.
-    /// </returns>
-    public static ComboBoxItem CreateComboBoxItem(string glyph, string content, object tag)
-    {
-        StackPanel stackPanel = new StackPanel();
-        stackPanel.Orientation = Orientation.Horizontal;
-
-        stackPanel.Children.Add(new FontIcon
-        {
-            Glyph = glyph,
-            Margin = new Thickness(0, 0, 8, 0),
-            FontSize = 16,
-            Opacity = 0.9
-        });
-
-        stackPanel.Children.Add(new TextBlock
-        {
-            Text = content
-        });
-
-        ComboBoxItem item = new ComboBoxItem
-        {
-            Content = stackPanel,
-            Tag = tag,
-        };
-
-        Windows.UI.Xaml.Automation.AutomationProperties.SetName(item, content);
-
-        return item;
-    }
-
-
-    /// <summary>
-    ///     Display a <see cref="BitmapImage"/> inside an <see cref="Image"/> control. If the <paramref name="imageControl"/>
-    ///     is already visible and source != null, <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/>
-    ///     is used to make the control visible once the image has been loaded.
-    /// </summary>
-    /// <remarks>
-    ///     If <see cref="FinishDisplayImage(object, SizeChangedEventArgs)"/> is used, the
-    ///     <paramref name="imageControl"/> will be empty for a brief moment in order to detect when the
-    ///     new image has been loaded.
-    /// </remarks>
-    /// <param name="bitmapImage">The <see cref="BitmapImage"/> that shall be displayed.</param>
-    /// <param name="imageControl">The <see cref="Image"/> control.</param>
-    public static void DisplayImage(BitmapImage bitmapImage, Image imageControl)
-    {
-        if (imageControl.Visibility == Visibility.Collapsed || imageControl.Source == null)
-        {
-            imageControl.Source = bitmapImage;
-            imageControl.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            imageControl.Source = null;
-            imageControl.Tag = bitmapImage;
-        }
-    }
-
-
     /// <summary>
     ///     Converts the <paramref name="formatString"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
@@ -164,58 +67,55 @@ static class Utilities
         }
     }
 
-
     /// <summary>
-    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
+    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
     /// </summary>
     /// <param name="format">An image format.</param>
     /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static Guid GetBitmapEncoderId(SupportedFormat? format)
-    {
-        switch (format)
-        {
-            case SupportedFormat.JPG:
-                return BitmapEncoder.JpegEncoderId;
-            case SupportedFormat.PNG:
-                return BitmapEncoder.PngEncoderId;
-            case SupportedFormat.TIF:
-                return BitmapEncoder.TiffEncoderId;
-            case SupportedFormat.BMP:
-                return BitmapEncoder.BmpEncoderId;
-            default:
-                throw new ApplicationException("GetBitmapEncoderId received invalid SupportedFormat '" + format + "'.");
-        }
-    }
-
-
-    /// <summary>
-    ///     Converts a <see cref="SupportedFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
-    /// </summary>
-    /// <param name="format">An image format.</param>
-    /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static SupportedFormat ConvertImageScannerFormatToSupportedFormat(ImageScannerFormat format)
+    public static Guid GetBitmapEncoderId(ImageScannerFormat? format)
     {
         switch (format)
         {
             case ImageScannerFormat.Jpeg:
-                return SupportedFormat.JPG;
+                return BitmapEncoder.JpegEncoderId;
             case ImageScannerFormat.Png:
-                return SupportedFormat.PNG;
-            case ImageScannerFormat.DeviceIndependentBitmap:
-                return SupportedFormat.BMP;
+                return BitmapEncoder.PngEncoderId;
             case ImageScannerFormat.Tiff:
-                return SupportedFormat.TIF;
-            case ImageScannerFormat.Xps:
-                return SupportedFormat.XPS;
-            case ImageScannerFormat.OpenXps:
-                return SupportedFormat.OpenXPS;
-            case ImageScannerFormat.Pdf:
-                return SupportedFormat.PDF;
+                return BitmapEncoder.TiffEncoderId;
+            case ImageScannerFormat.DeviceIndependentBitmap:
+                return BitmapEncoder.BmpEncoderId;
             default:
-                throw new ApplicationException("ConvertImageScannerFormatToSupportedFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
+                throw new ApplicationException("GetBitmapEncoderId received invalid ImageScannerFormat '" + format + "'.");
         }
     }
 
+    /// <summary>
+    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding format string.
+    /// </summary>
+    /// <param name="format">An image format.</param>
+    /// <returns>The corresponding string.</returns>
+    public static string ConvertImageScannerFormatToString(ImageScannerFormat format)
+    {
+        switch (format)
+        {
+            case ImageScannerFormat.Jpeg:
+                return ".jpg";
+            case ImageScannerFormat.Png:
+                return ".png";
+            case ImageScannerFormat.DeviceIndependentBitmap:
+                return ".bmp";
+            case ImageScannerFormat.Tiff:
+                return ".tif";
+            case ImageScannerFormat.Xps:
+                return ".xps";
+            case ImageScannerFormat.OpenXps:
+                return ".oxps";
+            case ImageScannerFormat.Pdf:
+                return ".pdf";
+            default:
+                throw new ApplicationException("ConvertImageScannerFormatToImageScannerFormat received invalid ImageScannerFormat '" + format + "' for conversion.");
+        }
+    }
 
     /// <summary>
     ///     Gets the BitmapFileFormat corresponding to a file's format.
@@ -247,7 +147,6 @@ static class Utilities
         }
     }
 
-
     /// <summary>
     ///     Gets the CanvasBitmapFileFormat corresponding to a file's format.
     /// </summary>
@@ -278,212 +177,6 @@ static class Utilities
         }
     }
 
-
-    /// <summary>
-    ///     Checks whether the ctrl key is currently pressed.
-    /// </summary>
-    /// <returns>True if the ctrl key is currently pressed.</returns>
-    public static bool IsCtrlKeyPressed()
-    {
-        var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
-        return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-    }
-
-
-    /// <summary>
-    ///     Empty the <paramref name="canvas"/> and make sure that it has the correct dimensions to cover the image.
-    /// </summary>
-    /// <param name="canvas">The <see cref="InkCanvas"/> that is to be cleared and resized.</param>
-    /// <param name="properties">The <see cref="ImageProperties"/> that include the dimensions.</param>
-    public static void InitializeInkCanvas(InkCanvas canvas, double width, double height)
-    {
-        canvas.InkPresenter.StrokeContainer.Clear();
-        canvas.Width = width;
-        canvas.Height = height;
-    }
-
-
-    /// <summary>
-    ///     Loads the <see cref="scanFolder"/> from the <see cref="futureAccessList"/>.
-    /// </summary>
-    public static async Task LoadScanFolderAsync()
-    {
-        StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
-        string defaultScanFolderName = GetDefaultScanFolderName();
-
-        if (futureAccessList.Entries.Count != 0)
-        {
-            try { scanFolder = await futureAccessList.GetFolderAsync("scanFolder"); }
-            catch (Exception exc)
-            {
-                log.Error(exc, "Loading scanFolder from futureAccessList failed.");
-                try { scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists); }
-                catch (Exception exc2)
-                {
-                    log.Error(exc2, "Creating a new scanFolder in PicturesLibrary failed as well.");
-                    ShowMessageDialogAsync(LocalizedString("ErrorMessageLoadScanFolderHeader"), LocalizedString("ErrorMessageLoadScanFolderBody"));
-                }
-                futureAccessList.AddOrReplace("scanFolder", scanFolder);
-            }
-        }
-        else
-        {
-            // Either first app launch ever or the futureAccessList is unavailable ~> Reset it
-            try
-            {
-                scanFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
-            }
-            catch (UnauthorizedAccessException exc)
-            {
-                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed. (Unauthorized)");
-                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderUnauthorizedHeading"), LocalizedString("ErrorMessageResetFolderUnauthorizedBody"));
-                return;
-            }
-            catch (Exception exc)
-            {
-                log.Error(exc, "Creating a new scanFolder in PicturesLibrary failed.");
-                ShowMessageDialogAsync(LocalizedString("ErrorMessageResetFolderHeading"), LocalizedString("ErrorMessageResetFolderBody") + "\n" + exc.Message);
-                return;
-            }
-            futureAccessList.AddOrReplace("scanFolder", scanFolder);
-        }
-    }
-
-
-    /// <summary>
-    ///     Loads all settings/data from the app's data container and initializes default data if necessary.
-    /// </summary>
-    public static void LoadSettings()
-    {
-        localSettingsContainer = ApplicationData.Current.LocalSettings;
-
-        if (localSettingsContainer.Values["settingSaveLocationAsk"] != null)
-        {
-            settingSaveLocationAsk = (bool)localSettingsContainer.Values["settingSaveLocationAsk"];
-        }
-        else
-        {
-            settingSaveLocationAsk = false;
-            localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
-        }
-
-        if (localSettingsContainer.Values["settingAppTheme"] != null)
-        {
-            switch ((int)localSettingsContainer.Values["settingAppTheme"])
-            {
-                case 0:
-                    settingAppTheme = Theme.system;
-                    break;
-                case 1:
-                    settingAppTheme = Theme.light;
-                    break;
-                case 2:
-                    settingAppTheme = Theme.dark;
-                    break;
-                default:
-                    settingAppTheme = Theme.system;
-                    break;
-            }
-        }
-        else
-        {
-            settingAppTheme = Theme.system;
-            localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
-        }
-        localSettingsContainer.Values["awaitingRestartAfterThemeChange"] = false;
-
-        if (localSettingsContainer.Values["settingAppendTime"] != null)
-        {
-            settingAppendTime = (bool)localSettingsContainer.Values["settingAppendTime"];
-        }
-        else
-        {
-            settingAppendTime = true;
-            localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
-        }
-
-        if (localSettingsContainer.Values["settingNotificationScanComplete"] != null)
-        {
-            settingNotificationScanComplete = (bool)localSettingsContainer.Values["settingNotificationScanComplete"];
-        }
-        else
-        {
-            settingNotificationScanComplete = true;
-            localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        }
-
-        if (localSettingsContainer.Values["settingErrorStatistics"] != null)
-        {
-            settingErrorStatistics = (bool)localSettingsContainer.Values["settingErrorStatistics"];
-        }
-        else
-        {
-            settingErrorStatistics = false;
-            localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
-        }
-        if (settingErrorStatistics == true)
-        {
-            AppCenter.SetEnabledAsync(true);
-        }
-        else AppCenter.SetEnabledAsync(false);
-        try
-        {
-            RegisterWithMicrosoftAppCenter();
-        }
-        catch (Exception) { }
-
-        PackageVersion version = Package.Current.Id.Version;
-        string currentVersionNumber = String.Format("Version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-        if (localSettingsContainer.Values["lastKnownVersion"] != null)
-        {
-            string lastKnownVersionNumber = (string)localSettingsContainer.Values["lastKnownVersion"];
-
-            if (currentVersionNumber != lastKnownVersionNumber) isFirstAppLaunchWithThisVersion = true;
-            else isFirstAppLaunchWithThisVersion = false;
-
-            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
-        }
-        else
-        {
-            // first launch of the app ever
-            localSettingsContainer.Values["lastKnownVersion"] = currentVersionNumber;
-        }
-
-        if (localSettingsContainer.Values["scanNumber"] != null)
-        {
-            scanNumber = (int)localSettingsContainer.Values["scanNumber"];
-        }
-        else
-        {
-            // first launch of the app ever
-            localSettingsContainer.Values["scanNumber"] = 1;
-            scanNumber = 1;
-        }
-
-        if (localSettingsContainer.Values["lastTouchDrawState"] != null)
-        {
-            lastTouchDrawState = (bool)localSettingsContainer.Values["lastTouchDrawState"];
-        }
-        else
-        {
-            lastTouchDrawState = false;
-        }
-
-        if (localSettingsContainer.Values["manageTutorialAlreadyShown"] != null)
-        {
-            manageTutorialAlreadyShown = (bool)localSettingsContainer.Values["manageTutorialAlreadyShown"];
-        }
-        else
-        {
-            manageTutorialAlreadyShown = false;
-        }
-
-        log.Information("Settings loaded: [settingSaveLocationAsk={SettingSaveLocationAsk}|settingAppTheme={SettingAppTheme}|settingAppendTime={SettingAppendTime}|settingNotificationScanComplete={SettingNotificationScanComplete}|settingErrorStatistics={SettingErrorStatistics}" +
-            "|isFirstAppLaunchWithThisVersion={IsFirstAppLaunchWithThisVersion}|scanNumber={ScanNumber}|lastTouchDrawState={LastTouchDrawState}|manageTutorialAlreadyShown={ManageTutorialAlreadyShown}]",
-            settingSaveLocationAsk, settingAppTheme, settingAppendTime, settingNotificationScanComplete, settingErrorStatistics, isFirstAppLaunchWithThisVersion, scanNumber, lastTouchDrawState, manageTutorialAlreadyShown);
-    }
-
-
     /// <summary>
     ///     Searches the app resources for a localized version of a string.
     /// </summary>
@@ -491,10 +184,15 @@ static class Utilities
     /// <returns>The localized string.</returns>
     public static string LocalizedString(string resource)
     {
-        if (CoreWindow.GetForCurrentThread() != null) return ResourceLoader.GetForCurrentView().GetString(resource);
-        else return "{~STRING~}";
+        if (CoreWindow.GetForCurrentThread() != null)
+        {
+            return ResourceLoader.GetForCurrentView().GetString(resource);
+        }
+        else
+        {
+            return ResourceLoader.GetForViewIndependentUse().GetString(resource);
+        }
     }
-
 
     /// <summary>
     ///     Searches the app secrets for a localized version of a string.
@@ -506,7 +204,6 @@ static class Utilities
         var resources = new ResourceLoader("Secrets");
         return resources.GetString(secret);
     }
-
 
     /// <summary>
     ///     Removes brackets, their content and the leading whitespace from <paramref name="input"/>.
@@ -529,202 +226,57 @@ static class Utilities
         }
     }
 
-
-    /// <summary>
-    ///     Resets the <see cref="scanFolder"/> to "Scans" in the Pictures Library.
-    /// </summary>
-    /// <remarks>
-    ///     The folder is created if necessary.
-    /// </remarks>
-    /// <exception cref="UnauthorizedAccessException">Access to the Pictures Library has been denied.</exception>
-    /// <exception cref="Exception">Remaining errors</exception>
-    public static async Task ResetScanFolderAsync()
-    {
-        StorageFolder folder;
-        string defaultScanFolderName = GetDefaultScanFolderName();
-
-        try
-        {
-            folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(defaultScanFolderName, CreationCollisionOption.OpenIfExists);
-        }
-        catch (UnauthorizedAccessException exc)
-        {
-            log.Error(exc, "Resetting the scan folder failed. (Unauthorized)");
-            Crashes.TrackError(exc);
-            throw;
-        }
-        catch (Exception exc)
-        {
-            log.Error(exc, "Resetting the scan folder failed.");
-            Crashes.TrackError(exc);
-            throw;
-        }
-
-        scanFolder = folder;
-        StorageApplicationPermissions.FutureAccessList.AddOrReplace("scanFolder", scanFolder);
-        log.Information("Resetting scan folder successful.");
-    }
-
-
-    /// <summary>
-    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/>,
-    ///     an <paramref name="expirationTime"/> (in seconds) and an image.
-    /// </summary>
-    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
-    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
-    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
-    /// <param name="imageURI">The URI pointing to the image that is displayed as part of the <see cref="ToastNotification"/>.</param>
-    public static void SendToastNotification(string title, string content, int expirationTime, string imageURI)
-    {
-        // Construct the visuals of the toast
-        ToastVisual visual = new ToastVisual()
-        {
-            BindingGeneric = new ToastBindingGeneric()
-            {
-                Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = title
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = content
-                    },
-
-                    new AdaptiveImage()
-                    {
-                        Source = imageURI
-                    }
-                },
-            }
-        };
-
-        // Construct final toast
-        ToastContent toastContent = new ToastContent()
-        {
-            Visual = visual,
-        };
-
-        var toast = new ToastNotification(toastContent.GetXml())
-        {
-            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
-        };
-
-        ToastNotificationManager.CreateToastNotifier().Show(toast);
-    }
-
-
-    /// <summary>
-    ///     Sends a <see cref="ToastNotification"/> consisting of a <paramref name="title"/>, <paramref name="content"/> and
-    ///     an <paramref name="expirationTime"/> (in seconds).
-    /// </summary>
-    /// <param name="title">The title of the <see cref="ToastNotification"/>.</param>
-    /// <param name="content">The content of the <see cref="ToastNotification"/>.</param>
-    /// <param name="expirationTime">The time (in seconds) after which the <see cref="ToastNotification"/> is removed from the Action Center.</param>
-    public static void SendToastNotification(string title, string content, int expirationTime)
-    {
-        // Construct the visuals of the toast
-        ToastVisual visual = new ToastVisual()
-        {
-            BindingGeneric = new ToastBindingGeneric()
-            {
-                Children =
-                {
-                    new AdaptiveText()
-                    {
-                        Text = title
-                    },
-
-                    new AdaptiveText()
-                    {
-                        Text = content
-                    },
-                },
-            }
-        };
-
-        // Construct final toast
-        ToastContent toastContent = new ToastContent()
-        {
-            Visual = visual,
-        };
-
-        var toast = new ToastNotification(toastContent.GetXml())
-        {
-            ExpirationTime = DateTime.Now.AddMinutes(expirationTime)
-        };
-
-        ToastNotificationManager.CreateToastNotifier().Show(toast);
-    }
-
-
-    /// <summary>
-    ///     Displays a MessageDialog consisting of a title and message.
-    /// </summary>
-    /// <param name="title">The title of the <see cref="MessageDialog"/>.</param>
-    /// <param name="message">The body of the <see cref="MessageDialog"/>.</param>
-    public async static void ShowMessageDialogAsync(string title, string message)
-    {
-        MessageDialog messageDialog = new MessageDialog(message, title);
-        await messageDialog.ShowAsync();
-    }
-
-
     /// <summary>
     ///     Adapts the titlebar buttons to the current theme.
     /// </summary>
     public static void UpdateTheme(UISettings uISettings, object theObject)
     {
-        if (settingAppTheme == Theme.system)
+        ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+        SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
+
+        if (theme == SettingAppTheme.System)
         {
             if ((new UISettings()).GetColorValue(UIColorType.Background).ToString() == "#FF000000")
             {
-                // Dark mode is active
-                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+                // dark mode is active
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(32, 169, 169, 211);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(96, 169, 169, 211);
             }
             else
             {
-                // Light mode is active
+                // light mode is active
                 applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(64, 169, 169, 169);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(156, 169, 169, 169);
             }
         }
         else
         {
-            if (settingAppTheme == Theme.light) applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
-            else applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.LightGray;
+            if (theme == SettingAppTheme.Light)
+            {
+                // light mode is forced
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(64, 169, 169, 169);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.Black;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(156, 169, 169, 169);
+            }
+            else
+            {
+                // dark mode is forced
+                applicationViewTitlebar.ButtonForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(32, 169, 169, 211);
+                applicationViewTitlebar.ButtonPressedForegroundColor = Windows.UI.Colors.White;
+                applicationViewTitlebar.ButtonPressedBackgroundColor = Windows.UI.Color.FromArgb(96, 169, 169, 211);
+            }
         }
     }
-
-
-    /// <summary>
-    ///     Saves all settings to the app's data container.
-    /// </summary>
-    public static void SaveSettings()
-    {
-        localSettingsContainer.Values["settingSaveLocationAsk"] = settingSaveLocationAsk;
-        localSettingsContainer.Values["settingAppTheme"] = (int)settingAppTheme;
-        localSettingsContainer.Values["settingAppendTime"] = settingAppendTime;
-        localSettingsContainer.Values["settingNotificationScanComplete"] = settingNotificationScanComplete;
-        localSettingsContainer.Values["settingErrorStatistics"] = settingErrorStatistics;
-
-        if (settingErrorStatistics == true) AppCenter.SetEnabledAsync(true);
-        else AppCenter.SetEnabledAsync(false);
-    }
-
-
-    /// <summary>
-    ///     Gets the image measurements from <see cref="ImageProperties"/>.
-    /// </summary>
-    /// <returns>
-    ///     A tuple of width and height.
-    /// </returns>
-    public static Tuple<double, double> GetImageMeasurements(ImageProperties properties)
-    {
-        return new Tuple<double, double>(properties.Width, properties.Height);
-    }
-
 
     /// <summary>
     ///     Gets the image measurements from a <see cref="BitmapImage"/>.
@@ -737,71 +289,15 @@ static class Utilities
         return new Tuple<double, double>(image.PixelWidth, image.PixelHeight);
     }
 
-
     /// <summary>
-    ///     Returns the default name of the folder that scans are saved to. This varies depending on the system language.
-    ///     The fallback name is "Scans".
-    /// </summary>
-    private static string GetDefaultScanFolderName()
-    {
-        string defaultScanFolderName = LocalizedString("DefaultScanFolderName");
-        bool validName = true;
-
-        foreach (char character in defaultScanFolderName.ToCharArray())
-        {
-            if (!Char.IsLetter(character))
-            {
-                validName = false;
-                break;
-            }
-        }
-
-        if (defaultScanFolderName == "" || validName == false)
-        {
-            defaultScanFolderName = "Scans";        // fallback name if there is an issue with the localization
-            Crashes.TrackError(new ApplicationException("The localized scan folder name is invalid, using 'Scans' instead."));
-        }
-
-        return defaultScanFolderName;
-    }
-
-
-    /// <summary>
-    ///     Checks whether <see cref="scanFolder"/> is set to its default value (..\Pictures\Scans).
-    /// </summary>
-    /// <returns>
-    ///     null  - <see cref="scanFolder"/> is null
-    ///     true  - <see cref="scanFolder"/> is set to its default value
-    ///     false - <see cref="scanFolder"/> is not set to its default value or null
-    /// </returns>
-    public static async Task<bool?> IsDefaultScanFolderSetAsync()
-    {
-        if (scanFolder == null) return null;
-
-        StorageFolder folder;
-        try
-        {
-            folder = await KnownFolders.PicturesLibrary.GetFolderAsync(GetDefaultScanFolderName());
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-
-        if (folder.Path == scanFolder.Path) return true;
-        else return false;
-    }
-
-
-    /// <summary>
-    ///     Converts a string to to a <see cref="SupportedFormat"/>.
+    ///     Converts a string to to a <see cref="ImageScannerFormat"/>.
     /// </summary>
     /// <param name="formatString">
     ///     The source format string, case-insensitive and with or without dot.
     ///     E.g. "png" / "PNG" / ".png" / ".PNG"
     /// </param>
-    /// <returns>The corresponding <see cref="SupportedFormat"/>.</returns>
-    public static SupportedFormat? ConvertFormatStringToSupportedFormat(string formatString)
+    /// <returns>The corresponding <see cref="ImageScannerFormat"/>.</returns>
+    public static ImageScannerFormat? ConvertFormatStringToImageScannerFormat(string formatString)
     {
         switch (formatString.ToLower())
         {
@@ -809,55 +305,38 @@ static class Utilities
             case "jpeg":
             case ".jpg":
             case ".jpeg":
-                return SupportedFormat.JPG;
+                return ImageScannerFormat.Jpeg;
 
             case "png":
             case ".png":
-                return SupportedFormat.PNG;
+                return ImageScannerFormat.Png;
 
             case "tif":
             case "tiff":
             case ".tif":
             case ".tiff":
-                return SupportedFormat.TIF;
+                return ImageScannerFormat.Tiff;
 
             case "bmp":
             case ".bmp":
-                return SupportedFormat.BMP;
+                return ImageScannerFormat.DeviceIndependentBitmap;
 
             case "pdf":
             case ".pdf":
-                return SupportedFormat.PDF;
+                return ImageScannerFormat.Pdf;
 
             case "xps":
             case ".xps":
-                return SupportedFormat.XPS;
+                return ImageScannerFormat.Xps;
 
             case "oxps":
             case ".oxps":
-                return SupportedFormat.OpenXPS;
+                return ImageScannerFormat.OpenXps;
 
             default:
                 return null;
         }
     }
-
-
-    public async static Task ShowRatingDialogAsync()
-    {
-        try
-        {
-            log.Information("Displaying rating dialog.");
-            StoreContext storeContext = StoreContext.GetDefault();
-            await storeContext.RequestRateAndReviewAppAsync();
-        }
-        catch (Exception exc)
-        {
-            log.Warning(exc, "Displaying the rating dialog failed.");
-            try { await Launcher.LaunchUriAsync(new Uri(storeRateUri)); } catch (Exception) { }
-        }
-    }
-
 
     /// <summary>
     ///     Opens a teaching tip and takes care of usual pitfalls.
@@ -873,308 +352,108 @@ static class Utilities
         }
     }
 
-
     /// <summary>
-    ///     Deletes all files from temporary folder. Creates the following subfolders, if necessary:
-    ///         - conversion
-    /// </summary>
-    public static async Task InitializeTempFolderAsync()
-    {
-        folderTemp = ApplicationData.Current.TemporaryFolder;
-
-        IReadOnlyList<StorageFile> files = await folderTemp.GetFilesAsync();
-        foreach (StorageFile file in files)
-        {
-            await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
-
-        // attempt to actively delete folders first, replacing is not reliable
-        try
-        {
-            StorageFolder folder = await folderTemp.GetFolderAsync("conversion");
-            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
-        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'conversion' in temp folder failed."); }
-
-        try
-        {
-            StorageFolder folder = await folderTemp.GetFolderAsync("withoutRotation");
-            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
-        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'withoutRotation' in temp folder failed."); }
-
-        try
-        {
-            StorageFolder folder = await folderTemp.GetFolderAsync("receivedPagesPDF");
-            await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
-        catch (Exception exc) { log.Error(exc, "Actively deleting folder 'receivedPagesPDF' in temp folder failed."); }
-
-        // replace/create folders
-        try
-        {
-            folderConversion = await folderTemp.CreateFolderAsync("conversion", CreationCollisionOption.ReplaceExisting);
-        }
-        catch (Exception exc)
-        {
-            log.Error(exc, "Couldn't create/replace folder 'conversion' in temp folder.");
-            throw;
-        }
-
-        try
-        {
-            folderWithoutRotation = await folderTemp.CreateFolderAsync("withoutRotation", CreationCollisionOption.ReplaceExisting);
-        }
-        catch (Exception exc)
-        {
-            log.Error(exc, "Couldn't create/replace folder 'withoutRotation' in temp folder.");
-            throw;
-        }
-
-        try
-        {
-            folderReceivedPagesPDF = await folderTemp.CreateFolderAsync("receivedPagesPDF", CreationCollisionOption.ReplaceExisting);
-        }
-        catch (Exception exc)
-        {
-            log.Error(exc, "Couldn't create/replace folder 'receivedPagesPDF' in temp folder.");
-            throw;
-        }
-
-        log.Information("Initialized temp folder");
-    }
-
-
-    /// <summary>
-    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/> .
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>.
     /// </summary>
     public static IAsyncAction RunOnUIThreadAsync(CoreDispatcherPriority priority, DispatchedHandler agileCallback)
     {
         return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, agileCallback);
     }
 
-
     /// <summary>
-    ///     Initializes <see cref="log"/> to a file sink in folder "logs" within the app's RoamingFolder. Also adds some meta
-    ///     data to the log.
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running.
     /// </summary>
-    public static async Task InitializeSerilogAsync()
+    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, Action action)
     {
-        Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
-
-        StorageFolder folder = await ApplicationData.Current.RoamingFolder
-            .CreateFolderAsync("logs", CreationCollisionOption.OpenIfExists);
-        string logPath = Path.Combine(folder.Path, "log.txt");
-
-        log = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(),
-            logPath,
-            rollingInterval: RollingInterval.Day,
-            retainedFileCountLimit: 8,
-            fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
-            .Enrich.WithExceptionDetails()
-            .CreateLogger();
-        log.Information("--- Log initialized ---");
-
-        // add meta data
-        PackageVersion version = Package.Current.Id.Version;
-        log.Information("App version: {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
-        log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture}",
-            SystemInformation.Instance.OperatingSystem, SystemInformation.Instance.OperatingSystemVersion, SystemInformation.Instance.OperatingSystemArchitecture);
-        log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
-            SystemInformation.Instance.DeviceFamily, SystemInformation.Instance.DeviceModel, SystemInformation.Instance.DeviceManufacturer);
+        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, () =>
+        {
+            try
+            {
+                action();
+                taskCompleted.SetResult(true);
+            }
+            catch (Exception exc)
+            {
+                taskCompleted.SetException(exc);
+                throw;
+            }
+        });
+        await taskCompleted.Task;
     }
 
-
     /// <summary>
-    ///     Attaches the relevant log to the Microsoft App Center error report.
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running.
     /// </summary>
-    public async static Task<ErrorAttachmentLog[]> SendRelevantLogWithErrorReportAsync(ErrorReport report)
+    public static async Task RunOnUIThreadAndWaitAsync(CoreDispatcherPriority priority, Func<Task> func)
     {
-        try
+        TaskCompletionSource<bool> taskCompleted = new TaskCompletionSource<bool>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, async () =>
         {
-            // close log file
-            Log.CloseAndFlush();
-            await InitializeSerilogAsync();
-
-            // get all logs
-            StorageFolder logFolder = await ApplicationData.Current.RoamingFolder.GetFolderAsync("logs");
-            IReadOnlyList<StorageFile> files = await logFolder.GetFilesAsync();
-
-            // find relevant log
-            List<StorageFile> sortedLogs = new List<StorageFile>(files);
-            sortedLogs.Sort(delegate (StorageFile x, StorageFile y)
+            try
             {
-                return DateTimeOffset.Compare(x.DateCreated, y.DateCreated);
-            });
-            sortedLogs.Reverse();
-            foreach (StorageFile log in sortedLogs)
-            {
-                if (log.DateCreated <= report.AppErrorTime)
-                {
-                    IBuffer buffer = await FileIO.ReadBufferAsync(log);
-                    return new ErrorAttachmentLog[]
-                    {
-                        ErrorAttachmentLog.AttachmentWithBinary(buffer.ToArray(), "log.json", "application/json")
-                    };
-                }
+                await func();
+                taskCompleted.SetResult(true);
             }
-        }
-        catch (Exception exc)
-        {
-            return new ErrorAttachmentLog[]
+            catch (Exception exc)
             {
-                ErrorAttachmentLog.AttachmentWithText("Failed to append log. (" + exc.Message + ")", "nolog.txt")
-            };
-        }
-
-        return new ErrorAttachmentLog[]
-        {
-            ErrorAttachmentLog.AttachmentWithText("Failed to append log.", "nolog.txt")
-        };
+                taskCompleted.SetException(exc);
+                throw;
+            }
+        });
+        await taskCompleted.Task;
     }
 
-
     /// <summary>
-    ///     Registers the app with Microsoft's App Center service. It can still be enabled/disabled
-    ///     separately from this.
+    ///     Wrapper for <see cref="CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync()"/>
+    ///     which waits for the code to finish running and returns its result.
     /// </summary>
-    public static void RegisterWithMicrosoftAppCenter()
+    public static async Task<T> RunOnUIThreadAndWaitAsync<T>(CoreDispatcherPriority priority, Func<Task<T>> func)
     {
-        Crashes.GetErrorAttachments = (report) => SendRelevantLogWithErrorReportAsync(report).Result;
-        AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
-    }
-
-
-    /// <summary>
-    ///     Send information on a new scanner to App Center
-    /// </summary>
-    public static void SendScannerAnalytics(RecognizedScanner scanner)
-    {
-        string formatCombination = "";
-        bool jpgSupported, pngSupported, pdfSupported, xpsSupported, oxpsSupported, tifSupported, bmpSupported;
-        jpgSupported = pngSupported = pdfSupported = xpsSupported = oxpsSupported = tifSupported = bmpSupported = false;
-
-        try
+        TaskCompletionSource<T> taskCompleted = new TaskCompletionSource<T>();
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, async () =>
         {
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
+            try
             {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|JPG");
-                jpgSupported = true;
+                taskCompleted.SetResult(await func());
             }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Png))
+            catch (Exception exc)
             {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|PNG");
-                pngSupported = true;
+                taskCompleted.SetException(exc);
+                throw;
             }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Pdf))
-            {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|PDF");
-                pdfSupported = true;
-            }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Xps))
-            {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|XPS");
-                xpsSupported = true;
-            }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps))
-            {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|OXPS");
-                oxpsSupported = true;
-            }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.Tiff))
-            {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|TIF");
-                tifSupported = true;
-            }
-            if (scanner.scanner.AutoConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
-            {
-                formatCombination = formatCombination.Insert(formatCombination.Length, "|BMP");
-                bmpSupported = true;
-            }
-
-            formatCombination = formatCombination.Insert(formatCombination.Length, "|");
-
-
-            Analytics.TrackEvent("Scanner added", new Dictionary<string, string> {
-                            { "formatCombination", formatCombination },
-                            { "jpgSupported", jpgSupported.ToString() },
-                            { "pngSupported", pngSupported.ToString() },
-                            { "pdfSupported", pdfSupported.ToString() },
-                            { "xpsSupported", xpsSupported.ToString() },
-                            { "oxpsSupported", oxpsSupported.ToString() },
-                            { "tifSupported", tifSupported.ToString() },
-                            { "bmpSupported", bmpSupported.ToString() },
-                            { "hasAuto", scanner.isAutoAllowed.ToString() },
-                            { "hasFlatbed", scanner.isFlatbedAllowed.ToString() },
-                            { "hasFeeder", scanner.isFeederAllowed.ToString() },
-                            { "autoPreviewSupported", scanner.isAutoPreviewAllowed.ToString() },
-                            { "flatbedPreviewSupported", scanner.isFlatbedPreviewAllowed.ToString() },
-                            { "feederPreviewSupported", scanner.isFeederPreviewAllowed.ToString() },
-                        });
-        }
-        catch (Exception) { }
+        });
+        return await taskCompleted.Task;
     }
-
 
     /// <summary>
     ///     Checks whether the given format is an image format.
     /// </summary>
-    public static bool IsImageFormat(SupportedFormat format)
+    public static bool IsImageFormat(ImageScannerFormat format)
     {
         switch (format)
         {
-            case SupportedFormat.JPG:
-            case SupportedFormat.PNG:
-            case SupportedFormat.TIF:
-            case SupportedFormat.BMP:
+            case ImageScannerFormat.Jpeg:
+            case ImageScannerFormat.Png:
+            case ImageScannerFormat.DeviceIndependentBitmap:
+            case ImageScannerFormat.Tiff:
                 return true;
+            case ImageScannerFormat.Xps:
+            case ImageScannerFormat.OpenXps:
+            case ImageScannerFormat.Pdf:
             default:
                 return false;
         }
     }
 
-
     /// <summary>
-    ///     Outputs text if narrator is enabled.
+    ///    Returns the current package version as a friendly string. 
     /// </summary>
-    /// <param name="text">The text that narrator shall read.</param>
-    public static async Task SayAsync(string text)
+    public static string GetCurrentVersion()
     {
-        SpeechSynthesisStream stream = await narratorSpeech.SynthesizeTextToStreamAsync(text);
-
-        // Send the stream to the media object, then play it.
-        narratorMediaElement.SetSource(stream, stream.ContentType);
-        narratorMediaElement.Play();
-    }
-
-
-    /// <summary>
-    ///     Ask the narrator to announce something.
-    /// </summary>
-    /// <param name="announcement">The announcement.</param>
-    /// <param name="liveRegion">A live region on the current page.</param>
-    public static async Task NarratorAnnounceAsync(string announcement, TextBlock liveRegion)
-    {
-        await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-        {
-            liveRegion.Text = announcement;
-            TextBlockAutomationPeer peer = new TextBlockAutomationPeer(liveRegion);
-            peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-        });
-    }
-
-
-    /// <summary>
-    ///     Copies the tooltip string of a <see cref="UIElement"/> to its AutomationProperties.Name.
-    /// </summary>
-    public static void CopyToolTipToAutomationPropertiesName(UIElement element)
-    {
-        string toolTip = (string)ToolTipService.GetToolTip(element);
-        if (toolTip != null)
-        {
-            Windows.UI.Xaml.Automation.AutomationProperties.SetName(element, toolTip);
-        }
+        PackageVersion version = Package.Current.Id.Version;
+        return String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
     }
 }
