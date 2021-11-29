@@ -739,7 +739,7 @@ Fuzzy</comment>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Escàner per al Windows 10</value>
+    <value>Escàner</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
