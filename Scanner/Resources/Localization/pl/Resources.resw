@@ -745,7 +745,7 @@ Fuzzy</comment>
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Skaner</value>
+    <value>Skaner — szybkie i łatwe skanowanie dokumentów</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
