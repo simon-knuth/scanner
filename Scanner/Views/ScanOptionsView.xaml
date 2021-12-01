@@ -699,20 +699,8 @@
                                     <TextBlock Text="Debug preview" Style="{StaticResource BaseTextBlockStyle}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Select a file" Style="{StaticResource AccentButtonStyle}" Click="ButtonDebugPreview_Clicked">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:EventTriggerBehavior EventName="Click">
-                                                <core:InvokeCommandAction Command="{x:Bind ViewModel.PreviewScanCommand}" CommandParameter="File"/>
-                                            </core:EventTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                    </Button>
-                                    <Button Content="Fail preview" Margin="8,0,0,0" Click="ButtonDebugPreview_Clicked">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:EventTriggerBehavior EventName="Click">
-                                                <core:InvokeCommandAction Command="{x:Bind ViewModel.PreviewScanCommand}" CommandParameter="Fail"/>
-                                            </core:EventTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                    </Button>
+                                    <Button Content="Select a file" Style="{StaticResource AccentButtonStyle}" Click="ButtonDebugPreviewFile_Clicked"/>
+                                    <Button Content="Fail preview" Margin="8,0,0,0" Click="ButtonDebugPreviewFail_Clicked"/>
                                 </StackPanel>
                             </StackPanel>
                         </Flyout>
@@ -770,13 +758,7 @@
             </muxc:SplitButton>
         </Grid>
 
-        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Closed">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.DismissPreviewScanCommand}"/>
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            
+        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False" Closed="TeachingTipPreview_Closed">
             <muxc:TeachingTip.HeroContent>
                 <Grid Width="300" Height="300" BorderBrush="{ThemeResource TeachingTipBorderBrush}" BorderThickness="0,0,0,1">
                     <muxc:ProgressRing x:Name="ProgressRingPreview" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{x:Bind ViewModel.PreviewScanCommand.IsRunning, Mode=OneWay}" Loaded="ProgressRingPreview_Loaded"/>

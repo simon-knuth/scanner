@@ -133,7 +133,7 @@ namespace Scanner.Views
 #endif
         }
 
-        private async void ButtonDebugPreview_Clicked(object sender, RoutedEventArgs e)
+        private async void ButtonDebugPreviewFile_Clicked(object sender, RoutedEventArgs e)
         {
 #if DEBUG
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
@@ -141,6 +141,18 @@ namespace Scanner.Views
                 FlyoutBase.GetAttachedFlyout(ButtonPreview).Hide();
             });
 #endif
+            ViewModel.PreviewScanCommand.Execute("File");
+        }
+
+        private async void ButtonDebugPreviewFail_Clicked(object sender, RoutedEventArgs e)
+        {
+#if DEBUG
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FlyoutBase.GetAttachedFlyout(ButtonPreview).Hide();
+            });
+#endif
+            ViewModel.PreviewScanCommand.Execute("Fail");
         }
 
         private async void ViewModel_ScannerSearchTipRequested(object sender, EventArgs e)
@@ -163,6 +175,11 @@ namespace Scanner.Views
             base.OnNavigatedFrom(e);
 
             ViewModel.ViewNavigatedFromCommand.Execute(null);
+        }
+
+        private void TeachingTipPreview_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
+        {
+            ViewModel.DismissPreviewScanCommand.Execute(null);
         }
     }
 }

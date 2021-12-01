@@ -25,7 +25,13 @@
     
     
     <!-- Add your application specific runtime directives here. -->
+	<Type Name="Windows.Foundation.TypedEventHandler{Microsoft.UI.Xaml.Controls.NavigationView,Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs}" MarshalObject="Public" />
+	<Type Name="Windows.Foundation.TypedEventHandler{Microsoft.UI.Xaml.Controls.NavigationView,Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs}" MarshalObject="Public" />
 
+	<Type Name="Microsoft.UI.Xaml.Controls.NavigationView">
+		<Event Name="ItemInvoked" Dynamic="Required"/>
+		<Event Name="SelectionChanged" Dynamic="Required"/>
+	</Type>
 
   </Application>
 </Directives>
