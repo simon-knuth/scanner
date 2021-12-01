@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Services;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Data;
 
@@ -6,6 +10,10 @@ namespace Scanner.Views.Converters
 {
     public class WindowStateOpacityConverter : IValueConverter
     {
+        private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+        private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
+
+
         /// <summary>
         ///     Converts the given <see cref="CoreWindowActivationState"/> into an
         ///     opacity value to expose the current window state to the user as per
@@ -26,7 +34,19 @@ namespace Scanner.Views.Converters
                 if (parameter != null)
                 {
                     // allow override of default value
-                    return Double.Parse((string)parameter);
+                    try
+                    {
+                        CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag("en-us");
+                        return Double.Parse((string)parameter, cultureInfo);
+                    }
+                    catch (Exception exc)
+                    {
+                        LogService.Log.Error(exc, "Error while parsing value in WindowStateOpacityConverter");
+                        AppCenterService.TrackError(exc, new Dictionary<string, string> {
+                            { "Parameter", (string)parameter },
+                        });
+                        return 1.0;
+                    }
                 }
                 else
                 {
