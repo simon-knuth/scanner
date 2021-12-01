@@ -10,10 +10,6 @@
 
 
 &nbsp;
-### 📢 Version 3.0 coming soon 📢
-
-
-&nbsp;
 ## Features
 <ul>
   <li>Support for all WIA-compatible scanners (that’s probably almost every regular consumer scanner in use today)</li>
