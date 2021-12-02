@@ -409,7 +409,7 @@ Fuzzy</comment>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>Il salvataggio delle modifiche è fallito. Per favore, controlle che il documento sia ancora disponibile e riprova.</value>
+    <value>Il salvataggio delle modifiche è fallito. Per favore, controlla che il documento sia ancora disponibile e riprova.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
@@ -565,7 +565,7 @@ Fuzzy</comment>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>Aggiungi il tempo al nome del documento</value>
+    <value>Aggiungi l'orario al nome del documento</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
@@ -781,7 +781,7 @@ Fuzzy</comment>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rimpicciolisci (Ctrl + Rotellina mouse in giù)</value>
+    <value>Riduci (Ctrl + Rotellina mouse in giù)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
