@@ -806,7 +806,7 @@ Fuzzy</comment>
 Fuzzy</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (Najlepiej do zdjęć)</value>
+    <value>{0:0} DPI (Najlepsza dla zdjęć)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.
 Fuzzy</comment>
   </data>
@@ -969,27 +969,27 @@ PDF to bardzo popularny format dokumentów, który umożliwia zapisanie wielu st
     <comment>The help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>Zmień folder, w którym zapisywane są skany</value>
+    <value>Zmienianie folderu, w którym zapisywane są skany</value>
     <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>Wybierz format pliku</value>
+    <value>Wybieranie formatu pliku</value>
     <comment>The heading for the help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
-    <value>Wybierz rozdzielczość</value>
+    <value>Wybieranie rozdzielczości</value>
     <comment>The heading for the help text on choosing the right resolution.</comment>
   </data>
   <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
-    <value>Zmień kolejność stron pliku PDF</value>
+    <value>Zmienianie kolejności stron pliku PDF</value>
     <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
-    <value>Zapisz zmiany</value>
+    <value>Zapisywanie zmian</value>
     <comment>The heading for the help text on how to save changes made in the app.</comment>
   </data>
   <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Zainstaluj i użyj skanera</value>
+    <value>Instalowanie i używanie skanera</value>
     <comment>The heading for the help text on how to install and use a scanner.</comment>
   </data>
   <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
@@ -997,7 +997,7 @@ PDF to bardzo popularny format dokumentów, który umożliwia zapisanie wielu st
     <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Rozpocznij nowy plik PDF</value>
+    <value>Rozpoczynanie nowego pliku PDF</value>
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
@@ -1197,11 +1197,11 @@ Dziękuję! ❤️</value>
     <comment>The heading for the contrast adjustment section in the scan options.</comment>
   </data>
   <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value>Zawsze zapisywane pomiędzy sesjami aplikacji</value>
+    <value>Wartość zapisywana pomiędzy sesjami aplikacji</value>
     <comment>The text for scan options that are always saved across app sessions.</comment>
   </data>
   <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
-    <value>Dostosuj jasność i kontrast</value>
+    <value>Dostosowywanie jasności i kontrastu</value>
     <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
@@ -1319,7 +1319,7 @@ Regulacja jasności i kontrastu jest możliwa tylko w trybie **płaskim lub poda
     <comment>The heading for the scan options.</comment>
   </data>
   <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
-    <value>Przycinaj skany automatycznie</value>
+    <value>Automatyczne przycinanie skanów</value>
     <comment>The heading for the help text on how to use automatic cropping.</comment>
   </data>
   <data name="TextHelpAutoCrop.Text" xml:space="preserve">
