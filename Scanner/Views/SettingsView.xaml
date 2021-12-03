@@ -420,6 +420,7 @@
                         <LineBreak/><Run FontWeight="SemiBold">gidano</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">nvi9</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="SemiBold">Marcellogianola</Run> - Italian
                         <LineBreak/><Run FontWeight="SemiBold">Damian Czupryn</Run> - Polish
                         <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
                         <LineBreak/><Run FontWeight="SemiBold">Brunotiago633</Run> - Portuguese (Portugal)
@@ -427,6 +428,9 @@
                         <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">Angel Leon</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Geroncity2201</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Kenneth</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
                     </TextBlock>
                 </muxc:Expander>

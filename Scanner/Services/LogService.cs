@@ -3,6 +3,7 @@ using Serilog;
 using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -102,9 +103,9 @@ namespace Scanner.Services
 
             // add meta data
             log.Information("App version: {0}", GetCurrentVersion());
-            log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture}",
+            log.Information("OS: {OS} | OS version: {Version} | OS architecture: {Architecture} | OS language: {Language}",
                 SystemInformation.Instance.OperatingSystem, SystemInformation.Instance.OperatingSystemVersion,
-                SystemInformation.Instance.OperatingSystemArchitecture);
+                SystemInformation.Instance.OperatingSystemArchitecture, CultureInfo.InstalledUICulture.Name);
             log.Information("Device family: {Family} | Device model: {Model} | Device manufacturer: {Manufacturer}",
                 SystemInformation.Instance.DeviceFamily, SystemInformation.Instance.DeviceModel,
                 SystemInformation.Instance.DeviceManufacturer);
