@@ -1,0 +1,491 @@
+﻿<Page
+    x:Class="Scanner.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:helpers="using:Scanner.Helpers"
+    d:DesignWidth="350"
+    d:DesignHeight="600">
+
+    <Page.DataContext>
+        <viewModels:SettingsViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridMain" AutomationProperties.LandmarkType="Form" AutomationProperties.Name="{x:Bind HeadingSettings.Text}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <!-- Toolbar -->
+        <Grid x:Name="GridToolbar" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
+            <TextBlock x:Name="HeadingSettings" x:Uid="HeadingSettings" Margin="14,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+            <StackPanel Orientation="Vertical" Margin="24,16,24,24" MaxWidth="450">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                
+                <!-- Setting Save Location -->
+                <muxc:Expander x:Name="ExpanderSaveLocation" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" AutomationProperties.Name="{x:Bind HeadingSettingsSaveLocation.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;" FontSize="16" Margin="0,0,16,0"/>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock x:Name="HeadingSettingsSaveLocation" x:Uid="HeadingSettingsSaveLocation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="SubheadingSettingsSaveLocation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderSaveLocation.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
+                                <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" x:Uid="OptionSettingsSaveLocationSet" Margin="0,0,12,0" IsEnabled="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                                <RadioButton x:Uid="OptionSettingsSaveLocationAsk"/>
+                            </muxc:RadioButtons>
+                        </StackPanel>
+                        <Frame x:Name="FrameSaveLocationFolder" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" Visibility="{x:Bind RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay}" Opacity="{x:Bind FrameSaveLocationFolder.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}">
+                            <Frame.OpacityTransition>
+                                <ScalarTransition Duration="0:0:0.3"/>
+                            </Frame.OpacityTransition>
+
+                            <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                                <TextBlock Text="{x:Bind ViewModel.SaveLocationPath, Mode=OneWay}" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="6">
+                                    <Button x:Uid="ButtonSettingsSaveLocationChoose" Command="{x:Bind ViewModel.ChooseSaveLocationCommand}" Style="{ThemeResource AccentButtonStyle}"/>
+                                    <Button x:Uid="ButtonSettingsSaveLocationReset" Command="{x:Bind ViewModel.ResetSaveLocationCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Frame>
+                        <Frame BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Visibility="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay}">
+                            <muxc:InfoBar x:Uid="InfoBarSetSaveLocationUnavailable" Severity="Warning" IsOpen="True" IsClosable="False" BorderThickness="0" CornerRadius="0"/>
+                        </Frame>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting Auto-Rotate -->
+                <muxc:Expander x:Name="ExpanderAutoRotate" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAutoRotation.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7AD;" FontSize="16" Margin="0,0,16,0"/>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock x:Name="HeadingSettingsAutoRotation" x:Uid="HeadingSettingsAutoRotation" Text="Automatic rotation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock x:Uid="SubheadingSettingsAutoRotation" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.75" TextWrapping="WrapWholeWords"/>
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderAutoRotate.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <CheckBox x:Name="CheckBoxSettingAutoRotate" x:Uid="OptionSettingsAutoRotation" IsChecked="{x:Bind ViewModel.SettingAutoRotate, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </CheckBox>
+                            <HyperlinkButton x:Uid="OptionSettingsAutoRotationLanguage" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom">
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddLanguage" x:Uid="ButtonSettingsAutoRotationAddLanguage" Command="{x:Bind ViewModel.LaunchLanguageSettingsCommand}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <TextBlock x:Uid="TextSettingsAutoRotationExplanation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition MaxWidth="350"/>
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting File Naming -->
+                <muxc:Expander x:Name="ExpanderFileName" IsEnabled="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsFileNaming.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8AC;" FontSize="16" Margin="0,0,16,0"/>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock x:Name="HeadingSettingsFileNaming" x:Uid="HeadingSettingsFileNaming" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                <Grid Margin="0,6,0,0" Visibility="{x:Bind ExpanderFileName.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}, FallbackValue=Collapsed}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,6,0"/>
+                                    <TextBlock Grid.Column="1" x:Uid="TextErrorUnavailableWhileScanning" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox x:Uid="OptionSettingsAppendTime" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Settings Scan Options -->
+                <muxc:Expander x:Name="ExpanderScanOptions" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsScanOptions.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8FE;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsScanOptions" Grid.Column="1" x:Uid="HeadingSettingsScanOptions" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox x:Uid="OptionSettingsRememberScanOptions" IsChecked="{x:Bind ViewModel.SettingRememberScanOptions, Mode=TwoWay}"/>
+                        <CheckBox x:Uid="OptionSettingsShowAdvancedScanOptions" Margin="0,3,0,0" IsChecked="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <TextBlock x:Uid="HeadingSettingsPersonalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <!-- Setting Theme -->
+                <muxc:Expander x:Name="ExpanderTheme" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsTheme.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE793;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsTheme" Grid.Column="1" x:Uid="HeadingSettingsTheme" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeLight"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeDark"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <TextBlock x:Uid="TextSettingsRestart" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting Editor Orientation -->
+                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsEditorOrientation.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsEditorOrientation" Grid.Column="1" x:Uid="HeadingSettingsEditorOrientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
+                            <RadioButton x:Uid="OptionSettingsEditorOrientationHorizontal" Margin="0,0,12,0"/>
+                            <RadioButton x:Uid="OptionSettingsEditorOrientationVertical"/>
+                        </muxc:RadioButtons>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <!-- Feedback -->
+                <StackPanel x:Name="StackPanelSettingsHeadingFeedback" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE939;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
+                    <TextBlock x:Uid="HeadingSettingsFeedback" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
+                </StackPanel>
+                <TextBlock x:Uid="TextSettingsFeedback" TextWrapping="WrapWholeWords" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <HyperlinkButton HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.StoreRatingCommand}">
+                    <TextBlock x:Uid="HyperlinkSettingsFeedbackRate" TextWrapping="WrapWholeWords"/>
+                </HyperlinkButton>
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriGithub}" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                        <TextBlock x:Uid="HyperlinkSettingsFeedbackGithub" TextWrapping="WrapWholeWords"/>
+                    </StackPanel>
+                </HyperlinkButton>
+                <muxc:Expander x:Name="ExpanderFeedbackReportsLogs" HorizontalAlignment="Stretch" Padding="0" Margin="0,12,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsErrorReports.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE9D9;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsErrorReports" Grid.Column="1" x:Uid="HeadingSettingsErrorReports" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.SettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
+                            </CheckBox>
+                            <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                            <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Uid="HyperlinkSettingsExportLog"/>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition MaxWidth="350"/>
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
+                                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,12,0,12" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </muxc:Expander>
+                <muxc:Expander x:Name="ExpanderFeedbackSurveys" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsSurveys.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE789;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsSurveys" Grid.Column="1" x:Uid="HeadingSettingsSurveys" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox x:Uid="OptionSettingsSurveys" IsChecked="{x:Bind ViewModel.SettingShowSurveys, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <!-- Translations -->
+                <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
+                    <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
+                </StackPanel>
+                <TextBlock x:Uid="TextSettingsTranslations" TextWrapping="WrapWholeWords"/>
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriHelpTranslate}" HorizontalAlignment="Center" Margin="0,12,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                        <TextBlock x:Uid="HyperlinkSettingsTranslations" TextWrapping="WrapWholeWords"/>
+                    </StackPanel>
+                </HyperlinkButton>
+                <muxc:Expander x:Name="ExpanderTranslationsContributors" Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HyperlinkSettingsTranslationsContributors.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Foreground="Red" Glyph="&#xEB52;" FontSize="16" Margin="0,0,16,0" Opacity="0">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ExpanderTranslationsContributors.IsExpanded, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                            <core:ChangePropertyAction PropertyName="Opacity" Value="1"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ExpanderTranslationsContributors.IsExpanded, Mode=OneWay}" ComparisonCondition="NotEqual" Value="True">
+                                            <core:ChangePropertyAction PropertyName="Opacity" Value="0"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                    
+                                    <FontIcon.OpacityTransition>
+                                        <ScalarTransition Duration="0:0:0.25"/>
+                                    </FontIcon.OpacityTransition>
+                                </FontIcon>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB51;" FontSize="16" Margin="0,0,16,0"/>
+                            </Grid>
+                            <TextBlock x:Name="HyperlinkSettingsTranslationsContributors" Grid.Column="1" x:Uid="HyperlinkSettingsTranslationsContributors" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    
+                    <TextBlock LineHeight="28" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True">
+                        <Run FontWeight="SemiBold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
+                        <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French
+                        <LineBreak/><Run FontWeight="SemiBold">gidano</Run> - Hungarian
+                        <LineBreak/><Run FontWeight="SemiBold">nvi9</Run> - Hungarian
+                        <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
+                        <LineBreak/><Run FontWeight="SemiBold">Marcellogianola</Run> - Italian
+                        <LineBreak/><Run FontWeight="SemiBold">Damian Czupryn</Run> - Polish
+                        <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
+                        <LineBreak/><Run FontWeight="SemiBold">Brunotiago633</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">Angel Leon</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Geroncity2201</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Kenneth</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
+                    </TextBlock>
+                </muxc:Expander>
+
+                <!-- About -->
+                <StackPanel x:Name="StackPanelSettingsHeadingAbout" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE946;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
+                    <TextBlock x:Uid="HeadingSettingsAbout" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
+                </StackPanel>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" x:Uid="ImageAppLogo" Source="/Assets/Logo.svg" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,8,4,4"/>
+                    <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
+                        <Span>
+                            <Run FontWeight="Medium">Scanner</Run>
+                            <LineBreak/><Run>Copyright © 2021</Run>
+                            <Hyperlink UnderlineStyle="None" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">Simon Knuth</Hyperlink>
+                            <LineBreak/><Run>Version</Run>
+                            <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
+                        </Span>
+                    </TextBlock>
+                </Grid>
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriWebsite}" HorizontalAlignment="Center" Margin="0,12,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutWebsite.FontSize}"/>
+                        <TextBlock x:Name="TextBlockSettingsAboutWebsite" x:Uid="HyperlinkSettingsAboutWebsite" TextWrapping="WrapWholeWords"/>
+                    </StackPanel>
+                </HyperlinkButton>
+                <HyperlinkButton NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE71B;" Margin="0,0,12,0" FontSize="{x:Bind TextBlockSettingsAboutPrivacyPolicy.FontSize}"/>
+                        <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" TextWrapping="WrapWholeWords"/>
+                    </StackPanel>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutLicenses" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayLicensesDialogCommand}">
+                    <TextBlock x:Name="TextBlockSettingsAboutLicenses" x:Uid="HyperlinkSettingsAboutLicenses" TextWrapping="WrapWholeWords"/>
+                </HyperlinkButton>
+                <HyperlinkButton x:Name="HyperlinkButtonSettingsAboutChangelog" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DisplayChangelogCommand}">
+                    <TextBlock x:Name="TextBlockSettingsAboutChangelog" x:Uid="HyperlinkSettingsAboutChangelog" TextWrapping="WrapWholeWords"/>
+                </HyperlinkButton>
+                <muxc:Expander x:Name="ExpanderAboutCredits" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,12,0,0">
+                    <muxc:Expander.Header>
+                        <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
+                    </muxc:Expander.Header>
+                    <TextBlock TextWrapping="WrapWholeWords">
+                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List</Hyperlink>
+                        -
+                        <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh</Hyperlink>
+                    </TextBlock>
+                </muxc:Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

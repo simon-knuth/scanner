@@ -11,14 +11,15 @@
     <AssemblyName>Scanner</AssemblyName>
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateThumbprint>9E804161293785A2B8F7758AA3C36DB0DFBE690B</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile />
+    <PackageCertificateKeyFile>
+    </PackageCertificateKeyFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -128,46 +129,132 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ErrorMessage.cs" />
-    <Compile Include="LicenseDetailPage.xaml.cs">
-      <DependentUpon>LicenseDetailPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LicensePage.xaml.cs">
-      <DependentUpon>LicensePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PreviewPageIntent.cs" />
-    <Compile Include="SettingsPageIntent.cs" />
-    <Compile Include="RecognizedScanner.cs" />
-    <Compile Include="LogFile.cs" />
-    <Compile Include="ScanResultElement.cs" />
-    <Compile Include="ScanResult.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Models\PersistentScanOptions.cs" />
+    <Compile Include="Services\AutoRotatorService.cs" />
+    <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
+    <Compile Include="Services\Interfaces\IPdfService.cs" />
+    <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\NarratorAnnouncementMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
+    <Compile Include="Services\PdfService.cs" />
+    <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="ViewModels\SetupDialogViewModel.cs" />
+    <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
+    <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
+    <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\ToolTipConverter.cs" />
+    <Compile Include="Views\Converters\SignedIntConverter.cs" />
+    <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
+    <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
+    <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
+    <Compile Include="Views\Dialogs\SetupDialogView.xaml.cs">
+      <DependentUpon>SetupDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ChangelogDialogView.xaml.cs">
+      <DependentUpon>ChangelogDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
+      <DependentUpon>LicenseDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\LicensesView.xaml.cs">
+      <DependentUpon>LicensesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LogFile.cs" />
+    <Compile Include="Models\DiscoveredScanner.cs" />
+    <Compile Include="Models\ScannerFileFormat.cs" />
+    <Compile Include="Models\ScanResolution.cs" />
+    <Compile Include="Models\ScanOptions.cs" />
+    <Compile Include="Services\HelperService.cs" />
+    <Compile Include="Services\AccessibilityService.cs" />
+    <Compile Include="Services\AppDataService.cs" />
+    <Compile Include="Services\Interfaces\IAccessibilityService.cs" />
+    <Compile Include="Services\Interfaces\IAppDataService.cs" />
+    <Compile Include="Services\Interfaces\IScanResultService.cs" />
+    <Compile Include="Services\Interfaces\IScanService.cs" />
+    <Compile Include="Services\Interfaces\IHelperService.cs" />
+    <Compile Include="Services\Messenger\Messages\SetShareFilesMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorIsEditingRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorIsEditingChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\PageListCurrentIndexChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorCurrentIndexChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorCurrentIndexRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\AppWideStatusMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\EditorSelectionTitleChangedMessage.cs" />
+    <Compile Include="Services\ScanResultService.cs" />
+    <Compile Include="Services\ScanService.cs" />
+    <Compile Include="Services\ScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Interfaces\IScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Interfaces\IAppCenterService.cs" />
+    <Compile Include="Services\Interfaces\IScannerDiscoveryService.cs" />
+    <Compile Include="Services\Interfaces\ILogService.cs" />
+    <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\AppCenterService.cs" />
+    <Compile Include="Services\Messenger\Messages\HelpRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\HelpRequestShellMessage.cs" />
+    <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\ScannerDiscoveryService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Models\ScanResultElement.cs" />
+    <Compile Include="Models\ScanResult.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="ScannerOperation.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PreviewPage.xaml.cs">
-      <DependentUpon>PreviewPage.xaml</DependentUpon>
+    <Compile Include="ViewModels\DonateDialogViewModel.cs" />
+    <Compile Include="ViewModels\LicensesDialogViewModel.cs" />
+    <Compile Include="ViewModels\PageListViewModel.cs" />
+    <Compile Include="ViewModels\LogExportDialogViewModel.cs" />
+    <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\HelpViewModel.cs" />
+    <Compile Include="ViewModels\ScanOptionsViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\Converters\AppWideMessageSeverityInfoBarConverter.cs" />
+    <Compile Include="Views\Converters\NotNullVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\NotNullBoolConverter.cs" />
+    <Compile Include="Views\Converters\EditorModeIntConverter.cs" />
+    <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
+    <Compile Include="Views\Converters\NotZeroVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\NegativeBoolVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\NegativeBoolConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsScannerAutoCropModeConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsScannerColorModeConverter.cs" />
+    <Compile Include="Views\Converters\ScanSaveLocationGlyphConverter.cs" />
+    <Compile Include="Views\Converters\ScannerFileFormatGlyphConverter.cs" />
+    <Compile Include="Views\Converters\ScannerSourceIntConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsScannerSourceConverter.cs" />
+    <Compile Include="Views\Converters\BoolVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\StringNotEmptyVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\WindowStateOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\LicensesDialogView.xaml.cs">
+      <DependentUpon>LicensesDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="XAML Converters\SliderThumbToolTipPercentageConverter.cs" />
-    <Compile Include="XAML Converters\NegativeThicknessConverter.cs" />
-    <Compile Include="XAML Converters\IsItemSelectedConverter.cs" />
-    <Compile Include="XAML Converters\StringNotEmptyVisibilityConverter.cs" />
-    <Compile Include="XAML Converters\NegativeVisibilityConverter.cs" />
-    <Compile Include="XAML Converters\NegativeBoolConverter.cs" />
-    <Compile Include="XAML Converters\ButtonTextOpacityConverter.cs" />
-    <Compile Include="XAML Converters\ButtonShadowConverter.cs" />
-    <Compile Include="XAML Converters\HeaderScrollBackgroundConverter.cs" />
-    <Compile Include="XAML Converters\HeaderScrollShadowConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemDescriptorBackgroundConverter.cs" />
-    <Compile Include="XAML Converters\PaneManageItemConverter.cs" />
-    <Compile Include="XAML Converters\TopThicknessConverter.cs" />
-    <Compile Include="XAML Converters\ScrollViewerTitlebarBleedConverter.cs" />
-    <Compile Include="XAML Converters\NegativeTopThicknessConverter.cs" />
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\LogExportDialogView.xaml.cs">
+      <DependentUpon>LogExportDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DonateDialogView.xaml.cs">
+      <DependentUpon>DonateDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Enums\HelpViewEnums.cs" />
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PageListView.xaml.cs">
+      <DependentUpon>PageListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScanOptionsView.xaml.cs">
+      <DependentUpon>ScanOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HelpView.xaml.cs">
+      <DependentUpon>HelpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
   </ItemGroup>
@@ -182,6 +269,8 @@
     <Content Include="Assets\contrast-black\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-black\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-black\Logo small.svg" />
+    <Content Include="Assets\contrast-black\Logo.svg" />
     <Content Include="Assets\contrast-black\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-150.png" />
@@ -227,11 +316,15 @@
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-black\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\contrast-high\Logo small.svg" />
+    <Content Include="Assets\contrast-high\Logo.svg" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-125.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-standard\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-standard\Logo small.svg" />
+    <Content Include="Assets\contrast-standard\Logo.svg" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-150.png" />
@@ -282,6 +375,8 @@
     <Content Include="Assets\contrast-white\LargeTile.scale-150.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-200.png" />
     <Content Include="Assets\contrast-white\LargeTile.scale-400.png" />
+    <Content Include="Assets\contrast-white\Logo small.svg" />
+    <Content Include="Assets\contrast-white\Logo.svg" />
     <Content Include="Assets\contrast-white\SmallTile.scale-100.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-125.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-150.png" />
@@ -378,6 +473,11 @@
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\contrast-high\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\Simon.jpg" />
+    <Content Include="License Texts\LicenseMicrosoftExtensionsDependencyInjection.txt" />
+    <Content Include="License Texts\LicenseMicrosoftDataSqliteCore.txt" />
+    <Content Include="License Texts\LicenseMicrosoftToolkitMvvm.txt" />
+    <Content Include="License Texts\LicenseSqlitePclRawBundleWinsqlite3.txt" />
+    <Content Include="License Texts\LicenseMicrosoftXamlBehaviorsUwpManaged.txt" />
     <Content Include="License Texts\LicenseSerilogSinksFile.txt" />
     <Content Include="License Texts\LicenseSerilogSinksAsync.txt" />
     <Content Include="License Texts\LicenseSerilogExceptions.txt" />
@@ -401,61 +501,105 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="LicenseDetailPage.xaml">
+    <Page Include="Views\Dialogs\SetupDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\ChangelogDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\LicenseDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LicensePage.xaml">
+    <Page Include="Views\Dialogs\LicensesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PreviewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="StylesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="Views\Dialogs\LicensesDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingsPage.xaml">
+    <Page Include="Views\Dialogs\LogExportDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\DonateDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PageListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ScanOptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HelpView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AppCenter">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Data.Sqlite.Core">
+      <Version>7.0.0-alpha.1.21571.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.12</Version>
+      <Version>6.2.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1901.28001</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.0.2</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>7.0.2</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.2</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Lottie">
-      <Version>7.0.3</Version>
+      <Version>7.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.5.0</Version>
+      <Version>2.7.1-prerelease.211026002</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="QueryString.NET">
       <Version>1.0.0</Version>
@@ -464,13 +608,16 @@
       <Version>2.10.0</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Exceptions">
-      <Version>7.0.0</Version>
+      <Version>8.0.0</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.Async">
       <Version>1.5.0</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.File">
       <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="SQLitePCLRaw.bundle_green">
+      <Version>2.0.7</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.26.0</Version>
@@ -480,7 +627,7 @@
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
     </SDKReference>
-    <SDKReference Include="WindowsDesktop, Version=10.0.19041.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.22000.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
@@ -489,9 +636,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Secrets.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\en\Resources.resw" />
@@ -539,7 +683,14 @@
     <PRIResource Include="Resources\Localization\zh-sg\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <PRIResource Include="Resources\Localization\hu\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\es\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
