@@ -77,6 +77,7 @@ The currently supported languages are:
   <li>Portuguese (PT)</li>
   <li>Portuguese (PT-BR)</li>
   <li>Russian (RU)</li>
+  <li>Spanish (ES)</li>
   <li>Ukrainian (UK)</li>
 </ul>  
 
