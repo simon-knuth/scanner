@@ -58,14 +58,22 @@ namespace Scanner.Services
         public async Task Initialize()
         {
             LogService?.Log.Information("AppDataService: Initialize");
-            
-            // clean up temp folder
-            _FolderTemp = ApplicationData.Current.TemporaryFolder;
 
-            IReadOnlyList<StorageFile> files = await FolderTemp.GetFilesAsync();
-            foreach (StorageFile file in files)
+            // clean up temp folder
+            try
             {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                _FolderTemp = ApplicationData.Current.TemporaryFolder;
+
+                IReadOnlyList<StorageFile> files = await FolderTemp.GetFilesAsync();
+                foreach (StorageFile file in files)
+                {
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Couldn't clean up temp folder.");
+                throw;
             }
 
             // attempt to actively delete folders first, replacing is not terribly reliable

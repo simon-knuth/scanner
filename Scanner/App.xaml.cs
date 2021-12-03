@@ -34,6 +34,9 @@ namespace Scanner
         /// </summary>
         public App()
         {
+            // register event handler
+            UnhandledException += App_UnhandledException;
+
             // register and setup services
             PrepareServices();
 
@@ -129,9 +132,6 @@ namespace Scanner
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
-
-            // register event handler
-            this.UnhandledException += App_UnhandledException;
 
             // hide default title bar.
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
