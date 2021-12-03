@@ -407,12 +407,32 @@ namespace Scanner.Models
                         Device.FeederConfiguration.AutoCroppingMode = options.GetAutoCropModeForScanner();
                     }
 
-                    // max number of pages
-                    if (options.FeederMultiplePages) Device.FeederConfiguration.MaxNumberOfPages = 10;
-                    else Device.FeederConfiguration.MaxNumberOfPages = 1;
-
                     // duplex
                     Device.FeederConfiguration.Duplex = options.FeederDuplex;
+
+                    // max number of pages
+                    if (options.FeederMultiplePages)
+                    {
+                        if (Device.FeederConfiguration.Duplex)
+                        {
+                            Device.FeederConfiguration.MaxNumberOfPages = 20;
+                        }
+                        else
+                        {
+                            Device.FeederConfiguration.MaxNumberOfPages = 10;
+                        }
+                    }
+                    else
+                    {
+                        if (Device.FeederConfiguration.Duplex)
+                        {
+                            Device.FeederConfiguration.MaxNumberOfPages = 2;
+                        }
+                        else
+                        {
+                            Device.FeederConfiguration.MaxNumberOfPages = 1;
+                        }
+                    }
 
                     // brightness
                     if (options.Brightness != null)
