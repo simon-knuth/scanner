@@ -337,6 +337,7 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Button Content="Crash the app" Command="{x:Bind ViewModel.DebugCrashCommand}"/>
+                            <Button Content="Track an exception" Command="{x:Bind ViewModel.DebugTrackErrorCommand}" Margin="6,0,0,0"/>
                         </StackPanel>
                         
                         

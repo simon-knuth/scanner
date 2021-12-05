@@ -41,6 +41,7 @@ namespace Scanner.ViewModels
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
         public RelayCommand ViewLoadedCommand;
         public RelayCommand DebugCrashCommand => new RelayCommand(Crash);
+        public RelayCommand DebugTrackErrorCommand => new RelayCommand(DebugTrackError);
         public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
         public RelayCommand DebugShowTutorialPageListCommand => new RelayCommand(DebugShowTutorialPageList);
         public RelayCommand DebugShowChangelogCommand => new RelayCommand(DebugShowChangelog);
@@ -353,6 +354,11 @@ namespace Scanner.ViewModels
         private void Crash()
         {
             AppCenterService?.GenerateTestCrash();
+        }
+
+        private void DebugTrackError()
+        {
+            AppCenterService?.TrackError(new ApplicationException("Debug exception"));
         }
     }
 

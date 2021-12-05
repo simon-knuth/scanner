@@ -72,7 +72,7 @@ namespace Scanner.Services
         {
             IsAppCenterAllowed = (bool)SettingsService.GetSetting(AppSetting.SettingErrorStatistics);
             await AppCenter.SetEnabledAsync(IsAppCenterAllowed);
-            Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report).Result;
+            Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report, true).Result;
             AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
         }
         
@@ -90,9 +90,9 @@ namespace Scanner.Services
 
         /// <summary>
         ///     Returns an <see cref="ErrorAttachmentLog"/> that includes the relevant log file
-        ///     for the given <paramref name="report"/>.
+        ///     for the given <paramref name="report"/>. If no report is specified, the newest log file is used.
         /// </summary>
-        private async Task<ErrorAttachmentLog[]> CreateErrorAttachmentAsync(ErrorReport report)
+        private async Task<ErrorAttachmentLog[]> CreateErrorAttachmentAsync(ErrorReport report, bool flush)
         {
             // check whether LogService is available
             if (LogService == null)
@@ -103,12 +103,15 @@ namespace Scanner.Services
                 };
             }
 
-            // attempt to append log to the ErrorReport
+            // attempt find log
             try
             {
-                // close log file
-                Log.CloseAndFlush();
-                await LogService.InitializeAsync();
+                if (flush)
+                {
+                    // close log file
+                    Log.CloseAndFlush();
+                    await LogService.InitializeAsync();
+                }
 
                 // get all logs
                 StorageFolder logFolder = await ApplicationData.Current.RoamingFolder
@@ -122,17 +125,31 @@ namespace Scanner.Services
                     return DateTimeOffset.Compare(x.DateCreated, y.DateCreated);
                 });
                 sortedLogs.Reverse();
-                foreach (StorageFile log in sortedLogs)
+
+                if (report != null)
                 {
-                    if (log.DateCreated <= report.AppErrorTime)
+                    foreach (StorageFile log in sortedLogs)
                     {
-                        IBuffer buffer = await FileIO.ReadBufferAsync(log);
-                        return new ErrorAttachmentLog[]
+                        if (log.DateCreated <= report.AppErrorTime)
                         {
+                            IBuffer buffer = await FileIO.ReadBufferAsync(log);
+                            return new ErrorAttachmentLog[]
+                            {
+                                ErrorAttachmentLog.AttachmentWithBinary(buffer.ToArray(), "log.json",
+                                    "application/json")
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    // just take newest log
+                    IBuffer buffer = await FileIO.ReadBufferAsync(sortedLogs[0]);
+                    return new ErrorAttachmentLog[]
+                    {
                         ErrorAttachmentLog.AttachmentWithBinary(buffer.ToArray(), "log.json",
                             "application/json")
-                        };
-                    }
+                    };
                 }
             }
             catch (Exception exc)
@@ -161,9 +178,17 @@ namespace Scanner.Services
         /// <summary>
         ///     Track an Error in AppCenter.
         /// </summary>
-        public void TrackError(Exception exception, IDictionary<string, string> properties = null, params ErrorAttachmentLog[] attachments)
+        public async void TrackError(Exception exception, IDictionary<string, string> properties = null, params ErrorAttachmentLog[] attachments)
         {
-            Crashes.TrackError(exception, properties, attachments);
+            LogService?.Log.Information("Tracking error");
+            if (attachments != null && attachments.Length > 0)
+            {
+                Crashes.TrackError(exception, properties, attachments);
+            }
+            else
+            {
+                Crashes.TrackError(exception, properties, await CreateErrorAttachmentAsync(null, false));
+            }
         }
 
         public void GenerateTestCrash()

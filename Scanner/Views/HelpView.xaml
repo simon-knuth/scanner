@@ -61,7 +61,7 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
 
-                <TextBlock Text="Scanner usage" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <TextBlock x:Uid="HeadingHelpScannerUsage" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <muxc:Expander x:Name="ExpanderScannerDiscovery" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpScannerDiscovery.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
@@ -181,7 +181,7 @@
                     </StackPanel>
                 </muxc:Expander>
 
-                <TextBlock Text="Files &amp; save location" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <TextBlock x:Uid="HeadingHelpFilesSaveLocation" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <muxc:Expander x:Name="ExpanderSaveChanges" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpSaveChanges.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
@@ -239,7 +239,7 @@
                     </StackPanel>
                 </muxc:Expander>
 
-                <TextBlock Text="PDF" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
+                <TextBlock x:Uid="HeadingHelpPdf" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <muxc:Expander x:Name="ExpanderStartNewPdf" HorizontalAlignment="Stretch" Margin="0,0,0,6" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingHelpStartNewPdf.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">

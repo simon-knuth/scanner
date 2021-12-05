@@ -812,8 +812,7 @@ namespace Scanner.ViewModels
 
                 case Enums.ScannerSource.None:
                 default:
-                    AppCenterService.TrackError(new ApplicationException
-                        ("Unable to apply default scan options for ScannerSource.None."));
+                    LogService?.Log.Warning("Unable to apply default scan options for ScannerSource.None");
                     break;
             }
         }
