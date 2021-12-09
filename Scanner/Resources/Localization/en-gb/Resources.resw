@@ -1437,4 +1437,16 @@ If you&apos;re using a more professional scanner, you can now apply advanced sca
     <value>App logo</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Files &amp; save location</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Scanner usage</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
 </root>
