@@ -1437,4 +1437,16 @@ Wenn Sie einen professionelleren Scanner besitzen, können Sie nun auch erweiter
     <value>App Logo</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Dateien &amp; Speicherort</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Scannerbenutzung</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
 </root>

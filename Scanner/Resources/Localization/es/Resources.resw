@@ -1409,7 +1409,7 @@ Los formatos soportados son PDF, JPG, PNG, TIF y BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
-    <value>Scanner - Escaneo rápido y fácil </value>
+    <value>Scanner - Escaneo rápido y fácil</value>
     <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
@@ -1433,7 +1433,7 @@ Si estas utilizando un escáner más profesional, ahora puedes aplicar opciones 
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
-    <value>Scanner </value>
+    <value>Scanner</value>
     <comment>App title for voice control.</comment>
   </data>
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">

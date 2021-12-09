@@ -1459,4 +1459,16 @@ Jeśli korzystasz z bardziej profesjonalnego skanera, możesz teraz zastosować 
     <value>Logo aplikacji</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Pliki i lokalizacja zapisu</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Użycie skanera</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
 </root>
