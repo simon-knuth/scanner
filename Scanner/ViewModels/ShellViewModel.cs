@@ -304,8 +304,7 @@ namespace Scanner.ViewModels
             if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == true
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchEver) == false
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion) == true
-                && SystemInformation.Instance.PreviousVersionInstalled.ToFormattedString() != "3.0.0.0"
-                && SystemInformation.Instance.PreviousVersionInstalled.ToFormattedString() != "3.0.1.0")
+                && SystemInformation.Instance.PreviousVersionInstalled.Major != 3)
             {
                 ChangelogRequested?.Invoke(this, EventArgs.Empty);
             }

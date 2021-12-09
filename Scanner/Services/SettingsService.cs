@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
@@ -87,6 +88,14 @@ namespace Scanner.Services
         /// </summary>
         public async Task InitializeAsync()
         {
+            // migrate settings if necessary
+            if (!SystemInformation.Instance.IsFirstRun
+                && SystemInformation.Instance.PreviousVersionInstalled.Major < 3
+                && SystemInformation.Instance.ApplicationVersion.Major == 3)
+            {
+                MigrateSettingsToV3();
+            }
+            
             // initialize save location
             var futureAccessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 

@@ -34,50 +34,9 @@ namespace Scanner
         /// </summary>
         public App()
         {
-            // register event handler
-            UnhandledException += App_UnhandledException;
-
-            // register and setup services
-            PrepareServices();
-
-            // initialize some settings
-            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
-            PackageVersion version = Package.Current.Id.Version;
-            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
-            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
-            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
-            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
-
-            // migrate settings if necessary
-            if (!(bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchEver)
-                && (bool)settingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion)
-                && currentVersionNumber == "Version 3.0.0.0")
-            {
-                settingsService.MigrateSettingsToV3();
-            }
-
-            // apply theme
-            SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
-            switch (theme)
-            {
-                case SettingAppTheme.Light:
-                    this.RequestedTheme = ApplicationTheme.Light;
-                    break;
-                case SettingAppTheme.Dark:
-                    this.RequestedTheme = ApplicationTheme.Dark;
-                    break;
-                case SettingAppTheme.System:
-                default:
-                    break;
-            }
-
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-        }
 
-        private void PrepareServices()
-        {
             // configure service landscape
             Ioc.Default.ConfigureServices(new ServiceCollection()
                 .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
@@ -95,24 +54,50 @@ namespace Scanner
                 .AddSingleton<IAutoRotatorService, AutoRotatorService>()
                 .AddSingleton<IPdfService, PdfService>()
                 .BuildServiceProvider());
-
-            // intialize essential singleton services
-            Task.Run(Ioc.Default.GetService<ILogService>().InitializeAsync).Wait();
-            LogService = Ioc.Default.GetService<ILogService>();
-            Task.Run(Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync).Wait();
-            Task.Run(Ioc.Default.GetService<IAppCenterService>().InitializeAsync).Wait();
-            Ioc.Default.GetService<IAppDataService>();
-            Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
         }
-
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // register event handler
+            UnhandledException += App_UnhandledException;
+
+            // intialize essential singleton services
+            await Ioc.Default.GetService<ILogService>().InitializeAsync();
+            LogService = Ioc.Default.GetService<ILogService>();
+            await Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync();
+            await Ioc.Default.GetService<IAppCenterService>().InitializeAsync();
+            Ioc.Default.GetService<IAppDataService>();
+            Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
+
+            // initialize some settings
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            PackageVersion version = Package.Current.Id.Version;
+            string currentVersionNumber = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            string previousVersionNumber = (string)settingsService.GetSetting(AppSetting.LastKnownVersion);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
+            settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
+            settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
+
+            // apply theme
+            SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
+            switch (theme)
+            {
+                case SettingAppTheme.Light:
+                    this.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                case SettingAppTheme.Dark:
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+                case SettingAppTheme.System:
+                default:
+                    break;
+            }
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -250,4 +235,6 @@ namespace Scanner
             }
         }
     }
+
+    
 }
