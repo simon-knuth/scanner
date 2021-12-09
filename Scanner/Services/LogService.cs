@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Scanner.Models;
 using Serilog;
 using Serilog.Exceptions;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Storage;
 using static Utilities;
 
@@ -91,12 +93,35 @@ namespace Scanner.Services
             ILogger log;
             log = new LoggerConfiguration()
                     .MinimumLevel.Debug()
-                    .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(),
-                        logPath,
+                    .WriteTo.Async(a => a.File(
+                        path: logPath,
+                        formatter: new Serilog.Formatting.Json.JsonFormatter(),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 8,
                         fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
                     .Enrich.WithExceptionDetails()
+                    .Destructure.ByTransforming<ScanOptions>(
+                        o => new
+                        {
+                            Source = o.Source,
+                            ColorMode = o.ColorMode,
+                            Resolution = o.Resolution,
+                            AutoCropMode = o.AutoCropMode,
+                            FeederMultiplePages = o.FeederMultiplePages,
+                            FeederDuplex = o.FeederDuplex,
+                            Format = o.Format,
+                            Brightness = o.Brightness,
+                            Contrast = o.Brightness
+                        })
+                    .Destructure.ByTransforming<DeviceInformation>(
+                        i => new { Name = i.Name, IsEnabled = i.IsEnabled, IsDefault = i.IsDefault, Kind = i.Kind, Id = i.Id })
+                    .Destructure.ByTransforming<ScannerFileFormat>(
+                        f => new
+                        {
+                            TargetFormat = f.TargetFormat,
+                            OriginalFormat = f.OriginalFormat,
+                            RequiresConversion = f.RequiresConversion
+                        })
                     .CreateLogger();
 
             log.Information("--- Log initialized ---");

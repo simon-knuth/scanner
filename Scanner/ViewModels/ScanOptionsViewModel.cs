@@ -760,7 +760,8 @@ namespace Scanner.ViewModels
         /// </summary>
         private void ApplyDefaultScanOptionsForSourceMode(ScannerSource sourceMode, ScanOptions previousScanOptions)
         {
-            LogService?.Log.Information($"ApplyDefaultScanOptionsForSourceMode: {sourceMode} | {previousScanOptions}");
+            LogService?.Log.Information("ApplyDefaultScanOptionsForSourceMode: {SourceMode} | {@PreviousScanOptions}", sourceMode,
+                previousScanOptions);
             switch (sourceMode)
             {
                 case Enums.ScannerSource.Auto:
@@ -918,7 +919,7 @@ namespace Scanner.ViewModels
                 FeederDuplex = FeederDuplex,
                 Format = SelectedFileFormat
             };
-            LogService?.Log.Information($"CreateScanOptions: {result}");
+            LogService?.Log.Information("CreateScanOptions: {@Result}", result);
 
             if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
 

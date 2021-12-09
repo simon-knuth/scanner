@@ -57,7 +57,11 @@ namespace Scanner.ViewModels
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+#if DEBUG
+            savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+#else
             savePicker.FileTypeChoices.Add("TXT", new List<string>() { ".txt" });
+#endif
             savePicker.SuggestedFileName = sourceFile.DisplayName;
 
             StorageFile targetFile = await savePicker.PickSaveFileAsync();
