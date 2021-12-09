@@ -18,8 +18,6 @@ namespace Scanner.Views
             this.InitializeComponent();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.PreviewRunning += ViewModel_PreviewRunning;
-            ViewModel.ScanService.ScanStarted += ViewModel_ScanStarted;
-            ViewModel.ScanService.ScanEnded += ViewModel_ScanEnded;
             ViewModel.ScannerSearchTipRequested += ViewModel_ScannerSearchTipRequested;
         }
 
@@ -41,18 +39,6 @@ namespace Scanner.Views
                     }
                 });
             }
-        }
-
-        private async void ViewModel_ScanEnded(object sender, EventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-                VisualStateManager.GoToState(this, NormalState.Name, true));
-        }
-
-        private async void ViewModel_ScanStarted(object sender, EventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-                VisualStateManager.GoToState(this, ScanningState.Name, true));
         }
 
         private async void ViewModel_PreviewRunning(object sender, EventArgs e)

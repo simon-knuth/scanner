@@ -78,10 +78,12 @@ namespace Scanner.Services
         /// </summary>
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder)
         {
+            IsScanResultChanging = true;
             Result = null;
 
             FutureAccessListIndex = 0;
             Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex);
+            IsScanResultChanging = false;
 
             ScanResultCreated?.Invoke(this, Result);
         }
@@ -97,10 +99,12 @@ namespace Scanner.Services
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             ImageScannerFormat targetFormat)
         {
+            IsScanResultChanging = true;
             Result = null;
 
             FutureAccessListIndex = 0;
             Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex);
+            IsScanResultChanging = false;
 
             ScanResultCreated?.Invoke(this, Result);
         }

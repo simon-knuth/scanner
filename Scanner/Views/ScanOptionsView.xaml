@@ -82,23 +82,11 @@
                     </VisualState.Setters>
                 </VisualState>
 
-                <VisualState x:Name="DisabledState">
+                <VisualState x:Name="ScanningState">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}"/>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsEditorEditing, Mode=OneWay}"/>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanInProgress, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
                     
-                    <Storyboard>
-                        
-                    </Storyboard>
-
-                    <VisualState.Setters>
-                        <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
-                        <Setter Target="ButtonScan.IsEnabled" Value="False"/>
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="ScanningState">
                     <Storyboard>
 
                     </Storyboard>
@@ -120,6 +108,22 @@
                         <Setter Target="HyperlinkButtonHelpScanners.IsEnabled" Value="False"/>
                         <Setter Target="StackPanelButtonScan.Visibility" Value="Collapsed"/>
                         <Setter Target="ProgressRingScan.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="DisabledState">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}"/>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsEditorEditing, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>
+
+                    <Storyboard>
+
+                    </Storyboard>
+
+                    <VisualState.Setters>
+                        <Setter Target="ButtonPreview.IsEnabled" Value="False"/>
+                        <Setter Target="ButtonScan.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

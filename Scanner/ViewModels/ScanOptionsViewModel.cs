@@ -55,8 +55,6 @@ namespace Scanner.ViewModels
         public RelayCommand CancelScanCommand;
 
         public event EventHandler PreviewRunning;
-        public event EventHandler ScanStarted;
-        public event EventHandler ScanEnded;
         public event EventHandler ScannerSearchTipRequested;
 
         private bool _PreviewFailed;
@@ -314,6 +312,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsScanResultChanging, value);
         }
 
+        private bool _IsScanInProgress;
+        public bool IsScanInProgress
+        {
+            get => _IsScanInProgress;
+            set => SetProperty(ref _IsScanInProgress, value);
+        }
+
         private bool _IsEditorEditing;
         public bool IsEditorEditing
         {
@@ -383,8 +388,8 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
             ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
             ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
-            ScanService.ScanStarted += (x, y) => ScanStarted?.Invoke(this, EventArgs.Empty);
-            ScanService.ScanEnded += (x, y) => ScanEnded?.Invoke(this, EventArgs.Empty);
+            ScanService.ScanStarted += (x, y) => IsScanInProgress = true;
+            ScanService.ScanEnded += (x, y) => IsScanInProgress = false;
 
             Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
             Messenger.Register<SetupCompletedMessage>(this, (r, m) => ScannerSearchTipRequested?.Invoke(this, EventArgs.Empty));
