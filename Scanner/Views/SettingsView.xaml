@@ -450,7 +450,7 @@
                     <Image Grid.Column="0" x:Uid="ImageAppLogo" Source="/Assets/Logo.svg" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,8,4,4"/>
                     <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
                         <Span>
-                            <Run FontWeight="Medium">Scanner</Run>
+                            <Run FontWeight="Medium" x:Uid="HeadingScanner"/>
                             <LineBreak/><Run>Copyright © 2021</Run>
                             <Hyperlink UnderlineStyle="None" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">Simon Knuth</Hyperlink>
                             <LineBreak/><Run>Version</Run>

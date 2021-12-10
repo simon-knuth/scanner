@@ -76,7 +76,13 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsService()
         {
-            
+            // migrate settings if necessary
+            if (!SystemInformation.Instance.IsFirstRun
+                && SystemInformation.Instance.PreviousVersionInstalled.Major < 3
+                && SystemInformation.Instance.ApplicationVersion.Major == 3)
+            {
+                MigrateSettingsToV3();
+            }
         }
 
 
@@ -87,15 +93,7 @@ namespace Scanner.Services
         ///     Initializes the settings and especially the save location.
         /// </summary>
         public async Task InitializeAsync()
-        {
-            // migrate settings if necessary
-            if (!SystemInformation.Instance.IsFirstRun
-                && SystemInformation.Instance.PreviousVersionInstalled.Major < 3
-                && SystemInformation.Instance.ApplicationVersion.Major == 3)
-            {
-                MigrateSettingsToV3();
-            }
-            
+        {            
             // initialize save location
             var futureAccessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 
@@ -252,7 +250,7 @@ namespace Scanner.Services
         /// </summary>
         public void SetSetting(AppSetting setting, object value)
         {
-            LogService?.Log.Information($"SetSetting: Setting value for {setting} to {value}");
+            LogService?.Log?.Information($"SetSetting: Setting value for {setting} to {value}");
             string name = setting.ToString().ToUpper();
 
             switch (setting)

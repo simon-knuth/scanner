@@ -26,6 +26,7 @@ namespace Scanner
     sealed partial class App : Application
     {
         private ILogService LogService;
+        private ISettingsService SettingsService;
         private UISettings uISettings;
 
         /// <summary>
@@ -54,6 +55,22 @@ namespace Scanner
                 .AddSingleton<IAutoRotatorService, AutoRotatorService>()
                 .AddSingleton<IPdfService, PdfService>()
                 .BuildServiceProvider());
+
+            // apply theme
+            SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            SettingAppTheme theme = (SettingAppTheme)SettingsService.GetSetting(AppSetting.SettingAppTheme);
+            switch (theme)
+            {
+                case SettingAppTheme.Light:
+                    this.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                case SettingAppTheme.Dark:
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+                case SettingAppTheme.System:
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -69,7 +86,7 @@ namespace Scanner
             // intialize essential singleton services
             await Ioc.Default.GetService<ILogService>().InitializeAsync();
             LogService = Ioc.Default.GetService<ILogService>();
-            await Ioc.Default.GetRequiredService<ISettingsService>().InitializeAsync();
+            await SettingsService.InitializeAsync();
             await Ioc.Default.GetService<IAppCenterService>().InitializeAsync();
             Ioc.Default.GetService<IAppDataService>();
             Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
@@ -82,21 +99,6 @@ namespace Scanner
             settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
             settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
             settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
-
-            // apply theme
-            SettingAppTheme theme = (SettingAppTheme)settingsService?.GetSetting(AppSetting.SettingAppTheme);
-            switch (theme)
-            {
-                case SettingAppTheme.Light:
-                    this.RequestedTheme = ApplicationTheme.Light;
-                    break;
-                case SettingAppTheme.Dark:
-                    this.RequestedTheme = ApplicationTheme.Dark;
-                    break;
-                case SettingAppTheme.System:
-                default:
-                    break;
-            }
 
             Frame rootFrame = Window.Current.Content as Frame;
 
