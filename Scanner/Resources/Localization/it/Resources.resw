@@ -550,7 +550,7 @@
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Dai un feedback</value>
+    <value>Invia un feedback</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
@@ -858,7 +858,7 @@
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Divertiti con il nuovo aspetto fresco e invitante ispirato a Windows 11.</value>
+    <value>Goditi il nuovo aspetto fresco e invitante ispirato a Windows 11.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
@@ -878,7 +878,7 @@
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value>One o più pagine sono state automaticamente ruotate. Questa funzionalità può essere disabilitata nelle impostazioni.</value>
+    <value>Una o più pagine sono state automaticamente ruotate. Questa funzionalità può essere disabilitata nelle impostazioni.</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
