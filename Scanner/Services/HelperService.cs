@@ -1,7 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
+using Windows.Graphics.Imaging;
 using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -35,9 +37,6 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        ///     Shows the dialog for rating the app. Opens the Microsoft Store, if something goes wrong.
-        /// </summary>
         public async Task ShowRatingDialogAsync()
         {
             try
@@ -53,15 +52,6 @@ namespace Scanner.Services
             }
         }
 
-        /// <summary>
-        ///     Moves the <paramref name="file"/> to the <paramref name="targetFolder"/>. Attempts to name
-        ///     it <paramref name="desiredName"/>.
-        /// </summary>
-        /// <param name="file">The file that's to be moved.</param>
-        /// <param name="targetFolder">The folder that the file shall be moved to.</param>
-        /// <param name="desiredName">The name that the file should ideally have when finished.</param>
-        /// <param name="replaceExisting">Replaces file if true, otherwise asks the OS to generate a unique name.</param>
-        /// <returns>The final name of the file.</returns>
         public async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
@@ -83,12 +73,6 @@ namespace Scanner.Services
             return file.Name;
         }
 
-        /// <summary>
-        ///     Converts the <paramref name="file"/> to a <see cref="BitmapImage"/>.
-        /// </summary>
-        /// <remarks>
-        ///     Partially runs on the UI thread.
-        /// </remarks>
         public async Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file)
         {
             BitmapImage bmp = null;
@@ -137,6 +121,45 @@ namespace Scanner.Services
             });
 
             return bmp;
+        }
+
+        public async Task<BitmapEncoder> CreateOptimizedBitmapEncoderAsync(ImageScannerFormat? encoderFormat, IRandomAccessStream stream)
+        {
+            // get encoder ID
+            Guid encoderId;
+            switch (encoderFormat)
+            {
+                case ImageScannerFormat.Jpeg:
+                    encoderId = BitmapEncoder.JpegEncoderId;
+                    break;
+                case ImageScannerFormat.Png:
+                    encoderId = BitmapEncoder.PngEncoderId;
+                    break;
+                case ImageScannerFormat.Tiff:
+                    encoderId = BitmapEncoder.TiffEncoderId;
+                    break;
+                case ImageScannerFormat.DeviceIndependentBitmap:
+                    encoderId = BitmapEncoder.BmpEncoderId;
+                    break;
+                default:
+                    throw new ApplicationException($"CreateOptimizedBitmapEncoderAsync received invalid ImageScannerFormat {encoderFormat}");
+            }
+
+            // create encoder
+            if (encoderFormat == ImageScannerFormat.Jpeg)
+            {
+                // prevent large JPG size
+                var propertySet = new BitmapPropertySet();
+                var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
+                propertySet.Add("ImageQuality", qualityValue);
+
+                stream.Size = 0;
+                return await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
+            }
+            else
+            {
+                return await BitmapEncoder.CreateAsync(encoderId, stream);
+            }
         }
     }
 }
