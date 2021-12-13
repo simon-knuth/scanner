@@ -618,7 +618,21 @@ namespace Scanner
 
                                 Guid encoderId = GetBitmapEncoderId(PagesFormat);
 
-                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
+                                BitmapEncoder encoder = null;
+                                if (ScanResultFormat == ImageScannerFormat.Jpeg)
+                                {
+                                    // Fix large JPG size
+                                    var propertySet = new BitmapPropertySet();
+                                    var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
+                                    propertySet.Add("ImageQuality", qualityValue);
+
+                                    fileStream.Size = 0;
+                                    encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream, propertySet);
+                                }
+                                else
+                                {
+                                    encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
+                                }
                                 encoder.SetSoftwareBitmap(softwareBitmap);
 
                                 encoder.BitmapTransform.Rotation = CombineRotations(instruction.Item2, _Elements[instruction.Item1].CurrentRotation);
