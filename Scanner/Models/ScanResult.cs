@@ -506,23 +506,8 @@ namespace Scanner
                     {
                         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                         SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                        Guid encoderId = GetBitmapEncoderId(targetFormat);
 
-                        BitmapEncoder encoder = null;
-                        if (targetFormat == ImageScannerFormat.Jpeg)
-                        {
-                            // Fix large JPG size
-                            var propertySet = new BitmapPropertySet();
-                            var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
-                            propertySet.Add("ImageQuality", qualityValue);
-
-                            stream.Size = 0;
-                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream, propertySet);
-                        }
-                        else
-                        {
-                            encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
-                        }
+                        BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(targetFormat, stream);
                         encoder.SetSoftwareBitmap(softwareBitmap);
 
                         // save/encode the file in the target format
@@ -616,23 +601,7 @@ namespace Scanner
 
                                 SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                                Guid encoderId = GetBitmapEncoderId(PagesFormat);
-
-                                BitmapEncoder encoder = null;
-                                if (ScanResultFormat == ImageScannerFormat.Jpeg)
-                                {
-                                    // Fix large JPG size
-                                    var propertySet = new BitmapPropertySet();
-                                    var qualityValue = new BitmapTypedValue(0.85d, Windows.Foundation.PropertyType.Single);
-                                    propertySet.Add("ImageQuality", qualityValue);
-
-                                    fileStream.Size = 0;
-                                    encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream, propertySet);
-                                }
-                                else
-                                {
-                                    encoder = await BitmapEncoder.CreateAsync(encoderId, fileStream);
-                                }
+                                BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, fileStream);
                                 encoder.SetSoftwareBitmap(softwareBitmap);
 
                                 encoder.BitmapTransform.Rotation = CombineRotations(instruction.Item2, _Elements[instruction.Item1].CurrentRotation);
@@ -871,7 +840,7 @@ namespace Scanner
 
                 using (IRandomAccessStream stream = await GetImageFile(index).OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(PagesFormat), stream);
+                    BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, stream);
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                     SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                     encoder.SetSoftwareBitmap(softwareBitmap);

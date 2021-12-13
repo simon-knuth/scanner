@@ -68,28 +68,6 @@ static class Utilities
     }
 
     /// <summary>
-    ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding <see cref="BitmapEncoder"/>ID.
-    /// </summary>
-    /// <param name="format">An image format.</param>
-    /// <returns>The corresponding <see cref="BitmapEncoder"/>ID.</returns>
-    public static Guid GetBitmapEncoderId(ImageScannerFormat? format)
-    {
-        switch (format)
-        {
-            case ImageScannerFormat.Jpeg:
-                return BitmapEncoder.JpegEncoderId;
-            case ImageScannerFormat.Png:
-                return BitmapEncoder.PngEncoderId;
-            case ImageScannerFormat.Tiff:
-                return BitmapEncoder.TiffEncoderId;
-            case ImageScannerFormat.DeviceIndependentBitmap:
-                return BitmapEncoder.BmpEncoderId;
-            default:
-                throw new ApplicationException("GetBitmapEncoderId received invalid ImageScannerFormat '" + format + "'.");
-        }
-    }
-
-    /// <summary>
     ///     Converts a <see cref="ImageScannerFormat"/> into the corresponding format string.
     /// </summary>
     /// <param name="format">An image format.</param>
