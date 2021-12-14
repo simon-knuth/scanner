@@ -746,6 +746,24 @@ namespace Scanner.Views
                 FlipViewItem flipViewItem = ((FrameworkElement)sender).Parent as FlipViewItem;
             });
         }
+
+        private async void GridScanning_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                ScanningAnimation.Stop();
+                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
+                ScanningAnimation.Start();
+            });
+        }
+
+        private async void GridScanning_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
+            });
+        }
     }
 
     enum ToolbarFunction
