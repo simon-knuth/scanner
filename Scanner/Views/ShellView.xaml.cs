@@ -171,7 +171,7 @@ namespace Scanner.Views
             }
             else if (args.SelectedItem == NavigationViewItemMainEditor)
             {
-                
+                FrameMainContentFirst.Navigate(typeof(EmptyView));
             }
             else if (args.SelectedItem == NavigationViewItemMainHelp)
             {

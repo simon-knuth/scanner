@@ -580,7 +580,7 @@
                         <animations:Explicit.Animations>
                             <animations:AnimationSet x:Name="ScanningAnimation">
                                 <animations:AnimationScope>
-                                    <animations:OpacityAnimation Duration="0:0:3" From="0.0" To="0.2" DelayBehavior="SetInitialValueBeforeDelay"/>
+                                    <animations:OpacityAnimation Duration="0:0:3" From="0.0" To="0.1" DelayBehavior="SetInitialValueBeforeDelay"/>
                                     <animations:TranslationAnimation Duration="0:0:6" Repeat="Forever" DelayBehavior="SetInitialValueBeforeDelay">
                                         <animations:Vector3KeyFrame Key="0.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
                                         <animations:Vector3KeyFrame x:Name="KeyFrameScanningAnimation" Key="0.5" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>

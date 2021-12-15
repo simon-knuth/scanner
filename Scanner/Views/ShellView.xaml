@@ -99,7 +99,6 @@
                         <Setter Target="GridMainContent.Padding" Value="0"/>
                         <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
                         <Setter Target="NavigationViewItemMainEditor.Visibility" Value="Visible"/>
-                        <Setter Target="FrameMainContentFirst.Content" Value="{x:Null}"/>
                         <Setter Target="FrameMainContentSecond.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentSecond.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentSecond.Margin" Value="0"/>
