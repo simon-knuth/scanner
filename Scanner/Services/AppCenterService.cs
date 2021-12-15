@@ -50,6 +50,7 @@ namespace Scanner.Services
             { AppCenterEvent.AutoRotatedPage, "Automatically rotated page" },
             { AppCenterEvent.CorrectedAutoRotation, "Corrected automatically rotated page" },
             { AppCenterEvent.SetSaveLocationUnavailable, "Set save location unavailable" },
+            { AppCenterEvent.SettingsRequested, "Settings requested" },
         };
 
 

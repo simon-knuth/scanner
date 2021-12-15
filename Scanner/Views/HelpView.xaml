@@ -147,7 +147,7 @@
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpBrightnessContrast" Padding="24,16,24,16" Background="Transparent"/>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
-                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsScanOptionsRequestCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
                                     <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
@@ -171,7 +171,7 @@
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpAutoCrop" Padding="24,16,24,16" Background="Transparent"/>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
-                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsScanOptionsRequestCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
                                     <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>
@@ -213,7 +213,7 @@
                     <StackPanel Orientation="Vertical">
                         <controls:MarkdownTextBlock x:Uid="TextHelpChangeScanFolder" Padding="24,16,24,16" Background="Transparent"/>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0">
-                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsRequestCommand}">
+                            <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsSaveLocationRequestCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
                                     <TextBlock x:Uid="ButtonHelpSettings" TextWrapping="WrapWholeWords"/>

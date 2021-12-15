@@ -1,10 +1,13 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using WinUI = Microsoft.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls;
 using System;
 using Scanner.Views.Dialogs;
 using Windows.UI.Core;
 using static Utilities;
 using Windows.Globalization;
 using Windows.UI.Xaml.Controls.Primitives;
+using static Enums;
+using System.Threading.Tasks;
 
 namespace Scanner.Views
 {
@@ -13,6 +16,7 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private TaskCompletionSource<bool> PageLoaded = new TaskCompletionSource<bool>();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,12 +28,25 @@ namespace Scanner.Views
             ViewModel.LogExportDialogRequested += ViewModel_LogExportDialogRequestedAsync;
             ViewModel.LicensesDialogRequested += ViewModel_LicensesDialogRequested;
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
+            ViewModel.SettingsSectionRequested += ViewModel_SettingsSectionRequested;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private async void ViewModel_SettingsSectionRequested(object sender, SettingsSection section)
+        {
+            WinUI.Expander requestedExpander = ConvertSettingsSection(section);
+            if (requestedExpander != null)
+            {
+                requestedExpander.IsExpanded = true;
+                PageLoaded = new TaskCompletionSource<bool>();
+                await PageLoaded.Task;
+                requestedExpander.StartBringIntoView();
+            }
+        }
+
         private async void ViewModel_LicensesDialogRequested(object sender, EventArgs e)
         {
             LicensesDialogView dialog = new LicensesDialogView();
@@ -90,6 +107,40 @@ namespace Scanner.Views
                 PrepareMenuFlyoutAutoRotateLanguages();
                 FlyoutBase.ShowAttachedFlyout((Windows.UI.Xaml.FrameworkElement)sender);
             });
+        }
+
+        /// <summary>
+        ///     Maps a <see cref="SettingsSection"/> to the corresponding
+        ///     <see cref="WinUI.Expander"/>.
+        /// </summary>
+        public WinUI.Expander ConvertSettingsSection(SettingsSection section)
+        {
+            switch (section)
+            {
+                case SettingsSection.SaveLocation:
+                    return ExpanderSaveLocation;
+                case SettingsSection.AutoRotation:
+                    return ExpanderAutoRotate;
+                case SettingsSection.FileNaming:
+                    return ExpanderFileName;
+                case SettingsSection.ScanOptions:
+                    return ExpanderScanOptions;
+                case SettingsSection.ScanAction:
+                    return ExpanderScanAction;
+                case SettingsSection.Theme:
+                    return ExpanderTheme;
+                case SettingsSection.EditorOrientation:
+                    return ExpanderEditorOrientation;
+                case SettingsSection.Animations:
+                    return ExpanderAnimations;
+                case SettingsSection.ErrorReports:
+                    return ExpanderFeedbackReportsLogs;
+                case SettingsSection.Surveys:
+                    return ExpanderFeedbackSurveys;
+                default:
+                    break;
+            }
+            return null;
         }
     }
 }

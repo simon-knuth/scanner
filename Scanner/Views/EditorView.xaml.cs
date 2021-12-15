@@ -737,24 +737,17 @@ namespace Scanner.Views
             });
         }
 
-        private async void ScrollViewerFlipViewPages_Loaded(object sender, RoutedEventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-            {
-                ScrollViewer scrollViewer = sender as ScrollViewer;
-                FlipView flipView = (FlipView)scrollViewer.Parent;
-                FlipViewItem flipViewItem = ((FrameworkElement)sender).Parent as FlipViewItem;
-            });
-        }
-
         private async void GridScanning_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            if (e.PreviousSize.Height != e.NewSize.Height)
             {
-                ScanningAnimation.Stop();
-                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
-                ScanningAnimation.Start();
-            });
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    ScanningAnimation.Stop();
+                    KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
+                    ScanningAnimation.Start();
+                });
+            }
         }
 
         private async void GridScanning_Loaded(object sender, RoutedEventArgs e)

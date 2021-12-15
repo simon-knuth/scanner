@@ -44,6 +44,7 @@ namespace Scanner.ViewModels
         public RelayCommand HelpRequestScannerDiscoveryCommand;
         public RelayCommand HelpRequestChooseResolutionCommand;
         public RelayCommand HelpRequestChooseFileFormatCommand;
+        public RelayCommand SettingsScanActionRequestCommand;
 
         public AsyncRelayCommand<string> PreviewScanCommand;
         public RelayCommand DismissPreviewScanCommand;
@@ -369,9 +370,10 @@ namespace Scanner.ViewModels
             ViewLoadedCommand = new AsyncRelayCommand(ViewLoaded);
             ViewNavigatedToCommand = new RelayCommand(ViewNavigatedTo);
             ViewNavigatedFromCommand = new RelayCommand(ViewNavigatedFrom);
-            HelpRequestScannerDiscoveryCommand = new RelayCommand(HelpRequestScannerDiscovery);
-            HelpRequestChooseResolutionCommand = new RelayCommand(HelpRequestChooseResolution);
-            HelpRequestChooseFileFormatCommand = new RelayCommand(HelpRequestChooseFileFormat);
+            HelpRequestScannerDiscoveryCommand = new RelayCommand(() => Messenger.Send(new HelpRequestShellMessage(HelpTopic.ScannerDiscovery)));
+            HelpRequestChooseResolutionCommand = new RelayCommand(() => Messenger.Send(new HelpRequestShellMessage(HelpTopic.ChooseResolution)));
+            HelpRequestChooseFileFormatCommand = new RelayCommand(() => Messenger.Send(new HelpRequestShellMessage(HelpTopic.ChooseFileFormat)));
+            SettingsScanActionRequestCommand = new RelayCommand(() => Messenger.Send(new SettingsRequestShellMessage(SettingsSection.ScanAction)));
             PreviewScanCommand = new AsyncRelayCommand<string>(PreviewScanAsync);
             DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
@@ -1000,30 +1002,6 @@ namespace Scanner.ViewModels
         {
             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
             PersistentScanOptionsDatabaseService?.DeletePersistentScanOptionsForScanner(SelectedScanner);
-        }
-
-        /// <summary>
-        ///     Asks the shell to display the help on scanner discovery.
-        /// </summary>
-        private void HelpRequestScannerDiscovery()
-        {
-            Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ScannerDiscovery));
-        }
-
-        /// <summary>
-        ///     Asks the shell to display the help on choosing a resolution.
-        /// </summary>
-        private void HelpRequestChooseResolution()
-        {
-            Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ChooseResolution));
-        }
-
-        /// <summary>
-        ///     Asks the shell to display the help on choosing a file format.
-        /// </summary>
-        private void HelpRequestChooseFileFormat()
-        {
-            Messenger.Send(new HelpRequestShellMessage(HelpViewEnums.HelpTopic.ChooseFileFormat));
         }
 
         /// <summary>

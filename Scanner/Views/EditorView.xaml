@@ -565,7 +565,7 @@
                     </core:DataTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
 
-                <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
                     <media:UIElementExtensions.VisualFactory>
                         <media:PipelineVisualFactory>
                             <media:BlurEffect Amount="40"/>

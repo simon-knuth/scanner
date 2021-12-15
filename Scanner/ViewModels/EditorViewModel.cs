@@ -72,6 +72,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _Orientation, value);
         }
 
+        private bool _ShowAnimations;
+        public bool ShowAnimations
+        {
+            get => _ShowAnimations;
+            set => SetProperty(ref _ShowAnimations, value);
+        }
+
         private ScanResult _ScanResult;
         public ScanResult ScanResult
         {
@@ -275,6 +282,7 @@ namespace Scanner.ViewModels
         public EditorViewModel()
         {
             RefreshOrientationSetting();
+            RefreshAnimationsSetting();
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             ShowOpenWithWarning = (bool)SettingsService.GetSetting(AppSetting.ShowOpenWithWarning);
 
@@ -339,11 +347,20 @@ namespace Scanner.ViewModels
             }
         }
 
+        private void RefreshAnimationsSetting()
+        {
+            ShowAnimations = (bool)SettingsService.GetSetting(AppSetting.SettingAnimations);
+        }
+
         private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
             if (e == AppSetting.SettingEditorOrientation)
             {
                 RefreshOrientationSetting();
+            }
+            else if (e == AppSetting.SettingAnimations)
+            {
+                RefreshAnimationsSetting();
             }
         }
 

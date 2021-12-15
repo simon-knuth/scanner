@@ -136,9 +136,10 @@
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\SettingsRequestShellMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\NarratorAnnouncementMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
-    <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="Views\EditorView.xaml.cs">
       <DependentUpon>EditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Enums\HelpViewEnums.cs" />
     <Compile Include="Views\EmptyView.xaml.cs">
       <DependentUpon>EmptyView.xaml</DependentUpon>
     </Compile>

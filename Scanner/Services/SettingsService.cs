@@ -240,6 +240,12 @@ namespace Scanner.Services
                 case AppSetting.SettingShowAdvancedScanOptions:
                     return SettingsContainer.Values[name] ?? false;
 
+                case AppSetting.SettingAnimations:
+                    return SettingsContainer.Values[name] ?? true;
+
+                case AppSetting.SettingScanAction:
+                    return SettingsContainer.Values[name] ?? SettingScanAction.AddToExisting;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -336,6 +342,14 @@ namespace Scanner.Services
 
                 case AppSetting.SettingShowAdvancedScanOptions:
                     SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingAnimations:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingScanAction:
+                    SettingsContainer.Values[name] = (int)value;
                     break;
 
                 default:

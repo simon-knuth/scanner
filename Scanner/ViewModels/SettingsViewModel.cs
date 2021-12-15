@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -37,6 +38,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand LaunchLanguageSettingsCommand;
 
         public event EventHandler ChangelogRequested;
+        public event EventHandler<SettingsSection> SettingsSectionRequested;
 
         private string _SaveLocationPath;
         public string SaveLocationPath
@@ -82,6 +84,12 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingAppendTime, value);
         }
 
+        public int SettingScanAction
+        {
+            get => (int)SettingsService.GetSetting(AppSetting.SettingScanAction);
+            set => SettingsService.SetSetting(AppSetting.SettingScanAction, value);
+        }
+
         public int SettingEditorOrientation
         {
             get => (int)SettingsService.GetSetting(AppSetting.SettingEditorOrientation);
@@ -112,6 +120,12 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingShowSurveys, value);
         }
 
+        public bool SettingAnimations
+        {
+            get => (bool)SettingsService.GetSetting(AppSetting.SettingAnimations);
+            set => SettingsService.SetSetting(AppSetting.SettingAnimations, value);
+        }
+
         private bool _IsScanInProgress;
         public bool IsScanInProgress
         {
@@ -136,6 +150,7 @@ namespace Scanner.ViewModels
             ScanService.ScanStarted += ScanService_ScanStartedOrCompleted;
             ScanService.ScanEnded += ScanService_ScanStartedOrCompleted;
             IsScanInProgress = ScanService.IsScanInProgress;
+            WeakReferenceMessenger.Default.Register<SettingsRequestMessage>(this, (r, m) => SettingsRequestMessage_Received(r, m));
 
             DisposeCommand = new RelayCommand(Dispose);
             DisplayLogExportDialogCommand = new RelayCommand(DisplayLogExportDialog);
@@ -162,6 +177,11 @@ namespace Scanner.ViewModels
             SettingsService.ScanSaveLocationChanged -= SettingsService_ScanSaveLocationChanged;
             ScanService.ScanStarted -= ScanService_ScanStartedOrCompleted;
             ScanService.ScanEnded -= ScanService_ScanStartedOrCompleted;
+        }
+
+        private void SettingsRequestMessage_Received(object r, SettingsRequestMessage m)
+        {
+            SettingsSectionRequested?.Invoke(this, m.SettingsSection);
         }
 
         private void DisplayLogExportDialog()

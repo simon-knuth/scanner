@@ -242,6 +242,10 @@
                     <muxc:NavigationViewItem.RenderTransform>
                         <CompositeTransform TranslateX="0"/>
                     </muxc:NavigationViewItem.RenderTransform>
+
+                    <muxc:NavigationViewItem.InfoBadge>
+                        <muxc:InfoBadge Value="{x:Bind ViewModel.NumberOfPages, Mode=OneWay}" Visibility="{x:Bind ViewModel.NumberOfPages, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}}"/>
+                    </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Visibility="Collapsed" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainEditor, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
@@ -384,7 +388,7 @@
             IsLightDismissEnabled="False">
             <muxc:TeachingTip.HeroContent>
                 <Frame CornerRadius="{StaticResource OverlayCornerRadius}" Padding="-50" Height="150">
-                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4">
+                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4" AutoPlay="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
                         <lottie:LottieVisualSource UriSource="ms-appx:///Assets/AnimatedVisuals/lottie_19814-data-list.json"/>
                     </muxc:AnimatedVisualPlayer>
                 </Frame>

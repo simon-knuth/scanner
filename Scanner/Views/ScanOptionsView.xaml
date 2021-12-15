@@ -739,6 +739,12 @@
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem x:Uid="ButtonScanOptionsSettingsScanAction" Command="{x:Bind ViewModel.SettingsScanActionRequestCommand}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE713;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </muxc:SplitButton.Flyout>
 

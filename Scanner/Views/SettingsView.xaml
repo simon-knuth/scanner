@@ -237,6 +237,26 @@
                         <CheckBox x:Uid="OptionSettingsShowAdvancedScanOptions" Margin="0,3,0,0" IsChecked="{x:Bind ViewModel.SettingShowAdvancedScanOptions, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
+                <!-- Setting Scan Action -->
+                <muxc:Expander x:Name="ExpanderScanAction" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsScanAction.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsScanAction" Grid.Column="1" x:Uid="HeadingSettingsScanAction" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingScanAction, Mode=TwoWay}">
+                            <RadioButton x:Uid="OptionSettingsScanActionAdd" Margin="0,0,12,0"/>
+                            <RadioButton x:Uid="OptionSettingsScanActionStartFresh"/>
+                        </muxc:RadioButtons>
+                    </StackPanel>
+                </muxc:Expander>
 
                 <TextBlock x:Uid="HeadingSettingsPersonalization" Style="{StaticResource BaseTextBlockStyle}" Margin="0,24,0,12" AutomationProperties.HeadingLevel="Level2"/>
                 <!-- Setting Theme -->
@@ -266,7 +286,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Editor Orientation -->
-                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsEditorOrientation.Text}">
+                <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsEditorOrientation.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -274,7 +294,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC8F;" FontSize="16" Margin="0,0,16,0"/>
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xECE7;" FontSize="16" Margin="0,0,16,0"/>
                             <TextBlock x:Name="HeadingSettingsEditorOrientation" Grid.Column="1" x:Uid="HeadingSettingsEditorOrientation" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                         </Grid>
                     </muxc:Expander.Header>
@@ -283,6 +303,23 @@
                             <RadioButton x:Uid="OptionSettingsEditorOrientationHorizontal" Margin="0,0,12,0"/>
                             <RadioButton x:Uid="OptionSettingsEditorOrientationVertical"/>
                         </muxc:RadioButtons>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting Animations -->
+                <muxc:Expander x:Name="ExpanderAnimations" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAnimations.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE805;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsAnimations" Grid.Column="1" x:Uid="HeadingSettingsAnimations" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <CheckBox x:Uid="OptionSettingsAnimations" IsChecked="{x:Bind ViewModel.SettingAnimations, Mode=TwoWay}"/>
                     </StackPanel>
                 </muxc:Expander>
 

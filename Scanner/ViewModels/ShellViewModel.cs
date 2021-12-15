@@ -114,6 +114,20 @@ namespace Scanner.ViewModels
             }
         }
 
+        private int _NumberOfPages;
+        public int NumberOfPages
+        {
+            get => _NumberOfPages;
+            set => SetProperty(ref _NumberOfPages, value);
+        }
+
+        private bool _ShowAnimations;
+        public bool ShowAnimations
+        {
+            get => _ShowAnimations;
+            set => SetProperty(ref _ShowAnimations, value);
+        }
+
         private AppWideStatusMessage _DebugStatusMessage = new AppWideStatusMessage();
         public AppWideStatusMessage DebugStatusMessage
         {
@@ -136,11 +150,11 @@ namespace Scanner.ViewModels
         public ShellViewModel()
         {
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
+            Messenger.Register<SettingsRequestShellMessage>(this, (r, m) => DisplaySettingsView(r, m));
             Messenger.Register<AppWideStatusMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
             Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
-            Messenger.Register<SettingsRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Settings);
             Messenger.Register<NarratorAnnouncementMessage>(this, (r, m) => RequestNarratorAnnouncement(m.AnnouncementText));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
@@ -148,8 +162,10 @@ namespace Scanner.ViewModels
             DebugShowFeedbackDialogCommand = new RelayCommand(DebugShowFeedbackDialog);
             StoreRatingCommand = new AsyncRelayCommand(DisplayStoreRatingDialogAsync);
             ViewLoadedCommand = new RelayCommand(ViewLoaded);
+            RefreshAnimationsSetting();
 
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultChanged += ScanResultService_ScanResultChanged;
@@ -176,6 +192,36 @@ namespace Scanner.ViewModels
             AppCenterService.TrackEvent(AppCenterEvent.HelpRequested, new Dictionary<string, string> {
                             { "Topic", m.HelpTopic.ToString() },
                         });
+        }
+
+        private async void DisplaySettingsView(object r, SettingsRequestShellMessage m)
+        {
+            DisplayedViewChanged = new TaskCompletionSource<bool>();
+
+            // ensure that settings are displayed and wait until they're ready
+            DisplayedView = ShellNavigationSelectableItem.Settings;
+            await DisplayedViewChanged.Task;
+
+            // relay requested section
+            var newRequest = new SettingsRequestMessage(m.SettingsSection);
+            Messenger.Send(newRequest);
+
+            AppCenterService.TrackEvent(AppCenterEvent.SettingsRequested, new Dictionary<string, string> {
+                            { "Section", m.SettingsSection.ToString() },
+                        });
+        }
+
+        private void RefreshAnimationsSetting()
+        {
+            ShowAnimations = (bool)SettingsService.GetSetting(AppSetting.SettingAnimations);
+        }
+
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
+        {
+            if (e == AppSetting.SettingAnimations)
+            {
+                RefreshAnimationsSetting();
+            }
         }
 
         private void Window_Activated(object sender, WindowActivatedEventArgs e)
@@ -256,17 +302,27 @@ namespace Scanner.ViewModels
 
         private void ScanResultService_ScanResultChanged(object sender, EventArgs e)
         {
-            if (ScanResultService.Result?.NumberOfPages >= 2)
+            if (ScanResultService.Result != null)
             {
-                RequestTutorialPageListIfNeeded();
+                NumberOfPages = ScanResultService.Result.NumberOfPages;
+
+                if (ScanResultService.Result.NumberOfPages >= 2)
+                {
+                    RequestTutorialPageListIfNeeded();
+                }
             }
         }
 
         private void ScanResultService_ScanResultCreated(object sender, ScanResult e)
         {
-            if (ScanResultService.Result?.NumberOfPages >= 2)
+            if (ScanResultService.Result != null)
             {
-                RequestTutorialPageListIfNeeded();
+                NumberOfPages = ScanResultService.Result.NumberOfPages;
+
+                if (ScanResultService.Result.NumberOfPages >= 2)
+                {
+                    RequestTutorialPageListIfNeeded();
+                }
             }
         }
 
@@ -297,6 +353,7 @@ namespace Scanner.ViewModels
         private void ScanResultService_ScanResultDismissed(object sender, EventArgs e)
         {
             RefreshAppTitle("");
+            NumberOfPages = 0;
         }
 
         private void ViewLoaded()

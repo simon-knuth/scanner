@@ -64,7 +64,9 @@ namespace Scanner.Services
         ShowAutoRotationMessage,
         SetupCompleted,
         SettingAutoRotateLanguage,
-        SettingShowAdvancedScanOptions
+        SettingShowAdvancedScanOptions,
+        SettingAnimations,
+        SettingScanAction
     }
 
     public enum SettingSaveLocationType
@@ -84,5 +86,11 @@ namespace Scanner.Services
     {
         Vertical = 1,
         Horizontal = 0
+    }
+
+    public enum SettingScanAction
+    {
+        AddToExisting = 0,
+        StartFresh = 1
     }
 }

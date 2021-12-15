@@ -11,7 +11,6 @@
         Feeder = 3
     }
 
-
     /// <summary>
     ///     The possible scanner color modes.
     /// </summary>
@@ -24,7 +23,6 @@
         Automatic = 4
     }
 
-
     /// <summary>
     ///     The possible scanner auto crop modes.
     /// </summary>
@@ -34,5 +32,39 @@
         Disabled = 1,
         SingleRegion = 2,
         MultipleRegions = 3
+    }
+
+    /// <summary>
+    ///     Available help topics.
+    /// </summary>
+    public enum HelpTopic
+    {
+        ScannerDiscovery,
+        ScannerNotWorking,
+        ChooseResolution,
+        BrightnessContrast,
+        AutoCrop,
+        SaveChanges,
+        ChangeScanFolder,
+        ChooseFileFormat,
+        StartNewPdf,
+        ReorderPdfPages
+    }
+
+    /// <summary>
+    ///     Available settings section.
+    /// </summary>
+    public enum SettingsSection
+    {
+        SaveLocation,
+        AutoRotation,
+        FileNaming,
+        ScanOptions,
+        ScanAction,
+        Theme,
+        EditorOrientation,
+        Animations,
+        ErrorReports,
+        Surveys
     }
 }
