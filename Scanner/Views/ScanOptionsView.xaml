@@ -53,6 +53,7 @@
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
             <converters:SignedIntConverter x:Key="SignedIntConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
+            <converters:ScanActionVisibilityConverter x:Key="ScanActionVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -712,7 +713,7 @@
                 </Button>
             </StackPanel>
 
-            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanDefaultCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -724,8 +725,8 @@
 
                 <Grid>
                     <StackPanel x:Name="StackPanelButtonScan" Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay, FallbackValue=Collapsed}"/>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}" Visibility="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay}"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity, Mode=OneWay}" Visibility="{x:Bind ViewModel.NextDefaultScanAction, Mode=OneWay, Converter={StaticResource ScanActionVisibilityConverter}, ConverterParameter=1}"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;" Margin="0,0,12,0" FontSize="16" Opacity="{x:Bind TextBlockButtonScan.Opacity}"  Visibility="{x:Bind ViewModel.NextDefaultScanAction, Mode=OneWay, Converter={StaticResource ScanActionVisibilityConverter}, ConverterParameter=2}"/>
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
                     <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="True" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24" Visibility="Collapsed"/>
@@ -733,8 +734,12 @@
 
                 <muxc:SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" FontWeight="Normal" Command="{x:Bind ViewModel.ScanFreshCommand}">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Visibility="{x:Bind ViewModel.NextDefaultScanAction, Mode=OneWay, Converter={StaticResource ScanActionVisibilityConverter}, ConverterParameter=1}"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Command="{x:Bind ViewModel.ScanFreshCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>

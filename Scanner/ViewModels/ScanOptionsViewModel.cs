@@ -51,6 +51,7 @@ namespace Scanner.ViewModels
         public RelayCommand ResetBrightnessCommand;
         public RelayCommand ResetContrastCommand;
 
+        public AsyncRelayCommand ScanDefaultCommand;
         public AsyncRelayCommand ScanCommand;
         public AsyncRelayCommand ScanFreshCommand;
         public RelayCommand CancelScanCommand;
@@ -306,6 +307,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _NextScanMustBeFresh, value);
         }
 
+        private ScanAction _NextDefaultScanAction;
+        public ScanAction NextDefaultScanAction
+        {
+            get => _NextDefaultScanAction;
+            set => SetProperty(ref _NextDefaultScanAction, value);
+        }
+
         private bool _IsScanResultChanging;
         public bool IsScanResultChanging
         {
@@ -379,6 +387,7 @@ namespace Scanner.ViewModels
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
             DebugDeleteScanOptionsFromDatabaseCommand = new RelayCommand(DebugDeleteScanOptionsFromDatabase);
+            ScanDefaultCommand = new AsyncRelayCommand(async () => await ScanAsync(NextDefaultScanAction == ScanAction.StartFresh, false));
             ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
             ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(true, false));
             DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
@@ -978,11 +987,11 @@ namespace Scanner.ViewModels
         {
             return new ObservableCollection<ScannerFileFormat>()
             {
-                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Jpeg),
-                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Png),
-                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Pdf),
-                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.Tiff),
-                new ScannerFileFormat(Windows.Devices.Scanners.ImageScannerFormat.DeviceIndependentBitmap)
+                new ScannerFileFormat(ImageScannerFormat.Jpeg),
+                new ScannerFileFormat(ImageScannerFormat.Png),
+                new ScannerFileFormat(ImageScannerFormat.Pdf),
+                new ScannerFileFormat(ImageScannerFormat.Tiff),
+                new ScannerFileFormat(ImageScannerFormat.DeviceIndependentBitmap)
             };
         }
 
@@ -1149,7 +1158,7 @@ namespace Scanner.ViewModels
                 if (PersistentScanOptionsDatabaseService != null
                     && (ScannerBrightnessConfig != null || ScannerContrastConfig != null))
                 {
-                    PersistentScanOptions persistentScanOptions = 
+                    PersistentScanOptions persistentScanOptions =
                         PersistentScanOptionsDatabaseService.GetPersistentScanOptionsForScanner(SelectedScanner);
 
                     if (persistentScanOptions == null) persistentScanOptions = new PersistentScanOptions();
@@ -1347,7 +1356,7 @@ namespace Scanner.ViewModels
                 SettingsService.LastSaveLocationPath = targetFolder.Path;
             }
             catch (Exception exc)
-            {                
+            {
                 LogService?.Log.Error(exc, "Unhandled exception occurred during scan.");
                 if (exc.GetType() == typeof(TaskCanceledException)) return;
 
@@ -1420,6 +1429,7 @@ namespace Scanner.ViewModels
                 CanAddToScanResult = false;
                 CanAddToScanResultDocument = false;
                 NextScanMustBeFresh = false;
+                NextDefaultScanAction = ScanAction.AddPages;
             }
             else
             {
@@ -1430,6 +1440,24 @@ namespace Scanner.ViewModels
                     CanAddToScanResult = true;
                     CanAddToScanResultDocument = ScanResultService.Result.ScanResultFormat == ImageScannerFormat.Pdf;
                     NextScanMustBeFresh = false;
+
+                    switch ((SettingScanAction)SettingsService.GetSetting(AppSetting.SettingScanAction))
+                    {
+                        case SettingScanAction.StartFresh:
+                            NextDefaultScanAction = ScanAction.StartFresh;
+                            break;
+                        case SettingScanAction.AddToExisting:
+                        default:
+                            if (ScanResultService.Result.ScanResultFormat == ImageScannerFormat.Pdf)
+                            {
+                                NextDefaultScanAction = ScanAction.AddPagesToDocument;
+                            }
+                            else
+                            {
+                                NextDefaultScanAction = ScanAction.AddPages;
+                            }
+                            break;
+                    }
                 }
                 else
                 {
@@ -1438,6 +1466,7 @@ namespace Scanner.ViewModels
                     CanAddToScanResult = false;
                     CanAddToScanResultDocument = false;
                     NextScanMustBeFresh = true;
+                    NextDefaultScanAction = ScanAction.StartFresh;
                 }
             }
         }
@@ -1463,6 +1492,10 @@ namespace Scanner.ViewModels
             {
                 SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
             }
+            else if (e == AppSetting.SettingScanAction)
+            {
+                RefreshCanAddToScanResult();
+            }
         }
 
         private void ResetBrightness()
@@ -1482,5 +1515,12 @@ namespace Scanner.ViewModels
                 SelectedContrast = ScannerContrastConfig.DefaultContrast;
             }
         }
+    }
+
+    public enum ScanAction
+    {
+        AddPages = 0,
+        AddPagesToDocument = 1,
+        StartFresh = 2
     }
 }

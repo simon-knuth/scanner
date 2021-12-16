@@ -23,19 +23,22 @@ namespace Scanner.Views
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.NextScanMustBeFresh))
+            if (e.PropertyName == nameof(ViewModel.NextDefaultScanAction))
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
-                    if (ViewModel.NextScanMustBeFresh)
+                    switch (ViewModel.NextDefaultScanAction)
                     {
-                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
-                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                    }
-                    else
-                    {
-                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                        case ViewModels.ScanAction.AddPages:
+                        case ViewModels.ScanAction.AddPagesToDocument:
+                        default:
+                            MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                            MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                            break;
+                        case ViewModels.ScanAction.StartFresh:
+                            MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                            MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                            break;
                     }
                 });
             }
