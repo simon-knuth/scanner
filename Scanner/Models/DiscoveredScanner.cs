@@ -170,6 +170,12 @@ namespace Scanner.Models
                     };
                 }
             }
+
+            if (!IsAutoAllowed && !IsFlatbedAllowed && !IsFeederAllowed)
+            {
+                // no source mode allowed, scanner is invalid and useless
+                throw new ArgumentException("Scanner doesn't support any source mode and can't be used.");
+            }
         }
 
         public DiscoveredScanner(string name)

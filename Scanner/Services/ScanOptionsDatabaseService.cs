@@ -144,6 +144,7 @@ namespace Scanner.Services
                             result.Resolution = float.Parse(query.GetString(3));
                             result.FeederMultiplePages = Convert.ToBoolean(int.Parse(query.GetString(4)));
                             result.FeederDuplex = Convert.ToBoolean(int.Parse(query.GetString(5)));
+                            result.AutoCropMode = (ScannerAutoCropMode)int.Parse(query.GetString(7));
                             break;
                         case ScannerSource.None:
                         case ScannerSource.Auto:

@@ -547,7 +547,7 @@
                 </controls:Case>
             </controls:SwitchPresenter>
 
-            <Grid x:Name="GridScanning" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" SizeChanged="GridScanning_SizeChanged" Loaded="GridScanning_Loaded">
+            <Grid x:Name="GridScanning" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="GridScanning_Loaded" SizeChanged="GridScanning_SizeChanged">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
                 </animations:Implicit.ShowAnimations>
@@ -568,11 +568,11 @@
                 <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
                     <media:UIElementExtensions.VisualFactory>
                         <media:PipelineVisualFactory>
-                            <media:BlurEffect Amount="40"/>
+                            <media:BlurEffect Amount="10"/>
                         </media:PipelineVisualFactory>
                     </media:UIElementExtensions.VisualFactory>
 
-                    <Rectangle HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Top" Fill="{ThemeResource SystemAccentColor}" Visibility="{x:Bind GridLoading.Visibility, Mode=OneWay}">
+                    <Rectangle HorizontalAlignment="Stretch" Height="80" VerticalAlignment="Top" Fill="{ThemeResource SystemAccentColor}" Visibility="{x:Bind GridLoading.Visibility, Mode=OneWay}">
                         <animations:Implicit.HideAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.2" To="0.0"/>
                         </animations:Implicit.HideAnimations>
@@ -580,7 +580,7 @@
                         <animations:Explicit.Animations>
                             <animations:AnimationSet x:Name="ScanningAnimation">
                                 <animations:AnimationScope>
-                                    <animations:OpacityAnimation Duration="0:0:3" From="0.0" To="0.1" DelayBehavior="SetInitialValueBeforeDelay"/>
+                                    <animations:OpacityAnimation Duration="0:0:0.6" From="0.0" To="0.2" DelayBehavior="SetInitialValueBeforeDelay"/>
                                     <animations:TranslationAnimation Duration="0:0:6" Repeat="Forever" DelayBehavior="SetInitialValueBeforeDelay">
                                         <animations:Vector3KeyFrame Key="0.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
                                         <animations:Vector3KeyFrame x:Name="KeyFrameScanningAnimation" Key="0.5" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
@@ -591,6 +591,8 @@
                         </animations:Explicit.Animations>
                     </Rectangle>
                 </Frame>
+
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
             </Grid>
 
             <Grid x:Name="GridLoading" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

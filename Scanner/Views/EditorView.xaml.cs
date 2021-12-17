@@ -744,7 +744,7 @@ namespace Scanner.Views
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     ScanningAnimation.Stop();
-                    KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
+                    KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 80},0";
                     ScanningAnimation.Start();
                 });
             }
@@ -754,7 +754,7 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 100},0";
+                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 80},0";
             });
         }
     }

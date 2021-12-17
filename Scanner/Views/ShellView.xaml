@@ -167,6 +167,7 @@
                         <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
                         <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="NavigationViewItemMainPageList.InfoBadge" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -186,6 +187,7 @@
 
                     <VisualState.Setters>
                         <Setter Target="NavigationViewItemMainPageList.IsEnabled" Value="False"/>
+                        <Setter Target="NavigationViewItemMainPageList.InfoBadge" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -244,7 +246,7 @@
                     </muxc:NavigationViewItem.RenderTransform>
 
                     <muxc:NavigationViewItem.InfoBadge>
-                        <muxc:InfoBadge Value="{x:Bind ViewModel.NumberOfPages, Mode=OneWay}" Visibility="{x:Bind ViewModel.NumberOfPages, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}}"/>
+                        <muxc:InfoBadge x:Name="InfoBadgePageList" Value="{x:Bind ViewModel.NumberOfPages, Mode=OneWay}" Visibility="{x:Bind ViewModel.NumberOfPages, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}}"/>
                     </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Visibility="Collapsed" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainEditor, Converter={StaticResource ToolTipConverter}}">
