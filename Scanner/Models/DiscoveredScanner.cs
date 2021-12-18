@@ -95,38 +95,47 @@ namespace Scanner.Models
                 IsFlatbedMonochromeAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
                 IsFlatbedAutoColorAllowed = device.FlatbedConfiguration.IsColorModeSupported(ImageScannerColorMode.AutoColor);
 
-                IsFlatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
-
-                IsFlatbedAutoCropSingleRegionAllowed = device.FlatbedConfiguration
-                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
-                IsFlatbedAutoCropMultiRegionAllowed = device.FlatbedConfiguration
-                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
-
-                FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
-
-                FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
-
-                if (device.FlatbedConfiguration.BrightnessStep != 0)
+                if (!IsFlatbedColorAllowed && !IsFlatbedGrayscaleAllowed && !IsFlatbedMonochromeAllowed && !IsFlatbedAutoColorAllowed)
                 {
-                    FlatbedBrightnessConfig = new BrightnessConfig
-                    {
-                        MinBrightness = device.FlatbedConfiguration.MinBrightness,
-                        MaxBrightness = device.FlatbedConfiguration.MaxBrightness,
-                        BrightnessStep = (int)device.FlatbedConfiguration.BrightnessStep,
-                        DefaultBrightness = device.FlatbedConfiguration.DefaultBrightness,
-                    };
+                    // no color mode allowed, source mode is invalid
+                    IsFlatbedAllowed = false;
+                    LogService.Log.Warning("DiscoveredScanner: No color mode for flatbed allowed, invalid source mode");
                 }
-
-                if (device.FlatbedConfiguration.ContrastStep != 0)
+                else
                 {
-                    FlatbedContrastConfig = new ContrastConfig
+                    IsFlatbedPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Flatbed);
+
+                    IsFlatbedAutoCropSingleRegionAllowed = device.FlatbedConfiguration
+                        .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
+                    IsFlatbedAutoCropMultiRegionAllowed = device.FlatbedConfiguration
+                        .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
+
+                    FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
+
+                    FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
+
+                    if (device.FlatbedConfiguration.BrightnessStep != 0)
                     {
-                        MinContrast = device.FlatbedConfiguration.MinContrast,
-                        MaxContrast = device.FlatbedConfiguration.MaxContrast,
-                        ContrastStep = (int)device.FlatbedConfiguration.ContrastStep,
-                        DefaultContrast = device.FlatbedConfiguration.DefaultContrast,
-                    };
-                }
+                        FlatbedBrightnessConfig = new BrightnessConfig
+                        {
+                            MinBrightness = device.FlatbedConfiguration.MinBrightness,
+                            MaxBrightness = device.FlatbedConfiguration.MaxBrightness,
+                            BrightnessStep = (int)device.FlatbedConfiguration.BrightnessStep,
+                            DefaultBrightness = device.FlatbedConfiguration.DefaultBrightness,
+                        };
+                    }
+
+                    if (device.FlatbedConfiguration.ContrastStep != 0)
+                    {
+                        FlatbedContrastConfig = new ContrastConfig
+                        {
+                            MinContrast = device.FlatbedConfiguration.MinContrast,
+                            MaxContrast = device.FlatbedConfiguration.MaxContrast,
+                            ContrastStep = (int)device.FlatbedConfiguration.ContrastStep,
+                            DefaultContrast = device.FlatbedConfiguration.DefaultContrast,
+                        };
+                    }
+                }                
             }
 
             if (IsFeederAllowed)
@@ -136,38 +145,47 @@ namespace Scanner.Models
                 IsFeederMonochromeAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.Monochrome);
                 IsFeederAutoColorAllowed = device.FeederConfiguration.IsColorModeSupported(ImageScannerColorMode.AutoColor);
 
-                IsFeederDuplexAllowed = device.FeederConfiguration.CanScanDuplex;
-                IsFeederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
-
-                IsFeederAutoCropSingleRegionAllowed = device.FeederConfiguration
-                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
-                IsFeederAutoCropMultiRegionAllowed = device.FeederConfiguration
-                    .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
-
-                FeederResolutions = GenerateResolutions(device.FeederConfiguration);
-
-                FeederFormats = GenerateFormats(device.FeederConfiguration);
-
-                if (device.FeederConfiguration.BrightnessStep != 0)
+                if (!IsFeederColorAllowed && !IsFeederGrayscaleAllowed && !IsFeederMonochromeAllowed && !IsFeederAutoColorAllowed)
                 {
-                    FeederBrightnessConfig = new BrightnessConfig
-                    {
-                        MinBrightness = device.FeederConfiguration.MinBrightness,
-                        MaxBrightness = device.FeederConfiguration.MaxBrightness,
-                        BrightnessStep = (int)device.FeederConfiguration.BrightnessStep,
-                        DefaultBrightness = device.FeederConfiguration.DefaultBrightness,
-                    };
+                    // no color mode allowed, source mode is invalid
+                    IsFeederAllowed = false;
+                    LogService.Log.Warning("DiscoveredScanner: No color mode for feeder allowed, invalid source mode");
                 }
-
-                if (device.FeederConfiguration.ContrastStep != 0)
+                else
                 {
-                    FeederContrastConfig = new ContrastConfig
+                    IsFeederDuplexAllowed = device.FeederConfiguration.CanScanDuplex;
+                    IsFeederPreviewAllowed = device.IsPreviewSupported(ImageScannerScanSource.Feeder);
+
+                    IsFeederAutoCropSingleRegionAllowed = device.FeederConfiguration
+                        .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.SingleRegion);
+                    IsFeederAutoCropMultiRegionAllowed = device.FeederConfiguration
+                        .IsAutoCroppingModeSupported(ImageScannerAutoCroppingMode.MultipleRegion);
+
+                    FeederResolutions = GenerateResolutions(device.FeederConfiguration);
+
+                    FeederFormats = GenerateFormats(device.FeederConfiguration);
+
+                    if (device.FeederConfiguration.BrightnessStep != 0)
                     {
-                        MinContrast = device.FeederConfiguration.MinContrast,
-                        MaxContrast = device.FeederConfiguration.MaxContrast,
-                        ContrastStep = (int)device.FeederConfiguration.ContrastStep,
-                        DefaultContrast = device.FeederConfiguration.DefaultContrast,
-                    };
+                        FeederBrightnessConfig = new BrightnessConfig
+                        {
+                            MinBrightness = device.FeederConfiguration.MinBrightness,
+                            MaxBrightness = device.FeederConfiguration.MaxBrightness,
+                            BrightnessStep = (int)device.FeederConfiguration.BrightnessStep,
+                            DefaultBrightness = device.FeederConfiguration.DefaultBrightness,
+                        };
+                    }
+
+                    if (device.FeederConfiguration.ContrastStep != 0)
+                    {
+                        FeederContrastConfig = new ContrastConfig
+                        {
+                            MinContrast = device.FeederConfiguration.MinContrast,
+                            MaxContrast = device.FeederConfiguration.MaxContrast,
+                            ContrastStep = (int)device.FeederConfiguration.ContrastStep,
+                            DefaultContrast = device.FeederConfiguration.DefaultContrast,
+                        };
+                    }
                 }
             }
 
