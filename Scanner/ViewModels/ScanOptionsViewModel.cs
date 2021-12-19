@@ -387,10 +387,26 @@ namespace Scanner.ViewModels
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
             DebugDeleteScanOptionsFromDatabaseCommand = new RelayCommand(DebugDeleteScanOptionsFromDatabase);
-            ScanDefaultCommand = new AsyncRelayCommand(async () => await ScanAsync(NextDefaultScanAction == ScanAction.StartFresh, false));
-            ScanCommand = new AsyncRelayCommand(async () => await ScanAsync(false, false));
-            ScanFreshCommand = new AsyncRelayCommand(async () => await ScanAsync(true, false));
-            DebugScanCommand = new AsyncRelayCommand(async () => await ScanAsync(DebugScanStartFresh == true, true));
+            ScanDefaultCommand = new AsyncRelayCommand(async () =>
+            {
+                if (ScanDefaultCommand.IsRunning) return;      // already running?
+                await ScanAsync(NextDefaultScanAction == ScanAction.StartFresh, false);
+            });
+            ScanCommand = new AsyncRelayCommand(async () =>
+            {
+                if (ScanCommand.IsRunning) return;      // already running?
+                await ScanAsync(false, false);
+            });
+            ScanFreshCommand = new AsyncRelayCommand(async () =>
+            {
+                if (ScanCommand.IsRunning) return;      // already running?
+                await ScanAsync(true, false);
+            });
+            DebugScanCommand = new AsyncRelayCommand(async () =>
+            {
+                if (ScanCommand.IsRunning) return;      // already running?
+                await ScanAsync(DebugScanStartFresh == true, false);
+            });
             CancelScanCommand = new RelayCommand(CancelScan);
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
             ResetBrightnessCommand = new RelayCommand(ResetBrightness);
@@ -930,13 +946,13 @@ namespace Scanner.ViewModels
                 FeederDuplex = FeederDuplex,
                 Format = SelectedFileFormat
             };
-            LogService?.Log.Information("CreateScanOptions: {@Result}", result);
 
             if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
 
             if (ScannerBrightnessConfig != null) result.Brightness = SelectedBrightness;
             if (ScannerContrastConfig != null) result.Contrast = SelectedContrast;
 
+            LogService?.Log.Information("CreateScanOptions: {@Result}", result);
             return result;
         }
 
@@ -1136,10 +1152,8 @@ namespace Scanner.ViewModels
 
         private async Task ScanAsync(bool startFresh, bool debug)
         {
-            if (ScanCommand.IsRunning) return;      // already running?
-
             LogService?.Log.Information("ScanAsync");
-            StorageFolder targetFolder;
+            StorageFolder targetFolder = null;
             bool askForFolder = (!CanAddToScanResultDocument || startFresh)
                 && (SettingSaveLocationType)SettingsService.GetSetting(AppSetting.SettingSaveLocationType) == SettingSaveLocationType.AskEveryTime;
             int numberOfScannedPages = 0;
@@ -1206,7 +1220,24 @@ namespace Scanner.ViewModels
                         LogService?.Log.Information("ScanAsync: Ask for save location");
                         var pickerFolder = new FolderPicker();
                         pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                        targetFolder = await pickerFolder.PickSingleFolderAsync();
+                        
+                        try
+                        {
+                            targetFolder = await pickerFolder.PickSingleFolderAsync();
+                        }
+                        catch (Exception exc)
+                        {
+                            LogService?.Log.Warning(exc, "The selected folder is invalid");
+                            Messenger.Send(new AppWideStatusMessage
+                            {
+                                Title = LocalizedString("ErrorMessagePickFolderHeading"),
+                                MessageText = LocalizedString("ErrorMessagePickFolderBody"),
+                                AdditionalText = exc.Message,
+                                Severity = AppWideStatusMessageSeverity.Error
+                            });
+                            exc.Data.Add("NoMessage", true);
+                            throw;
+                        }
 
                         if (targetFolder == null) return;
                     }
@@ -1292,7 +1323,22 @@ namespace Scanner.ViewModels
                             LogService?.Log.Information("ScanAsync: Ask for save location");
                             var pickerFolder = new FolderPicker();
                             pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                            targetFolder = await pickerFolder.PickSingleFolderAsync();
+                            try
+                            {
+                                targetFolder = await pickerFolder.PickSingleFolderAsync();
+                            }
+                            catch (Exception exc)
+                            {
+                                LogService?.Log.Warning(exc, "The selected folder is invalid");
+                                Messenger.Send(new AppWideStatusMessage
+                                {
+                                    Title = LocalizedString("ErrorMessagePickFolderHeading"),
+                                    MessageText = LocalizedString("ErrorMessagePickFolderBody"),
+                                    AdditionalText = exc.Message,
+                                    Severity = AppWideStatusMessageSeverity.Error
+                                });
+                                exc.Data.Add("NoMessage", true);
+                            }                            
 
                             if (targetFolder == null) throw new ArgumentException("No folder selected");
                         }
@@ -1357,6 +1403,7 @@ namespace Scanner.ViewModels
             }
             catch (Exception exc)
             {
+                if (exc.Data.Contains("NoMessage")) return;
                 LogService?.Log.Error(exc, "Unhandled exception occurred during scan.");
                 if (exc.GetType() == typeof(TaskCanceledException)) return;
 

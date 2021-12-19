@@ -131,6 +131,7 @@ namespace Scanner.Services
             LogService?.Log.Information("GetScanAsync");
             IsScanInProgress = true;
             ImageScannerScanResult result = null;
+            ScanCancellationToken = new CancellationTokenSource();
 
             try
             {
@@ -139,7 +140,6 @@ namespace Scanner.Services
                     // real scanner ~> configure scanner and commence scan
                     scanner.ConfigureForScanOptions(options);
 
-                    ScanCancellationToken = new CancellationTokenSource();
                     _ScanProgress = new Progress<uint>();
                     _ScanProgress.ProgressChanged += (x, y) => PageScanned?.Invoke(this, y);
                     result = await scanner.Device.ScanFilesToFolderAsync
@@ -153,7 +153,7 @@ namespace Scanner.Services
                 else
                 {
                     // debug scanner ~> throw exception
-                    await Task.Delay(4000);
+                    await Task.Delay(5000, ScanCancellationToken.Token);
                     throw new ArgumentException("Can't scan with a debug scanner, duh");
                 }
             }
