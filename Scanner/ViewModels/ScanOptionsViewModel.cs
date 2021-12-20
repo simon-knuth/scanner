@@ -1218,12 +1218,13 @@ namespace Scanner.ViewModels
                     {
                         // user has to select location
                         LogService?.Log.Information("ScanAsync: Ask for save location");
-                        var pickerFolder = new FolderPicker();
-                        pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                        var folderPicker = new FolderPicker();
+                        folderPicker.FileTypeFilter.Add("*");
+                        folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                         
                         try
                         {
-                            targetFolder = await pickerFolder.PickSingleFolderAsync();
+                            targetFolder = await folderPicker.PickSingleFolderAsync();
                         }
                         catch (Exception exc)
                         {
@@ -1321,11 +1322,13 @@ namespace Scanner.ViewModels
                         {
                             // user has to select location
                             LogService?.Log.Information("ScanAsync: Ask for save location");
-                            var pickerFolder = new FolderPicker();
-                            pickerFolder.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                            var folderPicker = new FolderPicker();
+                            folderPicker.FileTypeFilter.Add("*");
+                            folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+
                             try
                             {
-                                targetFolder = await pickerFolder.PickSingleFolderAsync();
+                                targetFolder = await folderPicker.PickSingleFolderAsync();
                             }
                             catch (Exception exc)
                             {

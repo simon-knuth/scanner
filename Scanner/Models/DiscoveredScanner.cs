@@ -135,7 +135,7 @@ namespace Scanner.Models
                             DefaultContrast = device.FlatbedConfiguration.DefaultContrast,
                         };
                     }
-                }                
+                }
             }
 
             if (IsFeederAllowed)
@@ -194,6 +194,8 @@ namespace Scanner.Models
                 // no source mode allowed, scanner is invalid and useless
                 throw new ArgumentException("Scanner doesn't support any source mode and can't be used.");
             }
+
+            LogService.Log.Information("Created {@DiscoveredScanner}", this);
         }
 
         public DiscoveredScanner(string name)

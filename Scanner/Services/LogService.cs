@@ -122,6 +122,48 @@ namespace Scanner.Services
                             OriginalFormat = f.OriginalFormat,
                             RequiresConversion = f.RequiresConversion
                         })
+                    .Destructure.ByTransforming<DiscoveredScanner>(
+                        s => new
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            IsAutoAllowed = s.IsAutoAllowed,
+                            IsAutoPreviewAllowed = s.IsAutoPreviewAllowed,
+                            AutoFormats = s.AutoFormats,
+                            IsFlatbedAllowed = s.IsFlatbedAllowed,
+                            IsFlatbedColorAllowed = s.IsFlatbedColorAllowed,
+                            IsFlatbedGrayscaleAllowed = s.IsFlatbedGrayscaleAllowed,
+                            IsFlatbedMonochromeAllowed = s.IsFlatbedMonochromeAllowed,
+                            IsFlatbedAutoColorAllowed = s.IsFlatbedAutoColorAllowed,
+                            IsFlatbedPreviewAllowed = s.IsFlatbedPreviewAllowed,
+                            IsFlatbedAutoCropSingleRegionAllowed = s.IsFlatbedAutoCropSingleRegionAllowed,
+                            IsFlatbedAutoCropMultiRegionAllowed = s.IsFlatbedAutoCropMultiRegionAllowed,
+                            IsFlatbedAutoCropPossible = s.IsFlatbedAutoCropPossible,
+                            FlatbedResolutions = s.FlatbedResolutions,
+                            FlatbedFormats = s.FlatbedFormats,
+                            FlatbedBrightnessConfig = s.FlatbedBrightnessConfig,
+                            FlatbedContrastConfig = s.FlatbedContrastConfig,
+                            IsFeederAllowed = s.IsFeederAllowed,
+                            IsFeederColorAllowed = s.IsFeederColorAllowed,
+                            IsFeederGrayscaleAllowed = s.IsFeederGrayscaleAllowed,
+                            IsFeederMonochromeAllowed = s.IsFeederMonochromeAllowed,
+                            IsFeederAutoColorAllowed = s.IsFeederAutoColorAllowed,
+                            IsFeederDuplexAllowed = s.IsFeederDuplexAllowed,
+                            IsFeederPreviewAllowed = s.IsFeederPreviewAllowed,
+                            IsFeederAutoCropSingleRegionAllowed = s.IsFeederAutoCropSingleRegionAllowed,
+                            IsFeederAutoCropMultiRegionAllowed = s.IsFeederAutoCropMultiRegionAllowed,
+                            IsFeederAutoCropPossible = s.IsFeederAutoCropPossible,
+                            FeederResolutions = s.FeederResolutions,
+                            FeederFormats = s.FeederFormats,
+                            FeederBrightnessConfig = s.FeederBrightnessConfig,
+                            FeederContrastConfig = s.FeederContrastConfig
+                        })
+                    .Destructure.ByTransforming<ScanResolution>(
+                        r => new
+                        {
+                            Resolution = r.Resolution.DpiX,
+                            Annotation = r.Annotation
+                        })
                     .CreateLogger();
 
             log.Information("--- Log initialized ---");
