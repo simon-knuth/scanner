@@ -1449,4 +1449,28 @@ If you&apos;re using a more professional scanner, you can now apply advanced sca
     <value>Scanner usage</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animations</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Show animations</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Default scan action</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Add to existing pages</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Start fresh</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Settings</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
 </root>
