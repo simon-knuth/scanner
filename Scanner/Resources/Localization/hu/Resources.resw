@@ -290,7 +290,7 @@
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>Szkennelés és kezdje újra</value>
+    <value>Szkennelés új fájlba</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
@@ -618,7 +618,7 @@
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>Az alkalmazás itt gyűjti az oldalakat, amiket beszkenneltél egészen addig, amíg nem változtatsz a formátumon, vagy választod a szkennelés újraindítását. Amikor egy több oldalas PDF fájlt készítesz, szintén itt rendezheted át az oldalakat.</value>
+    <value>Az alkalmazás itt gyűjti az oldalakat, amiket beszkennelt egészen addig, amíg nem változtat a formátumon, vagy választja a &quot;Szkennelés új fájlba&quot; lehetőséget. Amikor egy több oldalas PDF fájlt készít, szintén itt rendezheti át az oldalakat.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
@@ -670,7 +670,7 @@
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Elismerések</value>
+    <value>Köszönet</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
@@ -719,7 +719,7 @@ Fuzzy</comment>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Elismerések</value>
+    <value>Köszönet</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -935,7 +935,7 @@ A felbontás kiválasztása **síkágyas vagy adagoló** módban lehetséges. Az
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Ha új PDF-fájlba szeretne beolvasni ahelyett, hogy egy meglévőhöz oldalakat adna hozzá, akkor nem kell újraindítania az alkalmazást. Csak válassza ki a szkennelés gomb melletti kis nyilat, és kezdje el újra.</value>
+    <value>Ha új PDF-fájlba szeretne beolvasni ahelyett, hogy egy meglévőhöz oldalakat adna hozzá, akkor nem kell újraindítania az alkalmazást. Csak kattintson a szkennelés gomb melletti kis nyílra, és válassza a &quot;Szkennelés új fájlba&quot; lehetőséget.</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
@@ -975,7 +975,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Új PDF indítása</value>
+    <value>Szkennelés új fájlba</value>
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
@@ -1043,7 +1043,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
   </data>
   <data name="TextScannerSearchRunning.Text" xml:space="preserve">
-    <value>Szkenner keresés...</value>
+    <value>Szkenner keresése...</value>
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
@@ -1127,11 +1127,11 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
-    <value>Adomány</value>
+    <value>Támogatom</value>
     <comment>The donation button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
-    <value>Nem, kösz</value>
+    <value>Köszönöm, nem</value>
     <comment>The cancel button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="TextPromiseNoAds.Text" xml:space="preserve">
@@ -1213,7 +1213,7 @@ A fényerő és a kontraszt beállítása csak **síkágyas vagy adagoló** mód
     <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
   </data>
   <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value>Autom. forgatás</value>
+    <value>Automatikus forgatás</value>
     <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
@@ -1297,7 +1297,7 @@ A fényerő és a kontraszt beállítása csak **síkágyas vagy adagoló** mód
     <comment>The heading for the scan options.</comment>
   </data>
   <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
-    <value>A szkennelések autom. vágása</value>
+    <value>Automatikus vágás</value>
     <comment>The heading for the help text on how to use automatic cropping.</comment>
   </data>
   <data name="TextHelpAutoCrop.Text" xml:space="preserve">
@@ -1436,5 +1436,21 @@ Ha professzionálisabb szkennert használ, mostantól speciális szkennelési be
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
     <value>App logó</value>
     <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Fájlok, mentés helye</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Szkenner használat</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Beállítások</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
   </data>
 </root>
