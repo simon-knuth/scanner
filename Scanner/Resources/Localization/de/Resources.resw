@@ -1449,4 +1449,28 @@ Wenn Sie einen professionelleren Scanner besitzen, können Sie nun auch erweiter
     <value>Scannerbenutzung</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animationen</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Animationen anzeigen</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Standardmäßige Scanaktion</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Zu bestehenden Seiten hinzufügen</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Neu beginnen</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Einstellungen</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
 </root>
