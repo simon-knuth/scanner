@@ -342,7 +342,7 @@
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="TextDialogRename.Text" xml:space="preserve">
-    <value>Inserisci un nuovo nome per il file:</value>
+    <value>Digita un nuovo nome per il file:</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
@@ -550,7 +550,7 @@
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Dai un feedback</value>
+    <value>Invia un feedback</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
@@ -858,7 +858,7 @@
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Divertiti con il nuovo aspetto fresco e invitante ispirato a Windows 11.</value>
+    <value>Goditi il nuovo aspetto fresco e invitante ispirato a Windows 11.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
@@ -878,7 +878,7 @@
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value>One o più pagine sono state automaticamente ruotate. Questa funzionalità può essere disabilitata nelle impostazioni.</value>
+    <value>Una o più pagine sono state automaticamente ruotate. Questa funzionalità può essere disabilitata nelle impostazioni.</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
@@ -904,7 +904,7 @@ Quando vedrai lo scanner nell&apos;app Impostazioni senza più l&apos;etichetta 
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
-    <value>Riavviare uno scanner di solito risolve molti problemi che potresti incontrare. Alcune volte l&apos;interfaccia di scansione di Windows non si comporta come aspettato e questo potrebbe richiedere il riavvio del PC.
+    <value>Riavviare uno scanner di solito risolve molti problemi che potresti incontrare. Alcune volte l&apos;interfaccia di scansione di Windows non si comporta come previsto e questo potrebbe richiedere il riavvio del PC.
 
 In casi molto rari, l&apos;installazione dello scanner potrebbe essere difettosa e dovresti rimuovere e poi riaggiungere lo scanner nell&apos;app Impostazioni nuovamente.
 
@@ -914,7 +914,7 @@ Per favore, consulta anche il manuale del tuo scanner per una guida aggiuntiva o
     <comment>The help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>Puoi cambiare le destinazione di salvataggio per le nuove scansioni nelle impostazioni. Se preferisci, la destinazione ti può essere richiesta ogni volta che scansioni qualcosa di nuovo - utile per inserire i documenti esattamente dove dovrebbero stare, invece che dover spostarli ogni volta.</value>
+    <value>Puoi cambiare la destinazione di salvataggio per le nuove scansioni nelle impostazioni. Se preferisci, la destinazione ti può essere richiesta ogni volta che scansioni qualcosa di nuovo - utile per inserire i documenti esattamente dove dovrebbero stare, invece che dover spostarli ogni volta.</value>
     <comment>The help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
@@ -1046,7 +1046,7 @@ Il formato PDF è molto popolare per i documenti e permette di salvare più pagi
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
-    <value>Il tuo scanner deve essere connesso, accendilo e installalo per poterlo usare. Per favore, consulta la pagina di aiuto per ulteriori informazioni.</value>
+    <value>Il tuo scanner deve essere connesso, acceso e installato per poterlo usare. Per favore, consulta la pagina di aiuto per ulteriori informazioni.</value>
     <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
   <data name="DialogScannerSearchTip.Title" xml:space="preserve">
@@ -1126,7 +1126,7 @@ Il formato PDF è molto popolare per i documenti e permette di salvare più pagi
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
-    <value>Dona</value>
+    <value>Invia donazione</value>
     <comment>The donation button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
@@ -1260,7 +1260,7 @@ Regolare la luminosità e il contrasto è possibile solo nelle modalità **piano
     <comment>The option for remembering the last used scan options.</comment>
   </data>
   <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
-    <value>Mostra le opzioni avanzate di scansione supportate dalla tua stampante</value>
+    <value>Mostra le opzioni avanzate di scansione supportate dal tuo scanner</value>
     <comment>The option for showing advanced scan options.</comment>
   </data>
   <data name="OptionSettingsSurveys.Content" xml:space="preserve">
@@ -1396,7 +1396,7 @@ Il ritaglio &quot;regione singola&quot; crea una singola immagine, che è utile 
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
-    <value>Scansionare documenti e foto è ora agevole come dovrebbe essere. Scansionare alcune pagine come file immagine, ruotale e ritagliale con le regolazioni predefinite e condividile velocemente via email o crea un PDF multi-pagina, dagli un nome espressivo e archivialo nella cartella corretta.
+    <value>Scansionare documenti e foto è ora agevole come dovrebbe essere. Scansionare alcune pagine come file immagine, ruotarle e ritagliarle con le regolazioni predefinite e condividerle velocemente via email o creare un PDF multi-pagina, assegnare un nome espressivo e archiviarlo nella cartella corretta.
 Con Scanner puoi avere tutto questo in un unico posto. Non sono necessari editor di immagine o costosi software per PDF aggiuntivi.
 
 Quasi ogni scanner in uso oggi è supportato da quest&apos;app, così non hai bisogno di usare il software antiquato e goffo fornito dal produttore del dispositivo. L&apos;app è progettata per essere semplice e facile da usare, ma offre anche strumenti e caratteristiche avanzate.
@@ -1435,5 +1435,41 @@ Se stai usando uno scanner professionale, ora puoi applicare opzioni di scansion
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
     <value>Logo app</value>
     <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Files e cartella di salvataggio</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Uso scanner</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animazioni</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Mostra animazioni</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Azione scansione predefinita</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Aggiungi alle pagine esistenti</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Inizia da capo</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Impostazioni</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
   </data>
 </root>
