@@ -1471,4 +1471,8 @@ Jeśli korzystasz z bardziej profesjonalnego skanera, możesz teraz zastosować 
     <value>Użycie skanera</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Ustawienia</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
 </root>

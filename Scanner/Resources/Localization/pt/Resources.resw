@@ -1437,4 +1437,8 @@ Se usar um scanner mais profissional, agora pode aplicar opções de digitaliza�
     <value>App Logo</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Definições</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
 </root>
