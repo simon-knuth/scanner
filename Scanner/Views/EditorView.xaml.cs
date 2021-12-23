@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -744,7 +745,9 @@ namespace Scanner.Views
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                 {
                     ScanningAnimation.Stop();
-                    KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 80},0";
+                    CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag("en-us");
+                    double value = GridContent.ActualHeight - 80;
+                    KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
                     ScanningAnimation.Start();
                 });
             }
@@ -754,7 +757,9 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                KeyFrameScanningAnimation.Value = $"0,{GridContent.ActualHeight - 80},0";
+                CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag("en-us");
+                double value = GridContent.ActualHeight - 80;
+                KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
             });
         }
     }

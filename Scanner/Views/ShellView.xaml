@@ -13,7 +13,6 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:muxcWindows11Present="using:Microsoft.UI.Xaml.Controls?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
-    xmlns:dialogs="using:Scanner.Views.Dialogs"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie"
