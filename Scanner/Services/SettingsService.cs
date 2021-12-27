@@ -235,7 +235,8 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? false;
 
                 case AppSetting.SettingAutoRotateLanguage:
-                    return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage.LanguageTag;
+                    return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages()?
+                        .RecognizerLanguage?.LanguageTag ?? "";
 
                 case AppSetting.SettingShowAdvancedScanOptions:
                     return SettingsContainer.Values[name] ?? false;
@@ -449,15 +450,30 @@ namespace Scanner.Services
         /// <summary>
         ///     Logs all current settings values.
         /// </summary>
-        public void LogAllSettings()
+        public void TryLogAllSettings()
         {
-            string logString = "Settings loaded: ";
-            foreach (AppSetting setting in Enum.GetValues(typeof(AppSetting)))
+            try
             {
-                logString += $"{setting}={GetSetting(setting)} | ";
+                string logString = "Settings loaded: ";
+                foreach (AppSetting setting in Enum.GetValues(typeof(AppSetting)))
+                {
+                    try
+                    {
+                        string newValue = GetSetting(setting).ToString();
+                        logString += $"{setting}={newValue} | ";
+                    }
+                    catch (Exception exc)
+                    {
+                        LogService?.Log.Error(exc, "TryLogAllSettings: Couldn't retrieve {setting}", setting);
+                    }
+                }
+                logString = logString.Remove(logString.Length - 3);
+                LogService?.Log.Information(logString);
             }
-            logString = logString.Remove(logString.Length - 3);
-            LogService?.Log.Information(logString);
+            catch (Exception)
+            {
+
+            }
         }
 
         /// <summary>

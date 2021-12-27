@@ -12,7 +12,7 @@ namespace Scanner.Services
         event EventHandler<AppSetting> SettingChanged;
         event EventHandler ScanSaveLocationChanged;
 
-        void LogAllSettings();
+        void TryLogAllSettings();
         void SetSetting(AppSetting setting, object value);
         object GetSetting(AppSetting setting);
 

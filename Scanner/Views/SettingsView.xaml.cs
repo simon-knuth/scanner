@@ -89,14 +89,24 @@ namespace Scanner.Views
                     IsChecked = language.LanguageTag == desiredLanguage
                 };
 
-                if (language.LanguageTag == ViewModel.AutoRotatorService.DefaultLanguage.LanguageTag)
+                // highlight default/best language
+                if ((ViewModel.AutoRotatorService.DefaultLanguage != null
+                        && language.LanguageTag == ViewModel.AutoRotatorService.DefaultLanguage.LanguageTag)
+                    || (ViewModel.AutoRotatorService.DefaultLanguage == null
+                        && i == 0))
                 {
                     item.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
                 }
 
                 MenuFlyoutSettingAutoRotateLanguage.Items.Add(item);
             }
-            MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());
+
+            if (ViewModel.AutoRotatorService.AvailableLanguages.Count > 0)
+            {
+                MenuFlyoutSettingAutoRotateLanguage.Items.Add(new MenuFlyoutSeparator());
+            }
+
+
             MenuFlyoutSettingAutoRotateLanguage.Items.Add(MenuFlyoutItemAddLanguage);
         }
 

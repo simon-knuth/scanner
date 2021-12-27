@@ -13,8 +13,12 @@ namespace Scanner.Views.Converters
         {
             if (value == null) return false;
             
-            IList list = (IList)value;
-            return list.Count > 0;
+            IEnumerable list = (IEnumerable)value;
+            foreach (var item in list)
+            {
+                return true;
+            }
+            return false;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

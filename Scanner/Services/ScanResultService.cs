@@ -35,8 +35,9 @@ namespace Scanner.Services
             get => _Result;
             private set
             {
+                bool changed = _Result != null;
                 SetProperty(ref _Result, value);
-                if (value == null) ScanResultDismissed?.Invoke(this, null);
+                if (value == null && changed) ScanResultDismissed?.Invoke(this, null);
             }
         }
 
@@ -57,7 +58,7 @@ namespace Scanner.Services
             }
         }
 
-        private int FutureAccessListIndex;
+        private int FutureAccessListIndex = 0;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,13 +80,21 @@ namespace Scanner.Services
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder)
         {
             IsScanResultChanging = true;
-            Result = null;
 
-            FutureAccessListIndex = 0;
-            Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex);
-            IsScanResultChanging = false;
-
-            ScanResultCreated?.Invoke(this, Result);
+            try
+            {
+                DismissScanResult();
+                Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex);
+                ScanResultCreated?.Invoke(this, Result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
         }
 
         /// <summary>
@@ -100,13 +109,21 @@ namespace Scanner.Services
             ImageScannerFormat targetFormat)
         {
             IsScanResultChanging = true;
-            Result = null;
 
-            FutureAccessListIndex = 0;
-            Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex);
-            IsScanResultChanging = false;
-
-            ScanResultCreated?.Invoke(this, Result);
+            try
+            {
+                DismissScanResult();
+                Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex);
+                ScanResultCreated?.Invoke(this, Result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
         }
 
         /// <summary>
@@ -117,8 +134,18 @@ namespace Scanner.Services
             StorageFolder targetFolder)
         {
             IsScanResultChanging = true;
-            await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex);
-            IsScanResultChanging = false;
+            try
+            {
+                await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
         }
 
         /// <summary>
@@ -128,8 +155,18 @@ namespace Scanner.Services
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat)
         {
             IsScanResultChanging = true;
-            await Result.AddFiles(files, targetFormat, FutureAccessListIndex);
-            IsScanResultChanging = false;
+            try
+            {
+                await Result.AddFiles(files, targetFormat, FutureAccessListIndex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
         }
 
         /// <summary>
@@ -157,8 +194,11 @@ namespace Scanner.Services
                 IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -235,17 +275,19 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Deleting failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
-
-            // check if there are still pages left
-            if (Result.NumberOfPages == 0)
+            finally
             {
-                Result = null;
+                // check if there are still pages left
+                if (Result.NumberOfPages == 0)
+                {
+                    DismissScanResult();
+                }
+
+                IsScanResultChanging = false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -270,17 +312,19 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Deleting failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
-
-            // check if there are still pages left
-            if (Result.NumberOfPages == 0)
+            finally
             {
-                Result = null;
+                // check if there are still pages left
+                if (Result.NumberOfPages == 0)
+                {
+                    DismissScanResult();
+                }
+
+                IsScanResultChanging = false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -305,17 +349,19 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Deleting failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
-
-            // check if there are still pages left
-            if (Result.NumberOfPages == 0)
+            finally
             {
-                Result = null;
+                // check if there are still pages left
+                if (Result.NumberOfPages == 0)
+                {
+                    DismissScanResult();
+                }
+
+                IsScanResultChanging = false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -340,17 +386,19 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Deleting failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
-
-            // check if there are still pages left
-            if (Result.NumberOfPages == 0)
+            finally
             {
-                Result = null;
+                // check if there are still pages left
+                if (Result.NumberOfPages == 0)
+                {
+                    DismissScanResult();
+                }
+
+                IsScanResultChanging = false;
             }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -533,11 +581,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Cropping page failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -563,11 +613,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Cropping pages failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -593,11 +645,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Cropping pages as copy failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -623,11 +677,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Drawing on page failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -653,11 +709,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Drawing on page as copy failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
 
-            IsScanResultChanging = false;
             return true;
         }
 
@@ -683,11 +741,13 @@ namespace Scanner.Services
                 });
                 LogService?.Log.Error(exc, "Duplicating page failed.");
 
-                IsScanResultChanging = false;
                 return false;
             }
-
-            IsScanResultChanging = false;
+            finally
+            {
+                IsScanResultChanging = false;
+            }
+            
             return true;
         }
 
@@ -697,6 +757,7 @@ namespace Scanner.Services
         public void DismissScanResult()
         {
             Result = null;
+            FutureAccessListIndex = 0;
         }
 
         private void ScanResult_PerformedAutomaticRotation(object sender, EventArgs e)

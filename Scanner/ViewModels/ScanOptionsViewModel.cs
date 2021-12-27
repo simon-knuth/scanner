@@ -405,7 +405,7 @@ namespace Scanner.ViewModels
             DebugScanCommand = new AsyncRelayCommand(async () =>
             {
                 if (ScanCommand.IsRunning) return;      // already running?
-                await ScanAsync(DebugScanStartFresh == true, false);
+                await ScanAsync(DebugScanStartFresh == true, true);
             });
             CancelScanCommand = new RelayCommand(CancelScan);
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
@@ -1205,9 +1205,10 @@ namespace Scanner.ViewModels
                         SelectedScanner, persistentScanOptions);
                 }
 
-                // clean folders
+                // clean folders and dismiss result
                 if (!CanAddToScanResult || startFresh)
                 {
+                    ScanResultService.DismissScanResult();
                     await AppDataService.Initialize();
                 }
 

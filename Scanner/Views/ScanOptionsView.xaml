@@ -736,7 +736,7 @@
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Visibility="{x:Bind ViewModel.NextDefaultScanAction, Mode=OneWay, Converter={StaticResource ScanActionVisibilityConverter}, ConverterParameter=1}"/>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Command="{x:Bind ViewModel.ScanFreshCommand}">

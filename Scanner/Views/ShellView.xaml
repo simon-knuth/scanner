@@ -17,6 +17,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie"
     xmlns:helpers="using:Scanner.Helpers"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
@@ -54,16 +55,7 @@
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             
             <!-- Storyboards -->
-            <Storyboard x:Key="StoryboardInfoBarEnter">
-                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                 From="100" To="0" Duration="0:0:0.3" BeginTime="0:0:0">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="Opacity"
-                                 From="0.0" To="1.0" Duration="0:0:0.3" BeginTime="0:0:0"/>
-            </Storyboard>
+            
         </ResourceDictionary>
     </Page.Resources>
 
@@ -298,10 +290,12 @@
                         <core:EventTriggerBehavior EventName="Closing">
                             <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
                         </core:EventTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind InfoBarAppWideMessages.Visibility, Mode=OneWay}" ComparisonCondition="Equal" Value="Visible">
-                            <Media:ControlStoryboardAction Storyboard="{StaticResource StoryboardInfoBarEnter}" ControlStoryboardOption="Play"/>
-                        </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
+
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3"/>
+                        <animations:TranslationAnimation From="0,100" To="0,0" Duration="0:0:0.3" EasingType="Cubic" EasingMode="EaseOut"/>
+                    </animations:Implicit.ShowAnimations>
 
                     <muxc:InfoBar.RenderTransform>
                         <CompositeTransform/>

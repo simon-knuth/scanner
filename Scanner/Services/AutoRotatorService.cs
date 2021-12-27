@@ -30,7 +30,7 @@ namespace Scanner.Services
         private OcrEngine OcrEngine;
 
         public IReadOnlyList<Language> AvailableLanguages => OcrEngine.AvailableRecognizerLanguages;
-        public Language DefaultLanguage => OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage;
+        public Language DefaultLanguage => OcrEngine.TryCreateFromUserProfileLanguages()?.RecognizerLanguage;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,16 +56,48 @@ namespace Scanner.Services
             LogService?.Log.Information("AutoRotatorService: Initializing");
             string desiredLanguageScript = (string)SettingsService.GetSetting(AppSetting.SettingAutoRotateLanguage);
 
-            try
+            Language desiredLanguage;
+            if (desiredLanguageScript != "")
             {
-                Language desiredLanguage = new Language(desiredLanguageScript);
-                OcrEngine = OcrEngine.TryCreateFromLanguage(desiredLanguage);
+                desiredLanguage = new Language(desiredLanguageScript);
+
+                try
+                {
+                    OcrEngine = OcrEngine.TryCreateFromLanguage(desiredLanguage);
+                }
+                catch (Exception)
+                {
+
+                }
             }
-            catch (Exception)
+
+            if (OcrEngine == null)
             {
-                // language unavailable, reset to default
+                // language unavailable, try to reset to default
                 OcrEngine = OcrEngine.TryCreateFromUserProfileLanguages();
-                SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, OcrEngine.RecognizerLanguage.LanguageTag);
+
+                if (OcrEngine == null)
+                {
+                    // can not reset to default, try choosing a language
+                    foreach (Language language in OcrEngine.AvailableRecognizerLanguages)
+                    {
+                        OcrEngine = OcrEngine.TryCreateFromLanguage(language);
+                        if (OcrEngine != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                // language changed, update settings
+                if (OcrEngine != null)
+                {
+                    SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, OcrEngine.RecognizerLanguage.LanguageTag);
+                }
+                else
+                {
+                    SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, "");
+                }
             }
         }
         

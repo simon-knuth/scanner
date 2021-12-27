@@ -89,7 +89,7 @@ namespace Scanner
             await SettingsService.InitializeAsync();
             await Ioc.Default.GetService<IAppCenterService>().InitializeAsync();
             Ioc.Default.GetService<IAppDataService>();
-            Ioc.Default.GetRequiredService<ISettingsService>().LogAllSettings();
+            Ioc.Default.GetRequiredService<ISettingsService>().TryLogAllSettings();
 
             // initialize some settings
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
