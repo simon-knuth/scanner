@@ -230,9 +230,16 @@ namespace Scanner.Services
             Watcher?.Stop();
         }
 
-        public void ResumeSearchAsync()
+        public void TryResumeSearchAsync()
         {
-            Watcher?.Start();
+            try
+            {
+                Watcher?.Start();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }

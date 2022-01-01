@@ -48,7 +48,8 @@
             <converters:FilePathFolderConverter x:Key="FilePathFolderConverter"/>
             <converters:FilePathFolderPathConverter x:Key="FilePathFolderPathConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
-
+            
+            <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
                                  To="0.0" Duration="0:0:0.15"/>

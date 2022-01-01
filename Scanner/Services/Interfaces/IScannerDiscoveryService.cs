@@ -14,7 +14,7 @@ namespace Scanner.Services
 
         Task RestartSearchAsync();
         void PauseSearchAsync();
-        void ResumeSearchAsync();
+        void TryResumeSearchAsync();
         Task AddDebugScannerAsync(DiscoveredScanner scanner);
         ObservableCollection<DiscoveredScanner> DiscoveredScanners
         {

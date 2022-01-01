@@ -191,7 +191,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="12" Foreground="{ThemeResource SystemErrorTextColor}" Margin="0,0,12,0"/>
-                                <TextBlock Grid.Column="1" Text="Automatic rotation is currently unavailable, because none of your installed languages support text recognition. Please install a supported language and restart your PC to use this feature." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
+                                <TextBlock Grid.Column="1" x:Uid="TextErrorSettingsAutoRotationNoLanguage" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemErrorTextColor}" TextWrapping="WrapWholeWords"/>
                             </Grid>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">

@@ -441,7 +441,7 @@ namespace Scanner.ViewModels
 
         private void ViewNavigatedTo()
         {
-            ScannerDiscoveryService.ResumeSearchAsync();
+            ScannerDiscoveryService.TryResumeSearchAsync();
         }
 
         private void ViewNavigatedFrom()
