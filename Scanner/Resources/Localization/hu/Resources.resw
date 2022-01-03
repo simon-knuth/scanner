@@ -122,7 +122,7 @@
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Kérjük próbáld újra.</value>
+    <value>Próbálja újra.</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
@@ -382,7 +382,7 @@
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>Válassz ki egy fájlformátumot.</value>
+    <value>Válasszon ki egy fájlformátumot.</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
@@ -398,7 +398,7 @@
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>Az elforgatás nem sikerült. Kérjük próbáld újra.</value>
+    <value>Az elforgatás nem sikerült. Próbálja újra.</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
@@ -406,7 +406,7 @@
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>A módosítások mentése sikertelen. Győződj meg arról, hogy a fájl továbbra is elérhető és próbáld újra.</value>
+    <value>A módosítások mentése sikertelen. Győződjön meg arról, hogy a fájl továbbra is elérhető és próbálja újra.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
@@ -506,7 +506,7 @@
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Valami nem oké. Győződj meg róla, hogy behelyeztél-e egy lapot és próbáld újra.</value>
+    <value>Valami nem sikerült. Győződjön meg róla, hogy behelyezett-e egy lapot és próbálja újra.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
@@ -526,7 +526,7 @@
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>A kiválasztott mappa nem elérhető. Kérjük válassz ki egy másikat.</value>
+    <value>A kiválasztott mappa nem elérhető. Válasszon ki egy másikat.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
@@ -542,7 +542,7 @@
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>Az alkalmazásnak nem engedélyezett a mappa a használata. Válassz ki egy másikat.</value>
+    <value>Az alkalmazásnak nem engedélyezett a mappa a használata. Válasszon ki egy másikat.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
@@ -578,7 +578,7 @@
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>Segíts fordítani</value>
+    <value>Segítsen fordítani</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
@@ -715,7 +715,7 @@
 Fuzzy</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Kérjük erősítsd meg az alábbi beállításokat.</value>
+    <value>Kérjük erősítse meg az alábbi beállításokat.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
@@ -935,7 +935,7 @@ A felbontás kiválasztása **síkágyas vagy adagoló** módban lehetséges. Az
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Ha új PDF-fájlba szeretne beolvasni ahelyett, hogy egy meglévőhöz oldalakat adna hozzá, akkor nem kell újraindítania az alkalmazást. Csak kattintson a szkennelés gomb melletti kis nyílra, és válassza a &quot;Szkennelés új fájlba&quot; lehetőséget.</value>
+    <value>Ha új PDF-fájlba szeretne beolvasni ahelyett, hogy egy meglévőhöz oldalakat fűzne hozzá, akkor nem kell újraindítania az alkalmazást. Csak kattintson a szkennelés gomb melletti kis nyílra, és válassza a &quot;Szkennelés új fájlba&quot; lehetőséget.</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
@@ -963,7 +963,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
-    <value>Módisítások mentése</value>
+    <value>Módosítások mentése</value>
     <comment>The heading for the help text on how to save changes made in the app.</comment>
   </data>
   <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
@@ -1071,7 +1071,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The text for the button that shows all available apps to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithStore.Text" xml:space="preserve">
-    <value>További appok keresése az Áruházban</value>
+    <value>További appok keresése a Microsoft Store-ban</value>
     <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
@@ -1135,7 +1135,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <comment>The cancel button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="TextPromiseNoAds.Text" xml:space="preserve">
-    <value>Nincs reklám</value>
+    <value>Nincsenek reklámok</value>
     <comment>The text promising an ads-free experience.</comment>
   </data>
   <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
@@ -1197,7 +1197,7 @@ A fényerő és a kontraszt beállítása csak **síkágyas vagy adagoló** mód
     <comment>The help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value>A Microsoft Store-ban értékelheti a Scanner alkalmazást, új funkciókat javasolhat, és segíthet másoknak eldönteni, hogy ez-e a megfelelő alkalmazás számukra. A professzionális felhasználók is befolyásolhatják a GitHub további fejlesztését.</value>
+    <value>A Microsoft Store-ban értékelheti a Szkenner alkalmazást, új funkciókat javasolhat, és segíthet másoknak eldönteni, hogy ez-e a megfelelő alkalmazás számukra. A hozzáértő felhasználók a GitHub-on be is kapcsolódhatnak a további fejlesztésbe.</value>
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
@@ -1305,7 +1305,7 @@ A fényerő és a kontraszt beállítása csak **síkágyas vagy adagoló** mód
 
 Az automatikus vágás csak **síkágyas vagy adagoló** módban lehetséges.
 
-Az &quot;egyrégiós&quot; vágás egyetlen képet hoz létre, ami különösen hasznos dokumentumok beolvasásához. A „több régiós” vágás több elemet is azonosíthat egyetlen szkennelés során, ami hasznos több fényképet a síkágyra helyezve.</value>
+Az &quot;egyrégiós&quot; vágás egyetlen képet hoz létre, ami különösen hasznos dokumentumok beolvasásához. A &quot;több régiós&quot; vágás több elemet is azonosíthat egyetlen szkennelés során, ami hasznos több fényképet a síkágyra helyezve.</value>
     <comment>The help text on how to use automatic cropping.</comment>
   </data>
   <data name="DialogSurvey.Subtitle" xml:space="preserve">
@@ -1449,8 +1449,32 @@ Ha professzionálisabb szkennert használ, mostantól speciális szkennelési be
     <value>Szkenner használat</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animációk</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Animációk engedélyezése</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Alapértelmezett művelet</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Oldalak összefűzése</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Szkennelés új fájlba</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
     <value>Beállítások</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>Az automatikus forgatás jelenleg nem elérhető, mert egyik telepített nyelv sem támogatja a szövegfelismerést. Telepítsen egy megfelelő nyelvet (sz összes nyelvi funkcióval) és indítsa újra a gépet ennek a funkciónak a használatához.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
 </root>
