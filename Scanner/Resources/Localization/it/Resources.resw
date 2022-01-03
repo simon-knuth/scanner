@@ -1472,4 +1472,8 @@ Se stai usando uno scanner professionale, ora puoi applicare opzioni di scansion
     <value>Impostazioni</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
   </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>La rotazione automatica non è al momento disponibile poiché nessuna lingua installata supporta il riconoscimento del testo. Installa una lingua supportata (includendo tutte le sue parti individuali) e riavvia il pc per usare questa caratteristica.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
 </root>
