@@ -38,6 +38,7 @@ namespace Scanner.Views
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
             ViewModel.SetupRequested += ViewModel_SetupRequested;
             ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
+            ViewModel.PreviewDialogRequested += ViewModel_PreviewDialogRequested;
             ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
             DataTransferManager.DataRequested += DataTransferManager_DataRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -50,6 +51,12 @@ namespace Scanner.Views
         private void ViewModel_ShareFilesChanged(object sender, List<Windows.Storage.StorageFile> e)
         {
             ShareFiles = e;
+        }
+
+        private async void ViewModel_PreviewDialogRequested(object sender, EventArgs e)
+        {
+            PreviewDialogView dialog = new PreviewDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)

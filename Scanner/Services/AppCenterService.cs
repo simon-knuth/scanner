@@ -110,7 +110,7 @@ namespace Scanner.Services
                 if (flush)
                 {
                     // close log file
-                    Log.CloseAndFlush();
+                    LogService.CloseAndFlush();
                     await LogService.InitializeAsync();
                 }
 

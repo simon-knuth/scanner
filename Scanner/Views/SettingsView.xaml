@@ -304,6 +304,26 @@
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
+                <!-- Setting Measurement Unit -->
+                <muxc:Expander x:Name="ExpanderMeasurementUnits" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsMeasurementUnits.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xECC6;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsMeasurementUnits" Grid.Column="1" x:Uid="HeadingSettingsMeasurementUnits" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                        <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingMeasurementUnits, Mode=TwoWay}">
+                            <RadioButton x:Uid="OptionSettingsMeasurementUnitsMetric" Margin="0,0,12,0"/>
+                            <RadioButton x:Uid="OptionSettingsMeasurementUnitsImperialUS"/>
+                        </muxc:RadioButtons>
+                    </StackPanel>
+                </muxc:Expander>
                 <!-- Setting Editor Orientation -->
                 <muxc:Expander x:Name="ExpanderEditorOrientation" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsEditorOrientation.Text}">
                     <muxc:Expander.Header>

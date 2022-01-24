@@ -65,6 +65,26 @@
         EditorOrientation,
         Animations,
         ErrorReports,
-        Surveys
+        Surveys,
+        MeasurementUnits
+    }
+
+    /// <summary>
+    ///     Available aspect ratio options for cropping or selecting a region.
+    /// </summary>
+    public enum AspectRatioOption
+    {
+        Custom = 0,
+        Square = 1,
+        ThreeByTwo = 2,
+        FourByThree = 3,
+        DinA = 4,
+        AnsiA = 5,
+        AnsiB = 6,
+        AnsiC = 7,
+        Kai4 = 8,
+        Kai8 = 9,
+        Kai16 = 10,
+        Kai32 = 11,
     }
 }

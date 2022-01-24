@@ -66,7 +66,8 @@ namespace Scanner.Services
         SettingAutoRotateLanguage,
         SettingShowAdvancedScanOptions,
         SettingAnimations,
-        SettingScanAction
+        SettingScanAction,
+        SettingMeasurementUnits
     }
 
     public enum SettingSaveLocationType
@@ -92,5 +93,11 @@ namespace Scanner.Services
     {
         AddToExisting = 0,
         StartFresh = 1
+    }
+
+    public enum SettingMeasurementUnit
+    {
+        Metric = 0,
+        ImperialUS = 1
     }
 }

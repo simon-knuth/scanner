@@ -20,6 +20,7 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -635,39 +636,6 @@ namespace Scanner.ViewModels
             if (ScanResult != null) SelectedPageIndex = ScanResult.NumberOfPages - 1;
         }
 
-        private double? ConvertAspectRatioOptionToValue(AspectRatioOption option)
-        {
-            switch (option)
-            {
-                case AspectRatioOption.Custom:
-                    return null;
-                case AspectRatioOption.Square:
-                    return 1;
-                case AspectRatioOption.ThreeByTwo:
-                    return 1.5;
-                case AspectRatioOption.FourByThree:
-                    return 1.3333;
-                case AspectRatioOption.DinA:
-                    return 0.7070;
-                case AspectRatioOption.AnsiA:
-                    return 0.7741;
-                case AspectRatioOption.AnsiB:
-                    return 0.6458;
-                case AspectRatioOption.AnsiC:
-                    return 0.7728;
-                case AspectRatioOption.Kai4:
-                    return 0.7216;
-                case AspectRatioOption.Kai8:
-                    return 0.6929;
-                case AspectRatioOption.Kai16:
-                    return 0.7216;
-                case AspectRatioOption.Kai32:
-                    return 0.6954;
-                default:
-                    throw new ArgumentException($"Can't convert AspectRatioOption {option} to value.");
-            }
-        }
-
         private void FlipSelectedAspectRatio(Rect currentRect)
         {
             SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
@@ -789,22 +757,6 @@ namespace Scanner.ViewModels
         Initial = 0,
         Crop = 1,
         Draw = 2,
-    }
-
-    public enum AspectRatioOption
-    {
-        Custom = 0,
-        Square = 1,
-        ThreeByTwo = 2,
-        FourByThree = 3,
-        DinA = 4,
-        AnsiA = 5,
-        AnsiB = 6,
-        AnsiC = 7,
-        Kai4 = 8,
-        Kai8 = 9,
-        Kai16 = 10,
-        Kai32 = 11,
     }
 
     public class OpenWithApp

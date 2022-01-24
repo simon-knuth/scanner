@@ -147,6 +147,8 @@ namespace Scanner.Views
                     return ExpanderFeedbackReportsLogs;
                 case SettingsSection.Surveys:
                     return ExpanderFeedbackSurveys;
+                case SettingsSection.MeasurementUnits:
+                    return ExpanderMeasurementUnits;
                 default:
                     break;
             }

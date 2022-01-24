@@ -126,6 +126,12 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingAnimations, value);
         }
 
+        public int SettingMeasurementUnits
+        {
+            get => (int)SettingsService.GetSetting(AppSetting.SettingMeasurementUnits);
+            set => SettingsService.SetSetting(AppSetting.SettingMeasurementUnits, value);
+        }
+
         private bool _IsScanInProgress;
         public bool IsScanInProgress
         {

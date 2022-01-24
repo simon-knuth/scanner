@@ -350,6 +350,7 @@ namespace Scanner.Models
         /// </summary>
         public void ConfigureForScanOptions(ScanOptions options)
         {
+            LogService.Log.Information("ConfigureForScanOptions");
             switch (options.Source)
             {
                 case ScannerSource.Auto:

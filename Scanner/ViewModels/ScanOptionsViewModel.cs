@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
@@ -46,8 +47,6 @@ namespace Scanner.ViewModels
         public RelayCommand HelpRequestChooseFileFormatCommand;
         public RelayCommand SettingsScanActionRequestCommand;
 
-        public AsyncRelayCommand<string> PreviewScanCommand;
-        public RelayCommand DismissPreviewScanCommand;
         public RelayCommand ResetBrightnessCommand;
         public RelayCommand ResetContrastCommand;
 
@@ -55,16 +54,10 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand ScanCommand;
         public AsyncRelayCommand ScanFreshCommand;
         public RelayCommand CancelScanCommand;
+        public RelayCommand PreviewScanCommand;
+        public RelayCommand RemoveSelectedRegionCommand;
 
-        public event EventHandler PreviewRunning;
         public event EventHandler ScannerSearchTipRequested;
-
-        private bool _PreviewFailed;
-        public bool PreviewFailed
-        {
-            get => _PreviewFailed;
-            set => SetProperty(ref _PreviewFailed, value);
-        }
 
         private ObservableCollection<DiscoveredScanner> _Scanners;
         public ObservableCollection<DiscoveredScanner> Scanners
@@ -107,6 +100,9 @@ namespace Scanner.ViewModels
                 ScannerSource? old = ScannerSource;
                 if (value == null || (ScannerSource)value == ScannerSource) return;
                 LogService?.Log.Information($"ScannerSource = {value}");
+
+                // reset selected scan region
+                SelectedScanRegion = null;
 
                 // get previously selected scan options
                 ScanOptions previousScanOptions = CreateScanOptions();
@@ -182,6 +178,13 @@ namespace Scanner.ViewModels
         {
             get => _ScannerResolutions;
             set => SetProperty(ref _ScannerResolutions, value);
+        }
+
+        private Size? _SelectedScanRegion;
+        public Size? SelectedScanRegion
+        {
+            get => _SelectedScanRegion;
+            set => SetProperty(ref _SelectedScanRegion, value);
         }
 
         private ScanResolution _SelectedResolution;
@@ -277,13 +280,6 @@ namespace Scanner.ViewModels
         {
             get => _IsDefaultContrastSelected;
             set => SetProperty(ref _IsDefaultContrastSelected, value);
-        }
-
-        private BitmapImage _PreviewImage;
-        public BitmapImage PreviewImage
-        {
-            get => _PreviewImage;
-            set => SetProperty(ref _PreviewImage, value);
         }
 
         private bool _CanAddToScanResult;
@@ -382,8 +378,6 @@ namespace Scanner.ViewModels
             HelpRequestChooseResolutionCommand = new RelayCommand(() => Messenger.Send(new HelpRequestShellMessage(HelpTopic.ChooseResolution)));
             HelpRequestChooseFileFormatCommand = new RelayCommand(() => Messenger.Send(new HelpRequestShellMessage(HelpTopic.ChooseFileFormat)));
             SettingsScanActionRequestCommand = new RelayCommand(() => Messenger.Send(new SettingsRequestShellMessage(SettingsSection.ScanAction)));
-            PreviewScanCommand = new AsyncRelayCommand<string>(PreviewScanAsync);
-            DismissPreviewScanCommand = new RelayCommand(DismissPreviewScanAsync);
             DebugAddScannerCommand = new AsyncRelayCommand(DebugAddScannerAsync);
             DebugRestartScannerDiscoveryCommand = new RelayCommand(DebugRestartScannerDiscovery);
             DebugDeleteScanOptionsFromDatabaseCommand = new RelayCommand(DebugDeleteScanOptionsFromDatabase);
@@ -408,6 +402,8 @@ namespace Scanner.ViewModels
                 await ScanAsync(DebugScanStartFresh == true, true);
             });
             CancelScanCommand = new RelayCommand(CancelScan);
+            PreviewScanCommand = new RelayCommand(() => Messenger.Send(new PreviewDialogRequestMessage()));
+            RemoveSelectedRegionCommand = new RelayCommand(() => SelectedScanRegion = null);
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
             ResetBrightnessCommand = new RelayCommand(ResetBrightness);
             ResetContrastCommand = new RelayCommand(ResetContrast);
@@ -420,6 +416,9 @@ namespace Scanner.ViewModels
 
             Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
             Messenger.Register<SetupCompletedMessage>(this, (r, m) => ScannerSearchTipRequested?.Invoke(this, EventArgs.Empty));
+            Messenger.Register<PreviewParametersRequestMessage>(this, (r, m) => 
+                m.Reply(new Tuple<DiscoveredScanner, ScanOptions>(SelectedScanner, CreateScanOptions())));
+            Messenger.Register<PreviewSelectedRegionChangedMessage>(this, (r, m) => SelectedScanRegion = m.Value);
 
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
@@ -1027,79 +1026,6 @@ namespace Scanner.ViewModels
         {
             ScanOptionsDatabaseService?.DeleteScanOptionsForScanner(SelectedScanner);
             PersistentScanOptionsDatabaseService?.DeletePersistentScanOptionsForScanner(SelectedScanner);
-        }
-
-        /// <summary>
-        ///     Requests a preview scan for the <see cref="SelectedScanner"/> and
-        ///     <see cref="ScannerSource"/> and updates <see cref="PreviewImage"/> and
-        ///     <see cref="PreviewFailed"/>.
-        /// </summary>
-        private async Task PreviewScanAsync(string parameter)
-        {
-            if (PreviewScanCommand.IsRunning) return;   // preview already running?
-
-            LogService?.Log.Information("PreviewScanAsync");
-            BitmapImage debugImage = null;
-            if (parameter == "File")
-            {
-                // debug preview with file
-                var picker = new FileOpenPicker();
-                picker.ViewMode = PickerViewMode.Thumbnail;
-                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                picker.FileTypeFilter.Add(".jpg");
-                picker.FileTypeFilter.Add(".png");
-                picker.FileTypeFilter.Add(".tif");
-                picker.FileTypeFilter.Add(".tiff");
-                picker.FileTypeFilter.Add(".bmp");
-
-                StorageFile file = await picker.PickSingleFileAsync();
-                debugImage = await HelperService.GenerateBitmapFromFileAsync(file);
-            }
-
-            PreviewRunning?.Invoke(this, EventArgs.Empty);
-
-            // reset properties
-            PreviewImage = null;
-            PreviewFailed = false;
-
-            // get preview
-            if (debugImage != null)
-            {
-                await Task.Delay(2000);
-                PreviewImage = debugImage;
-            }
-            else if (parameter == "Fail" || SelectedScanner.Debug)
-            {
-                await Task.Delay(2000);
-                PreviewFailed = true;
-                PreviewScanCommand?.Cancel();
-            }
-            else
-            {
-                try
-                {
-                    ScanOptions scanOptions = CreateScanOptions();
-                    BitmapImage image = await ScanService.GetPreviewAsync(SelectedScanner, scanOptions);
-                    PreviewImage = image;
-                }
-                catch (Exception)
-                {
-                    PreviewFailed = true;
-                    PreviewScanCommand?.Cancel();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Signals that any preview scans are not needed any longer by getting rid of
-        ///     <see cref="PreviewImage"/> and canceling any previews in progress.
-        /// </summary>
-        private void DismissPreviewScanAsync()
-        {
-            try { PreviewImage = null; }
-            catch { }
-
-            PreviewScanCommand?.Cancel();
         }
 
         private void PrepareDebugScanner()

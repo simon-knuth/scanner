@@ -1,38 +1,19 @@
-﻿using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.Graphics.Canvas;
+﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner.Services;
-using Serilog;
-using Serilog.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
-using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
-using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Notifications;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Automation.Peers;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using static Enums;
 using static Globals;
 
 static class Utilities
@@ -433,5 +414,64 @@ static class Utilities
     {
         PackageVersion version = Package.Current.Id.Version;
         return String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+    }
+
+    /// <summary>
+    ///     Converts the <paramref name="value"/> from its <paramref name="sourceUnit"/> to the given
+    ///     <paramref name="targetUnit"/>.
+    /// </summary>
+    public static double ConvertMeasurement(double value, SettingMeasurementUnit sourceUnit, SettingMeasurementUnit targetUnit)
+    {
+        if (sourceUnit != targetUnit)
+        {
+            // convert value
+            if (targetUnit == SettingMeasurementUnit.Metric)
+            {
+                // inches to cm
+                return value * 2.54;
+            }
+            else
+            {
+                // cm to inches
+                return value / 2.54;
+            }
+        }
+        else
+        {
+            return value;
+        }
+    }
+
+    public static double? ConvertAspectRatioOptionToValue(AspectRatioOption option)
+    {
+        switch (option)
+        {
+            case AspectRatioOption.Custom:
+                return null;
+            case AspectRatioOption.Square:
+                return 1;
+            case AspectRatioOption.ThreeByTwo:
+                return 1.5;
+            case AspectRatioOption.FourByThree:
+                return 1.3333;
+            case AspectRatioOption.DinA:
+                return 0.7070;
+            case AspectRatioOption.AnsiA:
+                return 0.7741;
+            case AspectRatioOption.AnsiB:
+                return 0.6458;
+            case AspectRatioOption.AnsiC:
+                return 0.7728;
+            case AspectRatioOption.Kai4:
+                return 0.7216;
+            case AspectRatioOption.Kai8:
+                return 0.6929;
+            case AspectRatioOption.Kai16:
+                return 0.7216;
+            case AspectRatioOption.Kai32:
+                return 0.6954;
+            default:
+                throw new ArgumentException($"Can't convert AspectRatioOption {option} to value.");
+        }
     }
 }
