@@ -88,6 +88,8 @@ namespace Scanner.ViewModels
                 {
                     ApplyDefaultSourceModeForScanner(SelectedScanner);
                 }
+
+                Messenger.Send(new SelectedScannerChangedMessage(value));
             }
         }
 

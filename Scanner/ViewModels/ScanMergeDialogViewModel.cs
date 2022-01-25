@@ -1,7 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Services;
+using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +13,7 @@ using static Utilities;
 
 namespace Scanner.ViewModels
 {
-    public class ScanMergeDialogViewModel : ObservableObject
+    public class ScanMergeDialogViewModel : ObservableRecipient
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +22,8 @@ namespace Scanner.ViewModels
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>(); 
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>(); 
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+
+        public event EventHandler CloseRequested;
 
         private List<ScanMergeElement> _MergeResult;
         public List<ScanMergeElement> MergeResult
@@ -71,6 +75,15 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanMergeDialogViewModel()
         {
+            Messenger.Register<SelectedScannerChangedMessage>(this, (r, m) =>
+            {
+                if (m.Value == null)
+                {
+                    // scanner lost
+                    CloseRequested?.Invoke(this, EventArgs.Empty);
+                }
+            });
+            
             if (ScanResultService.Result == null || ScanResultService.Result.NumberOfPages == 0)
             {
                 // invalid result
@@ -116,7 +129,7 @@ namespace Scanner.ViewModels
                         newList.Add(new ScanMergeElement
                         {
                             IsPotentialPage = true,
-                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1)
+                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1),
                         });
 
                         // if 0 pages are skipped, add a total of 3 potential pages and then go on,
@@ -126,7 +139,7 @@ namespace Scanner.ViewModels
                             newList.Add(new ScanMergeElement
                             {
                                 IsPotentialPage = true,
-                                IsPlaceholderForMultiplePages = true
+                                IsPlaceholderForMultiplePages = true,
                             });
 
                             for (int j = i; j < cleanList.Count; j++)
@@ -135,8 +148,7 @@ namespace Scanner.ViewModels
                                 newList[newList.Count - 1].ItemDescriptor = "";
                             }
 
-                            MergeResult = newList;
-                            return;
+                            break;
                         }
                     }
                     else if ((newList.Count - (StartPageNumber - 1)) % (SkipPages + 1) == 0
@@ -146,7 +158,7 @@ namespace Scanner.ViewModels
                         newList.Add(new ScanMergeElement
                         {
                             IsPotentialPage = true,
-                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1)
+                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1),
                         });
                     }
 
@@ -159,7 +171,7 @@ namespace Scanner.ViewModels
                     newList.Add(new ScanMergeElement
                     {
                         IsPotentialPage = true,
-                        IsPlaceholderForMultiplePages = true
+                        IsPlaceholderForMultiplePages = true,
                     });
                 }
 
