@@ -1501,4 +1501,16 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>in</value>
     <comment>The unit text that appears after an inch value.</comment>
   </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>The close button text of the "Scan and merge" dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Scan</value>
+    <comment>The text of the button that starts a scan from the "Scan and merge" dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Scan and merge into PDF</value>
+    <comment>The heading for the "Scan and merge" dialog.</comment>
+  </data>
 </root>

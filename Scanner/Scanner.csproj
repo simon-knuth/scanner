@@ -132,10 +132,12 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />
+    <Compile Include="Models\ScanMergeElement.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\ScanMergeDialogRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewDialogRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewParametersRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewSelectedRegionChangedMessage.cs" />
@@ -146,6 +148,7 @@
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="ViewModels\ScanMergeDialogViewModel.cs" />
     <Compile Include="ViewModels\PreviewDialogViewModel.cs" />
     <Compile Include="ViewModels\SetupDialogViewModel.cs" />
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
@@ -158,6 +161,9 @@
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
     <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\ScanMergeDialogView.xaml.cs">
+      <DependentUpon>ScanMergeDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ChangelogDialogView.xaml.cs">
       <DependentUpon>ChangelogDialogView.xaml</DependentUpon>
     </Compile>
@@ -513,6 +519,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\Dialogs\ScanMergeDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Dialogs\ChangelogDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

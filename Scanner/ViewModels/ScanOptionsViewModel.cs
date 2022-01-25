@@ -56,6 +56,7 @@ namespace Scanner.ViewModels
         public RelayCommand CancelScanCommand;
         public RelayCommand PreviewScanCommand;
         public RelayCommand RemoveSelectedRegionCommand;
+        public RelayCommand ScanMergeConfigCommand;
 
         public event EventHandler ScannerSearchTipRequested;
 
@@ -404,6 +405,7 @@ namespace Scanner.ViewModels
             CancelScanCommand = new RelayCommand(CancelScan);
             PreviewScanCommand = new RelayCommand(() => Messenger.Send(new PreviewDialogRequestMessage()));
             RemoveSelectedRegionCommand = new RelayCommand(() => SelectedScanRegion = null);
+            ScanMergeConfigCommand = new RelayCommand(() => Messenger.Send(new ScanMergeDialogRequestMessage()));
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
             ResetBrightnessCommand = new RelayCommand(ResetBrightness);
             ResetContrastCommand = new RelayCommand(ResetContrast);

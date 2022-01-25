@@ -47,7 +47,7 @@ namespace Scanner.Views.Dialogs
                     await SetSelectedRegionInViewModel();
                     break;
                 case nameof(ViewModel.SelectedRegion):
-                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         if (ViewModel.SelectedRegion != null)
                         {

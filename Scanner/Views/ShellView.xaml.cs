@@ -39,6 +39,7 @@ namespace Scanner.Views
             ViewModel.SetupRequested += ViewModel_SetupRequested;
             ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
             ViewModel.PreviewDialogRequested += ViewModel_PreviewDialogRequested;
+            ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
             ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
             DataTransferManager.DataRequested += DataTransferManager_DataRequested; ;
             CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -56,6 +57,12 @@ namespace Scanner.Views
         private async void ViewModel_PreviewDialogRequested(object sender, EventArgs e)
         {
             PreviewDialogView dialog = new PreviewDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_ScanMergeDialogRequested(object sender, EventArgs e)
+        {
+            ScanMergeDialogView dialog = new ScanMergeDialogView();
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
         }
 

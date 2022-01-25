@@ -1,0 +1,121 @@
+﻿<ContentDialog
+    x:Class="Scanner.Views.Dialogs.ScanMergeDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:scanner="using:Scanner"
+    xmlns:converters="using:Scanner.Views.Converters"
+    mc:Ignorable="d"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    x:Uid="DialogScanMerge"
+    DefaultButton="Secondary"
+    PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}">
+
+    <ContentDialog.DataContext>
+        <viewModels:ScanMergeDialogViewModel x:Name="ViewModel"/>
+    </ContentDialog.DataContext>
+    
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   DIALOG CONTENT   - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Title>
+        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,0,0,12">
+            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA3C;"/>
+            <TextBlock x:Uid="HeadingDialogScanMerge"/>
+        </StackPanel>
+    </ContentDialog.Title>
+
+    <Grid RowSpacing="24" ColumnSpacing="24">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock Text="You can use this mode to insert new pages in a specific spot. This also allows you to scan multiple two-sided sheets without duplex, by scanning the front sides normally first and then merging all the flip sides into the first batch." Style="{StaticResource BodyTextBlockStyle}"/>
+        </ScrollViewer>
+        <muxc:NumberBox Grid.Row="1" Grid.Column="0" SpinButtonPlacementMode="Inline" Minimum="1" Maximum="{x:Bind ViewModel.TotalNumberOfPages, Mode=OneWay}" Value="{x:Bind ViewModel.StartPageNumber, Mode=TwoWay}" MinWidth="100">
+            <muxc:NumberBox.Header>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE819;" FontSize="16" />
+                    <TextBlock Text="First page" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </muxc:NumberBox.Header>
+        </muxc:NumberBox>
+        <muxc:NumberBox Grid.Row="1" Grid.Column="1" SpinButtonPlacementMode="Inline" Minimum="0" Maximum="{x:Bind ViewModel.MaxSkippablePages, Mode=OneWay}" Value="{x:Bind ViewModel.SkipPages, Mode=TwoWay}" MinWidth="100">
+            <muxc:NumberBox.Header>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE151;" FontSize="16" />
+                    <TextBlock Text="In-between pages" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </muxc:NumberBox.Header>
+        </muxc:NumberBox>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="241" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" SizeChanged="ScrollViewer_SizeChanged">
+            <muxc:ItemsRepeater x:Name="ItemsRepeaterScanMergeElements" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.MergeResult, Mode=OneWay}" Margin="24,16,24,24" MinHeight="200">
+                <muxc:ItemsRepeater.Layout>
+                    <muxc:UniformGridLayout x:Name="UniformGridLayoutScanMergeElements" MaximumRowsOrColumns="4" Orientation="Horizontal" MinItemWidth="150" MinItemHeight="150"/>
+                </muxc:ItemsRepeater.Layout>
+                
+                <muxc:ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="scanner:ScanMergeElement">
+                        <Grid Margin="8" AutomationProperties.Name="{Binding ItemDescriptor}" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}"/>
+
+                            <Image Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind IsPlaceholderForMultiplePages, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                        <core:ChangePropertyAction PropertyName="Glyph" Value="&#xE10C;" />
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind IsPlaceholderForMultiplePages, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                        <core:ChangePropertyAction PropertyName="Glyph" Value="&#xE294;" />
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </FontIcon>
+
+                            <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" Visibility="{x:Bind ItemDescriptor, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </muxc:ItemsRepeater.ItemTemplate>
+            </muxc:ItemsRepeater>
+        </ScrollViewer>
+    </Grid>
+
+</ContentDialog>

@@ -127,5 +127,15 @@ namespace Scanner.Views
                 FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
             });
         }
+
+        private async void MenuFlyoutButtonScan_Opening(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                MenuFlyoutItemButtonScanMerge.IsEnabled =
+                    ViewModel.ScannerSource == Enums.ScannerSource.Feeder
+                    && ViewModel.CanAddToScanResultDocument;
+            });
+        }
     }
 }

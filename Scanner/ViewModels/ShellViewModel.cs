@@ -36,6 +36,7 @@ namespace Scanner.ViewModels
         public event EventHandler SetupRequested;
         public event EventHandler FeedbackDialogRequested;
         public event EventHandler PreviewDialogRequested;
+        public event EventHandler ScanMergeDialogRequested;
         public event EventHandler<List<StorageFile>> ShareFilesChanged;
 
         public AsyncRelayCommand ShowScanSaveLocationCommand;
@@ -157,6 +158,7 @@ namespace Scanner.ViewModels
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
             Messenger.Register<DonateDialogRequestMessage>(this, (r, m) => DisplayedView = ShellNavigationSelectableItem.Donate);
             Messenger.Register<PreviewDialogRequestMessage>(this, (r, m) => PreviewDialogRequested?.Invoke(this, EventArgs.Empty));
+            Messenger.Register<ScanMergeDialogRequestMessage>(this, (r, m) => ScanMergeDialogRequested?.Invoke(this, EventArgs.Empty));
             Messenger.Register<NarratorAnnouncementMessage>(this, (r, m) => RequestNarratorAnnouncement(m.AnnouncementText));
             Window.Current.Activated += Window_Activated;
             ShowScanSaveLocationCommand = new AsyncRelayCommand(ShowScanSaveLocation);
