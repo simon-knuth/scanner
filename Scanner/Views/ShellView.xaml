@@ -344,14 +344,15 @@
                             <TextBlock Text="Debug contextual dialogs" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
                             <Button Content="Tutorial page list" Command="{x:Bind ViewModel.DebugShowTutorialPageListCommand}"/>
-                            <Button Content="Changelog" Command="{x:Bind ViewModel.DebugShowChangelogCommand}" Margin="6,0,0,0"/>
-                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}" Margin="6,0,0,0"/>
+                            <Button Content="Changelog" Command="{x:Bind ViewModel.ShowChangelogCommand}"/>
+                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Spacing="6">
                             <Button Content="Feedback" Command="{x:Bind ViewModel.DebugShowFeedbackDialogCommand}"/>
+                            <Button Content="Updated" Command="{x:Bind ViewModel.DebugShowUpdatedDialogCommand}"/>
                         </StackPanel>
 
 
@@ -395,7 +396,7 @@
             x:Uid="DialogFeedback"
             IsLightDismissEnabled="False">
             <muxc:TeachingTip.IconSource>
-                <muxc:FontIconSource Glyph="&#xE939;"/>
+                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xE939;"/>
             </muxc:TeachingTip.IconSource>
 
             <StackPanel Orientation="Vertical" Margin="0,6,0,0">
@@ -414,6 +415,18 @@
                     <TextBlock x:Uid="DialogFeedbackButtonDonate"/>
                 </Button>
             </StackPanel>
+        </muxc:TeachingTip>
+
+        <muxc:TeachingTip
+            x:Name="TeachingTipUpdated"
+            x:Uid="DialogUpdated"
+            IsLightDismissEnabled="False"
+            ActionButtonCommand="{x:Bind ViewModel.ShowChangelogCommand}"
+            ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
+            ActionButtonStyle="{ThemeResource AccentButtonStyle}">
+            <muxc:TeachingTip.IconSource>
+                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xF133;"/>
+            </muxc:TeachingTip.IconSource>
         </muxc:TeachingTip>
     </Grid>
 </Page>

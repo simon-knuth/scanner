@@ -40,6 +40,7 @@
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
+            <converters:ScanMergeElementGlyphConverter x:Key="ScanMergeElementGlyphConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -98,24 +99,16 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="scanner:ScanMergeElement">
                         <GridViewItem AutomationProperties.Name="{Binding ItemDescriptor, Mode=OneWay}" Style="{ThemeResource DefaultGridViewItemStyle}">
-                            <Grid Width="110" Height="110" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <Grid Width="110" Height="110" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
+                                <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
 
                                 <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw"/>
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <interactivity:Interaction.Behaviors>
-                                        <core:DataTriggerBehavior Binding="{x:Bind IsPlaceholderForMultiplePages, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                            <core:ChangePropertyAction PropertyName="Glyph" Value="&#xE10C;" />
-                                        </core:DataTriggerBehavior>
-                                        <core:DataTriggerBehavior Binding="{x:Bind IsPlaceholderForMultiplePages, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                            <core:ChangePropertyAction PropertyName="Glyph" Value="&#xE294;" />
-                                        </core:DataTriggerBehavior>
-                                    </interactivity:Interaction.Behaviors>
-                                </FontIcon>
+                                <FontIcon Glyph="{x:Bind Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                                <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2"  Visibility="{x:Bind  IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip"/>
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" Visibility="{x:Bind ItemDescriptor, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>

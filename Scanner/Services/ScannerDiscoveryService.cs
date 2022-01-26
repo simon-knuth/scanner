@@ -225,9 +225,16 @@ namespace Scanner.Services
             catch (Exception) { }
         }
 
-        public void PauseSearchAsync()
+        public void TryPauseSearchAsync()
         {
-            Watcher?.Stop();
+            try
+            {
+                Watcher?.Stop();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public void TryResumeSearchAsync()

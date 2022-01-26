@@ -40,6 +40,13 @@ namespace Scanner
             set => SetProperty(ref _IsPotentialPage, value);
         }
 
+        private bool _IsStartPage;
+        public bool IsStartPage
+        {
+            get => _IsStartPage;
+            set => SetProperty(ref _IsStartPage, value);
+        }
+
         private bool _IsPlaceholderForMultiplePages;
         public bool IsPlaceholderForMultiplePages
         {

@@ -38,6 +38,7 @@ namespace Scanner.Views
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
             ViewModel.SetupRequested += ViewModel_SetupRequested;
             ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
+            ViewModel.UpdatedDialogRequested += ViewModel_UpdatedDialogRequested;
             ViewModel.PreviewDialogRequested += ViewModel_PreviewDialogRequested;
             ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
             ViewModel.ShareFilesChanged += ViewModel_ShareFilesChanged;
@@ -345,7 +346,14 @@ namespace Scanner.Views
         private async void ViewModel_ChangelogRequested(object sender, EventArgs e)
         {
             ChangelogDialogView dialog = new ChangelogDialogView();
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    ViewModel.ShowDonateDialogCommand.Execute(null);
+                }
+            });
         }
 
         private async void ViewModel_SetupRequested(object sender, EventArgs e)
@@ -362,12 +370,28 @@ namespace Scanner.Views
             });
         }
 
+        private async void ViewModel_UpdatedDialogRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipUpdated);
+            });
+        }
+
         private async Task AnnounceNarratorStatus()
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
                 TextBlockAutomationPeer peer = new TextBlockAutomationPeer(TextBlockNarratorStatus);
                 peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+            });
+        }
+
+        private async void TeachingTipUpdated_ActionButtonClick(WinUI.TeachingTip sender, object args)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TeachingTipUpdated.IsOpen = false;
             });
         }
     }

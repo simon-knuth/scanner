@@ -846,28 +846,28 @@ Fuzzy</comment>
     <value>Theme</value>
     <comment>The heading for the "Theme" option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>A stunning new interface</value>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>New preview experience</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Super-smart features</value>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Smaller PDFs</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Support for even more scan options</value>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Scan and merge</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Enjoy the fresh and inviting look inspired by Windows 11.</value>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Scan previews are now much bigger, so you don't need a magnifying glass any longer. Also added by popular demand: Selecting a scan region from the preview.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Automatically rotate scans, crop multiple pages at once and quickly reuse your previous settings across app sessions.</value>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Some users were experiencing difficulties sharing PDFs due to their huge file size. PDFs will now be optimized consistently for all users to save space on your device and make sharing easier.</value>
     <comment>Text for the second changelog section.</comment>
   </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Added support for advanced scan options such as automatic cropping and automatic color mode selection. Requires a compatible scanner.</value>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>If you've got a feeder scanner, you can now use the new "Scan and merge into PDF" tool to add pages in the right spots. Super useful for scanning two-sided sheets without a duplex scanner.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">

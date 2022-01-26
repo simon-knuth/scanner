@@ -66,26 +66,33 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <FontIcon Grid.Row="0" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE771;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,0,20">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEF20;" Margin="0,0,18,18" FontSize="32" Foreground="{ThemeResource SystemAccentColor}"/>
+                    <Border Background="{ThemeResource ContentDialogBackground}" Margin="18,18,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Border Background="{ThemeResource ContentDialogTopOverlay}" Padding="2">
+                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" FontSize="32" Foreground="{ThemeResource SystemAccentColor}"/>
+                        </Border>
+                    </Border>
+                </Grid>
                 <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Margin="24,0,0,20">
-                    <TextBlock x:Uid="HeadingChangelog3_0_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
-                    <TextBlock x:Uid="TextChangelog3_0_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Uid="HeadingChangelog3_1_0_0Section1" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                    <TextBlock x:Uid="TextChangelog3_1_0_0Section1" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                 </StackPanel>
 
-                <FontIcon Grid.Row="1" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74C;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                <FontIcon Grid.Row="1" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE1D8;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
                 <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="24,0,0,20">
-                    <TextBlock x:Uid="HeadingChangelog3_0_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
-                    <TextBlock x:Uid="TextChangelog3_0_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Uid="HeadingChangelog3_1_0_0Section2" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                    <TextBlock x:Uid="TextChangelog3_1_0_0Section2" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                 </StackPanel>
 
-                <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC7A;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                <FontIcon Grid.Row="2" Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA3C;" FontSize="32" Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
                 <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="24,0,0,20">
-                    <TextBlock x:Uid="HeadingChangelog3_0_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
-                    <TextBlock x:Uid="TextChangelog3_0_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                    <TextBlock x:Uid="HeadingChangelog3_1_0_0Section3" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                    <TextBlock x:Uid="TextChangelog3_1_0_0Section3" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="24,12,0,20">
-                    <TextBlock x:Uid="HeadingChangelog3_0_0_0Section4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
+                    <TextBlock Text="And much more!" x:Uid="HeadingChangelog3_0_0_0Section4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

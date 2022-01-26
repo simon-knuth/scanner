@@ -449,7 +449,7 @@ namespace Scanner.ViewModels
 
         private void ViewNavigatedFrom()
         {
-            ScannerDiscoveryService.PauseSearchAsync();
+            ScannerDiscoveryService.TryPauseSearchAsync();
         }
 
         /// <summary>

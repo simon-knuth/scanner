@@ -35,6 +35,7 @@ namespace Scanner.ViewModels
         public event EventHandler ChangelogRequested;
         public event EventHandler SetupRequested;
         public event EventHandler FeedbackDialogRequested;
+        public event EventHandler UpdatedDialogRequested;
         public event EventHandler PreviewDialogRequested;
         public event EventHandler ScanMergeDialogRequested;
         public event EventHandler<List<StorageFile>> ShareFilesChanged;
@@ -46,9 +47,10 @@ namespace Scanner.ViewModels
         public RelayCommand DebugTrackErrorCommand => new RelayCommand(DebugTrackError);
         public RelayCommand DebugBroadcastStatusMessageCommand => new RelayCommand(DebugBroadcastStatusMessage);
         public RelayCommand DebugShowTutorialPageListCommand => new RelayCommand(DebugShowTutorialPageList);
-        public RelayCommand DebugShowChangelogCommand => new RelayCommand(DebugShowChangelog);
         public RelayCommand DebugShowSetupCommand => new RelayCommand(DebugShowSetup);
+        public RelayCommand DebugShowUpdatedDialogCommand => new RelayCommand(ShowUpdatedDialog);
         public RelayCommand ShowDonateDialogCommand;
+        public RelayCommand ShowChangelogCommand => new RelayCommand(ShowChangelog);
         public RelayCommand DebugShowFeedbackDialogCommand;
         public AsyncRelayCommand StoreRatingCommand;
 
@@ -344,9 +346,14 @@ namespace Scanner.ViewModels
             TutorialPageListRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void DebugShowChangelog()
+        private void ShowChangelog()
         {
             ChangelogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ShowUpdatedDialog()
+        {
+            UpdatedDialogRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void DebugShowSetup()
@@ -365,9 +372,10 @@ namespace Scanner.ViewModels
             if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == true
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchEver) == false
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion) == true
-                && SystemInformation.Instance.PreviousVersionInstalled.Major != 3)
+                && SystemInformation.Instance.PreviousVersionInstalled.Major != 3
+                && SystemInformation.Instance.PreviousVersionInstalled.Minor != 1)
             {
-                ChangelogRequested?.Invoke(this, EventArgs.Empty);
+                UpdatedDialogRequested?.Invoke(this, EventArgs.Empty);
             }
             else if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == false)
             {

@@ -130,6 +130,7 @@ namespace Scanner.ViewModels
                         {
                             IsPotentialPage = true,
                             ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1),
+                            IsStartPage = true
                         });
 
                         // if 0 pages are skipped, add a total of 3 potential pages and then go on,
