@@ -859,15 +859,15 @@ Fuzzy</comment>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>Scan previews are now much bigger, so you don't need a magnifying glass any longer. Also added by popular demand: Selecting a scan region from the preview.</value>
+    <value>Scan previews are now much bigger, so you no longer need a magnifying glass. Also added by popular demand: Selecting a scan region from the preview.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>Some users were experiencing difficulties sharing PDFs due to their huge file size. PDFs will now be optimized consistently for all users to save space on your device and make sharing easier.</value>
+    <value>PDFs will now be optimized consistently regardless of the scanner to save space on your device and make sharing easier.</value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>If you've got a feeder scanner, you can now use the new "Scan and merge into PDF" tool to add pages in the right spots. Super useful for scanning two-sided sheets without a duplex scanner.</value>
+    <value>If you've got a feeder scanner, you can now use the new "Scan and merge into PDF" tool to add pages in the right spots. Super useful for scanning multiple two-sided sheets without a duplex scanner.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
@@ -1512,5 +1512,37 @@ If you're using a more professional scanner, you can now apply advanced scan opt
   <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
     <value>Scan and merge into PDF</value>
     <comment>The heading for the "Scan and merge" dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Single scanned page</value>
+    <comment>The preview description for a single page added in "Scan and merge". This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>First scanned page</value>
+    <comment>The preview description for the first page added in "Scan and merge". This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>All surplus pages</value>
+    <comment>The preview description for all surplus pages added in "Scan and merge". This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>You can use this mode to insert new pages in a specific spot. This also allows you to scan multiple two-sided sheets without duplex, by scanning the front sides normally first and then merging all the flip sides into the first batch.</value>
+    <comment>The explanation for "Scan and merge".</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>In-between pages</value>
+    <comment>The desciption for the in-between pages in "Scan and merge".</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>First page</value>
+    <comment>The desciption for the first page added in "Scan and merge".</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Scan and add to PDF</value>
+    <comment>The text of the "Scan and add to document" button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Scan and merge into PDF...</value>
+    <comment>The text of the "Scan and merge into PDF" button in the scan options for merging new pages into an existing document.</comment>
   </data>
 </root>

@@ -729,9 +729,10 @@
 
                 <muxc:SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom" Opening="MenuFlyoutButtonScan_Opening">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanAddToDocument" x:Uid="ButtonScanOptionsScanAddToDocument" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}"/>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Command="{x:Bind ViewModel.ScanFreshCommand}">
@@ -739,7 +740,7 @@
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Scan and merge into PDF..." x:Name="MenuFlyoutItemButtonScanMerge" x:Uid="ButtonScanOptionsScanMerge" Command="{x:Bind ViewModel.ScanMergeConfigCommand}">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanMerge" x:Uid="ButtonScanOptionsScanMerge" Command="{x:Bind ViewModel.ScanMergeConfigCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA3C;"/>
                             </MenuFlyoutItem.Icon>

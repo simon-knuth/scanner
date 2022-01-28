@@ -2,6 +2,7 @@
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
@@ -27,24 +28,35 @@ namespace Scanner.Views
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.NextDefaultScanAction))
+            switch (e.PropertyName)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    switch (ViewModel.NextDefaultScanAction)
+                case nameof(ViewModel.NextDefaultScanAction):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                     {
-                        case ViewModels.ScanAction.AddPages:
-                        case ViewModels.ScanAction.AddPagesToDocument:
-                        default:
-                            MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                            MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
-                            break;
-                        case ViewModels.ScanAction.StartFresh:
-                            MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
-                            MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                            break;
-                    }
-                });
+                        switch (ViewModel.NextDefaultScanAction)
+                        {
+                            case ViewModels.ScanAction.AddPages:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScan.Text);
+                                break;
+                            case ViewModels.ScanAction.AddPagesToDocument:
+                            default:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScanAddToDocument.Text);
+                                break;
+                            case ViewModels.ScanAction.StartFresh:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScanFresh.Text);
+                                break;
+                        }
+                    });
+                    break;
             }
         }
 

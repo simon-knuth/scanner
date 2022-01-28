@@ -129,18 +129,17 @@ namespace Scanner.ViewModels
                         newList.Add(new ScanMergeElement
                         {
                             IsPotentialPage = true,
-                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1),
+                            ItemDescriptor = LocalizedString("TextScanMergeElementStartPage"),
                             IsStartPage = true
                         });
 
-                        // if 0 pages are skipped, add a total of 3 potential pages and then go on,
-                        // otherwise would end up adding an infinite amount of potential pages
                         if (SkipPages == 0)
                         {
                             newList.Add(new ScanMergeElement
                             {
                                 IsPotentialPage = true,
                                 IsPlaceholderForMultiplePages = true,
+                                ItemDescriptor = LocalizedString("TextScanMergeElementSurplusPages")
                             });
 
                             for (int j = i; j < cleanList.Count; j++)
@@ -159,7 +158,7 @@ namespace Scanner.ViewModels
                         newList.Add(new ScanMergeElement
                         {
                             IsPotentialPage = true,
-                            ItemDescriptor = String.Format(LocalizedString("TextPageListDescriptor"), newList.Count + 1),
+                            ItemDescriptor = LocalizedString("TextScanMergeElementSinglePage")
                         });
                     }
 
@@ -173,6 +172,7 @@ namespace Scanner.ViewModels
                     {
                         IsPotentialPage = true,
                         IsPlaceholderForMultiplePages = true,
+                        ItemDescriptor = LocalizedString("TextScanMergeElementSurplusPages")
                     });
                 }
 

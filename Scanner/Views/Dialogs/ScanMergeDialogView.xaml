@@ -68,13 +68,13 @@
         </Grid.ColumnDefinitions>
 
         <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
-            <TextBlock Text="You can use this mode to insert new pages in a specific spot. This also allows you to scan multiple two-sided sheets without duplex, by scanning the front sides normally first and then merging all the flip sides into the first batch." Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,24"/>
+            <TextBlock x:Uid="TextScanMergeExplanation" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,24"/>
         </ScrollViewer>
         <muxc:NumberBox Grid.Row="1" Grid.Column="0" SpinButtonPlacementMode="Inline" Minimum="1" Maximum="{x:Bind ViewModel.TotalNumberOfPages, Mode=OneWay}" Value="{x:Bind ViewModel.StartPageNumber, Mode=TwoWay}" MinWidth="100" AutomationProperties.IsRequiredForForm="True" AutomationProperties.LandmarkType="Form">
             <muxc:NumberBox.Header>
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE819;" FontSize="16" />
-                    <TextBlock Text="First page" Style="{StaticResource BodyTextBlockStyle}" />
+                    <TextBlock x:Uid="TextScanMergeStartPage" Style="{StaticResource BodyTextBlockStyle}" />
                 </StackPanel>
             </muxc:NumberBox.Header>
         </muxc:NumberBox>
@@ -82,7 +82,7 @@
             <muxc:NumberBox.Header>
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE151;" FontSize="16" />
-                    <TextBlock Text="In-between pages" Style="{StaticResource BodyTextBlockStyle}" />
+                    <TextBlock x:Uid="TextScanMergeInBetweenPages" Style="{StaticResource BodyTextBlockStyle}" />
                 </StackPanel>
             </muxc:NumberBox.Header>
         </muxc:NumberBox>
@@ -103,7 +103,7 @@
                                 <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
                                 <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
 
-                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw"/>
+                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw" Margin="1"/>
                                 <FontIcon Glyph="{x:Bind Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                                 <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
@@ -112,16 +112,15 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-
-                            <GridViewItem.Transitions>
-                                <TransitionCollection>
-                                    <AddDeleteThemeTransition />
-                                    <ReorderThemeTransition />
-                                </TransitionCollection>
-                            </GridViewItem.Transitions>
                         </GridViewItem>
                     </DataTemplate>
                 </GridView.ItemTemplate>
+
+                <GridView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="0"/>
+                    </TransitionCollection>
+                </GridView.ItemContainerTransitions>
             </GridView>
         </ScrollViewer>
     </Grid>
