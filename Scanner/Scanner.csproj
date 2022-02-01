@@ -132,6 +132,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />
+    <Compile Include="Models\ScanMergeConfig.cs" />
     <Compile Include="Models\ScanMergeElement.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
     <Compile Include="Views\Converters\ScanActionVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\ScanMergeElementTooltipConverter.cs" />
     <Compile Include="Views\Converters\ScanMergeElementGlyphConverter.cs" />
     <Compile Include="Views\Converters\ToolTipConverter.cs" />
     <Compile Include="Views\Converters\SignedIntConverter.cs" />

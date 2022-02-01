@@ -59,5 +59,10 @@ namespace Scanner.Models
                     throw new ArgumentException("Unable to generate FriendlyName from format " + targetFormat + ".");
             }
         }
+
+        public override string ToString()
+        {
+            return FriendlyName;
+        }
     }
 }

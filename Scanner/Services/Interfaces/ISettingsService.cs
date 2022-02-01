@@ -67,7 +67,8 @@ namespace Scanner.Services
         SettingShowAdvancedScanOptions,
         SettingAnimations,
         SettingScanAction,
-        SettingMeasurementUnits
+        SettingMeasurementUnits,
+        TutorialScanMergeShown
     }
 
     public enum SettingSaveLocationType

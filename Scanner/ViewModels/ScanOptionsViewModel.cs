@@ -59,6 +59,7 @@ namespace Scanner.ViewModels
         public RelayCommand ScanMergeConfigCommand;
 
         public event EventHandler ScannerSearchTipRequested;
+        public event EventHandler ScanMergeTipRequested;
 
         private ObservableCollection<DiscoveredScanner> _Scanners;
         public ObservableCollection<DiscoveredScanner> Scanners
@@ -347,6 +348,7 @@ namespace Scanner.ViewModels
         public RelayCommand DebugDeleteScanOptionsFromDatabaseCommand;
         public AsyncRelayCommand DebugScanCommand;
         public RelayCommand DebugShowScannerTipCommand;
+        public RelayCommand DebugShowScanMergeTipCommand;
 
         private DiscoveredScanner _DebugScanner;
         public DiscoveredScanner DebugScanner
@@ -354,17 +356,6 @@ namespace Scanner.ViewModels
             get => _DebugScanner;
             set => SetProperty(ref _DebugScanner, value);
         }
-
-        public List<ImageScannerFormat> DebugScanFormats = new List<ImageScannerFormat>
-        {
-            ImageScannerFormat.Jpeg,
-            ImageScannerFormat.Png,
-            ImageScannerFormat.Pdf,
-            ImageScannerFormat.Tiff,
-            ImageScannerFormat.DeviceIndependentBitmap
-        };
-
-        public ImageScannerFormat DebugSelectedScanFormat;
 
         public bool DebugScanStartFresh;
 
@@ -409,6 +400,7 @@ namespace Scanner.ViewModels
             RemoveSelectedRegionCommand = new RelayCommand(() => SelectedScanRegion = null);
             ScanMergeConfigCommand = new RelayCommand(() => Messenger.Send(new ScanMergeDialogRequestMessage()));
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
+            DebugShowScanMergeTipCommand = new RelayCommand(() => ScanMergeTipRequested?.Invoke(this, EventArgs.Empty));
             ResetBrightnessCommand = new RelayCommand(ResetBrightness);
             ResetContrastCommand = new RelayCommand(ResetContrast);
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
@@ -1291,10 +1283,10 @@ namespace Scanner.ViewModels
                         {
                             // create new result
                             if (ConvertFormatStringToImageScannerFormat(copiedFiles[0].FileType)
-                                != DebugSelectedScanFormat)
+                                != scanOptions.Format.TargetFormat)
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder, DebugSelectedScanFormat);
+                                    targetFolder, scanOptions.Format.TargetFormat);
                             }
                             else
                             {
@@ -1309,7 +1301,7 @@ namespace Scanner.ViewModels
                                 != ScanResultService.Result.ScanResultFormat)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    DebugSelectedScanFormat);
+                                    scanOptions.Format.TargetFormat);
                             }
                             else
                             {
@@ -1372,6 +1364,12 @@ namespace Scanner.ViewModels
                 {
                     AnnouncementText = String.Format(LocalizedString("TextScanCompleteMultipleAccessibility"), numberOfScannedPages)
                 });
+            }
+
+            // scan and merge tip
+            if (numberOfScannedPages >= 1)
+            {
+                ShowScanMergeTipIfNeeded();
             }
         }
 
@@ -1494,6 +1492,36 @@ namespace Scanner.ViewModels
             if (ScannerContrastConfig != null)
             {
                 SelectedContrast = ScannerContrastConfig.DefaultContrast;
+            }
+        }
+
+        private void ShowScanMergeTipIfNeeded()
+        {
+            try
+            {
+                // tip already shown?
+                if ((bool)SettingsService.GetSetting(AppSetting.TutorialScanMergeShown)) return;
+                
+                // scanner selected and pages exist?
+                if (SelectedScanner == null || ScanResultService.Result == null) return;
+
+                // right result format?
+                if (ScanResultService.Result.IsImage) return;
+
+                // feeder supported, and duplex not?
+                if (!SelectedScanner.IsFeederAllowed || SelectedScanner.IsFeederDuplexAllowed) return;
+
+                // right source mode selected?
+                ScanOptions scanOptions = CreateScanOptions();
+                if (scanOptions.Source != Enums.ScannerSource.Feeder && scanOptions.Source != Enums.ScannerSource.Auto) return;
+
+                // all conditions met
+                ScanMergeTipRequested?.Invoke(this, EventArgs.Empty);
+                SettingsService.SetSetting(AppSetting.TutorialScanMergeShown, true);
+            }
+            catch (Exception exc)
+            {
+                AppCenterService.TrackError(exc);
             }
         }
     }

@@ -315,7 +315,7 @@
                                         <DataTemplate x:DataType="models:ScannerFileFormat">
                                             <StackPanel Orientation="Horizontal" AutomationProperties.Name="{x:Bind FriendlyName}">
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind TargetFormat, Converter={StaticResource ScannerFileFormatGlyphConverter}}" FontSize="16" Margin="0,0,12,0"/>
-                                                <TextBlock Text="{x:Bind FriendlyName}"/>
+                                                <TextBlock Text="{x:Bind FriendlyName}" AutomationProperties.IsPeripheral="True"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
@@ -763,11 +763,11 @@
                                 <TextBlock Text="Debug scanning" Style="{StaticResource BaseTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <ComboBox Header="Target format" Width="150" ItemsSource="{x:Bind ViewModel.DebugScanFormats}" SelectedItem="{x:Bind ViewModel.DebugSelectedScanFormat, Mode=TwoWay}"/>
+                                <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
                                 <CheckBox Content="Start fresh" IsChecked="{x:Bind ViewModel.DebugScanStartFresh, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
                             </StackPanel>
                             <MenuFlyoutSeparator Margin="0,12,0,12"/>
-                            <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Show scan and merge tip" Command="{x:Bind ViewModel.DebugShowScanMergeTipCommand}" />
                         </StackPanel>
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>
@@ -775,5 +775,11 @@
         </Grid>
 
         <muxc:TeachingTip x:Name="TeachingTipScannerSearchTip" x:Uid="DialogScannerSearchTip" Target="{x:Bind HyperlinkButtonHelpScanners}" PlacementMargin="3" PreferredPlacement="Bottom" IsLightDismissEnabled="False"/>
+
+        <muxc:TeachingTip x:Name="TeachingTipScanMerge" x:Uid="DialogScanMergeTip" Target="{x:Bind ButtonScan}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False">
+            <muxc:TeachingTip.IconSource>
+                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xEA3C;"/>
+            </muxc:TeachingTip.IconSource>
+        </muxc:TeachingTip>
     </Grid>
 </Page>

@@ -267,6 +267,9 @@ namespace Scanner.Services
                     
                     return SettingsContainer.Values[name] ?? measurementUnit;
 
+                case AppSetting.TutorialScanMergeShown:
+                    return SettingsContainer.Values[name] ?? false;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -375,6 +378,10 @@ namespace Scanner.Services
 
                 case AppSetting.SettingMeasurementUnits:
                     SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.TutorialScanMergeShown:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:

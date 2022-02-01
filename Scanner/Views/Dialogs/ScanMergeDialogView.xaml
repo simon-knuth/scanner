@@ -41,6 +41,7 @@
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:ScanMergeElementGlyphConverter x:Key="ScanMergeElementGlyphConverter"/>
+            <converters:ScanMergeElementTooltipConverter x:Key="ScanMergeElementTooltipConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -89,39 +90,29 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
 
         <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="241" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0">
-            <GridView x:Name="ItemsRepeaterScanMergeElements" VerticalAlignment="Top" IsEnabled="False" ItemsSource="{x:Bind ViewModel.MergeResult, Mode=OneWay}" Margin="24,16,24,24" MinHeight="200">
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsWrapGrid x:Name="ItemsWrapGridScanMergeElements" MaximumRowsOrColumns="4" Orientation="Horizontal" HorizontalAlignment="Center"/>
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
+            <muxc:ItemsRepeater x:Name="ItemsRepeaterScanMergeElements" HorizontalAlignment="Center" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.MergeResult, Mode=OneWay}" Margin="24,16,24,24" MinHeight="200">
+                <muxc:ItemsRepeater.Layout>
+                    <muxc:UniformGridLayout MaximumRowsOrColumns="4" Orientation="Horizontal" MinRowSpacing="8"/>
+                </muxc:ItemsRepeater.Layout>
 
-                <GridView.ItemTemplate>
+                <muxc:ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="scanner:ScanMergeElement">
-                        <GridViewItem AutomationProperties.Name="{Binding ItemDescriptor, Mode=OneWay}" Style="{ThemeResource DefaultGridViewItemStyle}">
-                            <Grid Width="110" Height="110" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
-                                <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
+                        <Grid AutomationProperties.Name="{Binding ItemDescriptor, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Converter={StaticResource ScanMergeElementTooltipConverter}}" Width="110" Height="110" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="{StaticResource ControlCornerRadius}">
+                            <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
+                            <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
 
-                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw" Margin="1"/>
-                                <FontIcon Glyph="{x:Bind Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw" Margin="1"/>
+                            <FontIcon Glyph="{x:Bind Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                                <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" Visibility="{x:Bind ItemDescriptor, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-                        </GridViewItem>
+                            <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" Visibility="{x:Bind ItemDescriptor, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </DataTemplate>
-                </GridView.ItemTemplate>
-
-                <GridView.ItemContainerTransitions>
-                    <TransitionCollection>
-                        <EntranceThemeTransition FromVerticalOffset="0"/>
-                    </TransitionCollection>
-                </GridView.ItemContainerTransitions>
-            </GridView>
+                </muxc:ItemsRepeater.ItemTemplate>
+            </muxc:ItemsRepeater>
         </ScrollViewer>
     </Grid>
 

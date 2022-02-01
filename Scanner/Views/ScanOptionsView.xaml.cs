@@ -19,6 +19,15 @@ namespace Scanner.Views
             this.InitializeComponent();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.ScannerSearchTipRequested += ViewModel_ScannerSearchTipRequested;
+            ViewModel.ScanMergeTipRequested += ViewModel_ScanMergeTipRequested;
+        }
+
+        private async void ViewModel_ScanMergeTipRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipScanMerge);
+            });
         }
 
         private void ViewModel_PreviewRequested(object sender, EventArgs e)
@@ -149,6 +158,8 @@ namespace Scanner.Views
                     && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder
                         || (ViewModel.ScannerSource == Enums.ScannerSource.Auto
                             && ViewModel.SelectedScanner.IsFeederAllowed));
+
+                TeachingTipScanMerge.IsOpen = false;
             });
         }
     }
