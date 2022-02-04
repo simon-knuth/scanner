@@ -143,6 +143,7 @@
     <Compile Include="Services\Messenger\Messages\PreviewDialogRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewParametersRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewSelectedRegionChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\ScanMergeRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SettingsRequestShellMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\NarratorAnnouncementMessage.cs" />

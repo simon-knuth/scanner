@@ -53,6 +53,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand ScanDefaultCommand;
         public AsyncRelayCommand ScanCommand;
         public AsyncRelayCommand ScanFreshCommand;
+        public AsyncRelayCommand<ScanMergeConfig> ScanMergeCommand;
         public RelayCommand CancelScanCommand;
         public RelayCommand PreviewScanCommand;
         public RelayCommand RemoveSelectedRegionCommand;
@@ -378,22 +379,27 @@ namespace Scanner.ViewModels
             ScanDefaultCommand = new AsyncRelayCommand(async () =>
             {
                 if (ScanDefaultCommand.IsRunning) return;      // already running?
-                await ScanAsync(NextDefaultScanAction == ScanAction.StartFresh, false);
+                await ScanAsync(NextDefaultScanAction == ScanAction.StartFresh, false, null);
             });
             ScanCommand = new AsyncRelayCommand(async () =>
             {
                 if (ScanCommand.IsRunning) return;      // already running?
-                await ScanAsync(false, false);
+                await ScanAsync(false, false, null);
             });
             ScanFreshCommand = new AsyncRelayCommand(async () =>
             {
                 if (ScanCommand.IsRunning) return;      // already running?
-                await ScanAsync(true, false);
+                await ScanAsync(true, false, null);
+            });
+            ScanMergeCommand = new AsyncRelayCommand<ScanMergeConfig>(async (x) =>
+            {
+                if (ScanCommand.IsRunning) return;      // already running?
+                await ScanAsync(false, SelectedScanner.Debug, x);
             });
             DebugScanCommand = new AsyncRelayCommand(async () =>
             {
                 if (ScanCommand.IsRunning) return;      // already running?
-                await ScanAsync(DebugScanStartFresh == true, true);
+                await ScanAsync(DebugScanStartFresh == true, true, null);
             });
             CancelScanCommand = new RelayCommand(CancelScan);
             PreviewScanCommand = new RelayCommand(() => Messenger.Send(new PreviewDialogRequestMessage()));
@@ -415,6 +421,7 @@ namespace Scanner.ViewModels
             Messenger.Register<PreviewParametersRequestMessage>(this, (r, m) => 
                 m.Reply(new Tuple<DiscoveredScanner, ScanOptions>(SelectedScanner, CreateScanOptions())));
             Messenger.Register<PreviewSelectedRegionChangedMessage>(this, (r, m) => SelectedScanRegion = m.Value);
+            Messenger.Register<ScanMergeRequestMessage>(this, (r, m) => ScanMergeCommand.Execute(m.ScanMergeConfig));
 
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
@@ -1072,7 +1079,7 @@ namespace Scanner.ViewModels
             };
         }
 
-        private async Task ScanAsync(bool startFresh, bool debug)
+        private async Task ScanAsync(bool startFresh, bool debug, ScanMergeConfig mergeConfig)
         {
             LogService?.Log.Information("ScanAsync");
             StorageFolder targetFolder = null;
@@ -1201,7 +1208,7 @@ namespace Scanner.ViewModels
                             if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                    null);
+                                    null, mergeConfig);
                             }
                             else
                             {
@@ -1301,14 +1308,14 @@ namespace Scanner.ViewModels
                                 != ScanResultService.Result.ScanResultFormat)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    scanOptions.Format.TargetFormat);
+                                    scanOptions.Format.TargetFormat, mergeConfig);
                             }
                             else
                             {
                                 if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                                 {
                                     await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                        null);
+                                        null, mergeConfig);
                                 }
                                 else
                                 {

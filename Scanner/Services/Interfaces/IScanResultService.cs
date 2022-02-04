@@ -34,9 +34,12 @@ namespace Scanner.Services
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder);
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
             ImageScannerFormat targetFormat);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat);
+
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
             StorageFolder targetFolder);
-        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
+            ScanMergeConfig mergeConfig);
         
         void DismissScanResult();
 

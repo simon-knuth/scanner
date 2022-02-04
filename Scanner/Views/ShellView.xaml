@@ -354,7 +354,7 @@
                             <Button Content="Feedback" Command="{x:Bind ViewModel.DebugShowFeedbackDialogCommand}"/>
                             <Button Content="Updated" Command="{x:Bind ViewModel.DebugShowUpdatedDialogCommand}"/>
                         </StackPanel>
-
+                        
 
                         <StackPanel Orientation="Horizontal" Margin="0,32,0,16">
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>

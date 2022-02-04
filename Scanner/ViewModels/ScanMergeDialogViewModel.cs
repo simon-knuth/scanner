@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Services;
@@ -25,8 +26,10 @@ namespace Scanner.ViewModels
 
         public event EventHandler CloseRequested;
 
+        public RelayCommand ClosedCommand => new RelayCommand(Closed);
+
         private List<ScanMergeElement> _MergeResult;
-        public List<ScanMergeElement> MergeResult
+        public List<ScanMergeElement> MergePreview
         {
             get => _MergeResult;
             set => SetProperty(ref _MergeResult, value);
@@ -103,7 +106,7 @@ namespace Scanner.ViewModels
                     ItemDescriptor = element.ItemDescriptor,
                 });
             }
-            MergeResult = newList;
+            MergePreview = newList;
             TotalNumberOfPages = ScanResultService.Result.NumberOfPages;
             StartPageNumber = 2;
         }
@@ -116,7 +119,9 @@ namespace Scanner.ViewModels
         {
             try
             {
-                List<ScanMergeElement> cleanList = new List<ScanMergeElement>(MergeResult);
+                LogService?.Log.Information("Creating 'Scan and merge' preview for {StartPage} and {SkipPages}",
+                    StartPageNumber, SkipPages);
+                List<ScanMergeElement> cleanList = new List<ScanMergeElement>(MergePreview);
                 cleanList.RemoveAll((x) => x.IsPotentialPage == true);
 
                 // generate new final pages
@@ -176,12 +181,74 @@ namespace Scanner.ViewModels
                     });
                 }
 
-                MergeResult = newList;
+                MergePreview = newList;
             }
             catch (Exception exc)
             {
+                LogService?.Log.Error(exc, "Failed to create 'Scan and merge' preview");
+                AppCenterService?.TrackError(exc);
+                CloseRequested?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
-                throw;
+        private void Closed()
+        {
+            ScanMergeConfig config = CreateMergeConfig();
+            if (config != null)
+            {
+                Messenger.Send(new ScanMergeRequestMessage(config));
+            }
+        }
+
+        private ScanMergeConfig CreateMergeConfig()
+        {
+            try
+            {
+                LogService?.Log.Information("Creating 'Scan and merge' preview for {StartPage} and {SkipPages}",
+                    StartPageNumber, SkipPages);
+
+                if (MergePreview != null && MergePreview.Count >= 1)
+                {
+                    // create config from preview
+                    ScanMergeConfig config = new ScanMergeConfig();
+
+                    int i = 0;
+                    foreach (ScanMergeElement element in MergePreview)
+                    {
+                        if (element.IsPotentialPage)
+                        {
+                            // single new page
+                            config.InsertIndices.Add(i);
+                            i++;
+                        }
+                        else if (element.IsPlaceholderForMultiplePages)
+                        {
+                            // surplus pages
+                            config.SurplusPagesIndex = i;
+                            break;
+                        }
+                        else
+                        {
+                            // single existing page
+                            i++;
+                        }
+                    }
+
+                    LogService?.Log.Information("Returning 'Scan and merge' {@Config}", config);
+                    return config;
+                }
+                else
+                {
+                    LogService?.Log.Information("Returning no 'Scan and merge' config.");
+                    return null;
+                }
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Failed to create 'Scan and merge' config");
+                AppCenterService?.TrackError(exc);
+                CloseRequested?.Invoke(this, EventArgs.Empty);
+                return null;
             }
         }
     }

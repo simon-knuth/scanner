@@ -1506,7 +1506,7 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <comment>The close button text of the "Scan and merge" dialog.</comment>
   </data>
   <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
-    <value>Scan</value>
+    <value>Scan and merge</value>
     <comment>The text of the button that starts a scan from the "Scan and merge" dialog.</comment>
   </data>
   <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
@@ -1546,7 +1546,7 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <comment>The text of the "Scan and merge into PDF" button in the scan options for merging new pages into an existing document.</comment>
   </data>
   <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
-    <value>You can use "Scan and merge into PDF" to insert multiple new pages in specific spots. This makes scanning two-sided sheets much easier.</value>
+    <value>You can select "Scan and merge into PDF" from the scan menu to insert new pages in specific spots. This makes scanning two-sided sheets much easier.</value>
     <comment>The subtitle of the dialog that quickly highlights the "Scan and merge" tool.</comment>
   </data>
   <data name="DialogScanMergeTip.Title" xml:space="preserve">

@@ -136,7 +136,29 @@ namespace Scanner.Services
             IsScanResultChanging = true;
             try
             {
-                await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex);
+                await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex, null);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsScanResultChanging = false;
+            }
+        }
+
+        /// <summary>
+        ///     Adds <paramref name="files"/> to the existing <see cref="Result"/>, converting the file(s) to the
+        ///     specified <paramref name="targetFormat"/>.
+        /// </summary>
+        public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
+            ScanMergeConfig mergeConfig)
+        {
+            IsScanResultChanging = true;
+            try
+            {
+                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, mergeConfig);
             }
             catch (Exception)
             {
@@ -157,7 +179,7 @@ namespace Scanner.Services
             IsScanResultChanging = true;
             try
             {
-                await Result.AddFiles(files, targetFormat, FutureAccessListIndex);
+                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, null);
             }
             catch (Exception)
             {
