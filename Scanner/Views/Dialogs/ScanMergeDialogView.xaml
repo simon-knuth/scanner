@@ -99,9 +99,14 @@
                     <DataTemplate x:DataType="scanner:ScanMergeElement">
                         <Grid AutomationProperties.Name="{Binding ItemDescriptor, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Converter={StaticResource ScanMergeElementTooltipConverter}}" Width="110" Height="110" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="{StaticResource ControlCornerRadius}">
                             <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" Background="{ThemeResource CustomGridViewItemSelectedBackgroundBrush}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
-                            <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" />
+                            <Border Visibility="{x:Bind IsPotentialPage, Converter={StaticResource NegativeBoolVisibilityConverter}}" CornerRadius="{StaticResource ControlCornerRadius}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
-                            <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" AutomationProperties.AccessibilityView="Raw" Margin="1"/>
+                            <Border BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}" Visibility="{x:Bind Thumbnail, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                                <Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="3">
+                                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}" AutomationProperties.AccessibilityView="Raw"/>
+                                </Border>
+                            </Border>
+
                             <FontIcon Glyph="{x:Bind Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind IsPotentialPage, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                             <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">

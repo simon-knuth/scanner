@@ -1553,4 +1553,12 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>Scan and merge</value>
     <comment>The title of the dialog that quickly highlights the "Scan and merge" tool.</comment>
   </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>The file you are trying to edit/use is unavailable. Please don't move, rename or open files outside of the app, until you are done editing here.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>File unavailable</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
 </root>

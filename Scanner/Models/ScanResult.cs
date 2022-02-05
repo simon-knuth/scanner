@@ -1446,14 +1446,7 @@ namespace Scanner
                 if (targetFormat == ImageScannerFormat.Pdf)
                 {
                     // number files
-                    if (mergeConfig == null)
-                    {
-                        await PrepareNewConversionFiles(files, NumberOfPages);
-                    }
-                    else
-                    {
-                        await PrepareNewConversionFiles(files, mergeConfig);
-                    }
+                    await PrepareNewConversionFiles(files, NumberOfPages);
                 }
 
                 for (int i = 0; i < files.Count(); i++)
@@ -1766,37 +1759,6 @@ namespace Scanner
             }
         }
 
-
-        /// <summary>
-        ///     Numbers new files.
-        /// </summary>
-        /// <param name="files">The files to be numbered.</param>
-        /// <param name="mergeConfig">The config for merging these files into the existing ones.</param>
-        private static async Task PrepareNewConversionFiles(IEnumerable<StorageFile> files, ScanMergeConfig mergeConfig)
-        {
-            ILogService logService = Ioc.Default.GetService<ILogService>();
-            IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
-
-            try
-            {
-                int nextNumber, mergeIndex = 0;
-
-                foreach (StorageFile file in files)
-                {
-                    nextNumber = GetNewIndexAccordingToMergeConfig(mergeIndex, mergeConfig);
-                    
-                    await file.MoveAsync(appDataService.FolderConversion, nextNumber + file.FileType);
-
-                    nextNumber++;
-                    mergeIndex++;
-                }
-            }
-            catch (Exception exc)
-            {
-                logService?.Log.Error(exc, "Preparing conversion files with mergeConfig {@MergeConfig} failed.", mergeConfig);
-                throw;
-            }
-        }
 
         /// <summary>
         ///     Calculates the index a new page will have in the <see cref="ScanResult"/>.

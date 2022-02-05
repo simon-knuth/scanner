@@ -8,6 +8,8 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:Scanner.Helpers"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
@@ -21,7 +23,13 @@
     <ContentDialog.DataContext>
         <viewModels:DonateDialogViewModel x:Name="ViewModel"/>
     </ContentDialog.DataContext>
-    
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->

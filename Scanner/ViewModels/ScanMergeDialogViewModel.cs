@@ -215,17 +215,17 @@ namespace Scanner.ViewModels
                     int i = 0;
                     foreach (ScanMergeElement element in MergePreview)
                     {
-                        if (element.IsPotentialPage)
-                        {
-                            // single new page
-                            config.InsertIndices.Add(i);
-                            i++;
-                        }
-                        else if (element.IsPlaceholderForMultiplePages)
+                        if (element.IsPlaceholderForMultiplePages)
                         {
                             // surplus pages
                             config.SurplusPagesIndex = i;
                             break;
+                        }
+                        else if (element.IsPotentialPage)
+                        {
+                            // single new page
+                            config.InsertIndices.Add(i);
+                            i++;
                         }
                         else
                         {

@@ -10,7 +10,7 @@ using static Scanner.Helpers.AppConstants;
 
 namespace Scanner.ViewModels
 {
-    public class DonateDialogViewModel : ObservableRecipient
+    public class DonateDialogViewModel : ObservableRecipient, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +18,7 @@ namespace Scanner.ViewModels
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
 
+        public RelayCommand DisposeCommand;
         public AsyncRelayCommand DonateCommand;
 
 
@@ -35,6 +36,12 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void Dispose()
+        {
+            // clean up messenger
+            Messenger.UnregisterAll(this);
+        }
+
         /// <summary>
         ///     Opens the donation webpage specified by <see cref="UriDonation"/>.
         /// </summary>
