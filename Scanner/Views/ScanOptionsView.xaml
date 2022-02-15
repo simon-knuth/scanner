@@ -698,7 +698,7 @@
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout Placement="TopEdgeAlignedLeft">
-                            <MenuFlyoutItem Text="Discard selected scan region" Command="{x:Bind ViewModel.RemoveSelectedRegionCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                            <MenuFlyoutItem x:Uid="ButtonScanOptionsDiscardScanRegion" Command="{x:Bind ViewModel.RemoveSelectedRegionCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;"/>
                                 </MenuFlyoutItem.Icon>

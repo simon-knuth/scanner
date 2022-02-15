@@ -1561,4 +1561,8 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>File unavailable</value>
     <comment>The error message heading that appears when a file is unavailable.</comment>
   </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Discard selected scan region</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
 </root>

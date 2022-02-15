@@ -19,7 +19,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        protected readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
 
         public ImageScanner Device;
         public string Id;
@@ -77,9 +77,17 @@ namespace Scanner.Models
 
             Name = name;
 
-            IsAutoAllowed = device.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured);
-            IsFeederAllowed = device.IsScanSourceSupported(ImageScannerScanSource.Feeder);
-            IsFlatbedAllowed = device.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
+            try
+            {
+                IsAutoAllowed = device.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured);
+                IsFeederAllowed = device.IsScanSourceSupported(ImageScannerScanSource.Feeder);
+                IsFlatbedAllowed = device.IsScanSourceSupported(ImageScannerScanSource.Flatbed);
+            }
+            catch (Exception exc)
+            {
+                LogService.Log.Error(exc, "DiscoveredScanner: Couldn't determine supported scan sources.");
+                throw;
+            }
 
             if (IsAutoAllowed)
             {
@@ -116,24 +124,12 @@ namespace Scanner.Models
 
                     if (device.FlatbedConfiguration.BrightnessStep != 0)
                     {
-                        FlatbedBrightnessConfig = new BrightnessConfig
-                        {
-                            MinBrightness = device.FlatbedConfiguration.MinBrightness,
-                            MaxBrightness = device.FlatbedConfiguration.MaxBrightness,
-                            BrightnessStep = (int)device.FlatbedConfiguration.BrightnessStep,
-                            DefaultBrightness = device.FlatbedConfiguration.DefaultBrightness,
-                        };
+                        FlatbedBrightnessConfig = GenerateBrightnessConfig(device.FlatbedConfiguration);
                     }
 
                     if (device.FlatbedConfiguration.ContrastStep != 0)
                     {
-                        FlatbedContrastConfig = new ContrastConfig
-                        {
-                            MinContrast = device.FlatbedConfiguration.MinContrast,
-                            MaxContrast = device.FlatbedConfiguration.MaxContrast,
-                            ContrastStep = (int)device.FlatbedConfiguration.ContrastStep,
-                            DefaultContrast = device.FlatbedConfiguration.DefaultContrast,
-                        };
+                        FlatbedContrastConfig = GenerateContrastConfig(device.FlatbedConfiguration);
                     }
                 }
             }
@@ -167,24 +163,12 @@ namespace Scanner.Models
 
                     if (device.FeederConfiguration.BrightnessStep != 0)
                     {
-                        FeederBrightnessConfig = new BrightnessConfig
-                        {
-                            MinBrightness = device.FeederConfiguration.MinBrightness,
-                            MaxBrightness = device.FeederConfiguration.MaxBrightness,
-                            BrightnessStep = (int)device.FeederConfiguration.BrightnessStep,
-                            DefaultBrightness = device.FeederConfiguration.DefaultBrightness,
-                        };
+                        FeederBrightnessConfig = GenerateBrightnessConfig(device.FeederConfiguration);
                     }
 
                     if (device.FeederConfiguration.ContrastStep != 0)
                     {
-                        FeederContrastConfig = new ContrastConfig
-                        {
-                            MinContrast = device.FeederConfiguration.MinContrast,
-                            MaxContrast = device.FeederConfiguration.MaxContrast,
-                            ContrastStep = (int)device.FeederConfiguration.ContrastStep,
-                            DefaultContrast = device.FeederConfiguration.DefaultContrast,
-                        };
+                        FeederContrastConfig = GenerateContrastConfig(device.FeederConfiguration);
                     }
                 }
             }
@@ -208,13 +192,84 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        ///     Generates the <see cref="BrightnessConfig"/> for a flatbed/feeder <paramref name="config"/>.
+        /// </summary>
+        internal static BrightnessConfig GenerateBrightnessConfig(IImageScannerSourceConfiguration config)
+        {
+            if (config.BrightnessStep == 0) return null;
+
+            BrightnessConfig result = new BrightnessConfig
+            {
+                MinBrightness = config.MinBrightness,
+                MaxBrightness = config.MaxBrightness,
+                BrightnessStep = (int)config.BrightnessStep,
+                DefaultBrightness = config.DefaultBrightness,
+            };
+
+            // determine virtual default brightness
+            if (Math.Abs(Math.Abs(result.DefaultBrightness + result.BrightnessStep)
+                    - Math.Abs(result.MaxBrightness))
+                <=
+                Math.Abs(Math.Abs(result.DefaultBrightness - result.BrightnessStep)
+                    - Math.Abs(result.MinBrightness)))
+            {
+                result.VirtualDefaultBrightness = result.DefaultBrightness
+                    - result.BrightnessStep;
+            }
+            else
+            {
+                result.VirtualDefaultBrightness = result.DefaultBrightness
+                    + result.BrightnessStep;
+            }
+
+            return result;
+
+        }
+
+        /// <summary>
+        ///     Generates the <see cref="ContrastConfig"/> for a flatbed/feeder <paramref name="config"/>.
+        /// </summary>
+        internal static ContrastConfig GenerateContrastConfig(IImageScannerSourceConfiguration config)
+        {
+            if (config.ContrastStep == 0) return null;
+
+            ContrastConfig result = new ContrastConfig
+            {
+                MinContrast = config.MinContrast,
+                MaxContrast = config.MaxContrast,
+                ContrastStep = (int)config.ContrastStep,
+                DefaultContrast = config.DefaultContrast,
+            };
+
+            // determine virtual default contrast
+            if (Math.Abs(Math.Abs(result.DefaultContrast + result.ContrastStep)
+                    - Math.Abs(result.MaxContrast))
+                <=
+                Math.Abs(Math.Abs(result.DefaultContrast - result.ContrastStep)
+                    - Math.Abs(result.MinContrast)))
+            {
+                result.VirtualDefaultContrast = result.DefaultContrast
+                    - result.ContrastStep;
+            }
+            else
+            {
+                result.VirtualDefaultContrast = result.DefaultContrast
+                    + result.ContrastStep;
+            }
+
+            return result;
+
+        }
+
         /// <summary>
         ///     Generates the true available resolution values for a flatbed/feeder configuration. Also enriches the resolution
         ///     values with the related <see cref="ResolutionAnnotation"/> and a friendly string.
         ///     Assumption: DpiX = DpiY
         /// </summary>
         /// <param name="config">The configuration for which resolution values are to be determined.</param>
-        private ObservableCollection<ScanResolution> GenerateResolutions(IImageScannerSourceConfiguration config)
+        internal static ObservableCollection<ScanResolution> GenerateResolutions(IImageScannerSourceConfiguration config)
         {
             float currentValue = config.MinResolution.DpiX;
             float lastValue = -1;
@@ -275,7 +330,7 @@ namespace Scanner.Models
         ///     formats available using conversion. The formats are generated in the following order
         ///     used in the formatArray.
         /// </summary>
-        private ObservableCollection<ScannerFileFormat> GenerateFormats(IImageScannerFormatConfiguration config)
+        internal static ObservableCollection<ScannerFileFormat> GenerateFormats(IImageScannerFormatConfiguration config)
         {
             List<ScannerFileFormat> unsortedResult = new List<ScannerFileFormat>();
             ImageScannerFormat[] formatArray =
@@ -396,13 +451,58 @@ namespace Scanner.Models
                     // brightness
                     if (options.Brightness != null)
                     {
-                        Device.FlatbedConfiguration.Brightness = (int)options.Brightness;
+                        if ((int)options.Brightness == FlatbedBrightnessConfig.DefaultBrightness)
+                        {
+                            // replace default brightness with virtual default brightness
+                            Device.FlatbedConfiguration.Brightness = FlatbedBrightnessConfig.VirtualDefaultBrightness;
+                        }
+                        else
+                        {
+                            Device.FlatbedConfiguration.Brightness = (int)options.Brightness;
+                        }
                     }
 
                     // contrast
                     if (options.Contrast != null)
                     {
-                        Device.FlatbedConfiguration.Contrast = (int)options.Contrast;
+                        if ((int)options.Brightness == FlatbedContrastConfig.DefaultContrast)
+                        {
+                            // replace default contrast with virtual default contrast
+                            Device.FlatbedConfiguration.Contrast = FlatbedContrastConfig.VirtualDefaultContrast;
+                        }
+                        else
+                        {
+                            Device.FlatbedConfiguration.Contrast = (int)options.Contrast;
+                        }
+                    }
+
+                    // scan region
+                    if (options.SelectedRegion != null)
+                    {
+                        try
+                        {
+                            Device.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                            {
+                                X = options.SelectedRegion.Value.X,
+                                Y = options.SelectedRegion.Value.Y,
+                                Width = options.SelectedRegion.Value.Width,
+                                Height = options.SelectedRegion.Value.Height
+                            };
+                        }
+                        catch (Exception exc)
+                        {
+                            throw new ArgumentException("Selected region is invalid", exc);
+                        }
+                    }
+                    else
+                    {
+                        Device.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                        {
+                            X = 0,
+                            Y = 0,
+                            Width = Device.FlatbedConfiguration.MaxScanArea.Width,
+                            Height = Device.FlatbedConfiguration.MaxScanArea.Height
+                        };
                     }
                     break;
 
@@ -464,13 +564,58 @@ namespace Scanner.Models
                     // brightness
                     if (options.Brightness != null)
                     {
-                        Device.FeederConfiguration.Brightness = (int)options.Brightness;
+                        if ((int)options.Brightness == FeederBrightnessConfig.DefaultBrightness)
+                        {
+                            // replace default brightness with virtual default brightness
+                            Device.FeederConfiguration.Brightness = FeederBrightnessConfig.VirtualDefaultBrightness;
+                        }
+                        else
+                        {
+                            Device.FeederConfiguration.Brightness = (int)options.Brightness;
+                        }
                     }
 
                     // contrast
                     if (options.Contrast != null)
                     {
-                        Device.FeederConfiguration.Contrast = (int)options.Contrast;
+                        if ((int)options.Brightness == FeederContrastConfig.DefaultContrast)
+                        {
+                            // replace default contrast with virtual default contrast
+                            Device.FeederConfiguration.Contrast = FeederContrastConfig.VirtualDefaultContrast;
+                        }
+                        else
+                        {
+                            Device.FeederConfiguration.Contrast = (int)options.Contrast;
+                        }
+                    }
+
+                    // scan region
+                    if (options.SelectedRegion != null)
+                    {
+                        try
+                        {
+                            Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                            {
+                                X = options.SelectedRegion.Value.X,
+                                Y = options.SelectedRegion.Value.Y,
+                                Width = options.SelectedRegion.Value.Width,
+                                Height = options.SelectedRegion.Value.Height
+                            };
+                        }
+                        catch (Exception exc)
+                        {
+                            throw new ArgumentException("Selected region is invalid", exc);
+                        }
+                    }
+                    else
+                    {
+                        Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                        {
+                            X = 0,
+                            Y = 0,
+                            Width = Device.FeederConfiguration.MaxScanArea.Width,
+                            Height = Device.FeederConfiguration.MaxScanArea.Height
+                        };
                     }
                     break;
 
@@ -602,6 +747,9 @@ namespace Scanner.Models
         public int MaxBrightness;
         public int BrightnessStep;
         public int DefaultBrightness;
+        public int VirtualDefaultBrightness;    // the value that replaces the actual default brightness to mitigate a bug
+                                                //  that causes the scanner to ignore the actual default brightness once
+                                                //  another value has been used
     }
 
     public class ContrastConfig
@@ -610,5 +758,8 @@ namespace Scanner.Models
         public int MaxContrast;
         public int ContrastStep;
         public int DefaultContrast;
+        public int VirtualDefaultContrast;      // the value that replaces the actual default contrast to mitigate a bug
+                                                //  that causes the scanner to ignore the actual default contrast once
+                                                //  another value has been used
     }
 }

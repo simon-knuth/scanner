@@ -102,6 +102,7 @@ namespace Scanner.Services
                 catch (Exception exc)
                 {
                     LogService?.Log.Error(exc, "Failed to add scanner {@Device} to existing {ScannerList}.", args, DiscoveredScanners);
+                    AppCenterService.TrackError(exc);
                     return;
                 }
             });
