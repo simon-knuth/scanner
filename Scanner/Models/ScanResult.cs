@@ -165,7 +165,7 @@ namespace Scanner
         }
 
         /// <summary>
-        ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>..
+        ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
             StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart)
@@ -185,6 +185,17 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
                 string pdfName = fileList[0].DisplayName + ".pdf";
                 await PrepareNewConversionFiles(fileList, 0);
+
+                // convert all source files to JPG for optimized size
+                IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
+                for (int i = 0; i < result.Elements.Count; i++)
+                {
+                    if (ConvertFormatStringToImageScannerFormat(result.Elements[i].ScanFile.FileType) != ImageScannerFormat.Jpeg)
+                    {
+                        await result.ConvertPageAsync(i, ImageScannerFormat.Jpeg, appDataService.FolderConversion);
+                    }
+                }
+
                 await result.GeneratePDFAsync(pdfName);
             }
             else
@@ -192,7 +203,7 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
-                    await result.ConvertScanAsync(i, targetFormat, targetFolder);
+                    await result.ConvertPageAsync(i, targetFormat, targetFolder);
                 }
             }
             result.ScanResultFormat = targetFormat;
@@ -490,9 +501,9 @@ namespace Scanner
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="NotImplementedException">Attempted to convert to PDF or (O)XPS.</exception>
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
-        public async Task ConvertScanAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
+        public async Task ConvertPageAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
         {
-            LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} requested.", index, targetFormat);
+            LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} with folder requested.", index, targetFormat);
             // check index
             if (!IsValidIndex(index))
             {
@@ -1469,6 +1480,12 @@ namespace Scanner
 
                     NumberOfPages = _Elements.Count;
 
+                    if (targetFormat == ImageScannerFormat.Pdf && ConvertFormatStringToImageScannerFormat(file.FileType) != ImageScannerFormat.Jpeg)
+                    {
+                        // convert to JPG for optimized size
+                        await ConvertPageAsync(insertIndex, ImageScannerFormat.Jpeg, AppDataService.FolderConversion);
+                    }
+
                     if (targetFolder != null)
                     {
                         StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
@@ -1516,7 +1533,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
-                        await ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
+                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
                     }
                 }
                 catch (Exception exc)
