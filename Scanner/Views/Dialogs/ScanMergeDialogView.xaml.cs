@@ -41,7 +41,14 @@ namespace Scanner.Views.Dialogs
 
         private void ContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
         {
-            ViewModel.ClosedCommand.Execute(null);
+            if (args.Result == ContentDialogResult.Primary)
+            {
+                ViewModel.AcceptCommand.Execute(null);
+            }
+            else
+            {
+                ViewModel.CancelCommand.Execute(null);
+            }
         }
     }
 }

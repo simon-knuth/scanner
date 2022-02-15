@@ -26,7 +26,8 @@ namespace Scanner.ViewModels
 
         public event EventHandler CloseRequested;
 
-        public RelayCommand ClosedCommand => new RelayCommand(Closed);
+        public RelayCommand AcceptCommand => new RelayCommand(AcceptConfig);
+        public RelayCommand CancelCommand => new RelayCommand(Cancel);
 
         private List<ScanMergeElement> _MergeResult;
         public List<ScanMergeElement> MergePreview
@@ -108,7 +109,15 @@ namespace Scanner.ViewModels
             }
             MergePreview = newList;
             TotalNumberOfPages = ScanResultService.Result.NumberOfPages;
-            StartPageNumber = 2;
+
+            if (TotalNumberOfPages > 1)
+            {
+                StartPageNumber = 2;
+            }
+            else
+            {
+                StartPageNumber = 1;
+            }
         }
 
 
@@ -191,13 +200,18 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void Closed()
+        private void AcceptConfig()
         {
             ScanMergeConfig config = CreateMergeConfig();
             if (config != null)
             {
                 Messenger.Send(new ScanMergeRequestMessage(config));
             }
+        }
+
+        private void Cancel()
+        {
+
         }
 
         private ScanMergeConfig CreateMergeConfig()
