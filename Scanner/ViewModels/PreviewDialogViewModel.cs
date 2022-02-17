@@ -29,7 +29,7 @@ namespace Scanner.ViewModels
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
         private readonly IScanService ScanService = Ioc.Default.GetService<IScanService>();
-        private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
 
         public RelayCommand ViewLoadedCommand => new RelayCommand(ViewLoaded);
         public RelayCommand ClosedCommand => new RelayCommand(Closed);
@@ -56,22 +56,19 @@ namespace Scanner.ViewModels
                     {
                         case ScannerSource.Flatbed:
                             InchesPerPixel = _scanner.Device.FlatbedConfiguration.MaxScanArea.Width / PreviewImage.PixelWidth;
+                            InitializeLengthsAndRegion();
                             break;
                         case ScannerSource.Feeder:
                             InchesPerPixel = _scanner.Device.FeederConfiguration.MaxScanArea.Width / PreviewImage.PixelWidth;
+                            InitializeLengthsAndRegion();
                             break;
                     }
                 }
                 else
                 {
                     InchesPerPixel = 0.2;
+                    InitializeLengthsAndRegion();
                 }
-
-                PreviewSizeInches = new Rect
-                {
-                    Width = value.PixelWidth * InchesPerPixel,
-                    Height = value.PixelHeight * InchesPerPixel
-                };
             }
         }
 
@@ -79,7 +76,15 @@ namespace Scanner.ViewModels
         public bool HasPreviewSucceeded
         {
             get => _HasPreviewSucceeded;
-            set => SetProperty(ref _HasPreviewSucceeded, value);
+            set
+            {
+                SetProperty(ref _HasPreviewSucceeded, value);
+
+                if (value == true)
+                {
+                    CanSelectCustomRegion = _scanOptions.Source == ScannerSource.Flatbed || _scanOptions.Source == ScannerSource.Feeder;
+                }
+            }
         }
 
         private bool _HasPreviewFailed;
@@ -87,6 +92,13 @@ namespace Scanner.ViewModels
         {
             get => _HasPreviewFailed;
             set => SetProperty(ref _HasPreviewFailed, value);
+        }
+
+        private bool _CanSelectCustomRegion;
+        public bool CanSelectCustomRegion
+        {
+            get => _CanSelectCustomRegion;
+            set => SetProperty(ref _CanSelectCustomRegion, value);
         }
 
         private bool _IsCustomRegionSelected;
@@ -103,75 +115,60 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _PreviewFile, value);
         }
 
-        private double _PreviewWidthInches;
-        public double PreviewWidthInches
+        private double _InchesPerPixel;
+        public double InchesPerPixel
         {
-            get => _PreviewWidthInches;
-            set => SetProperty(ref _PreviewWidthInches, value);
+            get => _InchesPerPixel;
+            set => SetProperty(ref _InchesPerPixel, value);
         }
 
-        private double _PreviewHeightInches;
-        public double PreviewHeightInches
+        private MeasurementValue _MinLength;
+        public MeasurementValue MinLength
         {
-            get => _PreviewHeightInches;
-            set => SetProperty(ref _PreviewHeightInches, value);
+            get => _MinLength;
+            set => SetProperty(ref _MinLength, value);
         }
 
-        private double _SelectedRegionWidthDisplay;
-        public double SelectedRegionWidthDisplay
+        private MeasurementValue _MaxWidth;
+        public MeasurementValue MaxWidth
         {
-            get => _SelectedRegionWidthDisplay;
-            set
-            {
-                SetProperty(ref _SelectedRegionWidthDisplay, value);
-
-                Rect newRegion = (Rect)SelectedRegion;
-                newRegion.Width = ConvertMeasurement(
-                    value / InchesPerPixel,
-                    (SettingMeasurementUnit)SettingsService.GetSetting(AppSetting.SettingMeasurementUnits),
-                    SettingMeasurementUnit.ImperialUS);
-                SelectedRegion = newRegion;
-            }
+            get => _MaxWidth;
+            set => SetProperty(ref _MaxWidth, value);
         }
 
-        private double _SelectedRegionHeightDisplay;
-        public double SelectedRegionHeightDisplay
+        private MeasurementValue _MaxHeight;
+        public MeasurementValue MaxHeight
         {
-            get => _SelectedRegionHeightDisplay;
-            set
-            {
-                SetProperty(ref _SelectedRegionHeightDisplay, value);
-
-                Rect newRegion = (Rect)SelectedRegion;
-                newRegion.Height = ConvertMeasurement(
-                    value / InchesPerPixel,
-                    (SettingMeasurementUnit)SettingsService.GetSetting(AppSetting.SettingMeasurementUnits),
-                    SettingMeasurementUnit.ImperialUS);
-                SelectedRegion = newRegion;
-            }
+            get => _MaxHeight;
+            set => SetProperty(ref _MaxHeight, value);
         }
 
-        private Rect? _SelectedRegion;
-        public Rect? SelectedRegion
+        private MeasurementValue _SelectedX;
+        public MeasurementValue SelectedX
         {
-            get => _SelectedRegion;
-            set
-            {
-                if (value == SelectedRegion) return;
-                
-                SetProperty(ref _SelectedRegion, value);
-                if (value != null)
-                {
-                    SelectedRegionWidthDisplay = ConvertMeasurement(
-                        value.Value.Width * InchesPerPixel,
-                        SettingMeasurementUnit.ImperialUS,
-                        (SettingMeasurementUnit)SettingsService.GetSetting(AppSetting.SettingMeasurementUnits));
-                    SelectedRegionHeightDisplay = ConvertMeasurement(
-                        value.Value.Height * InchesPerPixel,
-                        SettingMeasurementUnit.ImperialUS,
-                        (SettingMeasurementUnit)SettingsService.GetSetting(AppSetting.SettingMeasurementUnits));
-                }
-            }
+            get => _SelectedX;
+            set => SetProperty(ref _SelectedX, value);
+        }
+
+        private MeasurementValue _SelectedY;
+        public MeasurementValue SelectedY
+        {
+            get => _SelectedY;
+            set => SetProperty(ref _SelectedY, value);
+        }
+
+        private MeasurementValue _SelectedWidth;
+        public MeasurementValue SelectedWidth
+        {
+            get => _SelectedWidth;
+            set => SetProperty(ref _SelectedWidth, value);
+        }
+
+        private MeasurementValue _SelectedHeight;
+        public MeasurementValue SelectedHeight
+        {
+            get => _SelectedHeight;
+            set => SetProperty(ref _SelectedHeight, value);
         }
 
         private AspectRatioOption _SelectedAspectRatio;
@@ -210,25 +207,6 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsFixedAspectRatioSelected, value);
         }
 
-        private Rect _PreviewSizeInches;
-        public Rect PreviewSizeInches
-        {
-            get => _PreviewSizeInches;
-            set
-            {
-                SetProperty(ref _PreviewSizeInches, value);
-                PreviewWidthInches = value.Width;
-                PreviewHeightInches = value.Height;
-            }
-        }
-
-        private double _InchesPerPixel;
-        public double InchesPerPixel
-        {
-            get => _InchesPerPixel;
-            set => SetProperty(ref _InchesPerPixel, value);
-        }
-
         private DiscoveredScanner _scanner;
         private ScanOptions _scanOptions;
 
@@ -242,7 +220,10 @@ namespace Scanner.ViewModels
 
             Tuple<DiscoveredScanner, ScanOptions> parameters = Messenger.Send(new PreviewParametersRequestMessage());
             _scanner = parameters.Item1;
+
+            parameters.Item2.SelectedRegion = null;
             _scanOptions = parameters.Item2;
+            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
         }
 
 
@@ -254,20 +235,72 @@ namespace Scanner.ViewModels
             await PreviewScanAsync();
         }
 
+        private void InitializeLengthsAndRegion()
+        {
+            double minWidth, minHeight, maxWidth, maxHeight;
+
+            if (_scanner.Debug)
+            {
+                maxWidth = PreviewImage.PixelWidth * InchesPerPixel;
+                maxHeight = PreviewImage.PixelHeight * InchesPerPixel;
+
+                minWidth = maxWidth / 4;
+                minHeight = maxHeight / 4;
+            }
+            else
+            {
+                switch (_scanOptions.Source)
+                {
+                    case ScannerSource.None:
+                    case ScannerSource.Auto:
+                    default:
+                        throw new ArgumentException("Can't get min/max scan area for source auto or none.");
+                    case ScannerSource.Flatbed:
+                        minWidth = _scanner.Device.FlatbedConfiguration.MinScanArea.Width;
+                        minHeight = _scanner.Device.FlatbedConfiguration.MinScanArea.Height;
+                        maxWidth = _scanner.Device.FlatbedConfiguration.MaxScanArea.Width;
+                        maxHeight = _scanner.Device.FlatbedConfiguration.MaxScanArea.Height;
+                        break;
+                    case ScannerSource.Feeder:
+                        minWidth = _scanner.Device.FeederConfiguration.MinScanArea.Width;
+                        minHeight = _scanner.Device.FeederConfiguration.MinScanArea.Height;
+                        maxWidth = _scanner.Device.FeederConfiguration.MaxScanArea.Width;
+                        maxHeight = _scanner.Device.FeederConfiguration.MaxScanArea.Height;
+                        break;
+                }
+            }
+
+            // determine baseline for min
+            if (minWidth > minHeight)
+            {
+                MinLength = new MeasurementValue(MeasurementType.Inches, minWidth, InchesPerPixel);
+            }
+            else
+            {
+                MinLength = new MeasurementValue(MeasurementType.Inches, minHeight, InchesPerPixel);
+            }
+
+            // determine max
+            MaxWidth = new MeasurementValue(MeasurementType.Inches, maxWidth, InchesPerPixel);
+            MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeight, InchesPerPixel);
+        }
+
         private void Closed()
         {
             ScanService.CancelPreview();
 
-            Size? size = null;
-            if (SelectedRegion != null)
+            Rect? rect = null;
+            if (CanSelectCustomRegion && IsCustomRegionSelected)
             {
-                size = new Size
+                rect = new Rect
                 {
-                    Width = SelectedRegion.Value.Width * InchesPerPixel,
-                    Height = SelectedRegion.Value.Height * InchesPerPixel
+                    X = SelectedX.Inches,
+                    Y = SelectedY.Inches,
+                    Width = SelectedWidth.Inches,
+                    Height = SelectedHeight.Inches
                 };
             }
-            Messenger.Send(new PreviewSelectedRegionChangedMessage(size));
+            Messenger.Send(new PreviewSelectedRegionChangedMessage(rect));
         }
 
         /// <summary>
@@ -304,7 +337,7 @@ namespace Scanner.ViewModels
                 if (debugImage != null)
                 {
                     // show debug image as preview
-                    await Task.Delay(2000);
+                    await Task.Delay(1000);
                     PreviewImage = debugImage;
                     IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
                     await CreatePreviewFile(stream);
@@ -363,6 +396,79 @@ namespace Scanner.ViewModels
         private void FlipSelectedAspectRatio(Rect currentRect)
         {
             SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
+            if (SelectedAspectRatio == AspectRatioOption.Custom)
+            {
+                SelectedAspectRatio = AspectRatioOption.Custom;
+            }
         }
+    }
+
+    public class MeasurementValue
+    {
+        public double Inches
+        {
+            get;
+            private set;
+        }
+
+        public double Pixels
+        {
+            get;
+            private set;
+        }
+
+        public double Display
+        {
+            get;
+            private set;
+        }
+
+        public MeasurementValue(MeasurementType unit, double value, double InchesPerPixel)
+        {
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+
+            switch (unit)
+            {
+                case MeasurementType.Inches:
+                    Inches = value;
+
+                    Pixels = Inches / InchesPerPixel;
+
+                    Display = ConvertMeasurement(
+                        value,
+                        SettingMeasurementUnit.ImperialUS,
+                        (SettingMeasurementUnit)settingsService.GetSetting(AppSetting.SettingMeasurementUnits));
+                    break;
+                case MeasurementType.Pixels:
+                    Pixels = value;
+
+                    Inches = Pixels * InchesPerPixel;
+
+                    Display = ConvertMeasurement(
+                        Inches,
+                        SettingMeasurementUnit.ImperialUS,
+                        (SettingMeasurementUnit)settingsService.GetSetting(AppSetting.SettingMeasurementUnits));
+                    break;
+                case MeasurementType.Display:
+                    Display = value;
+
+                    Inches = ConvertMeasurement(
+                        value,
+                        (SettingMeasurementUnit)settingsService.GetSetting(AppSetting.SettingMeasurementUnits),
+                        SettingMeasurementUnit.ImperialUS);
+
+                    Pixels = Inches / InchesPerPixel;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public enum MeasurementType
+    {
+        Inches,
+        Pixels,
+        Display
     }
 }

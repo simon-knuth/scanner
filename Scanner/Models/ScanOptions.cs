@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using static Enums;
 
 namespace Scanner.Models
@@ -26,6 +27,8 @@ namespace Scanner.Models
 
         public int? Brightness;
         public int? Contrast;
+
+        public Rect? SelectedRegion;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

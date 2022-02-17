@@ -280,7 +280,7 @@
                 <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -317,7 +317,7 @@
                 <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>

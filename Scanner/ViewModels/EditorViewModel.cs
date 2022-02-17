@@ -323,7 +323,6 @@ namespace Scanner.ViewModels
             PointerDevice device = pointerDevices.FirstOrDefault((x) => x.PointerDeviceType == PointerDeviceType.Touch);
             IsDeviceTouchEnabled = device != null;
 
-            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
             IsTouchDrawingEnabled = (bool)SettingsService.GetSetting(AppSetting.LastTouchDrawState);
         }
 
@@ -458,6 +457,7 @@ namespace Scanner.ViewModels
         private void EnterCropMode()
         {
             LogService?.Log.Information("EnterCropMode");
+            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
             EditorMode = EditorMode.Crop;
         }
 
@@ -639,6 +639,10 @@ namespace Scanner.ViewModels
         private void FlipSelectedAspectRatio(Rect currentRect)
         {
             SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
+            if (SelectedAspectRatio == AspectRatioOption.Custom)
+            {
+                SelectedAspectRatio = AspectRatioOption.Custom;
+            }
         }
 
         private async Task CropAsync(ImageCropper imageCropper)

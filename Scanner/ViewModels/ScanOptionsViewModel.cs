@@ -15,7 +15,6 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Media.Imaging;
 using static Enums;
 using static Utilities;
 
@@ -185,8 +184,8 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _ScannerResolutions, value);
         }
 
-        private Size? _SelectedScanRegion;
-        public Size? SelectedScanRegion
+        private Rect? _SelectedScanRegion;
+        public Rect? SelectedScanRegion
         {
             get => _SelectedScanRegion;
             set => SetProperty(ref _SelectedScanRegion, value);
@@ -946,7 +945,8 @@ namespace Scanner.ViewModels
                 AutoCropMode = SelectedScannerAutoCropMode,
                 FeederMultiplePages = FeederMultiplePages,
                 FeederDuplex = FeederDuplex,
-                Format = SelectedFileFormat
+                Format = SelectedFileFormat,
+                SelectedRegion = SelectedScanRegion
             };
 
             if (SelectedResolution != null) result.Resolution = SelectedResolution.Resolution.DpiX;
