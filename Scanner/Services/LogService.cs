@@ -139,7 +139,6 @@ namespace Scanner.Services
                             IsFlatbedAutoCropSingleRegionAllowed = s.IsFlatbedAutoCropSingleRegionAllowed,
                             IsFlatbedAutoCropMultiRegionAllowed = s.IsFlatbedAutoCropMultiRegionAllowed,
                             IsFlatbedAutoCropPossible = s.IsFlatbedAutoCropPossible,
-                            FlatbedResolutions = s.FlatbedResolutions,
                             FlatbedFormats = s.FlatbedFormats,
                             FlatbedBrightnessConfig = s.FlatbedBrightnessConfig,
                             FlatbedContrastConfig = s.FlatbedContrastConfig,
@@ -153,7 +152,6 @@ namespace Scanner.Services
                             IsFeederAutoCropSingleRegionAllowed = s.IsFeederAutoCropSingleRegionAllowed,
                             IsFeederAutoCropMultiRegionAllowed = s.IsFeederAutoCropMultiRegionAllowed,
                             IsFeederAutoCropPossible = s.IsFeederAutoCropPossible,
-                            FeederResolutions = s.FeederResolutions,
                             FeederFormats = s.FeederFormats,
                             FeederBrightnessConfig = s.FeederBrightnessConfig,
                             FeederContrastConfig = s.FeederContrastConfig
