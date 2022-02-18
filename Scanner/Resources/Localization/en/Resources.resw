@@ -1114,9 +1114,9 @@ PDF is a very popular document format and allows you to save multiple pages in a
     <value>Print</value>
     <comment>The tooltip text that appears while hovering the "Print" button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Preview</value>
-    <comment>The tooltip for the scan preview button.</comment>
+    <comment>The tooltip for the scan preview button when no scan region is selected.</comment>
   </data>
   <data name="DialogPreview.Title" xml:space="preserve">
     <value>Preview</value>
@@ -1546,7 +1546,7 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <comment>The text of the "Scan and merge into PDF" button in the scan options for merging new pages into an existing document.</comment>
   </data>
   <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
-    <value>You can select "Scan and merge into PDF" from the scan menu to insert new pages in specific spots. This makes scanning two-sided sheets much easier.</value>
+    <value>You can select "Scan and merge into PDF" from the scan menu to insert new pages in specific spots. This makes scanning two-sided sheets a piece of cake.</value>
     <comment>The subtitle of the dialog that quickly highlights the "Scan and merge" tool.</comment>
   </data>
   <data name="DialogScanMergeTip.Title" xml:space="preserve">
@@ -1564,5 +1564,41 @@ If you're using a more professional scanner, you can now apply advanced scan opt
   <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
     <value>Discard selected scan region</value>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Apply selection</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select scan region</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Scan region selection</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Height of entire preview</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Height of selected scan region</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Width of selected scan region</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Width of entire preview</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>Preview (scan region selected)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
 </root>

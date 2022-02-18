@@ -69,6 +69,14 @@
         </Grid.RowDefinitions>
         
         <!-- Top Toolbar -->
+        <muxc:NavigationView Grid.Row="0" Width="100" IsSettingsVisible="False" PaneDisplayMode="Top" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackEnabled="{x:Bind ViewModel.IsCustomRegionSelected, Mode=OneWay}" HorizontalAlignment="Left">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="BackRequested">
+                    <core:ChangePropertyAction TargetObject="{x:Bind ViewModel}" PropertyName="IsCustomRegionSelected" Value="False" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </muxc:NavigationView>
+        
         <controls:SwitchPresenter Grid.Row="0" Value="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" CornerRadius="8,8,0,0">
             <interactivity:Interaction.Behaviors>
                 <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCustomRegionSelected, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
@@ -87,8 +95,8 @@
                                 <EntranceThemeTransition FromHorizontalOffset="-16" FromVerticalOffset="0"/>
                             </TransitionCollection>
                         </StackPanel.Transitions>
-                        
-                        <TextBlock x:Uid="HeadingPreview" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+
+                        <TextBlock x:Uid="HeadingPreview" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                         <AppBarSeparator Margin="16,0,12,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -97,14 +105,14 @@
                                 <EntranceThemeTransition FromHorizontalOffset="16" FromVerticalOffset="0"/>
                             </TransitionCollection>
                         </StackPanel.Transitions>
-                        
+
                         <AppBarButton x:Name="ButtonToolbarSelectRegion" x:Uid="ButtonPreviewSelectRegion" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" IsEnabled="{x:Bind ViewModel.CanSelectCustomRegion, Mode=OneWay}"  AutomationProperties.Name="{x:Bind ButtonToolbarSelectRegion, Converter={StaticResource ToolTipConverter}}">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
                                     <core:ChangePropertyAction TargetObject="{x:Bind ViewModel}" PropertyName="IsCustomRegionSelected" Value="True" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                            
+
                             <Grid Padding="0" Margin="0">
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEF20;" FontSize="16" />
                             </Grid>
@@ -122,7 +130,7 @@
                             </TransitionCollection>
                         </StackPanel.Transitions>
 
-                        <TextBlock Text="Region selection" MaxWidth="224" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        <TextBlock x:Uid="HeadingPreviewSelectRegion" MaxWidth="224" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                         <AppBarSeparator Margin="16,0,12,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -165,16 +173,8 @@
                 </StackPanel>
             </controls:Case>
         </controls:SwitchPresenter>
-        
-        <muxc:NavigationView Grid.Row="0" Width="100" IsSettingsVisible="False" PaneDisplayMode="Top" IsPaneToggleButtonVisible="False" IsPaneOpen="False" IsBackEnabled="{x:Bind ViewModel.IsCustomRegionSelected, Mode=OneWay}" HorizontalAlignment="Left">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="BackRequested">
-                    <core:ChangePropertyAction TargetObject="{x:Bind ViewModel}" PropertyName="IsCustomRegionSelected" Value="False" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </muxc:NavigationView>
 
-        <AppBarButton Grid.Row="0" Margin="0,0,4,0" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" HorizontalAlignment="Right" AutomationProperties.Name="{x:Bind ButtonToolbarSelectRegion, Converter={StaticResource ToolTipConverter}}">
+        <AppBarButton x:Name="ButtonToolbarClose" x:Uid="ButtonClosePreview" Grid.Row="0" Margin="0,0,4,0" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" HorizontalAlignment="Right" AutomationProperties.Name="{x:Bind ButtonToolbarClose, Converter={StaticResource ToolTipConverter}}">
             <Grid Padding="0" Margin="0">
                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE10A;" FontSize="16" />
             </Grid>
@@ -203,7 +203,7 @@
             <controls:Case Value="0" IsDefault="True">
                 <Grid>
                     <muxc:ProgressRing x:Name="ProgressRingPreview" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.IsPreviewRunning, Mode=OneWay}"/>
-                    <controls:ImageEx Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}"/>
+                    <controls:ImageEx Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" AutomationProperties.AccessibilityView="Raw"/>
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.HasPreviewFailed, Mode=OneWay}" Margin="24" MaxWidth="400">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -241,7 +241,7 @@
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
 
-                    <TextBlock Text="Apply selection" Style="{StaticResource BodyTextBlockStyle}"/>
+                    <TextBlock x:Uid="ButtonPreviewApplyRegion" Style="{StaticResource BodyTextBlockStyle}"/>
                 </Button>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.HasPreviewSucceeded, Mode=OneWay}">
@@ -260,18 +260,18 @@
                             <controls:Case Value="0">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xECC6;" FontSize="16" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}" Margin="0,0,6,0" />
-                                    <muxc:NumberBox Value="{x:Bind ViewModel.MaxWidth.Display, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" Loaded="NumberBox_Loaded" />
+                                    <muxc:NumberBox x:Name="NumberBoxPreviewWidth" x:Uid="OptionPreviewWidth" Value="{x:Bind ViewModel.MaxWidth.Display, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" AutomationProperties.Name="{x:Bind NumberBoxPreviewWidth, Converter={StaticResource ToolTipConverter}}" Loaded="NumberBox_Loaded" />
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE947;" FontSize="10" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}" VerticalAlignment="Center" />
-                                    <muxc:NumberBox Value="{x:Bind ViewModel.MaxHeight.Display, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" Loaded="NumberBox_Loaded" />
+                                    <muxc:NumberBox x:Name="NumberBoxPreviewHeight" x:Uid="OptionPreviewHeight" Value="{x:Bind ViewModel.MaxHeight.Display, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" AutomationProperties.Name="{x:Bind NumberBoxPreviewHeight, Converter={StaticResource ToolTipConverter}}" Loaded="NumberBox_Loaded" />
                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" Loaded="TextBlockUnit_Loaded" />
                                 </StackPanel>
                             </controls:Case>
                             <controls:Case Value="1">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xECC6;" FontSize="16" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}" Margin="0,0,6,0" />
-                                    <muxc:NumberBox x:Name="NumberBoxSelectedWidth" Value="{x:Bind ViewModel.SelectedWidth.Display, Mode=OneWay}" Minimum="{x:Bind ViewModel.MinLength.Display, Mode=OneWay}" Maximum="{x:Bind ViewModel.MaxWidth.Display, Mode=OneWay}" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" KeyDown="NumberBoxWidth_KeyDown" Loaded="NumberBox_Loaded" ValueChanged="NumberBoxWidth_ValueChanged" />
+                                    <muxc:NumberBox x:Name="NumberBoxSelectedWidth" x:Uid="OptionPreviewSelectedWidth" Value="{x:Bind ViewModel.SelectedWidth.Display, Mode=OneWay}" Minimum="{x:Bind ViewModel.MinLength.Display, Mode=OneWay}" Maximum="{x:Bind ViewModel.MaxWidth.Display, Mode=OneWay}" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" AutomationProperties.Name="{x:Bind NumberBoxSelectedWidth, Converter={StaticResource ToolTipConverter}}" KeyDown="NumberBoxWidth_KeyDown" Loaded="NumberBox_Loaded" ValueChanged="NumberBoxWidth_ValueChanged" />
                                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE947;" FontSize="10" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}" VerticalAlignment="Center" />
-                                    <muxc:NumberBox x:Name="NumberBoxSelectedHeight" Value="{x:Bind ViewModel.SelectedHeight.Display, Mode=OneWay}" Minimum="{x:Bind ViewModel.MinLength.Display, Mode=OneWay}" Maximum="{x:Bind ViewModel.MaxHeight.Display, Mode=OneWay}" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" KeyDown="NumberBoxHeight_KeyDown" Loaded="NumberBox_Loaded" ValueChanged="NumberBoxHeight_ValueChanged" />
+                                    <muxc:NumberBox x:Name="NumberBoxSelectedHeight" x:Uid="OptionPreviewSelectedHeight" Value="{x:Bind ViewModel.SelectedHeight.Display, Mode=OneWay}" Minimum="{x:Bind ViewModel.MinLength.Display, Mode=OneWay}" Maximum="{x:Bind ViewModel.MaxHeight.Display, Mode=OneWay}" SpinButtonPlacementMode="Hidden" Background="Transparent" Margin="3,0,3,0" VerticalAlignment="Center" Padding="5,6,5,6" MinWidth="32" TextAlignment="Center" AutomationProperties.Name="{x:Bind NumberBoxSelectedHeight, Converter={StaticResource ToolTipConverter}}" KeyDown="NumberBoxHeight_KeyDown" Loaded="NumberBox_Loaded" ValueChanged="NumberBoxHeight_ValueChanged" />
                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" Loaded="TextBlockUnit_Loaded" />
                                 </StackPanel>
                             </controls:Case>

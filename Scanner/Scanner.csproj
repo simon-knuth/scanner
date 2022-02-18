@@ -158,6 +158,7 @@
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
     <Compile Include="Views\Converters\ScanActionVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\PreviewToolTipConverter.cs" />
     <Compile Include="Views\Converters\ScanMergeElementTooltipConverter.cs" />
     <Compile Include="Views\Converters\ScanMergeElementGlyphConverter.cs" />
     <Compile Include="Views\Converters\ToolTipConverter.cs" />
@@ -723,13 +724,13 @@
     <PRIResource Include="Resources\Localization\zh-sg\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\de\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Resources\Localization\hu\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\es\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

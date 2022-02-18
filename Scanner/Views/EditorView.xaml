@@ -428,7 +428,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="16,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -481,7 +481,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">

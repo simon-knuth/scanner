@@ -155,9 +155,7 @@ namespace Scanner.Views
             {
                 MenuFlyoutItemButtonScanMerge.IsEnabled =
                     ViewModel.CanAddToScanResultDocument
-                    && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder
-                        || (ViewModel.ScannerSource == Enums.ScannerSource.Auto
-                            && ViewModel.SelectedScanner.IsFeederAllowed));
+                    && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder);
 
                 TeachingTipScanMerge.IsOpen = false;
             });

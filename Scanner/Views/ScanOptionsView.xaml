@@ -55,6 +55,7 @@
             <converters:SignedIntConverter x:Key="SignedIntConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             <converters:ScanActionVisibilityConverter x:Key="ScanActionVisibilityConverter"/>
+            <converters:PreviewToolTipConverter x:Key="PreviewToolTipConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -666,7 +667,7 @@
                     
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                 </Button>
-                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" AutomationProperties.Name="{x:Bind ButtonPreview, Converter={StaticResource ToolTipConverter}}" RightTapped="ButtonPreview_RightTapped">
+                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource PreviewToolTipConverter}}" AutomationProperties.Name="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource PreviewToolTipConverter}}" RightTapped="ButtonPreview_RightTapped">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}" >
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
