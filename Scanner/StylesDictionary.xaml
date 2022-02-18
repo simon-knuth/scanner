@@ -39,7 +39,7 @@
                         <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource RadioButtonsHeaderForeground}" Margin="0"/>
                         <muxc:ItemsRepeater x:Name="InnerRepeater">
                             <muxc:ItemsRepeater.Layout>
-                                <primitiveContract7Present:ColumnMajorUniformToLargestGridLayout ColumnSpacing="{ThemeResource RadioButtonsColumnSpacing}" MaxColumns="{Binding MaxColumns, RelativeSource={RelativeSource Mode=TemplatedParent}}" RowSpacing="3"/>
+                                <muxc:StackLayout Orientation="Vertical" Spacing="3"/>
                             </muxc:ItemsRepeater.Layout>
                         </muxc:ItemsRepeater>
                     </StackPanel>

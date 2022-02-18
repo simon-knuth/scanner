@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
@@ -294,6 +295,9 @@ namespace Scanner.ViewModels
 
         private void DisplayChangelog()
         {
+            AppCenterService?.TrackEvent(AppCenterEvent.ChangelogOpened, new Dictionary<string, string> {
+                            { "Source", "Settings" },
+                        });
             ChangelogRequested?.Invoke(this, EventArgs.Empty);
         }
 

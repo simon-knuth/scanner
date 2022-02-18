@@ -195,7 +195,7 @@ namespace Scanner.ViewModels
             var newRequest = new HelpRequestMessage(m.HelpTopic);
             Messenger.Send(newRequest);
 
-            AppCenterService.TrackEvent(AppCenterEvent.HelpRequested, new Dictionary<string, string> {
+            AppCenterService?.TrackEvent(AppCenterEvent.HelpRequested, new Dictionary<string, string> {
                             { "Topic", m.HelpTopic.ToString() },
                         });
         }
@@ -212,7 +212,7 @@ namespace Scanner.ViewModels
             var newRequest = new SettingsRequestMessage(m.SettingsSection);
             Messenger.Send(newRequest);
 
-            AppCenterService.TrackEvent(AppCenterEvent.SettingsRequested, new Dictionary<string, string> {
+            AppCenterService?.TrackEvent(AppCenterEvent.SettingsRequested, new Dictionary<string, string> {
                             { "Section", m.SettingsSection.ToString() },
                         });
         }
@@ -348,6 +348,9 @@ namespace Scanner.ViewModels
 
         private void ShowChangelog()
         {
+            AppCenterService.TrackEvent(AppCenterEvent.ChangelogOpened, new Dictionary<string, string> {
+                            { "Source", "Updated dialog" },
+                        });
             ChangelogRequested?.Invoke(this, EventArgs.Empty);
         }
 

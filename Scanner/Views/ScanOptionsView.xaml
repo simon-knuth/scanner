@@ -353,7 +353,7 @@
                             <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
                             <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
-                                <RadioButton x:Uid="OptionScanOptionsColorColor">
+                                <RadioButton x:Uid="OptionScanOptionsColorColor" Visibility="{x:Bind ViewModel.SelectedScanner.IsColorAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -372,7 +372,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorGrayscale">
+                                <RadioButton x:Uid="OptionScanOptionsColorGrayscale" Visibility="{x:Bind ViewModel.SelectedScanner.IsGrayscaleAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -391,7 +391,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorMonochrome">
+                                <RadioButton x:Uid="OptionScanOptionsColorMonochrome" Visibility="{x:Bind ViewModel.SelectedScanner.IsMonochromeAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -410,7 +410,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorAuto">
+                                <RadioButton x:Uid="OptionScanOptionsColorAuto" Visibility="{x:Bind ViewModel.SelectedScanner.IsAutoColorAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>

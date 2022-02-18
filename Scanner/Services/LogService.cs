@@ -162,6 +162,12 @@ namespace Scanner.Services
                             Resolution = r.Resolution.DpiX,
                             Annotation = r.Annotation
                         })
+                    .Destructure.ByTransforming<ScanMergeConfig>(
+                        c => new
+                        {
+                            InsertIndices = c.InsertIndices.ToString(),
+                            SurplusPagesIndex = c.SurplusPagesIndex
+                        })
                     .CreateLogger();
 
             log.Information("--- Log initialized ---");

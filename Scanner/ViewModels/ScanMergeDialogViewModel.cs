@@ -42,6 +42,7 @@ namespace Scanner.ViewModels
             get => _StartPageNumber;
             set
             {
+                LogService.Log.Information($"Scan and merge: Setting StartPageNumber to {value}");
                 SetProperty(ref _StartPageNumber, value);
                 RefreshMergeResult();
                 MaxSkippablePages = TotalNumberOfPages - StartPageNumber + 1;
@@ -54,6 +55,7 @@ namespace Scanner.ViewModels
             get => _SkipPages;
             set
             {
+                LogService.Log.Information($"Scan and merge: Setting SkipPages to {value}");
                 SetProperty(ref _SkipPages, value);
                 RefreshMergeResult();
             }
@@ -211,7 +213,7 @@ namespace Scanner.ViewModels
 
         private void Cancel()
         {
-
+            LogService?.Log.Information("Scan and merge: Cancel");
         }
 
         private ScanMergeConfig CreateMergeConfig()

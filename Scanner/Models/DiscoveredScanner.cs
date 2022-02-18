@@ -66,6 +66,11 @@ namespace Scanner.Models
         public BrightnessConfig FeederBrightnessConfig;
         public ContrastConfig FeederContrastConfig;
 
+        public bool IsColorAllowedInAnyMode => IsFlatbedColorAllowed || IsFeederColorAllowed;
+        public bool IsGrayscaleAllowedInAnyMode => IsFlatbedGrayscaleAllowed || IsFeederGrayscaleAllowed;
+        public bool IsMonochromeAllowedInAnyMode => IsFlatbedMonochromeAllowed || IsFeederMonochromeAllowed;
+        public bool IsAutoColorAllowedInAnyMode => IsFlatbedAutoColorAllowed || IsFeederAutoColorAllowed;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////

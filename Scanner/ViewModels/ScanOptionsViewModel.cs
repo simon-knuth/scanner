@@ -188,7 +188,11 @@ namespace Scanner.ViewModels
         public Rect? SelectedScanRegion
         {
             get => _SelectedScanRegion;
-            set => SetProperty(ref _SelectedScanRegion, value);
+            set
+            {
+                LogService?.Log.Information($"ScanOptionsViewModel: Setting SelectedScanRegion to {value}");
+                SetProperty(ref _SelectedScanRegion, value);
+            }
         }
 
         private ScanResolution _SelectedResolution;
@@ -1229,6 +1233,9 @@ namespace Scanner.ViewModels
                             { "AskedForSaveLocation", askForFolder.ToString() },
                             { "FormatFlow", $"({scanOptions.Format.OriginalFormat}, {scanOptions.Format.TargetFormat})" },
                             { "AutoCropMode", scanOptions.AutoCropMode.ToString() },
+                            { "Brightness adjusted", (scanOptions.Brightness != null && scanOptions.Brightness != 0).ToString() },
+                            { "Contrast adjusted", (scanOptions.Contrast != null && scanOptions.Contrast != 0).ToString() },
+                            { "Merge", $"{(mergeConfig != null ? $"{mergeConfig.InsertIndices.FirstOrDefault()} | {mergeConfig.SurplusPagesIndex}" : "None")}" },
                         });
                 }
                 else
