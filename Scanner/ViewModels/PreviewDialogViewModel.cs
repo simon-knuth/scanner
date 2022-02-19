@@ -24,16 +24,20 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
         private readonly IScanService ScanService = Ioc.Default.GetService<IScanService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        #endregion
 
+        #region Commands
         public RelayCommand ViewLoadedCommand => new RelayCommand(ViewLoaded);
         public RelayCommand ClosedCommand => new RelayCommand(Closed);
         public RelayCommand<Rect> AspectRatioFlipCommand;
+        #endregion
 
         private bool _IsPreviewRunning = true;
         public bool IsPreviewRunning

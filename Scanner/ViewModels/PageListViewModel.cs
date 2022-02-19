@@ -21,18 +21,16 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        #endregion
 
-        public event EventHandler TargetedShareUiRequested;
-        public event EventHandler RotateSuccessful;
-        public event EventHandler DeleteSuccessful;
-        public event EventHandler CopySuccessful;
-
+        #region Commands
         public RelayCommand DisposeCommand;
         public AsyncRelayCommand<string> RotateCommand;
         public AsyncRelayCommand DeleteCommand;
@@ -41,6 +39,14 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<StorageFile> ShowInFileExplorerCommand;
         public AsyncRelayCommand<ScanResultElement> DuplicatePageCommand;
         public AsyncRelayCommand DragDropPage;
+        #endregion
+
+        #region Events
+        public event EventHandler TargetedShareUiRequested;
+        public event EventHandler RotateSuccessful;
+        public event EventHandler DeleteSuccessful;
+        public event EventHandler CopySuccessful;
+        #endregion
 
         private ScanResult _ScanResult;
         public ScanResult ScanResult

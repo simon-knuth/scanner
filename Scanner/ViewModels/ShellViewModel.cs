@@ -23,6 +23,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
@@ -30,16 +31,9 @@ namespace Scanner.ViewModels
         public readonly IScanResultService ScanResultService = Ioc.Default.GetService<IScanResultService>();
         public readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
         public readonly IScanService ScanService = Ioc.Default.GetService<IScanService>();
+        #endregion
 
-        public event EventHandler TutorialPageListRequested;
-        public event EventHandler ChangelogRequested;
-        public event EventHandler SetupRequested;
-        public event EventHandler FeedbackDialogRequested;
-        public event EventHandler UpdatedDialogRequested;
-        public event EventHandler PreviewDialogRequested;
-        public event EventHandler ScanMergeDialogRequested;
-        public event EventHandler<List<StorageFile>> ShareFilesChanged;
-
+        #region Commands
         public AsyncRelayCommand ShowScanSaveLocationCommand;
         public RelayCommand StatusMessageDismissedCommand => new RelayCommand(StatusMessageDismissed);
         public RelayCommand ViewLoadedCommand;
@@ -53,6 +47,18 @@ namespace Scanner.ViewModels
         public RelayCommand ShowChangelogCommand => new RelayCommand(ShowChangelog);
         public RelayCommand DebugShowFeedbackDialogCommand;
         public AsyncRelayCommand StoreRatingCommand;
+        #endregion
+
+        #region Events
+        public event EventHandler TutorialPageListRequested;
+        public event EventHandler ChangelogRequested;
+        public event EventHandler SetupRequested;
+        public event EventHandler FeedbackDialogRequested;
+        public event EventHandler UpdatedDialogRequested;
+        public event EventHandler PreviewDialogRequested;
+        public event EventHandler ScanMergeDialogRequested;
+        public event EventHandler<List<StorageFile>> ShareFilesChanged;
+        #endregion
 
         private TaskCompletionSource<bool> DisplayedViewChanged = new TaskCompletionSource<bool>();
 

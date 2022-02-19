@@ -19,6 +19,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         private readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
@@ -26,7 +27,9 @@ namespace Scanner.ViewModels
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IAutoRotatorService AutoRotatorService = Ioc.Default.GetService<IAutoRotatorService>();
+        #endregion
 
+        #region Commands
         public RelayCommand DisposeCommand;
         public RelayCommand DisplayLogExportDialogCommand;
         public RelayCommand DisplayLicensesDialogCommand;
@@ -37,9 +40,12 @@ namespace Scanner.ViewModels
         public RelayCommand ShowDonateDialogCommand;
         public RelayCommand<string> SetAutoRotateLanguageCommand;
         public AsyncRelayCommand LaunchLanguageSettingsCommand;
+        #endregion
 
+        #region Events
         public event EventHandler ChangelogRequested;
         public event EventHandler<SettingsSection> SettingsSectionRequested;
+        #endregion
 
         private string _SaveLocationPath;
         public string SaveLocationPath

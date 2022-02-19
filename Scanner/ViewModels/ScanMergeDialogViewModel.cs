@@ -19,15 +19,21 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>(); 
-        public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>(); 
-        public readonly ILogService LogService = Ioc.Default.GetService<ILogService>(); 
+        #region Services
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
+        public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+        #endregion
 
-        public event EventHandler CloseRequested;
-
+        #region Commands
         public RelayCommand AcceptCommand => new RelayCommand(AcceptConfig);
         public RelayCommand CancelCommand => new RelayCommand(Cancel);
+        #endregion
+
+        #region Events
+        public event EventHandler CloseRequested;
+        #endregion
 
         private List<ScanMergeElement> _MergeResult;
         public List<ScanMergeElement> MergePreview

@@ -30,13 +30,16 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+        #endregion
 
+        #region Commands
         public AsyncRelayCommand<ImageCropper> CropPageCommand;
         public AsyncRelayCommand<ImageCropper> CropPagesCommand;
         public AsyncRelayCommand<ImageCropper> CropPageAsCopyCommand;
@@ -54,7 +57,9 @@ namespace Scanner.ViewModels
         public RelayCommand LeaveDrawModeCommand;
         public RelayCommand<string> AspectRatioCommand;
         public RelayCommand<Rect> AspectRatioFlipCommand;
+        #endregion
 
+        #region Events
         public event EventHandler CropSuccessful;
         public event EventHandler CropAsCopySuccessful;
         public event EventHandler RotateSuccessful;
@@ -65,6 +70,7 @@ namespace Scanner.ViewModels
         public event EventHandler CopySuccessful;
 
         public event EventHandler TargetedShareUiRequested;
+        #endregion
 
         private Orientation _Orientation;
         public Orientation Orientation

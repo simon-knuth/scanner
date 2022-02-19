@@ -25,6 +25,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
@@ -35,8 +36,9 @@ namespace Scanner.ViewModels
         private readonly IPersistentScanOptionsDatabaseService PersistentScanOptionsDatabaseService = Ioc.Default.GetService<IPersistentScanOptionsDatabaseService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
-        private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
+        #endregion
 
+        #region Commands
         public AsyncRelayCommand ViewLoadedCommand;
         public RelayCommand ViewNavigatedToCommand;
         public RelayCommand ViewNavigatedFromCommand;
@@ -58,8 +60,18 @@ namespace Scanner.ViewModels
         public RelayCommand RemoveSelectedRegionCommand;
         public RelayCommand ScanMergeConfigCommand;
 
+        public AsyncRelayCommand DebugAddScannerCommand;
+        public RelayCommand DebugRestartScannerDiscoveryCommand;
+        public RelayCommand DebugDeleteScanOptionsFromDatabaseCommand;
+        public AsyncRelayCommand DebugScanCommand;
+        public RelayCommand DebugShowScannerTipCommand;
+        public RelayCommand DebugShowScanMergeTipCommand;
+        #endregion
+
+        #region Events
         public event EventHandler ScannerSearchTipRequested;
         public event EventHandler ScanMergeTipRequested;
+        #endregion
 
         private ObservableCollection<DiscoveredScanner> _Scanners;
         public ObservableCollection<DiscoveredScanner> Scanners
@@ -346,14 +358,6 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _SettingShowAdvancedScanOptions, value);
         }
 
-        // Debug stuff
-        public AsyncRelayCommand DebugAddScannerCommand;
-        public RelayCommand DebugRestartScannerDiscoveryCommand;
-        public RelayCommand DebugDeleteScanOptionsFromDatabaseCommand;
-        public AsyncRelayCommand DebugScanCommand;
-        public RelayCommand DebugShowScannerTipCommand;
-        public RelayCommand DebugShowScanMergeTipCommand;
-
         private DiscoveredScanner _DebugScanner;
         public DiscoveredScanner DebugScanner
         {
@@ -405,7 +409,7 @@ namespace Scanner.ViewModels
                 await ScanAsync(DebugScanStartFresh == true, true, null);
             });
             CancelScanCommand = new RelayCommand(CancelScan);
-            PreviewScanCommand = new RelayCommand(() => Messenger.Send(new PreviewDialogRequestMessage()));
+            PreviewScanCommand = new RelayCommand(PreviewScan);
             RemoveSelectedRegionCommand = new RelayCommand(() => SelectedScanRegion = null);
             ScanMergeConfigCommand = new RelayCommand(() => Messenger.Send(new ScanMergeDialogRequestMessage()));
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
@@ -1411,6 +1415,12 @@ namespace Scanner.ViewModels
         private void CancelScan()
         {
             CancelScan(false);
+        }
+
+        private void PreviewScan()
+        {
+            SelectedScanRegion = null;
+            Messenger.Send(new PreviewDialogRequestMessage());
         }
 
         private void RefreshCanAddToScanResult()
