@@ -174,7 +174,7 @@
             </controls:Case>
         </controls:SwitchPresenter>
 
-        <AppBarButton x:Name="ButtonToolbarClose" x:Uid="ButtonClosePreview" Grid.Row="0" Margin="0,0,4,0" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" HorizontalAlignment="Right" AutomationProperties.Name="{x:Bind ButtonToolbarClose, Converter={StaticResource ToolTipConverter}}">
+        <AppBarButton x:Name="ButtonToolbarClose" x:Uid="ButtonClosePreview" Grid.Row="0" Margin="0,0,4,0" LabelPosition="Collapsed" Style="{StaticResource AppBarButtonStyleCompact}" HorizontalAlignment="Right" AutomationProperties.Name="{x:Bind ButtonToolbarClose, Converter={StaticResource ToolTipConverter}}" Command="{x:Bind ViewModel.CloseCommand}">
             <Grid Padding="0" Margin="0">
                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE10A;" FontSize="16" />
             </Grid>
@@ -234,13 +234,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ButtonApplySelection" Grid.Column="0" VerticalAlignment="Stretch" MinWidth="100" Margin="3,0,0,0" Style="{ThemeResource AccentButtonStyle}" Visibility="{x:Bind ViewModel.IsCustomRegionSelected, Mode=OneWay}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:CallMethodAction TargetObject="{x:Bind RootContentDialog}" MethodName="Hide" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-
+                <Button x:Name="ButtonApplySelection" Grid.Column="0" VerticalAlignment="Stretch" MinWidth="100" Margin="3,0,0,0" Style="{ThemeResource AccentButtonStyle}" Visibility="{x:Bind ViewModel.IsCustomRegionSelected, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyAndCloseCommand}">
                     <TextBlock x:Uid="ButtonPreviewApplyRegion" Style="{StaticResource BodyTextBlockStyle}"/>
                 </Button>
 

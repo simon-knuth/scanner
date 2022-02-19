@@ -31,6 +31,7 @@ namespace Scanner.Views.Dialogs
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.CloseRequested += ViewModel_CloseRequested;
         }
 
 
@@ -119,7 +120,7 @@ namespace Scanner.Views.Dialogs
 
         private void ContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
         {
-            ViewModel.ClosedCommand.Execute(null);
+            
         }
 
         private async void ToggleButtonToolbarAspectRatio_Click(object sender, RoutedEventArgs e)
@@ -211,6 +212,11 @@ namespace Scanner.Views.Dialogs
             {
                 ViewModel.SelectedHeight = new MeasurementValue(MeasurementType.Display, args.NewValue, ViewModel.InchesPerPixel);
             }
+        }
+
+        private void ViewModel_CloseRequested(object sender, EventArgs e)
+        {
+            this.Hide();
         }
     }
 }

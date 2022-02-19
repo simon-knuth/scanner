@@ -35,8 +35,13 @@ namespace Scanner.ViewModels
 
         #region Commands
         public RelayCommand ViewLoadedCommand => new RelayCommand(ViewLoaded);
-        public RelayCommand ClosedCommand => new RelayCommand(Closed);
+        public RelayCommand ApplyAndCloseCommand => new RelayCommand(() => Close(true));
+        public RelayCommand CloseCommand => new RelayCommand(() => Close(false));
         public RelayCommand<Rect> AspectRatioFlipCommand;
+        #endregion
+
+        #region Events
+        public event EventHandler CloseRequested;
         #endregion
 
         private bool _IsPreviewRunning = true;
@@ -60,18 +65,15 @@ namespace Scanner.ViewModels
                     {
                         case ScannerSource.Flatbed:
                             InchesPerPixel = _scanner.Device.FlatbedConfiguration.MaxScanArea.Width / PreviewImage.PixelWidth;
-                            InitializeLengthsAndRegion();
                             break;
                         case ScannerSource.Feeder:
                             InchesPerPixel = _scanner.Device.FeederConfiguration.MaxScanArea.Width / PreviewImage.PixelWidth;
-                            InitializeLengthsAndRegion();
                             break;
                     }
                 }
                 else
                 {
                     InchesPerPixel = 0.2;
-                    InitializeLengthsAndRegion();
                 }
             }
         }
@@ -109,7 +111,16 @@ namespace Scanner.ViewModels
         public bool IsCustomRegionSelected
         {
             get => _IsCustomRegionSelected;
-            set => SetProperty(ref _IsCustomRegionSelected, value);
+            set
+            {
+                if (value == true && _previewFileBuffer != null)
+                {
+                    PreviewFile = _previewFileBuffer;
+                    _previewFileBuffer = null;
+                }
+
+                SetProperty(ref _IsCustomRegionSelected, value);
+            }
         }
 
         private StorageFile _PreviewFile;
@@ -211,6 +222,7 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsFixedAspectRatioSelected, value);
         }
 
+        private StorageFile _previewFileBuffer;
         private DiscoveredScanner _scanner;
         private ScanOptions _scanOptions;
 
@@ -239,7 +251,7 @@ namespace Scanner.ViewModels
             await PreviewScanAsync();
         }
 
-        private void InitializeLengthsAndRegion()
+        private void InitializeRegionSelectionLengths()
         {
             double minWidth, minHeight, maxWidth, maxHeight;
 
@@ -289,22 +301,24 @@ namespace Scanner.ViewModels
             MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeight, InchesPerPixel);
         }
 
-        private void Closed()
+        private void Close(bool applySelection)
         {
             ScanService.CancelPreview();
 
-            Rect? rect = null;
-            if (CanSelectCustomRegion && IsCustomRegionSelected)
+            if (applySelection && CanSelectCustomRegion && IsCustomRegionSelected)
             {
-                rect = new Rect
+                Rect? rect = new Rect
                 {
                     X = SelectedX.Inches,
                     Y = SelectedY.Inches,
                     Width = SelectedWidth.Inches,
                     Height = SelectedHeight.Inches
                 };
+
+                Messenger.Send(new PreviewSelectedRegionChangedMessage(rect));
             }
-            Messenger.Send(new PreviewSelectedRegionChangedMessage(rect));
+
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -372,6 +386,7 @@ namespace Scanner.ViewModels
                 IsPreviewRunning = false;
                 HasPreviewSucceeded = false;
             }
+            InitializeRegionSelectionLengths();
         }
 
         /// <summary>
@@ -393,7 +408,7 @@ namespace Scanner.ViewModels
                     encoder.SetSoftwareBitmap(softwareBitmap);
                     await encoder.FlushAsync();
                 }
-                PreviewFile = file;
+                _previewFileBuffer = file;
             });
         }
 
