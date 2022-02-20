@@ -176,14 +176,42 @@ namespace Scanner.ViewModels
         public MeasurementValue SelectedWidth
         {
             get => _SelectedWidth;
-            set => SetProperty(ref _SelectedWidth, value);
+            set
+            {
+                if (value != null && SelectedX != null && value.Pixels + SelectedX.Pixels > MaxWidth.Pixels)
+                {
+                    // too wide, check whether moving the selection to the left would help
+                    if (value.Pixels <= MaxWidth.Pixels)
+                    {
+                        // move selection to the left to allow new width
+                        LogService?.Log.Information("SelectedWidth: Changing X to compensate for new width");
+                        SelectedX = new MeasurementValue(MeasurementType.Pixels, MaxWidth.Pixels - value.Pixels, InchesPerPixel);
+                    }
+                }
+
+                SetProperty(ref _SelectedWidth, value);
+            }
         }
 
         private MeasurementValue _SelectedHeight;
         public MeasurementValue SelectedHeight
         {
             get => _SelectedHeight;
-            set => SetProperty(ref _SelectedHeight, value);
+            set
+            {
+                if (value != null && SelectedY != null && value.Pixels + SelectedY.Pixels > MaxHeight.Pixels)
+                {
+                    // too wide, check whether moving the selection to the left would help
+                    if (value.Pixels <= MaxHeight.Pixels)
+                    {
+                        // move selection to the left to allow new height
+                        LogService?.Log.Information("SelectedHeight: Changing Y to compensate for new height");
+                        SelectedY = new MeasurementValue(MeasurementType.Pixels, MaxHeight.Pixels - value.Pixels, InchesPerPixel);
+                    }
+                }
+
+                SetProperty(ref _SelectedHeight, value);
+            }
         }
 
         private AspectRatioOption _SelectedAspectRatio;

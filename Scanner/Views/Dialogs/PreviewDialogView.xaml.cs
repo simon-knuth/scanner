@@ -185,16 +185,20 @@ namespace Scanner.Views.Dialogs
             NumberBox numberBox = sender as NumberBox;
 
             // define rounding
-            IncrementNumberRounder numberRounder = new IncrementNumberRounder();
-            numberRounder.Increment = 0.01;
+            IncrementNumberRounder numberRounder = new IncrementNumberRounder
+            {
+                Increment = 0.01
+            };
 
             // define formatting
-            DecimalFormatter formatter = new DecimalFormatter();
-            formatter.IntegerDigits = 1;
-            formatter.FractionDigits = 2;
-            formatter.IsGrouped = false;
-            formatter.IsDecimalPointAlwaysDisplayed = true;
-            formatter.NumberRounder = numberRounder;
+            DecimalFormatter formatter = new DecimalFormatter
+            {
+                IntegerDigits = 1,
+                FractionDigits = 2,
+                IsGrouped = false,
+                IsDecimalPointAlwaysDisplayed = true,
+                NumberRounder = numberRounder
+            };
             numberBox.NumberFormatter = formatter;
         }
 
