@@ -186,7 +186,15 @@ namespace Scanner.ViewModels
         public ScannerAutoCropMode SelectedScannerAutoCropMode
         {
             get => _SelectedScannerAutoCropMode;
-            set => SetProperty(ref _SelectedScannerAutoCropMode, value);
+            set
+            {
+                SetProperty(ref _SelectedScannerAutoCropMode, value);
+
+                if (value == ScannerAutoCropMode.SingleRegion || value == ScannerAutoCropMode.MultipleRegions)
+                {
+                    SelectedScanRegion = null;
+                }
+            }
         }
 
         private ObservableCollection<ScanResolution> _ScannerResolutions;
@@ -204,6 +212,11 @@ namespace Scanner.ViewModels
             {
                 LogService?.Log.Information($"ScanOptionsViewModel: Setting SelectedScanRegion to {value}");
                 SetProperty(ref _SelectedScanRegion, value);
+
+                if (value != null)
+                {
+                    SelectedScannerAutoCropMode = ScannerAutoCropMode.Disabled;     // required for selected scan region
+                }
             }
         }
 

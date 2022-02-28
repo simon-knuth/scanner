@@ -449,7 +449,7 @@
 
                 <!-- Translations -->
                 <StackPanel x:Name="StackPanelSettingsHeadingTranslations" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="3,64,0,12">
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE775;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF2B7;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,12,0"/>
                     <TextBlock x:Uid="HeadingSettingsTranslations" Style="{ThemeResource BaseTextBlockStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" AutomationProperties.HeadingLevel="Level2"/>
                 </StackPanel>
                 <TextBlock x:Uid="TextSettingsTranslations" TextWrapping="WrapWholeWords"/>

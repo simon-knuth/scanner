@@ -50,6 +50,10 @@ namespace Scanner.Views.Dialogs
                     });
                     break;
                 case nameof(ViewModel.SelectedAspectRatioValue):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                    {
+                        ImageCropperPreview.AspectRatio = ViewModel.SelectedAspectRatioValue;
+                    });
                     await Task.Delay(500);      // ugh... 😞
                     await SetSelectedRegionInViewModel();
                     break;
@@ -82,6 +86,15 @@ namespace Scanner.Views.Dialogs
                     {
                         Rect newRect = ImageCropperPreview.CroppedRegion;
                         newRect.Width = ViewModel.SelectedWidth.Pixels;
+                        newRect.Height = ViewModel.SelectedHeight.Pixels;
+                        newRect.X = ViewModel.SelectedX.Pixels;
+                        newRect.Y = ViewModel.SelectedY.Pixels;
+
+                        if (ViewModel.IsFixedAspectRatioSelected)
+                        {
+                            // aspect ratio needs to be *exactly* right, so it sometimes has to be recalculated
+                            ImageCropperPreview.AspectRatio = newRect.Width / newRect.Height;
+                        }
 
                         ImageCropperPreview.TrySetCroppedRegion(newRect);
                     });
@@ -90,7 +103,16 @@ namespace Scanner.Views.Dialogs
                     await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         Rect newRect = ImageCropperPreview.CroppedRegion;
+                        newRect.Width = ViewModel.SelectedWidth.Pixels;
                         newRect.Height = ViewModel.SelectedHeight.Pixels;
+                        newRect.X = ViewModel.SelectedX.Pixels;
+                        newRect.Y = ViewModel.SelectedY.Pixels;
+
+                        if (ViewModel.IsFixedAspectRatioSelected)
+                        {
+                            // aspect ratio needs to be *exactly* right, so it sometimes has to be recalculated
+                            ImageCropperPreview.AspectRatio = newRect.Width / newRect.Height;
+                        }
 
                         ImageCropperPreview.TrySetCroppedRegion(newRect);
                     });

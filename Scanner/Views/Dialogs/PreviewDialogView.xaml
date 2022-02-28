@@ -55,6 +55,7 @@
             
             <!-- Other -->
             <x:Double x:Key="ContentDialogMaxWidth">756</x:Double>
+            <Thickness x:Key="AppBarButtonContentViewboxMargin">0,16,0,2</Thickness>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -160,6 +161,7 @@
                                     <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="5"/>
                                     <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="6"/>
                                     <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="7"/>
+                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNALegal" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=12}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="12"/>
                                     <MenuFlyoutSeparator/>
                                     <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
                                     <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="8"/>
@@ -217,7 +219,7 @@
             </controls:Case>
 
             <controls:Case Value="1">
-                <controls:ImageCropper x:Name="ImageCropperPreview" AspectRatio="{x:Bind ViewModel.SelectedAspectRatioValue, Mode=OneWay}" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32" Background="Transparent" ManipulationCompleted="ImageCropperPreview_ManipulationCompleted">
+                <controls:ImageCropper x:Name="ImageCropperPreview" PrimaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" SecondaryThumbStyle="{StaticResource ImageCropperThumbStyleAcrylic}" CropShape="Rectangular" ThumbPlacement="All" Padding="32" Background="Transparent" ManipulationCompleted="ImageCropperPreview_ManipulationCompleted">
                     <controls:ImageCropper.Mask>
                         <SolidColorBrush Color="Black" Opacity="0.5"/>
                     </controls:ImageCropper.Mask>

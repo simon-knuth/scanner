@@ -470,6 +470,8 @@ static class Utilities
                 return 0.7216;
             case AspectRatioOption.Kai32:
                 return 0.6954;
+            case AspectRatioOption.Legal:
+                return 0.6067;
             default:
                 throw new ArgumentException($"Can't convert AspectRatioOption {option} to value.");
         }

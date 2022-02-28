@@ -26,6 +26,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly IAppDataService AppDataService = Ioc.Default.GetService<IAppDataService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly IHelperService HelperService = Ioc.Default.GetService<IHelperService>();
@@ -113,6 +114,8 @@ namespace Scanner.ViewModels
             get => _IsCustomRegionSelected;
             set
             {
+                LogService.Log.Information($"PreviewDialogViewModel: Setting IsCustomRegionSelected to {value}");
+                
                 if (value == true && _previewFileBuffer != null)
                 {
                     PreviewFile = _previewFileBuffer;
@@ -178,18 +181,50 @@ namespace Scanner.ViewModels
             get => _SelectedWidth;
             set
             {
-                if (value != null && SelectedX != null && value.Pixels + SelectedX.Pixels > MaxWidth.Pixels)
+                try
                 {
-                    // too wide, check whether moving the selection to the left would help
-                    if (value.Pixels <= MaxWidth.Pixels)
+                    if (value != null && SelectedX != null && value.Pixels + SelectedX.Pixels > MaxWidth.Pixels)
                     {
-                        // move selection to the left to allow new width
-                        LogService?.Log.Information("SelectedWidth: Changing X to compensate for new width");
-                        SelectedX = new MeasurementValue(MeasurementType.Pixels, MaxWidth.Pixels - value.Pixels, InchesPerPixel);
+                        // too wide, check whether moving the selection to the left would help
+                        if (value.Pixels <= MaxWidth.Pixels)
+                        {
+                            // move selection to the left to allow new width
+                            LogService?.Log.Information("SelectedWidth: Changing X to compensate for new width");
+                            SelectedX = new MeasurementValue(MeasurementType.Pixels, MaxWidth.Pixels - value.Pixels, InchesPerPixel);
+                        }
+                    }
+
+                    if (SelectedWidth != null && SelectedAspectRatio != AspectRatioOption.Custom
+                        && Math.Abs(SelectedWidth.Pixels - value.Pixels) > 0.1)
+                    {
+                        SetProperty(ref _SelectedWidth, value);
+
+                        // change height according to aspect ratio
+                        double newHeightPixels = value.Pixels / (double)SelectedAspectRatioValue;
+
+                        if (Math.Abs(newHeightPixels - SelectedHeight.Pixels) > 0.1)
+                        {
+                            SelectedHeight = new MeasurementValue(MeasurementType.Pixels, newHeightPixels, InchesPerPixel);
+                        }
+                    }
+                    else
+                    {
+                        SetProperty(ref _SelectedWidth, value);
                     }
                 }
-
-                SetProperty(ref _SelectedWidth, value);
+                catch (Exception exc)
+                {
+                    Messenger.Send(new AppWideStatusMessage
+                    {
+                        Title = LocalizedString("ErrorMessageHeader"),
+                        MessageText = LocalizedString("ErrorMessageBody"),
+                        Severity = AppWideStatusMessageSeverity.Warning,
+                        AdditionalText = exc.Message
+                    });
+                    LogService.Log.Error(exc, $"Setting SelectedWidth to {value} failed");
+                    AppCenterService.TrackError(exc);
+                    Close(false);
+                }
             }
         }
 
@@ -199,18 +234,50 @@ namespace Scanner.ViewModels
             get => _SelectedHeight;
             set
             {
-                if (value != null && SelectedY != null && value.Pixels + SelectedY.Pixels > MaxHeight.Pixels)
+                try
                 {
-                    // too wide, check whether moving the selection to the left would help
-                    if (value.Pixels <= MaxHeight.Pixels)
+                    if (value != null && SelectedY != null && value.Pixels + SelectedY.Pixels > MaxHeight.Pixels)
                     {
-                        // move selection to the left to allow new height
-                        LogService?.Log.Information("SelectedHeight: Changing Y to compensate for new height");
-                        SelectedY = new MeasurementValue(MeasurementType.Pixels, MaxHeight.Pixels - value.Pixels, InchesPerPixel);
+                        // too wide, check whether moving the selection to the left would help
+                        if (value.Pixels <= MaxHeight.Pixels)
+                        {
+                            // move selection to the left to allow new height
+                            LogService?.Log.Information("SelectedHeight: Changing Y to compensate for new height");
+                            SelectedY = new MeasurementValue(MeasurementType.Pixels, MaxHeight.Pixels - value.Pixels, InchesPerPixel);
+                        }
+                    }
+
+                    if (SelectedHeight != null && SelectedAspectRatio != AspectRatioOption.Custom
+                        && Math.Abs(SelectedHeight.Pixels - value.Pixels) > 0.1)
+                    {
+                        SetProperty(ref _SelectedHeight, value);
+
+                        // change width according to aspect ratio
+                        double newWidthPixels = value.Pixels * (double)SelectedAspectRatioValue;
+
+                        if (Math.Abs(newWidthPixels - SelectedWidth.Pixels) > 0.1)
+                        {
+                            SelectedWidth = new MeasurementValue(MeasurementType.Pixels, newWidthPixels, InchesPerPixel);
+                        }
+                    }
+                    else
+                    {
+                        SetProperty(ref _SelectedHeight, value);
                     }
                 }
-
-                SetProperty(ref _SelectedHeight, value);
+                catch (Exception exc)
+                {
+                    Messenger.Send(new AppWideStatusMessage
+                    {
+                        Title = LocalizedString("ErrorMessageHeader"),
+                        MessageText = LocalizedString("ErrorMessageBody"),
+                        Severity = AppWideStatusMessageSeverity.Warning,
+                        AdditionalText = exc.Message
+                    });
+                    LogService.Log.Error(exc, $"Setting SelectedHeight to {value} failed");
+                    AppCenterService.TrackError(exc);
+                    Close(false);
+                }
             }
         }
 
@@ -220,19 +287,35 @@ namespace Scanner.ViewModels
             get => _SelectedAspectRatio;
             set
             {
-                SetProperty(ref _SelectedAspectRatio, value);
-                SelectedAspectRatioValue = ConvertAspectRatioOptionToValue(value);
-
-                if (value == AspectRatioOption.Custom)
+                try
                 {
-                    IsFixedAspectRatioSelected = false;
-                }
-                else
-                {
-                    IsFixedAspectRatioSelected = true;
-                }
+                    SetProperty(ref _SelectedAspectRatio, value);
+                    SelectedAspectRatioValue = ConvertAspectRatioOptionToValue(value);
 
-                SettingsService.SetSetting(AppSetting.LastUsedCropAspectRatio, value);
+                    if (value == AspectRatioOption.Custom)
+                    {
+                        IsFixedAspectRatioSelected = false;
+                    }
+                    else
+                    {
+                        IsFixedAspectRatioSelected = true;
+                    }
+
+                    SettingsService.SetSetting(AppSetting.LastUsedCropAspectRatio, value);
+                }
+                catch (Exception exc)
+                {
+                    Messenger.Send(new AppWideStatusMessage
+                    {
+                        Title = LocalizedString("ErrorMessageHeader"),
+                        MessageText = LocalizedString("ErrorMessageBody"),
+                        Severity = AppWideStatusMessageSeverity.Warning,
+                        AdditionalText = exc.Message
+                    });
+                    LogService.Log.Error(exc, $"Setting SelectedAspectRatio to {value} failed");
+                    AppCenterService.TrackError(exc);
+                    Close(false);
+                }
             }
         }
 
@@ -260,6 +343,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public PreviewDialogViewModel()
         {
+            LogService.Log.Information("Opening preview dialog");
             AspectRatioFlipCommand = new RelayCommand<Rect>((x) => FlipSelectedAspectRatio(x));
 
             Tuple<DiscoveredScanner, ScanOptions> parameters = Messenger.Send(new PreviewParametersRequestMessage());
@@ -343,7 +427,12 @@ namespace Scanner.ViewModels
                     Height = SelectedHeight.Inches
                 };
 
+                LogService.Log.Information($"Closing preview dialog and returning region {rect}");
                 Messenger.Send(new PreviewSelectedRegionChangedMessage(rect));
+            }
+            else
+            {
+                LogService.Log.Information($"Closing preview dialog without returning region");
             }
 
             CloseRequested?.Invoke(this, EventArgs.Empty);
@@ -394,9 +483,7 @@ namespace Scanner.ViewModels
                 {
                     // fail debug preview
                     await Task.Delay(2000);
-                    HasPreviewFailed = true;
-                    IsPreviewRunning = false;
-                    HasPreviewSucceeded = false;
+                    throw new ApplicationException("Debug preview failed on purpose");
                 }
                 else
                 {
@@ -413,6 +500,7 @@ namespace Scanner.ViewModels
                 HasPreviewFailed = true;
                 IsPreviewRunning = false;
                 HasPreviewSucceeded = false;
+                return;
             }
             InitializeRegionSelectionLengths();
         }
@@ -442,10 +530,26 @@ namespace Scanner.ViewModels
 
         private void FlipSelectedAspectRatio(Rect currentRect)
         {
-            SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
-            if (SelectedAspectRatio == AspectRatioOption.Custom)
+            try
             {
-                SelectedAspectRatio = AspectRatioOption.Custom;
+                SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
+                if (SelectedAspectRatio == AspectRatioOption.Custom)
+                {
+                    SelectedAspectRatio = AspectRatioOption.Custom;
+                }
+            }
+            catch (Exception exc)
+            {
+                Messenger.Send(new AppWideStatusMessage
+                {
+                    Title = LocalizedString("ErrorMessageHeader"),
+                    MessageText = LocalizedString("ErrorMessageBody"),
+                    Severity = AppWideStatusMessageSeverity.Warning,
+                    AdditionalText = exc.Message
+                });
+                LogService.Log.Error(exc, $"Flipping aspect ratio rect {currentRect} to failed");
+                AppCenterService.TrackError(exc);
+                Close(false);
             }
         }
     }

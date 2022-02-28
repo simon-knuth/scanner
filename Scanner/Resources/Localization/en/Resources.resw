@@ -1601,4 +1601,8 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>Preview (scan region selected)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>Legal</value>
+    <comment>The aspect ratio description for the North American "Legal".</comment>
+  </data>
 </root>

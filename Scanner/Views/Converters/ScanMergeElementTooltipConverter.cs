@@ -12,7 +12,8 @@ namespace Scanner.Views.Converters
         {
             ScanMergeElement element = value as ScanMergeElement;
 
-            if (element.IsPotentialPage) return element.ItemDescriptor;
+            if (element == null) return null;
+            else if (element.IsPotentialPage) return element.ItemDescriptor;
             else return null;
         }
 
