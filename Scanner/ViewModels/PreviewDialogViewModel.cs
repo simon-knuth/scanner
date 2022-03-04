@@ -74,7 +74,7 @@ namespace Scanner.ViewModels
                 }
                 else
                 {
-                    InchesPerPixel = 0.2;
+                    InchesPerPixel = 0.005;
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace Scanner.ViewModels
 
                 if (value == true)
                 {
-                    CanSelectCustomRegion = _scanOptions.Source == ScannerSource.Flatbed || _scanOptions.Source == ScannerSource.Feeder;
+                    CanSelectCustomRegion = _scanOptions.Source == ScannerSource.Flatbed;
                 }
             }
         }
@@ -147,11 +147,39 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _MinLength, value);
         }
 
+        private MeasurementValue _MinWidthForAspectRatio;
+        public MeasurementValue MinWidthForAspectRatio
+        {
+            get => _MinWidthForAspectRatio;
+            set => SetProperty(ref _MinWidthForAspectRatio, value);
+        }
+
+        private MeasurementValue _MinHeightForAspectRatio;
+        public MeasurementValue MinHeightForAspectRatio
+        {
+            get => _MinHeightForAspectRatio;
+            set => SetProperty(ref _MinHeightForAspectRatio, value);
+        }
+
         private MeasurementValue _MaxWidth;
         public MeasurementValue MaxWidth
         {
             get => _MaxWidth;
             set => SetProperty(ref _MaxWidth, value);
+        }
+
+        private MeasurementValue _MaxWidthForAspectRatio;
+        public MeasurementValue MaxWidthForAspectRatio
+        {
+            get => _MaxWidthForAspectRatio;
+            set => SetProperty(ref _MaxWidthForAspectRatio, value);
+        }
+
+        private MeasurementValue _MaxHeightForAspectRatio;
+        public MeasurementValue MaxHeightForAspectRatio
+        {
+            get => _MaxHeightForAspectRatio;
+            set => SetProperty(ref _MaxHeightForAspectRatio, value);
         }
 
         private MeasurementValue _MaxHeight;
@@ -194,7 +222,7 @@ namespace Scanner.ViewModels
                         }
                     }
 
-                    if (SelectedWidth != null && SelectedAspectRatio != AspectRatioOption.Custom
+                    if (SelectedWidth != null && SelectedHeight != null && SelectedAspectRatio != AspectRatioOption.Custom
                         && Math.Abs(SelectedWidth.Pixels - value.Pixels) > 0.1)
                     {
                         SetProperty(ref _SelectedWidth, value);
@@ -247,7 +275,7 @@ namespace Scanner.ViewModels
                         }
                     }
 
-                    if (SelectedHeight != null && SelectedAspectRatio != AspectRatioOption.Custom
+                    if (SelectedHeight != null && SelectedWidth != null && SelectedAspectRatio != AspectRatioOption.Custom
                         && Math.Abs(SelectedHeight.Pixels - value.Pixels) > 0.1)
                     {
                         SetProperty(ref _SelectedHeight, value);
@@ -323,7 +351,47 @@ namespace Scanner.ViewModels
         public double? SelectedAspectRatioValue
         {
             get => _SelectedAspectRatioValue;
-            set => SetProperty(ref _SelectedAspectRatioValue, value);
+            set
+            {
+                SetProperty(ref _SelectedAspectRatioValue, value);
+
+                // refresh max/min width/height
+                if (value == null)
+                {
+                    MinWidthForAspectRatio = MinHeightForAspectRatio = MinLength;
+                    MaxWidthForAspectRatio = MaxWidth;
+                    MaxHeightForAspectRatio = MaxHeight;
+                }
+                else
+                {
+                    if (value == 1)
+                    {
+                        // same width as height
+                        if (MaxWidth.Pixels > MaxHeight.Pixels) MaxWidthForAspectRatio = MaxHeightForAspectRatio = MaxHeight;
+                        else MaxWidthForAspectRatio = MaxHeightForAspectRatio = MaxWidth;
+
+                        MinWidthForAspectRatio = MinHeightForAspectRatio = MinLength;
+                    }
+                    else if (value > 1)
+                    {
+                        // longer width than height
+                        MaxWidthForAspectRatio = MaxWidth;
+                        MaxHeightForAspectRatio = new MeasurementValue(MeasurementType.Pixels, MaxWidth.Pixels / (double)value, InchesPerPixel);
+
+                        MinHeightForAspectRatio = MinLength;
+                        MinWidthForAspectRatio = new MeasurementValue(MeasurementType.Pixels, MinLength.Pixels * (double)value, InchesPerPixel);
+                    }
+                    else
+                    {
+                        // longer height than width
+                        MaxHeightForAspectRatio = MaxHeight;
+                        MaxWidthForAspectRatio = new MeasurementValue(MeasurementType.Pixels, MaxHeight.Pixels * (double)value, InchesPerPixel);
+
+                        MinWidthForAspectRatio = MinLength;
+                        MinHeightForAspectRatio = new MeasurementValue(MeasurementType.Pixels, MinLength.Pixels * (double)value, InchesPerPixel);
+                    }
+                }
+            }
         }
 
         private bool _IsFixedAspectRatioSelected;
@@ -351,7 +419,6 @@ namespace Scanner.ViewModels
 
             parameters.Item2.SelectedRegion = null;
             _scanOptions = parameters.Item2;
-            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
         }
 
 
@@ -363,7 +430,7 @@ namespace Scanner.ViewModels
             await PreviewScanAsync();
         }
 
-        private void InitializeRegionSelectionLengths()
+        private void InitializeRegionSelectionParameters()
         {
             double minWidth, minHeight, maxWidth, maxHeight;
 
@@ -411,6 +478,8 @@ namespace Scanner.ViewModels
             // determine max
             MaxWidth = new MeasurementValue(MeasurementType.Inches, maxWidth, InchesPerPixel);
             MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeight, InchesPerPixel);
+
+            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
         }
 
         private void Close(bool applySelection)
@@ -502,7 +571,7 @@ namespace Scanner.ViewModels
                 HasPreviewSucceeded = false;
                 return;
             }
-            InitializeRegionSelectionLengths();
+            InitializeRegionSelectionParameters();
         }
 
         /// <summary>

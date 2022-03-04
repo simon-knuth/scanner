@@ -384,7 +384,7 @@ namespace Scanner.ViewModels
                 && SystemInformation.Instance.PreviousVersionInstalled.Major != 3
                 && SystemInformation.Instance.PreviousVersionInstalled.Minor != 1)
             {
-                UpdatedDialogRequested?.Invoke(this, EventArgs.Empty);
+                ShowUpdatedDialog();
             }
             else if ((bool)SettingsService.GetSetting(AppSetting.SetupCompleted) == false)
             {
