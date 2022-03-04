@@ -116,10 +116,12 @@ namespace Scanner.Services
                 {
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(previewStream);
+                    LogService?.Log.Information("GetPreviewAsync: Success");
                     return bitmapImage;
                 }
                 else
                 {
+                    LogService?.Log.Information("GetPreviewAsync: Failed");
                     throw new ApplicationException("Preview unsuccessful");
                 }
             }

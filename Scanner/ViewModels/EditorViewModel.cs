@@ -583,7 +583,6 @@ namespace Scanner.ViewModels
 
         private async Task<List<OpenWithApp>> GetAppsToOpenWith()
         {
-            LogService?.Log.Information("GetAppsToOpenWith");
             List<OpenWithApp> result = new List<OpenWithApp>();
 
             // get format of current result
@@ -595,8 +594,6 @@ namespace Scanner.ViewModels
             IReadOnlyList<AppInfo> readOnlyList = await Launcher.FindFileHandlersAsync(formatString);
             foreach (AppInfo appInfo in readOnlyList)
             {
-                LogService?.Log.Information($"GetAppsToOpenWith: Adding {appInfo.DisplayInfo.DisplayName}");
-
                 try
                 {
                     RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(64, 64));

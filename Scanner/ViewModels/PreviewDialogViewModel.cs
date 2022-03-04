@@ -217,7 +217,6 @@ namespace Scanner.ViewModels
                         if (value.Pixels <= MaxWidth.Pixels)
                         {
                             // move selection to the left to allow new width
-                            LogService?.Log.Information("SelectedWidth: Changing X to compensate for new width");
                             SelectedX = new MeasurementValue(MeasurementType.Pixels, MaxWidth.Pixels - value.Pixels, InchesPerPixel);
                         }
                     }
@@ -270,7 +269,6 @@ namespace Scanner.ViewModels
                         if (value.Pixels <= MaxHeight.Pixels)
                         {
                             // move selection to the left to allow new height
-                            LogService?.Log.Information("SelectedHeight: Changing Y to compensate for new height");
                             SelectedY = new MeasurementValue(MeasurementType.Pixels, MaxHeight.Pixels - value.Pixels, InchesPerPixel);
                         }
                     }
@@ -480,6 +478,9 @@ namespace Scanner.ViewModels
             MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeight, InchesPerPixel);
 
             SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
+
+            // log result
+            LogService?.Log.Information("Datermined {@MinLength}, {@MaxWidth} and {@MaxHeight}", MinLength, MaxWidth, MaxHeight);
         }
 
         private void Close(bool applySelection)

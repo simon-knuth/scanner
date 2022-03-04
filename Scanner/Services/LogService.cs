@@ -165,7 +165,7 @@ namespace Scanner.Services
                     .Destructure.ByTransforming<ScanMergeConfig>(
                         c => new
                         {
-                            InsertIndices = c.InsertIndices.ToString(),
+                            InsertIndices = c.InsertIndices,
                             SurplusPagesIndex = c.SurplusPagesIndex
                         })
                     .CreateLogger();
