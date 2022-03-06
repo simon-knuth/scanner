@@ -396,7 +396,7 @@
             x:Uid="DialogFeedback"
             IsLightDismissEnabled="False">
             <muxc:TeachingTip.IconSource>
-                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xE939;"/>
+                <muxc:FontIconSource Glyph="&#xE939;"/>
             </muxc:TeachingTip.IconSource>
 
             <StackPanel Orientation="Vertical" Margin="0,6,0,0">
@@ -425,7 +425,7 @@
             ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
             ActionButtonStyle="{ThemeResource AccentButtonStyle}">
             <muxc:TeachingTip.IconSource>
-                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xF133;"/>
+                <muxc:FontIconSource Glyph="&#xF133;"/>
             </muxc:TeachingTip.IconSource>
         </muxc:TeachingTip>
     </Grid>

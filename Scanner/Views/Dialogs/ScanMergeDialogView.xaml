@@ -83,7 +83,7 @@
         <muxc:NumberBox Grid.Row="1" Grid.Column="1" SpinButtonPlacementMode="Inline" Minimum="0" Maximum="{x:Bind ViewModel.MaxSkippablePages, Mode=OneWay}" Value="{x:Bind ViewModel.SkipPages, Mode=TwoWay}" MinWidth="100" AutomationProperties.IsRequiredForForm="True" Loaded="NumberBox_Loaded">
             <muxc:NumberBox.Header>
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE151;" FontSize="16" />
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEB9D;" FontSize="16" />
                     <TextBlock x:Uid="TextScanMergeInBetweenPages" Style="{StaticResource BodyTextBlockStyle}" />
                 </StackPanel>
             </muxc:NumberBox.Header>

@@ -2388,19 +2388,6 @@
     </Style>
 
     <RevealBackgroundBrush x:Key="ButtonAccentRevealBackgroundBrushPressed" Color="#8C8C8C" FallbackColor="{StaticResource SystemBaseMediumLowColor}" />
-
-    <ResourceDictionary.MergedDictionaries>
-        <windows11Present:ResourceDictionary>
-            <FontFamily x:Key="FontFamilySegoeFluentIcons">
-                Segoe Fluent Icons
-            </FontFamily>
-        </windows11Present:ResourceDictionary>
-        <windows11NotPresent:ResourceDictionary>
-            <FontFamily x:Key="FontFamilySegoeFluentIcons">
-                Segoe MDL2 Assets
-            </FontFamily>
-        </windows11NotPresent:ResourceDictionary>
-    </ResourceDictionary.MergedDictionaries>
     
     <ResourceDictionary.ThemeDictionaries>
         <!-- HeaderScrollShadowConverter expects DropShadowPanelThemedStyle to set ShadowOpacity at index 0 -->

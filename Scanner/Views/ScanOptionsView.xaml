@@ -779,7 +779,7 @@
 
         <muxc:TeachingTip x:Name="TeachingTipScanMerge" x:Uid="DialogScanMergeTip" Target="{x:Bind ButtonScan}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False">
             <muxc:TeachingTip.IconSource>
-                <muxc:FontIconSource FontFamily="{StaticResource FontFamilySegoeFluentIcons}" Glyph="&#xEA3C;"/>
+                <muxc:FontIconSource Glyph="&#xEA3C;"/>
             </muxc:TeachingTip.IconSource>
         </muxc:TeachingTip>
     </Grid>
