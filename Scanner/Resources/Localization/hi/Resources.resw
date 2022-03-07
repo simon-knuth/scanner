@@ -1,0 +1,1609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorMessageHeader" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The header for a generic error message.</comment>
+  </data>
+  <data name="ErrorMessageBody" xml:space="preserve">
+    <value>कृपया पुनः प्रयास करें।</value>
+    <comment>The body for a generic error message.</comment>
+  </data>
+  <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ को क्लिपबोर्ड पर कॉपी करें (Ctrl+C)</value>
+    <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ क्रॉप करें</value>
+    <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐस्पेक्ट अनुपात</value>
+    <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
+  </data>
+  <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
+    <value>ऐस्पेक्ट रेशियो</value>
+    <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
+    <value>Kai 4</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
+    <value>Kai 8</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
+    <value>Kai 16</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
+    <value>Kai 32</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
+    <value>अनुकूलित</value>
+    <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
+    <value>पलटें</value>
+    <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
+    <value>DIN A</value>
+    <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
+    <value>ANSI A - लेटर</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
+    <value>ANSI B - लेजर/टैबलॉयड</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
+    <value>ANSI C - ब्रॉडशीट</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
+    <value>चौकोर</value>
+    <comment>The aspect ratio description for a square aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ मिटाऍं</value>
+    <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परिवर्तनों को निरस्त करें</value>
+    <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>विंडोज इंक का प्रयोग करके ड्रा और हाइलाइट करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्पर्श के द्वारा ड्रा करें</value>
+    <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
+    <value>दूसरे ऐप में खोलें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ाइल का नाम बदलें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate90.Text" xml:space="preserve">
+    <value>९०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate180.Text" xml:space="preserve">
+    <value>१८०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate270.Text" xml:space="preserve">
+    <value>२७०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ घुमाएँ (अधिक ऑप्शंस के लिए राइट क्लिक करें)</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परिवर्तनों को सहेजें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परिवर्तनों को कॉपी के रूप में सहेजें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>साझा करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ सूची</value>
+    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित पृष्ठों को कॉपी करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित पृष्ठों को मिटाऍं</value>
+    <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate90.Text" xml:space="preserve">
+    <value>चयनित पृष्ठों को ९०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate180.Text" xml:space="preserve">
+    <value>चयनित पृष्ठों को १८०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate270.Text" xml:space="preserve">
+    <value>चयनित पृष्ठों को २७०° घुमाएँ</value>
+    <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित पृष्ठों को घुमाएँ (अधिक ऑप्शंस के लिए राइट क्लिक करें)</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठों का चयन करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित पृष्ठों को साझा करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्कैन ऑप्शंस</value>
+    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सहेजने के स्थान को फ़ाइल एक्सप्लोरर में दिखाऍं</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
+    <value>पूर्वावलोकन करें</value>
+    <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
+    <value>स्कैन</value>
+    <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
+    <value>स्कैन करें और नए सिरे से प्रारंभ करें</value>
+    <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सेटिंग्स</value>
+    <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingDialogDelete.Text" xml:space="preserve">
+    <value>क्या आप निश्चित हैं?</value>
+    <comment>The title of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="TextDialogDelete.Text" xml:space="preserve">
+    <value>यह पृष्ठ स्थायी रूप से मिटा दिया जाएगा।</value>
+    <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
+    <value>मिटाऍं</value>
+    <comment>The action button text of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The close button text of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
+    <value>क्या आप निश्चित हैं?</value>
+    <comment>The title of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
+    <value>चयनित पृष्ठों को स्थायी रूप से मिटा दिया जाएगा।</value>
+    <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
+    <value>मिटाऍं</value>
+    <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="DialogFeedback.Title" xml:space="preserve">
+    <value>क्या आप ऐप का आनंद ले रहे हैं?</value>
+    <comment>The title of the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogFeedback.Subtitle" xml:space="preserve">
+    <value>मैं आपकी राय सुनना पसंद करूँगा:</value>
+    <comment>The subtitle of the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="HeadingDialogRename.Text" xml:space="preserve">
+    <value>पुनर्नामित करें</value>
+    <comment>The title of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="TextDialogRename.Text" xml:space="preserve">
+    <value>फ़ाइल के लिए एक नया नाम दर्ज करें:</value>
+    <comment>The title of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
+    <value>पुष्टि करें</value>
+    <comment>The action button text of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The close button text of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ErrorMessageCopyHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when copying something fails.</comment>
+  </data>
+  <data name="ErrorMessageCopyBody" xml:space="preserve">
+    <value>क्लिपबोर्ड पर कॉपी करना विफल रहा।</value>
+    <comment>The error message body that appears when copying something fails.</comment>
+  </data>
+  <data name="ErrorMessageCropHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when cropping something fails.</comment>
+  </data>
+  <data name="ErrorMessageCropBody" xml:space="preserve">
+    <value>क्रॉपिंग अभी उपलब्ध नहीं है।</value>
+    <comment>The error message body that appears when cropping something fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when deleting something fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteBody" xml:space="preserve">
+    <value>इसे मिटाना अभी संभव नहीं है।</value>
+    <comment>The error message body that appears when deleting something fails.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
+    <value>अरे!</value>
+    <comment>The error message heading that appears when no format was selected before starting a scan.
+Fuzzy</comment>
+  </data>
+  <data name="ErrorMessageNoFormatBody" xml:space="preserve">
+    <value>कृपया एक फ़ाइल फॉर्मेट का चयन करें।</value>
+    <comment>The error message body that appears when no format was selected before starting a scan.</comment>
+  </data>
+  <data name="ErrorMessageRenameHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when renaming something fails.</comment>
+  </data>
+  <data name="ErrorMessageRenameBody" xml:space="preserve">
+    <value>इसका नाम बदलना अभी संभव नहीं है। शायद इसी नाम की फ़ाइल पहले से मौजूद है?</value>
+    <comment>The error message body that appears when renaming something fails.</comment>
+  </data>
+  <data name="ErrorMessageRotateHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when rotating something fails.</comment>
+  </data>
+  <data name="ErrorMessageRotateBody" xml:space="preserve">
+    <value>इसे घुमाना अभी संभव नहीं है। कृपया पुन: प्रयास करें।</value>
+    <comment>The error message body that appears when rotating something fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveBody" xml:space="preserve">
+    <value>इन परिवर्तनों को सहेजना विफल रहा। कृपया सुनिश्चित करें कि फ़ाइल अभी भी उपलब्ध है और पुनः प्रयास करें।</value>
+    <comment>The error message body that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when canceling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelBody" xml:space="preserve">
+    <value>स्कैनर वर्तमान में स्कैनिंग रद्द करने के ऐप के अनुरोध को स्वीकार नहीं कर रहा है।</value>
+    <comment>The error message body that appears when canceling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when a scan fails without more information.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorBody" xml:space="preserve">
+    <value>स्कैन किसी अज्ञात त्रुटि के कारण विफल रहा।</value>
+    <comment>The error message body that appears when a scan fails without more information.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
+    <value>चीनी</value>
+    <comment>The heading for Chinese aspect ratio options.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
+    <value>अंतरराष्ट्रीय</value>
+    <comment>The heading for international aspect ratio options.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
+    <value>उत्तरि अमेरिका</value>
+    <comment>The heading for North American aspect ratio options.</comment>
+  </data>
+  <data name="HeadingScanner.Text" xml:space="preserve">
+    <value>स्कैनर</value>
+    <comment>The heading for the app&apos;s main page.</comment>
+  </data>
+  <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
+    <value>रंग मोड</value>
+    <comment>The heading for the color mode options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
+    <value>दूसरे रूप में सहेजें</value>
+    <comment>The heading for the format options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>फीडर ऑप्शंस</value>
+    <comment>The heading for additional options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
+    <value>रिज़ॉल्यूशन</value>
+    <comment>The heading for resolution options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
+    <value>स्रोत</value>
+    <comment>The heading for source options in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
+    <value>लगातार १० पृष्ठों तक स्कैन करें</value>
+    <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
+    <value>रंगीन</value>
+    <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
+    <value>ग्रेस्केल</value>
+    <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
+    <value>मोनोक्रोम</value>
+    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
+    <value>दोहरा (आगे और पीछे)</value>
+    <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
+    <value>स्वचालित विन्यास</value>
+    <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
+    <value>फीडर</value>
+    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
+    <value>फ्लैटबेड</value>
+    <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
+    <value>स्कैन किए गए पृष्ठ यहाँ दिखाई देंगे</value>
+    <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
+  </data>
+  <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पूर्वावलोकन सपोर्ट करता है</value>
+    <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
+  </data>
+  <data name="HeadingPreview.Text" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+    <comment>The heading of the preview functionality.</comment>
+  </data>
+  <data name="TextPreviewError.Text" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई। कृपया सुनिश्चित करें कि कोई पृष्ठ डाला गया है और पुनः प्रयास करें।</value>
+    <comment>The error message that appears when previewing fails.</comment>
+  </data>
+  <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
+    <value>फ़ोल्डर चुनें</value>
+    <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
+  </data>
+  <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
+    <value>डिफ़ॉल्ट अवस्था में रीसेट करें</value>
+    <comment>The text of the button that allows the user reset the folder to save files to.</comment>
+  </data>
+  <data name="HeadingDialogLicenses.Text" xml:space="preserve">
+    <value>तृतीय-पक्ष लाइसेंस</value>
+    <comment>The title of the dialog that displays all third-party licenses.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when selecting a new save location failed.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderBody" xml:space="preserve">
+    <value>चयनित फ़ोल्डर उपलब्ध नहीं है। कृपया किसी अन्य को चुनने का प्रयास करें।</value>
+    <comment>The error message body that appears when selecting a new save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
+    <value>कोई अज्ञात त्रुटि उत्पन्न हुई</value>
+    <comment>The error message heading that appears when resetting the save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>फ़ोल्डर स्थान को रीसेट करना विफल रहा।</value>
+    <comment>The error message body that appears when resetting the save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
+    <value>ऐक्सेस अस्वीकृत</value>
+    <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
+    <value>ऐप को इस फ़ोल्डर का प्रयोग करने की अनुमति नहीं है। कृपया किसी अन्य को चुनने का प्रयास करें।</value>
+    <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
+  </data>
+  <data name="HeadingSettingsAbout.Text" xml:space="preserve">
+    <value>इस ऐप के बारे में</value>
+    <comment>The heading for the &quot;About&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
+    <value>प्रतिक्रिया दें</value>
+    <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>सहेजने का स्थान</value>
+    <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
+    <value>अनुवाद</value>
+    <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
+    <value>फ़ाइल के नाम में समय जोड़ें</value>
+    <comment>The text for the option for appending the time to file names.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
+    <value>तृतीय-पक्ष लाइसेंस</value>
+    <comment>The hyperlink text for viewing third-party licenses.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
+    <value>गोपनीयता नीति</value>
+    <comment>The hyperlink text for viewing the privacy policy.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
+    <value>वेबसाइट</value>
+    <comment>The hyperlink text for viewing the website.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
+    <value>अनुवाद करने में मदद करें</value>
+    <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
+  </data>
+  <data name="HeadingSettings.Text" xml:space="preserve">
+    <value>सेटिंग्स</value>
+    <comment>The heading for the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
+    <value>डार्क</value>
+    <comment>The dark theme option in the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
+    <value>लाइट</value>
+    <comment>The light theme option in the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
+    <value>सिस्टम सेटिंग</value>
+    <comment>The system theme option in the settings.</comment>
+  </data>
+  <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button text of the dialog that displays all third-party licenses.</comment>
+  </data>
+  <data name="ButtonCloseText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingNotificationScanComplete" xml:space="preserve">
+    <value>स्कैन पूर्ण हुआ</value>
+    <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="ShareUITitleMultipleFiles" xml:space="preserve">
+    <value>एकाधिक पृष्ठ</value>
+    <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
+  </data>
+  <data name="TextNotificationScanComplete" xml:space="preserve">
+    <value>परिणाम देखने और संपादित करने के लिए ऐप पर लौटें।</value>
+    <comment>The body for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
+    <value>ऐप आपके द्वारा स्कैन किए गए सभी पृष्ठों को एकत्र करता है, जब तक कि आप स्कैन करते समय फ़ाइल फॉर्मेट नहीं बदलते या &quot;नए सिरे से प्रारंभ&quot; नहीं करते हैं। यदि आप एक पीडीएफ फ़ाइल बना रहे हैं, तो आप यहां पृष्ठों को फिर से क्रमबद्ध भी कर सकते हैं।</value>
+    <comment>The subtitle of the dialog that explains the page management.</comment>
+  </data>
+  <data name="DialogTutorialManage.Title" xml:space="preserve">
+    <value>आपके पृष्ठ यहाँ हैं</value>
+    <comment>The title of the dialog that explains the page management.</comment>
+  </data>
+  <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button text of the translation contributors dialog.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
+    <value>योगदानकर्ता</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
+    <value>सेटिंग्स</value>
+    <comment>The settings button of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
+    <value>स्कैन पूर्वनिर्धारित स्थान पर सहेजे जाते हैं। आप सेटिंग्स में किसी अन्य फ़ोल्डर का चयन कर सकते हैं।</value>
+    <comment>The subtitle of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
+    <value>सहेजने का स्थान</value>
+    <comment>The heading of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
+    <value>चेंजलाग</value>
+    <comment>The action button text of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Subtitle" xml:space="preserve">
+    <value>आप चेंजलाग में नया और बेहतर क्या है, इस पर एक नज़र डाल सकते हैं (हो सकता है कि यह हर भाषा में उपलब्ध न हो)।</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Title" xml:space="preserve">
+    <value>ऐप अपडेट किया गया</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button text of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingDialogChangelog.Text" xml:space="preserve">
+    <value>नया क्या है?</value>
+    <comment>The title of the changelog dialog.</comment>
+  </data>
+  <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button text of the translation contributors dialog.</comment>
+  </data>
+  <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
+    <value>क्रेडिट्स</value>
+    <comment>The title of the dialog that shows the translation contributors.</comment>
+  </data>
+  <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
+    <value>त्रुटि रिपोर्ट और प्रयोग के आँकड़े भेजें</value>
+    <comment>The option for sending error reports and usage statistics.</comment>
+  </data>
+  <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
+    <value>यह मुझे ऐप क्रैश की जांच करने और उपयोगकर्ताओं के लिए सबसे मूल्यवान सुविधाओं की पहचान करने की अनुमति देता है। निश्चिंत रहें कि आपके स्कैन किए गए पृष्ठ कभी भी इन रिपोर्टों में शामिल नहीं होते हैं।</value>
+    <comment>The additional text for the option for sending error reports and usage statistics.</comment>
+  </data>
+  <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
+    <value>गोपनीयता पहले</value>
+    <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
+    <value>आप कभी भी अपना विचार ऐप सेटिंग्स में जाकर बदल सकते हैं।</value>
+    <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button text for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="HeadingDialogExportLog.Text" xml:space="preserve">
+    <value>इवेंट लॉग निर्यात करें</value>
+    <comment>The heading for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
+    <value>इवेंट लॉग निर्यात करें</value>
+    <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
+  </data>
+  <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
+    <value>निर्यात करें</value>
+    <comment>The text of the button that allows the user to export a single event log.</comment>
+  </data>
+  <data name="TextDialogExportLog.Text" xml:space="preserve">
+    <value>आपका कोई भी स्कैन किए गए पृष्ठ इन लॉग में शामिल नहीं है।</value>
+    <comment>The text for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
+    <value>पुष्टि करें</value>
+    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
+    <value>कृपया निम्नलिखित सेटिंग्स की पुष्टि करें।</value>
+    <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
+    <value>क्रेडिट्स</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
+    <value>३:२</value>
+    <comment>The aspect ratio description for a 3:2 aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio4by3.Text" xml:space="preserve">
+    <value>४:३</value>
+    <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
+  </data>
+  <data name="TextEditSave.Text" xml:space="preserve">
+    <value>सहेजें</value>
+    <comment>The text of the button that saves changes.</comment>
+  </data>
+  <data name="ManifestDisplayName" xml:space="preserve">
+    <value>स्कैनर</value>
+    <comment>App name as displayed in app list.</comment>
+  </data>
+  <data name="ManifestPackageDisplayName" xml:space="preserve">
+    <value>स्कैनर - शीघ्र और आसान दस्तावेज़ स्कैनिंग</value>
+    <comment>App package name.</comment>
+  </data>
+  <data name="ManifestShortName" xml:space="preserve">
+    <value>स्कैनर</value>
+    <comment>App name as displayed on tile.</comment>
+  </data>
+  <data name="TextPageListDescriptor" xml:space="preserve">
+    <value>पृष्ठ {0}</value>
+    <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
+  </data>
+  <data name="DefaultScanFolderName" xml:space="preserve">
+    <value>स्कैन्स</value>
+    <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
+    <value>हर बार पूछें</value>
+    <comment>The option to ask for a save location for each scan.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
+    <value>एक निर्धारित स्थान का प्रयोग करें</value>
+    <comment>The option to use a set save location.</comment>
+  </data>
+  <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वापस जाऍं</value>
+    <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+  </data>
+  <data name="TextZoomFactor" xml:space="preserve">
+    <value>{0:000}%</value>
+    <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
+  </data>
+  <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ज़ूम इन करें (Ctrl+माउस व्हील अप)</value>
+    <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
+  </data>
+  <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ज़ूम आउट करें (Ctrl+माउस व्हील डाउन)</value>
+    <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
+  </data>
+  <data name="TextPageIndicator" xml:space="preserve">
+    <value>{1} में से {0}</value>
+    <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
+  </data>
+  <data name="OptionScanOptionsResolution" xml:space="preserve">
+    <value>{0:0} डीपीआई</value>
+    <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
+    <value>{0:0} डीपीआई (डिफ़ॉल्ट)</value>
+    <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
+    <value>{0:0} डीपीआई (दस्तावेजों के लिए सर्वश्रेष्ठ)</value>
+    <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
+    <value>{0:0} डीपीआई (तस्वीरों के लिए सर्वश्रेष्ठ)</value>
+    <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
+    <value>स्कैन पूर्ण हुआ, {0} पृष्ठ जोड़े गए</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
+  </data>
+  <data name="TextScanFailAccessibility" xml:space="preserve">
+    <value>स्कैन विफल रहा</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
+  </data>
+  <data name="TextSavedChangesAccessibility" xml:space="preserve">
+    <value>परिवर्तन सहेजे गए</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
+  </data>
+  <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
+    <value>स्कैन पूरा हुआ, एक पृष्ठ जोड़ा गया</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
+  </data>
+  <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
+    <value>परिवर्तन कॉपी के रूप में सहेजे गए</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
+  </data>
+  <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
+    <value>पृष्ठ अवलोकन</value>
+    <comment>The name of the page management area for use by accessibility tools.</comment>
+  </data>
+  <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>स्कैन ऑप्शंस</value>
+    <comment>The name of the scan options area for use by accessibility tools.</comment>
+  </data>
+  <data name="HeadingDialogDonate.Text" xml:space="preserve">
+    <value>विकास में सहायता करें</value>
+    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+  </data>
+  <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
+    <value>विकास में सहायता करें</value>
+    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
+    <value>विकास में सहायता करें</value>
+    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+  </data>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान में चल रहे स्कैन को रद्द करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
+    <value>थीम</value>
+    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट स्टोर में रेट करें</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value>एक या अधिक पृष्ठ स्वचालित रूप से घुमाए गए थे। इस सुविधा को सेटिंग्स में अक्षम किया जा सकता है।</value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="PerformedAutoRotationHeading" xml:space="preserve">
+    <value>स्वचालित घूर्णन</value>
+    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value>नवीनतम चेंजलॉग</value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value>और भी बहुत कुछ!</value>
+    <comment>Heading for the fourth changelog section.</comment>
+  </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>कृपया सुनिश्चित करें कि आपका स्कैनर चालू है और या तो वाई-फाई या यूएसबी केबल के माध्यम से जुड़ा हुआ है। यदि आपका स्कैनर विंडोज सेटिंग्स ऐप में सूचीबद्ध नहीं है, तो आपको पहले इसे वहां से जोड़ना होगा।
+
+एक बार जब आप सेटिंग्स ऐप में अपना स्कैनर देखते हैं और इसे &quot;ऑफ़लाइन&quot; लेबल नहीं किया हुआ है, तो कनेक्शन काम कर रहा है और आप आगे बढ़ने के लिए तैयार हैं!
+
+&amp;nbsp;
+
+**टिप:** यदि विंडोज़ आपके पहले से स्थापित वायरलेस स्कैनर को खोजने में बहुत अधिक समय लेता है, तो आप तुरंत नेटवर्क खोज को ट्रिगर करने के लिए वाई-फाई को बंद और चालू कर सकते हैं। ध्यान रखें कि यह आपके डिवाइस पर सभी ऐप्स में इंटरनेट एक्सेस को बाधित कर सकता है।</value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>स्कैनर को पुनरारंभ करने से आमतौर पर आपके द्वारा अनुभव की जा सकने वाली अधिकांश समस्याऍं हल हो जाती हैं। कभी-कभी विंडोज स्कैनिंग इंटरफ़ेस स्वयं अपेक्षा के अनुरूप व्यवहार नहीं करता है, जिसके लिए आपके कम्प्यूटर को पुनरारंभ करने की आवश्यकता हो सकती है।
+
+बहुत ही दुर्लभ मामलों में, स्कैनर इंस्टॉलेशन दोषपूर्ण हो सकता है और आपको स्कैनर को पुनः सेटिंग्स में हटाने और जोड़ने की आवश्यकता होती है।
+
+&amp;nbsp;
+
+कृपया अतिरिक्त मार्गदर्शन के लिए अपने स्कैनर मैनुअल से भी परामर्श करें या निर्माता से संपर्क करें।</value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>आप सेटिंग्स में नए स्कैन के लिए सहेजने का स्थान बदल सकते हैं। यदि आप चाहें, तो हर बार जब आप कुछ नया स्कैन करते हैं, तो भी आपसे यह पूछा जा सकता है - यह सामान को हमेशा सही जगह पर रखने के लिए बहुत अच्छा है, बजाय इसके कि इसे बाद में व्यवस्थित करना पड़े।</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>रिज़ॉल्यूशन स्कैन की समग्र तीक्ष्णता को निर्धारित करता है और फ़ाइल साइज को भी भारी रूप से प्रभावित करता है। उच्च रिज़ॉल्यूशन पर स्कैन करना फ़ाइल को बड़ा कर सकती है और प्रत्येक पृष्ठ को स्कैन करने के लिए आवश्यक समय बढ़ा सकती है। कम रिज़ॉल्यूशन पर स्कैन करने से विवरण का नुकसान हो सकता है और यहां तक कि अस्पष्ट पाठ का उत्पादन भी हो सकता है।
+
+**फ्लैटबेड या फीडर** मोड में रिज़ॉल्यूशन का चयन करना संभव है। ऐप हमेशा आपके लिए एक डिफ़ॉल्ट रिज़ॉल्यूशन चुनता है, जो सभी प्रकार के स्कैन के लिए बहुत अच्छा काम करता है। कभी-कभी यह दस्तावेजों और तस्वीरों के लिए अलग-अलग रिज़ॉल्यूशन का भी सुझाव देता है।
+
+एक नियम के रूप में, दस्तावेज़ों को केवल लगभग ३०० डीपीआई के रिज़ॉल्यूशन की आवश्यकता होती है, जबकि तस्वीरों को लगभग ५०० डीपीआई के उच्च रिज़ॉल्यूशन से लाभ होता है।</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>स्कैनिंग करते समय कुछ पृष्ठ इधर-उधर हो गए? फिर से प्रारंभ करने की आवश्यकता नहीं है, आप स्कैन करने के बाद अपनी पीडीएफ फ़ाइल में पृष्ठों को शीघ्रतः पुन: व्यवस्थित कर सकते हैं। पृष्ठों को उठाकर बस पृष्ठ सूची में डाल दें और वहां पृष्ठों को क्रमबद्ध कर दें।</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>यदि आप ऐप में अपने स्कैन संपादित करते हैं, तो परिवर्तन तुरंत पृष्ठभूमि में सहेजे जाते हैं। बस कुछ पृष्ठों को स्कैन करें, परिणाम संपादित करें और आपका काम हो गया!</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>यदि आप किसी मौजूदा पीडीएफ फ़ाइल में पेज जोड़ने के बजाय एक नई पीडीएफ फ़ाइल को स्कैन करना चाहते हैं, तो आपको ऐप को पुनरारंभ करने की आवश्यकता नहीं है। बस स्कैन बटन के बगल में छोटे तीर का चयन करें और नए सिरे से प्रारंभ करें।</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>यदि आप अनिश्चित हैं कि किस फ़ाइल फॉर्मेट को चुनना है, तो आपको ** जेपीजी, पीएनजी और पीडीएफ ** पर ध्यान केंद्रित करना चाहिए।
+
+जेपीजी और पीएनजी इमेज फॉर्मेट हैं, जिसका अर्थ है कि प्रत्येक पृष्ठ को एक अलग फ़ाइल के रूप में सहेजा जाएगा। इन फ़ाइलों को लगभग हर डिवाइस पर देखा जा सकता है और बाद में आसानी से संपादित किया जा सकता है। जेपीजी फ़ाइलें आमतौर पर पीएनजी की तुलना में छोटे होते हैं, विशेष रूप से उच्च रिज़ॉल्यूशन पर, लेकिन पीएनजी एक बेहतर समग्र गुणवत्ता प्रदान करते हैं, जो तस्वीरों को स्कैन करते समय महत्वपूर्ण हो सकता है।
+
+पीडीएफ एक बहुत ही लोकप्रिय दस्तावेज़ फॉर्मेट है और आपको एक ही फ़ाइल में कई पृष्ठों को सहेजने की अनुमति देता है। इस फॉर्मेट को लगभग हर डिवाइस पर देखा जा सकता है, लेकिन बाद में इन फ़ाइलों को संपादित करना आसान नहीं है और उन्नत सॉफ़्टवेयर की आवश्यकता हो सकती है।</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>उस फ़ोल्डर को बदलें जिसमें स्कैन सहेजे जाते हैं</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>कोई फ़ाइल फॉर्मेट चुनें</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>कोई रिज़ॉल्यूशन चुनें</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>पीडीएफ पृष्ठों को पुनः क्रमबद्ध करें</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>परिवर्तनों को सहेजें</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>स्कैनर स्थापित कर उसका प्रयोग करें</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>स्कैनर समस्याओं का निवारण</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>एक नया पीडीएफ शुरू करें</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>कुछ ऐसा है जो ऐप को आपके कम्प्यूटर पर एक निर्धारित फ़ोल्डर का प्रयोग करने से रोक रहा है, इसलिए आपको प्रत्येक स्कैन के लिए एक फ़ोल्डर का चयन करना होगा। कृपया सुनिश्चित करें कि कोई सेटिंग या कोई एंटीवायरस सॉफ़्टवेयर हस्तक्षेप नहीं कर रहा है।</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>सहेजने के स्थान को लोड करना विफल रहा</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>कुछ ऐसा है जो ऐप को आपके कम्प्यूटर पर एक निर्धारित फ़ोल्डर का प्रयोग करने से रोक रहा है, इसलिए आपको प्रत्येक स्कैन के लिए एक फ़ोल्डर का चयन करना होगा। कृपया सुनिश्चित करें कि कोई सेटिंग या कोई एंटीवायरस सॉफ़्टवेयर हस्तक्षेप नहीं कर रहा है।</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>विकास में सहायता करें</value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>संपादक</value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सहायता</value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सहायता प्राप्त करें</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>स्कैनर सेटिंग्स</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>सेटिंग्स</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>वाईफाई सेटिंग्स</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>सहायता</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>स्वचालित क्रॉप</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>निष्क्रिय</value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value>एकाधिक क्षेत्र</value>
+    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value>एकल क्षेत्र</value>
+    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>स्वचालित</value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>स्कैनर खोजे जा रहे हैं...</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>आपके स्कैनर को प्रयोग करने के लिए उसे कनेक्ट, चालू और स्थापित करने की आवश्यकता है। कृपया अधिक जानकारी के लिए सहायता पृष्ठ से परामर्श करें।</value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>स्कैनर का प्रयोग करें</value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>समान पृष्ठों को क्रॉप करें</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>पुष्टि करें</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>सभी ऐप्स दिखाएँ</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>स्टोर में और ऐप्स प्राप्त करें</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>ठीक</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>क्रॉप</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value>समान पृष्ठों को क्रॉप करें</value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>ड्रा</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
+    <value>सचेत</value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>दोबारा मत दिखाऍं</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value>वर्तमान क्रॉप को एक ही माप के साथ कई पृष्ठों पर एक साथ लागू करें।</value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value>अगले मेन्यू में एक ऐप चुनने पर यहाँ सभी पृष्ठ बंद हो जाएंगे।</value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित पृष्ठ प्रिंट करें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>छापें</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
+    <value>पूर्वावलोकन करें</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>व्यक्तिगत डेटा आपके डिवाइस पर रहता है</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>दान करें</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>नहीं धन्यवाद</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>कोई विज्ञापन नहीं</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>कोई सदस्यता नहीं</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>नि: शुल्क अपडेट्स</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value>यह ऐप हर किसी के प्रयोग के लिए बिना किसी लागत के उपलब्ध है।
+
+यदि आप इसे पसंद करते हैं, तो आप सीधे दान के साथ इसके विकास में सहायता कर सकते हैं।
+
+धन्यवाद! ❤️</value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>पृष्ठ की प्रतिलिपि बनाऍं</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में दिखाएँ</value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिफ़ॉल्ट अवस्था में पुनर्स्थापित करें</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value>चमक समायोजन</value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value>कंट्रास्ट समायोजन</value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value>हमेशा ऐप्लिकेशन सत्रों में सहेजा जाता है</value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>चमक और कंट्रास्ट समायोजित करें</value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>चुनें कि स्कैन कहाँ सहेजे जाते हैं</value>
+    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value>स्कैन करते समय अनुपलब्ध</value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>चमक और कंट्रास्ट उन्नत स्कैन ऑप्शंस हैं और सेटिंग्स में सक्षम किया जा सकता है। यदि ये ऑप्शंस आपके स्कैनर द्वारा समर्थित नहीं हैं, तो वे छिपे रहेंगे।
+
+चमक और कंट्रास्ट का समायोजन केवल **फ्लैटबेड या फीडर** मोड में ही संभव है।</value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value>आप नई सुविधाओं का सुझाव देने के लिए और दूसरों को यह तय करने में मदद करने के लिए कि क्या यह उनके लिए सही ऐप है, माइक्रोसॉफ्ट स्टोर में स्कैनर को रेट कर सकते हैं। पेशेवर उपयोगकर्ता GitHub पर आगे के विकास को भी प्रभावित कर सकते हैं।</value>
+    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value>इस सेटिंग में परिवर्तन ऐप को पुनरारंभ करने के बाद लागू किए जाते हैं।</value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value>विंडोज़ १०० से अधिक भाषाओं के लिए समर्थन प्रदान करता है - आप इस ऐप को दुनिया भर के लोगों के लिए सुलभ बनाने में मदद कर सकते हैं।</value>
+    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>कोई अन्य भाषा जोड़ें</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>स्वचालित घूर्णन</value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value>संपादक अभिविन्यास</value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value>त्रुटि रिपोर्ट और लॉग</value>
+    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value>फ़ाइल का नामकरण</value>
+    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>वैयक्तिकरण</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>स्कैन ऑप्शंस</value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value>सर्वेक्षण</value>
+    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>पृष्ठों को स्वचालित रूप से घुमाएँ</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+    <value>पाठ पहचानकर्ता की भाषा</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>क्षैतिज</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>अनुलंब</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>पिछली बार प्रयोग किए गए स्कैन ऑप्शंस को याद रखें</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>अपने स्कैनर द्वारा समर्थित उन्नत स्कैन ऑप्शंस दिखाएँ</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value>सामयिक सर्वेक्षणों में भाग लें</value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>स्कैन किए गए पृष्ठों का सही अभिविन्यास स्वचालित रूप से निर्धारित करें</value>
+    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value>यह सुविधा स्कैन किए गए पृष्ठों की पाठ सामग्री की जांच करती है ताकि उनका सही अभिविन्यास निर्धारित किया जा सके। यह प्रक्रिया ऑन-डिवाइस टेक्स्ट रिकग्निशन द्वारा संचालित है - निश्चिंत रहें कि पहचाने गए पाठ आपके डिवाइस के बाहर कभी नहीं जाते हैं।</value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value>स्कैनर सबसे अच्छा विंडोज ११ पर काम करता है। कृपया एक इष्टतम अनुभव के लिए अपने सिस्टम को अप-टू-डेट रखें।</value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
+  </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>नया स्थिति संदेश उपलब्ध है</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>संपादक</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>पृष्ठ सूची</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>स्कैन ऑप्शंस</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>स्कैन्स को स्वचालित रूप से क्रॉप करें</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>स्वचालित क्रॉपिंग के ऑप्शंस डिफ़ॉल्ट अवस्था में छिपे होते हैं और इन्हें सेटिंग्स में सक्षम किया जा सकता है। यदि ये ऑप्शंस आपके स्कैनर द्वारा समर्थित नहीं हैं, तो वे छिपे रहेंगे।
+
+स्वचालित क्रॉपिंग केवल **फ्लैटबेड या फीडर** मोड में ही संभव है।
+
+&quot;एकल क्षेत्र&quot; क्रॉपिंग एक एकल इमेज बनाता है, जो दस्तावेजों को स्कैन करने के लिए विशेष रूप से उपयोगी है। &quot;एकाधिक क्षेत्र&quot; क्रॉपिंग एकल स्कैन में एक से अधिक तत्वों की पहचान कर सकता है, जो एक फ़्लैटबेड पर एकाधिक तस्वीर लगाने के लिए उपयोगी है।</value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value>आपके उत्तर गोपनीय हैं।</value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value>सर्वेक्षण</value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value>इसे पहले से ही स्थापित किया जा चुका है</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value>वेबसाइट/लेख</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>मुझे नहीं पता</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>अन्य</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value>किसी की अनुशंसा</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट स्टोर</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value>अन्य</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
+    <value>निजी</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageSchool" xml:space="preserve">
+    <value>विद्यालय</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageStudy" xml:space="preserve">
+    <value>अध्ययन</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageWork" xml:space="preserve">
+    <value>नौकरी</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
+    <value>आपको इस ऐप के बारे में कैसे पता चला?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
+    <value>इस ऐप का प्रयोग करना कितना आसान है?</value>
+    <comment>The survey question on ease of use.</comment>
+  </data>
+  <data name="TextSurveyFeatures.Text" xml:space="preserve">
+    <value>क्या ऐप आपके द्वारा अपेक्षित सभी सुविधाएँ प्रदान करता है?</value>
+    <comment>The survey question on the offered features.</comment>
+  </data>
+  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
+    <value>आप उपलब्ध फ़ाइल फॉर्मेट्स से कितने संतुष्ट हैं?</value>
+    <comment>The survey question on available file formats.</comment>
+  </data>
+  <data name="TextSurveyFileSize.Text" xml:space="preserve">
+    <value>आप बनाई गई फ़ाइलों के साइज से कितने संतुष्ट हैं?</value>
+    <comment>The survey question on file sizes.</comment>
+  </data>
+  <data name="TextSurveyInterface.Text" xml:space="preserve">
+    <value>आप ऐप इंटरफ़ेस को कैसा रेट करेंगे?</value>
+    <comment>The survey question on the app interface.</comment>
+  </data>
+  <data name="TextSurveyPerformance.Text" xml:space="preserve">
+    <value>ऐप आपके डिवाइस पर कितना तीव्र महसूस होता है?</value>
+    <comment>The survey question on performance.</comment>
+  </data>
+  <data name="TextSurveyRecommend.Text" xml:space="preserve">
+    <value>आपके द्वारा इस ऐप की अनुशंसा किसी ऐसे व्यक्ति को करने की कितनी संभावना है जो एक स्कैनर का प्रयोग करना चाहते हैं?</value>
+    <comment>The survey question on recommending the app to others.</comment>
+  </data>
+  <data name="TextSurveyUsage.Text" xml:space="preserve">
+    <value>आप मुख्यतः इस ऐप का प्रयोग किस लिए करते हैं?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="StoreDescription" xml:space="preserve">
+    <value>दस्तावेजों और तस्वीरों को स्कैन करना अब उतना ही आसान है जितना कि उसे होना चाहिए। कुछ पृष्ठों को इमेज फ़ाइलों के रूप में स्कैन करें, उन्हें अंतर्निर्मित प्रीसेट के साथ घुमाऍं और क्रॉप करें और उन्हें ईमेल के माध्यम से शीघ्र साझा करें - या एक बहु-पृष्ठ पीडीएफ फ़ाइल बनाऍं, उसे एक अभिव्यंजक नाम दें और उसे सही फ़ोल्डर में संग्रहीत करें।
+स्कैनर के माध्यम से आप सब कुछ एक ही स्थान पर कर सकते हैं, किसी अतिरिक्त इमेज संपादक या महंगे पीडीएफ सॉफ़्टवेयर की आवश्यकता नहीं है।
+
+आज प्रयोग में आने वाला लगभग हर स्कैनर इस ऐप द्वारा समर्थित है, इसलिए आपको अपने डिवाइस निर्माता द्वारा प्रदान किए गए पुराने और भद्दे सॉफ़्टवेयर का उपयोग करने की आवश्यकता नहीं है। यह सादगी और उपयोग में आसानी को ध्यान में रखते हुए बनाया गया है, जबकि उन्नत टूल और सुविधाओं की पेशकश भी करता है।
+
+समर्थित फॉर्मेट्स पीडीएफ, जेपीजी, पीएनजी, टीआईएफ और बीएमपी हैं।</value>
+    <comment>The Microsoft Store description of the app.</comment>
+  </data>
+  <data name="StoreProductName" xml:space="preserve">
+    <value>स्कैनर - शीघ्र और आसान दस्तावेज़ स्कैनिंग</value>
+    <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
+  </data>
+  <data name="StoreSearchTerms" xml:space="preserve">
+    <value>स्कैनर|विंडोज-स्कैन|दस्तावेज़ स्कैन|स्कैन|विंडोज स्कैन|स्कैनर विंडोज १०</value>
+    <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
+  </data>
+  <data name="StoreShortDescription" xml:space="preserve">
+    <value>दस्तावेजों और तस्वीरों को स्कैन करें, पृष्ठों को संपादित करें और उन्हें पीडीएफ या इमेज फ़ाइलों के रूप में सहेजें - सभी एक ही प्रयोग में आसान ऐप में।</value>
+    <comment>A short and concise description of the app.</comment>
+  </data>
+  <data name="StoreShortTitle" xml:space="preserve">
+    <value>स्कैनर</value>
+    <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
+  </data>
+  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
+    <value>इस अपडेट मे विंडोज ११ के आधिकारिक समर्थन के साथ एक सुंदर नया डिज़ाइन शामिल है जो सिस्टम के बाकी हिस्सों से मेल खाता है।
+
+नई सुविधाएँ पाऍं, जैसे कि आपके पिछले स्कैन ऑप्शंस का पुन: प्रयोग करने की अत्यधिक-अनुरोधित क्षमता, ताकि आपको हर बार &quot;पीडीएफ&quot; फॉर्मेट का चयन करने की आवश्यकता न हो, साथ ही साथ स्वचालित घूर्णन जैसी कुछ अन्य स्मार्ट सुविधाएँ, जो आपको अपने पृष्ठों के अभिविन्यास के बारे में चिंता किए बिना उन्हें फ्लैटबेड पर रखने की अनुमति देती हैं।
+
+यदि आप अधिक पेशेवर स्कैनर का प्रयोग कर रहे हैं, तो अब आप स्वचालित क्रॉपिंग, स्वचालित रंग मोड चयन और चमक/कंट्रास्ट समायोजन जैसे उन्नत स्कैन ऑप्शंस लागू कर सकते हैं। इन ऑप्शंस के ऐप सेटिंग्स में सक्षम होने के साथ एक संगत स्कैनर की आवश्यकता होती है।</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="StoreVoiceTitle" xml:space="preserve">
+    <value>स्कैनर</value>
+    <comment>App title for voice control.</comment>
+  </data>
+  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
+    <value>ऐप लोगो</value>
+    <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>फ़ाइलें और सहेजने का स्थान</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>पीडीएफ</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>स्कैनर का प्रयोग</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>ऐनिमेशंस</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>ऐनिमेशन दिखाएँ</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>डिफ़ॉल्ट स्कैन क्रिया</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>मौजूदा पृष्ठों में जोड़ें</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>नए सिरे से प्रारंभ करें</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>सेटिंग्स</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>स्वचालित घूर्णन वर्तमान में अनुपलब्ध है, क्योंकि आपकी कोई भी स्थापित भाषा पाठ पहचान का सामर्थ्य नहीं रखती हैं। कृपया एक समर्थित भाषा स्थापित करें (इसके सभी व्यक्तिगत भागों सहित) और इस सुविधा का प्रयोग करने के लिए अपने कम्प्यूटर को पुनरारंभ करें।</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>नया पूर्वावलोकन अनुभव</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>पहले से छोटे पीडीएफ</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>स्कैन करके विलय करें</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>स्कैन पूर्वावलोकन अब बहुत बड़े हो गए हैं, इसलिए अब आपको आवर्धक कांच की आवश्यकता नहीं है। यह भी लोकप्रिय मांग के कारण जोड़ा गया: पूर्वावलोकन से स्कैन क्षेत्र का चयन करना।</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>आपके डिवाइस पर जगह बचाने और साझा करने को आसान बनाने के लिए स्कैनर की परवाह किए बिना पीडीएफ को लगातार अनुकूलित किया जाएगा।</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>यदि आपके पास फीडर स्कैनर है, तो अब आप नए &quot;स्कैन करके पीडीएफ में विलय करें&quot; टूल का उपयोग करके सही स्थानों पर पृष्ठों को जोड़ सकते हैं। डुप्लेक्स स्कैनर के बिना कई दो-तरफा शीट को स्कैन करने के लिए बहुत उपयोगी।</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>माप की इकाइयाँ</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>इंपीरियल/यूएस</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>मेट्रिक</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>से.मी.</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>इंच</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>स्कैन करके विलय करें</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>स्कैन करके पीडीएफ में विलय करें</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>स्कैन किया गया एकल पृष्ठ</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>स्कैन किया गया पहला पृष्ठ</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>सभी अधिशेष पृष्ठ</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>आप इस टूल का उपयोग किसी विशिष्ट स्थान पर नए पृष्ठों को सम्मिलित करने के लिए कर सकते हैं। यह आपको डुप्लेक्स के बिना कई दो-तरफा शीटों को स्कैन करने की अनुमति देता है, सामने के सतहों को सामान्य रूप से पहले स्कैन करके और फिर सभी पिछली सतहों को पहले बैच में विलय करके।</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>बीच के पृष्ठ</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>पहला पृष्ठ</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>स्कैन करें और पीडीएफ में जोड़ें</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>स्कैन करके पीडीएफ में विलय करें...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>विशिष्ट स्थानों पर नए पृष्ठों को सम्मिलित करने के लिए आप स्कैन मेनू से &quot;स्कैन करके पीडीएफ में विलय करें&quot; का चयन कर सकते हैं। यह दो-तरफा शीटों को स्कैन करना बहुत ही सरल बनाता है।</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>स्कैन करके विलय करें</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>आप जिस फ़ाइल को संपादित या उपयोग करने का प्रयास कर रहे हैं वह अनुपलब्ध है। जब तक आप यहां संपादन नहीं कर लेते, तब तक कृपया ऐप के बाहर फ़ाइलों का स्थाना या नाम नहीं बदलें और ना उन्हें खोलें।</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>फ़ाइल अनुपलब्ध</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>चयनित स्कैन क्षेत्र को त्यागें</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.
+Fuzzy</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बंद करें</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>चयन लागू करें</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्कैन क्षेत्र का चयन करें</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>स्कैन क्षेत्र का चयन</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>संपूर्ण पूर्वावलोकन की ऊँचाई</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित स्कैन क्षेत्र की ऊँचाई</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित स्कैन क्षेत्र की चौड़ाई</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>संपूर्ण पूर्वावलोकन की चौड़ाई</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>पूर्वावलोकन करें (स्कैन क्षेत्र चयनित किया हुआ है)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>कानूनी</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
+</root>

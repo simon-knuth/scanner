@@ -739,6 +739,18 @@
   <ItemGroup>
     <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\fr-be\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\hi\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\en-ca\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
