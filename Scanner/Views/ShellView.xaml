@@ -280,7 +280,7 @@
                 <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -317,7 +317,7 @@
                 <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -344,16 +344,17 @@
                             <TextBlock Text="Debug contextual dialogs" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
                             <Button Content="Tutorial page list" Command="{x:Bind ViewModel.DebugShowTutorialPageListCommand}"/>
-                            <Button Content="Changelog" Command="{x:Bind ViewModel.DebugShowChangelogCommand}" Margin="6,0,0,0"/>
-                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}" Margin="6,0,0,0"/>
+                            <Button Content="Changelog" Command="{x:Bind ViewModel.ShowChangelogCommand}"/>
+                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Spacing="6">
                             <Button Content="Feedback" Command="{x:Bind ViewModel.DebugShowFeedbackDialogCommand}"/>
+                            <Button Content="Updated" Command="{x:Bind ViewModel.DebugShowUpdatedDialogCommand}"/>
                         </StackPanel>
-
+                        
 
                         <StackPanel Orientation="Horizontal" Margin="0,32,0,16">
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
@@ -414,6 +415,18 @@
                     <TextBlock x:Uid="DialogFeedbackButtonDonate"/>
                 </Button>
             </StackPanel>
+        </muxc:TeachingTip>
+
+        <muxc:TeachingTip
+            x:Name="TeachingTipUpdated"
+            x:Uid="DialogUpdated"
+            IsLightDismissEnabled="False"
+            ActionButtonCommand="{x:Bind ViewModel.ShowChangelogCommand}"
+            ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
+            ActionButtonStyle="{ThemeResource AccentButtonStyle}">
+            <muxc:TeachingTip.IconSource>
+                <muxc:FontIconSource Glyph="&#xF133;"/>
+            </muxc:TeachingTip.IconSource>
         </muxc:TeachingTip>
     </Grid>
 </Page>

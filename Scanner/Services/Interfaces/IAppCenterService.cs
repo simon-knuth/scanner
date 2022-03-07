@@ -44,6 +44,7 @@ namespace Scanner.Services
         AutoRotatedPage,
         CorrectedAutoRotation,
         SetSaveLocationUnavailable,
-        SettingsRequested
+        SettingsRequested,
+        ChangelogOpened
     }
 }

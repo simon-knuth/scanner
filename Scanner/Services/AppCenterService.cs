@@ -51,6 +51,7 @@ namespace Scanner.Services
             { AppCenterEvent.CorrectedAutoRotation, "Corrected automatically rotated page" },
             { AppCenterEvent.SetSaveLocationUnavailable, "Set save location unavailable" },
             { AppCenterEvent.SettingsRequested, "Settings requested" },
+            { AppCenterEvent.ChangelogOpened, "Changelog opened" },
         };
 
 
@@ -110,7 +111,7 @@ namespace Scanner.Services
                 if (flush)
                 {
                     // close log file
-                    Log.CloseAndFlush();
+                    LogService.CloseAndFlush();
                     await LogService.InitializeAsync();
                 }
 

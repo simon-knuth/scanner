@@ -16,15 +16,22 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+        #endregion
 
-        public event EventHandler<HelpTopic> HelpTopicRequested;
+        #region Commands
         public RelayCommand DisposeCommand;
         public AsyncRelayCommand LaunchScannerSettingsCommand;
         public AsyncRelayCommand LaunchWifiSettingsCommand;
         public RelayCommand SettingsScanOptionsRequestCommand;
         public RelayCommand SettingsSaveLocationRequestCommand;
+        #endregion
+
+        #region Events
+        public event EventHandler<HelpTopic> HelpTopicRequested;
+        #endregion
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

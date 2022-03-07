@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
@@ -52,6 +53,7 @@ namespace Scanner.Services
         public int CompletedScans => (int)SettingsService.GetSetting(AppSetting.ScanNumber);
 
         private CancellationTokenSource ScanCancellationToken;
+        private CancellationTokenSource PreviewCancellationToken;
 
         public event EventHandler ScanStarted;
         public event EventHandler ScanEnded;
@@ -89,19 +91,21 @@ namespace Scanner.Services
             using (IRandomAccessStream previewStream = new InMemoryRandomAccessStream())
             {
                 ImageScannerPreviewResult previewResult;
+                PreviewCancellationToken = new CancellationTokenSource();
+
                 switch (options.Source)
                 {
                     case Enums.ScannerSource.Auto:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.AutoConfigured, previewStream);
+                            ImageScannerScanSource.AutoConfigured, previewStream).AsTask(PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.Flatbed:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.Flatbed, previewStream);
+                            ImageScannerScanSource.Flatbed, previewStream).AsTask(PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.Feeder:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.Feeder, previewStream);
+                            ImageScannerScanSource.Feeder, previewStream).AsTask(PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.None:
                     default:
@@ -112,12 +116,65 @@ namespace Scanner.Services
                 {
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(previewStream);
+                    LogService?.Log.Information("GetPreviewAsync: Success");
                     return bitmapImage;
                 }
                 else
                 {
+                    LogService?.Log.Information("GetPreviewAsync: Failed");
                     throw new ApplicationException("Preview unsuccessful");
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Gets a preview scan from <paramref name="scanner"/> using <paramref name="options"/>.
+        /// </summary>
+        public async Task<Tuple<BitmapImage, IRandomAccessStream>> GetPreviewWithStreamAsync(DiscoveredScanner scanner, ScanOptions options)
+        {
+            LogService?.Log.Information("GetPreviewAsync");
+            AppCenterService?.TrackEvent(AppCenterEvent.Preview,
+                new Dictionary<string, string>
+                {
+                        { "Source", options.Source.ToString() },
+                });
+
+            // apply selected scan options
+            scanner.ConfigureForScanOptions(options);
+
+            // get preview
+            IRandomAccessStream previewStream = new InMemoryRandomAccessStream();
+            ImageScannerPreviewResult previewResult;
+            PreviewCancellationToken = new CancellationTokenSource();
+
+            switch (options.Source)
+            {
+                case Enums.ScannerSource.Auto:
+                    previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                        ImageScannerScanSource.AutoConfigured, previewStream).AsTask(PreviewCancellationToken.Token);
+                    break;
+                case Enums.ScannerSource.Flatbed:
+                    previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                        ImageScannerScanSource.Flatbed, previewStream).AsTask(PreviewCancellationToken.Token);
+                    break;
+                case Enums.ScannerSource.Feeder:
+                    previewResult = await scanner.Device.ScanPreviewToStreamAsync(
+                        ImageScannerScanSource.Feeder, previewStream).AsTask(PreviewCancellationToken.Token);
+                    break;
+                case Enums.ScannerSource.None:
+                default:
+                    throw new ArgumentException($"Source mode {options.Source} not valid for preview");
+            }
+
+            if (previewResult.Succeeded)
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.SetSource(previewStream);
+                return new Tuple<BitmapImage, IRandomAccessStream>(bitmapImage, previewStream);
+            }
+            else
+            {
+                throw new ApplicationException("Preview unsuccessful");
             }
         }
 
@@ -191,6 +248,20 @@ namespace Scanner.Services
             }
             catch (Exception) { }
             ScanCancellationToken = null;
+        }
+
+        /// <summary>
+        ///     Cancels any currently running preview.
+        /// </summary>
+        public void CancelPreview()
+        {
+            LogService?.Log.Information("CancelPreview");
+            try
+            {
+                if (PreviewCancellationToken != null) PreviewCancellationToken.Cancel();
+            }
+            catch (Exception) { }
+            PreviewCancellationToken = null;
         }
     }
 }

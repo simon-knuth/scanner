@@ -1,5 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.UI.Xaml.Controls;
+using Scanner.Services;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.Views
@@ -25,6 +28,8 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private IAppCenterService _appCenterService = Ioc.Default.GetService<IAppCenterService>();
+        
         public string IconStoryboardToolbarIcon = "FontIconCrop";
         public string IconStoryboardToolbarIconDone = "FontIconCropDone";
 
@@ -560,19 +565,26 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
-
-                snapPoints.Add(1);
-                float value = (float)1.05;
-                while (value <= 2.5)
+                try
                 {
-                    snapPoints.Add(value);
-                    value = (float)(value + 0.01);
-                }
+                    IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+                    snapPoints.Add(1);
+                    float value = (float)1.05;
+                    while (value <= 2.5)
+                    {
+                        snapPoints.Add(value);
+                        value = (float)(value + 0.01);
+                    }
 
                 ((ScrollViewer)sender).ChangeView(0, 0, 1);
 
-                RefreshZoomUIForFactor(1);
+                    RefreshZoomUIForFactor(1);
+                }
+                catch (Exception exc)
+                {
+                    _appCenterService?.TrackError(exc);
+                }
             });
         }
 

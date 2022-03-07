@@ -78,6 +78,7 @@ namespace Scanner
         {
             LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}]", futureAccessListIndexStart);
             int futureAccessListIndex = futureAccessListIndexStart;
+
             foreach (StorageFile file in fileList)
             {
                 if (file == null) continue;
@@ -88,12 +89,16 @@ namespace Scanner
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                 futureAccessListIndex += 1;
             }
+
             ScanResultFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(_Elements[0].ScanFile.FileType);
             OriginalTargetFolder = targetFolder;
             RefreshItemDescriptors();
             _Elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
         }
 
+        /// <summary>
+        ///     Create a <see cref="ScanResult"/> without conversion.
+        /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
             StorageFolder targetFolder, int futureAccessListIndexStart)
         {
@@ -159,6 +164,9 @@ namespace Scanner
             return result;
         }
 
+        /// <summary>
+        ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>.
+        /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
             StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart)
         {
@@ -177,6 +185,17 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
                 string pdfName = fileList[0].DisplayName + ".pdf";
                 await PrepareNewConversionFiles(fileList, 0);
+
+                // convert all source files to JPG for optimized size
+                IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
+                for (int i = 0; i < result.Elements.Count; i++)
+                {
+                    if (ConvertFormatStringToImageScannerFormat(result.Elements[i].ScanFile.FileType) != ImageScannerFormat.Jpeg)
+                    {
+                        await result.ConvertPageAsync(i, ImageScannerFormat.Jpeg, appDataService.FolderConversion);
+                    }
+                }
+
                 await result.GeneratePDFAsync(pdfName);
             }
             else
@@ -184,7 +203,7 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
-                    await result.ConvertScanAsync(i, targetFormat, targetFolder);
+                    await result.ConvertPageAsync(i, targetFormat, targetFolder);
                 }
             }
             result.ScanResultFormat = targetFormat;
@@ -482,9 +501,9 @@ namespace Scanner
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="NotImplementedException">Attempted to convert to PDF or (O)XPS.</exception>
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
-        public async Task ConvertScanAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
+        public async Task ConvertPageAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
         {
-            LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} requested.", index, targetFormat);
+            LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} with folder requested.", index, targetFormat);
             // check index
             if (!IsValidIndex(index))
             {
@@ -1425,7 +1444,8 @@ namespace Scanner
         ///     saved to the targetFolder, unless the result is a PDF document.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder, int futureAccessListIndexStart)
+        public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder,
+            int futureAccessListIndexStart, ScanMergeConfig mergeConfig)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
@@ -1434,13 +1454,37 @@ namespace Scanner
             if (targetFormat == null || targetFormat == ImageScannerFormat.Pdf)
             {
                 // no conversion (but perhaps generation later on), just add files for now
-                if (targetFormat == ImageScannerFormat.Pdf) await PrepareNewConversionFiles(files, NumberOfPages);
-
-                foreach (StorageFile file in files)
+                if (targetFormat == ImageScannerFormat.Pdf)
                 {
-                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Add(
+                    // number files
+                    await PrepareNewConversionFiles(files, NumberOfPages);
+                }
+
+                for (int i = 0; i < files.Count(); i++)
+                {
+                    StorageFile file = files.ElementAt(i);
+                    int insertIndex;
+
+                    if (mergeConfig == null)
+                    {
+                        insertIndex = _Elements.Count;
+                    }
+                    else
+                    {
+                        insertIndex = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+                    }
+
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Insert(
+                        insertIndex,
                         new ScanResultElement(file, futureAccessListIndex, targetFormat == ImageScannerFormat.Pdf)));
+
                     NumberOfPages = _Elements.Count;
+
+                    if (targetFormat == ImageScannerFormat.Pdf && ConvertFormatStringToImageScannerFormat(file.FileType) != ImageScannerFormat.Jpeg)
+                    {
+                        // convert to JPG for optimized size
+                        await ConvertPageAsync(insertIndex, ImageScannerFormat.Jpeg, AppDataService.FolderConversion);
+                    }
 
                     if (targetFolder != null)
                     {
@@ -1455,7 +1499,7 @@ namespace Scanner
 
                     if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)
                     {
-                        await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
+                        await SetInitialNameAsync(_Elements[insertIndex], append);
                     }
                 }
             }
@@ -1489,7 +1533,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
-                        await ConvertScanAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
+                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
                     }
                 }
                 catch (Exception exc)
@@ -1507,8 +1551,8 @@ namespace Scanner
                 }
             }
 
-            // if necessary, generate PDF now
-            if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
+            // if necessary, finalize file numbering and generate PDF now
+            if (ScanResultFormat == ImageScannerFormat.Pdf) await ApplyElementOrderToFilesAsync();
 
             // automatic rotation
             if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
@@ -1517,12 +1561,22 @@ namespace Scanner
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 for (int i = 0; i < files.Count(); i++)
                 {
-                    ScanResultElement element = Elements[i + NumberOfPages - files.Count()];
+                    int indexInResult;
+                    if (mergeConfig == null)
+                    {
+                        indexInResult = i + NumberOfPages - files.Count();
+                    }
+                    else
+                    {
+                        indexInResult = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+                    }
+                    
+                    ScanResultElement element = Elements[indexInResult];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
                     BitmapRotation recommendation = await AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
                     if (recommendation != BitmapRotation.None)
                     {
-                        instructions.Add(new Tuple<int, BitmapRotation>(i + NumberOfPages - files.Count(), recommendation));
+                        instructions.Add(new Tuple<int, BitmapRotation>(indexInResult, recommendation));
                     }
                 }
 
@@ -1544,10 +1598,23 @@ namespace Scanner
             }
 
             // generate new previews and descriptors
-            for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
+            if (mergeConfig == null)
             {
-                await GetImageAsync(i);
-                _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
+                for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
+                {
+                    await GetImageAsync(i);
+                    _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < files.Count(); i++)
+                {
+                    int mergeIndex = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+
+                    await GetImageAsync(mergeIndex);
+                    _Elements[mergeIndex].ItemDescriptor = GetDescriptorForIndex(mergeIndex);
+                }
             }
         }
 
@@ -1556,9 +1623,10 @@ namespace Scanner
         ///     Adds the specified files to this instance.
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
-        public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart)
+        public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart,
+            ScanMergeConfig mergeConfig)
         {
-            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart);
+            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig);
         }
 
 
@@ -1705,6 +1773,24 @@ namespace Scanner
             {
                 logService?.Log.Error(exc, "Preparing conversion files with startIndex {Index} failed.", startIndex);
                 throw;
+            }
+        }
+
+
+        /// <summary>
+        ///     Calculates the index a new page will have in the <see cref="ScanResult"/>.
+        /// </summary>
+        /// <param name="indexOfNewPage">Index of the new page among all new pages.</param>
+        private static int GetNewIndexAccordingToMergeConfig(int indexOfNewPage, ScanMergeConfig mergeConfig)
+        {
+            if (indexOfNewPage < mergeConfig.InsertIndices.Count)
+            {
+                return mergeConfig.InsertIndices[indexOfNewPage];
+            }
+            else
+            {
+                // surplus page
+                return mergeConfig.SurplusPagesIndex + indexOfNewPage - mergeConfig.InsertIndices.Count;
             }
         }
 

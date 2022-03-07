@@ -5,9 +5,12 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.Media.Ocr;
 using Windows.Storage;
+using Windows.System.UserProfile;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.Services
@@ -247,6 +250,26 @@ namespace Scanner.Services
                 case AppSetting.SettingScanAction:
                     return SettingsContainer.Values[name] ?? SettingScanAction.AddToExisting;
 
+                case AppSetting.SettingMeasurementUnits:
+                    SettingMeasurementUnit measurementUnit = SettingMeasurementUnit.Metric;
+                    try
+                    {
+                        if (new RegionInfo(CultureInfo.InstalledUICulture.LCID).IsMetric)
+                        {
+                            measurementUnit = SettingMeasurementUnit.Metric;
+                        }
+                        else
+                        {
+                            measurementUnit = SettingMeasurementUnit.ImperialUS;
+                        }
+                    }
+                    catch (Exception) { }
+                    
+                    return SettingsContainer.Values[name] ?? measurementUnit;
+
+                case AppSetting.TutorialScanMergeShown:
+                    return SettingsContainer.Values[name] ?? false;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -351,6 +374,14 @@ namespace Scanner.Services
 
                 case AppSetting.SettingScanAction:
                     SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.SettingMeasurementUnits:
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.TutorialScanMergeShown:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:

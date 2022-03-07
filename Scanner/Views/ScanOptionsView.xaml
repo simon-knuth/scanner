@@ -47,6 +47,7 @@
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
+            <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:ScannerSourceIntConverter x:Key="ScannerSourceIntConverter"/>
             <converters:ScannerFileFormatGlyphConverter x:Key="ScannerFileFormatGlyphConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
@@ -54,6 +55,7 @@
             <converters:SignedIntConverter x:Key="SignedIntConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             <converters:ScanActionVisibilityConverter x:Key="ScanActionVisibilityConverter"/>
+            <converters:PreviewToolTipConverter x:Key="PreviewToolTipConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -314,7 +316,7 @@
                                         <DataTemplate x:DataType="models:ScannerFileFormat">
                                             <StackPanel Orientation="Horizontal" AutomationProperties.Name="{x:Bind FriendlyName}">
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind TargetFormat, Converter={StaticResource ScannerFileFormatGlyphConverter}}" FontSize="16" Margin="0,0,12,0"/>
-                                                <TextBlock Text="{x:Bind FriendlyName}"/>
+                                                <TextBlock Text="{x:Bind FriendlyName}" AutomationProperties.IsPeripheral="True"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
@@ -350,8 +352,8 @@
                         <StackPanel Orientation="Vertical">
                             <TextBlock x:Uid="HeadingScanOptionsColor" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
-                            <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
-                                <RadioButton x:Uid="OptionScanOptionsColorColor">
+                            <muxc:RadioButtons x:Name="RadioButtonsColorMode" Style="{StaticResource RadioButtonsStyleCompactVisibilitySupport}" MaxColumns="1" SelectedIndex="{x:Bind ViewModel.ScannerColorMode, Mode=TwoWay, Converter={StaticResource RadioButtonsScannerColorModeConverter}}">
+                                <RadioButton x:Uid="OptionScanOptionsColorColor" Visibility="{x:Bind ViewModel.SelectedScanner.IsColorAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -370,7 +372,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorGrayscale">
+                                <RadioButton x:Uid="OptionScanOptionsColorGrayscale" Visibility="{x:Bind ViewModel.SelectedScanner.IsGrayscaleAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -389,7 +391,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorMonochrome">
+                                <RadioButton x:Uid="OptionScanOptionsColorMonochrome" Visibility="{x:Bind ViewModel.SelectedScanner.IsMonochromeAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -408,7 +410,7 @@
                                         </core:DataTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </RadioButton>
-                                <RadioButton x:Uid="OptionScanOptionsColorAuto">
+                                <RadioButton x:Uid="OptionScanOptionsColorAuto" Visibility="{x:Bind ViewModel.SelectedScanner.IsAutoColorAllowedInAnyMode, Mode=OneWay}">
                                     <interactivity:Interaction.Behaviors>
                                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -665,11 +667,8 @@
                     
                     <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
                 </Button>
-                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" RightTapped="ButtonPreview_RightTapped" AutomationProperties.Name="{x:Bind ButtonPreview, Converter={StaticResource ToolTipConverter}}">
+                <Button x:Name="ButtonPreview" x:Uid="ButtonPreview" Command="{x:Bind ViewModel.PreviewScanCommand}" Height="{x:Bind ButtonScan.Height}" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource PreviewToolTipConverter}}" AutomationProperties.Name="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource PreviewToolTipConverter}}" RightTapped="ButtonPreview_RightTapped">
                     <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:ChangePropertyAction TargetObject="{x:Bind TeachingTipPreview}" PropertyName="IsOpen" Value="True"/>
-                        </core:EventTriggerBehavior>
                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}" >
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
                         </core:DataTriggerBehavior>
@@ -693,22 +692,19 @@
                         </TransitionCollection>
                     </Button.Transitions>
 
-                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" FontSize="16"/>
+                    <Grid>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE773;" FontSize="16"/>
+                        <muxc:InfoBadge Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,-4,0" Visibility="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" />
+                    </Grid>
 
-                    <!-- Debug Flyout -->
                     <FlyoutBase.AttachedFlyout>
-                        <Flyout>
-                            <StackPanel Orientation="Vertical" MaxWidth="400">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
-                                    <TextBlock Text="Debug preview" Style="{StaticResource BaseTextBlockStyle}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="Select a file" Style="{StaticResource AccentButtonStyle}" Click="ButtonDebugPreviewFile_Clicked"/>
-                                    <Button Content="Fail preview" Margin="8,0,0,0" Click="ButtonDebugPreviewFail_Clicked"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Flyout>
+                        <MenuFlyout Placement="TopEdgeAlignedLeft">
+                            <MenuFlyoutItem x:Uid="ButtonScanOptionsDiscardScanRegion" Command="{x:Bind ViewModel.RemoveSelectedRegionCommand}" IsEnabled="{x:Bind ViewModel.SelectedScanRegion, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
             </StackPanel>
@@ -733,15 +729,21 @@
                 </Grid>
 
                 <muxc:SplitButton.Flyout>
-                    <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <MenuFlyout Placement="Bottom" Opening="MenuFlyoutButtonScan_Opening">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanAddToDocument" x:Uid="ButtonScanOptionsScanAddToDocument" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}"/>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Command="{x:Bind ViewModel.ScanFreshCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanMerge" x:Uid="ButtonScanOptionsScanMerge" Command="{x:Bind ViewModel.ScanMergeConfigCommand}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA3C;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
@@ -762,35 +764,23 @@
                                 <TextBlock Text="Debug scanning" Style="{StaticResource BaseTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <ComboBox Header="Target format" Width="150" ItemsSource="{x:Bind ViewModel.DebugScanFormats}" SelectedItem="{x:Bind ViewModel.DebugSelectedScanFormat, Mode=TwoWay}"/>
+                                <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
                                 <CheckBox Content="Start fresh" IsChecked="{x:Bind ViewModel.DebugScanStartFresh, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Bottom"/>
                             </StackPanel>
                             <MenuFlyoutSeparator Margin="0,12,0,12"/>
-                            <Button Content="Select files" Command="{x:Bind ViewModel.DebugScanCommand}" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Show scan and merge tip" Command="{x:Bind ViewModel.DebugShowScanMergeTipCommand}" />
                         </StackPanel>
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>
             </muxc:SplitButton>
         </Grid>
 
-        <muxc:TeachingTip x:Name="TeachingTipPreview" x:Uid="DialogPreview" Target="{x:Bind ButtonPreview}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False" Closed="TeachingTipPreview_Closed">
-            <muxc:TeachingTip.HeroContent>
-                <Grid Width="300" Height="300" BorderBrush="{ThemeResource TeachingTipBorderBrush}" BorderThickness="0,0,0,1">
-                    <muxc:ProgressRing x:Name="ProgressRingPreview" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{x:Bind ViewModel.PreviewScanCommand.IsRunning, Mode=OneWay}" Loaded="ProgressRingPreview_Loaded"/>
-                    <Image Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" MaxWidth="300" MaxHeight="300"/>
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.PreviewFailed, Mode=OneWay}" Margin="12">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        
-                        <FontIcon Grid.Row="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE783;" FontSize="24" Foreground="{ThemeResource SystemErrorTextColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,12"/>
-                        <TextBlock Grid.Row="1" x:Uid="TextPreviewError" TextAlignment="Center" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}"/>
-                    </Grid>
-                </Grid>
-            </muxc:TeachingTip.HeroContent>
-        </muxc:TeachingTip>
-
         <muxc:TeachingTip x:Name="TeachingTipScannerSearchTip" x:Uid="DialogScannerSearchTip" Target="{x:Bind HyperlinkButtonHelpScanners}" PlacementMargin="3" PreferredPlacement="Bottom" IsLightDismissEnabled="False"/>
+
+        <muxc:TeachingTip x:Name="TeachingTipScanMerge" x:Uid="DialogScanMergeTip" Target="{x:Bind ButtonScan}" PlacementMargin="3" PreferredPlacement="Top" IsLightDismissEnabled="False">
+            <muxc:TeachingTip.IconSource>
+                <muxc:FontIconSource Glyph="&#xEA3C;"/>
+            </muxc:TeachingTip.IconSource>
+        </muxc:TeachingTip>
     </Grid>
 </Page>

@@ -52,7 +52,7 @@
   <PropertyGroup>
     <ProjectGuid>1b39989e-060f-40d3-8371-f20f4cca2bc9</ProjectGuid>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\Scanner\Scanner.csproj</EntryPointProjectUniqueName>

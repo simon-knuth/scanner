@@ -14,11 +14,15 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        #endregion
 
+        #region Commands
         public AsyncRelayCommand ViewLoadedCommand;
         public AsyncRelayCommand<StorageFile> LogExportCommand;
+        #endregion
 
         private List<Models.LogFile> _LogFiles;
         public List<Models.LogFile> LogFiles

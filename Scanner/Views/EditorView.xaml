@@ -428,7 +428,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="16,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -458,6 +458,7 @@
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="5"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="6"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="7"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNALegal" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=12}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="12"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="8"/>
@@ -481,7 +482,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -520,7 +521,7 @@
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="scanner:ScanResultElement">
                                 <ScrollViewer x:Name="ScrollViewerFlipViewPages" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ZoomSnapPointsType="Mandatory" Loading="ScrollViewerZoomable_Loading" ViewChanging="ScrollViewerFlipViewPages_ViewChanging" AutomationProperties.Name="{x:Bind ItemDescriptor}">
-                                    <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
+                                    <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded" AutomationProperties.AccessibilityView="Raw"/>
                                 </ScrollViewer>
                             </DataTemplate>
                         </FlipView.ItemTemplate>
