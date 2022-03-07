@@ -849,30 +849,6 @@ Fuzzy</comment>
     <value>Тема</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Потрясающий новый интерфейс</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Супер-умные функции</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Поддержка большего количества вариантов сканирования</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Наслаждайтесь свежим и привлекательным внешним видом, вдохновленным Windows 11.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Автоматически поворачивайте отсканированные изображения, обрезайте сразу несколько страниц и быстро повторно используйте свои предыдущие настройки в сеансах приложения.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Добавлена ​​поддержка расширенных параметров сканирования, таких как автоматическая обрезка и автоматический выбор цветового режима. Требуется совместимый сканер.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Оценить в Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -920,6 +896,94 @@ Fuzzy</comment>
   <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
     <value>Вы можете изменить место сохранения новых сканов в настройках. Если хотите, место сохранения будет запрашиваться каждый раз, когда вы сканируете что-то новое - отлично подходит для того, чтобы всегда помещать вещи именно там, где они должны, вместо того, чтобы организовывать их впоследствии.</value>
     <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>Разрешение определяет общую чёткость сканирования, а также сильно влияет на размер файла. Сканирование с высоким разрешением может утежелять файл и увеличивать необходимое время для сканирования каждой страницы. Сканирование с низким разрешением может привести к потере детализации и даже привести к нечитаемому тексту.
+
+Выбор разрешения возможен в режиме **планшета или с устройства подачи **. Приложение всегда выбирает для вас разрешение по умолчанию, которое отлично работает для всех видов сканирования. Иногда даже рекомендует разрешение для документов и отдельное разрешение для фотографий.
+
+Как правило, документы требуют разрешения около 300 DPI, тогда как фотографии имеют более высокое разрешение около 500 DPI</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>Перепутали несколько страниц при сканировании? Нет необходимости начинать сначала, вы можете быстро изменить порядок страниц в файле PDF после сканирования. Просто перетащите страницы в список страниц и поместите все на свои места.</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>Если вы редактируете свои сканы в приложении, изменения немедленно сохраняются в фоновом режиме. Просто отсканируйте несколько страниц, отредактируйте результат, и все готово!</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>Если вы хотите сканировать в новый файл PDF вместо добавления страниц в существующий, вам не нужно перезапускать приложение. Просто выберите маленькую стрелку рядом с кнопкой сканирования и начните заново.</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>Если вы не уверены, какой формат файла выбрать, вам следует сосредоточиться на ** JPG, PNG и PDF **.
+
+JPG и PNG - это форматы изображений, что означает, что каждая страница будет сохранена как отдельный файл. Эти файлы можно просматривать практически на каждом устройстве, а затем легко редактировать. JPG обычно меньше PNG, особенно в высоком разрешении, но PNG предлагают лучшее общее качество, которое может быть важно при сканировании фотографий.
+
+PDF — очень популярный формат документов, позволяющий сохранять несколько страниц в одном файле. Этот формат можно просматривать практически на любом устройстве, но редактировать эти файлы позже непросто и может потребоваться дополнительное программное обеспечение.</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>Измените папку, в которую сохраняются сканы</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>Выберите формат файла</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>Выберите разрешение</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>Изменение порядка страниц PDF</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>Сохранить изменения</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>Установите и используйте сканер</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>Устранение неполадок со сканером</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>Начать новый PDF</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Что-то мешает приложению использовать выбранную папку на вашем ПК, поэтому вам придется выбирать ее для каждого сканирования. Пожалуйста, убедитесь, что никакие настройки или какое-либо антивирусное программное обеспечение не мешают.</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>Не удалось загрузить место сохранения</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>Что-то мешает приложению использовать выбранную папку на вашем ПК, поэтому вам придется выбирать ее для каждого сканирования. Пожалуйста, убедитесь, что никакие настройки или какое-либо антивирусное программное обеспечение не мешают.</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Поддержите развитие</value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Редактор</value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Помощь</value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Получить помощь</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
     <value>Сканер | Сканирование Windows | Сканирование документа | Сканирование | Сканирование Windows | Сканер Windows 10</value>
