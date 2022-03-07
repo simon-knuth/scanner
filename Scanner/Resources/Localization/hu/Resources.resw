@@ -846,30 +846,6 @@ Fuzzy</comment>
     <value>Téma</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Lenyűgöző új felület</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Szuperokos funkciók</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Még több szkennelési lehetőség támogatása</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Élvezze a Windows 11 által ihletett friss és hívogató megjelenést.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Automatikusan elforgathatja a lapokat, egyszerre több oldalt levághat, és gyorsan újrahasználhatja korábbi beállításait a munkamenetek során.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Hozzáadott támogatás a speciális szkennelési beállításokhoz, mint például az automatikus kivágás és az automatikus színmódválasztás. Kompatibilis szkenner szükséges.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Értékelés a Microsoft Store-ban</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -1114,7 +1090,7 @@ A PDF egy nagyon népszerű dokumentumformátum, amellyel több oldalt is elment
     <value>Nyomtatás</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Előnézet</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
@@ -1476,5 +1452,85 @@ Ha professzionálisabb szkennert használ, mostantól speciális szkennelési be
   <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
     <value>Az automatikus forgatás jelenleg nem elérhető, mert egyik telepített nyelv sem támogatja a szövegfelismerést. Telepítsen egy megfelelő nyelvet (sz összes nyelvi funkcióval) és indítsa újra a gépet ennek a funkciónak a használatához.</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Új előnézeti élmény</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Kisebb PDF-ek</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Szkennelés és egyesítés</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>A beolvasási előnézetek most sokkal nagyobbak, így többé nincs szüksége nagyítóra. Szintén népszerű igény szerint hozzáadva: szkennelési régió kiválasztása az előnézetből.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>A PDF fájlok ezentúl következetesen optimalizálva lesznek szkennertől függetlenül, hogy helyet takarítsanak meg az eszközön és megkönnyítsék a megosztást.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Ha rendelkezik adagolós szkennerrel, most már használhatja az új &quot;Szkennelés és egyesítés PDF-be&quot; eszközt, hogy oldalakat adjon hozzá a megfelelő helyekre. Rendkívül hasznos több kétoldalas lap beolvasásához duplex szkenner nélkül.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Bezár</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Mértékegységek</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>Angolszász/USA</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Metrikus</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>cm</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>inch</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Mégse</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Szkennelés és egyesítés</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Szkennelés és egyesítés PDF-be</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Egyetlen szkennelt oldal</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>Első szkennelt oldal</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>Minden felesleges oldal</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>Ezzel az eszközzel új oldalakat szúrhat be egy adott helyre. Ez azt is lehetővé teszi, hogy több kétoldalas lapot szkenneljen be kétoldalas nyomtatás nélkül, először az elülső oldalakat szkennelje be, majd egyesítse az összes fedett oldalt az első kötegbe.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>Az oldalak közé</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
   </data>
 </root>
