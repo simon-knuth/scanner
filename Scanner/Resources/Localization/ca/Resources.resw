@@ -711,8 +711,7 @@
   </data>
   <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>Confirma</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.
-Fuzzy</comment>
+    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Si us plau, confirmeu la configuració següent.</value>
@@ -845,30 +844,6 @@ Fuzzy</comment>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
     <value>Tema</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Una interfície nova i impactant</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Característiques intel·ligents</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Amb suport per a encara més característiques</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Disfruta del nou apel·lant disseny inspirat pel Windows 11</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Rota els escanejos automàticament, retalla pàgines múltiples de cop i ràpidament i reutilitza les teves preferències entre diferents sessions.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Hem afegit suport per a opcions avançades d&apos;escaneig, com per exemple retallar automàticament i selecció automàtica del mode de color. Requereix un escàner compatible.</value>
-    <comment>Text for the third changelog section.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Puntuna a la Microsoft Store</value>
@@ -1114,7 +1089,7 @@ El PDF és un format de document molt popular que us permet desar diverses pàgi
     <value>Imprimeix</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Previsualitza</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
@@ -1472,5 +1447,157 @@ Si utilitzeu un escàner més professional, ara podeu aplicar opcions d&apos;esc
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
     <value>Configuració</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>La rotació automàtica no està disponible, perquè cap dels idiomes instal·lats admet el reconeixement de text. Si us plsu, instal·leu un idioma admès (incloses totes les seves característiques) i reinicieu l&apos;ordinador per a usar aquesta característica.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Nova experiència de previsualització</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>PDFs més petits</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Escaneja i combina</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Les previsualitzacions d&apos;escaneig són ara molt més grans, de manera que ja no necessitareu cap lupa. També hem afegit per demanda popular: seleccionar una regió d&apos;escaneig de la vista prèvia.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Ara els PDF s&apos;optimitzaran de manera consistent independentment de l&apos;escàner per estalviar espai al dispositiu i facilitar la compartició.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Si teniu un escàner amb alimentador, ara podeu utilitzar la nova eina &quot;Escaneja i combina a PDF&quot; per afegir pàgines als llocs adequats. Molt útil per escanejar múltiples documents a dues cares sense tenir escàner dúplex.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Tanca</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Unitats de mesura</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>Imerial/EEUU</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Mètric</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>cm</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>in</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Cancel·la</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Escaneja i combina</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Escaneja i combina en un PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Una única pàgina escanejada</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>Primera pàgina escanejada</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>Totes les pàgines de més</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>Podeu utilitzar aquesta eina per inserir pàgines noves en un lloc específic. Això també us permet escanejar diversos fulls a dues cares sense un escàner dúplex, escanejant normalment primer les cares frontals i després fusionant totes les cares al primer lot.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>Pàgines d&apos;entre mig</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Primera pàgina</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Escaneja i afegeix al PDF</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Escaneja i combina en un PDF...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>Podeu seleccionar &quot;Escanejar i combinar en PDF&quot; al menú d&apos;escaneig per inserir pàgines noves en llocs determinats. Això fa que escanejar fulls a dues cares sigui una mica més agradable.</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>Escaneja i combina</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>El fitxer que esteu intentant editar/utilitzar no està disponible. No moveu, canvieu el nom ni obriu els fitxers fora de l&apos;aplicació fins que no acabeu d&apos;editar-los aquí.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>Fitxer no disponible</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Descarta la regió d&apos;escaneig seleccionada</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tanca</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Aplica la selecció</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Selecciona una regió d&apos;escaneig</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Selecció de l&apos;àrea d&apos;escaneig</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alçada de la previsualització sencera</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alçada de la regió d&apos;escaneig seleccionada</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Amplada de la regió d&apos;escaneig seleccionada</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Amplada de la previsualització sencera</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>Previsualitza (selecció de l&apos;àrea d&apos;escaneig)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
 </root>
