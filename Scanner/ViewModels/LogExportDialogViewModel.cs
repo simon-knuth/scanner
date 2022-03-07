@@ -14,11 +14,15 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
+        #endregion
 
+        #region Commands
         public AsyncRelayCommand ViewLoadedCommand;
         public AsyncRelayCommand<StorageFile> LogExportCommand;
+        #endregion
 
         private List<Models.LogFile> _LogFiles;
         public List<Models.LogFile> LogFiles
@@ -57,7 +61,11 @@ namespace Scanner.ViewModels
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+#if DEBUG
+            savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+#else
             savePicker.FileTypeChoices.Add("TXT", new List<string>() { ".txt" });
+#endif
             savePicker.SuggestedFileName = sourceFile.DisplayName;
 
             StorageFile targetFile = await savePicker.PickSaveFileAsync();

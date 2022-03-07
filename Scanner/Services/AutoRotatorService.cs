@@ -22,6 +22,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IHelperService HelperService = Ioc.Default.GetRequiredService<IHelperService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
         private const int MinimumNumberOfWords = 50;
@@ -29,7 +30,7 @@ namespace Scanner.Services
         private OcrEngine OcrEngine;
 
         public IReadOnlyList<Language> AvailableLanguages => OcrEngine.AvailableRecognizerLanguages;
-        public Language DefaultLanguage => OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage;
+        public Language DefaultLanguage => OcrEngine.TryCreateFromUserProfileLanguages()?.RecognizerLanguage;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,16 +56,48 @@ namespace Scanner.Services
             LogService?.Log.Information("AutoRotatorService: Initializing");
             string desiredLanguageScript = (string)SettingsService.GetSetting(AppSetting.SettingAutoRotateLanguage);
 
-            try
+            Language desiredLanguage;
+            if (desiredLanguageScript != "")
             {
-                Language desiredLanguage = new Language(desiredLanguageScript);
-                OcrEngine = OcrEngine.TryCreateFromLanguage(desiredLanguage);
+                desiredLanguage = new Language(desiredLanguageScript);
+
+                try
+                {
+                    OcrEngine = OcrEngine.TryCreateFromLanguage(desiredLanguage);
+                }
+                catch (Exception)
+                {
+
+                }
             }
-            catch (Exception)
+
+            if (OcrEngine == null)
             {
-                // language unavailable, reset to default
+                // language unavailable, try to reset to default
                 OcrEngine = OcrEngine.TryCreateFromUserProfileLanguages();
-                SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, OcrEngine.RecognizerLanguage.LanguageTag);
+
+                if (OcrEngine == null)
+                {
+                    // can not reset to default, try choosing a language
+                    foreach (Language language in OcrEngine.AvailableRecognizerLanguages)
+                    {
+                        OcrEngine = OcrEngine.TryCreateFromLanguage(language);
+                        if (OcrEngine != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                // language changed, update settings
+                if (OcrEngine != null)
+                {
+                    SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, OcrEngine.RecognizerLanguage.LanguageTag);
+                }
+                else
+                {
+                    SettingsService.SetSetting(AppSetting.SettingAutoRotateLanguage, "");
+                }
             }
         }
         
@@ -92,7 +125,7 @@ namespace Scanner.Services
                         using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
                             // create rotated 90°
-                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(format, targetStream);
                             encoder.SetSoftwareBitmap(bitmap);
                             encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
                             await encoder.FlushAsync();
@@ -108,8 +141,7 @@ namespace Scanner.Services
                         using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
                             // create rotated 180°
-                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
-                            encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(format, targetStream);
                             encoder.SetSoftwareBitmap(bitmap);
                             encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
                             await encoder.FlushAsync();
@@ -125,8 +157,7 @@ namespace Scanner.Services
                         using (InMemoryRandomAccessStream targetStream = new InMemoryRandomAccessStream())
                         {
                             // create rotated 270°
-                            var encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
-                            encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderId(format), targetStream);
+                            BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(format, targetStream);
                             encoder.SetSoftwareBitmap(bitmap);
                             encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
                             await encoder.FlushAsync();

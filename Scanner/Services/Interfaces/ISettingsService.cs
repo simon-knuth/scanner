@@ -12,7 +12,7 @@ namespace Scanner.Services
         event EventHandler<AppSetting> SettingChanged;
         event EventHandler ScanSaveLocationChanged;
 
-        void LogAllSettings();
+        void TryLogAllSettings();
         void SetSetting(AppSetting setting, object value);
         object GetSetting(AppSetting setting);
 
@@ -64,7 +64,11 @@ namespace Scanner.Services
         ShowAutoRotationMessage,
         SetupCompleted,
         SettingAutoRotateLanguage,
-        SettingShowAdvancedScanOptions
+        SettingShowAdvancedScanOptions,
+        SettingAnimations,
+        SettingScanAction,
+        SettingMeasurementUnits,
+        TutorialScanMergeShown
     }
 
     public enum SettingSaveLocationType
@@ -84,5 +88,17 @@ namespace Scanner.Services
     {
         Vertical = 1,
         Horizontal = 0
+    }
+
+    public enum SettingScanAction
+    {
+        AddToExisting = 0,
+        StartFresh = 1
+    }
+
+    public enum SettingMeasurementUnit
+    {
+        Metric = 0,
+        ImperialUS = 1
     }
 }

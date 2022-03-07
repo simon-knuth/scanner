@@ -2,7 +2,7 @@
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Scanner.Services.Messenger;
 using System;
-using static HelpViewEnums;
+using static Enums;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using Windows.System;
@@ -16,14 +16,22 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
+        #endregion
 
-        public event EventHandler<HelpTopic> HelpTopicRequested;
+        #region Commands
         public RelayCommand DisposeCommand;
         public AsyncRelayCommand LaunchScannerSettingsCommand;
         public AsyncRelayCommand LaunchWifiSettingsCommand;
-        public RelayCommand SettingsRequestCommand;
+        public RelayCommand SettingsScanOptionsRequestCommand;
+        public RelayCommand SettingsSaveLocationRequestCommand;
+        #endregion
+
+        #region Events
+        public event EventHandler<HelpTopic> HelpTopicRequested;
+        #endregion
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +43,8 @@ namespace Scanner.ViewModels
             DisposeCommand = new RelayCommand(Dispose);
             LaunchScannerSettingsCommand = new AsyncRelayCommand(LaunchScannerSettings);
             LaunchWifiSettingsCommand = new AsyncRelayCommand(LaunchWifiSettings);
-            SettingsRequestCommand = new RelayCommand(SettingsRequest);
+            SettingsScanOptionsRequestCommand = new RelayCommand(() => SettingsRequest(SettingsSection.ScanOptions));
+            SettingsSaveLocationRequestCommand = new RelayCommand(() => SettingsRequest(SettingsSection.SaveLocation));
         }
 
 
@@ -72,10 +81,10 @@ namespace Scanner.ViewModels
             catch (Exception) { }
         }
 
-        private void SettingsRequest()
+        private void SettingsRequest(SettingsSection section)
         {
             LogService?.Log.Information("SettingsRequest");
-            Messenger.Send(new SettingsRequestMessage());
+            Messenger.Send(new SettingsRequestShellMessage(section));
         }
     }
 }

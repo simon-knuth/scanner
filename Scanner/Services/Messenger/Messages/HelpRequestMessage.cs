@@ -1,4 +1,4 @@
-﻿using static HelpViewEnums;
+﻿using static Enums;
 
 namespace Scanner.Services.Messenger
 {

@@ -58,6 +58,11 @@ namespace Scanner.Models
                     return String.Format(LocalizedString("OptionScanOptionsResolution"), Resolution.DpiX);
             }
         }
+
+        public override string ToString()
+        {
+            return FriendlyText;
+        }
     }
 
     /// <summary>

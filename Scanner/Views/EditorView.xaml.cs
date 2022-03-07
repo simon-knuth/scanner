@@ -1,8 +1,11 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.UI.Xaml.Controls;
+using Scanner.Services;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -15,6 +18,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.Views
@@ -24,6 +28,8 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private IAppCenterService _appCenterService = Ioc.Default.GetService<IAppCenterService>();
+        
         public string IconStoryboardToolbarIcon = "FontIconCrop";
         public string IconStoryboardToolbarIconDone = "FontIconCropDone";
 
@@ -559,19 +565,26 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
-
-                snapPoints.Add(1);
-                float value = (float)1.05;
-                while (value <= 2.5)
+                try
                 {
-                    snapPoints.Add(value);
-                    value = (float)(value + 0.01);
-                }
+                    IList<float> snapPoints = ((ScrollViewer)sender).ZoomSnapPoints;
+
+                    snapPoints.Add(1);
+                    float value = (float)1.05;
+                    while (value <= 2.5)
+                    {
+                        snapPoints.Add(value);
+                        value = (float)(value + 0.01);
+                    }
 
                 ((ScrollViewer)sender).ChangeView(0, 0, 1);
 
-                RefreshZoomUIForFactor(1);
+                    RefreshZoomUIForFactor(1);
+                }
+                catch (Exception exc)
+                {
+                    _appCenterService?.TrackError(exc);
+                }
             });
         }
 
@@ -737,13 +750,28 @@ namespace Scanner.Views
             });
         }
 
-        private async void ScrollViewerFlipViewPages_Loaded(object sender, RoutedEventArgs e)
+        private async void GridScanning_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.PreviousSize.Height != e.NewSize.Height)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    ScanningAnimation.Stop();
+                    CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag("en-us");
+                    double value = GridContent.ActualHeight - 80;
+                    KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
+                    ScanningAnimation.Start();
+                });
+            }
+        }
+
+        private async void GridScanning_Loaded(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
-                ScrollViewer scrollViewer = sender as ScrollViewer;
-                FlipView flipView = (FlipView)scrollViewer.Parent;
-                FlipViewItem flipViewItem = ((FrameworkElement)sender).Parent as FlipViewItem;
+                CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag("en-us");
+                double value = GridContent.ActualHeight - 80;
+                KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
             });
         }
     }

@@ -7,14 +7,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
+    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
@@ -25,7 +27,7 @@
     <Page.DataContext>
         <viewModels:EditorViewModel x:Name="ViewModel"/>
     </Page.DataContext>
-    
+
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
@@ -52,7 +54,7 @@
             <converters:ListNotNullOrEmptyConverter x:Key="ListNotNullOrEmptyConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
-            
+
             <!-- Storyboards -->
             <Storyboard x:Name="StoryboardToolbarIconDoneStart" Completed="StoryboardToolbarIconDoneStart_Completed" Duration="0:0:1.8">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)"
@@ -91,7 +93,7 @@
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)"
                                  To="0.0" Duration="0:0:0" BeginTime="0:0:0.15"/>
             </Storyboard>
-            
+
             <!-- Flyouts -->
             <MenuFlyout x:Name="MenuFlyoutOpenWith" Placement="Bottom">
                 <MenuFlyoutItem x:Name="MenuFlyoutItemStore" x:Uid="ButtonOpenWithStore" Command="{x:Bind ViewModel.OpenWithCommand}" CommandParameter="-2">
@@ -143,7 +145,7 @@
                     </Storyboard>
 
                     <VisualState.Setters>
-
+                        
                     </VisualState.Setters>
                 </VisualState>
 
@@ -174,6 +176,7 @@
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
                         <Setter Target="GridLoading.Visibility" Value="Visible"/>
+                        <Setter Target="GridScanning.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -425,7 +428,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditCrop" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="16,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -455,6 +458,7 @@
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="5"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="6"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="7"/>
+                                            <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNALegal" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=12}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="12"/>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
                                             <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioOptionBoolConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="8"/>
@@ -478,7 +482,7 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                <TextBlock x:Uid="HeadingEditDraw" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" FontWeight="SemiBold" AutomationProperties.HeadingLevel="Level1"/>
                                 <AppBarSeparator Margin="12,0,12,0"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -517,7 +521,7 @@
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="scanner:ScanResultElement">
                                 <ScrollViewer x:Name="ScrollViewerFlipViewPages" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="2.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ZoomSnapPointsType="Mandatory" Loading="ScrollViewerZoomable_Loading" ViewChanging="ScrollViewerFlipViewPages_ViewChanging" AutomationProperties.Name="{x:Bind ItemDescriptor}">
-                                    <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded"/>
+                                    <controls:ImageEx Source="{x:Bind CachedImage, Mode=OneWay}" Loaded="ImageEx_Loaded" AutomationProperties.AccessibilityView="Raw"/>
                                 </ScrollViewer>
                             </DataTemplate>
                         </FlipView.ItemTemplate>
@@ -544,7 +548,55 @@
                 </controls:Case>
             </controls:SwitchPresenter>
 
-            <Grid x:Name="GridLoading" Visibility="Collapsed">
+            <Grid x:Name="GridScanning" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="GridScanning_Loaded" SizeChanged="GridScanning_SizeChanged">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.5" To="0.0"/>
+                </animations:Implicit.HideAnimations>
+
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                        <behaviors:StartAnimationAction Animation="{x:Bind ScanningAnimation}"/>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                        <core:CallMethodAction TargetObject="{x:Bind ScanningAnimation}" MethodName="Stop"/>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+                <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
+                    <media:UIElementExtensions.VisualFactory>
+                        <media:PipelineVisualFactory>
+                            <media:BlurEffect Amount="10"/>
+                        </media:PipelineVisualFactory>
+                    </media:UIElementExtensions.VisualFactory>
+
+                    <Rectangle HorizontalAlignment="Stretch" Height="80" VerticalAlignment="Top" Fill="{ThemeResource SystemAccentColor}" Visibility="{x:Bind GridLoading.Visibility, Mode=OneWay}">
+                        <animations:Implicit.HideAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.2" To="0.0"/>
+                        </animations:Implicit.HideAnimations>
+
+                        <animations:Explicit.Animations>
+                            <animations:AnimationSet x:Name="ScanningAnimation">
+                                <animations:AnimationScope>
+                                    <animations:OpacityAnimation Duration="0:0:0.6" From="0.0" To="0.2" DelayBehavior="SetInitialValueBeforeDelay"/>
+                                    <animations:TranslationAnimation Duration="0:0:6" Repeat="Forever" DelayBehavior="SetInitialValueBeforeDelay">
+                                        <animations:Vector3KeyFrame Key="0.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                        <animations:Vector3KeyFrame x:Name="KeyFrameScanningAnimation" Key="0.5" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                        <animations:Vector3KeyFrame Key="1.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                    </animations:TranslationAnimation>
+                                </animations:AnimationScope>
+                            </animations:AnimationSet>
+                        </animations:Explicit.Animations>
+                    </Rectangle>
+                </Frame>
+
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+            </Grid>
+
+            <Grid x:Name="GridLoading" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
                         <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
@@ -554,13 +606,13 @@
                     </core:DataTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
 
-                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1"/>
-                <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50"/>
+                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
         </Grid>
 
         <!-- Footer -->
-        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" CornerRadius="0,0,8,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+        <Frame x:Name="FrameFooter" Grid.Row="2" Background="{ThemeResource NavigationViewContentBackground}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Padding="6,0,6,0" CornerRadius="0,0,8,8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.ScanResult, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <controls:SwitchPresenter Value="{x:Bind ViewModel.EditorMode, Mode=OneWay, Converter={StaticResource EditorModeIntConverter}}" HorizontalContentAlignment="Stretch">
                 <controls:SwitchPresenter.ContentTransitions>
                     <TransitionCollection>
@@ -587,18 +639,18 @@
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <TextBlock x:Name="TextBlockZoomFactor" Style="{StaticResource BodyTextBlockStyle}" Margin="12,0,12,0" Text="100 %" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" MaxLines="1" MinWidth="40"/>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                        <AppBarButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomIn, Converter={StaticResource ToolTipConverter}}">
+                                        <AppBarButton x:Name="ButtonZoomIn" x:Uid="ButtonZoomIn" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomIn, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;" FontSize="16"/>
                                         </AppBarButton>
-                                        <AppBarButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="True" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomOut, Converter={StaticResource ToolTipConverter}}">
+                                        <AppBarButton x:Name="ButtonZoomOut" x:Uid="ButtonZoomOut" LabelPosition="Collapsed" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Style="{StaticResource AppBarButtonStyleShallow}" Padding="0" Click="ButtonZoomInOut_Click" AutomationProperties.Name="{x:Bind ButtonZoomOut, Converter={StaticResource ToolTipConverter}}">
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE738;" FontSize="16"/>
                                         </AppBarButton>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-                        
-                        <muxc:PipsPager MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver" SelectedIndexChanged="PipsPager_SelectedIndexChanged"/>
+
+                        <muxc:PipsPager MaxVisiblePips="10" NumberOfPages="{x:Bind ViewModel.ScanResult.Elements.Count, Mode=OneWay, FallbackValue=0}" SelectedPageIndex="{x:Bind ViewModel.SelectedPageIndex, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviousButtonVisibility="VisibleOnPointerOver" NextButtonVisibility="VisibleOnPointerOver" SelectedIndexChanged="PipsPager_SelectedIndexChanged"/>
                     </Grid>
 
                 </controls:Case>
@@ -686,7 +738,7 @@
                                                     </DataTemplate>
                                                 </ListView.ItemTemplate>
                                             </ListView>
-                                            
+
                                             <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
@@ -741,7 +793,7 @@
                                 <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                             </core:DataTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        
+
                         <Grid x:Name="GridFooterDraw" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SizeChanged="GridFooterDraw_SizeChanged">
                             <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left" Height="40">
                                 <Grid.ColumnDefinitions>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Scanner.Models;
 using Serilog;
 using Serilog.Exceptions;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Storage;
 using static Utilities;
 
@@ -91,12 +93,81 @@ namespace Scanner.Services
             ILogger log;
             log = new LoggerConfiguration()
                     .MinimumLevel.Debug()
-                    .WriteTo.Async(a => a.File(new Serilog.Formatting.Json.JsonFormatter(),
-                        logPath,
+                    .WriteTo.Async(a => a.File(
+                        path: logPath,
+                        formatter: new Serilog.Formatting.Json.JsonFormatter(),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 8,
                         fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
                     .Enrich.WithExceptionDetails()
+                    .Destructure.ByTransforming<ScanOptions>(
+                        o => new
+                        {
+                            Source = o.Source,
+                            ColorMode = o.ColorMode,
+                            Resolution = o.Resolution,
+                            AutoCropMode = o.AutoCropMode,
+                            FeederMultiplePages = o.FeederMultiplePages,
+                            FeederDuplex = o.FeederDuplex,
+                            Format = o.Format,
+                            Brightness = o.Brightness,
+                            Contrast = o.Brightness
+                        })
+                    .Destructure.ByTransforming<DeviceInformation>(
+                        i => new { Name = i.Name, IsEnabled = i.IsEnabled, IsDefault = i.IsDefault, Kind = i.Kind, Id = i.Id })
+                    .Destructure.ByTransforming<ScannerFileFormat>(
+                        f => new
+                        {
+                            TargetFormat = f.TargetFormat,
+                            OriginalFormat = f.OriginalFormat,
+                            RequiresConversion = f.RequiresConversion
+                        })
+                    .Destructure.ByTransforming<DiscoveredScanner>(
+                        s => new
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            IsAutoAllowed = s.IsAutoAllowed,
+                            IsAutoPreviewAllowed = s.IsAutoPreviewAllowed,
+                            AutoFormats = s.AutoFormats,
+                            IsFlatbedAllowed = s.IsFlatbedAllowed,
+                            IsFlatbedColorAllowed = s.IsFlatbedColorAllowed,
+                            IsFlatbedGrayscaleAllowed = s.IsFlatbedGrayscaleAllowed,
+                            IsFlatbedMonochromeAllowed = s.IsFlatbedMonochromeAllowed,
+                            IsFlatbedAutoColorAllowed = s.IsFlatbedAutoColorAllowed,
+                            IsFlatbedPreviewAllowed = s.IsFlatbedPreviewAllowed,
+                            IsFlatbedAutoCropSingleRegionAllowed = s.IsFlatbedAutoCropSingleRegionAllowed,
+                            IsFlatbedAutoCropMultiRegionAllowed = s.IsFlatbedAutoCropMultiRegionAllowed,
+                            IsFlatbedAutoCropPossible = s.IsFlatbedAutoCropPossible,
+                            FlatbedFormats = s.FlatbedFormats,
+                            FlatbedBrightnessConfig = s.FlatbedBrightnessConfig,
+                            FlatbedContrastConfig = s.FlatbedContrastConfig,
+                            IsFeederAllowed = s.IsFeederAllowed,
+                            IsFeederColorAllowed = s.IsFeederColorAllowed,
+                            IsFeederGrayscaleAllowed = s.IsFeederGrayscaleAllowed,
+                            IsFeederMonochromeAllowed = s.IsFeederMonochromeAllowed,
+                            IsFeederAutoColorAllowed = s.IsFeederAutoColorAllowed,
+                            IsFeederDuplexAllowed = s.IsFeederDuplexAllowed,
+                            IsFeederPreviewAllowed = s.IsFeederPreviewAllowed,
+                            IsFeederAutoCropSingleRegionAllowed = s.IsFeederAutoCropSingleRegionAllowed,
+                            IsFeederAutoCropMultiRegionAllowed = s.IsFeederAutoCropMultiRegionAllowed,
+                            IsFeederAutoCropPossible = s.IsFeederAutoCropPossible,
+                            FeederFormats = s.FeederFormats,
+                            FeederBrightnessConfig = s.FeederBrightnessConfig,
+                            FeederContrastConfig = s.FeederContrastConfig
+                        })
+                    .Destructure.ByTransforming<ScanResolution>(
+                        r => new
+                        {
+                            Resolution = r.Resolution.DpiX,
+                            Annotation = r.Annotation
+                        })
+                    .Destructure.ByTransforming<ScanMergeConfig>(
+                        c => new
+                        {
+                            InsertIndices = c.InsertIndices,
+                            SurplusPagesIndex = c.SurplusPagesIndex
+                        })
                     .CreateLogger();
 
             log.Information("--- Log initialized ---");

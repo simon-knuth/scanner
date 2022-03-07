@@ -1,12 +1,16 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.Media.Ocr;
 using Windows.Storage;
+using Windows.System.UserProfile;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.Services
@@ -75,7 +79,13 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SettingsService()
         {
-            
+            // migrate settings if necessary
+            if (!SystemInformation.Instance.IsFirstRun
+                && SystemInformation.Instance.PreviousVersionInstalled.Major < 3
+                && SystemInformation.Instance.ApplicationVersion.Major == 3)
+            {
+                MigrateSettingsToV3();
+            }
         }
 
 
@@ -86,7 +96,7 @@ namespace Scanner.Services
         ///     Initializes the settings and especially the save location.
         /// </summary>
         public async Task InitializeAsync()
-        {
+        {            
             // initialize save location
             var futureAccessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 
@@ -228,9 +238,36 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? false;
 
                 case AppSetting.SettingAutoRotateLanguage:
-                    return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages().RecognizerLanguage.LanguageTag;
+                    return SettingsContainer.Values[name] ?? OcrEngine.TryCreateFromUserProfileLanguages()?
+                        .RecognizerLanguage?.LanguageTag ?? "";
 
                 case AppSetting.SettingShowAdvancedScanOptions:
+                    return SettingsContainer.Values[name] ?? false;
+
+                case AppSetting.SettingAnimations:
+                    return SettingsContainer.Values[name] ?? true;
+
+                case AppSetting.SettingScanAction:
+                    return SettingsContainer.Values[name] ?? SettingScanAction.AddToExisting;
+
+                case AppSetting.SettingMeasurementUnits:
+                    SettingMeasurementUnit measurementUnit = SettingMeasurementUnit.Metric;
+                    try
+                    {
+                        if (new RegionInfo(CultureInfo.InstalledUICulture.LCID).IsMetric)
+                        {
+                            measurementUnit = SettingMeasurementUnit.Metric;
+                        }
+                        else
+                        {
+                            measurementUnit = SettingMeasurementUnit.ImperialUS;
+                        }
+                    }
+                    catch (Exception) { }
+                    
+                    return SettingsContainer.Values[name] ?? measurementUnit;
+
+                case AppSetting.TutorialScanMergeShown:
                     return SettingsContainer.Values[name] ?? false;
 
                 default:
@@ -243,7 +280,7 @@ namespace Scanner.Services
         /// </summary>
         public void SetSetting(AppSetting setting, object value)
         {
-            LogService?.Log.Information($"SetSetting: Setting value for {setting} to {value}");
+            LogService?.Log?.Information($"SetSetting: Setting value for {setting} to {value}");
             string name = setting.ToString().ToUpper();
 
             switch (setting)
@@ -328,6 +365,22 @@ namespace Scanner.Services
                     break;
 
                 case AppSetting.SettingShowAdvancedScanOptions:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingAnimations:
+                    SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingScanAction:
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.SettingMeasurementUnits:
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.TutorialScanMergeShown:
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 
@@ -428,15 +481,30 @@ namespace Scanner.Services
         /// <summary>
         ///     Logs all current settings values.
         /// </summary>
-        public void LogAllSettings()
+        public void TryLogAllSettings()
         {
-            string logString = "Settings loaded: ";
-            foreach (AppSetting setting in Enum.GetValues(typeof(AppSetting)))
+            try
             {
-                logString += $"{setting}={GetSetting(setting)} | ";
+                string logString = "Settings loaded: ";
+                foreach (AppSetting setting in Enum.GetValues(typeof(AppSetting)))
+                {
+                    try
+                    {
+                        string newValue = GetSetting(setting).ToString();
+                        logString += $"{setting}={newValue} | ";
+                    }
+                    catch (Exception exc)
+                    {
+                        LogService?.Log.Error(exc, "TryLogAllSettings: Couldn't retrieve {setting}", setting);
+                    }
+                }
+                logString = logString.Remove(logString.Length - 3);
+                LogService?.Log.Information(logString);
             }
-            logString = logString.Remove(logString.Length - 3);
-            LogService?.Log.Information(logString);
+            catch (Exception)
+            {
+
+            }
         }
 
         /// <summary>

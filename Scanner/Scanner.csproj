@@ -12,7 +12,7 @@
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -129,33 +129,58 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ScanMergePreviewBlock.xaml.cs">
+      <DependentUpon>ScanMergePreviewBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />
+    <Compile Include="Models\ScanMergeConfig.cs" />
+    <Compile Include="Models\ScanMergeElement.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\SelectedScannerChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\ScanMergeDialogRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\PreviewDialogRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\PreviewParametersRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\PreviewSelectedRegionChangedMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\ScanMergeRequestMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\SettingsRequestShellMessage.cs" />
+    <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\NarratorAnnouncementMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SetupCompletedMessage.cs" />
-    <Compile Include="Services\Messenger\Messages\SettingsRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="ViewModels\ScanMergeDialogViewModel.cs" />
+    <Compile Include="ViewModels\PreviewDialogViewModel.cs" />
     <Compile Include="ViewModels\SetupDialogViewModel.cs" />
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\ScanActionVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\PreviewToolTipConverter.cs" />
+    <Compile Include="Views\Converters\ScanMergeElementTooltipConverter.cs" />
+    <Compile Include="Views\Converters\ScanMergeElementGlyphConverter.cs" />
     <Compile Include="Views\Converters\ToolTipConverter.cs" />
     <Compile Include="Views\Converters\SignedIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
-    <Compile Include="Views\Dialogs\SetupDialogView.xaml.cs">
-      <DependentUpon>SetupDialogView.xaml</DependentUpon>
+    <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\ScanMergeDialogView.xaml.cs">
+      <DependentUpon>ScanMergeDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ChangelogDialogView.xaml.cs">
       <DependentUpon>ChangelogDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SetupDialogView.xaml.cs">
+      <DependentUpon>SetupDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\PreviewDialogView.xaml.cs">
+      <DependentUpon>PreviewDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\LicenseDetailView.xaml.cs">
       <DependentUpon>LicenseDetailView.xaml</DependentUpon>
@@ -215,7 +240,7 @@
     <Compile Include="Views\Converters\NotNullVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NotNullBoolConverter.cs" />
     <Compile Include="Views\Converters\EditorModeIntConverter.cs" />
-    <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
+    <Compile Include="Views\Converters\DoubleStringConverter.cs" />
     <Compile Include="Views\Converters\NotZeroVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NegativeBoolConverter.cs" />
@@ -240,7 +265,9 @@
     <Compile Include="Views\EditorView.xaml.cs">
       <DependentUpon>EditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Enums\HelpViewEnums.cs" />
+    <Compile Include="Views\EmptyView.xaml.cs">
+      <DependentUpon>EmptyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -494,18 +521,29 @@
     <Content Include="License Texts\LicenseMicrosoftNETCoreUniversalWindowsPlatform.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterCrashes.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterAnalytics.txt" />
-    <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\Dialogs\SetupDialogView.xaml">
+    <Page Include="Controls\ScanMergePreviewBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ScanMergeDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\ChangelogDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\SetupDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\PreviewDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -537,6 +575,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EmptyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -560,13 +602,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AppCenter">
-      <Version>4.4.0</Version>
+      <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>4.4.0</Version>
+      <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>4.4.0</Version>
+      <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite.Core">
       <Version>7.0.0-alpha.1.21571.3</Version>
@@ -589,11 +631,17 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Behaviors">
+      <Version>7.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Lottie">
       <Version>7.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.7.1-prerelease.211026002</Version>
@@ -683,14 +731,25 @@
     <PRIResource Include="Resources\Localization\zh-sg\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Resources\Localization\hu\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\es\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\hu\Resources.resw" />
+    <PRIResource Include="Resources\Localization\fr-be\Resources.resw" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\es\Resources.resw" />
+    <PRIResource Include="Resources\Localization\hi\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\en-ca\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Resources\Localization\de\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

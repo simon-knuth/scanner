@@ -12,12 +12,16 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
+        #endregion
 
+        #region Commands
         public RelayCommand ConfirmSettingsCommand;
+        #endregion
 
         private bool _ProxySettingErrorStatistics = true;
         public bool ProxySettingErrorStatistics

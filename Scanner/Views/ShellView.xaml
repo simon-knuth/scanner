@@ -13,11 +13,11 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:muxcWindows11Present="using:Microsoft.UI.Xaml.Controls?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
-    xmlns:dialogs="using:Scanner.Views.Dialogs"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie"
     xmlns:helpers="using:Scanner.Helpers"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     muxcWindows11Present:BackdropMaterial.ApplyToRootOrPageBackground="True"
     windows11NotPresent:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="800"
@@ -55,16 +55,7 @@
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
             
             <!-- Storyboards -->
-            <Storyboard x:Key="StoryboardInfoBarEnter">
-                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                 From="100" To="0" Duration="0:0:0.3" BeginTime="0:0:0">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase Exponent="4.5" EasingMode="EaseOut"/>
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-                <DoubleAnimation Storyboard.TargetName="InfoBarAppWideMessages" Storyboard.TargetProperty="Opacity"
-                                 From="0.0" To="1.0" Duration="0:0:0.3" BeginTime="0:0:0"/>
-            </Storyboard>
+            
         </ResourceDictionary>
     </Page.Resources>
 
@@ -99,7 +90,6 @@
                         <Setter Target="GridMainContent.Padding" Value="0"/>
                         <Setter Target="NavigationViewItemMainEditor.IsEnabled" Value="True"/>
                         <Setter Target="NavigationViewItemMainEditor.Visibility" Value="Visible"/>
-                        <Setter Target="FrameMainContentFirst.Content" Value="{x:Null}"/>
                         <Setter Target="FrameMainContentSecond.CornerRadius" Value="8,8,0,0"/>
                         <Setter Target="FrameMainContentSecond.BorderThickness" Value="0,1,0,0"/>
                         <Setter Target="FrameMainContentSecond.Margin" Value="0"/>
@@ -168,6 +158,7 @@
                         <Setter Target="ColumnMainContentThird.MinWidth" Value="0"/>
                         <Setter Target="ColumnMainContentThird.MaxWidth" Value="0"/>
                         <Setter Target="FrameMainContentThird.Content" Value="{x:Null}"/>
+                        <Setter Target="NavigationViewItemMainPageList.InfoBadge" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -187,6 +178,7 @@
 
                     <VisualState.Setters>
                         <Setter Target="NavigationViewItemMainPageList.IsEnabled" Value="False"/>
+                        <Setter Target="NavigationViewItemMainPageList.InfoBadge" Value="{x:Null}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -243,6 +235,10 @@
                     <muxc:NavigationViewItem.RenderTransform>
                         <CompositeTransform TranslateX="0"/>
                     </muxc:NavigationViewItem.RenderTransform>
+
+                    <muxc:NavigationViewItem.InfoBadge>
+                        <muxc:InfoBadge x:Name="InfoBadgePageList" Value="{x:Bind ViewModel.NumberOfPages, Mode=OneWay}" Visibility="{x:Bind ViewModel.NumberOfPages, Mode=OneWay, Converter={StaticResource NotZeroVisibilityConverter}}"/>
+                    </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainEditor" x:Uid="ButtonEditor" IsEnabled="False" Visibility="Collapsed" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainEditor, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
@@ -284,7 +280,7 @@
                 <Frame x:Name="FrameMainContentFirst" Grid.Row="0" Grid.Column="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -294,10 +290,12 @@
                         <core:EventTriggerBehavior EventName="Closing">
                             <core:InvokeCommandAction Command="{x:Bind ViewModel.StatusMessageDismissedCommand}"/>
                         </core:EventTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind InfoBarAppWideMessages.Visibility, Mode=OneWay}" ComparisonCondition="Equal" Value="Visible">
-                            <Media:ControlStoryboardAction Storyboard="{StaticResource StoryboardInfoBarEnter}" ControlStoryboardOption="Play"/>
-                        </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
+
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3"/>
+                        <animations:TranslationAnimation From="0,100" To="0,0" Duration="0:0:0.3" EasingType="Cubic" EasingMode="EaseOut"/>
+                    </animations:Implicit.ShowAnimations>
 
                     <muxc:InfoBar.RenderTransform>
                         <CompositeTransform/>
@@ -319,7 +317,7 @@
                 <Frame x:Name="FrameMainContentSecond" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" Margin="6,0,0,0" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <PopupThemeTransition/>
+                            <PopupThemeTransition FromVerticalOffset="48"/>
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
@@ -337,6 +335,7 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Button Content="Crash the app" Command="{x:Bind ViewModel.DebugCrashCommand}"/>
+                            <Button Content="Track an exception" Command="{x:Bind ViewModel.DebugTrackErrorCommand}" Margin="6,0,0,0"/>
                         </StackPanel>
                         
                         
@@ -345,16 +344,17 @@
                             <TextBlock Text="Debug contextual dialogs" Style="{StaticResource BaseTextBlockStyle}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
                             <Button Content="Tutorial page list" Command="{x:Bind ViewModel.DebugShowTutorialPageListCommand}"/>
-                            <Button Content="Changelog" Command="{x:Bind ViewModel.DebugShowChangelogCommand}" Margin="6,0,0,0"/>
-                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}" Margin="6,0,0,0"/>
+                            <Button Content="Changelog" Command="{x:Bind ViewModel.ShowChangelogCommand}"/>
+                            <Button Content="Setup" Command="{x:Bind ViewModel.DebugShowSetupCommand}"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Spacing="6">
                             <Button Content="Feedback" Command="{x:Bind ViewModel.DebugShowFeedbackDialogCommand}"/>
+                            <Button Content="Updated" Command="{x:Bind ViewModel.DebugShowUpdatedDialogCommand}"/>
                         </StackPanel>
-
+                        
 
                         <StackPanel Orientation="Horizontal" Margin="0,32,0,16">
                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEBE8;" FontSize="16" HorizontalAlignment="Left" Margin="0,0,12,0"/>
@@ -384,7 +384,7 @@
             IsLightDismissEnabled="False">
             <muxc:TeachingTip.HeroContent>
                 <Frame CornerRadius="{StaticResource OverlayCornerRadius}" Padding="-50" Height="150">
-                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4">
+                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4" AutoPlay="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
                         <lottie:LottieVisualSource UriSource="ms-appx:///Assets/AnimatedVisuals/lottie_19814-data-list.json"/>
                     </muxc:AnimatedVisualPlayer>
                 </Frame>
@@ -415,6 +415,18 @@
                     <TextBlock x:Uid="DialogFeedbackButtonDonate"/>
                 </Button>
             </StackPanel>
+        </muxc:TeachingTip>
+
+        <muxc:TeachingTip
+            x:Name="TeachingTipUpdated"
+            x:Uid="DialogUpdated"
+            IsLightDismissEnabled="False"
+            ActionButtonCommand="{x:Bind ViewModel.ShowChangelogCommand}"
+            ActionButtonClick="TeachingTipUpdated_ActionButtonClick"
+            ActionButtonStyle="{ThemeResource AccentButtonStyle}">
+            <muxc:TeachingTip.IconSource>
+                <muxc:FontIconSource Glyph="&#xF133;"/>
+            </muxc:TeachingTip.IconSource>
         </muxc:TeachingTip>
     </Grid>
 </Page>

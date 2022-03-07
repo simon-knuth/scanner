@@ -2,6 +2,7 @@
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
@@ -17,50 +18,55 @@ namespace Scanner.Views
         {
             this.InitializeComponent();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ViewModel.PreviewRunning += ViewModel_PreviewRunning;
-            ViewModel.ScanService.ScanStarted += ViewModel_ScanStarted;
-            ViewModel.ScanService.ScanEnded += ViewModel_ScanEnded;
             ViewModel.ScannerSearchTipRequested += ViewModel_ScannerSearchTipRequested;
+            ViewModel.ScanMergeTipRequested += ViewModel_ScanMergeTipRequested;
+        }
+
+        private async void ViewModel_ScanMergeTipRequested(object sender, EventArgs e)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ReliablyOpenTeachingTip(TeachingTipScanMerge);
+            });
+        }
+
+        private void ViewModel_PreviewRequested(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.NextScanMustBeFresh))
+            switch (e.PropertyName)
             {
-                await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    if (ViewModel.NextScanMustBeFresh)
+                case nameof(ViewModel.NextDefaultScanAction):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
                     {
-                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
-                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                    }
-                    else
-                    {
-                        MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
-                        MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
-                    }
-                });
+                        switch (ViewModel.NextDefaultScanAction)
+                        {
+                            case ViewModels.ScanAction.AddPages:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScan.Text);
+                                break;
+                            case ViewModels.ScanAction.AddPagesToDocument:
+                            default:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScanAddToDocument.Text);
+                                break;
+                            case ViewModels.ScanAction.StartFresh:
+                                MenuFlyoutItemButtonScan.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanAddToDocument.FontWeight = Windows.UI.Text.FontWeights.Normal;
+                                MenuFlyoutItemButtonScanFresh.FontWeight = Windows.UI.Text.FontWeights.SemiBold;
+                                AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScanFresh.Text);
+                                break;
+                        }
+                    });
+                    break;
             }
-        }
-
-        private async void ViewModel_ScanEnded(object sender, EventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-                VisualStateManager.GoToState(this, NormalState.Name, true));
-        }
-
-        private async void ViewModel_ScanStarted(object sender, EventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-                VisualStateManager.GoToState(this, ScanningState.Name, true));
-        }
-
-        private async void ViewModel_PreviewRunning(object sender, EventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                ReliablyOpenTeachingTip(TeachingTipPreview);
-            });
         }
 
         private async void ComboBoxScanners_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -113,48 +119,6 @@ namespace Scanner.Views
             });
         }
 
-        private async void ProgressRingPreview_Loaded(object sender, RoutedEventArgs e)
-        {
-            // fix ProgressRing getting stuck when previewing multiple times
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-            {
-                ProgressRingPreview.IsActive = false;
-                ProgressRingPreview.IsActive = true;
-            });
-        }
-
-        private async void ButtonPreview_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-#if DEBUG
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-            {
-                FlyoutBase.ShowAttachedFlyout(ButtonPreview);
-            });
-#endif
-        }
-
-        private async void ButtonDebugPreviewFile_Clicked(object sender, RoutedEventArgs e)
-        {
-#if DEBUG
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-            {
-                FlyoutBase.GetAttachedFlyout(ButtonPreview).Hide();
-            });
-#endif
-            ViewModel.PreviewScanCommand.Execute("File");
-        }
-
-        private async void ButtonDebugPreviewFail_Clicked(object sender, RoutedEventArgs e)
-        {
-#if DEBUG
-            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
-            {
-                FlyoutBase.GetAttachedFlyout(ButtonPreview).Hide();
-            });
-#endif
-            ViewModel.PreviewScanCommand.Execute("Fail");
-        }
-
         private async void ViewModel_ScannerSearchTipRequested(object sender, EventArgs e)
         {
             await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
@@ -177,9 +141,24 @@ namespace Scanner.Views
             ViewModel.ViewNavigatedFromCommand.Execute(null);
         }
 
-        private void TeachingTipPreview_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
+        private async void ButtonPreview_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ViewModel.DismissPreviewScanCommand.Execute(null);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            });
+        }
+
+        private async void MenuFlyoutButtonScan_Opening(object sender, object e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                MenuFlyoutItemButtonScanMerge.IsEnabled =
+                    ViewModel.CanAddToScanResultDocument
+                    && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder);
+
+                TeachingTipScanMerge.IsOpen = false;
+            });
         }
     }
 }

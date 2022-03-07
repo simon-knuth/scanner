@@ -16,6 +16,7 @@ namespace Scanner.Services
         private const string FolderReceivedPagesName = "ReceivedPages";
         private const string FolderConversionName = "Conversion";
         private const string FolderWithoutRotationName = "WithoutRotation";
+        private const string FolderPreviewName = "Preview";
 
         private StorageFolder _FolderTemp;
         public StorageFolder FolderTemp
@@ -41,6 +42,13 @@ namespace Scanner.Services
             get => _FolderWithoutRotation;
         }
 
+        private StorageFolder _FolderPreview;
+        public StorageFolder FolderPreview
+        {
+            get => _FolderPreview;
+        }
+        
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,6 +56,7 @@ namespace Scanner.Services
         {
             Task.Run(async () => await Initialize());
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,14 +67,22 @@ namespace Scanner.Services
         public async Task Initialize()
         {
             LogService?.Log.Information("AppDataService: Initialize");
-            
-            // clean up temp folder
-            _FolderTemp = ApplicationData.Current.TemporaryFolder;
 
-            IReadOnlyList<StorageFile> files = await FolderTemp.GetFilesAsync();
-            foreach (StorageFile file in files)
+            // clean up temp folder
+            try
             {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                _FolderTemp = ApplicationData.Current.TemporaryFolder;
+
+                IReadOnlyList<StorageFile> files = await FolderTemp.GetFilesAsync();
+                foreach (StorageFile file in files)
+                {
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Couldn't clean up temp folder.");
+                throw;
             }
 
             // attempt to actively delete folders first, replacing is not terribly reliable
@@ -89,6 +106,13 @@ namespace Scanner.Services
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
             catch (Exception exc) { LogService?.Log.Error(exc, "Actively deleting folder 'WithoutRotation' in temp folder failed."); }
+
+            try
+            {
+                StorageFolder folder = await FolderTemp.GetFolderAsync(FolderPreviewName);
+                await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            catch (Exception exc) { LogService?.Log.Error(exc, "Actively deleting folder 'Preview' in temp folder failed."); }
 
             // replace/create folders
             try
@@ -118,6 +142,16 @@ namespace Scanner.Services
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Couldn't create/replace folder 'WithoutRotation' in temp folder.");
+                throw;
+            }
+
+            try
+            {
+                _FolderPreview = await FolderTemp.CreateFolderAsync(FolderPreviewName, CreationCollisionOption.ReplaceExisting);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Couldn't create/replace folder 'Preview' in temp folder.");
                 throw;
             }
 

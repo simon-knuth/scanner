@@ -28,6 +28,11 @@ namespace Scanner.Services
             get;
         }
 
+        StorageFolder FolderPreview
+        {
+            get;
+        }
+
         Task Initialize();
         Task EmptyReceivedPagesFolderAsync();
     }

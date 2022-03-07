@@ -16,7 +16,7 @@ namespace Scanner.Models
 
         public readonly string FriendlyName;
 
-        public bool RequiresConversion => TargetFormat == OriginalFormat;
+        public bool RequiresConversion => TargetFormat != OriginalFormat;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +58,11 @@ namespace Scanner.Models
                 default:
                     throw new ArgumentException("Unable to generate FriendlyName from format " + targetFormat + ".");
             }
+        }
+
+        public override string ToString()
+        {
+            return FriendlyName;
         }
     }
 }

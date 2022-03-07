@@ -20,6 +20,7 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -29,13 +30,16 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetRequiredService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetRequiredService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         public readonly IScanService ScanService = Ioc.Default.GetRequiredService<IScanService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+        #endregion
 
+        #region Commands
         public AsyncRelayCommand<ImageCropper> CropPageCommand;
         public AsyncRelayCommand<ImageCropper> CropPagesCommand;
         public AsyncRelayCommand<ImageCropper> CropPageAsCopyCommand;
@@ -53,7 +57,9 @@ namespace Scanner.ViewModels
         public RelayCommand LeaveDrawModeCommand;
         public RelayCommand<string> AspectRatioCommand;
         public RelayCommand<Rect> AspectRatioFlipCommand;
+        #endregion
 
+        #region Events
         public event EventHandler CropSuccessful;
         public event EventHandler CropAsCopySuccessful;
         public event EventHandler RotateSuccessful;
@@ -64,12 +70,20 @@ namespace Scanner.ViewModels
         public event EventHandler CopySuccessful;
 
         public event EventHandler TargetedShareUiRequested;
+        #endregion
 
         private Orientation _Orientation;
         public Orientation Orientation
         {
             get => _Orientation;
             set => SetProperty(ref _Orientation, value);
+        }
+
+        private bool _ShowAnimations;
+        public bool ShowAnimations
+        {
+            get => _ShowAnimations;
+            set => SetProperty(ref _ShowAnimations, value);
         }
 
         private ScanResult _ScanResult;
@@ -275,6 +289,7 @@ namespace Scanner.ViewModels
         public EditorViewModel()
         {
             RefreshOrientationSetting();
+            RefreshAnimationsSetting();
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             ShowOpenWithWarning = (bool)SettingsService.GetSetting(AppSetting.ShowOpenWithWarning);
 
@@ -314,7 +329,6 @@ namespace Scanner.ViewModels
             PointerDevice device = pointerDevices.FirstOrDefault((x) => x.PointerDeviceType == PointerDeviceType.Touch);
             IsDeviceTouchEnabled = device != null;
 
-            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
             IsTouchDrawingEnabled = (bool)SettingsService.GetSetting(AppSetting.LastTouchDrawState);
         }
 
@@ -339,11 +353,20 @@ namespace Scanner.ViewModels
             }
         }
 
+        private void RefreshAnimationsSetting()
+        {
+            ShowAnimations = (bool)SettingsService.GetSetting(AppSetting.SettingAnimations);
+        }
+
         private void SettingsService_SettingChanged(object sender, AppSetting e)
         {
             if (e == AppSetting.SettingEditorOrientation)
             {
                 RefreshOrientationSetting();
+            }
+            else if (e == AppSetting.SettingAnimations)
+            {
+                RefreshAnimationsSetting();
             }
         }
 
@@ -440,6 +463,7 @@ namespace Scanner.ViewModels
         private void EnterCropMode()
         {
             LogService?.Log.Information("EnterCropMode");
+            SelectedAspectRatio = (AspectRatioOption)SettingsService.GetSetting(AppSetting.LastUsedCropAspectRatio);
             EditorMode = EditorMode.Crop;
         }
 
@@ -559,7 +583,6 @@ namespace Scanner.ViewModels
 
         private async Task<List<OpenWithApp>> GetAppsToOpenWith()
         {
-            LogService?.Log.Information("GetAppsToOpenWith");
             List<OpenWithApp> result = new List<OpenWithApp>();
 
             // get format of current result
@@ -571,8 +594,6 @@ namespace Scanner.ViewModels
             IReadOnlyList<AppInfo> readOnlyList = await Launcher.FindFileHandlersAsync(formatString);
             foreach (AppInfo appInfo in readOnlyList)
             {
-                LogService?.Log.Information($"GetAppsToOpenWith: Adding {appInfo.DisplayInfo.DisplayName}");
-
                 try
                 {
                     RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(64, 64));
@@ -618,42 +639,13 @@ namespace Scanner.ViewModels
             if (ScanResult != null) SelectedPageIndex = ScanResult.NumberOfPages - 1;
         }
 
-        private double? ConvertAspectRatioOptionToValue(AspectRatioOption option)
-        {
-            switch (option)
-            {
-                case AspectRatioOption.Custom:
-                    return null;
-                case AspectRatioOption.Square:
-                    return 1;
-                case AspectRatioOption.ThreeByTwo:
-                    return 1.5;
-                case AspectRatioOption.FourByThree:
-                    return 1.3333;
-                case AspectRatioOption.DinA:
-                    return 0.7070;
-                case AspectRatioOption.AnsiA:
-                    return 0.7741;
-                case AspectRatioOption.AnsiB:
-                    return 0.6458;
-                case AspectRatioOption.AnsiC:
-                    return 0.7728;
-                case AspectRatioOption.Kai4:
-                    return 0.7216;
-                case AspectRatioOption.Kai8:
-                    return 0.6929;
-                case AspectRatioOption.Kai16:
-                    return 0.7216;
-                case AspectRatioOption.Kai32:
-                    return 0.6954;
-                default:
-                    throw new ArgumentException($"Can't convert AspectRatioOption {option} to value.");
-            }
-        }
-
         private void FlipSelectedAspectRatio(Rect currentRect)
         {
             SelectedAspectRatioValue = currentRect.Height / currentRect.Width;
+            if (SelectedAspectRatio == AspectRatioOption.Custom)
+            {
+                SelectedAspectRatio = AspectRatioOption.Custom;
+            }
         }
 
         private async Task CropAsync(ImageCropper imageCropper)
@@ -772,22 +764,6 @@ namespace Scanner.ViewModels
         Initial = 0,
         Crop = 1,
         Draw = 2,
-    }
-
-    public enum AspectRatioOption
-    {
-        Custom = 0,
-        Square = 1,
-        ThreeByTwo = 2,
-        FourByThree = 3,
-        DinA = 4,
-        AnsiA = 5,
-        AnsiB = 6,
-        AnsiC = 7,
-        Kai4 = 8,
-        Kai8 = 9,
-        Kai16 = 10,
-        Kai32 = 11,
     }
 
     public class OpenWithApp

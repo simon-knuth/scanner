@@ -1,7 +1,7 @@
 ﻿using Scanner.ViewModels;
 using System;
 using Windows.UI.Xaml.Data;
-
+using static Enums;
 
 namespace Scanner.Views.Converters
 {

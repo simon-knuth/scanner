@@ -47,7 +47,35 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="RadioButtonsStyleCompactVisibilitySupport" TargetType="muxc:RadioButtons">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="muxc:RadioButtons">
+                    <StackPanel>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderContentPresenter.Foreground" Value="{ThemeResource RadioButtonsHeaderForegroundDisabled}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource RadioButtonsHeaderForeground}" Margin="0"/>
+                        <muxc:ItemsRepeater x:Name="InnerRepeater">
+                            <muxc:ItemsRepeater.Layout>
+                                <muxc:StackLayout Orientation="Vertical" Spacing="3"/>
+                            </muxc:ItemsRepeater.Layout>
+                        </muxc:ItemsRepeater>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="FlipViewStyleRoundedButtons" TargetType="FlipView">
         <Setter Property="Background" Value="{ThemeResource FlipViewBackground}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -2360,7 +2388,7 @@
     </Style>
 
     <RevealBackgroundBrush x:Key="ButtonAccentRevealBackgroundBrushPressed" Color="#8C8C8C" FallbackColor="{StaticResource SystemBaseMediumLowColor}" />
-
+    
     <ResourceDictionary.ThemeDictionaries>
         <!-- HeaderScrollShadowConverter expects DropShadowPanelThemedStyle to set ShadowOpacity at index 0 -->
         <ResourceDictionary x:Key="Light">
