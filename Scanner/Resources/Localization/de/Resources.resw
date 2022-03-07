@@ -1601,4 +1601,8 @@ Wenn Sie einen professionelleren Scanner besitzen, können Sie nun auch erweiter
     <value>Vorschau (Scanregion ausgewählt)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>Legal</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
 </root>
