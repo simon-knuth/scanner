@@ -845,30 +845,6 @@
     <value>Tema</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Una nueva interfaz impresionante</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Funciones inteligentes</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Soporte para aún más opciones de escaneo</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Disfruta el look fresco y acogedor inspirado en Windows 11.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Rota automáticamente los escaneos, recorta varias páginas a la vez y reutiliza rápidamente tus ajustes anteriores en las sesiones de la aplicación.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Soporte añadido para funciones avanzadas de escaneo como recorte automático y selección automática del modo de color. Requiere un escáner compatible.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Valorar en la tienda de Microsoft</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -1114,7 +1090,7 @@ PDF es un formato de documento muy popular y te permite guardar varias páginas 
     <value>Imprimir</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Vista Previa</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
@@ -1440,8 +1416,44 @@ Si estas utilizando un escáner más profesional, ahora puedes aplicar opciones 
     <value>App logo</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Archivos y ubicación de guardado</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Uso del escáner</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animaciones</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Muestra animaciones</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Acción por defecto de escaneo</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Añadir a las páginas existentes</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Comienza de nuevo</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
     <value>Ajustes</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>La rotación automática no está disponible porque ningún idioma instalado admite el reconocimiento de texto. Por favor, instale un idioma admitido (incluyendo todas sus características) y reinicie la computadora para usar esta característica.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
 </root>

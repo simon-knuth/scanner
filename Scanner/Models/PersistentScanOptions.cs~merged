@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:Scanner/Models/PersistentScanOptions.cs
+=======
+>>>>>>> main
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
@@ -7,6 +10,7 @@ using static Enums;
 namespace Scanner.Models
 {
     public class PersistentScanOptions
+<<<<<<< HEAD
 =======
 ﻿using System.Collections.Generic;
 
@@ -14,30 +18,42 @@ namespace Scanner
 {
     public class ScanMergeConfig
 >>>>>>> main:Scanner/Models/ScanMergeConfig.cs
+=======
+>>>>>>> main
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 <<<<<<< HEAD:Scanner/Models/PersistentScanOptions.cs
+=======
+>>>>>>> main
         public int? FlatbedBrightness;
         public int? FlatbedContrast;
 
         public int? FeederBrightness;
         public int? FeederContrast;
+<<<<<<< HEAD
 =======
         public List<int> InsertIndices = new List<int>();
         public int SurplusPagesIndex;
 >>>>>>> main:Scanner/Models/ScanMergeConfig.cs
+=======
+>>>>>>> main
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 <<<<<<< HEAD:Scanner/Models/PersistentScanOptions.cs
         public PersistentScanOptions()
 =======
         public ScanMergeConfig()
 >>>>>>> main:Scanner/Models/ScanMergeConfig.cs
+=======
+        public PersistentScanOptions()
+>>>>>>> main
         {
 
         }
@@ -46,11 +62,15 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 <<<<<<< HEAD:Scanner/Models/PersistentScanOptions.cs
         
 =======
 
 >>>>>>> main:Scanner/Models/ScanMergeConfig.cs
+=======
+        
+>>>>>>> main
 
     }
 }

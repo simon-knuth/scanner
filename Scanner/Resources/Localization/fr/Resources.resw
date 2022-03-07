@@ -558,7 +558,7 @@
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Translations</value>
+    <value>Traductions</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
@@ -846,30 +846,6 @@ Fuzzy</comment>
     <value>Thème</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Une superbe nouvelle interface</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Des fonctionnalités super intelligentes</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Encore plus d&apos;options de numérisation supportées</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Appréciez le nouveau look chaleureux inspiré de Windows 11.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Rotation automatique des numérisations, recadrage de plusieurs pages à la fois et utilisation rapide des paramètres préférés à chaque nouvelle session.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Ajout d&apos;options de numérisation avancées comme le recadrage automatique et la sélection automatique du mode de colorisation. Nécessite un scanneur compatible.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Évaluer sur le Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -887,7 +863,7 @@ Fuzzy</comment>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
-    <value>Dernière nouveautés</value>
+    <value>Dernières nouveautés</value>
     <comment>The hyperlink text for viewing the latest changelog.</comment>
   </data>
   <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
@@ -921,7 +897,7 @@ Veuillez également consulter le manuel de votre scanneur pour obtenir des conse
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
     <value>La résolution détermine la netteté globale de la numérisation et influence également fortement la taille du fichier. La numérisation à haute résolution peut faire grossir le fichier et augmenter le temps requis pour chaque page à numériser. La numérisation à faible résolution peut entraîner une perte de détails et même produire du texte illisible.
 
-La sélection d&apos;une résolution est possible en mode **plateau ou charger**. L&apos;application choisit toujours une résolution par défaut pour vous, qui fonctionne très bien pour toutes sortes de numérisations. Parfois, il recommande même une résolution pour les documents et une autre pour les photos.
+La sélection d&apos;une résolution est possible en mode **plateau ou chargeur**. L&apos;application choisit toujours une résolution par défaut pour vous, qui fonctionne très bien pour toutes sortes de numérisations. Parfois, il recommande même une résolution pour les documents et une autre pour les photos.
 
 En règle générale, les documents ne nécessitent qu&apos;une résolution d&apos;environ 300 DPI, tandis que les photos bénéficient d&apos;une résolution plus élevée d&apos;environ 500 DPI.</value>
     <comment>The help text on choosing the right resolution.</comment>
@@ -1015,7 +991,7 @@ PDF est un format de document très populaire et vous permet d&apos;enregistrer 
     <comment>The text for the button in the help section that opens the settings.</comment>
   </data>
   <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
-    <value>Paramèters du Wi-Fi</value>
+    <value>Paramètres du Wi-Fi</value>
     <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
   </data>
   <data name="HeadingHelp.Text" xml:space="preserve">
@@ -1114,7 +1090,7 @@ PDF est un format de document très populaire et vous permet d&apos;enregistrer 
     <value>Imprimer</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Prévisualisation</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
@@ -1201,7 +1177,7 @@ Le réglage de la luminosité et du contraste n&apos;est possible qu&apos;en mod
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
-    <value>Les changements de ce paramètre seront appliqué au redémarrage de l&apos;appli.</value>
+    <value>Les changements de ce paramètre seront appliqués au redémarrage de l&apos;application.</value>
     <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
   </data>
   <data name="TextSettingsTranslations.Text" xml:space="preserve">
@@ -1437,8 +1413,192 @@ Si vous utilisez un scanneur plus professionnel, vous pouvez désormais applique
     <value>Logo de l&apos;app</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Fichiers &amp; emplacement d&apos;enregistrement</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Utilisation du scanneur</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Animations</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Afficher les animations</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Action de numérisation par défaut</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Ajouter aux pages existantes</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Commencer un nouveau document</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
     <value>Paramètres</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>La rotation automatique n&apos;est actuellement pas disponible, car aucune de vos langues installées ne prend en charge la reconnaissance de texte. Veuillez installer une langue prise en charge (y compris toutes ses fonctionnalités linguistiques facultatives) et redémarrer votre PC pour utiliser cette fonction.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Nouvelle expérience de prévisualisation</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>PDFs réduits</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Numériser et fusionner</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Les aperçus de numérisation sont maintenant beaucoup plus grands, vous n&apos;avez donc plus besoin d&apos;une loupe. Également ajouté à la demande générale : la sélection d&apos;une région de numérisation à partir de l&apos;aperçu.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Les PDF seront désormais optimisés de manière cohérente quel que soit le scanneur pour économiser de l&apos;espace sur votre appareil et faciliter le partage.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Si vous avez un chargeur automatique de documents, vous pouvez désormais utiliser le nouvel outil &quot;Numériser et fusionner en PDF&quot; pour ajouter des pages aux bons endroits. Super utile pour numériser plusieurs feuilles recto verso sans posséder un scanneur recto verso.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Unités de mesure</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>Impériales/US</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Métriques</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>cm</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>pouces</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Numériser et fusionner</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Numériser et fusionner dans le PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Page numérisée unique</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>Première page numérisée</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>Toutes les pages en surplus</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>Vous pouvez utiliser cet outil pour insérer de nouvelles pages à un endroit spécifique. Cela vous permet également de numériser plusieurs feuilles recto verso sans recto verso, en numérisant d&apos;abord normalement les faces avant, puis en fusionnant toutes les faces arrières dans le premier lot.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>Entre les pages</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Première page</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Numériser et ajouter au PDF</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Numériser et fusionner dans le PDF...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>Vous pouvez sélectionner &quot;Numériser et fusionner dans le PDF&quot; dans le menu de numérisation pour insérer de nouvelles pages à des endroits spécifiques. Cela fait de la numérisation de feuilles recto verso un jeu d&apos;enfant.</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>Numériser et fusionner</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>Le fichier que vous essayez de modifier/utiliser n&apos;est pas disponible. Veuillez ne pas déplacer, renommer ou ouvrir des fichiers en dehors de l&apos;application tant que vous n&apos;avez pas terminé les modifications ici.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>Fichier indisponible</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Ignorer la zone de numérisation sélectionnée</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Appliquer la sélection.</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez une zone à numériser</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Sélection de la zone de numérisation</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hauteur de la page de prévisualisation</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hauteur de la zone de numérisation sélectionnée</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Largeur de la zone de numérisation sélectionnée</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Largeur de la page de prévisualisation</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>Prévisualisation (zone de numérisation activée)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
 </root>
