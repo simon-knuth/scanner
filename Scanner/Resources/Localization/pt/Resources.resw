@@ -846,30 +846,6 @@ Fuzzy</comment>
     <value>Tema</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
-  <data name="HeadingChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Uma nova interface</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Funcionalidades super inteligentes</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Suporte para ainda mais opções de digitalização</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section1.Text" xml:space="preserve">
-    <value>Desfrute do aspeto fresco e convidativo inspirado no Windows 11.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section2.Text" xml:space="preserve">
-    <value>Rode automaticamente as digitalizações, corte várias páginas de uma só vez e reutilize rapidamente as suas definições anteriores ao longo das sessões na aplicação.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_0_0_0Section3.Text" xml:space="preserve">
-    <value>Adicionado suporte para opções de digitalização avançadas tais como o corte automático e a seleção automática do modo de cor. Requer um scanner compatível.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
     <value>Classificar a aplicação na Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
@@ -1114,7 +1090,7 @@ O PDF é um formato de documento muito popular e permite guardar várias página
     <value>Imprimir</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
-  <data name="ButtonPreview.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
     <value>Pré-visualizar</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
@@ -1472,5 +1448,157 @@ Se usar um scanner mais profissional, agora pode aplicar opções de digitaliza�
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
     <value>Definições</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>A rotação automática não está atualmente disponível, porque nenhum dos seus idiomas instalados suporta o reconhecimento de texto. Por favor, instale um idioma suportado (incluindo todas as suas partes individuais) e reinicie o seu PC para utilizar esta funcionalidade.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Nova experiência de pré-visualização</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>PDFs mais pequenos</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Digitalizar e combinar</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>As pré-visualizações são agora muito maiores, pelo que já não precisa de uma lupa para as ver. Também adicionado por feedback popular: selecionar uma região de digitalização a partir da pré-visualização.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Os PDFs serão agora otimizados de forma consistente, independentemente do scanner, para economizar espaço no seu dispositivo e facilitar a partilha.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Se tem um scanner alimentador, agora pode usar a nova ferramenta &quot;Digitalizar e combinar em PDF&quot; para adicionar páginas nos lugares certos. Muito útil para digitalizar várias folhas frente e verso sem usar um scanner duplex.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Fechar</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Unidades de medida</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>Imperiais/EUA</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Métricas</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>cm</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>polegadas</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Digitalizar e combinar</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Digitalizar e combinar em PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Página única digitalizada</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>Primeira página digitalizada</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>Todas as páginas restantes</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>Pode usar esta ferramenta para inserir novas páginas num local específico. Também permite que digitalize várias folhas frente e verso mesmo sem a função duplex, digitalizando primeiro as frentes, normalmente, e adicionando depois todos os versos ao primeiro lote.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>Páginas intermediárias</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Primeira página</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Digitalizar e adicionar ao PDF</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Digitalizar e combinar em PDF...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>Pode selecionar &quot;Digitalizar e combinar em PDF&quot; no menu de digitalização para inserir novas páginas em pontos específicos. Isto faz com que digitalizar a frente e verso se torne muito mais fácil.</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>Digitalizar e combinar</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>O ficheiro que está a tentar editar/usar não está disponível. Por favor, não mova, mude o nome ou abra ficheiros fora da aplicação até terminar de editar aqui.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>Ficheiro indisponível</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Descartar região de digitalização selecionada</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fechar</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Aplicar seleção</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Selecionar região de digitalização</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Seleção de regiões de digitalização</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Altura de toda a pré-visualização</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Altura da região de digitalização selecionada</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Largura da região de digitalização selecionada</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Largura de toda a pré-visualização</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>Pré-visualização (região selecionada)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
 </root>
