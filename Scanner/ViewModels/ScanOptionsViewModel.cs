@@ -424,7 +424,11 @@ namespace Scanner.ViewModels
             CancelScanCommand = new RelayCommand(CancelScan);
             PreviewScanCommand = new RelayCommand(PreviewScan);
             RemoveSelectedRegionCommand = new RelayCommand(() => SelectedScanRegion = null);
-            ScanMergeConfigCommand = new RelayCommand(() => Messenger.Send(new ScanMergeDialogRequestMessage()));
+            ScanMergeConfigCommand = new RelayCommand(() =>
+            {
+                FeederMultiplePages = true;
+                Messenger.Send(new ScanMergeDialogRequestMessage());
+            });
             DebugShowScannerTipCommand = new RelayCommand(DebugShowScannerTip);
             DebugShowScanMergeTipCommand = new RelayCommand(() => ScanMergeTipRequested?.Invoke(this, EventArgs.Empty));
             ResetBrightnessCommand = new RelayCommand(ResetBrightness);
@@ -1222,7 +1226,7 @@ namespace Scanner.ViewModels
                         if (scanOptions.Format.OriginalFormat != ScanResultService.Result.ScanResultFormat)
                         {
                             await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                scanOptions.Format.TargetFormat);
+                                scanOptions.Format.TargetFormat, mergeConfig);
                         }
                         else
                         {

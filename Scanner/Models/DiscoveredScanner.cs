@@ -680,33 +680,33 @@ namespace Scanner.Models
                     }
 
                     // scan region
-                    if (options.SelectedRegion != null)
-                    {
-                        try
-                        {
-                            Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
-                            {
-                                X = options.SelectedRegion.Value.X,
-                                Y = options.SelectedRegion.Value.Y,
-                                Width = options.SelectedRegion.Value.Width,
-                                Height = options.SelectedRegion.Value.Height
-                            };
-                        }
-                        catch (Exception exc)
-                        {
-                            throw new ArgumentException("Selected region is invalid", exc);
-                        }
-                    }
-                    else
-                    {
-                        Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
-                        {
-                            X = 0,
-                            Y = 0,
-                            Width = Device.FeederConfiguration.MaxScanArea.Width,
-                            Height = Device.FeederConfiguration.MaxScanArea.Height
-                        };
-                    }
+                    //if (options.SelectedRegion != null)
+                    //{
+                    //    try
+                    //    {
+                    //        Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                    //        {
+                    //            X = options.SelectedRegion.Value.X,
+                    //            Y = options.SelectedRegion.Value.Y,
+                    //            Width = options.SelectedRegion.Value.Width,
+                    //            Height = options.SelectedRegion.Value.Height
+                    //        };
+                    //    }
+                    //    catch (Exception exc)
+                    //    {
+                    //        throw new ArgumentException("Selected region is invalid", exc);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    Device.FeederConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                    //    {
+                    //        X = 0,
+                    //        Y = 0,
+                    //        Width = Device.FeederConfiguration.MaxScanArea.Width,
+                    //        Height = Device.FeederConfiguration.MaxScanArea.Height
+                    //    };
+                    //}
                     break;
 
                 case ScannerSource.None:
