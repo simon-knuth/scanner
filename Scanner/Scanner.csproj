@@ -521,6 +521,7 @@
     <Content Include="License Texts\LicenseMicrosoftNETCoreUniversalWindowsPlatform.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterCrashes.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterAnalytics.txt" />
+    <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
