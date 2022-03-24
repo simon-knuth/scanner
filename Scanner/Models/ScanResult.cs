@@ -201,7 +201,6 @@ namespace Scanner
             {
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
                 string pdfName = fileList[0].DisplayName + ".pdf";
-                await PrepareNewConversionFiles(fileList, 0);
 
                 // convert all source files to JPG for optimized size
                 IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
@@ -213,6 +212,7 @@ namespace Scanner
                     }
                 }
 
+                await PrepareNewConversionFiles(result.GetImageFiles(), 0);
                 await result.GeneratePDFAsync(pdfName);
             }
             else

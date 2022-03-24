@@ -313,7 +313,7 @@
                                             <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
                                             <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch" Margin="0,0,0,12"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,13" Text="{x:Bind ViewModel.ScanResult.ScanResultFormatString, Mode=OneWay}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,14" Text="{x:Bind ViewModel.ScanResult.ScanResultFormatString, Mode=OneWay}" />
 
                                             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
