@@ -55,7 +55,24 @@ namespace Scanner
             get => _Elements;
         }
 
-        public ImageScannerFormat ScanResultFormat;
+        private ImageScannerFormat _ScanResultFormat;
+        public ImageScannerFormat ScanResultFormat
+        {
+            get => _ScanResultFormat;
+            set
+            {
+                SetProperty(ref _ScanResultFormat, value);
+                ScanResultFormatString = ConvertImageScannerFormatToString(value);
+            }
+        }
+
+        private string _ScanResultFormatString;
+        public string ScanResultFormatString
+        {
+            get => _ScanResultFormatString;
+            set => SetProperty(ref _ScanResultFormatString, value);
+        }
+
         public ImageScannerFormat PagesFormat;
         public StorageFile Pdf = null;
         public readonly StorageFolder OriginalTargetFolder;
