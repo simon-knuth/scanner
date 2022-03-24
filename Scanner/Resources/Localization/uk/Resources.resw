@@ -237,6 +237,10 @@
     <value>Поділитися</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
+  <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Список сторінок</value>
+    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
+  </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
     <value>Копіювати вибрані сторінки</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
@@ -268,6 +272,14 @@
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>Поділитися вибраними сторінками</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Параметри сканування</value>
+    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Показати місце збереження в Провіднику</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
     <value>Перегляд</value>
@@ -438,6 +450,10 @@ Fuzzy</comment>
     <value>Зберегти як</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>Варіанти подання</value>
+    <comment>The heading for additional options in the scan options section.</comment>
+  </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
     <value>Роздільна здатність</value>
     <comment>The heading for resolution options in the scan options section.</comment>
@@ -518,6 +534,10 @@ Fuzzy</comment>
     <value>Щось пішло не так</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>Не вдалося скинути розташування теки.</value>
+    <comment>The error message body that appears when resetting the save location failed.</comment>
+  </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
     <value>Доступ заборонено</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
@@ -557,6 +577,10 @@ Fuzzy</comment>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
     <value>Веб-сайт</value>
     <comment>The hyperlink text for viewing the website.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
+    <value>Допоможіть перекласти</value>
+    <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>Налаштування</value>
@@ -815,5 +839,109 @@ Fuzzy</comment>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
     <value>Підтримайте розвиток</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+  </data>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Скасувати поточне сканування</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
+    <value>Тема</value>
+    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>Оцінити в Microsoft Store</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>GitHub</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value>Одну чи декілька сторінок було автоматично перевернуто. Цю функцію можна відключити в налаштуваннях.</value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="PerformedAutoRotationHeading" xml:space="preserve">
+    <value>Автоматичне обертання</value>
+    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value>Останній журнал змін</value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value>І набагато більше!</value>
+    <comment>Heading for the fourth changelog section.</comment>
+  </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>Переконайтеся, що ваш сканер увімкнено та підключено через Wi-Fi або USB-кабель. Якщо ваш сканер не містить у списку налаштувань Windows, вам потрібно спочатку додати його звідти.
+
+Як тільки ви побачите свій сканер у додатку налаштувань, і він більше не помічений як &quot;Не в мережі&quot;, з&apos;єднання працює, і все готове!
+
+&amp;nbsp;
+
+**Порада.** Якщо Windows надто довго знаходить вже встановлений бездротовий сканер, ви можете просто вимкнути і знову увімкнути Wi-Fi, щоб негайно запустити пошук мережі. Майте на увазі, що це може призупинити доступ до Інтернету для всіх програм на вашому пристрої.</value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>Перезавантаження сканера зазвичай вирішує більшість проблем, з якими можна зіткнутися. Іноді сам інтерфейс сканування Windows веде себе не так, як очікувалося, що може вимагати перезавантаження комп&apos;ютера.
+
+В окремих випадках установка сканера може бути помилковою і потрібно видалити, а потім знову додати сканер в налаштуваннях.
+
+&amp;nbsp;
+
+Також зверніться до посібника зі сканера за додатковими вказівками або зверніться до виробника.</value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>Ви можете змінити місце збереження для нових сканувань у налаштуваннях. Якщо хочете, вас також можуть запитувати щоразу, коли ви скануєте щось нове – чудово, щоб завжди розміщувати речі там, де їм належить, замість того, щоб потім упорядковувати їх.</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>Роздільна здатність визначає загальну різкість скана, а також сильно впливає на розмір файлу. Сканування з високою роздільною здатністю може збільшити розмір файлу та збільшити час сканування кожної сторінки. Сканування з низькою роздільною здатністю може призвести до втрати деталей і навіть до нерозбірливого тексту.
+
+Вибір роздільної здатності можливий у режимі **планшета або пристрою подавання**. Програма завжди вибирає для вас стандартну роздільну здатноість, яка відмінно підходить для всіх видів сканування. Іноді навіть рекомендує роздільну здатніость для документів та окрему для фотографій.
+
+Як правило, для документів потрібна роздільна здатність лише близько 300 DPI, тоді як фотографії мають більшу роздільну здатність близько 500 DPI.</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>Переплутали деякі сторінки під час сканування? Немає необхідності починати спочатку, ви можете швидко змінити порядок сторінок у вашому PDF-файлі після сканування. Просто перетягніть сторінки в список сторінок і помістіть все туди, де їм належить бути.</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>Якщо ви редагуєте свої сканування в програмі, зміни відразу ж зберігаються у фоновому режимі. Просто відскануйте кілька сторінок, відредагуйте результат і готово!</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>Допомога</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>Автоматичне обрізання</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>Вимкнено</value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value>Кілька регіонів</value>
+    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value>Єдиний регіон</value>
+    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>Автоматично</value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>Пошук сканерів...</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>Щоб використовувати сканер, його потрібно підключити, увімкнути та встановити. Будь ласка, перегляньте сторінку довідки для отримання додаткової інформації.</value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
 </root>
