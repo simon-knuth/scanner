@@ -1397,14 +1397,6 @@ A támogatott formátumok: PDF, JPG, PNG, TIF és BMP.</value>
     <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Ez a frissítés a Windows 11 hivatalos támogatását tartalmazza egy gyönyörű új dizájnnal, amely illeszkedik a rendszer többi részéhez.
-
-Fedezze fel az új funkciókat, például a nagyon kért lehetőséget a korábbi szkennelési beállítások újrafelhasználására, így nem kell minden egyes alkalommal kiválasztania a &quot;PDF&quot; formátumot, valamint néhány más intelligens funkciót, például az automatikus elforgatást, amely lehetővé teszi az oldalak behelyezését anélkül, hogy aggódnia kellene a tájolásuk miatt.
-
-Ha professzionálisabb szkennert használ, mostantól speciális szkennelési beállításokat is alkalmazhat, például az automatikus kivágást, az automatikus színmód-választást és a fényerő/kontraszt beállítását. Ezekhez a lehetőségekhez kompatibilis szkennerre van szükség, és engedélyezni kell őket az alkalmazás beállításai között.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Scanner</value>
     <comment>App title for voice control.</comment>
