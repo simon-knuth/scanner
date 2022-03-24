@@ -1397,14 +1397,6 @@ Os formatos de ficheiro suportados são PDF, JPG, PNG, TIF e BMP.</value>
     <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Esta atualização inclui suporte oficial para o Windows 11 com um novo e bonito design que combina com o resto do sistema.
-
-Descubra novas funcionalidades, como a altamente solicitada capacidade de reutilizar as suas opções de digitalização anteriores para que não precise de voltar a selecionar o formato &quot;PDF&quot; todas as vezes, bem como alguns outros recursos inteligentes como a rotação automática, que lhe permite digitalizar as suas páginas sem se preocupar com a orientação.
-
-Se usar um scanner mais profissional, agora pode aplicar opções de digitalização avançadas, como recorte automático, seleção automática do modo de cor e ajuste de luminosidade ou de contraste. Essas opções requerem um scanner compatível e precisam de ser ativadas nas definições da aplicação.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Scanner</value>
     <comment>App title for voice control.</comment>
@@ -1600,5 +1592,9 @@ Se usar um scanner mais profissional, agora pode aplicar opções de digitaliza�
   <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
     <value>Pré-visualização (região selecionada)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>Jurídico</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
 </root>
