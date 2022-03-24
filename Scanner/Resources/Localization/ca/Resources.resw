@@ -1396,14 +1396,6 @@ Els formats admesos són PDF, JPG, PNG, TIF i BMP.</value>
     <value>Escàner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Aquesta actualització inclou suport oficial per a Windows 11 amb un disseny nou i bonic que coincideix amb la resta del sistema.
-
-Descobriu funcions noves, com ara la molt sol·licitada capacitat de reutilitzar les vostres opcions d&apos;escaneig anteriors perquè no hàgiu de seleccionar el format &quot;PDF&quot; cada vegada, així com algunes altres funcions intel·ligents com la rotació automàtica, que només us permet poseu les vostres pàgines a la plataforma sense haver de preocupar-vos per la seva orientació.
-
-Si utilitzeu un escàner més professional, ara podeu aplicar opcions d&apos;escaneig avançades com el retall automàtic, la selecció automàtica del mode de color i l&apos;ajust de la brillantor/contrast. Aquestes opcions requereixen un escàner compatible i s&apos;han d&apos;activar a la configuració de l&apos;aplicació.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Escàner</value>
     <comment>App title for voice control.</comment>
