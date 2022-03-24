@@ -1396,14 +1396,6 @@ Les formats pris en charge sont PDF, JPG, PNG, TIF et BMP.</value>
     <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Cette mise à jour inclut la prise en charge officielle de Windows 11 avec un nouveau suberbe design qui correspond au reste du système.
-
-Découvrez de nouvelles fonctionnalités, telles que la capacité très demandée de réutiliser vos options de numérisation de sessions précédentes afin que vous n&apos;ayez pas besoin de sélectionner le format &quot;PDF&quot; à chaque fois, ainsi que d&apos;autres fonctionnalités intelligentes telles que la rotation automatique, qui vous permet de simplement placez vos pages sur le plateau sans avoir à vous soucier de leur orientation.
-
-Si vous utilisez un scanneur plus professionnel, vous pouvez désormais appliquer des options de numérisation avancées telles que le recadrage automatique, la sélection automatique du mode couleur et le réglage de la luminosité/du contraste. Ces options nécessitent un scanneur compatible et doivent être activées dans les paramètres de l&apos;application.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Scanner</value>
     <comment>App title for voice control.</comment>
