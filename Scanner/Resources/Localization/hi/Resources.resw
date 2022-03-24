@@ -1397,14 +1397,6 @@ Fuzzy</comment>
     <value>स्कैनर</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>इस अपडेट मे विंडोज ११ के आधिकारिक समर्थन के साथ एक सुंदर नया डिज़ाइन शामिल है जो सिस्टम के बाकी हिस्सों से मेल खाता है।
-
-नई सुविधाएँ पाऍं, जैसे कि आपके पिछले स्कैन ऑप्शंस का पुन: प्रयोग करने की अत्यधिक-अनुरोधित क्षमता, ताकि आपको हर बार &quot;पीडीएफ&quot; फॉर्मेट का चयन करने की आवश्यकता न हो, साथ ही साथ स्वचालित घूर्णन जैसी कुछ अन्य स्मार्ट सुविधाएँ, जो आपको अपने पृष्ठों के अभिविन्यास के बारे में चिंता किए बिना उन्हें फ्लैटबेड पर रखने की अनुमति देती हैं।
-
-यदि आप अधिक पेशेवर स्कैनर का प्रयोग कर रहे हैं, तो अब आप स्वचालित क्रॉपिंग, स्वचालित रंग मोड चयन और चमक/कंट्रास्ट समायोजन जैसे उन्नत स्कैन ऑप्शंस लागू कर सकते हैं। इन ऑप्शंस के ऐप सेटिंग्स में सक्षम होने के साथ एक संगत स्कैनर की आवश्यकता होती है।</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>स्कैनर</value>
     <comment>App title for voice control.</comment>
