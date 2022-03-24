@@ -1400,14 +1400,6 @@ Os formatos suportados são PDF, JPG, PNG, TIF e BMP.</value>
     <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Esta atualização inclui suporte oficial para Windows 11 com uma nova bela interface consistente com o resto do sistema.
-
-Descubra novos recursos, tais como a muito solicitada possibilidade de reutilizar opções de digitalizações prévias de forma a dispensar a necessidade de selecionar o formato &quot;PDF&quot; a cada sessão, bem como outros recursos inteligentes a exemplo de rotação automática, a qual lhe permite colocar as páginas no digitalizador sem se preocupar com suas orientações.
-
-Se você estiver utilizando um digitalizador mais profissional, poderá fazer uso de opções avançadas de digitalização tais como recorte automático, modo de seleção automática de cor e ajuste de brilho/contraste. Essas opções requerem um digitalizador compatível e precisam ser habilitadas em configurações.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Scanner</value>
     <comment>App title for voice control.</comment>
