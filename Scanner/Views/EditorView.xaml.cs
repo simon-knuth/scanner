@@ -774,6 +774,11 @@ namespace Scanner.Views
                 KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
             });
         }
+
+        private async void HyperlinkButtonFileNamingSettings_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutRename.Hide());
+        }
     }
 
     enum ToolbarFunction

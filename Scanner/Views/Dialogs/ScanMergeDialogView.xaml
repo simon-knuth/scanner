@@ -89,7 +89,8 @@
             </muxc:NumberBox.Header>
         </muxc:NumberBox>
         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
-
+        
+        <!-- Preview -->
         <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="241" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0">
             <muxc:ItemsRepeater x:Name="ItemsRepeaterScanMergeElements" HorizontalAlignment="Center" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.MergePreview, Mode=OneWay}" Margin="24,16,24,24" MinHeight="200">
                 <muxc:ItemsRepeater.Layout>

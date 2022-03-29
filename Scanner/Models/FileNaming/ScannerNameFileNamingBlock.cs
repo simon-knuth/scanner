@@ -1,0 +1,68 @@
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Windows.Devices.Scanners;
+using static Utilities;
+
+namespace Scanner.Models.FileNaming
+{
+    public class ScannerNameFileNamingBlock : ObservableObject, IFileNamingBlock
+    {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string Name => "SCANNERNAME";
+
+        public string FriendlyName
+        {
+            get;
+            private set;
+        }
+
+        private bool _AllCaps;
+        public bool AllCaps
+        {
+            get => _AllCaps;
+            set => SetProperty(ref _AllCaps, value);
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ScannerNameFileNamingBlock()
+        {
+
+        }
+
+        public static ScannerNameFileNamingBlock Deserialize(string serialized)
+        {
+            return new ScannerNameFileNamingBlock
+            {
+                AllCaps = bool.Parse(serialized.Split('|', StringSplitOptions.RemoveEmptyEntries)[1]),
+            };
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
+        {
+            if (AllCaps)
+            {
+                return scanner.Name.ToUpper();
+            }
+            else
+            {
+                return scanner.Name;
+            }
+        }
+
+        public string GetSerialized()
+        {
+            return $"*{Name}";
+        }
+    }
+}

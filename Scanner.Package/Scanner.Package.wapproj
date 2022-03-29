@@ -66,43 +66,43 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefaultLanguage>en</DefaultLanguage>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -57,6 +57,7 @@ namespace Scanner.ViewModels
         public RelayCommand LeaveDrawModeCommand;
         public RelayCommand<string> AspectRatioCommand;
         public RelayCommand<Rect> AspectRatioFlipCommand;
+        public RelayCommand SettingsFileNamingRequestCommand;
         #endregion
 
         #region Events
@@ -324,6 +325,7 @@ namespace Scanner.ViewModels
             LeaveDrawModeCommand = new RelayCommand(LeaveDrawMode);
             AspectRatioCommand = new RelayCommand<string>((x) => SelectedAspectRatio = (AspectRatioOption)int.Parse(x));
             AspectRatioFlipCommand = new RelayCommand<Rect>((x) => FlipSelectedAspectRatio(x));
+            SettingsFileNamingRequestCommand = new RelayCommand(() => SettingsRequest(SettingsSection.FileNaming));
 
             IReadOnlyList<PointerDevice> pointerDevices = PointerDevice.GetPointerDevices();
             PointerDevice device = pointerDevices.FirstOrDefault((x) => x.PointerDeviceType == PointerDeviceType.Touch);
@@ -756,6 +758,12 @@ namespace Scanner.ViewModels
 
             LogService?.Log.Information($"GetSelectedIndicesCropSimilarPages: Indices are {indices}");
             return indices;
+        }
+
+        private void SettingsRequest(SettingsSection section)
+        {
+            LogService?.Log.Information("SettingsRequest");
+            Messenger.Send(new SettingsRequestShellMessage(section));
         }
     }
 

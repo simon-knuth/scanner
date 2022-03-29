@@ -29,6 +29,7 @@ namespace Scanner.Views
             ViewModel.LicensesDialogRequested += ViewModel_LicensesDialogRequested;
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
             ViewModel.SettingsSectionRequested += ViewModel_SettingsSectionRequested;
+            ViewModel.CustomFileNamingDialogRequested += ViewModel_CustomFileNamingDialogRequested;
         }
 
 
@@ -50,6 +51,12 @@ namespace Scanner.Views
         private async void ViewModel_LicensesDialogRequested(object sender, EventArgs e)
         {
             LicensesDialogView dialog = new LicensesDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_CustomFileNamingDialogRequested(object sender, EventArgs e)
+        {
+            CustomFileNamingDialogView dialog = new CustomFileNamingDialogView();
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
         }
 

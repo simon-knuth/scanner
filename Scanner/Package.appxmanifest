@@ -11,7 +11,7 @@
   <Identity
     Name="9390SimonKnuth.ScannerforWindows10"
     Publisher="CN=757034B5-C251-4A1E-BCA4-C0C9D29C0508"
-    Version="3.1.0.0" />
+    Version="3.2.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="584d67fc-bc8c-485b-bac0-4cbbf6609860" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

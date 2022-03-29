@@ -40,11 +40,15 @@ namespace Scanner.ViewModels
         public RelayCommand ShowDonateDialogCommand;
         public RelayCommand<string> SetAutoRotateLanguageCommand;
         public AsyncRelayCommand LaunchLanguageSettingsCommand;
+        public RelayCommand DisplayCustomFileNamingDialogCommand;
         #endregion
 
         #region Events
         public event EventHandler ChangelogRequested;
         public event EventHandler<SettingsSection> SettingsSectionRequested;
+        public event EventHandler LogExportDialogRequested;
+        public event EventHandler LicensesDialogRequested;
+        public event EventHandler CustomFileNamingDialogRequested;
         #endregion
 
         private string _SaveLocationPath;
@@ -148,9 +152,6 @@ namespace Scanner.ViewModels
 
         public string CurrentVersion => GetCurrentVersion();
 
-        public event EventHandler LogExportDialogRequested;
-        public event EventHandler LicensesDialogRequested;
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,6 +176,7 @@ namespace Scanner.ViewModels
             ShowDonateDialogCommand = new RelayCommand(() => Messenger.Send(new DonateDialogRequestMessage()));
             SetAutoRotateLanguageCommand = new RelayCommand<string>((x) => SetAutoRotateLanguage(int.Parse(x)));
             LaunchLanguageSettingsCommand = new AsyncRelayCommand(LaunchLanguageSettings);
+            DisplayCustomFileNamingDialogCommand = new RelayCommand(DisplayCustomFileNamingDialog);
         }
 
 
@@ -207,6 +209,12 @@ namespace Scanner.ViewModels
         {
             LogService?.Log.Information("DisplayLicensesDialog");
             LicensesDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DisplayCustomFileNamingDialog()
+        {
+            LogService?.Log.Information("DisplayCustomFileNamingDialog");
+            CustomFileNamingDialogRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task DisplayStoreRatingDialogAsync()

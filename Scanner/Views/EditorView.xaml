@@ -16,7 +16,8 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
@@ -295,8 +296,9 @@
 
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout x:Name="FlyoutRename">
-                                        <Grid MinWidth="250" MaxWidth="250">
+                                        <Grid MinWidth="250" MaxWidth="250" ColumnSpacing="6">
                                             <Grid.RowDefinitions>
+                                                <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
@@ -311,10 +313,17 @@
                                             <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
                                             <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch" Margin="0,0,0,12"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,12" Text="{x:Bind ViewModel.ScanResult.ScanResultFormatString, Mode=OneWay}" />
+                                            
+                                            <HyperlinkButton Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsFileNamingRequestCommand}" Click="HyperlinkButtonFileNamingSettings_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                                    <TextBlock x:Uid="ButtonDialogRenameFileNamingSettings" TextWrapping="WrapWholeWords"/>
+                                                </StackPanel>
+                                            </HyperlinkButton>
 
-                                            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
+                                            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>

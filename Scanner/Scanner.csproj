@@ -134,9 +134,18 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Models\FileNaming\FileNamingStatics.cs" />
+    <Compile Include="Models\FileNaming\FileTypeFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\ScannerNameFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\ContrastFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\BrightnessFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\ResolutionFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\TextFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\IFileNamingBlock.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />
     <Compile Include="Models\ScanMergeConfig.cs" />
     <Compile Include="Models\ScanMergeElement.cs" />
+    <Compile Include="Models\FileNaming\FileNamingPattern.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
@@ -154,6 +163,7 @@
     <Compile Include="Services\Messenger\Messages\DonateDialogRequestMessage.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="ViewModels\CustomFileNamingDialogViewModel.cs" />
     <Compile Include="ViewModels\ScanMergeDialogViewModel.cs" />
     <Compile Include="ViewModels\PreviewDialogViewModel.cs" />
     <Compile Include="ViewModels\SetupDialogViewModel.cs" />
@@ -170,6 +180,9 @@
     <Compile Include="Views\Converters\FilePathFolderConverter.cs" />
     <Compile Include="Views\Converters\ListNotNullOrEmptyConverter.cs" />
     <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
+    <Compile Include="Views\Dialogs\CustomFileNamingDialogView.xaml.cs">
+      <DependentUpon>CustomFileNamingDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ScanMergeDialogView.xaml.cs">
       <DependentUpon>ScanMergeDialogView.xaml</DependentUpon>
     </Compile>
@@ -531,6 +544,10 @@
     <Page Include="Controls\ScanMergePreviewBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\CustomFileNamingDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\ScanMergeDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
