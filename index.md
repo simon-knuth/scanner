@@ -67,6 +67,7 @@ The currently supported languages are:
 <ul>
   <li>Catalan (CA)</li>
   <li>Chinese Simplified (ZH-HANS, ZH-CN, ZH-HANS-CN, ZH-SG, ZH-HANS-SG)</li>
+  <li>Dutch (NL)</li>
   <li>English (EN)</li>
   <li>English (EN-GB)</li>
   <li>French (FR)</li>
