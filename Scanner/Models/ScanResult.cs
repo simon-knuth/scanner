@@ -224,7 +224,7 @@ namespace Scanner
                 }
             }
             result.ScanResultFormat = targetFormat;
-            result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
+            result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(result.GetImageFile(0).FileType);
 
             // set initial name(s)
             if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
