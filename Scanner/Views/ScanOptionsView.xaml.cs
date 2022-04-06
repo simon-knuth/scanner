@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Scanner.Models;
+using System;
+using System.Linq;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -159,6 +161,31 @@ namespace Scanner.Views
 
                 TeachingTipScanMerge.IsOpen = false;
             });
+        }
+
+        private void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+        {
+            if (int.TryParse(args.Text, out int intValue))
+            {
+                // entered pure number, try to apply it
+                ScanResolution resolution = ViewModel.ScannerResolutions.FirstOrDefault((x) => x.Resolution.DpiX == intValue);
+                if (resolution != null)
+                {
+                    // found corresponding resolution
+                    ViewModel.SelectedResolution = resolution;
+                }
+                else
+                {
+                    // no resolution for number, find the closest available one
+                    resolution = ViewModel.ScannerResolutions.Aggregate((x, y) => Math.Abs(x.Resolution.DpiX - intValue) < Math.Abs(y.Resolution.DpiX - intValue) ? x : y);
+                    ViewModel.SelectedResolution = resolution;
+                }
+            }
+            else
+            {
+                sender.SelectedItem = ViewModel.SelectedResolution;
+                args.Handled = true;
+            }
         }
     }
 }

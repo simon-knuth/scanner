@@ -228,7 +228,7 @@
             </FlyoutBase.AttachedFlyout>
         </ComboBox>
         <HyperlinkButton x:Name="HyperlinkButtonHelpScanners" x:Uid="ButtonGetHelp" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestScannerDiscoveryCommand}" RightTapped="ComboBoxScanners_RightTapped" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpScanners, Converter={StaticResource ToolTipConverter}}">
-            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,8,10,8"/>
+            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="8,8,8,8"/>
         </HyperlinkButton>
         <Grid Grid.Row="0" Padding="14,0,72,0" HorizontalAlignment="Stretch">
             <interactivity:Interaction.Behaviors>
@@ -322,7 +322,7 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
                                 <HyperlinkButton x:Name="HyperlinkButtonHelpFileFormat" Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseFileFormatCommand}" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpFileFormat, Converter={StaticResource ToolTipConverter}}">
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="8,4,8,4"/>
                                 </HyperlinkButton>
                             </Grid>
                         </StackPanel>
@@ -458,7 +458,16 @@
                             <TextBlock x:Name="HeadingScanOptionsResolution" x:Uid="HeadingScanOptionsResolution" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
                             <Grid Margin="0,3,0,0">
-                                <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}">
+                                <ComboBox x:Name="ComboBoxResolution" ItemsSource="{x:Bind ViewModel.ScannerResolutions, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedResolution, Mode=TwoWay}" HorizontalAlignment="Stretch" Padding="14,6,38,6" AutomationProperties.Name="{x:Bind HeadingScanOptionsResolution.Text}" TextSubmitted="ComboBoxResolution_TextSubmitted">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerResolutions.Count, Mode=OneWay}" ComparisonCondition="LessThan" Value="10">
+                                            <core:ChangePropertyAction PropertyName="IsEditable" Value="False" />
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScannerResolutions.Count, Mode=OneWay}" ComparisonCondition="GreaterThanOrEqual" Value="10">
+                                            <core:ChangePropertyAction PropertyName="IsEditable" Value="True" />
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                    
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="models:ScanResolution">
                                             <TextBlock Text="{x:Bind FriendlyText}" Style="{StaticResource BodyTextBlockStyle}"/>
@@ -466,7 +475,7 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
                                 <HyperlinkButton x:Name="HyperlinkButtonHelpResolution" Grid.Row="0" x:Uid="ButtonGetHelp" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0" Margin="0,0,36,0" Foreground="{ThemeResource ComboBoxDropDownGlyphForeground}" Command="{x:Bind ViewModel.HelpRequestChooseResolutionCommand}" AutomationProperties.Name="{x:Bind HyperlinkButtonHelpResolution, Converter={StaticResource ToolTipConverter}}">
-                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="10,4,10,4"/>
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16" Margin="8,4,8,4"/>
                                 </HyperlinkButton>
                             </Grid>
                         </StackPanel>

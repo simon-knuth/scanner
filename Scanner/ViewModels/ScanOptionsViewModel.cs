@@ -1017,9 +1017,15 @@ namespace Scanner.ViewModels
             return new ObservableCollection<ScanResolution>()
             {
                 new ScanResolution(150, ResolutionAnnotation.None),
+                new ScanResolution(200, ResolutionAnnotation.None),
+                new ScanResolution(250, ResolutionAnnotation.None),
+                new ScanResolution(300, ResolutionAnnotation.None),
                 new ScanResolution(350, ResolutionAnnotation.Documents),
+                new ScanResolution(400, ResolutionAnnotation.None),
+                new ScanResolution(500, ResolutionAnnotation.None),
                 new ScanResolution(600, ResolutionAnnotation.Photos),
-                new ScanResolution(800, ResolutionAnnotation.None)
+                new ScanResolution(800, ResolutionAnnotation.None),
+                new ScanResolution(1000, ResolutionAnnotation.None)
             };
         }
 
