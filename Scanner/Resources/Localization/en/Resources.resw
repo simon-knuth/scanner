@@ -1609,4 +1609,16 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>File naming settings</value>
     <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
   </data>
+  <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reverse order of inserted pages</value>
+    <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in "Scan and merge".</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>Last scanned page</value>
+    <comment>The preview description for the last page added in "Scan and merge" when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>Last page</value>
+    <comment>The desciption for the last page added in "Scan and merge" when the insertion direction is reversed.</comment>
+  </data>
 </root>

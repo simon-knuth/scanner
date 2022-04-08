@@ -47,6 +47,13 @@ namespace Scanner
             set => SetProperty(ref _IsStartPage, value);
         }
 
+        private bool _IsOrderReversed;
+        public bool IsOrderReversed
+        {
+            get => _IsOrderReversed;
+            set => SetProperty(ref _IsOrderReversed, value);
+        }
+
         private bool _IsPlaceholderForMultiplePages;
         public bool IsPlaceholderForMultiplePages
         {
