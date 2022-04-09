@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,15 +32,16 @@ namespace Scanner.Services
             get;
         }
 
-        Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder);
         Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
-            ImageScannerFormat targetFormat);
-        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat);
-
+            ScanOptions scanOptions);
+        Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
+            ImageScannerFormat targetFormat, ScanOptions scanOptions);
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
-            StorageFolder targetFolder);
+            ScanOptions scanOptions);
         Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
-            ScanMergeConfig mergeConfig);
+            StorageFolder targetFolder, ScanOptions scanOptions);
+        Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
+            ScanMergeConfig mergeConfig, ScanOptions scanOptions);
         
         void DismissScanResult();
 

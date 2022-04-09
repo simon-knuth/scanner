@@ -27,8 +27,8 @@ namespace Scanner.Services
         /// <param name="targetFolder">The folder that the file shall be moved to.</param>
         /// <param name="desiredName">The name that the file should ideally have when finished.</param>
         /// <param name="replaceExisting">Replaces file if true, otherwise asks the OS to generate a unique name.</param>
-        /// <returns>The final name of the file.</returns>
-        Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting);
+        /// <returns>The updated file.</returns>
+        Task<StorageFile> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting);
 
         /// <summary>
         ///     Converts the <paramref name="file"/> to a <see cref="BitmapImage"/>.
