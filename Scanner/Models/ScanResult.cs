@@ -1481,7 +1481,7 @@ namespace Scanner
                     }
                     else
                     {
-                        insertIndex = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+                        insertIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count());
                     }
 
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Insert(
@@ -1568,7 +1568,7 @@ namespace Scanner
                     }
                     else
                     {
-                        indexInResult = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+                        indexInResult = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count());
                     }
 
                     ScanResultElement element = Elements[indexInResult];
@@ -1610,7 +1610,7 @@ namespace Scanner
             {
                 for (int i = 0; i < files.Count(); i++)
                 {
-                    int mergeIndex = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
+                    int mergeIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count());
 
                     await GetImageAsync(mergeIndex);
                     _Elements[mergeIndex].ItemDescriptor = GetDescriptorForIndex(mergeIndex);
@@ -1781,16 +1781,34 @@ namespace Scanner
         ///     Calculates the index a new page will have in the <see cref="ScanResult"/>.
         /// </summary>
         /// <param name="indexOfNewPage">Index of the new page among all new pages.</param>
-        private static int GetNewIndexAccordingToMergeConfig(int indexOfNewPage, ScanMergeConfig mergeConfig)
+        /// <param name="totalNewPages">The number of pages being added in total.</param>
+        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages)
         {
-            if (indexOfNewPage < mergeConfig.InsertIndices.Count)
+            if (!mergeConfig.InsertReversed)
             {
-                return mergeConfig.InsertIndices[indexOfNewPage];
+                // insert normally
+                if (indexOfNewPage < mergeConfig.InsertIndices.Count)
+                {
+                    return mergeConfig.InsertIndices[indexOfNewPage];
+                }
+                else
+                {
+                    // surplus page
+                    return mergeConfig.SurplusPagesIndex + indexOfNewPage - mergeConfig.InsertIndices.Count;
+                }
             }
             else
             {
-                // surplus page
-                return mergeConfig.SurplusPagesIndex + indexOfNewPage - mergeConfig.InsertIndices.Count;
+                // insert reversed
+                if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                {
+                    return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                }
+                else
+                {
+                    // surplus page
+                    return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                }
             }
         }
 
