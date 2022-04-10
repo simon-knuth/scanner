@@ -36,6 +36,15 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void Page_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.LogExportDialogRequested -= ViewModel_LogExportDialogRequestedAsync;
+            ViewModel.LicensesDialogRequested -= ViewModel_LicensesDialogRequested;
+            ViewModel.ChangelogRequested -= ViewModel_ChangelogRequested;
+            ViewModel.SettingsSectionRequested -= ViewModel_SettingsSectionRequested;
+            ViewModel.CustomFileNamingDialogRequested -= ViewModel_CustomFileNamingDialogRequested;
+        }
+
         private async void ViewModel_SettingsSectionRequested(object sender, SettingsSection section)
         {
             WinUI.Expander requestedExpander = ConvertSettingsSection(section);

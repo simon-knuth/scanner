@@ -14,7 +14,8 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:helpers="using:Scanner.Helpers"
     d:DesignWidth="350"
-    d:DesignHeight="600">
+    d:DesignHeight="600"
+    Unloaded="Page_Unloaded">
 
     <Page.DataContext>
         <viewModels:SettingsViewModel x:Name="ViewModel"/>
