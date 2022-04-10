@@ -1,16 +1,13 @@
-﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.Graphics.Canvas;
+﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner.Models;
 using Scanner.Services;
-using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -28,7 +25,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-using static Globals;
 using static Utilities;
 
 
@@ -117,7 +113,7 @@ namespace Scanner
         ///     Create a <see cref="ScanResult"/> without conversion.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, int futureAccessListIndexStart)
+            StorageFolder targetFolder, int futureAccessListIndexStart, ScanOptions scanOptions)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -128,19 +124,14 @@ namespace Scanner
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
 
             // construct ScanResult
-            for (int i = 0; i < fileList.Count; i++)
+            List<StorageFile> files = fileList.ToList();
+            for (int i = 0; i < files.Count; i++)
             {
-                await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, RemoveNumbering(fileList[i].Name), false);
+                files[i] = await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, GetInitialName(scanOptions), false);
             }
 
-            ScanResult result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
+            ScanResult result = new ScanResult(files, targetFolder, futureAccessListIndexStart, false);
             result.ScanResultFormat = result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
-
-            // set initial name(s)
-            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
-            {
-                try { await result.SetInitialNamesAsync(); } catch (Exception) { }
-            }
 
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
@@ -157,7 +148,7 @@ namespace Scanner
                         instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
                 }
-                
+
                 // apply recommendations
                 if (instructions.Count > 0)
                 {
@@ -184,8 +175,8 @@ namespace Scanner
         /// <summary>
         ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>.
         /// </summary>
-        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, ImageScannerFormat targetFormat, int futureAccessListIndexStart)
+        public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder,
+            ImageScannerFormat targetFormat, int futureAccessListIndexStart, ScanOptions scanOptions)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -200,7 +191,7 @@ namespace Scanner
             if (targetFormat == ImageScannerFormat.Pdf)
             {
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
-                string pdfName = fileList[0].DisplayName + ".pdf";
+                string pdfName = GetInitialName(scanOptions);
 
                 // convert all source files to JPG for optimized size
                 IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
@@ -220,17 +211,12 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
-                    await result.ConvertPageAsync(i, targetFormat, targetFolder);
+                    await result.ConvertPageAsync(i, targetFormat, targetFolder, GetInitialName(scanOptions));
                 }
+                result.RefreshItemDescriptors();
             }
             result.ScanResultFormat = targetFormat;
-            result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
-
-            // set initial name(s)
-            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
-            {
-                try { await result.SetInitialNamesAsync(); } catch (Exception) { }
-            }
+            result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(result.GetImageFile(0).FileType);
 
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
@@ -247,7 +233,7 @@ namespace Scanner
                         instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
                 }
-                
+
                 // apply recommendations
                 if (instructions.Count > 0)
                 {
@@ -518,7 +504,7 @@ namespace Scanner
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="NotImplementedException">Attempted to convert to PDF or (O)XPS.</exception>
         /// <exception cref="ApplicationException">Could not determine file type of scan.</exception>
-        public async Task ConvertPageAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
+        public async Task ConvertPageAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder, string desiredName)
         {
             LogService?.Log.Information("Conversion of index {Index} into {TargetFormat} with folder requested.", index, targetFormat);
             // check index
@@ -528,9 +514,16 @@ namespace Scanner
                 throw new ArgumentOutOfRangeException("Invalid index for conversion.");
             }
 
-            // convert
             StorageFile sourceFile = _Elements[index].ScanFile;
-            string newName, newNameWithoutNumbering;
+
+            // check desired name
+            if (desiredName == null)
+            {
+                desiredName = sourceFile.DisplayName + ConvertImageScannerFormatToString(targetFormat);
+            }
+
+            // convert
+            string newName;
             switch (targetFormat)
             {
                 case ImageScannerFormat.Jpeg:
@@ -556,13 +549,8 @@ namespace Scanner
                         }
                     }
 
-                    // get new file name with updated extension
-                    newNameWithoutNumbering = RemoveNumbering(sourceFile.Name
-                        .Replace("." + sourceFile.Name.Split(".")[1], "." + targetFormat.ToString().ToLower()));
-                    newName = newNameWithoutNumbering;
-
                     // move file to the correct folder
-                    newName = await HelperService.MoveFileToFolderAsync(sourceFile, targetFolder, newName, false);
+                    newName = (await HelperService.MoveFileToFolderAsync(sourceFile, targetFolder, desiredName, false)).Name;
                     break;
 
                 case ImageScannerFormat.Pdf:
@@ -578,6 +566,12 @@ namespace Scanner
 
             // refresh file
             _Elements[index].ScanFile = await targetFolder.GetFileAsync(newName);
+        }
+
+
+        public Task ConvertPageAsync(int index, ImageScannerFormat targetFormat, StorageFolder targetFolder)
+        {
+            return ConvertPageAsync(index, targetFormat, targetFolder, null);
         }
 
 
@@ -1462,12 +1456,11 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder,
-            int futureAccessListIndexStart, ScanMergeConfig mergeConfig)
+            int futureAccessListIndexStart, ScanMergeConfig mergeConfig, ScanOptions scanOptions)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
 
-            string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
             if (targetFormat == null || targetFormat == ImageScannerFormat.Pdf)
             {
                 // no conversion (but perhaps generation later on), just add files for now
@@ -1510,13 +1503,8 @@ namespace Scanner
                         if (targetFormat != ImageScannerFormat.Pdf)
                         {
                             // move file to the correct folder
-                            await HelperService.MoveFileToFolderAsync(file, targetFolder, file.Name, false);
+                            await HelperService.MoveFileToFolderAsync(file, targetFolder, GetInitialName(scanOptions), false);
                         }
-                    }
-
-                    if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime) && targetFormat != ImageScannerFormat.Pdf)
-                    {
-                        await SetInitialNameAsync(_Elements[insertIndex], append);
                     }
                 }
             }
@@ -1538,11 +1526,6 @@ namespace Scanner
                         StorageApplicationPermissions.FutureAccessList.AddOrReplace("Scan_" + futureAccessListIndex.ToString(), targetFolder);
                         futureAccessListIndex += 1;
                     }
-
-                    if ((bool)SettingsService.GetSetting(AppSetting.SettingAppendTime))
-                    {
-                        await SetInitialNameAsync(_Elements[_Elements.Count - 1], append);
-                    }
                 }
 
                 Task[] conversionTasks = new Task[files.Count()];
@@ -1550,7 +1533,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
-                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder);
+                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder, GetInitialName(scanOptions));
                     }
                 }
                 catch (Exception exc)
@@ -1587,7 +1570,7 @@ namespace Scanner
                     {
                         indexInResult = GetNewIndexAccordingToMergeConfig(i, mergeConfig);
                     }
-                    
+
                     ScanResultElement element = Elements[indexInResult];
                     ImageScannerFormat? format = ConvertFormatStringToImageScannerFormat(element.ScanFile.FileType);
                     BitmapRotation recommendation = await AutoRotatorService.TryGetRecommendedRotationAsync(element.ScanFile, (ImageScannerFormat)format);
@@ -1641,9 +1624,9 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart,
-            ScanMergeConfig mergeConfig)
+            ScanMergeConfig mergeConfig, ScanOptions scanOptions)
         {
-            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig);
+            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig, scanOptions);
         }
 
 
@@ -1818,7 +1801,7 @@ namespace Scanner
         public async Task ApplyElementOrderToFilesAsync()
         {
             LogService?.Log.Information("Applying element order to files.");
-            
+
             if (GetFileFormat() != ImageScannerFormat.Pdf)
             {
                 LogService?.Log.Error("Attempted to apply element order to non-PDF file.");
@@ -1851,7 +1834,6 @@ namespace Scanner
             await GeneratePDF();
         }
 
-
         /// <summary>
         ///     Refreshes all item descriptors of <see cref="_Elements"/>.
         /// </summary>
@@ -1862,7 +1844,6 @@ namespace Scanner
                 _Elements[i].ItemDescriptor = GetDescriptorForIndex(i);
             }
         }
-
 
         /// <summary>
         ///     Gets a specific item descriptor.
@@ -1880,49 +1861,27 @@ namespace Scanner
             }
         }
 
-
         /// <summary>
-        ///     Sets the name of the elements or the PDF file to their initial value.
+        ///     Constructs the initial name for a file according to the supplied <paramref name="scanOptions"/>.
         /// </summary>
-        protected async Task SetInitialNameAsync(ScanResultElement element, string append)
+        protected static string GetInitialName(ScanOptions scanOptions)
         {
-            string baseName = element.ScanFile.Name;
-            RemoveNumbering(baseName);
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
-            string baseDisplayName = baseName.Split(".")[0];
+            // base name
+            string name = $"SCN_{DateTime.Now.Year}{DateTime.Now.Month.ToString("00")}{DateTime.Now.Day.ToString("00")}";
 
-            await element.RenameFileAsync(baseDisplayName + "_" + append + element.ScanFile.FileType, NameCollisionOption.GenerateUniqueName);
-        }
-
-        protected async Task SetInitialNameAsync(StorageFile file, string append)
-        {
-            string baseName = file.Name;
-            RemoveNumbering(baseName);
-
-            string baseDisplayName = baseName.Split(".")[0];
-
-            await file.RenameAsync(baseDisplayName + "_" + append + file.FileType, NameCollisionOption.GenerateUniqueName);
-            RefreshItemDescriptors();
-        }
-
-        protected async Task SetInitialNamesAsync()
-        {
-            string append = DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00");
-
-            if (ScanResultFormat == ImageScannerFormat.Pdf)
+            // append time
+            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
             {
-                await SetInitialNameAsync(Pdf, append);
+                name += $"_{DateTime.Now.Hour.ToString("00")}{DateTime.Now.Minute.ToString("00")}{DateTime.Now.Second.ToString("00")}";
             }
-            else
-            {
-                foreach (ScanResultElement element in _Elements)
-                {
-                    await SetInitialNameAsync(element, append);
-                }
-                RefreshItemDescriptors();
-            }
-        }
 
+            // file extension
+            name += ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat);
+
+            return name;
+        }
 
         /// <summary>
         ///     Duplicates the selected page and adds it to the instance (right behind its

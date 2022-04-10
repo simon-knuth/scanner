@@ -165,27 +165,6 @@ static class Utilities
     }
 
     /// <summary>
-    ///     Removes brackets, their content and the leading whitespace from <paramref name="input"/>.
-    /// </summary>
-    /// <param name="input">A string like "abc (def).xyz", of which " (def)" shall be removed.</param>
-    public static string RemoveNumbering(string input)
-    {
-        // expect string like "abc (def).xyz" and deliver "abc.xyz"
-        string name = input.Substring(0, input.LastIndexOf("."));           // get name without file extension
-        string extension = input.Substring(input.LastIndexOf("."));         // get file extension (with ".")
-
-        if (name[name.Length - 1] == ')' && name.Contains(" ("))
-        {
-            name = name.Substring(0, name.LastIndexOf(" ("));
-            return name + extension;
-        }
-        else
-        {
-            return input;
-        }
-    }
-
-    /// <summary>
     ///     Adapts the titlebar buttons to the current theme.
     /// </summary>
     public static void UpdateTheme(UISettings uISettings, object theObject)
