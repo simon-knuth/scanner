@@ -1400,14 +1400,6 @@ Los formatos soportados son PDF, JPG, PNG, TIF y BMP.</value>
     <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
-  <data name="StoreUpdate3.0.0.0" xml:space="preserve">
-    <value>Esta actualización incluye soporte oficial para Windows 11 con un hermoso diseño nuevo que coincide con el resto del sistema.
-
-Descubre nuevas características, como la muy solicitada capacidad de reutilizar sus opciones de escaneo anteriores para que no tengas que seleccionar el formato &quot;PDF&quot; cada vez, así como algunas otras características inteligentes como la rotación automática, que te permite poner sus páginas en la superficie de escaneo sin tener que preocuparse por su orientación.
-
-Si estas utilizando un escáner más profesional, ahora puedes aplicar opciones avanzadas de escaneo como el recorte automático, la selección automática del modo de color y el ajuste de brillo/contraste. Estas opciones requieren un escáner compatible y deben habilitarse en la configuración de la aplicación.</value>
-    <comment>A description of what&apos;s new with this update.</comment>
-  </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Scanner</value>
     <comment>App title for voice control.</comment>

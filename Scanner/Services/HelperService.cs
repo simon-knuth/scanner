@@ -52,7 +52,7 @@ namespace Scanner.Services
             }
         }
 
-        public async Task<string> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
+        public async Task<StorageFile> MoveFileToFolderAsync(StorageFile file, StorageFolder targetFolder, string desiredName, bool replaceExisting)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
 
@@ -70,7 +70,7 @@ namespace Scanner.Services
                 catch (Exception) { throw; }
             }
 
-            return file.Name;
+            return await targetFolder.GetFileAsync(file.Name);
         }
 
         public async Task<BitmapImage> GenerateBitmapFromFileAsync(StorageFile file)
