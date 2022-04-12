@@ -68,7 +68,8 @@ namespace Scanner.Services
         SettingAnimations,
         SettingScanAction,
         SettingMeasurementUnits,
-        TutorialScanMergeShown
+        TutorialScanMergeShown,
+        SettingAppLanguage
     }
 
     public enum SettingSaveLocationType

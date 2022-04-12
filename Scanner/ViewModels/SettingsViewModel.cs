@@ -6,7 +6,9 @@ using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Globalization;
 using Windows.Storage;
 using Windows.System;
 using static Enums;
@@ -143,6 +145,12 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingMeasurementUnits, value);
         }
 
+        public string SettingAppLanguage
+        {
+            get => (string)SettingsService.GetSetting(AppSetting.SettingAppLanguage);
+            set => SettingsService.SetSetting(AppSetting.SettingAppLanguage, value);
+        }
+
         private bool _IsScanInProgress;
         public bool IsScanInProgress
         {
@@ -151,6 +159,8 @@ namespace Scanner.ViewModels
         }
 
         public string CurrentVersion => GetCurrentVersion();
+
+        public List<string> AvailableAppLanguages = new List<string>();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +187,14 @@ namespace Scanner.ViewModels
             SetAutoRotateLanguageCommand = new RelayCommand<string>((x) => SetAutoRotateLanguage(int.Parse(x)));
             LaunchLanguageSettingsCommand = new AsyncRelayCommand(LaunchLanguageSettings);
             DisplayCustomFileNamingDialogCommand = new RelayCommand(DisplayCustomFileNamingDialog);
+
+            // prepare language list
+            foreach (string languageString in ApplicationLanguages.ManifestLanguages)
+            {
+                AvailableAppLanguages.Add(languageString);
+            }
+            AvailableAppLanguages = AvailableAppLanguages.OrderBy((x) => new Language(x).DisplayName).ToList();
+            AvailableAppLanguages.Insert(0, "");
         }
 
 

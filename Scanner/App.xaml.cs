@@ -10,6 +10,7 @@ using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Globalization;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -99,6 +100,25 @@ namespace Scanner
             settingsService.SetSetting(AppSetting.IsFirstAppLaunchWithThisVersion, currentVersionNumber != previousVersionNumber);
             settingsService.SetSetting(AppSetting.IsFirstAppLaunchEver, String.IsNullOrEmpty(previousVersionNumber));
             settingsService.SetSetting(AppSetting.LastKnownVersion, currentVersionNumber);
+
+            // set app language
+            string languageTag = (string)settingsService.GetSetting(AppSetting.SettingAppLanguage);
+            if (!string.IsNullOrEmpty(languageTag))
+            {
+                // custom language selected
+                if (ApplicationLanguages.PrimaryLanguageOverride != languageTag)
+                {
+                    ApplicationLanguages.PrimaryLanguageOverride = languageTag;
+                }
+            }
+            else
+            {
+                // no custom language selected
+                if (!string.IsNullOrEmpty(ApplicationLanguages.PrimaryLanguageOverride))
+                {
+                    ApplicationLanguages.PrimaryLanguageOverride = "";
+                }
+            }
 
             Frame rootFrame = Window.Current.Content as Frame;
 

@@ -12,7 +12,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:helpers="using:Scanner.Helpers" xmlns:globalization="using:Windows.Globalization" xmlns:system="using:System"
     d:DesignWidth="350"
     d:DesignHeight="600"
     Unloaded="Page_Unloaded">
@@ -38,6 +38,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- XAML Converters -->
+            <converters:AppLanguageSettingConverter x:Key="AppLanguageSettingConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
@@ -462,7 +463,7 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
-                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" FontWeight="SemiBold" />
                                 <ComboBoxItem x:Uid="OptionSettingsThemeLight"/>
                                 <ComboBoxItem x:Uid="OptionSettingsThemeDark"/>
                             </ComboBox>
@@ -513,7 +514,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Animations -->
-                <muxc:Expander x:Name="ExpanderAnimations" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAnimations.Text}">
+                <muxc:Expander x:Name="ExpanderAnimations" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAnimations.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -527,6 +528,34 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                         <CheckBox x:Uid="OptionSettingsAnimations" IsChecked="{x:Bind ViewModel.SettingAnimations, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting App Language -->
+                <muxc:Expander x:Name="ExpanderAppLanguage" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAppLanguage.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF2B7;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsAppLanguage" Grid.Column="1" x:Uid="HeadingSettingsAppLanguage" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <ComboBox x:Uid="OptionSettingsAppLanguage" HorizontalAlignment="Stretch" IsTextSearchEnabled="True" ItemsSource="{x:Bind ViewModel.AvailableAppLanguages}" SelectedItem="{x:Bind ViewModel.SettingAppLanguage, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="system:String">
+                                        <TextBlock Text="{x:Bind Converter={StaticResource AppLanguageSettingConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <TextBlock x:Uid="TextSettingsRestart" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
 

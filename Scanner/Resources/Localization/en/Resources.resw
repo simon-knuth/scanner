@@ -1621,4 +1621,12 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>Last page</value>
     <comment>The desciption for the last page added in "Scan and merge" when the insertion direction is reversed.</comment>
   </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>App language</value>
+    <comment>The heading for the "App language" option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>System setting</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
 </root>

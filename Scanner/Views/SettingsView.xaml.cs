@@ -1,13 +1,13 @@
-﻿using WinUI = Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls;
+﻿using Scanner.Views.Dialogs;
 using System;
-using Scanner.Views.Dialogs;
-using Windows.UI.Core;
-using static Utilities;
+using System.Threading.Tasks;
 using Windows.Globalization;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using static Enums;
-using System.Threading.Tasks;
+using static Utilities;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace Scanner.Views
 {

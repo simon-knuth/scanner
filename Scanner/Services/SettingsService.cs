@@ -270,6 +270,9 @@ namespace Scanner.Services
                 case AppSetting.TutorialScanMergeShown:
                     return SettingsContainer.Values[name] ?? false;
 
+                case AppSetting.SettingAppLanguage:
+                    return SettingsContainer.Values[name] ?? "";
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -382,6 +385,10 @@ namespace Scanner.Services
 
                 case AppSetting.TutorialScanMergeShown:
                     SettingsContainer.Values[name] = (bool)value;
+                    break;
+
+                case AppSetting.SettingAppLanguage:
+                    SettingsContainer.Values[name] = (string)value;
                     break;
 
                 default:
