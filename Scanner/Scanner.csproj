@@ -153,6 +153,7 @@
     <Compile Include="Services\Interfaces\IAutoRotatorService.cs" />
     <Compile Include="Services\Interfaces\IPdfService.cs" />
     <Compile Include="Services\Interfaces\IPersistentScanOptionsDatabaseService.cs" />
+    <Compile Include="Services\Messenger\Messages\SelectedScannerRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\SelectedScannerChangedMessage.cs" />
     <Compile Include="Services\Messenger\Messages\ScanMergeDialogRequestMessage.cs" />
     <Compile Include="Services\Messenger\Messages\PreviewDialogRequestMessage.cs" />

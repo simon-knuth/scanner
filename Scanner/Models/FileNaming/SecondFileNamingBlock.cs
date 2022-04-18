@@ -23,7 +23,7 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _DisplayName, value);
         }
 
-        private bool _Use2Digits;
+        private bool _Use2Digits = true;
         public bool Use2Digits
         {
             get => _Use2Digits;

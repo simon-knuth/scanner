@@ -1,7 +1,9 @@
-﻿namespace Scanner.Models.FileNaming
+﻿using System.ComponentModel;
+
+namespace Scanner.Models.FileNaming
 {
-    public interface IFileNamingBlock
-    {
+    public interface IFileNamingBlock : INotifyPropertyChanged
+    {       
         string Glyph
         {
             get;

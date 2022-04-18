@@ -55,7 +55,7 @@ namespace Scanner.Models.FileNaming
                 result += block.ToString(scanOptions, scanner);
             }
 
-            return result;
+            return result + ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat);
         }
 
         public string GetSerialized()

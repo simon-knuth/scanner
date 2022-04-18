@@ -446,6 +446,7 @@ namespace Scanner.ViewModels
                 m.Reply(new Tuple<DiscoveredScanner, ScanOptions>(SelectedScanner, CreateScanOptions())));
             Messenger.Register<PreviewSelectedRegionChangedMessage>(this, (r, m) => SelectedScanRegion = m.Value);
             Messenger.Register<ScanMergeRequestMessage>(this, (r, m) => ScanMergeCommand.Execute(m.ScanMergeConfig));
+            Messenger.Register<SelectedScannerRequestMessage>(this, (r, m) => m.Reply(SelectedScanner));
 
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);

@@ -20,6 +20,13 @@ namespace Scanner.Models.FileNaming
             get => "Brightness";
         }
 
+        private bool _SkipIfDefault = true;
+        public bool SkipIfDefault
+        {
+            get => _SkipIfDefault;
+            set => SetProperty(ref _SkipIfDefault, value);
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +49,38 @@ namespace Scanner.Models.FileNaming
         {
             if (scanOptions.Brightness != null)
             {
-                return scanOptions.Brightness.Value.ToString();
+                if (SkipIfDefault && scanOptions.Brightness != null)
+                {
+                    switch (scanOptions.Source)
+                    {
+                        case Enums.ScannerSource.Flatbed:
+                            if (scanOptions.Brightness != scanner.FlatbedBrightnessConfig.DefaultBrightness)
+                            {
+                                return scanOptions.Brightness.Value.ToString();
+                            }
+                            else
+                            {
+                                return "";
+                            }
+                        case Enums.ScannerSource.Feeder:
+                            if (scanOptions.Brightness != scanner.FeederBrightnessConfig.DefaultBrightness)
+                            {
+                                return scanOptions.Brightness.Value.ToString();
+                            }
+                            else
+                            {
+                                return "";
+                            }
+                        default:
+                        case Enums.ScannerSource.None:
+                        case Enums.ScannerSource.Auto:
+                            return "";
+                    }
+                }
+                else
+                {
+                    return scanOptions.Brightness.Value.ToString();
+                }
             }
             else
             {
@@ -52,7 +90,7 @@ namespace Scanner.Models.FileNaming
 
         public string GetSerialized()
         {
-            return $"*{Name}";
+            return $"*{Name}|{SkipIfDefault}";
         }
     }
 }

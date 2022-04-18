@@ -20,7 +20,7 @@ namespace Scanner.Models.FileNaming
             get => "File type";
         }
 
-        private bool _AllCaps;
+        private bool _AllCaps = true;
         public bool AllCaps
         {
             get => _AllCaps;
@@ -52,11 +52,11 @@ namespace Scanner.Models.FileNaming
         {
             if (AllCaps)
             {
-                return scanOptions.Format.TargetFormat.ToString().ToUpper();
+                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).ToUpper().Split(".")[1];
             }
             else
             {
-                return scanOptions.Format.TargetFormat.ToString();
+                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).Split(".")[1];
             }
         }
 

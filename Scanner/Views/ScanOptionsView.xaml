@@ -718,7 +718,7 @@
                 </Button>
             </StackPanel>
 
-            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanDefaultCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="24,0,24,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
+            <muxc:SplitButton x:Name="ButtonScan" Style="{StaticResource SplitButtonStyleAccent}" Command="{x:Bind ViewModel.ScanDefaultCommand}" IsEnabled="False" Height="40" MinWidth="100" Margin="14,0,14,0" AutomationProperties.Name="{x:Bind TextBlockButtonScan.Text}" HorizontalAlignment="Right" RightTapped="ButtonScan_RightTapped">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedScanner, Mode=OneWay}" ComparisonCondition="Equal" Value="{x:Null}">
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>

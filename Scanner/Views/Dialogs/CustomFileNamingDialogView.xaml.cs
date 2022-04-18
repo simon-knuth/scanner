@@ -65,63 +65,6 @@ namespace Scanner.Views.Dialogs
             });
         }
 
-        private async void ListViewPattern_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetView().AvailableFormats.Count > 0)
-            {
-                // new block
-                string block = await e.Data.GetView().GetTextAsync();
-
-                Type type = FileNamingStatics.FileNamingBlocksDictionary[block];
-                Type[] parameterTypes = new Type[0];
-                string[] parameters = new string[0];
-
-                // determine new index
-                int insertIndex = 0;
-                for (int i = 0; i < ((ListView)sender).Items.Count; i++)
-                {
-                    // check position relative to each existing item's container
-                    ListViewItem container = ((ListView)sender).ContainerFromIndex(i) as ListViewItem;
-                    var point = container.TransformToVisual(ListViewPattern).TransformPoint(new Windows.Foundation.Point(0, 0));
-                    if (e.GetPosition(container).X < 0)
-                    {
-                        // in front of this item
-                        insertIndex = i;
-                        break;
-                    }
-                    else
-                    {
-                        // behind this item
-                        if (i == ((ListView)sender).Items.Count - 1)
-                        {
-                            // inserted behind last item
-                            insertIndex = i + 1;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                ViewModel.SelectedBlocks.Insert(insertIndex, type.GetConstructor(parameterTypes).Invoke(parameters) as IFileNamingBlock);
-                e.Handled = true;
-            }
-            else
-            {
-                // existing block
-                e.Handled = false;
-            }            
-        }
-
-        private void ListViewPattern_DragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
-            e.DragUIOverride.IsCaptionVisible = false;
-            e.DragUIOverride.IsGlyphVisible = false;
-            e.Handled = true;
-        }
-
         private void AppBarButton_Loaded(object sender, RoutedEventArgs e)
         {
             // get all available blocks
@@ -170,7 +113,7 @@ namespace Scanner.Views.Dialogs
                 }
 
                 item.Command = ViewModel.AddBlockCommand;
-                item.CommandParameter = block;
+                item.CommandParameter = block.Name;
 
                 if (block.GetType() == typeof(TextFileNamingBlock))
                 {
