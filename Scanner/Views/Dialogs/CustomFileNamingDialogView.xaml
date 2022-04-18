@@ -13,7 +13,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:customcontrols="using:Scanner.Controls" xmlns:ui="using:Microsoft.Toolkit.Uwp.UI" xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media" xmlns:system="using:System" xmlns:filenaming="using:Scanner.Models.FileNaming"
+    xmlns:filenaming="using:Scanner.Models.FileNaming" xmlns:ui="using:Microsoft.Toolkit.Uwp.UI" xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     PrimaryButtonText="Confirm"
@@ -60,9 +60,8 @@
 
     <Grid ColumnSpacing="24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" MinHeight="80" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -72,488 +71,193 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Padding="24,0,24,0" Margin="-24,0,-24,24">
-            <TextBlock x:Uid="TextCustomFileNamingExplanation" Style="{StaticResource BodyTextBlockStyle}" Text="Drag and drop some content blocks to build your own dynamic file naming pattern. Select a block to modify its output or remove it."/>
+        <!-- Stretch ContentDialog -->
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Width="1000" Background="Transparent" />
+
+        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Padding="24,0,24,0" Margin="-24,0,-24,0">
+            <TextBlock x:Uid="TextCustomFileNamingExplanation" Style="{StaticResource BodyTextBlockStyle}" Text="Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or remove it."/>
         </ScrollViewer>
         
-        <!-- Blocks -->
-        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Padding="0,0,0,16" Margin="-24,0,-24,0">
-            <controls:AdaptiveGridView x:Name="AdaptiveGridViewBlocks" CanDragItems="True" SelectionMode="None" Padding="0" Margin="28,0,28,0" IsItemClickEnabled="False" ItemsSource="{x:Bind ViewModel.AvailableBlocks}" DragItemsStarting="AdaptiveGridViewBlocks_DragItemsStarting">
-                <GridView.ItemsPanel>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="-24,24,-24,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ListView x:Name="ListViewPattern" Grid.Column="0" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="20,12,20,12" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" Drop="ListViewPattern_Drop" DragOver="ListViewPattern_DragOver" ItemClick="ListViewPattern_ItemClick">
+                <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <controls:WrapPanel Orientation="Horizontal" />
+                        <ItemsStackPanel Orientation="Horizontal" ItemsUpdatingScrollMode="KeepLastItemInView" />
                     </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
+                </ListView.ItemsPanel>
 
-                <GridView.ItemContainerTransitions>
+                <ListView.ItemContainerTransitions>
                     <TransitionCollection>
-                        <EntranceThemeTransition FromVerticalOffset="16" IsStaggeringEnabled="True" />
+                        <AddDeleteThemeTransition />
+                        <EntranceThemeTransition FromVerticalOffset="0" IsStaggeringEnabled="False" />
+                        <ReorderThemeTransition />
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
                     </TransitionCollection>
-                </GridView.ItemContainerTransitions>
+                </ListView.ItemContainerTransitions>
 
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <Grid CornerRadius="{StaticResource ControlCornerRadius}" AllowDrop="False" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
-                            <!-- Block -->
-                            <controls:SwitchPresenter Value="{x:Bind}" VerticalAlignment="Stretch" Padding="4,0,4,0">
-                                <!-- Text -->
-                                <controls:Case Value="TEXT">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Path=Text, Mode=TwoWay}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                    </StackPanel>
-                                </controls:Case>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="filenaming:IFileNamingBlock">
+                        <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                            <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
+                                <!-- Block -->
+                                <StackPanel Orientation="Horizontal" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind Glyph}" FontSize="16" Margin="0,0,8,0" Visibility="{x:Bind Glyph, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
+                                    <controls:SwitchPresenter Value="{x:Bind Name}">
+                                        <controls:Case IsDefault="True">
+                                            <TextBlock Text="{Binding Path=DisplayName, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </controls:Case>
 
-                                <!-- Date -->
-                                <controls:Case Value="DATE">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                        <TextBlock Text="Date" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                        <controls:Case Value="TEXT">
+                                            <TextBlock Text="{Binding Path=Text, Mode=OneWay, FallbackValue=ERROR}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
+                                        </controls:Case>
+                                    </controls:SwitchPresenter>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <!-- Block flyout -->
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout x:Name="FlyoutBlock">
+                                    <StackPanel Orientation="Vertical" Spacing="16" MinWidth="250" MaxWidth="250">
+                                        <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch">
+                                            <!-- Text -->
+                                            <controls:Case Value="TEXT">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <TextBlock Text="Text" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- Time -->
-                                <controls:Case Value="TIME">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                        <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                            <!-- Date -->
+                                            <controls:Case Value="DATE">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock Text="Date" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- Resolution -->
-                                <controls:Case Value="RESOLUTION">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
-                                        <TextBlock Text="Resolution" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                            <!-- Hour -->
+                                            <controls:Case Value="HOUR">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock Text="Hour" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="24-hours" IsChecked="{Binding Path=Use24Hours, Mode=TwoWay}" />
+                                                    <CheckBox Content="Always two digits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- File type -->
-                                <controls:Case Value="FILETYPE">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
-                                        <TextBlock Text="File type" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                            <!-- Minute -->
+                                            <controls:Case Value="MINUTE">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock Text="Minute" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="Always two digits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- Scanner name -->
-                                <controls:Case Value="SCANNERNAME">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
-                                        <TextBlock Text="Scanner name" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                            <!-- Second -->
+                                            <controls:Case Value="SECOND">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock Text="Second" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="Always two digits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- Brightness -->
-                                <controls:Case Value="BRIGHTNESS">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                        <TextBlock Text="Brightness adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
-                                    </StackPanel>
-                                </controls:Case>
+                                            <!-- Resolution -->
+                                            <controls:Case Value="RESOLUTION">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
+                                                    <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" />
+                                                </StackPanel>
+                                            </controls:Case>
 
-                                <!-- Contrast -->
-                                <controls:Case Value="CONTRAST">
-                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                        <TextBlock Text="Contrast adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <!-- File type -->
+                                            <controls:Case Value="FILETYPE">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
+                                                        <TextBlock Text="File type" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Scanner name -->
+                                            <controls:Case Value="SCANNERNAME">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
+                                                        <TextBlock Text="Scanner name" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Brightness -->
+                                            <controls:Case Value="BRIGHTNESS">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
+                                                        <TextBlock Text="Brightness adjustment" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Contrast -->
+                                            <controls:Case Value="CONTRAST">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
+                                                    <TextBlock Text="Contrast adjustment" Style="{StaticResource BaseTextBlockStyle}" />
+                                                </StackPanel>
+                                            </controls:Case>
+                                        </controls:SwitchPresenter>
+
+                                        <Grid ColumnSpacing="6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Name="ButtonDoneEditingBlock" Grid.Column="0" HorizontalAlignment="Stretch" Content="Done" Style="{ThemeResource AccentButtonStyle}" Tag="{x:Bind}" Click="ButtonDoneEditingBlock_Click" />
+                                            <Button x:Name="ButtonDeleteBlock" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" CommandParameter="{x:Bind}" Click="ButtonDeleteBlock_Click" />
+                                        </Grid>
                                     </StackPanel>
-                                </controls:Case>
-                            </controls:SwitchPresenter>
-                        </Grid>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </ListViewItem>
                     </DataTemplate>
-                </GridView.ItemTemplate>
-            </controls:AdaptiveGridView>
-        </ScrollViewer>
-        
-        <!-- Pattern -->
-        <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="-17,12,-17,0">
-            <ui:Effects.Shadow>
-                <media:AttachedCardShadow BlurRadius="4" CornerRadius="10" Color="Black" Offset="0,2" Opacity="0.05"/>
-            </ui:Effects.Shadow>
+                </ListView.ItemTemplate>
+            </ListView>
 
-            <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Visible">
-                <StackPanel Orientation="Vertical">
-                    <controls:AdaptiveGridView x:Name="AdaptiveGridViewPattern" CanReorderItems="True" Padding="0" Margin="20,12,20,10" MinHeight="48" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ItemClick="AdaptiveGridViewPattern_ItemClick">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls:WrapPanel Orientation="Horizontal" VerticalSpacing="0" />
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
+            <Border Grid.Column="1" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1,0,0,0" Padding="3,0,4,0">
+                <AppBarButton LabelPosition="Collapsed" VerticalAlignment="Center" MaxWidth="300" HorizontalContentAlignment="Stretch" Style="{StaticResource AppBarButtonStyleCompact}" Click="AppBarButton_Click" Loaded="AppBarButton_Loaded">
+                    <AppBarButton.Icon>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE109;" FontSize="16" />
+                    </AppBarButton.Icon>
 
-                        <GridView.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromVerticalOffset="0" IsStaggeringEnabled="False" />
-                            </TransitionCollection>
-                        </GridView.ItemContainerTransitions>
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout x:Name="MenuFlyoutAddBlock" />
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+            </Border>
+        </Grid>
 
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="filenaming:IFileNamingBlock">
-                                <Grid CornerRadius="{StaticResource ControlCornerRadius}" AllowDrop="False" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
-                                    <!-- Block -->
-                                    <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch" Padding="4,0,4,0">
-                                        <!-- Text -->
-                                        <controls:Case Value="TEXT">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Path=Text, Mode=TwoWay}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Date -->
-                                        <controls:Case Value="DATE">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                <TextBlock Text="Date" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Time -->
-                                        <controls:Case Value="TIME">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                                <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Resolution -->
-                                        <controls:Case Value="RESOLUTION">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
-                                                <TextBlock Text="Resolution" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- File type -->
-                                        <controls:Case Value="FILETYPE">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
-                                                <TextBlock Text="File type" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Scanner name -->
-                                        <controls:Case Value="SCANNERNAME">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
-                                                <TextBlock Text="Scanner name" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Brightness -->
-                                        <controls:Case Value="BRIGHTNESS">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                <TextBlock Text="Brightness adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Contrast -->
-                                        <controls:Case Value="CONTRAST">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                <TextBlock Text="Contrast adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-                                    </controls:SwitchPresenter>
-
-                                    <!-- Block flyout -->
-                                    <FlyoutBase.AttachedFlyout>
-                                        <Flyout x:Name="FlyoutBlock">
-                                            <StackPanel Orientation="Vertical" Spacing="16" MinWidth="250" MaxWidth="250">
-                                                <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch">
-                                                    <!-- Text -->
-                                                    <controls:Case Value="TEXT">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <TextBlock Text="Text" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            <TextBox Text="{Binding Path=Text, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Date -->
-                                                    <controls:Case Value="DATE">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                                <TextBlock Text="Date" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Time -->
-                                                    <controls:Case Value="TIME">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                                                <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Resolution -->
-                                                    <controls:Case Value="RESOLUTION">
-                                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
-                                                            <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- File type -->
-                                                    <controls:Case Value="FILETYPE">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
-                                                                <TextBlock Text="File type" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                            <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Scanner name -->
-                                                    <controls:Case Value="SCANNERNAME">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
-                                                                <TextBlock Text="Scanner name" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                            <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Brightness -->
-                                                    <controls:Case Value="BRIGHTNESS">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                                <TextBlock Text="Brightness adjustment" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Contrast -->
-                                                    <controls:Case Value="CONTRAST">
-                                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                            <TextBlock Text="Contrast adjustment" Style="{StaticResource BaseTextBlockStyle}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-                                                </controls:SwitchPresenter>
-
-                                                <Grid ColumnSpacing="6">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <Button Grid.Column="0" HorizontalAlignment="Stretch" Content="Done" Style="{ThemeResource AccentButtonStyle}">
-                                                        <interactivity:Interaction.Behaviors>
-                                                            <core:EventTriggerBehavior EventName="Click">
-                                                                <core:CallMethodAction TargetObject="{Binding FlyoutBlock}" MethodName="Hide" />
-                                                            </core:EventTriggerBehavior>
-                                                        </interactivity:Interaction.Behaviors>
-                                                    </Button>
-                                                    <Button Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" />
-                                                </Grid>
-
-                                            </StackPanel>
-                                        </Flyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </controls:AdaptiveGridView>
-                    <GridView x:Name="GridViewPattern" CanReorderItems="True" Padding="0" Margin="20,12,20,10" MinHeight="48" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ItemClick="AdaptiveGridViewPattern_ItemClick">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls:WrapPanel Orientation="Horizontal" VerticalSpacing="0" />
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-
-                        <GridView.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition FromVerticalOffset="0" IsStaggeringEnabled="False" />
-                            </TransitionCollection>
-                        </GridView.ItemContainerTransitions>
-
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="filenaming:IFileNamingBlock">
-                                <Grid CornerRadius="{StaticResource ControlCornerRadius}" AllowDrop="False" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
-                                    <!-- Block -->
-                                    <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch" Padding="4,0,4,0">
-                                        <!-- Text -->
-                                        <controls:Case Value="TEXT">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Path=Text, Mode=TwoWay}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Date -->
-                                        <controls:Case Value="DATE">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                <TextBlock Text="Date" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Time -->
-                                        <controls:Case Value="TIME">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                                <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Resolution -->
-                                        <controls:Case Value="RESOLUTION">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
-                                                <TextBlock Text="Resolution" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- File type -->
-                                        <controls:Case Value="FILETYPE">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
-                                                <TextBlock Text="File type" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Scanner name -->
-                                        <controls:Case Value="SCANNERNAME">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
-                                                <TextBlock Text="Scanner name" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Brightness -->
-                                        <controls:Case Value="BRIGHTNESS">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                <TextBlock Text="Brightness adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-
-                                        <!-- Contrast -->
-                                        <controls:Case Value="CONTRAST">
-                                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                <TextBlock Text="Contrast adjustment" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </StackPanel>
-                                        </controls:Case>
-                                    </controls:SwitchPresenter>
-
-                                    <!-- Block flyout -->
-                                    <FlyoutBase.AttachedFlyout>
-                                        <Flyout x:Name="FlyoutBlock">
-                                            <StackPanel Orientation="Vertical" Spacing="16" MinWidth="250" MaxWidth="250">
-                                                <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch">
-                                                    <!-- Text -->
-                                                    <controls:Case Value="TEXT">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <TextBlock Text="Text" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            <TextBox Text="{Binding Path=Text, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Date -->
-                                                    <controls:Case Value="DATE">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                                <TextBlock Text="Date" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Time -->
-                                                    <controls:Case Value="TIME">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                                                <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Resolution -->
-                                                    <controls:Case Value="RESOLUTION">
-                                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
-                                                            <TextBlock Text="Resolution" Style="{StaticResource BaseTextBlockStyle}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- File type -->
-                                                    <controls:Case Value="FILETYPE">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
-                                                                <TextBlock Text="File type" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                            <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Scanner name -->
-                                                    <controls:Case Value="SCANNERNAME">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
-                                                                <TextBlock Text="Scanner name" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                            <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Brightness -->
-                                                    <controls:Case Value="BRIGHTNESS">
-                                                        <StackPanel Orientation="Vertical" Spacing="12">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                                <TextBlock Text="Brightness adjustment" Style="{StaticResource BaseTextBlockStyle}" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </controls:Case>
-
-                                                    <!-- Contrast -->
-                                                    <controls:Case Value="CONTRAST">
-                                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
-                                                            <TextBlock Text="Contrast adjustment" Style="{StaticResource BaseTextBlockStyle}" />
-                                                        </StackPanel>
-                                                    </controls:Case>
-                                                </controls:SwitchPresenter>
-
-                                                <Grid ColumnSpacing="6">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <Button Grid.Column="0" HorizontalAlignment="Stretch" Content="Done" Style="{ThemeResource AccentButtonStyle}">
-                                                        <interactivity:Interaction.Behaviors>
-                                                            <core:EventTriggerBehavior EventName="Click">
-                                                                <core:CallMethodAction TargetObject="{Binding FlyoutBlock}" MethodName="Hide" />
-                                                            </core:EventTriggerBehavior>
-                                                        </interactivity:Interaction.Behaviors>
-                                                    </Button>
-                                                    <Button Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" />
-                                                </Grid>
-
-                                            </StackPanel>
-                                        </Flyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
-                </StackPanel>
-            </ScrollViewer>
-        </Frame>
-        
         <!-- Preview -->
-        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
-        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" Padding="24,12,24,12" MinHeight="80">
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Example PDF file" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" Padding="24,12,24,12" MinHeight="80">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="4*" />

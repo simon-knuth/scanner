@@ -136,10 +136,13 @@
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Models\FileNaming\FileNamingStatics.cs" />
     <Compile Include="Models\FileNaming\FileTypeFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\SecondFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\MinuteFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\ScannerNameFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\ContrastFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\BrightnessFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\ResolutionFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\HourFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\TextFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\IFileNamingBlock.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />

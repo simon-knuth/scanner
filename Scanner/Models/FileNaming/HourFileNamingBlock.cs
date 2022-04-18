@@ -2,43 +2,53 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Utilities;
 
 namespace Scanner.Models.FileNaming
 {
-    public class TextFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class HourFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => null;
-        public string Name => "TEXT";
+        public string Glyph => "\uE121";
+        public string Name => "HOUR";
 
+        private string _DisplayName = "Hour";
         public string DisplayName
         {
-            get => "Text";
+            get => _DisplayName;
+            set => SetProperty(ref _DisplayName, value);
         }
 
-        private string _Text;
-        public string Text
+        private bool _Use24Hours;
+        public bool Use24Hours
         {
-            get => _Text;
-            set => SetProperty(ref _Text, value);
+            get => _Use24Hours;
+            set => SetProperty(ref _Use24Hours, value);
+        }
+
+        private bool _Use2Digits;
+        public bool Use2Digits
+        {
+            get => _Use2Digits;
+            set => SetProperty(ref _Use2Digits, value);
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public TextFileNamingBlock()
+        public HourFileNamingBlock()
         {
-
+            
         }
 
-        public static TextFileNamingBlock Deserialize(string serialized)
+        public static HourFileNamingBlock Deserialize(string serialized)
         {
-            return new TextFileNamingBlock();
+            return new HourFileNamingBlock();
         }
 
 
@@ -47,12 +57,30 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            return Text;
+            DateTime currentTime = DateTime.Now;
+            string result = "";
+            if (Use24Hours)
+            {
+                result = currentTime.Hour.ToString(new CultureInfo("de-DE"));
+            }
+            else
+            {
+                result = currentTime.Hour.ToString(new CultureInfo("en-US"));
+            }
+
+            if (Use2Digits)
+            {
+                return result.PadLeft(2, '0');
+            }
+            else
+            {
+                return result;
+            }
         }
 
         public string GetSerialized()
         {
-            return $"*{Name}|{Text}";
+            return $"*{Name}|{Use24Hours}|{Use2Digits}";
         }
     }
 }

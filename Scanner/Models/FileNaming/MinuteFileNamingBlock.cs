@@ -2,43 +2,46 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Utilities;
 
 namespace Scanner.Models.FileNaming
 {
-    public class TextFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class MinuteFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => null;
-        public string Name => "TEXT";
+        public string Glyph => "\uE121";
+        public string Name => "MINUTE";
 
+        private string _DisplayName = "Minute";
         public string DisplayName
         {
-            get => "Text";
+            get => _DisplayName;
+            set => SetProperty(ref _DisplayName, value);
         }
 
-        private string _Text;
-        public string Text
+        private bool _Use2Digits;
+        public bool Use2Digits
         {
-            get => _Text;
-            set => SetProperty(ref _Text, value);
+            get => _Use2Digits;
+            set => SetProperty(ref _Use2Digits, value);
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public TextFileNamingBlock()
+        public MinuteFileNamingBlock()
         {
-
+            
         }
 
-        public static TextFileNamingBlock Deserialize(string serialized)
+        public static MinuteFileNamingBlock Deserialize(string serialized)
         {
-            return new TextFileNamingBlock();
+            return new MinuteFileNamingBlock();
         }
 
 
@@ -47,12 +50,19 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            return Text;
+            if (Use2Digits)
+            {
+                return DateTime.Now.Minute.ToString().PadLeft(2, '0');
+            }
+            else
+            {
+                return DateTime.Now.Minute.ToString();
+            }
         }
 
         public string GetSerialized()
         {
-            return $"*{Name}|{Text}";
+            return $"*{Name}|{Use2Digits}";
         }
     }
 }

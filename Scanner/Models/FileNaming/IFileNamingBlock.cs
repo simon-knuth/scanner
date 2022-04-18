@@ -2,12 +2,17 @@
 {
     public interface IFileNamingBlock
     {
+        string Glyph
+        {
+            get;
+        }
+
         string Name
         {
             get;
         }
 
-        string FriendlyName
+        string DisplayName
         {
             get;
         }

@@ -14,6 +14,9 @@ namespace Scanner.Models.FileNaming
         public static Dictionary<string, Type> FileNamingBlocksDictionary = new Dictionary<string, Type>
         {
             { "TEXT",  typeof(TextFileNamingBlock)},
+            { "HOUR",  typeof(HourFileNamingBlock)},
+            { "MINUTE",  typeof(MinuteFileNamingBlock)},
+            { "SECOND",  typeof(SecondFileNamingBlock)},
             { "RESOLUTION",  typeof(ResolutionFileNamingBlock)},
             { "FILETYPE",  typeof(FileTypeFileNamingBlock)},
             { "BRIGHTNESS",  typeof(BrightnessFileNamingBlock)},

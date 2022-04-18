@@ -401,7 +401,7 @@
                                     <ColumnDefinition Width="4*" />
                                 </Grid.ColumnDefinitions>
 
-                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="32"/>
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
                                 <TextBlock Grid.Column="1" MaxLines="3" Style="{StaticResource BodyTextBlockStyle}" Text="Scan_16.03.2022_2215.pdf" VerticalAlignment="Center" />
                             </Grid>
                         </StackPanel>

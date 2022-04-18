@@ -29,18 +29,13 @@ namespace Scanner.ViewModels
         #region Commands
         public RelayCommand AcceptCommand => new RelayCommand(AcceptPattern);
         public RelayCommand CancelCommand => new RelayCommand(Cancel);
+        public RelayCommand<IFileNamingBlock> AddBlockCommand => new RelayCommand<IFileNamingBlock>((x) => AddBlock(x));
+        public RelayCommand<IFileNamingBlock> DeleteBlockCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteBlock(x));
         #endregion
 
         #region Events
         public event EventHandler CloseRequested;
         #endregion
-
-        private List<string> _AvailableBlocks;
-        public List<string> AvailableBlocks
-        {
-            get => _AvailableBlocks;
-            set => SetProperty(ref _AvailableBlocks, value);
-        }
 
         private ObservableCollection<IFileNamingBlock> _SelectedBlocks = new ObservableCollection<IFileNamingBlock>();
         public ObservableCollection<IFileNamingBlock> SelectedBlocks
@@ -57,9 +52,9 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public CustomFileNamingDialogViewModel()
         {
-            AvailableBlocks = FileNamingStatics.FileNamingBlocksDictionary.Keys.ToList();
             SelectedBlocks.Add(new ResolutionFileNamingBlock());
             SelectedBlocks.Add(new FileTypeFileNamingBlock());
+            SelectedBlocks.Add(new BrightnessFileNamingBlock());
         }
 
 
@@ -74,6 +69,16 @@ namespace Scanner.ViewModels
         private void Cancel()
         {
 
+        }
+
+        private void AddBlock(IFileNamingBlock block)
+        {
+            SelectedBlocks.Add(block);
+        }
+
+        private void DeleteBlock(IFileNamingBlock block)
+        {            
+            SelectedBlocks.Remove(block);
         }
     }
 }

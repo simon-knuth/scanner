@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Scanner.Models.FileNaming;
 using System;
+using System.Collections.Generic;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
 using Windows.UI.Core;
@@ -55,16 +56,16 @@ namespace Scanner.Views.Dialogs
             }
         }
 
-        private async void AdaptiveGridViewPattern_ItemClick(object sender, ItemClickEventArgs e)
+        private async void ListViewPattern_ItemClick(object sender, ItemClickEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
-                GridViewItem container = ((AdaptiveGridView)sender).ContainerFromItem(e.ClickedItem) as GridViewItem;
-                FlyoutBase.ShowAttachedFlyout(container.ContentTemplateRoot as FrameworkElement);
+                ListViewItem container = ((ListView)sender).ContainerFromItem(e.ClickedItem) as ListViewItem;
+                FlyoutBase.ShowAttachedFlyout(container);
             });
         }
 
-        private async void AdaptiveGridViewPattern_Drop(object sender, DragEventArgs e)
+        private async void ListViewPattern_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetView().AvailableFormats.Count > 0)
             {
@@ -75,7 +76,35 @@ namespace Scanner.Views.Dialogs
                 Type[] parameterTypes = new Type[0];
                 string[] parameters = new string[0];
 
-                ViewModel.SelectedBlocks.Add(type.GetConstructor(parameterTypes).Invoke(parameters) as IFileNamingBlock);
+                // determine new index
+                int insertIndex = 0;
+                for (int i = 0; i < ((ListView)sender).Items.Count; i++)
+                {
+                    // check position relative to each existing item's container
+                    ListViewItem container = ((ListView)sender).ContainerFromIndex(i) as ListViewItem;
+                    var point = container.TransformToVisual(ListViewPattern).TransformPoint(new Windows.Foundation.Point(0, 0));
+                    if (e.GetPosition(container).X < 0)
+                    {
+                        // in front of this item
+                        insertIndex = i;
+                        break;
+                    }
+                    else
+                    {
+                        // behind this item
+                        if (i == ((ListView)sender).Items.Count - 1)
+                        {
+                            // inserted behind last item
+                            insertIndex = i + 1;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                ViewModel.SelectedBlocks.Insert(insertIndex, type.GetConstructor(parameterTypes).Invoke(parameters) as IFileNamingBlock);
                 e.Handled = true;
             }
             else
@@ -85,12 +114,7 @@ namespace Scanner.Views.Dialogs
             }            
         }
 
-        private void AdaptiveGridViewPattern_DragEnter(object sender, DragEventArgs e)
-        {
-            
-        }
-
-        private void AdaptiveGridViewPattern_DragOver(object sender, DragEventArgs e)
+        private void ListViewPattern_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
             e.DragUIOverride.IsCaptionVisible = false;
@@ -98,9 +122,97 @@ namespace Scanner.Views.Dialogs
             e.Handled = true;
         }
 
-        private void AdaptiveGridViewBlocks_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        private void AppBarButton_Loaded(object sender, RoutedEventArgs e)
         {
-            e.Data.SetText(e.Items[0] as string);
+            // get all available blocks
+            List<IFileNamingBlock> availableBlocks = new List<IFileNamingBlock>();
+            foreach (Type type in FileNamingStatics.FileNamingBlocksDictionary.Values)
+            {
+                Type[] parameterTypes = new Type[0];
+                string[] parameters = new string[0];
+
+                IFileNamingBlock block = type.GetConstructor(parameterTypes).Invoke(parameters) as IFileNamingBlock;
+                availableBlocks.Add(block);
+            }
+
+            // create parent items for date & time
+            MenuFlyoutSubItem dateParentItem = new MenuFlyoutSubItem
+            {
+                Text = "Date",
+                Icon = new FontIcon
+                {
+                    Glyph = "\uE163"
+                }
+            };
+            MenuFlyoutSubItem timeParentItem = new MenuFlyoutSubItem
+            {
+                Text = "Time",
+                Icon = new FontIcon
+                {
+                    Glyph = "\uE121"
+                }
+            };
+
+            // create remaining items
+            foreach (var block in availableBlocks)
+            {
+                MenuFlyoutItem item = new MenuFlyoutItem
+                {
+                    Text = block.DisplayName,
+                };
+
+                if (block.Glyph != null)
+                {
+                    item.Icon = new FontIcon
+                    {
+                        Glyph = block.Glyph
+                    };
+                }
+
+                item.Command = ViewModel.AddBlockCommand;
+                item.CommandParameter = block;
+
+                if (block.GetType() == typeof(TextFileNamingBlock))
+                {
+                    MenuFlyoutAddBlock.Items.Add(item);
+                    MenuFlyoutAddBlock.Items.Add(new MenuFlyoutSeparator());
+                }
+                else if (block.GetType() == typeof(HourFileNamingBlock)
+                    || block.GetType() == typeof(MinuteFileNamingBlock)
+                    || block.GetType() == typeof(SecondFileNamingBlock))
+                {
+                    timeParentItem.Items.Add(item);
+                }
+                else
+                {
+                    MenuFlyoutAddBlock.Items.Add(item);
+                }
+            }
+
+            MenuFlyoutAddBlock.Items.Insert(2, timeParentItem);
+            MenuFlyoutAddBlock.Items.Insert(3, dateParentItem);
+        }
+
+        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
+            });
+        }
+
+        private void ButtonDeleteBlock_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteBlockCommand.Execute(((Button)sender).CommandParameter);
+        }
+
+        private async void ButtonDoneEditingBlock_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                ListViewItem item = ListViewPattern.ContainerFromItem(((Button)sender).Tag) as ListViewItem;
+                FlyoutBase.GetAttachedFlyout(item).Hide();
+            });
         }
     }
 }
