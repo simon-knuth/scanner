@@ -129,6 +129,7 @@ namespace Scanner.ViewModels
                 switch (value)
                 {
                     case Enums.ScannerSource.Auto:
+                        SelectedResolution = null;
                         ScannerResolutions = null;
                         SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
                         FileFormats = SelectedScanner?.AutoFormats;

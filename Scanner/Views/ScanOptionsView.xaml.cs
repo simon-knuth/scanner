@@ -68,6 +68,13 @@ namespace Scanner.Views
                         }
                     });
                     break;
+                case nameof(ViewModel.SelectedResolution):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                    {
+                        // fix resolution ComboBox appears empty for new scanner
+                        ComboBoxResolution.SelectedItem = ViewModel.SelectedResolution;
+                    });
+                    break;
             }
         }
 
@@ -163,29 +170,43 @@ namespace Scanner.Views
             });
         }
 
-        private void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+        private async void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
         {
-            if (int.TryParse(args.Text, out int intValue))
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
             {
-                // entered pure number, try to apply it
-                ScanResolution resolution = ViewModel.ScannerResolutions.FirstOrDefault((x) => x.Resolution.DpiX == intValue);
-                if (resolution != null)
+                if (int.TryParse(args.Text, out int intValue))
                 {
-                    // found corresponding resolution
-                    ViewModel.SelectedResolution = resolution;
+                    // entered pure number, try to apply it
+                    ScanResolution resolution = ViewModel.ScannerResolutions.FirstOrDefault((x) => x.Resolution.DpiX == intValue);
+                    if (resolution != null)
+                    {
+                        // found corresponding resolution
+                        ViewModel.SelectedResolution = resolution;
+                    }
+                    else
+                    {
+                        // no resolution for number, find the closest available one
+                        resolution = ViewModel.ScannerResolutions.Aggregate((x, y) => Math.Abs(x.Resolution.DpiX - intValue) < Math.Abs(y.Resolution.DpiX - intValue) ? x : y);
+                        ViewModel.SelectedResolution = resolution;
+                    }
                 }
                 else
                 {
-                    // no resolution for number, find the closest available one
-                    resolution = ViewModel.ScannerResolutions.Aggregate((x, y) => Math.Abs(x.Resolution.DpiX - intValue) < Math.Abs(y.Resolution.DpiX - intValue) ? x : y);
-                    ViewModel.SelectedResolution = resolution;
+                    sender.SelectedItem = ViewModel.SelectedResolution;
+                    args.Handled = true;
                 }
-            }
-            else
+            });
+        }
+
+        private async void ComboBoxResolution_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
             {
-                sender.SelectedItem = ViewModel.SelectedResolution;
-                args.Handled = true;
-            }
+                if (e.AddedItems.Count == 1)
+                {
+                    ViewModel.SelectedResolution = e.AddedItems[0] as ScanResolution;
+                }
+            });
         }
     }
 }
