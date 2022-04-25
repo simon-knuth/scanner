@@ -1,4 +1,5 @@
-﻿using Scanner.Views.Converters;
+﻿using Microsoft.Toolkit.Diagnostics;
+using Scanner.Views.Converters;
 using System;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -89,28 +90,6 @@ namespace Scanner.Views
                     double size = grid.ActualWidth / 2;
 
                     grid.ItemWidth = grid.ItemHeight = size;
-                }
-            });
-        }
-
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
-            {
-                if (GridViewPages.Items.Count >= 1)
-                {
-                    int index = ViewModel.SelectedPageIndex;
-
-                    // fix GridView initially fails to select item by binding
-                    GridViewPages.SelectedIndex = index;
-
-                    // scroll to selected item
-                    GridViewItem item = (GridViewItem)GridViewPages.ContainerFromIndex(index);
-                    BringIntoViewOptions options = new BringIntoViewOptions
-                    {
-                        AnimationDesired = false,
-                    };
-                    item.StartBringIntoView(options);
                 }
             });
         }
@@ -347,6 +326,37 @@ namespace Scanner.Views
         private void GridViewPages_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
             ViewModel.DragDropPage.Execute(null);
+        }
+
+        private async void GridViewPages_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (GridViewPages.Items.Count >= 1)
+                {
+                    int index = ViewModel.SelectedPageIndex;
+
+                    // fix GridView initially fails to select item by binding
+                    GridViewPages.SelectedIndex = index;
+
+                    // try scroll to selected item
+                    try
+                    {
+                        GridViewItem item = (GridViewItem)GridViewPages.ContainerFromIndex(index);
+                        Guard.IsNotNull(item, nameof(item));
+
+                        BringIntoViewOptions options = new BringIntoViewOptions
+                        {
+                            AnimationDesired = false,
+                        };
+                        item.StartBringIntoView(options);
+                    }
+                    catch (Exception exc)
+                    {
+                        ViewModel.AppCenterService.TrackError(exc);
+                    }
+                }
+            });
         }
     }
 }

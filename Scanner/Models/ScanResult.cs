@@ -87,7 +87,7 @@ namespace Scanner
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ScanResult(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder, int futureAccessListIndexStart,
-            bool isDocument)
+            bool isDocument, ImageScannerFormat format)
         {
             LogService?.Log.Information("ScanResult constructor [futureAccessListIndexStart={Index}]", futureAccessListIndexStart);
             int futureAccessListIndex = futureAccessListIndexStart;
@@ -103,7 +103,7 @@ namespace Scanner
                 futureAccessListIndex += 1;
             }
 
-            ScanResultFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(_Elements[0].ScanFile.FileType);
+            ScanResultFormat = format;
             OriginalTargetFolder = targetFolder;
             RefreshItemDescriptors();
             _Elements.CollectionChanged += (x, y) => PagesChanged?.Invoke(this, y);
@@ -130,8 +130,9 @@ namespace Scanner
                 files[i] = await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, GetInitialName(scanOptions), false);
             }
 
-            ScanResult result = new ScanResult(files, targetFolder, futureAccessListIndexStart, false);
-            result.ScanResultFormat = result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType);
+            ScanResult result = new ScanResult(files, targetFolder, futureAccessListIndexStart, false,
+                (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType));
+            result.PagesFormat = result.ScanResultFormat;
 
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
@@ -190,7 +191,7 @@ namespace Scanner
             ScanResult result;
             if (targetFormat == ImageScannerFormat.Pdf)
             {
-                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true);
+                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true, targetFormat);
                 string pdfName = GetInitialName(scanOptions);
 
                 // convert all source files to JPG for optimized size
@@ -208,7 +209,7 @@ namespace Scanner
             }
             else
             {
-                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false);
+                result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false, targetFormat);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
                     await result.ConvertPageAsync(i, targetFormat, targetFolder, GetInitialName(scanOptions));
