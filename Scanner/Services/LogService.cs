@@ -111,7 +111,7 @@ namespace Scanner.Services
                             FeederDuplex = o.FeederDuplex,
                             Format = o.Format,
                             Brightness = o.Brightness,
-                            Contrast = o.Brightness
+                            Contrast = o.Contrast
                         })
                     .Destructure.ByTransforming<DeviceInformation>(
                         i => new { Name = i.Name, IsEnabled = i.IsEnabled, IsDefault = i.IsDefault, Kind = i.Kind, Id = i.Id })
