@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Windows.Devices.Scanners;
 using static Utilities;
 
@@ -12,40 +14,70 @@ namespace Scanner.Models.FileNaming
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [Required(ErrorMessage = "Blocks is required")]
-        public List<IFileNamingBlock> Blocks = new List<IFileNamingBlock>();
+        public IReadOnlyList<IFileNamingBlock> Blocks;
+
+        public bool IsValid;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileNamingPattern()
+        public FileNamingPattern(List<IFileNamingBlock> blocks)
         {
-            
+            Blocks = blocks;
+            IsValid = CheckValidity();
         }
 
         public FileNamingPattern(string serialized)
         {           
-            if (!string.IsNullOrEmpty(serialized))
-            {
-                string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
-                Type[] types = new Type[]
-                {
-                    typeof(string),
-                };
+            Guard.IsNotNullOrEmpty(serialized, nameof(serialized));
 
-                foreach (string part in parts)
-                {
-                    Type blockType = FileNamingStatics.FileNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
-                    string[] partArray = new string[1] { part };
-                    Blocks.Add(blockType.GetConstructor(types).Invoke(partArray) as IFileNamingBlock);
-                }
+            string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
+            Type[] types = new Type[]
+            {
+                typeof(string),
+            };
+
+            // iterate through blocks
+            List<IFileNamingBlock> newList = new List<IFileNamingBlock>();
+            foreach (string part in parts)
+            {
+                Type blockType = FileNamingStatics.FileNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
+                string[] partArray = new string[1] { part };
+                newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IFileNamingBlock);
             }
+
+            Blocks = newList;
+            IsValid = CheckValidity();
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        private bool CheckValidity()
+        {
+            if (Blocks == null)
+            {
+                return false;
+            }
+
+            if (Blocks.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (IFileNamingBlock block in Blocks)
+            {
+                if (!block.IsValid)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
         public string GenerateResult(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             string result = "";
@@ -64,7 +96,7 @@ namespace Scanner.Models.FileNaming
 
             foreach (IFileNamingBlock block in Blocks)
             {
-                serialized += GetSerialized();
+                serialized += block.GetSerialized();
             }
 
             return serialized;

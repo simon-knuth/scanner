@@ -12,7 +12,8 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:helpers="using:Scanner.Helpers" xmlns:globalization="using:Windows.Globalization" xmlns:system="using:System"
+    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:system="using:System"
     d:DesignWidth="350"
     d:DesignHeight="600"
     Unloaded="Page_Unloaded">
@@ -238,160 +239,12 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" SelectedIndex="0">
-                                <RadioButton Margin="0,0,0,12">
-                                    <StackPanel Orientation="Vertical" Spacing="18" Margin="0,0,0,6">
-                                        <TextBlock Text="Default pattern (date and time)" />
-                                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="SCN_" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Year" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Month" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Day" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="_" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
-                                                    <TextBlock Text="Time" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-                                        </controls:WrapPanel>
-                                    </StackPanel>
-                                </RadioButton>
-
-                                <RadioButton Margin="0,0,0,12">
-                                    <StackPanel Orientation="Vertical" Spacing="18" Margin="0,0,0,6">
-                                        <TextBlock Text="Reduced pattern (date)" />
-                                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="SCN_" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Year" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Month" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Day" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-                                        </controls:WrapPanel>
-                                    </StackPanel>
-                                </RadioButton>
-
-                                <RadioButton>
-                                    <StackPanel Orientation="Vertical" Spacing="18" Margin="0,0,0,6">
-                                        <TextBlock Text="Custom pattern" />
-                                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="SCN_" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Year" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Month" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="." Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <Button CanDrag="True" CornerRadius="8" Padding="12,8,12,8" IsEnabled="False">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                    <TextBlock Text="Day" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                </StackPanel>
-                                            </Button>
-
-                                            <HyperlinkButton Content="Edit" VerticalAlignment="Center" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
-                                        </controls:WrapPanel>
-                                    </StackPanel>
-                                </RadioButton>
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" SelectedIndex="{x:Bind ViewModel.SettingFileNamingPattern, Mode=TwoWay}">
+                                <RadioButton Content="Date and time (Default)" />
+                                <RadioButton Content="Date" />
+                                <RadioButton x:Name="RadioButtonSettingsFileNamingCustom" Content="Custom" />
                             </muxc:RadioButtons>
+                            <HyperlinkButton Content="Edit custom pattern" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" Spacing="12">
                             <TextBlock Text="Preview" />
@@ -402,7 +255,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
-                                <TextBlock Grid.Column="1" MaxLines="3" Style="{StaticResource BodyTextBlockStyle}" Text="Scan_16.03.2022_2215.pdf" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.FileNamingPatternPreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
                             </Grid>
                         </StackPanel>
                     </StackPanel>

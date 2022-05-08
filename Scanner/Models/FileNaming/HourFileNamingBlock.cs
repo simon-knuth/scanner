@@ -37,6 +37,11 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _Use2Digits, value);
         }
 
+        public bool IsValid
+        {
+            get => true;
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +51,11 @@ namespace Scanner.Models.FileNaming
             
         }
 
-        public static HourFileNamingBlock Deserialize(string serialized)
+        public HourFileNamingBlock(string serialized)
         {
-            return new HourFileNamingBlock();
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            Use24Hours = bool.Parse(parts[1]);
+            Use2Digits = bool.Parse(parts[2]);
         }
 
 
@@ -61,11 +68,11 @@ namespace Scanner.Models.FileNaming
             string result = "";
             if (Use24Hours)
             {
-                result = currentTime.Hour.ToString(new CultureInfo("de-DE"));
+                result = currentTime.Hour.ToString();
             }
             else
             {
-                result = currentTime.Hour.ToString(new CultureInfo("en-US"));
+                result = currentTime.ToString("%h");
             }
 
             if (Use2Digits)

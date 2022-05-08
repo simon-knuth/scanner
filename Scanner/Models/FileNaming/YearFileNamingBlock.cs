@@ -2,29 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Utilities;
 
 namespace Scanner.Models.FileNaming
 {
-    public class FileTypeFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class YearFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE8A5";
-        public string Name => "FILETYPE";
+        public string Glyph => "\uE163";
+        public string Name => "YEAR";
 
+        private string _DisplayName = "Year";
         public string DisplayName
         {
-            get => "File type";
-        }
-
-        private bool _AllCaps = true;
-        public bool AllCaps
-        {
-            get => _AllCaps;
-            set => SetProperty(ref _AllCaps, value);
+            get => _DisplayName;
+            set => SetProperty(ref _DisplayName, value);
         }
 
         public bool IsValid
@@ -36,15 +32,14 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileTypeFileNamingBlock()
+        public YearFileNamingBlock()
         {
-
+            
         }
 
-        public FileTypeFileNamingBlock(string serialized)
+        public YearFileNamingBlock(string serialized)
         {
-            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            AllCaps = bool.Parse(parts[1]);
+            
         }
 
 
@@ -53,19 +48,14 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            if (AllCaps)
-            {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).ToUpper().Split(".")[1];
-            }
-            else
-            {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).Split(".")[1];
-            }
+            DateTime currentTime = DateTime.Now;
+
+            return CultureInfo.CurrentCulture.Calendar.GetYear(currentTime).ToString();
         }
 
         public string GetSerialized()
         {
-            return $"*{Name}|{AllCaps}";
+            return $"*{Name}";
         }
     }
 }

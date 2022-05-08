@@ -2,29 +2,32 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Utilities;
 
 namespace Scanner.Models.FileNaming
 {
-    public class FileTypeFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class DayFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE8A5";
-        public string Name => "FILETYPE";
+        public string Glyph => "\uE163";
+        public string Name => "DAY";
 
+        private string _DisplayName = "Day";
         public string DisplayName
         {
-            get => "File type";
+            get => _DisplayName;
+            set => SetProperty(ref _DisplayName, value);
         }
 
-        private bool _AllCaps = true;
-        public bool AllCaps
+        private DayType _Type = DayType.DayOfMonth;
+        public DayType Type
         {
-            get => _AllCaps;
-            set => SetProperty(ref _AllCaps, value);
+            get => _Type;
+            set => SetProperty(ref _Type, value);
         }
 
         public bool IsValid
@@ -36,15 +39,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileTypeFileNamingBlock()
+        public DayFileNamingBlock()
         {
-
+            
         }
 
-        public FileTypeFileNamingBlock(string serialized)
+        public DayFileNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            AllCaps = bool.Parse(parts[1]);
+            Type = (DayType)int.Parse(parts[1]);
         }
 
 
@@ -53,19 +56,30 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            if (AllCaps)
+            DateTime currentTime = DateTime.Now;
+
+            switch (Type)
             {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).ToUpper().Split(".")[1];
-            }
-            else
-            {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).Split(".")[1];
+                case DayType.DayOfWeek:
+                    return CultureInfo.CurrentCulture.Calendar.GetDayOfWeek(currentTime).ToString();
+                case DayType.DayOfYear:
+                    return CultureInfo.CurrentCulture.Calendar.GetDayOfYear(currentTime).ToString();
+                case DayType.DayOfMonth:
+                default:
+                    return CultureInfo.CurrentCulture.Calendar.GetDayOfMonth(currentTime).ToString();
             }
         }
 
         public string GetSerialized()
         {
-            return $"*{Name}|{AllCaps}";
+            return $"*{Name}|{(int)Type}";
         }
+    }
+
+    public enum DayType
+    {
+        DayOfWeek = 0,
+        DayOfMonth = 1,
+        DayOfYear = 2
     }
 }

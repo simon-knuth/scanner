@@ -134,8 +134,12 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Models\FileNaming\YearFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\MonthFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\FileNamingStatics.cs" />
     <Compile Include="Models\FileNaming\FileTypeFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\DayFileNamingBlock.cs" />
+    <Compile Include="Models\FileNaming\HourPeriodFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\SecondFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\MinuteFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\ScannerNameFileNamingBlock.cs" />
@@ -174,6 +178,8 @@
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsMonthTypeConverter.cs" />
+    <Compile Include="Views\Converters\RadioButtonsDayTypeConverter.cs" />
     <Compile Include="Views\Converters\ScanActionVisibilityConverter.cs" />
     <Compile Include="Views\Converters\PreviewToolTipConverter.cs" />
     <Compile Include="Views\Converters\ScanMergeElementTooltipConverter.cs" />

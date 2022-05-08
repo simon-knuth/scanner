@@ -27,6 +27,11 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _SkipIfDefault, value);
         }
 
+        public bool IsValid
+        {
+            get => true;
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +41,10 @@ namespace Scanner.Models.FileNaming
 
         }
 
-        public static ContrastFileNamingBlock Deserialize(string serialized)
+        public ContrastFileNamingBlock(string serialized)
         {
-            return new ContrastFileNamingBlock();
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            SkipIfDefault = bool.Parse(parts[1]);
         }
 
 

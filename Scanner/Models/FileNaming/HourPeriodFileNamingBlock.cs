@@ -2,25 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Utilities;
 
 namespace Scanner.Models.FileNaming
 {
-    public class FileTypeFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class HourPeriodFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE8A5";
-        public string Name => "FILETYPE";
+        public string Glyph => "\uE121";
+        public string Name => "HOURPERIOD";
 
+        private string _DisplayName = "Hour period";
         public string DisplayName
         {
-            get => "File type";
+            get => _DisplayName;
+            set => SetProperty(ref _DisplayName, value);
         }
 
-        private bool _AllCaps = true;
+        private bool _AllCaps;
         public bool AllCaps
         {
             get => _AllCaps;
@@ -36,12 +39,12 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileTypeFileNamingBlock()
+        public HourPeriodFileNamingBlock()
         {
-
+            
         }
 
-        public FileTypeFileNamingBlock(string serialized)
+        public HourPeriodFileNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
             AllCaps = bool.Parse(parts[1]);
@@ -53,13 +56,14 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
+            DateTime currentTime = DateTime.Now;
             if (AllCaps)
             {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).ToUpper().Split(".")[1];
+                return currentTime.ToString("tt").ToUpper();
             }
             else
             {
-                return ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat).Split(".")[1];
+                return currentTime.ToString("tt").ToLower();
             }
         }
 

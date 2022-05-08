@@ -27,6 +27,11 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _AllCaps, value);
         }
 
+        public bool IsValid
+        {
+            get => true;
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,12 +41,10 @@ namespace Scanner.Models.FileNaming
 
         }
 
-        public static ScannerNameFileNamingBlock Deserialize(string serialized)
+        public ScannerNameFileNamingBlock(string serialized)
         {
-            return new ScannerNameFileNamingBlock
-            {
-                AllCaps = bool.Parse(serialized.Split('|', StringSplitOptions.RemoveEmptyEntries)[1]),
-            };
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            AllCaps = bool.Parse(parts[1]);
         }
 
 
@@ -62,7 +65,7 @@ namespace Scanner.Models.FileNaming
 
         public string GetSerialized()
         {
-            return $"*{Name}";
+            return $"*{Name}|{AllCaps}";
         }
     }
 }

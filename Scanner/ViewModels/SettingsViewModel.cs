@@ -2,6 +2,8 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Models;
+using Scanner.Models.FileNaming;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
@@ -151,6 +153,23 @@ namespace Scanner.ViewModels
             set => SettingsService.SetSetting(AppSetting.SettingAppLanguage, value);
         }
 
+        public int SettingFileNamingPattern
+        {
+            get => (int)SettingsService.GetSetting(AppSetting.SettingFileNamingPattern);
+            set
+            {
+                SettingsService.SetSetting(AppSetting.SettingFileNamingPattern, value);
+                RefreshFileNamingPatternPreviewResult();
+            }
+        }
+
+        private string _FileNamingPatternPreviewResult;
+        public string FileNamingPatternPreviewResult
+        {
+            get => _FileNamingPatternPreviewResult;
+            set => SetProperty(ref _FileNamingPatternPreviewResult, value);
+        }
+
         private bool _IsScanInProgress;
         public bool IsScanInProgress
         {
@@ -169,6 +188,7 @@ namespace Scanner.ViewModels
         public SettingsViewModel()
         {
             SettingsService.ScanSaveLocationChanged += SettingsService_ScanSaveLocationChanged;
+            SettingsService.SettingChanged += SettingsService_SettingChanged;
             SaveLocationPath = SettingsService.ScanSaveLocation?.Path;
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
             ScanService.ScanStarted += ScanService_ScanStartedOrCompleted;
@@ -195,6 +215,9 @@ namespace Scanner.ViewModels
             }
             AvailableAppLanguages = AvailableAppLanguages.OrderBy((x) => new Language(x).DisplayName).ToList();
             AvailableAppLanguages.Insert(0, "");
+
+            // prepare file naming preview
+            RefreshFileNamingPatternPreviewResult();
         }
 
 
@@ -210,6 +233,18 @@ namespace Scanner.ViewModels
             SettingsService.ScanSaveLocationChanged -= SettingsService_ScanSaveLocationChanged;
             ScanService.ScanStarted -= ScanService_ScanStartedOrCompleted;
             ScanService.ScanEnded -= ScanService_ScanStartedOrCompleted;
+        }
+
+        private void SettingsService_SettingChanged(object sender, AppSetting e)
+        {
+            switch (e)
+            {
+                case AppSetting.CustomFileNamingPattern:
+                    RefreshFileNamingPatternPreviewResult();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void SettingsRequestMessage_Received(object r, SettingsRequestMessage m)
@@ -344,6 +379,48 @@ namespace Scanner.ViewModels
             {
                 SettingAutoRotateLanguage = AutoRotatorService.AvailableLanguages[language].LanguageTag;
             }
+        }
+
+        private void RefreshFileNamingPatternPreviewResult()
+        {
+            // get pattern
+            FileNamingPattern previewPattern;
+            switch ((SettingFileNamingPattern)SettingFileNamingPattern)
+            {
+                default:
+                case Services.SettingFileNamingPattern.DateTime:
+                    previewPattern = FileNamingStatics.DateTimePattern;
+                    break;
+                case Services.SettingFileNamingPattern.Date:
+                    previewPattern = FileNamingStatics.DatePattern;
+                    break;
+                case Services.SettingFileNamingPattern.Custom:
+                    previewPattern = new FileNamingPattern((string)SettingsService.GetSetting(AppSetting.CustomFileNamingPattern));
+                    break;
+            }
+
+            // create preview DiscoveredScanner
+            DiscoveredScanner previewScanner;
+            string currentScannerName = Messenger.Send(new SelectedScannerRequestMessage()).Response?.Name;
+            if (String.IsNullOrEmpty(currentScannerName))
+            {
+                previewScanner = new DiscoveredScanner("IntelliQ TX3000-S");
+            }
+            else
+            {
+                previewScanner = new DiscoveredScanner(currentScannerName);
+            }
+            previewScanner.FlatbedBrightnessConfig = new BrightnessConfig
+            {
+                DefaultBrightness = 0
+            };
+            previewScanner.FlatbedContrastConfig = new ContrastConfig
+            {
+                DefaultContrast = 0
+            };
+
+            // generate preview
+            FileNamingPatternPreviewResult = previewPattern.GenerateResult(FileNamingStatics.PreviewScanOptions, previewScanner);
         }
     }
 }

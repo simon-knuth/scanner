@@ -555,7 +555,7 @@ namespace Scanner.Models
                     // contrast
                     if (options.Contrast != null)
                     {
-                        if ((int)options.Brightness == FlatbedContrastConfig.DefaultContrast)
+                        if ((int)options.Contrast == FlatbedContrastConfig.DefaultContrast)
                         {
                             // replace default contrast with virtual default contrast
                             Device.FlatbedConfiguration.Contrast = FlatbedContrastConfig.VirtualDefaultContrast;

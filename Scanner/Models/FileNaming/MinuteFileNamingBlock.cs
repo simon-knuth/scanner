@@ -30,6 +30,11 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _Use2Digits, value);
         }
 
+        public bool IsValid
+        {
+            get => true;
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,9 +44,10 @@ namespace Scanner.Models.FileNaming
             
         }
 
-        public static MinuteFileNamingBlock Deserialize(string serialized)
+        public MinuteFileNamingBlock(string serialized)
         {
-            return new MinuteFileNamingBlock();
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            Use2Digits = bool.Parse(parts[1]);
         }
 
 

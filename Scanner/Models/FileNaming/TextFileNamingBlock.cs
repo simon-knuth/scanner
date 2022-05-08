@@ -24,7 +24,20 @@ namespace Scanner.Models.FileNaming
         public string Text
         {
             get => _Text;
-            set => SetProperty(ref _Text, value);
+            set
+            {
+                if (SetProperty(ref _Text, value))
+                {
+                    IsValid = CheckValidity();
+                }
+            }
+        }
+
+        private bool _IsValid;
+        public bool IsValid
+        {
+            get => _IsValid;
+            set => SetProperty(ref _IsValid, value);
         }
 
 
@@ -36,9 +49,10 @@ namespace Scanner.Models.FileNaming
 
         }
 
-        public static TextFileNamingBlock Deserialize(string serialized)
+        public TextFileNamingBlock(string serialized)
         {
-            return new TextFileNamingBlock();
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            Text = parts[1];
         }
 
 
@@ -53,6 +67,27 @@ namespace Scanner.Models.FileNaming
         public string GetSerialized()
         {
             return $"*{Name}|{Text}";
+        }
+
+        public bool CheckValidity()
+        {
+            // not empty?
+            if (string.IsNullOrEmpty(Text))
+            {
+                return false;
+            }
+            
+            // forbidden chars?
+            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            foreach (char invalidChar in invalidChars)
+            {
+                if (Text.Contains(invalidChar.ToString()))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

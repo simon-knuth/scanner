@@ -65,7 +65,7 @@ namespace Scanner.Views.Dialogs
             });
         }
 
-        private void AppBarButton_Loaded(object sender, RoutedEventArgs e)
+        private void ButtonAddBlock_Loaded(object sender, RoutedEventArgs e)
         {
             // get all available blocks
             List<IFileNamingBlock> availableBlocks = new List<IFileNamingBlock>();
@@ -126,6 +126,17 @@ namespace Scanner.Views.Dialogs
                 {
                     timeParentItem.Items.Add(item);
                 }
+                else if (block.GetType() == typeof(HourPeriodFileNamingBlock))
+                {
+                    timeParentItem.Items.Add(new MenuFlyoutSeparator());
+                    timeParentItem.Items.Add(item);
+                }
+                else if (block.GetType() == typeof(DayFileNamingBlock)
+                    || block.GetType() == typeof(MonthFileNamingBlock)
+                    || block.GetType() == typeof(YearFileNamingBlock))
+                {
+                    dateParentItem.Items.Add(item);
+                }
                 else
                 {
                     MenuFlyoutAddBlock.Items.Add(item);
@@ -136,26 +147,74 @@ namespace Scanner.Views.Dialogs
             MenuFlyoutAddBlock.Items.Insert(3, dateParentItem);
         }
 
-        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void ListViewPattern_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
         {
-            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
-                FlyoutBase.ShowAttachedFlyout((AppBarButton)sender);
+                ButtonAddBlock.Visibility = Visibility.Collapsed;
+                ButtonClearPattern.Visibility = Visibility.Collapsed;
+                GridTrashDropZones.Visibility = Visibility.Visible;
+                GridTrashDropZone.Visibility = Visibility.Visible;
+                GridTrashDropZoneHover.Visibility = Visibility.Collapsed;
+
+                e.Data.SetText(ListViewPattern.Items.IndexOf(e.Items[0]).ToString());
+                e.Data.RequestedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
             });
         }
 
-        private void ButtonDeleteBlock_Click(object sender, RoutedEventArgs e)
+        private async void ListViewPattern_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            ViewModel.DeleteBlockCommand.Execute(((Button)sender).CommandParameter);
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ButtonAddBlock.Visibility = Visibility.Visible;
+                ButtonClearPattern.Visibility = Visibility.Visible;
+                GridTrashDropZones.Visibility = Visibility.Collapsed;
+                GridTrashDropZone.Visibility = Visibility.Collapsed;
+                GridTrashDropZoneHover.Visibility = Visibility.Collapsed;
+            });
         }
 
-        private async void ButtonDoneEditingBlock_Click(object sender, RoutedEventArgs e)
+        private async void GridTrashDropZones_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+            e.DragUIOverride.IsCaptionVisible = false;
+            e.DragUIOverride.IsGlyphVisible = false;
+            e.Handled = true;
+
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+            {
+                GridTrashDropZone.Visibility = Visibility.Collapsed;
+                GridTrashDropZoneHover.Visibility = Visibility.Visible;
+            });
+        }
+
+        private async void GridTrashDropZones_DragLeave(object sender, DragEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
-                ListViewItem item = ListViewPattern.ContainerFromItem(((Button)sender).Tag) as ListViewItem;
-                FlyoutBase.GetAttachedFlyout(item).Hide();
+                GridTrashDropZone.Visibility = Visibility.Visible;
+                GridTrashDropZoneHover.Visibility = Visibility.Collapsed;
             });
+        }
+
+        private async void GridTrashDropZones_Drop(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+
+            int blockIndex = int.Parse(await e.DataView.GetTextAsync());
+            ViewModel.DeleteBlockCommand.Execute(ViewModel.SelectedBlocks[blockIndex]);
+        }
+
+        private async void TextBoxText_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
+                {
+                    ListViewItem item = ListViewPattern.ContainerFromItem(((TextBox)sender).Tag) as ListViewItem;
+                    FlyoutBase.GetAttachedFlyout(item).Hide();
+                });
+            }
         }
     }
 }

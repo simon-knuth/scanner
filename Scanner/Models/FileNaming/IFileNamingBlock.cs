@@ -19,6 +19,11 @@ namespace Scanner.Models.FileNaming
             get;
         }
 
+        bool IsValid
+        {
+            get;
+        }
+
 
         string ToString(ScanOptions scanOptions, DiscoveredScanner scanner);
         string GetSerialized();

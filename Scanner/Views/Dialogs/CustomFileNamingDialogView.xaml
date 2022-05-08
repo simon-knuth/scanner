@@ -13,7 +13,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:filenaming="using:Scanner.Models.FileNaming" xmlns:ui="using:Microsoft.Toolkit.Uwp.UI" xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:filenaming="using:Scanner.Models.FileNaming"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
     PrimaryButtonText="Confirm"
@@ -22,6 +22,7 @@
     DefaultButton="Primary"
     PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.Pattern.IsValid, Mode=OneWay}"
     Closed="ContentDialog_Closed">
 
     <ContentDialog.DataContext>
@@ -43,8 +44,11 @@
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
+            <converters:RadioButtonsDayTypeConverter x:Key="RadioButtonsDayTypeConverter"/>
+            <converters:RadioButtonsMonthTypeConverter x:Key="RadioButtonsMonthTypeConverter"/>
             <converters:ScanMergeElementGlyphConverter x:Key="ScanMergeElementGlyphConverter"/>
             <converters:ScanMergeElementTooltipConverter x:Key="ScanMergeElementTooltipConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -58,23 +62,19 @@
         </StackPanel>
     </ContentDialog.Title>
 
-    <Grid ColumnSpacing="24">
+    <Grid ColumnSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
-            <RowDefinition Height="88" />
+            <RowDefinition Height="96" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
         <!-- Stretch ContentDialog -->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Width="1000" Background="Transparent" />
+        <Border Grid.Row="0" Width="1000" Background="Transparent" />
 
-        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Padding="24,0,24,0" Margin="-24,0,-24,0">
+        <ScrollViewer Grid.Row="0" VerticalAlignment="Top" Padding="24,0,24,0" Margin="-24,0,-24,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
             <TextBlock x:Uid="TextCustomFileNamingExplanation" Style="{StaticResource BodyTextBlockStyle}" Text="Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or remove it."/>
         </ScrollViewer>
         
@@ -84,7 +84,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ListView x:Name="ListViewPattern" Grid.Column="0" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="20,12,20,12" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ItemClick="ListViewPattern_ItemClick">
+            <ListView x:Name="ListViewPattern" Grid.Column="0" CanDragItems="True" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="20,16,20,16" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ItemClick="ListViewPattern_ItemClick" DragItemsStarting="ListViewPattern_DragItemsStarting" DragItemsCompleted="ListViewPattern_DragItemsCompleted">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Horizontal" ItemsUpdatingScrollMode="KeepLastItemInView" />
@@ -113,7 +113,10 @@
                                         </controls:Case>
 
                                         <controls:Case Value="TEXT">
-                                            <TextBlock Text="{Binding Path=Text, Mode=OneWay, FallbackValue=ERROR}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA39;" FontSize="16" Margin="8,0,8,0" ToolTipService.ToolTip="Invalid block" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind IsValid, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                                                <TextBlock Text="{Binding Path=Text, Mode=OneWay, FallbackValue=ERROR}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" Visibility="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
+                                            </StackPanel>
                                         </controls:Case>
                                     </controls:SwitchPresenter>
                                 </StackPanel>
@@ -128,17 +131,7 @@
                                             <controls:Case Value="TEXT">
                                                 <StackPanel Orientation="Vertical" Spacing="12">
                                                     <TextBlock Text="Text" Style="{StaticResource BaseTextBlockStyle}" />
-                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" />
-                                                </StackPanel>
-                                            </controls:Case>
-
-                                            <!-- Date -->
-                                            <controls:Case Value="DATE">
-                                                <StackPanel Orientation="Vertical" Spacing="12">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
-                                                        <TextBlock Text="Date" Style="{StaticResource BaseTextBlockStyle}" />
-                                                    </StackPanel>
+                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" Tag="{x:Bind}" KeyUp="TextBoxText_KeyUp" />
                                                 </StackPanel>
                                             </controls:Case>
 
@@ -151,6 +144,17 @@
                                                     </StackPanel>
                                                     <CheckBox Content="24-hours" IsChecked="{Binding Path=Use24Hours, Mode=TwoWay}" />
                                                     <CheckBox Content="Always two digits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Hour period -->
+                                            <controls:Case Value="HOURPERIOD">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock Text="Hour period" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="All caps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
                                                 </StackPanel>
                                             </controls:Case>
 
@@ -173,6 +177,46 @@
                                                         <TextBlock Text="Second" Style="{StaticResource BaseTextBlockStyle}" />
                                                     </StackPanel>
                                                     <CheckBox Content="Always two digits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Day -->
+                                            <controls:Case Value="DAY">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock Text="Day" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsDayTypeConverter}}">
+                                                        <RadioButton Content="Day of week" />
+                                                        <RadioButton Content="Day of month" />
+                                                        <RadioButton Content="Day of year" />
+                                                    </muxc:RadioButtons>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Month -->
+                                            <controls:Case Value="MONTH">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock Text="Month" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}">
+                                                        <RadioButton Content="Number of month" />
+                                                        <RadioButton Content="Name of month" />
+                                                        <RadioButton Content="Short name of month" />
+                                                    </muxc:RadioButtons>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Year -->
+                                            <controls:Case Value="YEAR">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock Text="Year" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </controls:Case>
 
@@ -206,7 +250,7 @@
                                                         <TextBlock Text="Scanner name" Style="{StaticResource BaseTextBlockStyle}" />
                                                     </StackPanel>
                                                     <CheckBox Content="Capitalized" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
-                                                    <TextBlock Text="You can rename scanners in the Windows setings app. Select your scanner and then &quot;Scanner properties&quot;. There you can enter a new device name. Changes will take effect after restarting this app." Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    <TextBlock Text="You can rename scanners in the Windows settings app. Select your scanner and then &quot;Scanner properties&quot;. There you can enter a new device name. Changes will take effect after restarting this app." Style="{StaticResource CaptionTextBlockStyle}" />
                                                     <HyperlinkButton HorizontalAlignment="Center" Command="{x:Bind ViewModel.LaunchScannerSettingsCommand}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE8FE;" Margin="0,0,12,0"/>
@@ -240,16 +284,6 @@
                                                 </StackPanel>
                                             </controls:Case>
                                         </controls:SwitchPresenter>
-
-                                        <Grid ColumnSpacing="6">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Button x:Name="ButtonDoneEditingBlock" Grid.Column="0" HorizontalAlignment="Stretch" Content="Done" Style="{ThemeResource AccentButtonStyle}" Tag="{x:Bind}" Click="ButtonDoneEditingBlock_Click" />
-                                            <Button x:Name="ButtonDeleteBlock" Grid.Column="1" HorizontalAlignment="Stretch" Content="Delete" CommandParameter="{x:Bind}" Click="ButtonDeleteBlock_Click" />
-                                        </Grid>
                                     </StackPanel>
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
@@ -257,31 +291,75 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+        </Grid>
+        <Grid x:Name="GridPatternButtons" Grid.Row="2" Padding="0,12,0,0" ColumnSpacing="12" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="48" />
+            </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="1" VerticalAlignment="Stretch" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1,0,0,0" Padding="3,0,4,0">
-                <AppBarButton LabelPosition="Collapsed" VerticalAlignment="Center" MaxWidth="300" HorizontalContentAlignment="Stretch" Style="{StaticResource AppBarButtonStyleCompact}" Click="AppBarButton_Click" Loaded="AppBarButton_Loaded">
-                    <AppBarButton.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE109;" FontSize="16" />
-                    </AppBarButton.Icon>
+            <muxc:DropDownButton x:Name="ButtonAddBlock" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonAddBlock.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Loaded="ButtonAddBlock_Loaded">
+                <Button.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Button.OpacityTransition>
+                
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Text="Add block" />
+                </StackPanel>
 
-                    <FlyoutBase.AttachedFlyout>
-                        <MenuFlyout x:Name="MenuFlyoutAddBlock" />
-                    </FlyoutBase.AttachedFlyout>
-                </AppBarButton>
-            </Border>
+                <muxc:DropDownButton.Flyout>
+                    <MenuFlyout x:Name="MenuFlyoutAddBlock" Placement="Bottom" />
+                </muxc:DropDownButton.Flyout>
+            </muxc:DropDownButton>
+            <Button x:Name="ButtonClearPattern" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonClearPattern.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}">
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
+                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="NotEqual" Value="0">
+                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+                <Button.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Button.OpacityTransition>
+
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="16" />
+                </StackPanel>
+            </Button>
+
+            <Grid x:Name="GridTrashDropZones" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" AllowDrop="True" Background="Transparent" Opacity="{x:Bind GridTrashDropZones.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Visibility="Collapsed" DragOver="GridTrashDropZones_DragOver" DragLeave="GridTrashDropZones_DragLeave" Drop="GridTrashDropZones_Drop">
+                <Grid.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Grid.OpacityTransition>
+
+                <Grid x:Name="GridTrashDropZone"  Visibility="Collapsed">
+                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" StrokeDashArray="3" StrokeDashCap="Round" StrokeDashOffset="0" StrokeThickness="2" RadiusX="4" RadiusY="4" />
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="20" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid x:Name="GridTrashDropZoneHover" Visibility="Collapsed">
+                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeDashArray="3" StrokeDashCap="Round" StrokeDashOffset="0" StrokeThickness="2" RadiusX="4" RadiusY="4" />
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
         </Grid>
 
         <!-- Preview -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" Padding="24,12,24,12" MinHeight="80">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="4*" />
-            </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="3" Text="Preview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
+        <ScrollViewer Grid.Row="4" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" Height="80" HorizontalAlignment="Stretch" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid Padding="24,12,24,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
 
-            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
-            <TextBlock Grid.Column="1" MaxLines="3" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
-        </Grid>
+                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
+                <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
+            </Grid>
+        </ScrollViewer>
+        
     </Grid>
 
 </ContentDialog>

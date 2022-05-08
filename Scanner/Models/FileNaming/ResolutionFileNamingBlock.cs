@@ -20,6 +20,11 @@ namespace Scanner.Models.FileNaming
             get => "Resolution";
         }
 
+        public bool IsValid
+        {
+            get => true;
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,9 +34,9 @@ namespace Scanner.Models.FileNaming
 
         }
 
-        public static ResolutionFileNamingBlock Deserialize(string serialized)
+        public ResolutionFileNamingBlock(string serialized)
         {
-            return new ResolutionFileNamingBlock();
+            
         }
 
 

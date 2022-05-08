@@ -27,6 +27,7 @@ namespace Scanner.ViewModels
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetService<IAccessibilityService>();
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         #endregion
 
         #region Commands
@@ -34,6 +35,7 @@ namespace Scanner.ViewModels
         public RelayCommand CancelCommand => new RelayCommand(Cancel);
         public RelayCommand<string> AddBlockCommand => new RelayCommand<string>((x) => AddBlock(x));
         public RelayCommand<IFileNamingBlock> DeleteBlockCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteBlock(x));
+        public RelayCommand<IFileNamingBlock> DeleteAllBlocksCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteAllBlocks());
         public AsyncRelayCommand LaunchScannerSettingsCommand;
         #endregion
 
@@ -56,7 +58,12 @@ namespace Scanner.ViewModels
         }
 
         private FileNamingPattern _Pattern;
-        private ScanOptions _PreviewScanOptions;
+        public FileNamingPattern Pattern
+        {
+            get => _Pattern;
+            set => SetProperty(ref _Pattern, value);
+        }
+
         private DiscoveredScanner _PreviewScanner;
 
 
@@ -67,17 +74,14 @@ namespace Scanner.ViewModels
         {
             LaunchScannerSettingsCommand = new AsyncRelayCommand(LaunchScannerSettings);
 
-            SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
-
-            // create preview ScanOptions
-            _PreviewScanOptions = new ScanOptions
+            // get current pattern
+            Pattern = new FileNamingPattern((string)SettingsService.GetSetting(AppSetting.CustomFileNamingPattern));
+            SelectedBlocks = new ObservableCollection<IFileNamingBlock>(Pattern.Blocks);
+            foreach (IFileNamingBlock block in SelectedBlocks)
             {
-                Brightness = -20,
-                Contrast = 5,
-                Format = new ScannerFileFormat(ImageScannerFormat.Pdf, ImageScannerFormat.Jpeg),
-                Resolution = 300,
-                Source = Enums.ScannerSource.Flatbed
-            };
+                block.PropertyChanged += Block_PropertyChanged;
+            }
+            SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
 
             // create preview DiscoveredScanner
             string currentScannerName = Messenger.Send(new SelectedScannerRequestMessage()).Response?.Name;
@@ -98,7 +102,7 @@ namespace Scanner.ViewModels
                 DefaultContrast = 0
             };
 
-            // ensure intital pattern is visible
+            // ensure initial pattern is visible
             UpdatePattern();
         }
 
@@ -107,7 +111,10 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void AcceptPattern()
         {
-
+            if (Pattern.IsValid)
+            {
+                SettingsService.SetSetting(AppSetting.CustomFileNamingPattern, Pattern.GetSerialized());
+            }
         }
 
         private void Cancel()
@@ -139,6 +146,19 @@ namespace Scanner.ViewModels
             SelectedBlocks.Remove(block);
         }
 
+        private void DeleteAllBlocks()
+        {
+            foreach (IFileNamingBlock block in SelectedBlocks)
+            {
+                block.PropertyChanged -= Block_PropertyChanged;
+            }
+
+            for (int i = SelectedBlocks.Count - 1; i >= 0; i--)
+            {
+                SelectedBlocks.RemoveAt(i);
+            }
+        }
+
         private void SelectedBlocks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             UpdatePattern();
@@ -146,15 +166,10 @@ namespace Scanner.ViewModels
 
         private void UpdatePattern()
         {
-            _Pattern = new FileNamingPattern();
-
-            foreach (IFileNamingBlock block in SelectedBlocks)
-            {
-                _Pattern.Blocks.Add(block);
-            }
+            Pattern = new FileNamingPattern(SelectedBlocks.ToList());
 
             // generate new preview
-            PreviewResult = _Pattern.GenerateResult(_PreviewScanOptions, _PreviewScanner);
+            PreviewResult = Pattern.GenerateResult(FileNamingStatics.PreviewScanOptions, _PreviewScanner);
         }
 
         private async Task LaunchScannerSettings()
