@@ -717,19 +717,7 @@
     <PRIResource Include="Resources\Localization\ca\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\zh-cn\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Resources\Localization\zh-Hans\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Resources\Localization\zh-hans-cn\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Resources\Localization\zh-hans-sg\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Resources\Localization\zh-sg\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Localization\hu\Resources.resw" />
