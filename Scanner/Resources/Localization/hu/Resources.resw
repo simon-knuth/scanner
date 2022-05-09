@@ -1525,4 +1525,76 @@ A támogatott formátumok: PDF, JPG, PNG, TIF és BMP.</value>
     <value>Az oldalak közé</value>
     <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
   </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Első oldal</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Szkennelés és PDF-hez fűzés</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Szkennelés és PDF-be egyesítés...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>Kiválaszthatod a &quot;Szkennelés és PDF-be egyesítést&quot; a szkennelés menüből, hogy az új oldalakat kiválasztott helyre szúrd be. Ez nagyon megkönnyíti a kétoldalas szkennelést.</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>Szkennelés és egyesítés</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>A szerkeszteni/használni kívánt fájl nem elérhető. Kérlek ne mozgass el, nevezz át vagy nyiss meg fájlokat, a szerkesztés befejezéséig.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>Fájl nem elérhető</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Szkennelési terület eldobása</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bezár</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Kiválasztás alkalmazása</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Szkennelési terület kiválasztása</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Szkennelési terület kiválasztása</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Előnézet teljes magassága</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kiválasztott szkennelési terület magassága</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kiválasztott szkennelési terület szélessége</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Előnézet szélessége</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>Előnézet (szkennelési terület kiválasztva)</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>Legal</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
 </root>

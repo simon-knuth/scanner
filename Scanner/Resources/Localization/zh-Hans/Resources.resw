@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
@@ -228,6 +228,10 @@
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
     <value>保存修改</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>将更改保存为副本</value>
+    <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
     <value>分享</value>
@@ -350,7 +354,7 @@
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
@@ -358,7 +362,7 @@
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
@@ -366,7 +370,7 @@
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
@@ -374,7 +378,7 @@
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>卧槽！</value>
+    <value>哎呀！</value>
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
@@ -382,7 +386,7 @@
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
@@ -390,7 +394,7 @@
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
@@ -398,7 +402,7 @@
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
@@ -406,7 +410,7 @@
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
@@ -414,7 +418,7 @@
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
@@ -444,6 +448,10 @@
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
     <value>另存为</value>
     <comment>The heading for the format options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>进纸选项</value>
+    <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
     <value>分辨率</value>
@@ -478,8 +486,9 @@
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>源</value>
-    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+    <value>进纸</value>
+    <comment>The &quot;Feeder&quot; source option in the scan options section.
+Fuzzy</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
     <value>平面</value>
@@ -498,7 +507,7 @@
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>有东西出错了。请确插入纸张并重试。</value>
+    <value>出错了。请确保纸张已插入并重试。</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
@@ -514,7 +523,7 @@
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
@@ -522,8 +531,12 @@
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>有东西出错了</value>
+    <value>出错了</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>重置文件夹位置失败。</value>
+    <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
     <value>拒绝访问</value>
@@ -564,6 +577,10 @@
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
     <value>网站</value>
     <comment>The hyperlink text for viewing the website.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
+    <value>帮助翻译</value>
+    <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
     <value>设置</value>
@@ -695,8 +712,7 @@
   </data>
   <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
     <value>确定</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.
-Fuzzy</comment>
+    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>请确认以下设置。</value>
@@ -822,6 +838,10 @@ Fuzzy</comment>
     <value>支持开发</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>取消当当前正在运行的扫描</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
     <value>主题</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
@@ -830,13 +850,549 @@ Fuzzy</comment>
     <value>在 Microsoft Store 中评分</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>Github</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value>自动旋转了一页或多页。可以在设置中禁用此功能。</value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
     <value>自动旋转</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value>最新更新日志</value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value>还有更多！</value>
+    <comment>Heading for the fourth changelog section.</comment>
+  </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>请确保扫描仪已打开，并通过Wi-Fi或USB连接。如果您的扫描仪未在Windows设置应用程序中列出，您首先需要从那里添加它。
+
+一旦你在设置应用程序中看到你的扫描仪，并且它不再被标记为“离线”，连接就正常了，你就可以开始扫描了！
+
+&amp;nbsp;
+
+**提示：**如果Windows花费太长时间才能找到已安装的无线扫描仪，您可以重启Wi-Fi，触发网络搜索。请注意，这可能会中断设备上所有应用的互联网访问。</value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>重启扫描仪通常可以解决您可能遇到的大多数问题。有时Windows扫描界面本身的行为与预期不符，这可能需要重新启动电脑。
+
+在极少数情况下，扫描仪安装可能会出现故障，您需要删除扫描仪，然后再次将其添加到设置中。
+
+&amp;nbsp;
+
+另外，请查阅扫描仪手册以获取更多指导，或联系制造商。</value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>你可以在“设置”中更改新扫描的保存位置。如果你愿意，你也可以选择每次扫描时都询问保存位置，从而有助于文档归类。</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>分辨率决定了扫描的整体清晰度，也严重影响文件大小。高分辨率的扫描可以使文件变大，并增加每页扫描所需的时间。低分辨率扫描会导致细节丢失，甚至产生难以辨认的文本。
+
+在 **平板或进纸 ** 模式中，你可以选择分辨率。Scanner总是会为你选择一个默认分辨率，这对于各种扫描都非常有用。有时候，它甚至会为文档或照片的分辨率提供不同建议。
+
+一般来说，文档只需要 300 DPI 左右的分辨率，而照片则需要 500 DPI 左右的高分辨率。</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>扫描时把一些页面弄混了？无需重新开始。扫描后可以快速重新排序PDF页面。只需在页面列表中拖放，并将所有页面放在它所属的位置。</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>如果在应用程序中编辑扫描，更改会立即保存在后台。只需扫描一些页面，编辑结果，你就完成了！</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>如果你想扫描到一个新的PDF文件，而不是在现有的PDF文件中添加页面，你不需要重新启动应用程序。只需选择扫描按钮旁边的小箭头，然后重新开始。</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>如果你不确定要选择哪种文件格式，你应该关注**JPG、PNG和PDF**。
+
+JPG和PNG是图像格式，这意味着每个页面都将保存为单独的文件。这些文件几乎可以在每台设备上查看，以后可以轻松编辑。JPG通常比PNG小，尤其是在高分辨率下，但PNG提供更好的整体质量，这在扫描照片时很重要。
+
+PDF是一种非常流行的文档格式，允许您在一个文件中保存多个页面。这种格式几乎可以在每台设备上查看，但以后编辑这些文件并不容易，可能需要高级软件。</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>更改扫描保存到的文件夹</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>选择文件格式</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>选择分辨率</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>重新排序PDF页面</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>保存更改</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>安装并使用扫描仪</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>解决扫描仪问题</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>新建一个PDF</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>由于某些原因，应用程序无法使用电脑上的设置文件夹，因此每次扫描都必须选择一个文件夹。请确保没有设置或任何防病毒软件干扰。</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>加载保存位置失败</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>由于某些原因，应用程序无法使用电脑上的设置文件夹，因此每次扫描都必须选择一个文件夹。请确保没有设置或任何防病毒软件干扰。</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>支持开发人员</value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>编辑器</value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>帮助</value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>获取帮助</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>扫描仪设置</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>设置</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>Wi-Fi 设置</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>帮助</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>自动剪切</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>禁用</value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value>多区域</value>
+    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value>单区域</value>
+    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>自动</value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>搜索扫描仪中......</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>您的扫描仪需要连接、打开并安装才能使用。要了解更多信息，请参阅帮助页面。</value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>使用扫描仪</value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>裁剪相似页面</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>取消</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>确认</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>显示所有应用</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>在微软商店中寻找更多应用</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>好的</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>裁剪</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value>裁剪相似页面</value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>绘制</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
+    <value>小心</value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>不再提示</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value>将当前裁剪应用于具有相同尺寸的多个页面。</value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value>在下一个菜单中选择一个应用程序后，此处所有页面都将关闭。</value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value>打印选定的页面</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>打印</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
+    <value>预览</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>预览</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>个人数据只存留在你的设备上</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>捐赠</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>不，谢谢</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>无广告</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>无订阅</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>免费更新</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value>该应用免费提供给所有人使用。
+
+如果你喜欢，你可以通过捐款直接支持其开发。
+
+非常感谢。❤️</value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>复制页面</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value>在文件资源管理器中显示</value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>恢复默认</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value>亮度调节</value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value>对比度调节</value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value>始终保存会话</value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>调整亮度和对比度</value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>选择扫描保存的位置</value>
+    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value>在扫描时不可用</value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>亮度和对比度是高级扫描选项，可以在设置中启用。如果扫描仪不支持这些选项，它们将保持隐藏状态。
+
+只能在**平板或进纸**模式下调整亮度和对比度。</value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value>你可以在微软商店里给扫描器打分，提供新功能建议，并为他人提供参考。专业用户也可以在GitHub上影响软件开发。</value>
+    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value>重新启动应用程序后，将应用对此设置的更改。</value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value>Windows支持100多种语言——你可以帮助全世界的人访问这个应用。</value>
+    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>添加另一种语言</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>自动旋转</value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value>编辑器方向</value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value>错误报告和日志</value>
+    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value>文件命名</value>
+    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>个性化</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>扫描选项</value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value>调查</value>
+    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>自动旋转页面</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+    <value>识别语言</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>水平</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>垂直</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>保存上一次扫描选项</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>显示扫描仪支持的高级扫描选项</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value>参加调查</value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>自动确定扫描页面的正确方向</value>
+    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value>此功能检查扫描页面的文本内容，以确定其正确方向。这一过程由设备上的文本识别驱动——请放心，识别到文本只会保存在你的设备上。</value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value>扫描仪在Windows 11上工作得最好。请随时更新您的系统，以获得最佳体验。</value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
+  </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>新的状态信息可用</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>编辑器</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>页面列表</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>扫描选项</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>自动裁剪扫描</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>默认情况下，自动裁剪选项是隐藏的，可以在设置中启用。如果扫描仪不支持这些选项，它们将保持隐藏状态。
+
+只有在**平板或进纸**模式下才能进行自动裁切。
+
+“单一区域”裁剪只创建一张图像，这对扫描文档特别有用。“多区域”裁剪可以在一次扫描中识别多个元素，这对于在平板上放置多张照片很有用。</value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value>你的回答是保密的。</value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value>调查</value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value>它本来就装上了</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value>网站/文章</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>我不知道</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>其他</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value>他人推荐</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value>微软商店</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value>其他</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
+    <value>私人</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageSchool" xml:space="preserve">
+    <value>学校</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageStudy" xml:space="preserve">
+    <value>学习</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageWork" xml:space="preserve">
+    <value>工作</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
+    <value>你是怎么发现这个应用的？</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
+    <value>这个应用程序有多容易使用？</value>
+    <comment>The survey question on ease of use.</comment>
+  </data>
+  <data name="TextSurveyFeatures.Text" xml:space="preserve">
+    <value>这个应用程序是否提供了你所期望的所有功能？</value>
+    <comment>The survey question on the offered features.</comment>
+  </data>
+  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
+    <value>你对可用的文件格式有多满意？</value>
+    <comment>The survey question on available file formats.</comment>
+  </data>
+  <data name="TextSurveyFileSize.Text" xml:space="preserve">
+    <value>你对创建的文件的大小有多满意？</value>
+    <comment>The survey question on file sizes.</comment>
+  </data>
+  <data name="TextSurveyInterface.Text" xml:space="preserve">
+    <value>你如何评价应用程序界面？</value>
+    <comment>The survey question on the app interface.</comment>
+  </data>
+  <data name="TextSurveyPerformance.Text" xml:space="preserve">
+    <value>应用程序在你的设备上运行的速度有多快？</value>
+    <comment>The survey question on performance.</comment>
+  </data>
+  <data name="TextSurveyRecommend.Text" xml:space="preserve">
+    <value>你向想使用扫描仪的人推荐这个应用的可能性有多大？</value>
+    <comment>The survey question on recommending the app to others.</comment>
+  </data>
+  <data name="TextSurveyUsage.Text" xml:space="preserve">
+    <value>你主要使用该应用程序做什么？</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="StoreDescription" xml:space="preserve">
+    <value>现在，扫描文档和照片很轻松。将一些页面扫描为图像文件，使用内置预设进行旋转和裁剪，并通过电子邮件快速共享，或者创建一个多页PDF文件，给它一个有意义的名称，并将其归档到正确的文件夹中。
+
+有了Scanner，你可以在一个地方完成所有事情，不需要额外的图像编辑器或昂贵的PDF软件。
+
+现在几乎所有扫描仪都支持该应用程序，所以你不需要使用设备制造商提供的过时且笨重的软件。它的设计考虑到了简单性和易用性，同时还提供了先进的工具和功能。
+
+支持的格式有PDF、JPG、PNG、TIF和BMP。</value>
+    <comment>The Microsoft Store description of the app.</comment>
+  </data>
+  <data name="StoreProductName" xml:space="preserve">
+    <value>Scanner - 快速简便的文档扫描</value>
+    <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
+  </data>
   <data name="StoreSearchTerms" xml:space="preserve">
     <value>扫描仪|Windows-扫描|扫描文档|扫描|Windows 扫描|扫描仪 Windows 10</value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
+  </data>
+  <data name="StoreShortDescription" xml:space="preserve">
+    <value>扫描文档和照片，编辑页面并将其保存为PDF或图像文件——所有这些都在一个易于使用的应用程序中。</value>
+    <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
     <value>扫描仪</value>
@@ -845,6 +1401,134 @@ Fuzzy</comment>
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>扫描仪</value>
     <comment>App title for voice control.</comment>
+  </data>
+  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
+    <value>应用图标</value>
+    <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>文件和保存位置</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>扫描仪使用情况</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>动画</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>显示动画</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>默认扫描操作</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>添加到现有页面</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>重新开始</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>设置</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>自动旋转当前不可用，因为您安装的语言都不支持文本识别。请安装受支持的语言（包括其所有独立组件），然后重新启动电脑以使用此功能。</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>新的预览体验</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>更小的 PDF </value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>扫描和合并</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>扫描预览现在要大得多，所以你不再需要放大镜。还增加了一个流行的需求：从预览中选择一个扫描区域。</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>现在，无论使用哪种扫描仪，PDF都将得到一致的优化，以节省设备空间并简化共享。</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>如果你有一个进纸扫描仪，你现在可以使用新的“扫描并合并成PDF”工具在正确的位置添加页面。超级有用，无需双面扫描仪即可扫描多张双面纸张。</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>关闭</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>度量单位</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>美国</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>公制</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>厘米</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>英寸</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>取消</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>扫描并合并</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>扫描并合并成PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>单一扫描页面</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>首次扫描页面</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>所有剩余页面</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>您可以使用此工具在特定位置插入新页面。这还允许您在不使用双面扫描的情况下扫描多张双面纸张，通常先扫描正面，然后将所有反面合并到一起。</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>中间页</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>第一页</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
     <value>扫描并添加到 PDF</value>
@@ -901,5 +1585,17 @@ Fuzzy</comment>
   <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
     <value>所选扫描区域的宽度</value>
     <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>预览宽度</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
+    <value>预览（扫描区域已选择）</value>
+    <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>法律</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
 </root>

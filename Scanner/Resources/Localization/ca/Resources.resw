@@ -1592,4 +1592,8 @@ Els formats admesos són PDF, JPG, PNG, TIF i BMP.</value>
     <value>Previsualitza (selecció de l&apos;àrea d&apos;escaneig)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
+  <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
+    <value>Legal</value>
+    <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
 </root>

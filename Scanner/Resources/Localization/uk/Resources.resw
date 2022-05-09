@@ -511,7 +511,7 @@ Fuzzy</comment>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Вибрати папку</value>
+    <value>Вибрати теку</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
@@ -527,7 +527,7 @@ Fuzzy</comment>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>Вибрана папка недоступна. Будь ласка, спробуйте вибрати іншу.</value>
+    <value>Вибрана тека недоступна. Будь ласка, спробуйте вибрати іншу.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
@@ -543,7 +543,7 @@ Fuzzy</comment>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>Додатку не дозволено використовувати цю папку. Будь ласка, спробуйте вибрати іншу.</value>
+    <value>Додатку не дозволено використовувати цю теку. Будь ласка, спробуйте вибрати іншу.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
@@ -640,7 +640,7 @@ Fuzzy</comment>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>Скани зберігаються в папку для збереження за замовчуванням. Ви можете вибрати іншу папку в налаштуваннях.</value>
+    <value>Скани зберігаються в теку для збереження за замовчуванням. Ви можете вибрати іншу теку в налаштуваннях.</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
@@ -680,7 +680,7 @@ Fuzzy</comment>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Це дозволяє нам досліджувати збої програми та визначати, які функції найбільш цінні для наших користувачів. Будьте впевнені, що ваші відскановані сторінки ніколи не включаються в ці звіти.</value>
+    <value>Це дозволяє нам досліджувати збої додатку та визначати, які функції найбільш цінні для наших користувачів. Будьте впевнені, що ваші відскановані сторінки ніколи не включаються в ці звіти.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
@@ -761,7 +761,7 @@ Fuzzy</comment>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Використовувати обрану папку</value>
+    <value>Використовувати обрану теку</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
@@ -899,7 +899,7 @@ Fuzzy</comment>
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
     <value>Роздільна здатність визначає загальну різкість скана, а також сильно впливає на розмір файлу. Сканування з високою роздільною здатністю може збільшити розмір файлу та збільшити час сканування кожної сторінки. Сканування з низькою роздільною здатністю може призвести до втрати деталей і навіть до нерозбірливого тексту.
 
-Вибір роздільної здатності можливий у режимі **планшета або пристрою подавання**. Програма завжди вибирає для вас стандартну роздільну здатноість, яка відмінно підходить для всіх видів сканування. Іноді навіть рекомендує роздільну здатніость для документів та окрему для фотографій.
+Вибір роздільної здатності можливий у режимі **планшета або пристрою подавання**. Додаток завжди вибирає для вас стандартну роздільну здатноість, яка відмінно підходить для всіх видів сканування. Іноді навіть рекомендує роздільну здатніость для документів та окрему для фотографій.
 
 Як правило, для документів потрібна роздільна здатність лише близько 300 DPI, тоді як фотографії мають більшу роздільну здатність близько 500 DPI.</value>
     <comment>The help text on choosing the right resolution.</comment>
@@ -911,6 +911,91 @@ Fuzzy</comment>
   <data name="TextHelpSaveChanges.Text" xml:space="preserve">
     <value>Якщо ви редагуєте свої сканування в програмі, зміни відразу ж зберігаються у фоновому режимі. Просто відскануйте кілька сторінок, відредагуйте результат і готово!</value>
     <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>Якщо ви хочете відсканувати в новий PDF-файл замість того, щоб додавати сторінки до наявного, вам не потрібно перезапускати програму. Просто виберіть маленьку стрілку біля кнопки сканування та почніть заново.</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>Якщо ви не впевнені, який формат файлу вибрати, вам слід зосередитися на **JPG, PNG і PDF**.
+
+JPG та PNG - це формати зображень, і мається на увазі, що кожна сторінка буде збережена як окремий файл. Ці файли можна переглядати майже на кожному пристрої та редагувати пізніше з легкістю. JPG зазвичай менше, ніж PNG, особливо з високою роздільною здатністю, але PNG пропонують кращу загальну якість, що може бути важливим при скануванні фотографій.
+
+PDF є дуже популярним форматом документа, який дозволяє зберігати кілька сторінок в одному файлі. Цей формат можна переглядати практично на кожному пристрої, але пізніше редагувати ці файли непросто і може знадобитися додаткове програмне забезпечення.
+</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>Змініть теку, в якій зберігаються скановані дані</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>Вибрати формат файлу</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>Вибрати роздільну здатність</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>Змінити порядок сторінок PDF</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>Зберегти зміни</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>Встановіть і використовуйте сканер</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>Вирішення проблем зі сканером</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>Створити новий PDF</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>Щось заважає програмі використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>Не вдалося завантажити місце збереження</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>Щось заважає програмі використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Підтримати розробку</value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Редактор</value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Допомога</value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Отримати допомогу</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>Налаштування Scanner</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>Налаштування</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>Налаштування Wi-Fi</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
   </data>
   <data name="HeadingHelp.Text" xml:space="preserve">
     <value>Допомога</value>
@@ -943,5 +1028,432 @@ Fuzzy</comment>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
     <value>Щоб використовувати сканер, його потрібно підключити, увімкнути та встановити. Будь ласка, перегляньте сторінку довідки для отримання додаткової інформації.</value>
     <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>Використовуйте сканер</value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Обрізати схожі сторінки</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>Скасувати</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>Підтвердити</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>Показати всі додатки</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>Знайдіть більше програм у магазині</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>Гаразд</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>Обрізати</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Обрізати схожі сторінки</value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>Малювати</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
+    <value>Попередження</value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>Не показувати більше</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Застосуйте поточну обрізку до кількох сторінок з однаковими розмірами одночасно.</value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value>Якщо обрати програму в наступному меню, усі сторінки тут будуть закриті.</value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Роздрукувати вибрані сторінки</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Друк</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
+    <value>Попередній перегляд</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>Попередній перегляд</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>Персональні дані залишаються на вашому пристрої</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>Донат</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>Ні, дякую</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>Без реклами</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>Без підписок</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>Безкоштовні оновлення</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value>Цей додаток безкоштовен для всіх. 
+
+Якщо він вам до вподоби, ви можете безпосередньо підтримати розробку пожертвуванням. 
+
+Велика  подяка! ❤️</value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>Дублювати сторінку</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value>Подивитися в Провіднику</value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Відновити початкові</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value>Налаштування яскравості</value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value>Регулювання контрасту</value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value>Завжди зберігається в різних сеансах програми</value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>Налаштуйте яскравість і контраст</value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>Виберіть, де зберігати скановані зображення</value>
+    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value>Недоступно під час сканування</value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>Яскравість і контрастність є розширеними параметрами сканування, які можна ввімкнути в налаштуваннях. Якщо ці параметри не підтримуються вашим сканером, вони залишаться прихованими.
+
+Налаштування яскравості та контрастності можливе лише в режимі **планшету або фідера**.</value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value>Ви можете оцінити Scanner у магазині Microsoft Store, щоб запропонувати нові функції та допомогти іншим вирішити, чи підходить цей додаток для них. Професійні користувачі також можуть впливати на подальший розвиток GitHub.</value>
+    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value>Зміни до цього налаштування застосовуються після перезапуску додатку.</value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value>Windows підтримує понад 100 мов – ви можете допомогти зробити цю програму доступною для людей з усього світу.</value>
+    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>Додайте іншу мову</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>Автоматичне обертання</value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value>Редагувати орієнтацію</value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value>Звіти про помилки та журнали</value>
+    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value>Найменування файлів</value>
+    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>Персоналізація</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>Параметри сканування</value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value>Опитування</value>
+    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>Автоматично обертати сторінки</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+    <value>Мова розпізнавальника</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>Горизонтальний</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>Вертикально</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>Запам’ятати останні використані параметри сканування</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>Подивитися розширені параметри сканування, які підтримує сканер</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value>Беріть участь у періодичних опитуваннях</value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>Автоматично визначати правильну орієнтацію відсканованих сторінок</value>
+    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value>Ця функція вивчає текстовий вміст відсканованих сторінок, щоб визначити їх правильну орієнтацію. Цей процес забезпечується за допомогою розпізнавання тексту на пристрої – будьте впевнені, що розпізнаний текст ніколи не залишає ваш пристрій.</value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value>Сканер найкраще працює в Windows 11. Підтримуйте свою систему в актуальному стані для оптимальної роботи.</value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
+  </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>Доступне нове повідомлення про статус</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>Редактор</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>Список сторінок</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>Параметри сканування</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>Автоматична обрізка сканів</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>Параметри автоматичного обрізання приховані за замовчуванням і їх можна увімкнути в налаштуваннях. Якщо ці параметри не підтримуються вашим сканером, вони залишаться прихованими.
+
+Автоматичне обрізання можливе лише в режимі **планшет або подавальник**.
+
+Обрізання &quot;Єдиної області&quot; створює єдине зображення, що особливо корисно для сканування документів. Обрізання &quot;декількох регіонів&quot; може ідентифікувати більше одного елемента в одному скануванні, що корисно для розміщення декількох фотографій на плоскому рівні.
+</value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value>Ваші відповіді є конфіденційними</value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value>Опитування</value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value>Його вже встановлено</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value>Веб-сайт/стаття</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>Я не знаю</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>Інше</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value>Рекомендація для когось</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="StoreVoiceTitle" xml:space="preserve">
+    <value>Сканер</value>
+    <comment>App title for voice control.</comment>
+  </data>
+  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
+    <value>Лого додатку</value>
+    <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>Файли та місце збереження</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>Використання сканера</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Анімації</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Показати анімацію</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>Дія сканування за замовчуванням</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>Додати до наявних сторінок</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>Додати до наявних сторінок</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Налаштування</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>Автоматична ротація наразі недоступна, оскільки жодна з ваших встановлених мов не підтримує розпізнавання тексту. Будь ласка, встановіть підтримувану мову (включаючи всі її окремі частини) та перезавантажте комп’ютер, щоб скористатися цією функцією.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Новий досвід попереднього перегляду</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>Менші PDF-файли</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Вісдкануйте та об’єднайте</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Попередній перегляд сканування тепер набагато більший, тому вам більше не потрібне збільшувальне скло. Також додано за популярністю: вибір області сканування з попереднього перегляду.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
+    <value>PDF-файли тепер будуть постійно оптиміуватись незалежно від сканера, щоб заощадити місце на вашому пристрої та спростити обмін.</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Якщо у вас є фідер сканер, тепер ви можете використовувати новий інструмент «Сканувати та об’єднати в PDF», щоб додавати сторінки в потрібні місця. Дуже корисно для сканування кількох двосторонніх аркушів без двостороннього сканера.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Закрити</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Одиниці виміру</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>Імперська/США</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Метрична</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>см</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>дюйми</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Скасувати</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Скануйте та об’єднайте</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Скануйте та об’єднайте в PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>Одна сканована сторінка</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>Перша сканована сторінка</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
+    <value>Усі зайві сторінки</value>
+    <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>Ви можете використовувати цей інструмент, щоб вставити нові сторінки в конкретне місце. Це також дозволяє сканувати кілька двосторонніх аркушів без дуплексу, спочатку скануючи лицьові сторони, а потім об’єднуючи всі зворотні сторони в першу партію.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>Між сторінками</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Перша сторінка</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>Скануйте та додайте в PDF</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>Сканувати та об’єднати в PDF...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
   </data>
 </root>

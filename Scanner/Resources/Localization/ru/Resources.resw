@@ -985,6 +985,182 @@ PDF — очень популярный формат документов, по�
     <value>Получить помощь</value>
     <comment>The tooltip for a button that offers help regarding some topic.</comment>
   </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>Настройки сканера</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>Настройки</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>Настройки Wi-Fi</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>Помощь</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>Автоматическая обрезка</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>Отключено</value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>Автоматический</value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>Поиск сканеров...</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>Для использования ваш сканер необходимо подключить, включить и установить. Пожалуйста, обратитесь к справочнику для получения дополнительной информации.</value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>Используйте сканер</value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>Обрезать похожие страницы</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>Отменить</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>Подтвердить</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>Показать все приложения</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>Найти больше приложении в магазине</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>Ок</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>Обрезать</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>Рисовать</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>Не показывать снова</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Печать</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
+    <value>Предпросмотр</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>Предпросмотр</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>Персональные данные остаются на вашем устройстве</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>Поддержать</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>Нет, спасибо</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>Без рекламы</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>Без подписок</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>Бесплатные обновления</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>Дублировать страницу</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Сброс настроек</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>Добавить другой язык</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>Автоматическое вращение</value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
+    <value>Редактор ориентации</value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>Персонализация</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>Опции сканера</value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>Автоматический поворачивать страницы</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>Горизонтально</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>Вертикально</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>Запомнить последние настройки сканера</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>Показать расширенные параметры сканирования, поддерживаемые вашим сканером</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>Я не знаю</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>Другое</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value>Microsoft Store</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value>Другое</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
   <data name="StoreSearchTerms" xml:space="preserve">
     <value>Сканер | Сканирование Windows | Сканирование документа | Сканирование | Сканирование Windows | Сканер Windows 10</value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
@@ -996,5 +1172,81 @@ PDF — очень популярный формат документов, по�
   <data name="StoreVoiceTitle" xml:space="preserve">
     <value>Сканер</value>
     <comment>App title for voice control.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>Анимация</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>Показывать анимацию</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>Настройки</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
+    <value>Новый предварительный просмотр</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
+    <value>Сканируйте и преобразуйте</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>Единицы измерения</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>Метрический</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>в</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>Отменить</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>Сканировать и преобразовать</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>Сканировать и преобразовать в PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>Первая страница</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>Файл недоступен</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>Удалить выбранную область сканирования</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>Применить выбор</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Выберите область сканирования</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>Выбор области сканирования</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
   </data>
 </root>
