@@ -103,20 +103,20 @@ namespace Scanner
 
             // set app language
             string languageTag = (string)settingsService.GetSetting(AppSetting.SettingAppLanguage);
-            if (!string.IsNullOrEmpty(languageTag))
-            {
-                // custom language selected
-                if (ApplicationLanguages.PrimaryLanguageOverride != languageTag)
-                {
-                    ApplicationLanguages.PrimaryLanguageOverride = languageTag;
-                }
-            }
-            else
+            if (languageTag == "SYSTEM")
             {
                 // no custom language selected
                 if (!string.IsNullOrEmpty(ApplicationLanguages.PrimaryLanguageOverride))
                 {
                     ApplicationLanguages.PrimaryLanguageOverride = "";
+                }
+            }
+            else
+            {
+                // custom language selected
+                if (ApplicationLanguages.PrimaryLanguageOverride != languageTag)
+                {
+                    ApplicationLanguages.PrimaryLanguageOverride = languageTag;
                 }
             }
 

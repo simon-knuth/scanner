@@ -14,13 +14,13 @@ namespace Scanner.Views.Converters
         {
             string languageString = value as string;
 
-            if (!string.IsNullOrEmpty(languageString))
+            if (languageString == "SYSTEM")
             {
-                return new Language(languageString).DisplayName;
+                return LocalizedString("OptionSettingsAppLanguageSystem");
             }
             else
             {
-                return LocalizedString("OptionSettingsAppLanguageSystem");
+                return new Language(languageString).DisplayName;
             }
         }
 

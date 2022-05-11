@@ -214,7 +214,7 @@ namespace Scanner.ViewModels
                 AvailableAppLanguages.Add(languageString);
             }
             AvailableAppLanguages = AvailableAppLanguages.OrderBy((x) => new Language(x).DisplayName).ToList();
-            AvailableAppLanguages.Insert(0, "");
+            AvailableAppLanguages.Insert(0, "SYSTEM");
 
             // prepare file naming preview
             RefreshFileNamingPatternPreviewResult();

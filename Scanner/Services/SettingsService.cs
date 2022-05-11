@@ -7,7 +7,9 @@ using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Globalization;
 using Windows.Media.Ocr;
 using Windows.Storage;
 using Windows.System.UserProfile;
@@ -279,7 +281,17 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? false;
 
                 case AppSetting.SettingAppLanguage:
-                    return SettingsContainer.Values[name] ?? "";
+                    string languageValue = SettingsContainer.Values[name] as string ?? "SYSTEM";
+                    if (languageValue != "SYSTEM" && !ApplicationLanguages.ManifestLanguages.Contains(languageValue))
+                    {
+                        // desired language unavailable
+                        SetSetting(AppSetting.SettingAppLanguage, "SYSTEM");
+                        return "SYSTEM";
+                    }
+                    else
+                    {
+                        return languageValue;
+                    }
 
                 case AppSetting.SettingFileNamingPattern:
                     return SettingsContainer.Values[name] ?? SettingFileNamingPattern.DateTime;

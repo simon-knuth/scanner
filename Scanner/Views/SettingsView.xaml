@@ -398,10 +398,10 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
-                            <ComboBox x:Uid="OptionSettingsAppLanguage" HorizontalAlignment="Stretch" IsTextSearchEnabled="True" ItemsSource="{x:Bind ViewModel.AvailableAppLanguages}" SelectedItem="{x:Bind ViewModel.SettingAppLanguage, Mode=TwoWay}">
+                            <ComboBox HorizontalAlignment="Stretch" IsTextSearchEnabled="True" ItemsSource="{x:Bind ViewModel.AvailableAppLanguages}" SelectedItem="{x:Bind ViewModel.SettingAppLanguage, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="system:String">
-                                        <TextBlock Text="{x:Bind Converter={StaticResource AppLanguageSettingConverter}}" />
+                                        <TextBlock Text="{x:Bind Converter={StaticResource AppLanguageSettingConverter}}" TextTrimming="CharacterEllipsis"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
