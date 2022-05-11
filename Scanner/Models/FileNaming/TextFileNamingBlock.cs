@@ -20,7 +20,7 @@ namespace Scanner.Models.FileNaming
             get => "Text";
         }
 
-        private string _Text;
+        private string _Text = "";
         public string Text
         {
             get => _Text;

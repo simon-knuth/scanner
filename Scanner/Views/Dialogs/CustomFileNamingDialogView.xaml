@@ -48,6 +48,7 @@
             <converters:RadioButtonsMonthTypeConverter x:Key="RadioButtonsMonthTypeConverter"/>
             <converters:ScanMergeElementGlyphConverter x:Key="ScanMergeElementGlyphConverter"/>
             <converters:ScanMergeElementTooltipConverter x:Key="ScanMergeElementTooltipConverter"/>
+            <converters:StringWhitespaceVisualizationConverter x:Key="StringWhitespaceVisualizationConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
@@ -115,7 +116,7 @@
                                         <controls:Case Value="TEXT">
                                             <StackPanel Orientation="Horizontal">
                                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA39;" FontSize="16" Margin="8,0,8,0" ToolTipService.ToolTip="Invalid block" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind IsValid, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
-                                                <TextBlock Text="{Binding Path=Text, Mode=OneWay, FallbackValue=ERROR}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" Visibility="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
+                                                <TextBlock Text="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringWhitespaceVisualizationConverter}}" Style="{StaticResource CaptionTextBlockStyle}" Visibility="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
                                             </StackPanel>
                                         </controls:Case>
                                     </controls:SwitchPresenter>
@@ -131,7 +132,7 @@
                                             <controls:Case Value="TEXT">
                                                 <StackPanel Orientation="Vertical" Spacing="12">
                                                     <TextBlock Text="Text" Style="{StaticResource BaseTextBlockStyle}" />
-                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" Tag="{x:Bind}" KeyUp="TextBoxText_KeyUp" />
+                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" Tag="{x:Bind}" KeyUp="TextBoxText_KeyUp" Loaded="TextBoxText_Loaded" />
                                                 </StackPanel>
                                             </controls:Case>
 

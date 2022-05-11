@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Scanner.Models;
+using Scanner.Models.FileNaming;
 using Scanner.Services;
 using System;
 using System.Collections.Generic;
@@ -113,7 +114,7 @@ namespace Scanner
         ///     Create a <see cref="ScanResult"/> without conversion.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, int futureAccessListIndexStart, ScanOptions scanOptions)
+            StorageFolder targetFolder, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -127,7 +128,7 @@ namespace Scanner
             List<StorageFile> files = fileList.ToList();
             for (int i = 0; i < files.Count; i++)
             {
-                files[i] = await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, GetInitialName(scanOptions), false);
+                files[i] = await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, GetInitialName(scanOptions, scanner), false);
             }
 
             ScanResult result = new ScanResult(files, targetFolder, futureAccessListIndexStart, false,
@@ -177,7 +178,7 @@ namespace Scanner
         ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder,
-            ImageScannerFormat targetFormat, int futureAccessListIndexStart, ScanOptions scanOptions)
+            ImageScannerFormat targetFormat, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -192,7 +193,7 @@ namespace Scanner
             if (targetFormat == ImageScannerFormat.Pdf)
             {
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, true, targetFormat);
-                string pdfName = GetInitialName(scanOptions);
+                string pdfName = GetInitialName(scanOptions, scanner);
 
                 // convert all source files to JPG for optimized size
                 IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
@@ -212,7 +213,7 @@ namespace Scanner
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false, targetFormat);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
-                    await result.ConvertPageAsync(i, targetFormat, targetFolder, GetInitialName(scanOptions));
+                    await result.ConvertPageAsync(i, targetFormat, targetFolder, GetInitialName(scanOptions, scanner));
                 }
                 result.RefreshItemDescriptors();
             }
@@ -1457,7 +1458,7 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder,
-            int futureAccessListIndexStart, ScanMergeConfig mergeConfig, ScanOptions scanOptions)
+            int futureAccessListIndexStart, ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
@@ -1504,7 +1505,7 @@ namespace Scanner
                         if (targetFormat != ImageScannerFormat.Pdf)
                         {
                             // move file to the correct folder
-                            await HelperService.MoveFileToFolderAsync(file, targetFolder, GetInitialName(scanOptions), false);
+                            await HelperService.MoveFileToFolderAsync(file, targetFolder, GetInitialName(scanOptions, scanner), false);
                         }
                     }
                 }
@@ -1534,7 +1535,7 @@ namespace Scanner
                 {
                     for (int i = numberOfPagesOld; i < NumberOfPages; i++)
                     {
-                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder, GetInitialName(scanOptions));
+                        await ConvertPageAsync(i, (ImageScannerFormat)targetFormat, targetFolder, GetInitialName(scanOptions, scanner));
                     }
                 }
                 catch (Exception exc)
@@ -1625,9 +1626,10 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart,
-            ScanMergeConfig mergeConfig, ScanOptions scanOptions)
+            ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig, scanOptions);
+            return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig, scanOptions,
+                scanner);
         }
 
 
@@ -1881,25 +1883,35 @@ namespace Scanner
         }
 
         /// <summary>
-        ///     Constructs the initial name for a file according to the supplied <paramref name="scanOptions"/>.
+        ///     Constructs the initial name for a file according to the file naming settings.
         /// </summary>
-        protected static string GetInitialName(ScanOptions scanOptions)
+        protected static string GetInitialName(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
-            // base name
-            string name = $"SCN_{DateTime.Now.Year}{DateTime.Now.Month.ToString("00")}{DateTime.Now.Day.ToString("00")}";
-
-            // append time
-            if ((bool)settingsService.GetSetting(AppSetting.SettingAppendTime))
+            try
             {
-                name += $"_{DateTime.Now.Hour.ToString("00")}{DateTime.Now.Minute.ToString("00")}{DateTime.Now.Second.ToString("00")}";
+                FileNamingPattern pattern;
+                switch ((SettingFileNamingPattern)settingsService.GetSetting(AppSetting.SettingFileNamingPattern))
+                {
+                    default:
+                    case SettingFileNamingPattern.DateTime:
+                        pattern = FileNamingStatics.DateTimePattern;
+                        break;
+                    case SettingFileNamingPattern.Date:
+                        pattern = FileNamingStatics.DatePattern;
+                        break;
+                    case SettingFileNamingPattern.Custom:
+                        pattern = new FileNamingPattern((string)settingsService.GetSetting(AppSetting.CustomFileNamingPattern));
+                        break;
+                }
+
+                return pattern.GenerateResult(scanOptions, scanner);
             }
-
-            // file extension
-            name += ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat);
-
-            return name;
+            catch (Exception)
+            {
+                return FileNamingStatics.DateTimePattern.GenerateResult(scanOptions, scanner);
+            }
         }
 
         /// <summary>

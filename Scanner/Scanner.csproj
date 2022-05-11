@@ -185,6 +185,7 @@
     <Compile Include="Views\Converters\ScanMergeElementTooltipConverter.cs" />
     <Compile Include="Views\Converters\ScanMergeElementGlyphConverter.cs" />
     <Compile Include="Views\Converters\AppLanguageSettingConverter.cs" />
+    <Compile Include="Views\Converters\StringWhitespaceVisualizationConverter.cs" />
     <Compile Include="Views\Converters\ToolTipConverter.cs" />
     <Compile Include="Views\Converters\SignedIntConverter.cs" />
     <Compile Include="Views\Converters\FilePathFolderPathConverter.cs" />

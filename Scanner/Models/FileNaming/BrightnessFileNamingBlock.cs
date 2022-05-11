@@ -20,7 +20,7 @@ namespace Scanner.Models.FileNaming
             get => "Brightness";
         }
 
-        private bool _SkipIfDefault = true;
+        private bool _SkipIfDefault;
         public bool SkipIfDefault
         {
             get => _SkipIfDefault;

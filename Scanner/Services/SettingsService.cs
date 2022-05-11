@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Scanner.Models.FileNaming;
 using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
@@ -284,7 +285,7 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? SettingFileNamingPattern.DateTime;
 
                 case AppSetting.CustomFileNamingPattern:
-                    return SettingsContainer.Values[name] ?? "";
+                    return SettingsContainer.Values[name] ?? FileNamingStatics.DefaultCustomPattern.GetSerialized();
 
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");

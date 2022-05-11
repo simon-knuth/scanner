@@ -216,5 +216,14 @@ namespace Scanner.Views.Dialogs
                 });
             }
         }
+
+        private async void TextBoxText_Loaded(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ((TextBox)sender).Focus(FocusState.Programmatic);
+                ((TextBox)sender).SelectAll();
+            });
+        }
     }
 }

@@ -1220,12 +1220,12 @@ namespace Scanner.ViewModels
                         if (scanOptions.Format.OriginalFormat != scanOptions.Format.TargetFormat)
                         {
                             await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                                targetFolder, scanOptions.Format.TargetFormat, scanOptions);
+                                targetFolder, scanOptions.Format.TargetFormat, scanOptions, SelectedScanner);
                         }
                         else
                         {
                             await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                                targetFolder, scanOptions);
+                                targetFolder, scanOptions, SelectedScanner);
                         }
                     }
                     else
@@ -1234,19 +1234,19 @@ namespace Scanner.ViewModels
                         if (scanOptions.Format.OriginalFormat != ScanResultService.Result.ScanResultFormat)
                         {
                             await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                scanOptions.Format.TargetFormat, mergeConfig, scanOptions);
+                                scanOptions.Format.TargetFormat, mergeConfig, scanOptions, SelectedScanner);
                         }
                         else
                         {
                             if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                    null, mergeConfig, scanOptions);
+                                    null, mergeConfig, scanOptions, SelectedScanner);
                             }
                             else
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                    null, targetFolder, scanOptions);
+                                    null, targetFolder, scanOptions, SelectedScanner);
                             }
                         }
                     }
@@ -1330,12 +1330,12 @@ namespace Scanner.ViewModels
                                 != scanOptions.Format.TargetFormat)
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder, scanOptions.Format.TargetFormat, scanOptions);
+                                    targetFolder, scanOptions.Format.TargetFormat, scanOptions, SelectedScanner);
                             }
                             else
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder, scanOptions);
+                                    targetFolder, scanOptions, SelectedScanner);
                             }
                         }
                         else
@@ -1345,19 +1345,19 @@ namespace Scanner.ViewModels
                                 != ScanResultService.Result.ScanResultFormat)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    scanOptions.Format.TargetFormat, mergeConfig, scanOptions);
+                                    scanOptions.Format.TargetFormat, mergeConfig, scanOptions, SelectedScanner);
                             }
                             else
                             {
                                 if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                                 {
                                     await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                        null, mergeConfig, scanOptions);
+                                        null, mergeConfig, scanOptions, SelectedScanner);
                                 }
                                 else
                                 {
                                     await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                        null, targetFolder, scanOptions);
+                                        null, targetFolder, scanOptions, SelectedScanner);
                                 }
                             }
                         }

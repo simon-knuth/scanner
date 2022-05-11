@@ -79,14 +79,14 @@ namespace Scanner.Services
         ///     the files to <paramref name="targetFolder"/>.
         /// </summary>
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
-            ScanOptions scanOptions)
+            ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             IsScanResultChanging = true;
 
             try
             {
                 DismissScanResult();
-                Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, scanOptions);
+                Result = await ScanResult.CreateAsync(files, targetFolder, FutureAccessListIndex, scanOptions, scanner);
                 ScanResultCreated?.Invoke(this, Result);
             }
             catch (Exception)
@@ -108,14 +108,14 @@ namespace Scanner.Services
         /// <param name="targetFormat"></param>
         /// <returns></returns>
         public async Task CreateResultFromFilesAsync(IReadOnlyList<StorageFile> files, StorageFolder targetFolder,
-            ImageScannerFormat targetFormat, ScanOptions scanOptions)
+            ImageScannerFormat targetFormat, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             IsScanResultChanging = true;
 
             try
             {
                 DismissScanResult();
-                Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex, scanOptions);
+                Result = await ScanResult.CreateAsync(files, targetFolder, targetFormat, FutureAccessListIndex, scanOptions, scanner);
                 ScanResultCreated?.Invoke(this, Result);
             }
             catch (Exception)
@@ -133,12 +133,12 @@ namespace Scanner.Services
         ///     specified <paramref name="targetFormat"/> and moving it/them to the <paramref name="targetFolder"/>.
         /// </summary>
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
-            StorageFolder targetFolder, ScanOptions scanOptions)
+            StorageFolder targetFolder, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             IsScanResultChanging = true;
             try
             {
-                await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex, null, scanOptions);
+                await Result.AddFiles(files, targetFormat, targetFolder, FutureAccessListIndex, null, scanOptions, scanner);
             }
             catch (Exception)
             {
@@ -155,12 +155,12 @@ namespace Scanner.Services
         ///     specified <paramref name="targetFormat"/>.
         /// </summary>
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
-            ScanMergeConfig mergeConfig, ScanOptions scanOptions)
+            ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             IsScanResultChanging = true;
             try
             {
-                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, mergeConfig, scanOptions);
+                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, mergeConfig, scanOptions, scanner);
             }
             catch (Exception)
             {
@@ -177,12 +177,12 @@ namespace Scanner.Services
         ///     specified <paramref name="targetFormat"/>.
         /// </summary>
         public async Task AddToResultFromFilesAsync(IReadOnlyList<StorageFile> files, ImageScannerFormat? targetFormat,
-            ScanOptions scanOptions)
+            ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             IsScanResultChanging = true;
             try
             {
-                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, null, scanOptions);
+                await Result.AddFiles(files, targetFormat, FutureAccessListIndex, null, scanOptions, scanner);
             }
             catch (Exception)
             {

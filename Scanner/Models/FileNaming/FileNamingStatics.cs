@@ -78,6 +78,31 @@ namespace Scanner.Models.FileNaming
             },
         });
 
+        public static FileNamingPattern DefaultCustomPattern = new FileNamingPattern(new List<IFileNamingBlock>
+        {
+            new TextFileNamingBlock
+            {
+                Text = "SCN - "
+            },
+            new YearFileNamingBlock(),
+            new TextFileNamingBlock
+            {
+                Text = " "
+            },
+            new MonthFileNamingBlock
+            {
+                Type = MonthType.Number
+            },
+            new TextFileNamingBlock
+            {
+                Text = " "
+            },
+            new DayFileNamingBlock
+            {
+                Type = DayType.DayOfMonth
+            },
+        });
+
         public static ScanOptions PreviewScanOptions = new ScanOptions
         {
             Brightness = -20,
