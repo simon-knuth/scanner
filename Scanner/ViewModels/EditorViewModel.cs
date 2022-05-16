@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner.Helpers;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using System;
@@ -164,14 +165,30 @@ namespace Scanner.ViewModels
                     RefreshSelectedPageText();
                     if (EditorMode == EditorMode.Crop) RefreshSimilarPagesForCrop();
                 }
+                IsLoading = IsScanning || IsScanResultChanging;
+                if (IsLoading == false)
+                {
+                    Progress = null;
+                }
             }
+        }
+
+        private bool _IsLoading;
+        public bool IsLoading
+        {
+            get => _IsLoading;
+            set => SetProperty(ref _IsLoading, value);
         }
 
         private bool _IsScanning;
         public bool IsScanning
         {
             get => _IsScanning;
-            set => SetProperty(ref _IsScanning, value);
+            set
+            {
+                SetProperty(ref _IsScanning, value);
+                IsLoading = IsScanning || IsScanResultChanging;
+            }
         }
 
         private bool _IsEditing;
@@ -188,6 +205,13 @@ namespace Scanner.ViewModels
                     Messenger.Send(new EditorIsEditingChangedMessage(value));
                 }
             }
+        }
+
+        private ScanAndEditingProgress _Progress;
+        public ScanAndEditingProgress Progress
+        {
+            get => _Progress;
+            set => SetProperty(ref _Progress, value);
         }
 
         private List<OpenWithApp> _OpenWithApps;
@@ -297,11 +321,11 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultCreated += ScanResultService_ScanResultCreated;
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
             IsScanResultChanging = ScanResultService.IsScanResultChanging;
-            ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
+            ScanResultService.ScanResultChanging += ScanResultService_ScanResultChanging;
             ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
 
             IsScanning = ScanService.IsScanInProgress;
-            ScanService.ScanStarted += (x, y) => IsScanning = true;
+            ScanService.ScanStarted += ScanService_ScanStarted;
             ScanService.ScanEnded += ScanService_ScanEnded;
 
             Messenger.Register<EditorCurrentIndexRequestMessage>(this, (r, m) => m.Reply(SelectedPageIndex));
@@ -625,6 +649,12 @@ namespace Scanner.ViewModels
             return result;
         }
 
+        private void ScanService_ScanStarted(object sender, ScanAndEditingProgress e)
+        {
+            Progress = e;
+            IsScanning = true;
+        }
+
         private void ScanService_ScanEnded(object sender, EventArgs e)
         {
             IsScanning = false;
@@ -764,6 +794,11 @@ namespace Scanner.ViewModels
         {
             LogService?.Log.Information("SettingsRequest");
             Messenger.Send(new SettingsRequestShellMessage(section));
+        }
+
+        private void ScanResultService_ScanResultChanging(object sender, EventArgs e)
+        {
+            IsScanResultChanging = true;
         }
     }
 

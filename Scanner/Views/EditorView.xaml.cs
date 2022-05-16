@@ -119,8 +119,10 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
                 // fix ProgressRing getting stuck when navigating back to cached page
-                ProgressRingLoading.IsActive = false;
-                ProgressRingLoading.IsActive = true;
+                ProgressRingLoadingIndeterminate.IsActive = false;
+                ProgressRingLoadingIndeterminate.IsActive = true;
+                ProgressRingLoadingDeterminate.IsActive = false;
+                ProgressRingLoadingDeterminate.IsActive = true;
 
                 InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
             });

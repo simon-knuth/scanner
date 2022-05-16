@@ -355,7 +355,7 @@ namespace Scanner.ViewModels
             IsDefaultSaveLocation = SettingsService.IsScanSaveLocationDefault;
         }
 
-        private void ScanService_ScanStartedOrCompleted(object sender, EventArgs e)
+        private void ScanService_ScanStartedOrCompleted(object sender, object e)
         {
             IsScanInProgress = ScanService.IsScanInProgress;
         }

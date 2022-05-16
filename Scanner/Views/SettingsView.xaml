@@ -616,9 +616,9 @@
                         <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
                     </muxc:Expander.Header>
                     <TextBlock TextWrapping="WrapWholeWords">
-                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List</Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/92923-loading-squares" UnderlineStyle="None">Loading Squares</Hyperlink>
                         -
-                        <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh</Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/jakub" UnderlineStyle="None">Jakub Holub</Hyperlink>
                     </TextBlock>
                 </muxc:Expander>
             </StackPanel>

@@ -280,7 +280,7 @@
                     <ScalarTransition Duration="0:0:0.3"/>
                 </StackPanel.OpacityTransition>
 
-                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
+                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF0E2;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
                 <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
             </StackPanel>
 

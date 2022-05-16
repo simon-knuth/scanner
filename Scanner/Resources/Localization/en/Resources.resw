@@ -1629,4 +1629,28 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>System setting</value>
     <comment>The system setting option in the app language settings.</comment>
   </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>Automatic rotation...</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>Almost done...</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>Preparing PDF....</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>Processing...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>Saving...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>Scanning...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
 </root>

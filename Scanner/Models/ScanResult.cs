@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Models.FileNaming;
 using Scanner.Services;
@@ -114,7 +115,8 @@ namespace Scanner
         ///     Create a <see cref="ScanResult"/> without conversion.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList,
-            StorageFolder targetFolder, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner)
+            StorageFolder targetFolder, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner,
+            ScanAndEditingProgress progress)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -123,13 +125,17 @@ namespace Scanner
             IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
             logService?.Log.Information("Creating a ScanResult without any conversion from {Num} pages.", fileList.Count);
+            progress.State = ProgressState.Processing;
 
             // construct ScanResult
+            progress.Progress = 0;
             List<StorageFile> files = fileList.ToList();
             for (int i = 0; i < files.Count; i++)
             {
                 files[i] = await helperService.MoveFileToFolderAsync(fileList[i], targetFolder, GetInitialName(scanOptions, scanner), false);
+                progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / files.Count * 100.0));
             }
+            progress.Progress = null;
 
             ScanResult result = new ScanResult(files, targetFolder, futureAccessListIndexStart, false,
                 (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(fileList[0].FileType));
@@ -138,6 +144,8 @@ namespace Scanner
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                progress.State = ProgressState.AutomaticRotation;
+
                 // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 for (int i = 0; i < result.Elements.Count; i++)
@@ -149,14 +157,17 @@ namespace Scanner
                     {
                         instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
+                    progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / result.Elements.Count * 100.0));
                 }
 
                 // apply recommendations
+                progress.Progress = 100;
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
                 }
+                progress.Progress = null;
 
                 // analytics
                 foreach (var instruction in instructions)
@@ -169,6 +180,7 @@ namespace Scanner
             }
 
             // create previews
+            progress.State = ProgressState.Finishing;
             await result.GetImagesAsync();
             logService?.Log.Information("ScanResult created.");
             return result;
@@ -178,7 +190,8 @@ namespace Scanner
         ///     Create a <see cref="ScanResult"/> with conversion to <paramref name="targetFormat"/>.
         /// </summary>
         public async static Task<ScanResult> CreateAsync(IReadOnlyList<StorageFile> fileList, StorageFolder targetFolder,
-            ImageScannerFormat targetFormat, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner)
+            ImageScannerFormat targetFormat, int futureAccessListIndexStart, ScanOptions scanOptions, DiscoveredScanner scanner,
+            ScanAndEditingProgress progress)
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -196,6 +209,7 @@ namespace Scanner
                 string pdfName = GetInitialName(scanOptions, scanner);
 
                 // convert all source files to JPG for optimized size
+                progress.State = ProgressState.PdfGeneration;
                 IAppDataService appDataService = Ioc.Default.GetService<IAppDataService>();
                 for (int i = 0; i < result.Elements.Count; i++)
                 {
@@ -210,12 +224,16 @@ namespace Scanner
             }
             else
             {
+                progress.State = ProgressState.Processing;
+                progress.Progress = 0;
                 result = new ScanResult(fileList, targetFolder, futureAccessListIndexStart, false, targetFormat);
                 for (int i = 0; i < result.NumberOfPages; i++)
                 {
                     await result.ConvertPageAsync(i, targetFormat, targetFolder, GetInitialName(scanOptions, scanner));
+                    progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / result.NumberOfPages * 100.0));
                 }
                 result.RefreshItemDescriptors();
+                progress.Progress = null;
             }
             result.ScanResultFormat = targetFormat;
             result.PagesFormat = (ImageScannerFormat)ConvertFormatStringToImageScannerFormat(result.GetImageFile(0).FileType);
@@ -223,6 +241,8 @@ namespace Scanner
             // automatic rotation
             if ((bool)settingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                progress.State = ProgressState.AutomaticRotation;
+
                 // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 for (int i = 0; i < result.Elements.Count; i++)
@@ -234,14 +254,17 @@ namespace Scanner
                     {
                         instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
+                    progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / result.Elements.Count * 100.0));
                 }
 
                 // apply recommendations
+                progress.Progress = 100;
                 if (instructions.Count > 0)
                 {
                     await result.RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(result, EventArgs.Empty);
                 }
+                progress.Progress = null;
 
                 // analytics
                 foreach (var instruction in instructions)
@@ -254,6 +277,7 @@ namespace Scanner
             }
 
             // create previews
+            progress.State = ProgressState.Finishing;
             await result.GetImagesAsync();
 
             logService?.Log.Information("ScanResult created.");
@@ -1458,10 +1482,12 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public async Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, StorageFolder targetFolder,
-            int futureAccessListIndexStart, ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner)
+            int futureAccessListIndexStart, ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner,
+            ScanAndEditingProgress progress)
         {
             LogService?.Log.Information("Adding {Num} files, the target format is {Format}.", files.Count(), targetFormat);
             int futureAccessListIndex = futureAccessListIndexStart;
+            progress.State = ProgressState.Processing;
 
             if (targetFormat == null || targetFormat == ImageScannerFormat.Pdf)
             {
@@ -1472,6 +1498,7 @@ namespace Scanner
                     await PrepareNewConversionFiles(files, NumberOfPages);
                 }
 
+                progress.Progress = 0;
                 for (int i = 0; i < files.Count(); i++)
                 {
                     StorageFile file = files.ElementAt(i);
@@ -1508,6 +1535,7 @@ namespace Scanner
                             await HelperService.MoveFileToFolderAsync(file, targetFolder, GetInitialName(scanOptions, scanner), false);
                         }
                     }
+                    progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / files.Count() * 100.0));
                 }
             }
             else
@@ -1552,6 +1580,7 @@ namespace Scanner
                     throw;
                 }
             }
+            progress.Progress = null;
 
             // if necessary, finalize file numbering and generate PDF now
             if (ScanResultFormat == ImageScannerFormat.Pdf) await ApplyElementOrderToFilesAsync();
@@ -1559,6 +1588,8 @@ namespace Scanner
             // automatic rotation
             if ((bool)SettingsService.GetSetting(AppSetting.SettingAutoRotate))
             {
+                progress.State = ProgressState.AutomaticRotation;
+
                 // collect recommendations
                 List<Tuple<int, BitmapRotation>> instructions = new List<Tuple<int, BitmapRotation>>();
                 for (int i = 0; i < files.Count(); i++)
@@ -1580,14 +1611,17 @@ namespace Scanner
                     {
                         instructions.Add(new Tuple<int, BitmapRotation>(indexInResult, recommendation));
                     }
+                    progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / files.Count() * 100.0));
                 }
 
                 // apply recommendations
+                progress.Progress = 100;
                 if (instructions.Count > 0)
                 {
                     await RotateScansAsync(instructions);
                     PerformedAutomaticRotation?.Invoke(this, EventArgs.Empty);
                 }
+                progress.Progress = null;
 
                 // analytics
                 foreach (var instruction in instructions)
@@ -1600,6 +1634,7 @@ namespace Scanner
             }
 
             // generate new previews and descriptors
+            progress.State = ProgressState.Finishing;
             if (mergeConfig == null)
             {
                 for (int i = NumberOfPages - files.Count(); i < NumberOfPages; i++)
@@ -1626,10 +1661,10 @@ namespace Scanner
         /// </summary>
         /// <exception cref="Exception">Something went wrong while adding the files.</exception>
         public Task AddFiles(IEnumerable<StorageFile> files, ImageScannerFormat? targetFormat, int futureAccessListIndexStart,
-            ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner)
+            ScanMergeConfig mergeConfig, ScanOptions scanOptions, DiscoveredScanner scanner, ScanAndEditingProgress progress)
         {
             return AddFiles(files, targetFormat, OriginalTargetFolder, futureAccessListIndexStart, mergeConfig, scanOptions,
-                scanner);
+                scanner, progress);
         }
 
 

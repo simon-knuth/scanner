@@ -134,6 +134,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
+    <Compile Include="Models\ScanMergeConfig.cs" />
     <Compile Include="Models\FileNaming\YearFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\MonthFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\FileNamingStatics.cs" />
@@ -150,7 +151,7 @@
     <Compile Include="Models\FileNaming\TextFileNamingBlock.cs" />
     <Compile Include="Models\FileNaming\IFileNamingBlock.cs" />
     <Compile Include="Models\PersistentScanOptions.cs" />
-    <Compile Include="Models\ScanMergeConfig.cs" />
+    <Compile Include="Helpers\ScanAndEditingProgress.cs" />
     <Compile Include="Models\ScanMergeElement.cs" />
     <Compile Include="Models\FileNaming\FileNamingPattern.cs" />
     <Compile Include="Services\AutoRotatorService.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="ViewModels\ChangelogDialogViewModel.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionBoolConverter.cs" />
     <Compile Include="Views\Converters\AspectRatioOptionIntConverter.cs" />
+    <Compile Include="Views\Converters\NullVisibilityConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsMonthTypeConverter.cs" />
     <Compile Include="Views\Converters\RadioButtonsDayTypeConverter.cs" />
     <Compile Include="Views\Converters\ScanActionVisibilityConverter.cs" />
@@ -713,7 +715,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\AnimatedVisuals\lottie_19814-data-list.json" />
+    <Content Include="Assets\AnimatedVisuals\92923-loading-squares.json" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Resources\Secrets.resw" />
