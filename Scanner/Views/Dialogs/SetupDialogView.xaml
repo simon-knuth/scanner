@@ -7,12 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:Scanner.Helpers"
+    xmlns:dialogs="using:Scanner.Views.Dialogs"
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:Scanner.Views.Converters"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
-    x:Uid="DialogPrivacySetup"
     DefaultButton="Primary"
     PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
     Loaded="ContentDialog_Loaded"
@@ -33,63 +35,180 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - -   DIALOG CONTENT   - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <ContentDialog.Title>
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock x:Uid="HeadingDialogPrivacySetup"/>
-        </StackPanel>
-    </ContentDialog.Title>
-
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords"/>
-        <TextBlock Grid.Row="1" x:Uid="TextDialogPrivacySetupFooter" TextWrapping="WrapWholeWords"/>
-        <ScrollViewer Grid.Row="2" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12" Margin="0,24,0,0">
-            <StackPanel Orientation="Vertical">
-                <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.ProxySettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
-                </CheckBox>
-                <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
-            </StackPanel>
-        </ScrollViewer>
-        <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,24,0,12">
-            <Grid HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition MaxWidth="350"/>
-                </Grid.ColumnDefinitions>
+        <controls:SwitchPresenter x:Name="SwitchPresenterContent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Value="Privacy" Width="460" Height="340">
+            <controls:SwitchPresenter.ContentTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition IsStaggeringEnabled="False" />
+                </TransitionCollection>
+            </controls:SwitchPresenter.ContentTransitions>
 
-                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}"/>
-                <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords"/>
-            </Grid>
-        </StackPanel>
-        <HyperlinkButton Grid.Row="4" NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy"/>
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}"/>
-            </StackPanel>
-        </HyperlinkButton>
+            <controls:Case Value="Privacy">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" ColumnSpacing="12" Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA18;"/>
+                        <TextBlock Grid.Column="1" x:Uid="HeadingDialogPrivacySetup" Style="{StaticResource SubtitleTextBlockStyle}" FontSize="20" AutomationProperties.HeadingLevel="Level1" />
+                        <muxc:PipsPager Grid.Column="2" SelectedPageIndex="0" NumberOfPages="2" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False" />
+                    </Grid>
+                    <TextBlock Grid.Row="1" x:Uid="TextDialogPrivacySetup" TextWrapping="WrapWholeWords" />
+                    <TextBlock Grid.Row="2" x:Uid="TextDialogPrivacySetupFooter" TextWrapping="WrapWholeWords" />
+                    <ScrollViewer Grid.Row="3" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12" Margin="0,24,0,0">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox x:Name="CheckBoxSettingsErrorStatistics" IsEnabled="False" IsChecked="{x:Bind ViewModel.ProxySettingErrorStatistics, Mode=TwoWay}" AutomationProperties.Name="{x:Bind OptionSettingsErrorStatistics.Text}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="Equal" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                    </core:DataTriggerBehavior>
+                                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AppCenterService}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                    </core:DataTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords" />
+                            </CheckBox>
+                            <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorTertiary}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,24,0,12">
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition MaxWidth="350"/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}" />
+                            <TextBlock Grid.Column="1" x:Uid="TextPromisePrivacy" VerticalAlignment="Center" Margin="16,0,0,0" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                        </Grid>
+                    </StackPanel>
+                    <HyperlinkButton Grid.Row="5" NavigateUri="{x:Bind helpers:AppConstants.UriPrivacyPolicy}" HorizontalAlignment="Center" Margin="0,0,0,24">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="TextBlockSettingsAboutPrivacyPolicy" x:Uid="HyperlinkSettingsAboutPrivacyPolicy" />
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="6,0,0,0" VerticalAlignment="Bottom" FontSize="{Binding ElementName=TextBlockSettingsAboutPrivacyPolicy, Path=FontSize}" />
+                        </StackPanel>
+                    </HyperlinkButton>
+                </Grid>
+            </controls:Case>
+
+            <controls:Case Value="Saving">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" ColumnSpacing="12" Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        
+                        <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE838;"/>
+                        <TextBlock Grid.Column="1" x:Uid="HeadingDialogSaveLocationSetup" Style="{StaticResource SubtitleTextBlockStyle}" FontSize="20" AutomationProperties.HeadingLevel="Level1" />
+                        <muxc:PipsPager Grid.Column="2" SelectedPageIndex="1" NumberOfPages="2" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False" />
+                    </Grid>
+                    <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="325" Padding="0,0,24,12">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" x:Uid="TextDialogSaveLocationSetup" TextWrapping="WrapWholeWords" />
+                            <TextBlock Grid.Row="1" x:Uid="TextDialogSaveLocationSetupSecondary" TextWrapping="WrapWholeWords" />
+                            <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,24,0,24" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Vertical">
+                                    <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="2" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
+                                        <RadioButton x:Name="RadioButtonSaveLocationSetSaveLocation" x:Uid="OptionSettingsSaveLocationSet" Margin="0,0,12,0" IsEnabled="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
+                                        <RadioButton x:Uid="OptionSettingsSaveLocationAsk" />
+                                    </muxc:RadioButtons>
+                                </StackPanel>
+                                <Frame x:Name="FrameSaveLocationFolder" Margin="0,12,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}">
+                                    <Frame.OpacityTransition>
+                                        <ScalarTransition Duration="0:0:0.3" />
+                                    </Frame.OpacityTransition>
+
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{x:Bind ViewModel.SaveLocationPath, Mode=OneWay}" Margin="0,0,0,12" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:DataTriggerBehavior Binding="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" ComparisonCondition="Equal" Value="True">
+                                                    <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                                </core:DataTriggerBehavior>
+                                                <core:DataTriggerBehavior Binding="{x:Bind (x:Boolean)RadioButtonSaveLocationSetSaveLocation.IsChecked, Mode=OneWay, FallbackValue=False}" ComparisonCondition="Equal" Value="False">
+                                                    <core:ChangePropertyAction PropertyName="Foreground" Value="{ThemeResource TextFillColorDisabled}" />
+                                                </core:DataTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </TextBlock>
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.Column="0" x:Uid="ButtonSettingsSaveLocationChoose" Command="{x:Bind ViewModel.ChooseSaveLocationCommand}" Style="{ThemeResource AccentButtonStyle}" HorizontalAlignment="Stretch" />
+                                            <Button Grid.Column="1" x:Uid="ButtonSettingsSaveLocationReset" Command="{x:Bind ViewModel.ResetSaveLocationCommand}" IsEnabled="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Frame>
+                                <Frame HorizontalAlignment="Center" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Visibility="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay}">
+                                    <muxc:InfoBar x:Uid="InfoBarSetSaveLocationUnavailable" Severity="Warning" IsOpen="True" IsClosable="False" BorderThickness="0" />
+                                </Frame>
+                                <Line X1="0" X2="200" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,24,0,0" HorizontalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock Grid.Row="3" x:Uid="TextDialogSaveLocationSetupFooter" VerticalAlignment="Bottom" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiary}" />
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </controls:Case>
+        </controls:SwitchPresenter>
+
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnSpacing="8" Margin="-24,0,-24,-24" Padding="24,0,24,0" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultSolidBrush}" BorderThickness="0,1,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="80">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="ButtonBack" Grid.Row="1" Grid.Column="0" x:Uid="ButtonBack" IsEnabled="False" HorizontalAlignment="Stretch" Click="ButtonBack_Click"/>
+            <Button Grid.Row="1" Grid.Column="1" x:Uid="ButtonDialogSetupConfirm" HorizontalAlignment="Stretch" Style="{ThemeResource AccentButtonStyle}" Click="ButtonConfirm_Click" />
+        </Grid>
     </Grid>
 
 </ContentDialog>

@@ -709,11 +709,6 @@
     <value>None of your scanned pages are included in these logs.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
-    <value>Confirm</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.
-Fuzzy</comment>
-  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Please confirm the following settings.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
@@ -1652,5 +1647,29 @@ If you're using a more professional scanner, you can now apply advanced scan opt
   <data name="TextScanProgressScanning.Text" xml:space="preserve">
     <value>Scanning...</value>
     <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonBack.Content" xml:space="preserve">
+    <value>Back</value>
+    <comment>The text for a generic "Back" button.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>Confirm</value>
+    <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Save location</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Choose a set location or select a new one for every scan.</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>The app automatically saves changes each time you scan pages or edit existing ones - no need to worry about forgetting something.</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>You can always change your mind in the app settings.</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
 </root>
