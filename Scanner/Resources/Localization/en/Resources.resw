@@ -1648,13 +1648,17 @@ If you're using a more professional scanner, you can now apply advanced scan opt
     <value>Scanning...</value>
     <comment>The text that indicates that a scan is currently running.</comment>
   </data>
-  <data name="ButtonBack.Content" xml:space="preserve">
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
     <value>Back</value>
-    <comment>The text for a generic "Back" button.</comment>
+    <comment>The text for the "Back" button in the setup dialog.</comment>
   </data>
   <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
     <value>Confirm</value>
     <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>Save location settings</value>
+    <comment>The text for the button that opens the save location settings.</comment>
   </data>
   <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
     <value>Save location</value>

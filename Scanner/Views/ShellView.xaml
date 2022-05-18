@@ -252,6 +252,16 @@
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource ScanSaveLocationGlyphConverter}}"/>
                     </muxc:NavigationViewItem.Icon>
+
+                    <muxc:NavigationViewItem.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="ButtonSaveLocationSettings" Command="{x:Bind ViewModel.ShowSaveLocationSettingsCommand}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE713;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </muxc:NavigationViewItem.ContextFlyout>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainHelp, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>

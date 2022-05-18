@@ -14,6 +14,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using static Enums;
 using static Utilities;
 
 namespace Scanner.ViewModels
@@ -46,6 +47,7 @@ namespace Scanner.ViewModels
         public RelayCommand ShowDonateDialogCommand;
         public RelayCommand ShowChangelogCommand => new RelayCommand(ShowChangelog);
         public RelayCommand DebugShowFeedbackDialogCommand;
+        public RelayCommand ShowSaveLocationSettingsCommand => new RelayCommand(() => DisplaySettingsView(SettingsSection.SaveLocation));
         public AsyncRelayCommand StoreRatingCommand;
         #endregion
 
@@ -160,7 +162,7 @@ namespace Scanner.ViewModels
         public ShellViewModel()
         {
             Messenger.Register<HelpRequestShellMessage>(this, (r, m) => DisplayHelpView(r, m));
-            Messenger.Register<SettingsRequestShellMessage>(this, (r, m) => DisplaySettingsView(r, m));
+            Messenger.Register<SettingsRequestShellMessage>(this, (r, m) => DisplaySettingsView(m.SettingsSection));
             Messenger.Register<AppWideStatusMessage>(this, (r, m) => ReceiveAppWideMessage(r, m));
             Messenger.Register<EditorSelectionTitleChangedMessage>(this, (r, m) => RefreshAppTitle(m.Title));
             Messenger.Register<SetShareFilesMessage>(this, (r, m) => ShareFilesChanged?.Invoke(this, m.Files));
@@ -206,7 +208,7 @@ namespace Scanner.ViewModels
                         });
         }
 
-        private async void DisplaySettingsView(object r, SettingsRequestShellMessage m)
+        private async void DisplaySettingsView(SettingsSection section)
         {
             DisplayedViewChanged = new TaskCompletionSource<bool>();
 
@@ -215,11 +217,11 @@ namespace Scanner.ViewModels
             await DisplayedViewChanged.Task;
 
             // relay requested section
-            var newRequest = new SettingsRequestMessage(m.SettingsSection);
+            var newRequest = new SettingsRequestMessage(section);
             Messenger.Send(newRequest);
 
             AppCenterService?.TrackEvent(AppCenterEvent.SettingsRequested, new Dictionary<string, string> {
-                            { "Section", m.SettingsSection.ToString() },
+                            { "Section", section.ToString() },
                         });
         }
 

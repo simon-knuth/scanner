@@ -191,7 +191,7 @@
                                 <Frame HorizontalAlignment="Center" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,1,0,0" Visibility="{x:Bind ViewModel.SettingsService.IsSaveLocationUnavailable, Mode=OneWay}">
                                     <muxc:InfoBar x:Uid="InfoBarSetSaveLocationUnavailable" Severity="Warning" IsOpen="True" IsClosable="False" BorderThickness="0" />
                                 </Frame>
-                                <Line X1="0" X2="200" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,24,0,0" HorizontalAlignment="Center" />
+                                <Line X1="0" X2="200" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,28,0,0" HorizontalAlignment="Center" />
                             </StackPanel>
                             <TextBlock Grid.Row="3" x:Uid="TextDialogSaveLocationSetupFooter" VerticalAlignment="Bottom" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiary}" />
                         </Grid>
@@ -206,7 +206,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonBack" Grid.Row="1" Grid.Column="0" x:Uid="ButtonBack" IsEnabled="False" HorizontalAlignment="Stretch" Click="ButtonBack_Click"/>
+            <Button x:Name="ButtonBack" Grid.Row="1" Grid.Column="0" x:Uid="ButtonDialogSetupBack" IsEnabled="False" HorizontalAlignment="Stretch" Click="ButtonBack_Click"/>
             <Button Grid.Row="1" Grid.Column="1" x:Uid="ButtonDialogSetupConfirm" HorizontalAlignment="Stretch" Style="{ThemeResource AccentButtonStyle}" Click="ButtonConfirm_Click" />
         </Grid>
     </Grid>
