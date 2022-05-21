@@ -157,6 +157,7 @@ namespace Scanner
                     {
                         instructions.Add(new Tuple<int, BitmapRotation>(i, recommendation));
                     }
+                    GC.Collect();
                     progress.Progress = Convert.ToInt32(Math.Ceiling((double)i / result.Elements.Count * 100.0));
                 }
 
@@ -183,6 +184,7 @@ namespace Scanner
             progress.State = ProgressState.Finishing;
             await result.GetImagesAsync();
             logService?.Log.Information("ScanResult created.");
+            GC.Collect();
             return result;
         }
 
@@ -281,6 +283,7 @@ namespace Scanner
             await result.GetImagesAsync();
 
             logService?.Log.Information("ScanResult created.");
+            GC.Collect();
             return result;
         }
 
@@ -1653,6 +1656,8 @@ namespace Scanner
                     _Elements[mergeIndex].ItemDescriptor = GetDescriptorForIndex(mergeIndex);
                 }
             }
+
+            GC.Collect();
         }
 
 

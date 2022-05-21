@@ -17,7 +17,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => "Text";
+            get => LocalizedString("HeadingFileNamingBlockText/Text");
         }
 
         private string _Text = "";

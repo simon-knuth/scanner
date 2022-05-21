@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE121";
         public string Name => "MINUTE";
 
-        private string _DisplayName = "Minute";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockMinute/Text");
         }
 
         private bool _Use2Digits = true;

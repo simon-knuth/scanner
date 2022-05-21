@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE121";
         public string Name => "HOURPERIOD";
 
-        private string _DisplayName = "Hour period";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockHourPeriod/Text");
         }
 
         private bool _AllCaps;

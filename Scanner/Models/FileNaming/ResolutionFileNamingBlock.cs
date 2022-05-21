@@ -17,7 +17,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => "Resolution";
+            get => LocalizedString("HeadingFileNamingBlockResolution/Text");
         }
 
         public bool IsValid

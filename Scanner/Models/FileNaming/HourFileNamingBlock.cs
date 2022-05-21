@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE121";
         public string Name => "HOUR";
 
-        private string _DisplayName = "Hour";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockHour/Text");
         }
 
         private bool _Use24Hours;
@@ -48,7 +46,11 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public HourFileNamingBlock()
         {
-            
+            if (CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern.Contains("H"))
+            {
+                // assume 24-hour clock
+                Use24Hours = true;
+            }
         }
 
         public HourFileNamingBlock(string serialized)

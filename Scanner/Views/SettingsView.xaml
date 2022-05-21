@@ -240,14 +240,14 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" SelectedIndex="{x:Bind ViewModel.SettingFileNamingPattern, Mode=TwoWay}">
-                                <RadioButton Content="Date and time (Default)" />
-                                <RadioButton Content="Date" />
-                                <RadioButton x:Name="RadioButtonSettingsFileNamingCustom" Content="Custom" />
+                                <RadioButton x:Uid="OptionSettingsDateTimePattern" />
+                                <RadioButton x:Uid="OptionSettingsDatePattern" />
+                                <RadioButton x:Uid="OptionSettingsCustomPattern" x:Name="RadioButtonSettingsFileNamingCustom" />
                             </muxc:RadioButtons>
-                            <HyperlinkButton Content="Edit custom pattern" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
+                            <HyperlinkButton x:Uid="ButtonSettingsEditCustomPattern" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" Spacing="12">
-                            <TextBlock Text="Preview" />
+                            <TextBlock x:Uid="HeadingFileNamingPreview" />
                             <Grid MinHeight="80">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />

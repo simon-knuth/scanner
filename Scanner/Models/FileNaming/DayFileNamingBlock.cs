@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE163";
         public string Name => "DAY";
 
-        private string _DisplayName = "Day";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockDay/Text");
         }
 
         private DayType _Type = DayType.DayOfMonth;

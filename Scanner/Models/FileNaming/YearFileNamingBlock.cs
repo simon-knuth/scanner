@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE163";
         public string Name => "YEAR";
 
-        private string _DisplayName = "Year";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockYear/Text");
         }
 
         public bool IsValid

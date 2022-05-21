@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE121";
         public string Name => "SECOND";
 
-        private string _DisplayName = "Second";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockSecond/Text");
         }
 
         private bool _Use2Digits = true;

@@ -16,11 +16,9 @@ namespace Scanner.Models.FileNaming
         public string Glyph => "\uE163";
         public string Name => "MONTH";
 
-        private string _DisplayName = "Month";
         public string DisplayName
         {
-            get => _DisplayName;
-            set => SetProperty(ref _DisplayName, value);
+            get => LocalizedString("HeadingFileNamingBlockMonth/Text");
         }
 
         private MonthType _Type = MonthType.Number;

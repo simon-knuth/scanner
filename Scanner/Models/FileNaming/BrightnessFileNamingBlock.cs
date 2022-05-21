@@ -17,7 +17,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => "Brightness";
+            get => LocalizedString("HeadingFileNamingBlockBrightness/Text");
         }
 
         private bool _SkipIfDefault;
