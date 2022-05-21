@@ -247,7 +247,7 @@
                             <HyperlinkButton x:Uid="ButtonSettingsEditCustomPattern" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" Spacing="12">
-                            <TextBlock x:Uid="HeadingFileNamingPreview" />
+                            <TextBlock x:Uid="HeadingFileNamingPreview" AutomationProperties.HeadingLevel="Level3" />
                             <Grid MinHeight="80">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*" />

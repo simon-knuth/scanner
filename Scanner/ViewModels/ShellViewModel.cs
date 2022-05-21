@@ -384,7 +384,7 @@ namespace Scanner.ViewModels
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchEver) == false
                 && (bool)SettingsService.GetSetting(AppSetting.IsFirstAppLaunchWithThisVersion) == true
                 && ( SystemInformation.Instance.PreviousVersionInstalled.Major != 3
-                    || SystemInformation.Instance.PreviousVersionInstalled.Minor != 1) )
+                    || SystemInformation.Instance.PreviousVersionInstalled.Minor != 2) )
             {
                 ShowUpdatedDialog();
             }

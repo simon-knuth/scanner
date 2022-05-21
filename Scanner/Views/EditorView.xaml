@@ -117,7 +117,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="HeadingOpenWithWarning" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="HeadingOpenWithWarning" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Uid="TextOpenWithWarning" Style="{StaticResource BodyTextBlockStyle}"/>
                     <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,16,0,16" IsChecked="{x:Bind ViewModel.ShowOpenWithWarning, Mode=TwoWay, Converter={StaticResource NegativeBoolConverter}}">
                         <TextBlock x:Uid="OptionDontShowAgain" TextWrapping="WrapWholeWords"/>
@@ -296,7 +296,7 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                                             <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
                                             <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,12" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" />
@@ -346,7 +346,7 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock x:Uid="HeadingDialogDelete" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="HeadingDialogDelete" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                                             <TextBlock x:Uid="TextDialogDelete" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
 
                                             <Grid Grid.Row="2">

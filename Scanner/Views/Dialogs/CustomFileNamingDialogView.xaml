@@ -50,6 +50,7 @@
             <converters:ScanMergeElementTooltipConverter x:Key="ScanMergeElementTooltipConverter"/>
             <converters:StringWhitespaceVisualizationConverter x:Key="StringWhitespaceVisualizationConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -103,7 +104,7 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="filenaming:IFileNamingBlock">
-                        <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                        <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind DisplayName, Mode=OneWay}">
                             <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
                                 <!-- Block -->
                                 <StackPanel Orientation="Horizontal" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
@@ -345,7 +346,7 @@
                     <MenuFlyout x:Name="MenuFlyoutAddBlock" Placement="Bottom" />
                 </muxc:DropDownButton.Flyout>
             </muxc:DropDownButton>
-            <Button x:Name="ButtonClearPattern" Grid.Column="1" x:Uid="ButtonFileNamingClearPattern" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonClearPattern.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}">
+            <Button x:Name="ButtonClearPattern" Grid.Column="1" x:Uid="ButtonFileNamingClearPattern" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonClearPattern.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}" AutomationProperties.Name="{x:Bind ButtonClearPattern, Converter={StaticResource ToolTipConverter}}">
                 <interactivity:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
