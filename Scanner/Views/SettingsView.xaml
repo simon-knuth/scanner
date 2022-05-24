@@ -157,7 +157,7 @@
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </CheckBox>
-                            <HyperlinkButton x:Uid="OptionSettingsAutoRotationLanguage" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
+                            <HyperlinkButton HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -166,6 +166,8 @@
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Uid="HyperlinkSettingsAutoRotationLanguage" HorizontalTextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
 
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom">
@@ -244,7 +246,9 @@
                                 <RadioButton x:Uid="OptionSettingsDatePattern" />
                                 <RadioButton x:Uid="OptionSettingsCustomPattern" x:Name="RadioButtonSettingsFileNamingCustom" />
                             </muxc:RadioButtons>
-                            <HyperlinkButton x:Uid="ButtonSettingsEditCustomPattern" HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}" />
+                            <HyperlinkButton HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}">
+                                <TextBlock x:Uid="HyperlinkSettingsEditCustomPattern" HorizontalTextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                            </HyperlinkButton>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" Spacing="12">
                             <TextBlock x:Uid="HeadingFileNamingPreview" AutomationProperties.HeadingLevel="Level3" />

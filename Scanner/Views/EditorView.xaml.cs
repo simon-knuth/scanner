@@ -195,8 +195,11 @@ namespace Scanner.Views
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    FlyoutRename.Hide();
-                    ViewModel.RenameCommand.Execute(TextBoxRename.Text);
+                    if (ButtonRenameConfirm.IsEnabled)
+                    {
+                        FlyoutRename.Hide();
+                        ViewModel.RenameCommand.Execute(TextBoxRename.Text);
+                    }
                 });
             }
         }
@@ -780,6 +783,30 @@ namespace Scanner.Views
         private async void HyperlinkButtonFileNamingSettings_Click(object sender, RoutedEventArgs e)
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutRename.Hide());
+        }
+
+        private void TextBoxRename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // validate entered file name
+            string text = ((TextBox)sender).Text;
+            if (string.IsNullOrEmpty(text))
+            {
+                ButtonRenameConfirm.IsEnabled = false;
+                return;
+            }
+
+            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            foreach (char invalidChar in invalidChars)
+            {
+                if (text.Contains(invalidChar.ToString()))
+                {
+                    ButtonRenameConfirm.IsEnabled = false;
+                    return;
+                }
+            }
+
+            // valid name
+            ButtonRenameConfirm.IsEnabled = true;
         }
     }
 

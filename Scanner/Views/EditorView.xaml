@@ -48,6 +48,7 @@
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
             <converters:EditorModeIntConverter x:Key="EditorModeIntConverter"/>
@@ -289,6 +290,7 @@
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
+                                                <RowDefinition/>
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
@@ -299,7 +301,7 @@
                                             <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                                             <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,12" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" />
+                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,12" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" TextChanged="TextBoxRename_TextChanged" />
                                             <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,12" Text="{x:Bind ViewModel.ScanResult.ScanResultFormatString, Mode=OneWay}" />
                                             
                                             <HyperlinkButton Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsFileNamingRequestCommand}" Click="HyperlinkButtonFileNamingSettings_Click">
@@ -315,8 +317,18 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button x:Uid="ButtonDialogRenameConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
+                                                <Button x:Name="ButtonRenameConfirm" x:Uid="ButtonDialogRenameConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
                                                 <Button x:Uid="ButtonDialogRenameCancel" Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonRenameCancel_Click"/>
+                                            </Grid>
+
+                                            <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0" ColumnSpacing="8" Visibility="{x:Bind ButtonRenameConfirm.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" HorizontalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA39;" FontSize="16" Foreground="{ThemeResource SystemFillColorCriticalBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" x:Uid="ErrorMessageRenameInvalidFileName" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Grid>
                                         </Grid>
                                     </Flyout>
@@ -618,7 +630,7 @@
                     <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingIndeterminate" IsIndeterminate="True" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" />
                     <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingDeterminate" IsIndeterminate="False" Value="{x:Bind (x:Int32)ViewModel.Progress.Progress, Mode=OneWay}" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" />
 
-                    <controls:SwitchPresenter Grid.Row="1" TargetType="helpers:ProgressState" Value="{x:Bind ViewModel.Progress.State, Mode=OneWay}" Visibility="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                    <!--<controls:SwitchPresenter Grid.Row="1" TargetType="helpers:ProgressState" Value="{x:Bind ViewModel.Progress.State, Mode=OneWay}" Visibility="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                         <controls:SwitchPresenter.ContentTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="-16" />
@@ -648,7 +660,7 @@
                         <controls:Case Value="Finishing">
                             <TextBlock x:Uid="TextScanProgressFinishing" Style="{StaticResource BaseTextBlockStyle}" />
                         </controls:Case>
-                    </controls:SwitchPresenter>
+                    </controls:SwitchPresenter>-->
                 </Grid>
             </Grid>
         </Grid>

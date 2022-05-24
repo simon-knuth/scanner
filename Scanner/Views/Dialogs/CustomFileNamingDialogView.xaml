@@ -16,8 +16,6 @@
     xmlns:filenaming="using:Scanner.Models.FileNaming"
     mc:Ignorable="d"
     Style="{ThemeResource DefaultContentDialogStyle}"
-    PrimaryButtonText="Confirm"
-    SecondaryButtonText="Cancel"
     x:Uid="DialogCustomFileNaming"
     DefaultButton="Primary"
     PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
