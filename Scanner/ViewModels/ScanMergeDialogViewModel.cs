@@ -96,6 +96,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanMergeDialogViewModel()
         {
+            LogService.Log.Information("Opening scan and merge dialog");
             Messenger.Register<SelectedScannerChangedMessage>(this, (r, m) =>
             {
                 if (m.Value == null)

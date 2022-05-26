@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using Windows.Devices.Scanners;
 using static Utilities;
 
@@ -64,9 +65,17 @@ namespace Scanner.Models.FileNaming
             return Text;
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{Text}";
+            string resultText = Text;
+            if (obfuscated)
+            {
+                // obfuscate all alphabetic characters
+                Regex regex = new Regex(@"\w", RegexOptions.IgnoreCase);
+                resultText = regex.Replace(resultText, "~");
+            }
+            
+            return $"*{Name}|{resultText}";
         }
 
         public bool CheckValidity()

@@ -26,6 +26,6 @@ namespace Scanner.Models.FileNaming
 
 
         string ToString(ScanOptions scanOptions, DiscoveredScanner scanner);
-        string GetSerialized();
+        string GetSerialized(bool obfuscated);
     }
 }

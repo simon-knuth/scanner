@@ -48,7 +48,7 @@ namespace Scanner.Models.FileNaming
             return scanOptions.Resolution.ToString("0");
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
             return $"*{Name}";
         }

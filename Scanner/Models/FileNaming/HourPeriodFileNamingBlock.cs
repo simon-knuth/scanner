@@ -65,7 +65,7 @@ namespace Scanner.Models.FileNaming
             }
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
             return $"*{Name}|{AllCaps}";
         }

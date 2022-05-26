@@ -1,4 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,26 +31,38 @@ namespace Scanner.Models.FileNaming
         }
 
         public FileNamingPattern(string serialized)
-        {           
-            Guard.IsNotNullOrEmpty(serialized, nameof(serialized));
-
-            string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
-            Type[] types = new Type[]
+        {
+            try
             {
+                Guard.IsNotNullOrEmpty(serialized, nameof(serialized));
+
+                string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
+                Type[] types = new Type[]
+                {
                 typeof(string),
-            };
+                };
 
-            // iterate through blocks
-            List<IFileNamingBlock> newList = new List<IFileNamingBlock>();
-            foreach (string part in parts)
-            {
-                Type blockType = FileNamingStatics.FileNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
-                string[] partArray = new string[1] { part };
-                newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IFileNamingBlock);
+                // iterate through blocks
+                List<IFileNamingBlock> newList = new List<IFileNamingBlock>();
+                foreach (string part in parts)
+                {
+                    Type blockType = FileNamingStatics.FileNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
+                    string[] partArray = new string[1] { part };
+                    newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IFileNamingBlock);
+                }
+
+                Blocks = newList;
+                IsValid = CheckValidity();
             }
+            catch (Exception exc)
+            {
+                ILogService logService = Ioc.Default.GetService<ILogService>();
+                IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
-            Blocks = newList;
-            IsValid = CheckValidity();
+                logService?.Log.Error(exc, "Generating file naming pattern from {source} failed", serialized);
+                appCenterService.TrackError(exc);
+                throw;
+            }
         }
 
 
@@ -80,23 +94,37 @@ namespace Scanner.Models.FileNaming
         
         public string GenerateResult(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
-            string result = "";
-
-            foreach (IFileNamingBlock block in Blocks)
+            try
             {
-                result += block.ToString(scanOptions, scanner);
-            }
+                string result = "";
 
-            return result + ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat);
+                foreach (IFileNamingBlock block in Blocks)
+                {
+                    result += block.ToString(scanOptions, scanner);
+                }
+
+                return result + ConvertImageScannerFormatToString(scanOptions.Format.TargetFormat);
+            }
+            catch (Exception exc)
+            {
+                ILogService logService = Ioc.Default.GetService<ILogService>();
+                IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
+
+                logService.Log.Error(exc, "Generating file name from {pattern} failed", GetSerialized(true));
+                appCenterService.TrackError(exc);
+
+                // fallback to rudimentary legacy file naming
+                return "SCN" + DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00"); ;
+            }
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
             string serialized = "";
 
             foreach (IFileNamingBlock block in Blocks)
             {
-                serialized += block.GetSerialized();
+                serialized += block.GetSerialized(obfuscated);
             }
 
             return serialized;

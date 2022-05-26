@@ -36,7 +36,6 @@ namespace Scanner.ViewModels
         public RelayCommand<string> AddBlockCommand => new RelayCommand<string>((x) => AddBlock(x));
         public RelayCommand<IFileNamingBlock> DeleteBlockCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteBlock(x));
         public RelayCommand<IFileNamingBlock> DeleteAllBlocksCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteAllBlocks());
-        public AsyncRelayCommand LaunchScannerSettingsCommand;
         #endregion
 
         #region Events
@@ -72,7 +71,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public CustomFileNamingDialogViewModel()
         {
-            LaunchScannerSettingsCommand = new AsyncRelayCommand(LaunchScannerSettings);
+            LogService.Log.Information("Opening custom file naming dialog");
 
             // get current pattern
             Pattern = new FileNamingPattern((string)SettingsService.GetSetting(AppSetting.CustomFileNamingPattern));
@@ -113,17 +112,20 @@ namespace Scanner.ViewModels
         {
             if (Pattern.IsValid)
             {
-                SettingsService.SetSetting(AppSetting.CustomFileNamingPattern, Pattern.GetSerialized());
+                SettingsService.SetSetting(AppSetting.CustomFileNamingPattern, Pattern.GetSerialized(false));
+                LogService.Log.Information("Changes in file naming {pattern} confirmed", Pattern.GetSerialized(false));
             }
         }
 
         private void Cancel()
         {
-
+            LogService.Log.Information("Changes in file naming pattern discarded");
         }
 
         private void AddBlock(string blockName)
         {
+            LogService.Log.Information("Adding file naming {block}", blockName);
+
             // construct block
             Type[] parameterTypes = new Type[0];
             string[] parameters = new string[0];
@@ -137,17 +139,22 @@ namespace Scanner.ViewModels
 
         private void Block_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            LogService.Log.Information("File naming {block} {property} changed", ((IFileNamingBlock)sender).Name, e.PropertyName);
             UpdatePattern();
         }
 
         private void DeleteBlock(IFileNamingBlock block)
-        {            
+        {
+            LogService.Log.Information("Removing file naming {block}", block.Name);
+
             block.PropertyChanged -= Block_PropertyChanged;
             SelectedBlocks.Remove(block);
         }
 
         private void DeleteAllBlocks()
         {
+            LogService.Log.Information("Removing all file naming blocks");
+
             foreach (IFileNamingBlock block in SelectedBlocks)
             {
                 block.PropertyChanged -= Block_PropertyChanged;
@@ -170,16 +177,6 @@ namespace Scanner.ViewModels
 
             // generate new preview
             PreviewResult = Pattern.GenerateResult(FileNamingStatics.PreviewScanOptions, _PreviewScanner);
-        }
-
-        private async Task LaunchScannerSettings()
-        {
-            LogService?.Log.Information("LaunchScannerSettings");
-            try
-            {
-                await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
-            }
-            catch (Exception) { }
         }
     }
 }

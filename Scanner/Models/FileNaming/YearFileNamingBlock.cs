@@ -51,7 +51,7 @@ namespace Scanner.Models.FileNaming
             return CultureInfo.CurrentCulture.Calendar.GetYear(currentTime).ToString();
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
             return $"*{Name}";
         }

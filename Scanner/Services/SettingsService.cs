@@ -297,7 +297,7 @@ namespace Scanner.Services
                     return SettingsContainer.Values[name] ?? SettingFileNamingPattern.DateTime;
 
                 case AppSetting.CustomFileNamingPattern:
-                    return SettingsContainer.Values[name] ?? FileNamingStatics.DefaultCustomPattern.GetSerialized();
+                    return SettingsContainer.Values[name] ?? FileNamingStatics.DefaultCustomPattern.GetSerialized(false);
 
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");

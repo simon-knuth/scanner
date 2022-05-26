@@ -134,7 +134,7 @@ namespace Scanner.Models.FileNaming
             return result;
         }
 
-        public string GetSerialized()
+        public string GetSerialized(bool obfuscated)
         {
             return $"*{Name}|{(int)Type}|{AllCaps}|{UseMinimumDigits}|{MinimumDigits}|{LimitMaxChars}|{MaxChars}";
         }
