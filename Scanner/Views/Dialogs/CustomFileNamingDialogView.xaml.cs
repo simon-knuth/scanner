@@ -225,5 +225,14 @@ namespace Scanner.Views.Dialogs
                 ((TextBox)sender).SelectAll();
             });
         }
+
+        private void ListViewItemPattern_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Delete)
+            {
+                ListViewItem item = sender as ListViewItem;
+                ViewModel.DeleteBlockCommand.Execute(item.DataContext);
+            }
+        }
     }
 }

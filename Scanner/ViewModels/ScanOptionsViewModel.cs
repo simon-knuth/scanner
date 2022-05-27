@@ -1285,6 +1285,7 @@ namespace Scanner.ViewModels
                             { "Contrast adjusted", (scanOptions.Contrast != null && scanOptions.Contrast != 0).ToString() },
                             { "Merge", $"{(mergeConfig != null ? $"{mergeConfig.InsertIndices.FirstOrDefault()} | {mergeConfig.SurplusPagesIndex}" : "None")}" },
                             { "Region", $"{scanOptions.SelectedRegion != null}" },
+                            { "File naming pattern", $"{(SettingFileNamingPattern)(int)SettingsService.GetSetting(AppSetting.SettingFileNamingPattern)}" }
                         });
                 }
                 else

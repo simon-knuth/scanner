@@ -1818,7 +1818,7 @@ Fuzzy</comment>
     <comment>The option for the date and time file naming pattern in the settings.</comment>
   </data>
   <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or remove it.</value>
+    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
   <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
