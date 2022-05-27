@@ -192,10 +192,36 @@
                                                         <RadioButton x:Uid="OptionFileNamingBlockDayMonth" />
                                                         <RadioButton x:Uid="OptionFileNamingBlockDayYear" />
                                                     </muxc:RadioButtons>
-                                                    <StackPanel Orientation="Vertical" Spacing="6">
-                                                        <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
-                                                        <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
-                                                    </StackPanel>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMaximumLetters" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=LimitMaxChars, Mode=OneWay}" Value="{Binding Path=MaxChars, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
                                                 </StackPanel>
                                             </controls:Case>
 
