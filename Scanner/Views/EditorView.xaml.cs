@@ -83,21 +83,50 @@ namespace Scanner.Views
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.Orientation))
+            switch (e.PropertyName)
             {
-                await ApplyFlipViewOrientation(ViewModel.Orientation);
+                case nameof(ViewModel.Orientation):
+                    await ApplyFlipViewOrientation(ViewModel.Orientation);
+                    break;
+                case nameof(ViewModel.EditorMode):
+                    if (ViewModel.EditorMode == EditorMode.Draw)
+                    {
+                        await InitializeInkCanvas();
+                    }
+                    break;
+                case nameof(ViewModel.IsTouchDrawingEnabled):
+                    await ApplyTouchDrawState();
+                    break;
+                case nameof(ViewModel.Progress):
+                    if (ViewModel.Progress != null)
+                    {
+                        ViewModel.Progress.PropertyChanged += Progress_PropertyChanged;
+                    }
+                    await RefreshProgressState();
+                    break;
+                default:
+                    break;
             }
-            else if (e.PropertyName == nameof(ViewModel.EditorMode))
+        }
+
+        private async void Progress_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            await RefreshProgressState();
+        }
+
+        private async Task RefreshProgressState()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (ViewModel.EditorMode == EditorMode.Draw)
+                if (ViewModel.Progress != null)
                 {
-                    await InitializeInkCanvas();
+                    SwitchPresenterProgressState.Value = ViewModel.Progress.State.ToString();
                 }
-            }
-            else if (e.PropertyName == nameof(ViewModel.IsTouchDrawingEnabled))
-            {
-                await ApplyTouchDrawState();
-            }
+                else
+                {
+                    SwitchPresenterProgressState.Value = null;
+                }
+            });
         }
 
         private async Task InitializeInkCanvas()

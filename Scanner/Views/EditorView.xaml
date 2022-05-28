@@ -630,7 +630,7 @@
                     <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingIndeterminate" IsIndeterminate="True" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" />
                     <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingDeterminate" IsIndeterminate="False" Value="{x:Bind (x:Int32)ViewModel.Progress.Progress, Mode=OneWay}" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" />
 
-                    <!--<controls:SwitchPresenter Grid.Row="1" TargetType="helpers:ProgressState" Value="{x:Bind ViewModel.Progress.State, Mode=OneWay}" Visibility="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                    <controls:SwitchPresenter x:Name="SwitchPresenterProgressState" Grid.Row="1" Visibility="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                         <controls:SwitchPresenter.ContentTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="-16" />
@@ -660,7 +660,7 @@
                         <controls:Case Value="Finishing">
                             <TextBlock x:Uid="TextScanProgressFinishing" Style="{StaticResource BaseTextBlockStyle}" />
                         </controls:Case>
-                    </controls:SwitchPresenter>-->
+                    </controls:SwitchPresenter>
                 </Grid>
             </Grid>
         </Grid>

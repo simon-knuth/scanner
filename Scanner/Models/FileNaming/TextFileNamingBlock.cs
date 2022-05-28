@@ -72,7 +72,7 @@ namespace Scanner.Models.FileNaming
             {
                 // obfuscate all alphabetic characters
                 Regex regex = new Regex(@"\w", RegexOptions.IgnoreCase);
-                resultText = regex.Replace(resultText, "~");
+                resultText = regex.Replace(resultText, "?");
             }
             
             return $"*{Name}|{resultText}";
