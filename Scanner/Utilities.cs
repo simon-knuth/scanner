@@ -160,8 +160,9 @@ static class Utilities
     /// <returns>The secret.</returns>
     public static string GetSecret(string secret)
     {
-        var resources = new ResourceLoader("Secrets");
-        return resources.GetString(secret);
+        //var resources = new ResourceLoader("Secrets");
+        //return resources.GetString(secret);
+        return "";
     }
 
     /// <summary>
