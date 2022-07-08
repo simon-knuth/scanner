@@ -67,7 +67,7 @@ namespace Scanner.Models.FileNaming
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
             DateTime currentTime = DateTime.Now;
-            string result = "";
+            string result;
             if (Use24Hours)
             {
                 result = currentTime.Hour.ToString();

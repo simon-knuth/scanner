@@ -100,7 +100,7 @@ namespace Scanner.Models.FileNaming
             switch (Type)
             {
                 case MonthType.Number:
-                    result = CultureInfo.CurrentCulture.Calendar.GetMonth(currentTime).ToString();
+                    result = CultureInfo.CurrentUICulture.Calendar.GetMonth(currentTime).ToString();
 
                     if (UseMinimumDigits)
                     {
@@ -108,7 +108,7 @@ namespace Scanner.Models.FileNaming
                     }
                     break;
                 case MonthType.Name:
-                    result = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentTime.Month);
+                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(currentTime.Month);
 
                     if (LimitMaxChars)
                     {
@@ -117,7 +117,7 @@ namespace Scanner.Models.FileNaming
                     break;
                 case MonthType.ShortName:
                 default:
-                    result = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(currentTime.Month);
+                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedMonthName(currentTime.Month);
 
                     if (LimitMaxChars)
                     {

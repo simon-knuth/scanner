@@ -548,6 +548,8 @@
     <Content Include="License Texts\LicenseMicrosoftNETCoreUniversalWindowsPlatform.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterCrashes.txt" />
     <Content Include="License Texts\LicenseMicrosoftAppCenterAnalytics.txt" />
+    <None Include="priconfig.default.xml" />
+    <None Include="priconfig.packaging.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>

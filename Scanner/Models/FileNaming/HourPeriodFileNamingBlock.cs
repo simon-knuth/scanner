@@ -54,15 +54,27 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions, DiscoveredScanner scanner)
         {
+            string result;
+            
             DateTime currentTime = DateTime.Now;
+            result = currentTime.ToString("tt").ToUpper();
+
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                // fallback to American English for languages that don't have a 24-hour system
+                result = currentTime.ToString("tt", CultureInfo.GetCultureInfoByIetfLanguageTag("en-us").DateTimeFormat);
+            }
+            
             if (AllCaps)
             {
-                return currentTime.ToString("tt").ToUpper();
+                result = result.ToUpper();
             }
             else
             {
-                return currentTime.ToString("tt").ToLower();
+                result = result.ToLower();
             }
+
+            return result;
         }
 
         public string GetSerialized(bool obfuscated)

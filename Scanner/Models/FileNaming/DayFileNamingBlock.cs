@@ -28,6 +28,13 @@ namespace Scanner.Models.FileNaming
             set => SetProperty(ref _Type, value);
         }
 
+        private bool _AllCaps;
+        public bool AllCaps
+        {
+            get => _AllCaps;
+            set => SetProperty(ref _AllCaps, value);
+        }
+
         private bool _UseMinimumDigits = true;
         public bool UseMinimumDigits
         {
@@ -74,10 +81,11 @@ namespace Scanner.Models.FileNaming
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
             Type = (DayType)int.Parse(parts[1]);
-            UseMinimumDigits = bool.Parse(parts[2]);
-            MinimumDigits = int.Parse(parts[3]);
-            LimitMaxChars = bool.Parse(parts[4]);
-            MaxChars = int.Parse(parts[5]);
+            AllCaps = bool.Parse(parts[2]);
+            UseMinimumDigits = bool.Parse(parts[3]);
+            MinimumDigits = int.Parse(parts[4]);
+            LimitMaxChars = bool.Parse(parts[5]);
+            MaxChars = int.Parse(parts[6]);
         }
 
 
@@ -92,7 +100,7 @@ namespace Scanner.Models.FileNaming
             switch (Type)
             {
                 case DayType.DayOfWeek:
-                    result = CultureInfo.CurrentCulture.Calendar.GetDayOfWeek(currentTime).ToString();
+                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetDayName(currentTime.DayOfWeek);
 
                     if (LimitMaxChars)
                     {
@@ -100,7 +108,7 @@ namespace Scanner.Models.FileNaming
                     }
                     break;
                 case DayType.DayOfYear:
-                    result = CultureInfo.CurrentCulture.Calendar.GetDayOfYear(currentTime).ToString();
+                    result = CultureInfo.CurrentUICulture.Calendar.GetDayOfYear(currentTime).ToString();
 
                     if (UseMinimumDigits)
                     {
@@ -109,7 +117,7 @@ namespace Scanner.Models.FileNaming
                     break;
                 case DayType.DayOfMonth:
                 default:
-                    result = CultureInfo.CurrentCulture.Calendar.GetDayOfMonth(currentTime).ToString();
+                    result = CultureInfo.CurrentUICulture.Calendar.GetDayOfMonth(currentTime).ToString();
 
                     if (UseMinimumDigits)
                     {
@@ -118,12 +126,17 @@ namespace Scanner.Models.FileNaming
                     break;
             }
 
+            if (AllCaps)
+            {
+                result = result.ToUpper();
+            }
+
             return result;
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{(int)Type}|{UseMinimumDigits}|{MinimumDigits}|{LimitMaxChars}|{MaxChars}";
+            return $"*{Name}|{(int)Type}|{AllCaps}|{UseMinimumDigits}|{MinimumDigits}|{LimitMaxChars}|{MaxChars}";
         }
     }
 
