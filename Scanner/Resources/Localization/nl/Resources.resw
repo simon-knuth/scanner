@@ -709,10 +709,6 @@
     <value>Geen van uw gescande pagina&apos;s is opgenomen in deze logboeken.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
-    <value>Bevestigen</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
-  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Bevestig de volgende instellingen.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
@@ -1193,9 +1189,10 @@
     <value>Pagina&apos;s automatisch roteren</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
-  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+  <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
     <value>Herkenningstaal</value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
+Fuzzy</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
     <value>Horizontaal</value>
@@ -1409,30 +1406,6 @@
     <value>Automatische rotatie is momenteel niet beschikbaar, omdat geen van uw geïnstalleerde talen tekstherkenning ondersteunt. Installeer een ondersteunde taal (inclusief alle afzonderlijke onderdelen) en start uw pc opnieuw op om deze functie te gebruiken.</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
-  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>Nieuwe voorbeeldervaring</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>Kleinere pdf&apos;s</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>Scannen en samenvoegen</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>Scanvoorbeelden zijn nu veel groter, dus je hebt geen vergrootglas meer nodig. Ook toegevoegd op veler verzoek: Selecteren van een scangebied uit de preview.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>PDF&apos;s worden nu consistent geoptimaliseerd, ongeacht de scanner, om ruimte op uw apparaat te besparen en het delen gemakkelijker te maken.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>Als u een feederscanner heeft, kunt u nu de nieuwe tool &quot;Scannen en samenvoegen in PDF&quot; gebruiken om pagina&apos;s op de juiste plaatsen toe te voegen. Super handig voor het scannen van meerdere dubbelzijdige vellen zonder duplex scanner.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="TextClose.Text" xml:space="preserve">
     <value>Dichtbij</value>
     <comment>The button text for a generic close button.</comment>
@@ -1560,5 +1533,9 @@
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
     <value>Rechtsgeldigheid</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>Bevestigen</value>
+    <comment>The confirm button text of the setup dialog.</comment>
   </data>
 </root>
