@@ -715,11 +715,6 @@ Fuzzy</comment>
     <value>Żadna z zeskanowanych stron nie jest uwzględniona w tych dziennikach.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
-    <value>Zatwierdź</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.
-Fuzzy</comment>
-  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>Zapoznaj się z poniższymi ustawieiami.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
@@ -1242,9 +1237,10 @@ Regulacja jasności i kontrastu jest możliwa tylko w trybie **płaskim lub poda
     <value>Automatycznie obracaj strony</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
-  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+  <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
     <value>Język rozpoznawania</value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
+Fuzzy</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
     <value>Pozioma</value>
@@ -1467,30 +1463,6 @@ Obsługiwane formaty to PDF, JPG, PNG, TIF i BMP.</value>
     <value>Automatyczne obracanie jest obecnie niedostępne, ponieważ żaden z zainstalowanych języków nie obsługuje rozpoznawania tekstu. Zainstaluj obsługiwany język (w tym wszystkie jego poszczególne części) i uruchom ponownie komputer, aby korzystać z tej funkcji.</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
-  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>Nowe doświadczenie podglądu</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>Mniejsze pliki PDF</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>Skanowanie i scalanie</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>Podgląd skanowania jest teraz znacznie większy, więc nie potrzebujesz już szkła powiększającego. Dodano również przez popularne żądanie: Wybór regionu skanowania z podglądu.</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>Pliki PDF są teraz optymalizowane niezależnie od skanera, aby zaoszczędzić miejsce na urządzeniu i ułatwić udostępnianie.</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>Jeśli masz skaner podajnika, możesz teraz użyć nowego narzędzia “Skanowanie i scalanie w PDF”, aby wstawić strony we właściwych miejscach. Bardzo przydatne do skanowania wielu arkuszy po obu stronach bez skanera dupleksowego.</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="TextClose.Text" xml:space="preserve">
     <value>Zamknij</value>
     <comment>The button text for a generic close button.</comment>
@@ -1618,5 +1590,285 @@ Obsługiwane formaty to PDF, JPG, PNG, TIF i BMP.</value>
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
     <value>Legal</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
+  <data name="StoreUpdate3_2_0_0" xml:space="preserve">
+    <value>Niestandardowe nazywanie plików
+Wyglądasz na osobę, która lubi być zorganizowana i Scanner jest tutaj, aby pomóc! Wypróbuj nowe, superelastyczne ustawienia nazewnictwa plików, aby spędzać więcej czasu na skanowaniu, a mniej na zmianie nazw.
+
+Wybór języka
+Dwujęzyczny? Trójjęzyczny? Czterojęzyczny? Wybierz język aplikacji, który jest niezależny od języka systemowego (ale tylko jeden na raz).
+
+Ulepszona lista rozdzielczości
+Jeśli Twoja lista rozdzielczości zaraz wymknie Ci się spod kontroli, możesz teraz po prostu wpisać żądaną rozdzielczość w polu zamiast przewijać listę godzinami.</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>Niestandardowe nazewnictwo plików</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>Wybór języka</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>Ulepszona lista rozdzielczości</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>Wyglądasz na osobę, która lubi być zorganizowana i Scanner jest tutaj, aby pomóc! Wypróbuj nowe, superelastyczne ustawienia nazewnictwa plików, aby spędzać więcej czasu na skanowaniu, a mniej na zmianie nazw.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>Dwujęzyczny? Trójjęzyczny? Czterojęzyczny? Wybierz język aplikacji, który jest niezależny od języka systemowego (ale tylko jeden na raz).</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>Jeśli Twoja lista rozdzielczości zaraz wymknie Ci się spod kontroli, możesz teraz po prostu wpisać żądaną rozdzielczość w polu zamiast przewijać listę godzinami.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
+    <value>Ustawienia nazywania plików</value>
+    <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
+  </data>
+  <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odwrócona kolejność wstawianych stron</value>
+    <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>Ostatnio zeskanowana strona</value>
+    <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>Ostatnia strona</value>
+    <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
+  </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>Język aplikacji</value>
+    <comment>The heading for the &quot;App language&quot; option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>Ustawienia systemowe</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>Automatyczne obracanie</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>Prawie gotowe...</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>Przygotowywanie PDF...</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>Przetwarzanie...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>Zapisywanie...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>Skanowanie...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
+    <value>Wstecz</value>
+    <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>Zatwierdź</value>
+    <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>Zapisz ustawienia lokalizacji</value>
+    <comment>The text for the button that opens the save location settings.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Lokalizacja zapisu</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Wybierz ustaloną lokalizację lub wybierz nową przy każdym skanowaniu.</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>Aplikacja automatycznie zapisuje zmiany za każdym razem, gdy skanujesz strony lub edytujesz już istniejące - nie musisz się martwić, że o czymś zapomnisz.</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>Zawsze możesz to zmienić w ustawieniach aplikacji</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
+    <value>Regulacja jasności</value>
+    <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
+    <value>Regulacja kontrastu</value>
+    <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
+    <value>Dzień</value>
+    <comment>The title for the &quot;Day&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
+    <value>Typ pliku</value>
+    <comment>The title for the &quot;File type&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
+    <value>Godzina</value>
+    <comment>The title for the &quot;Hour&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+    <value>AM/PM</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.
+Fuzzy</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
+    <value>Minuta</value>
+    <comment>The title for the &quot;Minute&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
+    <value>Miesiąć</value>
+    <comment>The title for the &quot;Month&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
+    <value>Rozdzielczość</value>
+    <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
+    <value>Nazwa skanera</value>
+    <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
+    <value>Sekunda</value>
+    <comment>The title for the &quot;Second&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
+    <value>Tekst</value>
+    <comment>The title for the &quot;Text&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
+    <value>Rok</value>
+    <comment>The title for the &quot;Year&quot; file naming block.</comment>
+  </data>
+  <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
+    <value>Dodaj blok</value>
+    <comment>The text for the button that adds a file naming block to the pattern.</comment>
+  </data>
+  <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść wzór</value>
+    <comment>The tooltip for the button that removes all file naming blocks in the pattern.</comment>
+  </data>
+  <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
+    <value>Edytuj niestandardowy wzór</value>
+    <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
+    <value>Niestandardowy wzór nazywania plików</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
+    <value>Podgląd</value>
+    <comment>The heading for the custom file naming preview.</comment>
+  </data>
+  <data name="HeadingScanMergePreview.Text" xml:space="preserve">
+    <value>Podgląd</value>
+    <comment>The heading for the scan and merge preview.</comment>
+  </data>
+  <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
+    <value>24 godziny</value>
+    <comment>The option for using the 24-hours system for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
+    <value>Wielkimi literami</value>
+    <comment>The option for upper-case letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
+    <value>Dzień miesiąca</value>
+    <comment>The option for outputting the day of the month for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
+    <value>Dzień tygodnia</value>
+    <comment>The option for outputting the day of the week for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
+    <value>Dzień roku</value>
+    <comment>The option for outputting the day of the year for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
+    <value>Ogranicz liczbę liter</value>
+    <comment>The option for limitting the number of letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
+    <value>Zawsze używaj minimalnej ilości cyfr</value>
+    <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
+    <value>Nazwa miesiąca</value>
+    <comment>The option for outputting the name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
+    <value>Numer miesiąca</value>
+    <comment>The option for outputting the number of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
+    <value>Krótka nazwa miesiąca</value>
+    <comment>The option for outputting the short name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
+    <value>Pomiń, jeśli domyślne</value>
+    <comment>The option for skipping a file naming block when its value is the default.</comment>
+  </data>
+  <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
+    <value>Zawsze dwie cyfry</value>
+    <comment>The option for always outputting two digits for a file naming block.</comment>
+  </data>
+  <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
+    <value>Niestandardowy wzór</value>
+    <comment>The option for the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
+    <value>Data</value>
+    <comment>The option for the date file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
+    <value>Data i czas (domyślnie)</value>
+    <comment>The option for the date and time file naming pattern in the settings.</comment>
+  </data>
+  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
+    <value>Przeciągnij i upuść bloki, aby zbudować własny dynamiczny wzorzec nazywania plików. Zaznacz blok, aby zmodyfikować jego dane wyjściowe, lub przeciągnij go do kosza, aby go usunąć.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nieprawidłowy blok</value>
+    <comment>The tooltip for an invalid file naming block.</comment>
+  </data>
+  <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
+    <value>Ten blok będzie zawsze pomijany w przypadku skanowania z konfiguracją automatyczną.</value>
+    <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
+    <value>Data</value>
+    <comment>The title for the &quot;Date&quot; file naming block section.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
+    <value>Czas</value>
+    <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>Potwierdź</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>Niepoprawna nazwa pliku</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
 </root>
