@@ -710,10 +710,6 @@ Fuzzy</comment>
     <value>आपका कोई भी स्कैन किए गए पृष्ठ इन लॉग में शामिल नहीं है।</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
-    <value>पुष्टि करें</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
-  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>कृपया निम्नलिखित सेटिंग्स की पुष्टि करें।</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
@@ -1220,9 +1216,10 @@ Fuzzy</comment>
     <value>पृष्ठों को स्वचालित रूप से घुमाएँ</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
-  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
+  <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
     <value>पाठ पहचानकर्ता की भाषा</value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
+Fuzzy</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
     <value>क्षैतिज</value>
@@ -1445,30 +1442,6 @@ Fuzzy</comment>
     <value>स्वचालित घूर्णन वर्तमान में अनुपलब्ध है, क्योंकि आपकी कोई भी स्थापित भाषा पाठ पहचान का सामर्थ्य नहीं रखती हैं। कृपया एक समर्थित भाषा स्थापित करें (इसके सभी व्यक्तिगत भागों सहित) और इस सुविधा का प्रयोग करने के लिए अपने कम्प्यूटर को पुनरारंभ करें।</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
-  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>नया पूर्वावलोकन अनुभव</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>पहले से छोटे पीडीएफ</value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>स्कैन करके विलय करें</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>स्कैन पूर्वावलोकन अब बहुत बड़े हो गए हैं, इसलिए अब आपको आवर्धक कांच की आवश्यकता नहीं है। यह भी लोकप्रिय मांग के कारण जोड़ा गया: पूर्वावलोकन से स्कैन क्षेत्र का चयन करना।</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>आपके डिवाइस पर जगह बचाने और साझा करने को आसान बनाने के लिए स्कैनर की परवाह किए बिना पीडीएफ को लगातार अनुकूलित किया जाएगा।</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>यदि आपके पास फीडर स्कैनर है, तो अब आप नए &quot;स्कैन करके पीडीएफ में विलय करें&quot; टूल का उपयोग करके सही स्थानों पर पृष्ठों को जोड़ सकते हैं। डुप्लेक्स स्कैनर के बिना कई दो-तरफा शीट को स्कैन करने के लिए बहुत उपयोगी।</value>
-    <comment>Text for the third changelog section.</comment>
-  </data>
   <data name="TextClose.Text" xml:space="preserve">
     <value>बंद करें</value>
     <comment>The button text for a generic close button.</comment>
@@ -1597,5 +1570,286 @@ Fuzzy</comment>
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
     <value>कानूनी</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
+  <data name="StoreUpdate3_2_0_0" xml:space="preserve">
+    <value>अनुकूलित फ़ाइल नामकरण
+आप किसी ऐसे व्यक्ति की तरह दिखते हैं जो संगठित रहना पसंद करता है, और स्कैनर इसमें आपकी मदद के लिए यहाँ है! अधिक समय स्कैन करने में और कम समय नामकरण में लगाने के लिए नई सुपर-लचीली फ़ाइल नामकरण सेटिंग्स का परीक्षण करें।
+
+भाषा चयन
+द्विभाषी? त्रिभाषी? चतुर्भाषी? एक ऐप भाषा चुनें जो आपकी सिस्टम भाषा से स्वतंत्र हो (हालांकि एक समय में केवल एक)।
+
+बेहतर रिज़ॉल्यूशन सूची
+यदि आपकी रिज़ॉल्यूशन सूची नियंत्रण से बाहर होने के कगार पर है, तो अब आप घंटों तक स्क्रॉल करने की जगह सीधा बॉक्स में वांछित रिज़ॉल्यूशन टाइप कर सकते हैं।</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>अनुकूलित फ़ाइल नामकरण</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>भाषा चयन</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>बेहतर रिज़ॉल्यूशन सूची</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>आप किसी ऐसे व्यक्ति की तरह दिखते हैं जो संगठित रहना पसंद करता है, और स्कैनर इसमें आपकी मदद के लिए यहाँ है! अधिक समय स्कैन करने में और कम समय नामकरण में लगाने के लिए नई सुपर-लचीली फ़ाइल नामकरण सेटिंग्स का परीक्षण करें।</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>द्विभाषी? त्रिभाषी? चतुर्भाषी? अब एक ऐप भाषा चुनें जो आपकी सिस्टम भाषा से स्वतंत्र हो (हालांकि एक समय में केवल एक)।</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>यदि आपकी रिज़ॉल्यूशन सूची नियंत्रण से बाहर होने के कगार पर है, तो अब आप घंटों तक स्क्रॉल करने की जगह सीधा बॉक्स में वांछित रिज़ॉल्यूशन टाइप कर सकते हैं।</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
+    <value>फ़ाइल नामकरण सेटिंग्स</value>
+    <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
+  </data>
+  <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सम्मिलित पृष्ठों का क्रम उलटें</value>
+    <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>स्कैन किया गया अंतिम पृष्ठ</value>
+    <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>अंतिम पृष्ठ</value>
+    <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
+  </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>ऐप भाषा</value>
+    <comment>The heading for the &quot;App language&quot; option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>सिस्टम सेटिंग</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>स्वचालित घूर्णन हो रहा है...</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>लगभग हो गया...</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>पीडीएफ तैयार हो रहा है...</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>प्रसंस्करण हो रहा है...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>सहेजा जा रहा है...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>स्कैन किया जा रहा है...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
+    <value>वापस जाऍं</value>
+    <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>पुष्टि करें</value>
+    <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>सहेजने के स्थान की सेटिंग्स</value>
+    <comment>The text for the button that opens the save location settings.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>सहेजने का स्थान</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>एक सुनिश्चित स्थान चुनें या हर स्कैन के बाद एक नया स्थान चुनें।</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>हर बार जब आप पृष्ठों को स्कैन करते हैं या मौजूदा पृष्ठों को संपादित करते हैं तो ऐप स्वतः परिवर्तनों को सहेजता है - कुछ भूलने की चिंता करने की कोई आवश्यकता नहीं है।</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>आप कभी भी अपना विचार ऐप सेटिंग्स में जाकर बदल सकते हैं।</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
+    <value>चमक समायोजन</value>
+    <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
+    <value>कंट्रास्ट समायोजित</value>
+    <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
+    <value>दिन</value>
+    <comment>The title for the &quot;Day&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
+    <value>फ़ाइल का प्रकार</value>
+    <comment>The title for the &quot;File type&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
+    <value>घंटा</value>
+    <comment>The title for the &quot;Hour&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+    <value>ए.एम/पी.एम</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.
+Fuzzy</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
+    <value>मिनट</value>
+    <comment>The title for the &quot;Minute&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
+    <value>महीना</value>
+    <comment>The title for the &quot;Month&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
+    <value>रिज़ॉल्यूशन</value>
+    <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
+    <value>स्कैनर का नाम</value>
+    <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
+    <value>सेकेंड</value>
+    <comment>The title for the &quot;Second&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
+    <value>टेक्स्ट</value>
+    <comment>The title for the &quot;Text&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
+    <value>साल</value>
+    <comment>The title for the &quot;Year&quot; file naming block.</comment>
+  </data>
+  <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
+    <value>ब्लॉक जोड़ें</value>
+    <comment>The text for the button that adds a file naming block to the pattern.</comment>
+  </data>
+  <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रतिमान मिटाऍं</value>
+    <comment>The tooltip for the button that removes all file naming blocks in the pattern.
+Fuzzy</comment>
+  </data>
+  <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
+    <value>अनुकूलित प्रतिमान को संपादित करें</value>
+    <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
+    <value>फ़ाइल नामकरण का अनुकूलित प्रतिमान</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+    <comment>The heading for the custom file naming preview.</comment>
+  </data>
+  <data name="HeadingScanMergePreview.Text" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+    <comment>The heading for the scan and merge preview.</comment>
+  </data>
+  <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
+    <value>२४-घंटा</value>
+    <comment>The option for using the 24-hours system for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
+    <value>बड़े अक्षरों में (अंग्रेजी में लागू)</value>
+    <comment>The option for upper-case letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
+    <value>महीने का दिन</value>
+    <comment>The option for outputting the day of the month for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
+    <value>सप्ताह का दिन</value>
+    <comment>The option for outputting the day of the week for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
+    <value>साल का दिन</value>
+    <comment>The option for outputting the day of the year for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
+    <value>अक्षरों की संख्या सीमित करें</value>
+    <comment>The option for limitting the number of letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
+    <value>हमेशा न्यूनतम अंकों का प्रयोग करें</value>
+    <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
+    <value>महीने का नाम</value>
+    <comment>The option for outputting the name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
+    <value>महीने की संख्या</value>
+    <comment>The option for outputting the number of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
+    <value>महीने का संक्षिप्त नाम</value>
+    <comment>The option for outputting the short name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
+    <value>डिफ़ॉल्ट मान होने पर छोड़ें</value>
+    <comment>The option for skipping a file naming block when its value is the default.</comment>
+  </data>
+  <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
+    <value>हमेशा दो अंक</value>
+    <comment>The option for always outputting two digits for a file naming block.</comment>
+  </data>
+  <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
+    <value>अनुकूलित प्रतिमान</value>
+    <comment>The option for the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
+    <value>दिनांक</value>
+    <comment>The option for the date file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
+    <value>दिनांक और समय (डिफ़ॉल्ट)</value>
+    <comment>The option for the date and time file naming pattern in the settings.</comment>
+  </data>
+  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
+    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अमान्य ब्लॉक</value>
+    <comment>The tooltip for an invalid file naming block.</comment>
+  </data>
+  <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
+    <value>स्वचालित कॉन्फ़िगरेशन के साथ स्कैन करने पर यह ब्लॉक हमेशा छोड़ दिया जाएगा।</value>
+    <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
+    <value>दिनांक</value>
+    <comment>The title for the &quot;Date&quot; file naming block section.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
+    <value>समय</value>
+    <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>पुष्टि करें</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>अमान्य फ़ाइल नाम</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
 </root>
