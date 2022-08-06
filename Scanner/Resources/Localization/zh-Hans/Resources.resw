@@ -519,7 +519,7 @@ Fuzzy</comment>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>三方许可协议</value>
+    <value>第三方许可协议</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
@@ -563,7 +563,7 @@ Fuzzy</comment>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>在文件名前附加时间</value>
+    <value>将时间附加到文件名</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
@@ -710,10 +710,6 @@ Fuzzy</comment>
     <value>您扫描的页面没有被包含在这些日志里。</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
-  <data name="DialogPrivacySetup.PrimaryButtonText" xml:space="preserve">
-    <value>确定</value>
-    <comment>The close button text of the dialog that appears when privacy settings have to be checked.</comment>
-  </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
     <value>请确认以下设置。</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
@@ -791,11 +787,11 @@ Fuzzy</comment>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0:0} DPI (文档最优化)</value>
+    <value>{0:0} DPI (最适合文档)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (照片最优化)</value>
+    <value>{0:0} DPI (最适合照片)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
@@ -839,7 +835,7 @@ Fuzzy</comment>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>取消当当前正在运行的扫描</value>
+    <value>取消当前正在进行的扫描</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
@@ -851,7 +847,7 @@ Fuzzy</comment>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>Github</value>
+    <value>GitHub</value>
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
@@ -877,7 +873,7 @@ Fuzzy</comment>
 
 &amp;nbsp;
 
-**提示：**如果Windows花费太长时间才能找到已安装的无线扫描仪，您可以重启Wi-Fi，触发网络搜索。请注意，这可能会中断设备上所有应用的互联网访问。</value>
+**提示：**如果 Windows 很长时间都无法找到已安装的无线扫描仪，您可以重启Wi-Fi，触发网络搜索。请注意，这可能会中断设备上所有应用的互联网访问。</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
@@ -887,7 +883,7 @@ Fuzzy</comment>
 
 &amp;nbsp;
 
-另外，请查阅扫描仪手册以获取更多指导，或联系制造商。</value>
+另外，请查阅扫描仪手册或联系制造商以获取更多指导。</value>
     <comment>The help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
@@ -895,9 +891,9 @@ Fuzzy</comment>
     <comment>The help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
-    <value>分辨率决定了扫描的整体清晰度，也严重影响文件大小。高分辨率的扫描可以使文件变大，并增加每页扫描所需的时间。低分辨率扫描会导致细节丢失，甚至产生难以辨认的文本。
+    <value>分辨率决定了扫描的整体清晰度，也严重影响文件大小。高分辨率的扫描将使文件变大，并增加每页扫描所需的时间。低分辨率扫描会导致细节丢失，甚至产生难以辨认的文本。
 
-在 **平板或进纸 ** 模式中，你可以选择分辨率。Scanner总是会为你选择一个默认分辨率，这对于各种扫描都非常有用。有时候，它甚至会为文档或照片的分辨率提供不同建议。
+在 **平板或进纸** 模式中，你可以选择分辨率。扫描仪 总是会为你选择一个默认分辨率，这对于各种扫描都非常有用。有时候，它甚至会为文档或照片的分辨率提供不同建议。
 
 一般来说，文档只需要 300 DPI 左右的分辨率，而照片则需要 500 DPI 左右的高分辨率。</value>
     <comment>The help text on choosing the right resolution.</comment>
@@ -907,7 +903,7 @@ Fuzzy</comment>
     <comment>The help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="TextHelpSaveChanges.Text" xml:space="preserve">
-    <value>如果在应用程序中编辑扫描，更改会立即保存在后台。只需扫描一些页面，编辑结果，你就完成了！</value>
+    <value>如果在应用程序中编辑扫描，更改会立即保存。尽管去扫描页面，编辑结果吧！</value>
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
@@ -1099,7 +1095,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The heading for the scan preview.</comment>
   </data>
   <data name="TextPromisePrivacy.Text" xml:space="preserve">
-    <value>个人数据只存留在你的设备上</value>
+    <value>个人数据仅保存在你的设备上</value>
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
@@ -1115,7 +1111,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The text promising an ads-free experience.</comment>
   </data>
   <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
-    <value>无订阅</value>
+    <value>无需订阅</value>
     <comment>The text promising a subscription-free experience.</comment>
   </data>
   <data name="TextPromiseUpdates.Text" xml:space="preserve">
@@ -1127,7 +1123,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
 
 如果你喜欢，你可以通过捐款直接支持其开发。
 
-非常感谢。❤️</value>
+非常感谢！❤️</value>
     <comment>The body for the dialog asking the user to support the development.</comment>
   </data>
   <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
@@ -1173,7 +1169,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value>你可以在微软商店里给扫描器打分，提供新功能建议，并为他人提供参考。专业用户也可以在GitHub上影响软件开发。</value>
+    <value>你可以在微软商店里给 扫描仪 打分，提供新功能建议，并帮助其他人确定这是否是适合他们的应用程序。专业用户也可以在GitHub上为进一步开发作出贡献。</value>
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
@@ -1220,8 +1216,8 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <value>自动旋转页面</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
-  <data name="OptionSettingsAutoRotationLanguage.Content" xml:space="preserve">
-    <value>识别语言</value>
+  <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
+    <value>语言识别器</value>
     <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
@@ -1241,7 +1237,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The option for showing advanced scan options.</comment>
   </data>
   <data name="OptionSettingsSurveys.Content" xml:space="preserve">
-    <value>参加调查</value>
+    <value>参加不定期的调查</value>
     <comment>The option for showing occasional surveys in settings.</comment>
   </data>
   <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
@@ -1253,7 +1249,7 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The text explaining the automatic rotation of pages.</comment>
   </data>
   <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value>扫描仪在Windows 11上工作得最好。请随时更新您的系统，以获得最佳体验。</value>
+    <value>扫描仪 在 Windows 11上工作效果最好。请及时更新你的系统，以获得最佳体验。</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
   <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
@@ -1373,17 +1369,16 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
-    <value>现在，扫描文档和照片很轻松。将一些页面扫描为图像文件，使用内置预设进行旋转和裁剪，并通过电子邮件快速共享，或者创建一个多页PDF文件，给它一个有意义的名称，并将其归档到正确的文件夹中。
+    <value>不费吹灰之力地扫描文档和照片。将纸质文件扫描为图像，使用内置预设进行旋转和裁剪，并通过电子邮件快速分享。或者创建一个多页PDF文件，给它一个有意义的名称，并归档到正确的文件夹中。
+有了 扫描仪，你可以在一个地方完成所有事情，不需要额外的图像编辑器或昂贵的PDF软件。
 
-有了Scanner，你可以在一个地方完成所有事情，不需要额外的图像编辑器或昂贵的PDF软件。
-
-现在几乎所有扫描仪都支持该应用程序，所以你不需要使用设备制造商提供的过时且笨重的软件。它的设计考虑到了简单性和易用性，同时还提供了先进的工具和功能。
+现在几乎所有扫描仪都支持该应用程序，所以你不需要使用厂商提供的过时且笨重的软件。它的设计考虑到了简单性和易用性，同时还提供了先进的工具和功能。
 
 支持的格式有PDF、JPG、PNG、TIF和BMP。</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
-    <value>Scanner - 快速简便的文档扫描</value>
+    <value>扫描仪 - 快速简单的文档扫描</value>
     <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
@@ -1445,30 +1440,6 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
   <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
     <value>自动旋转当前不可用，因为您安装的语言都不支持文本识别。请安装受支持的语言（包括其所有独立组件），然后重新启动电脑以使用此功能。</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>新的预览体验</value>
-    <comment>Heading for the first changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>更小的 PDF </value>
-    <comment>Heading for the second changelog section.</comment>
-  </data>
-  <data name="HeadingChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>扫描和合并</value>
-    <comment>Heading for the third changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section1.Text" xml:space="preserve">
-    <value>扫描预览现在要大得多，所以你不再需要放大镜。还增加了一个流行的需求：从预览中选择一个扫描区域。</value>
-    <comment>Text for the first changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section2.Text" xml:space="preserve">
-    <value>现在，无论使用哪种扫描仪，PDF都将得到一致的优化，以节省设备空间并简化共享。</value>
-    <comment>Text for the second changelog section.</comment>
-  </data>
-  <data name="TextChangelog3_1_0_0Section3.Text" xml:space="preserve">
-    <value>如果你有一个进纸扫描仪，你现在可以使用新的“扫描并合并成PDF”工具在正确的位置添加页面。超级有用，无需双面扫描仪即可扫描多张双面纸张。</value>
-    <comment>Text for the third changelog section.</comment>
   </data>
   <data name="TextClose.Text" xml:space="preserve">
     <value>关闭</value>
@@ -1597,5 +1568,284 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
     <value>法律</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
+  </data>
+  <data name="StoreUpdate3_2_0_0" xml:space="preserve">
+    <value>自定义文件命名
+你看起来像一个喜欢有条理的人，扫描仪 会帮你的！尝试新的超级灵活的文件命名设置，让时间花在扫描而不是重命名上。
+
+语言选择
+会说双语？三语？四语？选择一种独立于系统语言的应用程序语言（但一次只能选择一种）。
+
+改进分辨率列表
+如果你的分辨率列表过长，你现在可以只在框中输入所需的分辨率，而不是滚动几个小时。</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>自定义文件命名</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>语言选择</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>改进分辨率列表</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>你看起来像一个喜欢有条理的人，扫描仪 会帮你的！尝试新的超级灵活的文件命名设置，让时间花在扫描而不是重命名上。</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>会说双语？三语？四语？选择一种独立于系统语言的应用程序语言（但一次只能选择一种）。</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>如果你的分辨率列表过长，你现在可以只在框中输入所需的分辨率，而无需滚动很久。</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
+    <value>文件命名设置</value>
+    <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
+  </data>
+  <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>逆序插入页面</value>
+    <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>上次扫描的页面</value>
+    <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>末页</value>
+    <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
+  </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>应用程序语言</value>
+    <comment>The heading for the &quot;App language&quot; option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>系统设置</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>自动旋转...</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>即将完成...</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>准备PDF...</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>处理中...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>保存...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>扫描...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
+    <value>返回</value>
+    <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>确定</value>
+    <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>保存位置设置</value>
+    <comment>The text for the button that opens the save location settings.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>保存位置</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>为每次扫描选择一个固定位置或选择一个新位置。</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>每次你扫描页面或编辑现有页面时，应用程序都会自动保存更改，无需担心忘记保存。</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>你可以随时在应用程序设置中进行更改。</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
+    <value>亮度调节</value>
+    <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
+    <value>对比度调节</value>
+    <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
+    <value>日</value>
+    <comment>The title for the &quot;Day&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
+    <value>文件类型</value>
+    <comment>The title for the &quot;File type&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
+    <value>小时</value>
+    <comment>The title for the &quot;Hour&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+    <value>上午/下午</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
+    <value>分钟</value>
+    <comment>The title for the &quot;Minute&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
+    <value>月份</value>
+    <comment>The title for the &quot;Month&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
+    <value>分辨率</value>
+    <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
+    <value>扫描仪名称</value>
+    <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
+    <value>秒</value>
+    <comment>The title for the &quot;Second&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
+    <value>文本</value>
+    <comment>The title for the &quot;Text&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
+    <value>年</value>
+    <comment>The title for the &quot;Year&quot; file naming block.</comment>
+  </data>
+  <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
+    <value>添加方块</value>
+    <comment>The text for the button that adds a file naming block to the pattern.</comment>
+  </data>
+  <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
+    <value>清空模式</value>
+    <comment>The tooltip for the button that removes all file naming blocks in the pattern.</comment>
+  </data>
+  <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
+    <value>编辑自定义模式</value>
+    <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
+    <value>自定义文件命名模式</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
+    <value>预览</value>
+    <comment>The heading for the custom file naming preview.</comment>
+  </data>
+  <data name="HeadingScanMergePreview.Text" xml:space="preserve">
+    <value>预览</value>
+    <comment>The heading for the scan and merge preview.</comment>
+  </data>
+  <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
+    <value>24小时</value>
+    <comment>The option for using the 24-hours system for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
+    <value>大写字母</value>
+    <comment>The option for upper-case letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
+    <value>每月第几天</value>
+    <comment>The option for outputting the day of the month for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
+    <value>每周第几天</value>
+    <comment>The option for outputting the day of the week for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
+    <value>每年第几天</value>
+    <comment>The option for outputting the day of the year for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
+    <value>限制字数</value>
+    <comment>The option for limitting the number of letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
+    <value>始终使用最少的数字个数</value>
+    <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
+    <value>月份名</value>
+    <comment>The option for outputting the name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
+    <value>第几月</value>
+    <comment>The option for outputting the number of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
+    <value>月份名简称</value>
+    <comment>The option for outputting the short name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
+    <value>默认情况下跳过</value>
+    <comment>The option for skipping a file naming block when its value is the default.</comment>
+  </data>
+  <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
+    <value>始终使用两位数</value>
+    <comment>The option for always outputting two digits for a file naming block.</comment>
+  </data>
+  <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
+    <value>自定义模式</value>
+    <comment>The option for the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
+    <value>日期</value>
+    <comment>The option for the date file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
+    <value>日期和时间（默认）</value>
+    <comment>The option for the date and time file naming pattern in the settings.</comment>
+  </data>
+  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
+    <value>拖放方块以构建自己的自动文件命名模式。选择一个方块以修改其输出，或将其拖动到垃圾箱中以将其删除。</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
+    <value>无效的方块</value>
+    <comment>The tooltip for an invalid file naming block.</comment>
+  </data>
+  <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
+    <value>对于自动配置的扫描，总是跳过此方块。</value>
+    <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
+    <value>日期</value>
+    <comment>The title for the &quot;Date&quot; file naming block section.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
+    <value>时间</value>
+    <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>确认</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>取消</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>文件名无效</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
 </root>
