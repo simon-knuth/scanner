@@ -1,4 +1,5 @@
-﻿using Scanner.Models;
+﻿using Scanner.Helpers;
+using Scanner.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Scanners;
@@ -13,7 +14,7 @@ namespace Scanner.Services
     /// </summary>
     public interface IScanService
     {
-        event EventHandler ScanStarted;
+        event EventHandler<ScanAndEditingProgress> ScanStarted;
         event EventHandler ScanEnded;
 
         bool IsScanInProgress
@@ -34,6 +35,7 @@ namespace Scanner.Services
         Task<BitmapImage> GetPreviewAsync(DiscoveredScanner scanner, ScanOptions options);
         Task<Tuple<BitmapImage, IRandomAccessStream>> GetPreviewWithStreamAsync(DiscoveredScanner scanner, ScanOptions options);
         Task<ImageScannerScanResult> GetScanAsync(DiscoveredScanner scanner, ScanOptions options, StorageFolder targetFolder);
+        void SimulateScan();
         void CancelScan();
         void CancelPreview();
     }

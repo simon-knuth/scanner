@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Scanner.Helpers;
 using Scanner.Models;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,17 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
         private readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         private readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        #endregion
+
+        #region Events
+        public event EventHandler<ScanAndEditingProgress> ScanStarted;
+        public event EventHandler ScanEnded;
+        public event EventHandler<uint> PageScanned;
+        #endregion
 
         private bool _IsScanInProgress;
         public bool IsScanInProgress
@@ -33,7 +42,7 @@ namespace Scanner.Services
 
                 if (!oldValue && value == true)
                 {
-                    ScanStarted?.Invoke(this, EventArgs.Empty);
+                    ScanStarted?.Invoke(this, _Progress);
                 }
                 else if (oldValue && value == false)
                 {
@@ -52,12 +61,9 @@ namespace Scanner.Services
 
         public int CompletedScans => (int)SettingsService.GetSetting(AppSetting.ScanNumber);
 
-        private CancellationTokenSource ScanCancellationToken;
-        private CancellationTokenSource PreviewCancellationToken;
-
-        public event EventHandler ScanStarted;
-        public event EventHandler ScanEnded;
-        public event EventHandler<uint> PageScanned;
+        private CancellationTokenSource _ScanCancellationToken;
+        private CancellationTokenSource _PreviewCancellationToken;
+        private ScanAndEditingProgress _Progress;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,21 +97,21 @@ namespace Scanner.Services
             using (IRandomAccessStream previewStream = new InMemoryRandomAccessStream())
             {
                 ImageScannerPreviewResult previewResult;
-                PreviewCancellationToken = new CancellationTokenSource();
+                _PreviewCancellationToken = new CancellationTokenSource();
 
                 switch (options.Source)
                 {
                     case Enums.ScannerSource.Auto:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.AutoConfigured, previewStream).AsTask(PreviewCancellationToken.Token);
+                            ImageScannerScanSource.AutoConfigured, previewStream).AsTask(_PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.Flatbed:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.Flatbed, previewStream).AsTask(PreviewCancellationToken.Token);
+                            ImageScannerScanSource.Flatbed, previewStream).AsTask(_PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.Feeder:
                         previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                            ImageScannerScanSource.Feeder, previewStream).AsTask(PreviewCancellationToken.Token);
+                            ImageScannerScanSource.Feeder, previewStream).AsTask(_PreviewCancellationToken.Token);
                         break;
                     case Enums.ScannerSource.None:
                     default:
@@ -145,21 +151,21 @@ namespace Scanner.Services
             // get preview
             IRandomAccessStream previewStream = new InMemoryRandomAccessStream();
             ImageScannerPreviewResult previewResult;
-            PreviewCancellationToken = new CancellationTokenSource();
+            _PreviewCancellationToken = new CancellationTokenSource();
 
             switch (options.Source)
             {
                 case Enums.ScannerSource.Auto:
                     previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                        ImageScannerScanSource.AutoConfigured, previewStream).AsTask(PreviewCancellationToken.Token);
+                        ImageScannerScanSource.AutoConfigured, previewStream).AsTask(_PreviewCancellationToken.Token);
                     break;
                 case Enums.ScannerSource.Flatbed:
                     previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                        ImageScannerScanSource.Flatbed, previewStream).AsTask(PreviewCancellationToken.Token);
+                        ImageScannerScanSource.Flatbed, previewStream).AsTask(_PreviewCancellationToken.Token);
                     break;
                 case Enums.ScannerSource.Feeder:
                     previewResult = await scanner.Device.ScanPreviewToStreamAsync(
-                        ImageScannerScanSource.Feeder, previewStream).AsTask(PreviewCancellationToken.Token);
+                        ImageScannerScanSource.Feeder, previewStream).AsTask(_PreviewCancellationToken.Token);
                     break;
                 case Enums.ScannerSource.None:
                 default:
@@ -186,9 +192,13 @@ namespace Scanner.Services
             ScanOptions options, StorageFolder targetFolder)
         {
             LogService?.Log.Information("GetScanAsync");
+            _Progress = new ScanAndEditingProgress
+            {
+                State = ProgressState.Scanning
+            };
             IsScanInProgress = true;
             ImageScannerScanResult result = null;
-            ScanCancellationToken = new CancellationTokenSource();
+            _ScanCancellationToken = new CancellationTokenSource();
 
             try
             {
@@ -201,7 +211,7 @@ namespace Scanner.Services
                     _ScanProgress.ProgressChanged += (x, y) => PageScanned?.Invoke(this, y);
                     result = await scanner.Device.ScanFilesToFolderAsync
                         ((ImageScannerScanSource)((int)options.Source - 1), targetFolder)
-                        .AsTask(ScanCancellationToken.Token, _ScanProgress);
+                        .AsTask(_ScanCancellationToken.Token, _ScanProgress);
 
                     // update number of performed scans
                     int scans = (int)SettingsService.GetSetting(AppSetting.ScanNumber);
@@ -210,7 +220,7 @@ namespace Scanner.Services
                 else
                 {
                     // debug scanner ~> throw exception
-                    await Task.Delay(5000, ScanCancellationToken.Token);
+                    await Task.Delay(5000, _ScanCancellationToken.Token);
                     throw new ArgumentException("Can't scan with a debug scanner, duh");
                 }
             }
@@ -220,6 +230,7 @@ namespace Scanner.Services
             }
             finally
             {
+                _Progress = null;
                 IsScanInProgress = false;
             }
 
@@ -235,6 +246,17 @@ namespace Scanner.Services
             return result;
         }
 
+        public void SimulateScan()
+        {
+            _Progress = new ScanAndEditingProgress
+            {
+                State = ProgressState.Scanning
+            };
+            IsScanInProgress = true;
+            _Progress = null;
+            IsScanInProgress = false;
+        }
+
         /// <summary>
         ///     Cancels any currently running scan.
         /// </summary>
@@ -244,10 +266,10 @@ namespace Scanner.Services
             ScanEnded?.Invoke(this, EventArgs.Empty);
             try
             {
-                if (ScanCancellationToken != null) ScanCancellationToken.Cancel();
+                if (_ScanCancellationToken != null) _ScanCancellationToken.Cancel();
             }
             catch (Exception) { }
-            ScanCancellationToken = null;
+            _ScanCancellationToken = null;
         }
 
         /// <summary>
@@ -258,10 +280,10 @@ namespace Scanner.Services
             LogService?.Log.Information("CancelPreview");
             try
             {
-                if (PreviewCancellationToken != null) PreviewCancellationToken.Cancel();
+                if (_PreviewCancellationToken != null) _PreviewCancellationToken.Cancel();
             }
             catch (Exception) { }
-            PreviewCancellationToken = null;
+            _PreviewCancellationToken = null;
         }
     }
 }

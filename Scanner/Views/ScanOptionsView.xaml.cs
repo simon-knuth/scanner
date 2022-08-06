@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Scanner.Models;
+using System;
+using System.Linq;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -64,6 +66,13 @@ namespace Scanner.Views
                                 AutomationProperties.SetName(ButtonScan, MenuFlyoutItemButtonScanFresh.Text);
                                 break;
                         }
+                    });
+                    break;
+                case nameof(ViewModel.SelectedResolution):
+                    await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
+                    {
+                        // fix resolution ComboBox appears empty for new scanner
+                        ComboBoxResolution.SelectedItem = ViewModel.SelectedResolution;
                     });
                     break;
             }
@@ -158,6 +167,45 @@ namespace Scanner.Views
                     && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder);
 
                 TeachingTipScanMerge.IsOpen = false;
+            });
+        }
+
+        private async void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (int.TryParse(args.Text, out int intValue))
+                {
+                    // entered pure number, try to apply it
+                    ScanResolution resolution = ViewModel.ScannerResolutions.FirstOrDefault((x) => x.Resolution.DpiX == intValue);
+                    if (resolution != null)
+                    {
+                        // found corresponding resolution
+                        ViewModel.SelectedResolution = resolution;
+                    }
+                    else
+                    {
+                        // no resolution for number, find the closest available one
+                        resolution = ViewModel.ScannerResolutions.Aggregate((x, y) => Math.Abs(x.Resolution.DpiX - intValue) < Math.Abs(y.Resolution.DpiX - intValue) ? x : y);
+                        ViewModel.SelectedResolution = resolution;
+                    }
+                }
+                else
+                {
+                    sender.SelectedItem = ViewModel.SelectedResolution;
+                    args.Handled = true;
+                }
+            });
+        }
+
+        private async void ComboBoxResolution_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () =>
+            {
+                if (e.AddedItems.Count == 1)
+                {
+                    ViewModel.SelectedResolution = e.AddedItems[0] as ScanResolution;
+                }
             });
         }
     }

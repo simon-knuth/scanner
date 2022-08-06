@@ -2,11 +2,14 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Scanner.Models.FileNaming;
 using Scanner.Services.Messenger;
 using Scanner.ViewModels;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Globalization;
 using Windows.Media.Ocr;
 using Windows.Storage;
 using Windows.System.UserProfile;
@@ -86,6 +89,13 @@ namespace Scanner.Services
             {
                 MigrateSettingsToV3();
             }
+
+            if (!SystemInformation.Instance.IsFirstRun
+                && SystemInformation.Instance.PreviousVersionInstalled.Minor < 2
+                && SystemInformation.Instance.ApplicationVersion.Major == 3)
+            {
+                MigrateSettingsToV3_2();
+            }
         }
 
 
@@ -96,7 +106,7 @@ namespace Scanner.Services
         ///     Initializes the settings and especially the save location.
         /// </summary>
         public async Task InitializeAsync()
-        {            
+        {
             // initialize save location
             var futureAccessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 
@@ -264,11 +274,30 @@ namespace Scanner.Services
                         }
                     }
                     catch (Exception) { }
-                    
+
                     return SettingsContainer.Values[name] ?? measurementUnit;
 
                 case AppSetting.TutorialScanMergeShown:
                     return SettingsContainer.Values[name] ?? false;
+
+                case AppSetting.SettingAppLanguage:
+                    string languageValue = SettingsContainer.Values[name] as string ?? "SYSTEM";
+                    if (languageValue != "SYSTEM" && !ApplicationLanguages.ManifestLanguages.Contains(languageValue))
+                    {
+                        // desired language unavailable
+                        SetSetting(AppSetting.SettingAppLanguage, "SYSTEM");
+                        return "SYSTEM";
+                    }
+                    else
+                    {
+                        return languageValue;
+                    }
+
+                case AppSetting.SettingFileNamingPattern:
+                    return SettingsContainer.Values[name] ?? SettingFileNamingPattern.DateTime;
+
+                case AppSetting.CustomFileNamingPattern:
+                    return SettingsContainer.Values[name] ?? FileNamingStatics.DefaultCustomPattern.GetSerialized(false);
 
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
@@ -384,6 +413,18 @@ namespace Scanner.Services
                     SettingsContainer.Values[name] = (bool)value;
                     break;
 
+                case AppSetting.SettingAppLanguage:
+                    SettingsContainer.Values[name] = (string)value;
+                    break;
+
+                case AppSetting.SettingFileNamingPattern:
+                    SettingsContainer.Values[name] = (int)value;
+                    break;
+
+                case AppSetting.CustomFileNamingPattern:
+                    SettingsContainer.Values[name] = (string)value;
+                    break;
+
                 default:
                     throw new ArgumentException("Can not save value for unknown setting " + setting + ".");
             }
@@ -410,7 +451,7 @@ namespace Scanner.Services
             {
                 IsScanSaveLocationDefault = null;
             }
-            
+
             ScanSaveLocationChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -543,7 +584,7 @@ namespace Scanner.Services
         {
             // hide setup
             SetSetting(AppSetting.SetupCompleted, true);
-            
+
             // save location type
             if (SettingsContainer.Values["settingSaveLocationAsk"] != null)
             {
@@ -604,6 +645,17 @@ namespace Scanner.Services
             if (SettingsContainer.Values["manageTutorialAlreadyShown"] != null)
             {
                 SetSetting(AppSetting.TutorialPageListShown, SettingsContainer.Values["manageTutorialAlreadyShown"]);
+            }
+        }
+
+        /// <summary>
+        ///     Migrates "Append time" setting from versions prior to v3.2 to the new file naming system.
+        /// </summary>
+        public void MigrateSettingsToV3_2()
+        {
+            if ((bool)GetSetting(AppSetting.SettingAppendTime) == false)
+            {
+                SetSetting(AppSetting.SettingFileNamingPattern, SettingFileNamingPattern.Date);
             }
         }
     }

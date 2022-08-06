@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Scanner")]
-[assembly: AssemblyCopyright("Copyright © 2021 Simon Knuth")]
+[assembly: AssemblyCopyright("Copyright © 2022 Simon Knuth")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

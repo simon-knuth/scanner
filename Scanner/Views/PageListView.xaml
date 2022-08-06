@@ -15,9 +15,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="Transparent"
     d:DesignWidth="350"
-    d:DesignHeight="600"
-    
-    Loaded="Page_Loaded">
+    d:DesignHeight="600">
 
     <Page.DataContext>
         <viewModels:PageListViewModel x:Name="ViewModel"/>
@@ -282,145 +280,143 @@
                     <ScalarTransition Duration="0:0:0.3"/>
                 </StackPanel.OpacityTransition>
 
-                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
+                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF0E2;" Margin="8,8,8,16" FontSize="72" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
                 <TextBlock x:Uid="TextManageInitialPlaceholder" Margin="8,0,8,0" Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource SystemColorGrayTextColor}"/>
             </StackPanel>
 
-            <ScrollViewer x:Name="ScrollViewerPages" VerticalScrollBarVisibility="Auto">
-                <GridView x:Name="GridViewPages" Margin="24,16,24,24" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged" DragItemsCompleted="GridViewPages_DragItemsCompleted">
-                    <interactivity:Interaction.Behaviors>
-                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
-                            <core:ChangePropertyAction PropertyName="CanReorderItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                            <core:ChangePropertyAction PropertyName="CanDragItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                            <core:ChangePropertyAction PropertyName="AllowDrop" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                            <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
-                            <core:ChangePropertyAction PropertyName="CanReorderItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                            <core:ChangePropertyAction PropertyName="CanDragItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                            <core:ChangePropertyAction PropertyName="AllowDrop" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
-                        </core:DataTriggerBehavior>
-                        <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                            <core:ChangePropertyAction PropertyName="SelectedIndex" Value="-1"/>
-                            <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
-                            <core:ChangePropertyAction PropertyName="CanReorderItems" Value="False"/>
-                            <core:ChangePropertyAction PropertyName="CanDragItems" Value="False"/>
-                            <core:ChangePropertyAction PropertyName="AllowDrop" Value="False"/>
-                        </core:DataTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+            <GridView x:Name="GridViewPages" Padding="24,16,24,24" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{x:Bind ViewModel.ScanResult.Elements, Mode=OneWay, FallbackValue={x:Null}}" IsItemClickEnabled="True" SelectionMode="Single" SelectionChanged="GridViewPages_SelectionChanged" DragItemsCompleted="GridViewPages_DragItemsCompleted" Loaded="GridViewPages_Loaded">
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ScanResult, Mode=OneWay}" ComparisonCondition="NotEqual" Value="{x:Null}">
+                        <core:ChangePropertyAction PropertyName="CanReorderItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                        <core:ChangePropertyAction PropertyName="CanDragItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                        <core:ChangePropertyAction PropertyName="AllowDrop" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                        <core:ChangePropertyAction PropertyName="SelectionMode" Value="Single"/>
+                        <core:ChangePropertyAction PropertyName="CanReorderItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                        <core:ChangePropertyAction PropertyName="CanDragItems" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                        <core:ChangePropertyAction PropertyName="AllowDrop" Value="{x:Bind ViewModel.ScanResult.IsImage, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"/>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind AppBarToggleButtonSelect.IsChecked, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                        <core:ChangePropertyAction PropertyName="SelectedIndex" Value="-1"/>
+                        <core:ChangePropertyAction PropertyName="SelectionMode" Value="Multiple"/>
+                        <core:ChangePropertyAction PropertyName="CanReorderItems" Value="False"/>
+                        <core:ChangePropertyAction PropertyName="CanDragItems" Value="False"/>
+                        <core:ChangePropertyAction PropertyName="AllowDrop" Value="False"/>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
 
-                    <GridView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsWrapGrid MaximumRowsOrColumns="2" Orientation="Horizontal" SizeChanged="ItemsWrapGrid_SizeChanged"/>
-                        </ItemsPanelTemplate>
-                    </GridView.ItemsPanel>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid MaximumRowsOrColumns="2" Orientation="Horizontal" SizeChanged="ItemsWrapGrid_SizeChanged"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
 
-                    <GridView.ItemContainerTransitions>
-                        <TransitionCollection>
-                            <AddDeleteThemeTransition/>
-                            <ReorderThemeTransition/>
-                            <EntranceThemeTransition FromHorizontalOffset="0" FromVerticalOffset="0"/>
-                        </TransitionCollection>
-                    </GridView.ItemContainerTransitions>
+                <GridView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                        <ReorderThemeTransition/>
+                        <EntranceThemeTransition FromHorizontalOffset="0" FromVerticalOffset="0"/>
+                    </TransitionCollection>
+                </GridView.ItemContainerTransitions>
 
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="scanner:ScanResultElement">
-                            <GridViewItem x:Name="GridViewItemPage" Margin="4" Style="{ThemeResource DefaultGridViewItemStyle}" AutomationProperties.Name="{Binding ItemDescriptor}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False">
-                                <Grid>
-                                    <!-- Selected Item Background -->
-                                    <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="scanner:ScanResultElement">
+                        <GridViewItem x:Name="GridViewItemPage" Margin="4" Style="{ThemeResource DefaultGridViewItemStyle}" AutomationProperties.Name="{Binding ItemDescriptor}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False">
+                            <Grid>
+                                <!-- Selected Item Background -->
+                                <Border Background="{ThemeResource NavigationViewContentBackground}" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}"/>
 
-                                    <Border BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}">
-                                        <Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="3">
-                                            <controls:ImageEx Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                                <Border BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}">
+                                    <Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="3">
+                                        <controls:ImageEx Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                                    </Border>
+                                </Border>
+
+                                <!-- Selected Item -->
+                                <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
+                                            <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
+                                            <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                        
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,3" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                        <Border x:Name="BorderContainingFolderSelected" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Loaded="BorderContainingFolderSelected_Loaded">
+                                            <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Foreground="{ThemeResource AccentButtonForeground}" FontSize="12"/>
+                                                <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
+                                            </Grid>
                                         </Border>
-                                    </Border>
-
-                                    <!-- Selected Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource AccentButtonBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource BoolVisibilityConverter}}">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
-                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
-                                            </core:DataTriggerBehavior>
-                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
-                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
-                                            </core:DataTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                        
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" Margin="8,3,8,3" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
-                                            <Border x:Name="BorderContainingFolderSelected" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Loaded="BorderContainingFolderSelected_Loaded">
-                                                <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Foreground="{ThemeResource AccentButtonForeground}" FontSize="12"/>
-                                                    <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Foreground="{ThemeResource AccentButtonForeground}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
-                                                </Grid>
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
+                                    </StackPanel>
+                                </Border>
                                     
-                                    <!-- Normal Item -->
-                                    <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <!-- Normal Item -->
+                                <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{Binding ElementName=GridViewItemPage, Path=IsSelected, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
+                                            <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
+                                        </core:DataTriggerBehavior>
+                                        <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
+                                            <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
+                                        </core:DataTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                        
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                        <Border x:Name="BorderContainingFolderNormal" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Visibility="Collapsed" Loaded="BorderContainingFolderNormal_Loaded">
+                                            <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Opacity="0.75" FontSize="12"/>
+                                                <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Opacity="0.75" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <GridViewItem.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Uid="ButtonManageShowinFileExplorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
                                         <interactivity:Interaction.Behaviors>
                                             <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
-                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Center"/>
+                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
                                             </core:DataTriggerBehavior>
                                             <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
-                                                <core:ChangePropertyAction PropertyName="HorizontalAlignment" Value="Stretch"/>
+                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                                             </core:DataTriggerBehavior>
                                         </interactivity:Interaction.Behaviors>
-                                        
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="8,3,8,3" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextAlignment="Center" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
-                                            <Border x:Name="BorderContainingFolderNormal" HorizontalAlignment="Stretch" BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="0,1,0,0" Visibility="Collapsed" Loaded="BorderContainingFolderNormal_Loaded">
-                                                <Grid HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderPathConverter}}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0" Margin="8,3,0,6" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED25;" Opacity="0.75" FontSize="12"/>
-                                                    <TextBlock Grid.Column="1" Margin="6,3,8,6" Text="{x:Bind ScanFile.Path, Mode=OneWay, Converter={StaticResource FilePathFolderConverter}}" Opacity="0.75" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="1" TextTrimming="Clip"/>
-                                                </Grid>
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <GridViewItem.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False"/>
-                                        <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem x:Uid="ButtonManageShowinFileExplorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
-                                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                                </core:DataTriggerBehavior>
-                                                <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
-                                                    <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                                </core:DataTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
                                             
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC50;"/>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem x:Uid="ButtonManageDuplicatePage" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </GridViewItem.ContextFlyout>
-                            </GridViewItem>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>
-            </ScrollViewer>
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC50;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="ButtonManageDuplicatePage" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </GridViewItem.ContextFlyout>
+                        </GridViewItem>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
         </Grid>
     </Grid>
 </Page>

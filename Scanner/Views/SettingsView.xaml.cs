@@ -1,13 +1,13 @@
-﻿using WinUI = Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls;
+﻿using Scanner.Views.Dialogs;
 using System;
-using Scanner.Views.Dialogs;
-using Windows.UI.Core;
-using static Utilities;
+using System.Threading.Tasks;
 using Windows.Globalization;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using static Enums;
-using System.Threading.Tasks;
+using static Utilities;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace Scanner.Views
 {
@@ -29,12 +29,22 @@ namespace Scanner.Views
             ViewModel.LicensesDialogRequested += ViewModel_LicensesDialogRequested;
             ViewModel.ChangelogRequested += ViewModel_ChangelogRequested;
             ViewModel.SettingsSectionRequested += ViewModel_SettingsSectionRequested;
+            ViewModel.CustomFileNamingDialogRequested += ViewModel_CustomFileNamingDialogRequested;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void Page_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.LogExportDialogRequested -= ViewModel_LogExportDialogRequestedAsync;
+            ViewModel.LicensesDialogRequested -= ViewModel_LicensesDialogRequested;
+            ViewModel.ChangelogRequested -= ViewModel_ChangelogRequested;
+            ViewModel.SettingsSectionRequested -= ViewModel_SettingsSectionRequested;
+            ViewModel.CustomFileNamingDialogRequested -= ViewModel_CustomFileNamingDialogRequested;
+        }
+
         private async void ViewModel_SettingsSectionRequested(object sender, SettingsSection section)
         {
             WinUI.Expander requestedExpander = ConvertSettingsSection(section);
@@ -50,6 +60,12 @@ namespace Scanner.Views
         private async void ViewModel_LicensesDialogRequested(object sender, EventArgs e)
         {
             LicensesDialogView dialog = new LicensesDialogView();
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+        }
+
+        private async void ViewModel_CustomFileNamingDialogRequested(object sender, EventArgs e)
+        {
+            CustomFileNamingDialogView dialog = new CustomFileNamingDialogView();
             await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
         }
 

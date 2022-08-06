@@ -1,0 +1,434 @@
+﻿<ContentDialog
+    x:Class="Scanner.Views.Dialogs.CustomFileNamingDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:scanner="using:Scanner"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:filenaming="using:Scanner.Models.FileNaming"
+    mc:Ignorable="d"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    x:Uid="DialogCustomFileNaming"
+    DefaultButton="Primary"
+    PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection}"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.Pattern.IsValid, Mode=OneWay}"
+    Closed="ContentDialog_Closed">
+
+    <ContentDialog.DataContext>
+        <viewModels:CustomFileNamingDialogViewModel x:Name="ViewModel"/>
+    </ContentDialog.DataContext>
+    
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
+            <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
+            <converters:RadioButtonsDayTypeConverter x:Key="RadioButtonsDayTypeConverter"/>
+            <converters:RadioButtonsMonthTypeConverter x:Key="RadioButtonsMonthTypeConverter"/>
+            <converters:ScanMergeElementGlyphConverter x:Key="ScanMergeElementGlyphConverter"/>
+            <converters:ScanMergeElementTooltipConverter x:Key="ScanMergeElementTooltipConverter"/>
+            <converters:StringWhitespaceVisualizationConverter x:Key="StringWhitespaceVisualizationConverter"/>
+            <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
+            <converters:ToolTipConverter x:Key="ToolTipConverter"/>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   DIALOG CONTENT   - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Title>
+        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,0,0,12">
+            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE13E;"/>
+            <TextBlock x:Uid="HeadingDialogCustomFileNaming" AutomationProperties.HeadingLevel="Level1" />
+        </StackPanel>
+    </ContentDialog.Title>
+
+    <Grid ColumnSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="96" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Stretch ContentDialog -->
+        <Border Grid.Row="0" Width="1000" Background="Transparent" />
+
+        <ScrollViewer Grid.Row="0" VerticalAlignment="Top" Padding="24,0,24,0" Margin="-24,0,-24,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <TextBlock x:Uid="TextCustomFileNamingExplanation" Style="{StaticResource BodyTextBlockStyle}" />
+        </ScrollViewer>
+        
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="-24,24,-24,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ListView x:Name="ListViewPattern" Grid.Column="0" CanDragItems="True" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="20,16,20,16" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ItemClick="ListViewPattern_ItemClick" DragItemsStarting="ListViewPattern_DragItemsStarting" DragItemsCompleted="ListViewPattern_DragItemsCompleted">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Horizontal" ItemsUpdatingScrollMode="KeepLastItemInView" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition />
+                        <EntranceThemeTransition FromVerticalOffset="0" IsStaggeringEnabled="False" />
+                        <ReorderThemeTransition />
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </ListView.ItemContainerTransitions>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="filenaming:IFileNamingBlock">
+                        <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind DisplayName, Mode=OneWay}" KeyUp="ListViewItemPattern_KeyUp">
+                            <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
+                                <!-- Block -->
+                                <StackPanel Orientation="Horizontal" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="{x:Bind Glyph}" FontSize="16" Margin="0,0,8,0" Visibility="{x:Bind Glyph, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
+                                    <controls:SwitchPresenter Value="{x:Bind Name}">
+                                        <controls:Case IsDefault="True">
+                                            <TextBlock Text="{Binding Path=DisplayName, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </controls:Case>
+
+                                        <controls:Case Value="TEXT">
+                                            <StackPanel Orientation="Horizontal">
+                                                <FontIcon x:Uid="TextFileNamingBlockInvalid" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA39;" FontSize="16" Margin="8,0,8,0" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind IsValid, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                                                <TextBlock Text="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringWhitespaceVisualizationConverter}}" Style="{StaticResource CaptionTextBlockStyle}" Visibility="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
+                                            </StackPanel>
+                                        </controls:Case>
+                                    </controls:SwitchPresenter>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <!-- Block flyout -->
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout x:Name="FlyoutBlock" Placement="Top">
+                                    <StackPanel Orientation="Vertical" Spacing="16" MinWidth="250" MaxWidth="250">
+                                        <controls:SwitchPresenter Value="{x:Bind Name}" VerticalAlignment="Stretch">
+                                            <!-- Text -->
+                                            <controls:Case Value="TEXT">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <TextBlock x:Uid="HeadingFileNamingBlockText" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    <TextBox Text="{Binding Path=Text, Mode=TwoWay}" Tag="{x:Bind}" KeyUp="TextBoxText_KeyUp" Loaded="TextBoxText_Loaded" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Hour -->
+                                            <controls:Case Value="HOUR">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockHour" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlock24Hours" IsChecked="{Binding Path=Use24Hours, Mode=TwoWay}" />
+                                                    <CheckBox x:Uid="OptionFileNamingBlockTwoDigits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Hour period -->
+                                            <controls:Case Value="HOURPERIOD">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockHourPeriod" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Minute -->
+                                            <controls:Case Value="MINUTE">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockMinute" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockTwoDigits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Second -->
+                                            <controls:Case Value="SECOND">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE121;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockSecond" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockTwoDigits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Day -->
+                                            <controls:Case Value="DAY">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockDay" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsDayTypeConverter}}">
+                                                        <RadioButton x:Uid="OptionFileNamingBlockDayWeek" />
+                                                        <RadioButton x:Uid="OptionFileNamingBlockDayMonth" />
+                                                        <RadioButton x:Uid="OptionFileNamingBlockDayYear" />
+                                                    </muxc:RadioButtons>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+                                                    </CheckBox>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMaximumLetters" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=LimitMaxChars, Mode=OneWay}" Value="{Binding Path=MaxChars, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Month -->
+                                            <controls:Case Value="MONTH">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockMonth" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}">
+                                                        <RadioButton x:Uid="OptionFileNamingBlockMonthNumber" />
+                                                        <RadioButton x:Uid="OptionFileNamingBlockMonthName" />
+                                                        <RadioButton x:Uid="OptionFileNamingBlockMonthShortName" />
+                                                    </muxc:RadioButtons>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+                                                    </CheckBox>
+                                                    <Frame>
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                                                            </core:DataTriggerBehavior>
+                                                            <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
+                                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+
+                                                        <StackPanel Orientation="Vertical" Spacing="6">
+                                                            <CheckBox x:Uid="OptionFileNamingBlockMaximumLetters" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
+                                                            <muxc:NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=LimitMaxChars, Mode=OneWay}" Value="{Binding Path=MaxChars, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
+                                                        </StackPanel>
+                                                    </Frame>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Year -->
+                                            <controls:Case Value="YEAR">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE163;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockYear" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Resolution -->
+                                            <controls:Case Value="RESOLUTION">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE744;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockResolution" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- File type -->
+                                            <controls:Case Value="FILETYPE">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8A5;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockFileType" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Scanner name -->
+                                            <controls:Case Value="SCANNERNAME">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE294;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockScannerName" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Brightness -->
+                                            <controls:Case Value="BRIGHTNESS">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockBrightness" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockSkipIfDefault" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
+                                                    <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </StackPanel>
+                                            </controls:Case>
+
+                                            <!-- Contrast -->
+                                            <controls:Case Value="CONTRAST">
+                                                <StackPanel Orientation="Vertical" Spacing="12">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF08C;" FontSize="16"/>
+                                                        <TextBlock x:Uid="HeadingFileNamingBlockContrast" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    </StackPanel>
+                                                    <CheckBox x:Uid="OptionFileNamingBlockSkipIfDefault" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
+                                                    <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </StackPanel>
+                                            </controls:Case>
+                                        </controls:SwitchPresenter>
+                                    </StackPanel>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </ListViewItem>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <Grid x:Name="GridPatternButtons" Grid.Row="2" Padding="0,12,0,0" ColumnSpacing="12" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="48" />
+            </Grid.ColumnDefinitions>
+
+            <muxc:DropDownButton x:Name="ButtonAddBlock" Grid.Column="0" x:Uid="ButtonFileNamingAddBlock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonAddBlock.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Loaded="ButtonAddBlock_Loaded">
+                <Button.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Button.OpacityTransition>
+
+                <muxc:DropDownButton.Flyout>
+                    <MenuFlyout x:Name="MenuFlyoutAddBlock" Placement="Bottom" />
+                </muxc:DropDownButton.Flyout>
+            </muxc:DropDownButton>
+            <Button x:Name="ButtonClearPattern" Grid.Column="1" x:Uid="ButtonFileNamingClearPattern" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="{x:Bind ButtonClearPattern.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}" AutomationProperties.Name="{x:Bind ButtonClearPattern, Converter={StaticResource ToolTipConverter}}">
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
+                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="NotEqual" Value="0">
+                        <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+                <Button.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Button.OpacityTransition>
+
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="16" />
+                </StackPanel>
+            </Button>
+
+            <Grid x:Name="GridTrashDropZones" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" AllowDrop="True" Background="Transparent" Opacity="{x:Bind GridTrashDropZones.Visibility, Mode=OneWay, Converter={StaticResource VisibilityOpacityConverter}}" Visibility="Collapsed" DragOver="GridTrashDropZones_DragOver" DragLeave="GridTrashDropZones_DragLeave" Drop="GridTrashDropZones_Drop">
+                <Grid.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.3"/>
+                </Grid.OpacityTransition>
+
+                <Grid x:Name="GridTrashDropZone"  Visibility="Collapsed">
+                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" StrokeDashArray="3" StrokeDashCap="Round" StrokeDashOffset="0" StrokeThickness="2" RadiusX="4" RadiusY="4" />
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="20" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid x:Name="GridTrashDropZoneHover" Visibility="Collapsed">
+                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeDashArray="3" StrokeDashCap="Round" StrokeDashOffset="0" StrokeThickness="2" RadiusX="4" RadiusY="4" />
+                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!-- Preview -->
+        <TextBlock Grid.Row="3" x:Uid="HeadingFileNamingPreview" Style="{StaticResource BaseTextBlockStyle}" Margin="0,32,0,12" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
+        <ScrollViewer Grid.Row="4" Margin="-24,0,-24,-24" BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}" BorderThickness="0,1,0,0" Height="80" HorizontalAlignment="Stretch" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid Padding="24,12,24,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+
+                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
+                <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
+            </Grid>
+        </ScrollViewer>
+        
+    </Grid>
+
+</ContentDialog>

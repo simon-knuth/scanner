@@ -65,6 +65,17 @@ namespace Scanner.ViewModels
             }
         }
 
+        private bool _ReversePages;
+        public bool ReversePages
+        {
+            get => _ReversePages;
+            set
+            {
+                SetProperty(ref _ReversePages, value);
+                RefreshMergeResult();
+            }
+        }
+
         private int _TotalNumberOfPages;
         public int TotalNumberOfPages
         {
@@ -85,6 +96,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanMergeDialogViewModel()
         {
+            LogService.Log.Information("Opening scan and merge dialog");
             Messenger.Register<SelectedScannerChangedMessage>(this, (r, m) =>
             {
                 if (m.Value == null)
@@ -146,12 +158,26 @@ namespace Scanner.ViewModels
                     if (newList.Count == StartPageNumber - 1)
                     {
                         // start of potential pages
-                        newList.Add(new ScanMergeElement
+                        if (!ReversePages)
                         {
-                            IsPotentialPage = true,
-                            ItemDescriptor = LocalizedString("TextScanMergeElementStartPage"),
-                            IsStartPage = true
-                        });
+                            newList.Add(new ScanMergeElement
+                            {
+                                IsPotentialPage = true,
+                                ItemDescriptor = LocalizedString("TextScanMergeElementStartPage"),
+                                IsStartPage = true,
+                                IsOrderReversed = ReversePages
+                            });
+                        }
+                        else
+                        {
+                            newList.Add(new ScanMergeElement
+                            {
+                                IsPotentialPage = true,
+                                ItemDescriptor = LocalizedString("TextScanMergeElementLastPage"),
+                                IsStartPage = true,
+                                IsOrderReversed = ReversePages
+                            });
+                        }
 
                         if (SkipPages == 0)
                         {
@@ -230,7 +256,10 @@ namespace Scanner.ViewModels
                 if (MergePreview != null && MergePreview.Count >= 1)
                 {
                     // create config from preview
-                    ScanMergeConfig config = new ScanMergeConfig();
+                    ScanMergeConfig config = new ScanMergeConfig
+                    {
+                        InsertReversed = ReversePages
+                    };
 
                     int i = 0;
                     foreach (ScanMergeElement element in MergePreview)
