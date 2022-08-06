@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Helpers;
 using Scanner.Services;
 using Scanner.Services.Messenger;
 using Scanner.Views.Converters;
@@ -205,7 +206,7 @@ namespace Scanner.ViewModels
             IsScanRunning = false;
         }
 
-        private void ScanService_ScanStarted(object sender, EventArgs e)
+        private void ScanService_ScanStarted(object sender, ScanAndEditingProgress e)
         {
             IsScanRunning = true;
         }

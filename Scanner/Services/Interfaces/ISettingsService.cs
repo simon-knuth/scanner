@@ -40,6 +40,7 @@ namespace Scanner.Services
         Task SetScanSaveLocationAsync(StorageFolder folder);
         Task ResetScanSaveLocationAsync();
         void MigrateSettingsToV3();
+        void MigrateSettingsToV3_2();
         Task InitializeAsync();
     }
 
@@ -68,7 +69,10 @@ namespace Scanner.Services
         SettingAnimations,
         SettingScanAction,
         SettingMeasurementUnits,
-        TutorialScanMergeShown
+        TutorialScanMergeShown,
+        SettingAppLanguage,
+        SettingFileNamingPattern,
+        CustomFileNamingPattern
     }
 
     public enum SettingSaveLocationType
@@ -100,5 +104,12 @@ namespace Scanner.Services
     {
         Metric = 0,
         ImperialUS = 1
+    }
+
+    public enum SettingFileNamingPattern
+    {
+        DateTime = 0,
+        Date = 1,
+        Custom = 2
     }
 }

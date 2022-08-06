@@ -2,6 +2,7 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,7 @@ namespace Scanner.Services
             { AppCenterEvent.SetSaveLocationUnavailable, "Set save location unavailable" },
             { AppCenterEvent.SettingsRequested, "Settings requested" },
             { AppCenterEvent.ChangelogOpened, "Changelog opened" },
+            { AppCenterEvent.ArchitectureDetected, "Architecture detected" },
         };
 
 
@@ -76,6 +78,11 @@ namespace Scanner.Services
             await AppCenter.SetEnabledAsync(IsAppCenterAllowed);
             Crashes.GetErrorAttachments = (report) => CreateErrorAttachmentAsync(report, true).Result;
             AppCenter.Start(GetSecret("SecretAppCenter"), typeof(Analytics), typeof(Crashes));
+
+            // send initial analytics
+            TrackEvent(AppCenterEvent.ArchitectureDetected, new Dictionary<string, string> {
+                { "Architecture", SystemInformation.Instance.OperatingSystemArchitecture.ToString() },
+            });
         }
         
         /// <summary>

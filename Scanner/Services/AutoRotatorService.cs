@@ -170,6 +170,8 @@ namespace Scanner.Services
                             }
                         }
 
+                        bitmap.Dispose();
+
                         if (bestRotation.Item2 < MinimumNumberOfWords)
                         {
                             // very low confidence, could just be random patterns

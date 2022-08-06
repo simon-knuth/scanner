@@ -13,8 +13,10 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:helpers="using:Scanner.Helpers"
+    xmlns:system="using:System"
     d:DesignWidth="350"
-    d:DesignHeight="600">
+    d:DesignHeight="600"
+    Unloaded="Page_Unloaded">
 
     <Page.DataContext>
         <viewModels:SettingsViewModel x:Name="ViewModel"/>
@@ -37,6 +39,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- XAML Converters -->
+            <converters:AppLanguageSettingConverter x:Key="AppLanguageSettingConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
@@ -154,7 +157,7 @@
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </CheckBox>
-                            <HyperlinkButton x:Uid="OptionSettingsAutoRotationLanguage" HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
+                            <HyperlinkButton HorizontalAlignment="Center" Margin="0,24,0,0" Click="HyperlinkButtonSettingAutoRotateLanguage_Click" IsEnabled="{x:Bind (x:Boolean)CheckBoxSettingAutoRotate.IsChecked, Mode=OneWay, FallbackValue=False}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.AutoRotatorService}" ComparisonCondition="Equal" Value="{x:Null}">
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
@@ -163,6 +166,8 @@
                                         <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Uid="HyperlinkSettingsAutoRotationLanguage" HorizontalTextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
 
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout x:Name="MenuFlyoutSettingAutoRotateLanguage" Placement="Bottom">
@@ -234,8 +239,29 @@
                             </StackPanel>
                         </Grid>
                     </muxc:Expander.Header>
-                    <StackPanel Orientation="Vertical" Padding="24,16,24,16">
-                        <CheckBox x:Uid="OptionSettingsAppendTime" IsChecked="{x:Bind ViewModel.SettingAppendTime, Mode=TwoWay}"/>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <muxc:RadioButtons Style="{StaticResource RadioButtonsStyleCompact}" SelectedIndex="{x:Bind ViewModel.SettingFileNamingPattern, Mode=TwoWay}">
+                                <RadioButton x:Uid="OptionSettingsDateTimePattern" />
+                                <RadioButton x:Uid="OptionSettingsDatePattern" />
+                                <RadioButton x:Uid="OptionSettingsCustomPattern" x:Name="RadioButtonSettingsFileNamingCustom" />
+                            </muxc:RadioButtons>
+                            <HyperlinkButton HorizontalAlignment="Center" Margin="0,24,0,0" IsEnabled="{x:Bind (x:Boolean)RadioButtonSettingsFileNamingCustom.IsChecked, Mode=OneWay, FallbackValue=False}" Command="{x:Bind ViewModel.DisplayCustomFileNamingDialogCommand}">
+                                <TextBlock x:Uid="HyperlinkSettingsEditCustomPattern" HorizontalTextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" Spacing="12">
+                            <TextBlock x:Uid="HeadingFileNamingPreview" AutomationProperties.HeadingLevel="Level3" />
+                            <Grid MinHeight="80">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="4*" />
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA90;" FontSize="24"/>
+                                <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.FileNamingPatternPreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Settings Scan Options -->
@@ -294,7 +320,7 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
                             <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
-                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem"/>
+                                <ComboBoxItem x:Uid="OptionSettingsThemeSystem" FontWeight="SemiBold" />
                                 <ComboBoxItem x:Uid="OptionSettingsThemeLight"/>
                                 <ComboBoxItem x:Uid="OptionSettingsThemeDark"/>
                             </ComboBox>
@@ -345,7 +371,7 @@
                     </StackPanel>
                 </muxc:Expander>
                 <!-- Setting Animations -->
-                <muxc:Expander x:Name="ExpanderAnimations" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAnimations.Text}">
+                <muxc:Expander x:Name="ExpanderAnimations" HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,6" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAnimations.Text}">
                     <muxc:Expander.Header>
                         <Grid Padding="0,12,0,12">
                             <Grid.ColumnDefinitions>
@@ -359,6 +385,34 @@
                     </muxc:Expander.Header>
                     <StackPanel Orientation="Vertical" Padding="24,16,24,16">
                         <CheckBox x:Uid="OptionSettingsAnimations" IsChecked="{x:Bind ViewModel.SettingAnimations, Mode=TwoWay}"/>
+                    </StackPanel>
+                </muxc:Expander>
+                <!-- Setting App Language -->
+                <muxc:Expander x:Name="ExpanderAppLanguage" HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind HeadingSettingsAppLanguage.Text}">
+                    <muxc:Expander.Header>
+                        <Grid Padding="0,12,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF2B7;" FontSize="16" Margin="0,0,16,0"/>
+                            <TextBlock x:Name="HeadingSettingsAppLanguage" Grid.Column="1" x:Uid="HeadingSettingsAppLanguage" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16" BorderBrush="{ThemeResource ExpanderContentBorderBrush}" BorderThickness="0,0,0,1">
+                            <ComboBox HorizontalAlignment="Stretch" IsTextSearchEnabled="True" ItemsSource="{x:Bind ViewModel.AvailableAppLanguages}" SelectedItem="{x:Bind ViewModel.SettingAppLanguage, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="system:String">
+                                        <TextBlock Text="{x:Bind Converter={StaticResource AppLanguageSettingConverter}}" TextTrimming="CharacterEllipsis"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Padding="24,16,24,16">
+                            <TextBlock x:Uid="TextSettingsRestart" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="Wrap"/>
+                        </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
 
@@ -403,7 +457,7 @@
 
                                 <TextBlock x:Name="OptionSettingsErrorStatistics" x:Uid="OptionSettingsErrorStatistics" TextWrapping="WrapWholeWords"/>
                             </CheckBox>
-                            <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+                            <TextBlock x:Uid="TextSettingsErrorStatistics" Margin="28,0,0,0" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorTertiary}"/>
                             <Button Margin="0,16,0,0" Command="{x:Bind ViewModel.DisplayLogExportDialogCommand}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:DataTriggerBehavior Binding="{x:Bind ViewModel.LogService}" ComparisonCondition="Equal" Value="{x:Null}">
@@ -491,9 +545,15 @@
                     <TextBlock LineHeight="28" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True">
                         <Run FontWeight="SemiBold">David</Run> - British English
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
+                        <LineBreak/><Run FontWeight="SemiBold">conql</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">xvzhenduo</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">赵大官人</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">1055773545</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">Cas Sprenger</Run> - Dutch
                         <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French
                         <LineBreak/><Run FontWeight="SemiBold">Ashish Upadhyay</Run> - Hindi
+                        <LineBreak/><Run FontWeight="SemiBold">Andras Kovi</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">gidano</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">nvi9</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
@@ -503,15 +563,18 @@
                         <LineBreak/><Run FontWeight="SemiBold">Zaptyp (Patryk)</Run> - Polish
                         <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
                         <LineBreak/><Run FontWeight="SemiBold">Marcelo Caetano Mello</Run> - Portuguese (Brazil)
-                        <LineBreak/><Run FontWeight="SemiBold">Brunotiago633</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">Bruno Tiago</Run> - Portuguese (Portugal)
                         <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Portugal)
                         <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">Almas</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">Angel Leon</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Geroncity2201</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Kenneth</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Mr. BURR!</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Danylo</Run> - Ukrainian
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
                     </TextBlock>
                 </muxc:Expander>
@@ -561,9 +624,9 @@
                         <TextBlock x:Uid="HyperlinkSettingsAboutCredits"/>
                     </muxc:Expander.Header>
                     <TextBlock TextWrapping="WrapWholeWords">
-                        <Hyperlink NavigateUri="https://lottiefiles.com/19814-data-list" UnderlineStyle="None">Data List</Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/92923-loading-squares" UnderlineStyle="None">Loading Squares</Hyperlink>
                         -
-                        <Hyperlink NavigateUri="https://lottiefiles.com/user/277494" UnderlineStyle="None">Hưng Nguyễn Khánh</Hyperlink>
+                        <Hyperlink NavigateUri="https://lottiefiles.com/jakub" UnderlineStyle="None">Jakub Holub</Hyperlink>
                     </TextBlock>
                 </muxc:Expander>
             </StackPanel>

@@ -60,7 +60,7 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <PackageCertificateThumbprint>9E804161293785A2B8F7758AA3C36DB0DFBE690B</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
@@ -127,11 +127,6 @@
     <Content Include="Assets\contrast-black\SmallTile.scale-150.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-200.png" />
     <Content Include="Assets\contrast-black\SmallTile.scale-400.png" />
-    <Content Include="Assets\contrast-black\SplashScreen.scale-100.png" />
-    <Content Include="Assets\contrast-black\SplashScreen.scale-125.png" />
-    <Content Include="Assets\contrast-black\SplashScreen.scale-150.png" />
-    <Content Include="Assets\contrast-black\SplashScreen.scale-200.png" />
-    <Content Include="Assets\contrast-black\SplashScreen.scale-400.png" />
     <Content Include="Assets\contrast-black\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\contrast-black\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\contrast-black\Square150x150Logo.scale-150.png" />
@@ -177,11 +172,6 @@
     <Content Include="Assets\contrast-high\SmallTile.scale-150.png" />
     <Content Include="Assets\contrast-high\SmallTile.scale-200.png" />
     <Content Include="Assets\contrast-high\SmallTile.scale-400.png" />
-    <Content Include="Assets\contrast-high\SplashScreen.scale-100.png" />
-    <Content Include="Assets\contrast-high\SplashScreen.scale-125.png" />
-    <Content Include="Assets\contrast-high\SplashScreen.scale-150.png" />
-    <Content Include="Assets\contrast-high\SplashScreen.scale-200.png" />
-    <Content Include="Assets\contrast-high\SplashScreen.scale-400.png" />
     <Content Include="Assets\contrast-high\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\contrast-high\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\contrast-high\Square150x150Logo.scale-150.png" />
@@ -227,11 +217,6 @@
     <Content Include="Assets\contrast-standard\SmallTile.scale-150.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-200.png" />
     <Content Include="Assets\contrast-standard\SmallTile.scale-400.png" />
-    <Content Include="Assets\contrast-standard\SplashScreen.scale-100.png" />
-    <Content Include="Assets\contrast-standard\SplashScreen.scale-125.png" />
-    <Content Include="Assets\contrast-standard\SplashScreen.scale-150.png" />
-    <Content Include="Assets\contrast-standard\SplashScreen.scale-200.png" />
-    <Content Include="Assets\contrast-standard\SplashScreen.scale-400.png" />
     <Content Include="Assets\contrast-standard\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\contrast-standard\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\contrast-standard\Square150x150Logo.scale-150.png" />
@@ -277,11 +262,6 @@
     <Content Include="Assets\contrast-white\SmallTile.scale-150.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-200.png" />
     <Content Include="Assets\contrast-white\SmallTile.scale-400.png" />
-    <Content Include="Assets\contrast-white\SplashScreen.scale-100.png" />
-    <Content Include="Assets\contrast-white\SplashScreen.scale-125.png" />
-    <Content Include="Assets\contrast-white\SplashScreen.scale-150.png" />
-    <Content Include="Assets\contrast-white\SplashScreen.scale-200.png" />
-    <Content Include="Assets\contrast-white\SplashScreen.scale-400.png" />
     <Content Include="Assets\contrast-white\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\contrast-white\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\contrast-white\Square150x150Logo.scale-150.png" />

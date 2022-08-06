@@ -83,21 +83,50 @@ namespace Scanner.Views
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.Orientation))
+            switch (e.PropertyName)
             {
-                await ApplyFlipViewOrientation(ViewModel.Orientation);
+                case nameof(ViewModel.Orientation):
+                    await ApplyFlipViewOrientation(ViewModel.Orientation);
+                    break;
+                case nameof(ViewModel.EditorMode):
+                    if (ViewModel.EditorMode == EditorMode.Draw)
+                    {
+                        await InitializeInkCanvas();
+                    }
+                    break;
+                case nameof(ViewModel.IsTouchDrawingEnabled):
+                    await ApplyTouchDrawState();
+                    break;
+                case nameof(ViewModel.Progress):
+                    if (ViewModel.Progress != null)
+                    {
+                        ViewModel.Progress.PropertyChanged += Progress_PropertyChanged;
+                    }
+                    await RefreshProgressState();
+                    break;
+                default:
+                    break;
             }
-            else if (e.PropertyName == nameof(ViewModel.EditorMode))
+        }
+
+        private async void Progress_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            await RefreshProgressState();
+        }
+
+        private async Task RefreshProgressState()
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (ViewModel.EditorMode == EditorMode.Draw)
+                if (ViewModel.Progress != null)
                 {
-                    await InitializeInkCanvas();
+                    SwitchPresenterProgressState.Value = ViewModel.Progress.State.ToString();
                 }
-            }
-            else if (e.PropertyName == nameof(ViewModel.IsTouchDrawingEnabled))
-            {
-                await ApplyTouchDrawState();
-            }
+                else
+                {
+                    SwitchPresenterProgressState.Value = null;
+                }
+            });
         }
 
         private async Task InitializeInkCanvas()
@@ -119,8 +148,10 @@ namespace Scanner.Views
             await RunOnUIThreadAsync(CoreDispatcherPriority.Low, () =>
             {
                 // fix ProgressRing getting stuck when navigating back to cached page
-                ProgressRingLoading.IsActive = false;
-                ProgressRingLoading.IsActive = true;
+                ProgressRingLoadingIndeterminate.IsActive = false;
+                ProgressRingLoadingIndeterminate.IsActive = true;
+                ProgressRingLoadingDeterminate.IsActive = false;
+                ProgressRingLoadingDeterminate.IsActive = true;
 
                 InkCanvasEditDraw.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
             });
@@ -193,8 +224,11 @@ namespace Scanner.Views
             {
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    FlyoutRename.Hide();
-                    ViewModel.RenameCommand.Execute(TextBoxRename.Text);
+                    if (ButtonRenameConfirm.IsEnabled)
+                    {
+                        FlyoutRename.Hide();
+                        ViewModel.RenameCommand.Execute(TextBoxRename.Text);
+                    }
                 });
             }
         }
@@ -773,6 +807,35 @@ namespace Scanner.Views
                 double value = GridContent.ActualHeight - 80;
                 KeyFrameScanningAnimation.Value = $"0,{value.ToString(cultureInfo)},0";
             });
+        }
+
+        private async void HyperlinkButtonFileNamingSettings_Click(object sender, RoutedEventArgs e)
+        {
+            await RunOnUIThreadAsync(CoreDispatcherPriority.High, () => FlyoutRename.Hide());
+        }
+
+        private void TextBoxRename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // validate entered file name
+            string text = ((TextBox)sender).Text;
+            if (string.IsNullOrEmpty(text))
+            {
+                ButtonRenameConfirm.IsEnabled = false;
+                return;
+            }
+
+            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            foreach (char invalidChar in invalidChars)
+            {
+                if (text.Contains(invalidChar.ToString()))
+                {
+                    ButtonRenameConfirm.IsEnabled = false;
+                    return;
+                }
+            }
+
+            // valid name
+            ButtonRenameConfirm.IsEnabled = true;
         }
     }
 

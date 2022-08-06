@@ -14,9 +14,11 @@
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:helpers="using:Scanner.Helpers"
     xmlns:scanner="using:Scanner"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)" xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:v1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     Background="Transparent"
     d:DesignWidth="350"
     d:DesignHeight="600"
@@ -46,7 +48,9 @@
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter"/>
+            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
             <converters:EditorModeIntConverter x:Key="EditorModeIntConverter"/>
             <converters:VisibilityOpacityConverter x:Key="VisibilityOpacityConverter"/>
             <converters:AspectRatioOptionBoolConverter x:Key="AspectRatioOptionBoolConverter"/>
@@ -114,7 +118,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="HeadingOpenWithWarning" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="HeadingOpenWithWarning" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Uid="TextOpenWithWarning" Style="{StaticResource BodyTextBlockStyle}"/>
                     <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,16,0,16" IsChecked="{x:Bind ViewModel.ShowOpenWithWarning, Mode=TwoWay, Converter={StaticResource NegativeBoolConverter}}">
                         <TextBlock x:Uid="OptionDontShowAgain" TextWrapping="WrapWholeWords"/>
@@ -145,13 +149,13 @@
                     </Storyboard>
 
                     <VisualState.Setters>
-                        
+
                     </VisualState.Setters>
                 </VisualState>
 
-                <VisualState x:Name="DisabledState">
+                <VisualState x:Name="LoadingState">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}"/>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
 
                     <Storyboard>
@@ -160,23 +164,7 @@
 
                     <VisualState.Setters>
                         <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
-                        <Setter Target="GridLoading.Visibility" Value="Visible"/>
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="ScanningState">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsScanning, Mode=OneWay}"/>
-                    </VisualState.StateTriggers>
-
-                    <Storyboard>
-
-                    </Storyboard>
-
-                    <VisualState.Setters>
-                        <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
-                        <Setter Target="GridLoading.Visibility" Value="Visible"/>
-                        <Setter Target="GridScanning.Visibility" Value="Visible"/>
+                        <Setter Target="FrameFooter.IsEnabled" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -295,8 +283,10 @@
 
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout x:Name="FlyoutRename">
-                                        <Grid MinWidth="250" MaxWidth="250">
+                                        <Grid MinWidth="250" MaxWidth="250" ColumnSpacing="6">
                                             <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
@@ -308,20 +298,37 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="HeadingDialogRename" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                                             <TextBlock x:Uid="TextDialogRename" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" HorizontalAlignment="Stretch"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                            <TextBox x:Name="TextBoxRename" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,12" KeyDown="TextBoxRename_KeyDown" Loaded="TextBoxRename_Loaded" TextChanged="TextBoxRename_TextChanged" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,12" Text="{x:Bind ViewModel.ScanResult.ScanResultFormatString, Mode=OneWay}" />
+                                            
+                                            <HyperlinkButton Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Command="{x:Bind ViewModel.SettingsFileNamingRequestCommand}" Click="HyperlinkButtonFileNamingSettings_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="&#xE713;" Margin="0,0,12,0"/>
+                                                    <TextBlock x:Uid="ButtonDialogRenameFileNamingSettings" TextWrapping="WrapWholeWords"/>
+                                                </StackPanel>
+                                            </HyperlinkButton>
 
-                                            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
+                                            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button x:Uid="ButtonDialogRenameConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
+                                                <Button x:Name="ButtonRenameConfirm" x:Uid="ButtonDialogRenameConfirm" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.RenameCommand}" CommandParameter="{x:Bind TextBoxRename.Text, Mode=OneWay}" Click="ButtonRename_Click"/>
                                                 <Button x:Uid="ButtonDialogRenameCancel" Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonRenameCancel_Click"/>
+                                            </Grid>
+
+                                            <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0" ColumnSpacing="8" Visibility="{x:Bind ButtonRenameConfirm.IsEnabled, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" HorizontalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA39;" FontSize="16" Foreground="{ThemeResource SystemFillColorCriticalBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" x:Uid="ErrorMessageRenameInvalidFileName" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Grid>
                                         </Grid>
                                     </Flyout>
@@ -351,7 +358,7 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock x:Uid="HeadingDialogDelete" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}"/>
+                                            <TextBlock x:Uid="HeadingDialogDelete" Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1"/>
                                             <TextBlock x:Uid="TextDialogDelete" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,16"/>
 
                                             <Grid Grid.Row="2">
@@ -547,8 +554,9 @@
                     </ScrollViewer>
                 </controls:Case>
             </controls:SwitchPresenter>
-
-            <Grid x:Name="GridScanning" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="GridScanning_Loaded" SizeChanged="GridScanning_SizeChanged">
+            
+            <!-- Scan animation -->
+            <Grid x:Name="GridLoading" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
                 </animations:Implicit.ShowAnimations>
@@ -557,57 +565,103 @@
                     <animations:OpacityAnimation Duration="0:0:0.5" To="0.0"/>
                 </animations:Implicit.HideAnimations>
 
-                <interactivity:Interaction.Behaviors>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                        <behaviors:StartAnimationAction Animation="{x:Bind ScanningAnimation}"/>
-                    </core:DataTriggerBehavior>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                        <core:CallMethodAction TargetObject="{x:Bind ScanningAnimation}" MethodName="Stop"/>
-                    </core:DataTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+                <Grid x:Name="GridScanning" Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="GridScanning_Loaded" SizeChanged="GridScanning_SizeChanged">
+                    <interactivity:Interaction.Behaviors>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                            <behaviors:StartAnimationAction Animation="{x:Bind ScanningAnimation}"/>
+                        </core:DataTriggerBehavior>
+                        <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanning, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                            <core:CallMethodAction TargetObject="{x:Bind ScanningAnimation}" MethodName="Stop"/>
+                        </core:DataTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
 
-                <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                    </animations:Implicit.ShowAnimations>
+
+                    <animations:Implicit.HideAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.5" To="0.0"/>
+                    </animations:Implicit.HideAnimations>
+
+                    <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Rectangle HorizontalAlignment="Stretch" Height="80" VerticalAlignment="Top" Fill="{ThemeResource SystemAccentColor}" Visibility="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
+                            <animations:Implicit.HideAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.2" To="0.0"/>
+                            </animations:Implicit.HideAnimations>
+
+                            <animations:Explicit.Animations>
+                                <animations:AnimationSet x:Name="ScanningAnimation">
+                                    <animations:AnimationScope>
+                                        <animations:OpacityAnimation Duration="0:0:0.6" From="0.0" To="0.2" DelayBehavior="SetInitialValueBeforeDelay"/>
+                                        <animations:TranslationAnimation Duration="0:0:6" Repeat="Forever" DelayBehavior="SetInitialValueBeforeDelay">
+                                            <animations:Vector3KeyFrame Key="0.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                            <animations:Vector3KeyFrame x:Name="KeyFrameScanningAnimation" Key="0.5" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                            <animations:Vector3KeyFrame Key="1.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
+                                        </animations:TranslationAnimation>
+                                    </animations:AnimationScope>
+                                </animations:AnimationSet>
+                            </animations:Explicit.Animations>
+                        </Rectangle>
+                    </Frame>
+
+                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+                </Grid>
+                
+                <!-- Loading blur -->
+                <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <media:UIElementExtensions.VisualFactory>
                         <media:PipelineVisualFactory>
                             <media:BlurEffect Amount="10"/>
                         </media:PipelineVisualFactory>
                     </media:UIElementExtensions.VisualFactory>
-
-                    <Rectangle HorizontalAlignment="Stretch" Height="80" VerticalAlignment="Top" Fill="{ThemeResource SystemAccentColor}" Visibility="{x:Bind GridLoading.Visibility, Mode=OneWay}">
-                        <animations:Implicit.HideAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.2" To="0.0"/>
-                        </animations:Implicit.HideAnimations>
-
-                        <animations:Explicit.Animations>
-                            <animations:AnimationSet x:Name="ScanningAnimation">
-                                <animations:AnimationScope>
-                                    <animations:OpacityAnimation Duration="0:0:0.6" From="0.0" To="0.2" DelayBehavior="SetInitialValueBeforeDelay"/>
-                                    <animations:TranslationAnimation Duration="0:0:6" Repeat="Forever" DelayBehavior="SetInitialValueBeforeDelay">
-                                        <animations:Vector3KeyFrame Key="0.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
-                                        <animations:Vector3KeyFrame x:Name="KeyFrameScanningAnimation" Key="0.5" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
-                                        <animations:Vector3KeyFrame Key="1.0" Value="0,0,0" EasingMode="EaseInOut" EasingType="Cubic"/>
-                                    </animations:TranslationAnimation>
-                                </animations:AnimationScope>
-                            </animations:AnimationSet>
-                        </animations:Explicit.Animations>
-                    </Rectangle>
                 </Frame>
+                
+                <!-- Tint -->
+                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.3" />
 
-                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
-            </Grid>
+                <!-- Loading indicator -->
+                <Grid RowSpacing="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="24" />
+                    </Grid.RowDefinitions>
 
-            <Grid x:Name="GridLoading" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <interactivity:Interaction.Behaviors>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                        <core:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                    </core:DataTriggerBehavior>
-                    <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                        <core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                    </core:DataTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+                    <Ellipse Grid.Row="0" Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="52" Height="52"  HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" />
+                    <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingIndeterminate" IsIndeterminate="True" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" />
+                    <muxc:ProgressRing Grid.Row="0" x:Name="ProgressRingLoadingDeterminate" IsIndeterminate="False" Value="{x:Bind (x:Int32)ViewModel.Progress.Progress, Mode=OneWay}" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.Progress.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" />
 
-                <Ellipse Fill="{ThemeResource SystemControlAcrylicElementBrush}" Width="60" Height="60" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <muxc:ProgressRing x:Name="ProgressRingLoading" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <controls:SwitchPresenter x:Name="SwitchPresenterProgressState" Grid.Row="1" Visibility="{x:Bind ViewModel.Progress, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                        <controls:SwitchPresenter.ContentTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition FromVerticalOffset="-16" />
+                            </TransitionCollection>
+                        </controls:SwitchPresenter.ContentTransitions>
+
+                        <controls:Case Value="Scanning">
+                            <TextBlock x:Uid="TextScanProgressScanning" Style="{StaticResource BaseTextBlockStyle}" />
+                        </controls:Case>
+
+                        <controls:Case Value="Processing">
+                            <TextBlock x:Uid="TextScanProgressProcessing" Style="{StaticResource BaseTextBlockStyle}" />
+                        </controls:Case>
+
+                        <controls:Case Value="AutomaticRotation">
+                            <TextBlock x:Uid="TextScanProgressAutomaticRotation" Style="{StaticResource BaseTextBlockStyle}" />
+                        </controls:Case>
+
+                        <controls:Case Value="PdfGeneration">
+                            <TextBlock x:Uid="TextScanProgressPdfGeneration" Style="{StaticResource BaseTextBlockStyle}" />
+                        </controls:Case>
+
+                        <controls:Case Value="Saving">
+
+                        </controls:Case>
+
+                        <controls:Case Value="Finishing">
+                            <TextBlock x:Uid="TextScanProgressFinishing" Style="{StaticResource BaseTextBlockStyle}" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
+                </Grid>
             </Grid>
         </Grid>
 

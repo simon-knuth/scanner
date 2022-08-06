@@ -229,7 +229,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainPageList" x:Uid="ButtonManage" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainPageList, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE81E;" FontSize="16"/>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF0E2;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
 
                     <muxc:NavigationViewItem.RenderTransform>
@@ -252,6 +252,16 @@
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="16" Glyph="{x:Bind ViewModel.IsDefaultSaveLocation, Mode=OneWay, Converter={StaticResource ScanSaveLocationGlyphConverter}}"/>
                     </muxc:NavigationViewItem.Icon>
+
+                    <muxc:NavigationViewItem.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="ButtonSaveLocationSettings" Command="{x:Bind ViewModel.ShowSaveLocationSettingsCommand}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE713;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </muxc:NavigationViewItem.ContextFlyout>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainHelp, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
@@ -383,9 +393,9 @@
             PreferredPlacement="BottomRight"
             IsLightDismissEnabled="False">
             <muxc:TeachingTip.HeroContent>
-                <Frame CornerRadius="{StaticResource OverlayCornerRadius}" Padding="-50" Height="150">
-                    <muxc:AnimatedVisualPlayer PlaybackRate="0.4" AutoPlay="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
-                        <lottie:LottieVisualSource UriSource="ms-appx:///Assets/AnimatedVisuals/lottie_19814-data-list.json"/>
+                <Frame CornerRadius="{StaticResource OverlayCornerRadius}" Padding="8" Height="150">
+                    <muxc:AnimatedVisualPlayer PlaybackRate="0.5" AutoPlay="{x:Bind ViewModel.ShowAnimations, Mode=OneWay}">
+                        <lottie:LottieVisualSource UriSource="ms-appx:///Assets/AnimatedVisuals/92923-loading-squares.json"/>
                     </muxc:AnimatedVisualPlayer>
                 </Frame>
             </muxc:TeachingTip.HeroContent>

@@ -51,7 +51,7 @@
             </Border>
         </Border>
 
-        <FontIcon Glyph="{x:Bind ScanMergeElement, Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind ScanMergeElement.IsPotentialPage, Mode=OneWay,Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <FontIcon Glyph="{x:Bind ScanMergeElement, Mode=OneWay, Converter={StaticResource ScanMergeElementGlyphConverter}}" Style="{StaticResource FontIconStyleSegoeFluentIcons}" FontSize="24" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Visibility="{x:Bind ScanMergeElement.IsPotentialPage, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
         <Border BorderBrush="{ThemeResource ToolTipBorderBrush}" BorderThickness="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="6" CornerRadius="2" Visibility="{x:Bind ScanMergeElement.IsPotentialPage, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
             <StackPanel Orientation="Vertical">

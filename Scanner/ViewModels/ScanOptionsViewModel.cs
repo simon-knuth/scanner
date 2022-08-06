@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Services;
 using Scanner.Services.Messenger;
@@ -129,6 +130,7 @@ namespace Scanner.ViewModels
                 switch (value)
                 {
                     case Enums.ScannerSource.Auto:
+                        SelectedResolution = null;
                         ScannerResolutions = null;
                         SelectedScannerAutoCropMode = ScannerAutoCropMode.None;
                         FileFormats = SelectedScanner?.AutoFormats;
@@ -364,6 +366,13 @@ namespace Scanner.ViewModels
             set => SetProperty(ref _IsEditorEditing, value);
         }
 
+        private ScanAndEditingProgress _Progress;
+        public ScanAndEditingProgress Progress
+        {
+            get => _Progress;
+            set => SetProperty(ref _Progress, value);
+        }
+
         private bool _SettingShowAdvancedScanOptions;
         public bool SettingShowAdvancedScanOptions
         {
@@ -437,8 +446,8 @@ namespace Scanner.ViewModels
             ScanResultService.ScanResultDismissed += ScanResultService_ScanResultDismissed;
             ScanResultService.ScanResultChanging += (x, y) => IsScanResultChanging = true;
             ScanResultService.ScanResultChanged += (x, y) => IsScanResultChanging = false;
-            ScanService.ScanStarted += (x, y) => IsScanInProgress = true;
-            ScanService.ScanEnded += (x, y) => IsScanInProgress = false;
+            ScanService.ScanStarted += ScanService_ScanStarted;
+            ScanService.ScanEnded += ScanService_ScanEnded;
 
             Messenger.Register<EditorIsEditingChangedMessage>(this, (r, m) => IsEditorEditing = m.Value);
             Messenger.Register<SetupCompletedMessage>(this, (r, m) => ScannerSearchTipRequested?.Invoke(this, EventArgs.Empty));
@@ -446,6 +455,7 @@ namespace Scanner.ViewModels
                 m.Reply(new Tuple<DiscoveredScanner, ScanOptions>(SelectedScanner, CreateScanOptions())));
             Messenger.Register<PreviewSelectedRegionChangedMessage>(this, (r, m) => SelectedScanRegion = m.Value);
             Messenger.Register<ScanMergeRequestMessage>(this, (r, m) => ScanMergeCommand.Execute(m.ScanMergeConfig));
+            Messenger.Register<SelectedScannerRequestMessage>(this, (r, m) => m.Reply(SelectedScanner));
 
             SettingsService.SettingChanged += SettingsService_SettingChanged;
             SettingShowAdvancedScanOptions = (bool)SettingsService.GetSetting(AppSetting.SettingShowAdvancedScanOptions);
@@ -473,6 +483,17 @@ namespace Scanner.ViewModels
         private void ViewNavigatedFrom()
         {
             ScannerDiscoveryService.TryPauseSearchAsync();
+        }
+
+        private void ScanService_ScanStarted(object sender, ScanAndEditingProgress e)
+        {
+            Progress = e;
+            IsScanInProgress = true;
+        }
+
+        private void ScanService_ScanEnded(object sender, EventArgs e)
+        {
+            IsScanInProgress = false;
         }
 
         /// <summary>
@@ -1017,9 +1038,15 @@ namespace Scanner.ViewModels
             return new ObservableCollection<ScanResolution>()
             {
                 new ScanResolution(150, ResolutionAnnotation.None),
+                new ScanResolution(200, ResolutionAnnotation.None),
+                new ScanResolution(250, ResolutionAnnotation.None),
+                new ScanResolution(300, ResolutionAnnotation.None),
                 new ScanResolution(350, ResolutionAnnotation.Documents),
+                new ScanResolution(400, ResolutionAnnotation.None),
+                new ScanResolution(500, ResolutionAnnotation.None),
                 new ScanResolution(600, ResolutionAnnotation.Photos),
-                new ScanResolution(800, ResolutionAnnotation.None)
+                new ScanResolution(800, ResolutionAnnotation.None),
+                new ScanResolution(1000, ResolutionAnnotation.None)
             };
         }
 
@@ -1212,12 +1239,12 @@ namespace Scanner.ViewModels
                         if (scanOptions.Format.OriginalFormat != scanOptions.Format.TargetFormat)
                         {
                             await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                                targetFolder, scanOptions.Format.TargetFormat);
+                                targetFolder, scanOptions.Format.TargetFormat, scanOptions, SelectedScanner, Progress);
                         }
                         else
                         {
                             await ScanResultService.CreateResultFromFilesAsync(result.ScannedFiles,
-                                targetFolder);
+                                targetFolder, scanOptions, SelectedScanner, Progress);
                         }
                     }
                     else
@@ -1226,19 +1253,19 @@ namespace Scanner.ViewModels
                         if (scanOptions.Format.OriginalFormat != ScanResultService.Result.ScanResultFormat)
                         {
                             await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                scanOptions.Format.TargetFormat, mergeConfig);
+                                scanOptions.Format.TargetFormat, mergeConfig, scanOptions, SelectedScanner, Progress);
                         }
                         else
                         {
                             if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                    null, mergeConfig);
+                                    null, mergeConfig, scanOptions, SelectedScanner, Progress);
                             }
                             else
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(result.ScannedFiles,
-                                    null, targetFolder);
+                                    null, targetFolder, scanOptions, SelectedScanner, Progress);
                             }
                         }
                     }
@@ -1257,11 +1284,15 @@ namespace Scanner.ViewModels
                             { "Brightness adjusted", (scanOptions.Brightness != null && scanOptions.Brightness != 0).ToString() },
                             { "Contrast adjusted", (scanOptions.Contrast != null && scanOptions.Contrast != 0).ToString() },
                             { "Merge", $"{(mergeConfig != null ? $"{mergeConfig.InsertIndices.FirstOrDefault()} | {mergeConfig.SurplusPagesIndex}" : "None")}" },
+                            { "Region", $"{scanOptions.SelectedRegion != null}" },
+                            { "File naming pattern", $"{(SettingFileNamingPattern)(int)SettingsService.GetSetting(AppSetting.SettingFileNamingPattern)}" }
                         });
                 }
                 else
                 {
                     // debug scan
+                    ScanService.SimulateScan();
+
                     var picker = new FileOpenPicker();
                     picker.ViewMode = PickerViewMode.Thumbnail;
                     picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
@@ -1321,12 +1352,12 @@ namespace Scanner.ViewModels
                                 != scanOptions.Format.TargetFormat)
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder, scanOptions.Format.TargetFormat);
+                                    targetFolder, scanOptions.Format.TargetFormat, scanOptions, SelectedScanner, Progress);
                             }
                             else
                             {
                                 await ScanResultService.CreateResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    targetFolder);
+                                    targetFolder, scanOptions, SelectedScanner, Progress);
                             }
                         }
                         else
@@ -1336,19 +1367,19 @@ namespace Scanner.ViewModels
                                 != ScanResultService.Result.ScanResultFormat)
                             {
                                 await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                    scanOptions.Format.TargetFormat, mergeConfig);
+                                    scanOptions.Format.TargetFormat, mergeConfig, scanOptions, SelectedScanner, Progress);
                             }
                             else
                             {
                                 if (scanOptions.Format.OriginalFormat == ImageScannerFormat.Pdf)
                                 {
                                     await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                        null, mergeConfig);
+                                        null, mergeConfig, scanOptions, SelectedScanner, Progress);
                                 }
                                 else
                                 {
                                     await ScanResultService.AddToResultFromFilesAsync(copiedFiles.AsReadOnly(),
-                                        null, targetFolder);
+                                        null, targetFolder, scanOptions, SelectedScanner, Progress);
                                 }
                             }
                         }
