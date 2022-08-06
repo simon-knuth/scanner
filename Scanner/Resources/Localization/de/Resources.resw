@@ -1217,8 +1217,7 @@ Das Anpassen von Helligkeit und Kontrast ist nur beim Scannen vom **Flachbett od
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
     <value>Erkenner-Sprache</value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
-Fuzzy</comment>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
     <value>Horizontal</value>
@@ -1577,7 +1576,7 @@ Sprachauswahl
 Bilingual? Trilingual? Quadrilingual? Wählen Sie eine Sprache unabhängig von Ihrer Systemsprache (jedoch immer nur eine).
 
 Verbesserte Auflösungsliste
-Falls Ihre Auflösungsliste zu explodieren scheint, können Sie nun einfach die gewünschte Auflösung direkt in die Box eintippen, anstatt ewig scrollen zu müssen.</value>
+Falls Ihre Auflösungsliste aus allen Nähten platzt, können Sie nun einfach die gewünschte Auflösung direkt in die Box eintippen, anstatt ewig scrollen zu müssen.</value>
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
@@ -1601,7 +1600,7 @@ Falls Ihre Auflösungsliste zu explodieren scheint, können Sie nun einfach die 
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>Falls Ihre Auflösungsliste zu explodieren scheint, können Sie nun einfach die gewünschte Auflösung direkt in die Box eintippen, anstatt ewig scrollen zu müssen.</value>
+    <value>Falls Ihre Auflösungsliste aus allen Nähten platzt, können Sie nun einfach die gewünschte Auflösung direkt in die Box eintippen, anstatt ewig scrollen zu müssen.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
@@ -1701,7 +1700,7 @@ Falls Ihre Auflösungsliste zu explodieren scheint, können Sie nun einfach die 
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
-    <value>Stundenzeitraum</value>
+    <value>AM/PM</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
@@ -1742,8 +1741,7 @@ Falls Ihre Auflösungsliste zu explodieren scheint, können Sie nun einfach die 
   </data>
   <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
     <value>Benutzerdefiniertes Muster bearbeiten</value>
-    <comment>The text for the button to edit the custom file naming pattern in the settings.
-Fuzzy</comment>
+    <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
   </data>
   <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
     <value>Benutzerdefiniertes Dateinamenmuster</value>
@@ -1818,7 +1816,7 @@ Fuzzy</comment>
     <comment>The option for the date and time file naming pattern in the settings.</comment>
   </data>
   <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
-    <value>Ziehen und platzieren Sie Blöcke um Ihr eigenes dynamisches Dateinamenmuster zu bauen. Wählen Sie einen Block um seine Ausgabe anzupassen, oder ihn zu löschen.</value>
+    <value>Ziehen und platzieren Sie Blöcke um Ihr eigenes dynamisches Dateinamenmuster zu bauen. Wählen Sie einen Block um seine Ausgabe anzupassen, oder ziehen Sie ihn den Mülleimer, um ihn zu löschen.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
   <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
@@ -1836,5 +1834,17 @@ Fuzzy</comment>
   <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
     <value>Zeit</value>
     <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>Bestätigen</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>Ungültiger Dateiname</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
 </root>
