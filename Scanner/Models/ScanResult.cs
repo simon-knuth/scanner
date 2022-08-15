@@ -1513,7 +1513,7 @@ namespace Scanner
                     }
                     else
                     {
-                        insertIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count());
+                        insertIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count(), true);
                     }
 
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Insert(
@@ -1707,12 +1707,12 @@ namespace Scanner
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
                             { "DisplayName", appInfo.DisplayInfo.DisplayName },
                         });
-            LogService?.Log.Information($"Requested opening with of index {index} with app '{appInfo.DisplayInfo.DisplayName}'.");
+            LogService?.Log.Information("Requested opening with of index {Index} with app '{DisplayName}'.", index, appInfo.DisplayInfo.DisplayName);
 
             // check index
             if (!IsValidIndex(index))
             {
-                LogService?.Log.Error($"Opening with of index {index} requested, but there are only {_Elements.Count} pages.");
+                LogService?.Log.Error("Opening with of index {Index} requested, but there are only {Count} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for opening file.");
             }
 
@@ -1821,11 +1821,14 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Calculates the index a new page will have in the <see cref="ScanResult"/>.
+        ///     Calculates the index where a new page will be placed in the <see cref="ScanResult"/>. If the insertion is
+        ///     reversed, the index is shifted accordingly to accomodate inserting pages starting from the back unless
+        ///     <paramref name="forInsertion"/> is false.
         /// </summary>
         /// <param name="indexOfNewPage">Index of the new page among all new pages.</param>
         /// <param name="totalNewPages">The number of pages being added in total.</param>
-        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages)
+        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages,
+            bool forInsertion = false)
         {
             if (!mergeConfig.InsertReversed)
             {
@@ -1843,14 +1846,29 @@ namespace Scanner
             else
             {
                 // insert reversed
-                if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                if (forInsertion)
                 {
-                    return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage] - (totalNewPages - 1 - indexOfNewPage);
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex - mergeConfig.InsertIndices.Count;
+                    }
                 }
                 else
                 {
-                    // surplus page
-                    return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                    }
                 }
             }
         }

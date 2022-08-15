@@ -73,26 +73,26 @@ namespace UnitTests
 
             // 5 total pages
             int calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 0, 5);
-            Assert.AreEqual(calculatedIndex, 6);
+            Assert.AreEqual(2, calculatedIndex);
 
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 1, 5);
-            Assert.AreEqual(calculatedIndex, 5);
+            Assert.AreEqual(2, calculatedIndex);
 
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 2, 5);
-            Assert.AreEqual(calculatedIndex, 4);
+            Assert.AreEqual(2, calculatedIndex);
 
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 3, 5);
-            Assert.AreEqual(calculatedIndex, 2);
+            Assert.AreEqual(1, calculatedIndex);
 
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 4, 5);
-            Assert.AreEqual(calculatedIndex, 0);
+            Assert.AreEqual(0, calculatedIndex);
 
             // 2 total pages
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 0, 2);
-            Assert.AreEqual(calculatedIndex, 2);
+            Assert.AreEqual(1, calculatedIndex);
 
             calculatedIndex = ScanResult.GetNewIndexAccordingToMergeConfig(scanMergeConfig, 1, 2);
-            Assert.AreEqual(calculatedIndex, 0);
+            Assert.AreEqual(0, calculatedIndex);
         }
     }
 }
