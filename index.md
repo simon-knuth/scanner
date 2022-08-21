@@ -75,10 +75,12 @@ The currently supported languages are:
   <li>Hindi (HI)</li>
   <li>Hungarian (HU)</li>
   <li>Italian (IT)</li>
+  <li>Norwegian (NB)</li>
   <li>Polish (PL)</li>
   <li>Portuguese (PT)</li>
   <li>Portuguese (PT-BR)</li>
   <li>Russian (RU)</li>
+  <li>Slovak (SK)</li>
   <li>Spanish (ES)</li>
   <li>Ukrainian (UK)</li>
 </ul>  
