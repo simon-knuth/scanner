@@ -50,7 +50,7 @@
   <tr>
     <td width="70%"> <b>The stable version of the app is available in the Microsoft Store.</b><br>Additionally, all release packages are published in the <a href="https://github.com/simon-knuth/scanner/releases">Releases</a> section.<br>You can also view the source code of both stable and WIP versions on GitHub.</td>
     <td width="30%">
-      <a href="https://www.microsoft.com/store/apps/9N438MZHD3ZF"><img src="https://i.imgur.com/aAWYhvm.png"/></a>
+      <a href="https://apps.microsoft.com/store/detail/9N438MZHD3ZF"><img src="https://i.imgur.com/aAWYhvm.png"/></a>
     </td>
   </tr>
 </table>
