@@ -1863,4 +1863,8 @@ If your resolutions list is on the verge of getting out of control, you can now 
     <value>Move to front</value>
     <comment>The text for the button that moves an element to the front of a list.</comment>
   </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Delete block</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
 </root>
