@@ -1847,4 +1847,24 @@ If your resolutions list is on the verge of getting out of control, you can now 
     <value>Invalid file name</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Move backward</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Move forward</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Move to back</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Move to front</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Delete block</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
 </root>
