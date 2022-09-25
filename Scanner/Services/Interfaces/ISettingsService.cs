@@ -72,7 +72,8 @@ namespace Scanner.Services
         TutorialScanMergeShown,
         SettingAppLanguage,
         SettingFileNamingPattern,
-        CustomFileNamingPattern
+        CustomFileNamingPattern,
+        LastScanMergeReversed
     }
 
     public enum SettingSaveLocationType
