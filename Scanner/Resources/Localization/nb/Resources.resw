@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>Noe skjedde feil</value>
+    <value>Noe som skjedde feil</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
@@ -873,7 +873,7 @@ Med en gang du ser din skanner i innstillingsappen å ikke er markert som &quot;
 
 &amp;nbsp;
 
-**Tips &amp; trix* Hvis Windows tar for lang tid for å finne din allerede installerte trådløse skanner, Du kan bare skru den av og på Wi-Fi til umiddelbart avfyre nettverk-søk. Husk at dette kan avbryte internettilkoblingen på alle appene på dine utstyr.</value>
+**Tips &amp; trix** Hvis Windows tar for lang tid for å finne din allerede installerte trådløse skanner, Du kan bare skru den av og på Wi-Fi til umiddelbart avfyre nettverk-søk. Husk at dette kan avbryte internettilkoblingen på alle appene på dine utstyr.</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
@@ -893,10 +893,7 @@ Vær vennlig å bistå din skanner med manual for ytterlige veiledning eller kon
 
 Velger du en oppløsning muligens i **flatseng/flatbed eller mater/feeder** modus. Appen vil alltid velge en standardoppløsning for deg, som fungerer for alle typer av skanninger. men noen ganger anbefaler den deg til og med en forskjellig oppløsning på oppløsning imellom bilder å dokumenter.
 
-
-Som en tommelfingerregel, dokumenter bare krever kun en oppløsning på 300 DPI, mens bilder har en høyere oppløsning på ca. 500 DPI.
-
-</value>
+Som en tommelfingerregel, dokumenter bare krever kun en oppløsning på 300 DPI, mens bilder har en høyere oppløsning på ca. 500 DPI.</value>
     <comment>The help text on choosing the right resolution.</comment>
   </data>
   <data name="TextHelpReorderPdf.Text" xml:space="preserve">
@@ -913,7 +910,7 @@ Umiddelbart i</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>Hvis du er usikker på hvilken type filformat du vil ha utvalgt, burde du konsentrere deg om formatene som er i ** JPG, PNG og PDF**.
+    <value>Hvis du er usikker på hvilken type filformat du vil ha utvalgt, burde du konsentrere deg om formatene som er i **JPG, PNG og PDF**.
 
 JPG og PNG er bildeformater, som betyr at hver side vil bli lagret som enkeltstående filer. Disse formatene kan vist frem på omentrent hvilken som helst utstyr enkelt. JPGer er vanligvis mindre en PNGer, Spessielt på høye oppløsninger, men PNGer tilbyr en gjennomsnittlig bedre oppløsning generelt sett, som kan være viktig hvis det er bilder med krevende oppløsning som
 
@@ -1378,7 +1375,7 @@ Med skanner kan du få alt gjort på ett sted, Ingen ekstra bilderedigering elle
 
 Nesten alle skannere som er i bruk i dag støttes av denne appen, Så du trenger ikke å bruke den foreldede og klønete programvaren fra enhetsprodusenten.  Den er designet med enkelhet og brukervennlighet i tankene, Samtidig som den tilbyr avanserte verktøy og funksjoner.
 
-De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP. </value>
+De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
@@ -1390,7 +1387,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP. </value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Scan documents and photos, edit pages and save them as pdf or image files - all in one simple, user-friendly app </value>
+    <value>Skann dokumenter å fotografier, Endre sidene og lagre de som PDF eller bildefiler - alt i en singel lett-å-bruke ap.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
@@ -1581,7 +1578,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP. </value>
  tospråklig?  trespråklig?  firespråklig?  velg et appspråk som er uavhengig av systemspråket ditt (men bare ett om gangen).
 
  forbedret oppløsningsliste
- hvis oppløsningslisten din er på nippet til å komme ut av kontroll, kan du nå bare skrive inn ønsket oppløsning i boksen i stedet for å bla i timevis. </value>
+ hvis oppløsningslisten din er på nippet til å komme ut av kontroll, kan du nå bare skrive inn ønsket oppløsning i boksen i stedet for å bla i timevis.</value>
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
@@ -1765,7 +1762,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP. </value>
     <comment>The option for using the 24-hours system for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
-    <value>Store bokstaver </value>
+    <value>Store bokstaver</value>
     <comment>The option for upper-case letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">

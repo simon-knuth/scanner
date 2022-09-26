@@ -1216,9 +1216,8 @@ A fényerő és a kontraszt beállítása csak **síkágyas vagy adagoló** mód
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
-    <value>Felismerő nyelv</value>
-    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
-Fuzzy</comment>
+    <value>Felismerés nyelve</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
     <value>Vízszintes</value>
@@ -1701,7 +1700,7 @@ A felbontás lista irányítása a küszöbön áll, most már egyszerűen beír
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
-    <value>Óra időszak</value>
+    <value>DE/DU</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.
 Fuzzy</comment>
   </data>

@@ -1776,7 +1776,7 @@ Se il tuo elenco di risoluzioni è troppo lungo, ora puoi semplicemente digitare
     <comment>The option for outputting the day of the year for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
-    <value>Limite numeri di lettere</value>
+    <value>Limite numero di lettere</value>
     <comment>The option for limitting the number of letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
@@ -1846,5 +1846,25 @@ Se il tuo elenco di risoluzioni è troppo lungo, ora puoi semplicemente digitare
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
     <value>Nome file non valido</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Sposta indietro</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Sposta avanti</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Sposta all&apos;indietro</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Sposta in avanti</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Elimina blocco</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
