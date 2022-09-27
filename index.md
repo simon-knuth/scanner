@@ -79,6 +79,7 @@ The currently supported languages are:
   <li>Polish (PL)</li>
   <li>Portuguese (PT)</li>
   <li>Portuguese (PT-BR)</li>
+  <li>Romanian (RO)</li>
   <li>Russian (RU)</li>
   <li>Slovak (SK)</li>
   <li>Spanish (ES)</li>
