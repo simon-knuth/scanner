@@ -1391,7 +1391,12 @@ namespace Scanner.ViewModels
                         throw new ArgumentException("No debug file(s) selected");
                     }
                 }
-                SettingsService.LastSaveLocationPath = targetFolder.Path;
+
+                // remember used location
+                if (targetFolder != null)
+                {
+                    SettingsService.LastSaveLocationPath = targetFolder.Path;
+                }
             }
             catch (Exception exc)
             {
