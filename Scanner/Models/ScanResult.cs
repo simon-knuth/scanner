@@ -899,9 +899,10 @@ namespace Scanner
 
                 using (IRandomAccessStream stream = await GetImageFile(index).OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, stream);
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                     SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    stream.Seek(0);
+                    BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, stream);
                     encoder.SetSoftwareBitmap(softwareBitmap);
                     encoder.BitmapTransform.Bounds = new BitmapBounds
                     {
