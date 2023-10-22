@@ -1701,8 +1701,7 @@ A felbontás lista irányítása a küszöbön áll, most már egyszerűen beír
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
     <value>DE/DU</value>
-    <comment>The title for the &quot;Hour period&quot; file naming block.
-Fuzzy</comment>
+    <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
     <value>Perc</value>
@@ -1847,5 +1846,25 @@ Fuzzy</comment>
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
     <value>Érvénytelen fájlnév</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Hátrébb</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Előrébb</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Hátra</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Előre</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Blokk törlése</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
