@@ -202,7 +202,7 @@
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Відкрити в іншому додатку</value>
+    <value>Відкрити в іншому застосунку</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
@@ -334,7 +334,7 @@
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>Ми були б раді дізнатися від вас:</value>
+    <value>Хочемо почути Ваші зауваження:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.
 Fuzzy</comment>
   </data>
@@ -543,7 +543,7 @@ Fuzzy</comment>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>Додатку не дозволено використовувати цю теку. Будь ласка, спробуйте вибрати іншу.</value>
+    <value>Застосунку не дозволено використовувати цю теку. Будь ласка, спробуйте вибрати іншу.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
@@ -680,7 +680,7 @@ Fuzzy</comment>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Це дозволяє нам досліджувати збої додатку та визначати, які функції найбільш цінні для наших користувачів. Будьте впевнені, що ваші відскановані сторінки ніколи не включаються в ці звіти.</value>
+    <value>Це дозволяє нам досліджувати збої застосунку та визначати, які функції найбільш цінні для наших користувачів. Будьте впевнені, що ваші відскановані сторінки ніколи не включаються в ці звіти.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
@@ -688,7 +688,7 @@ Fuzzy</comment>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>Ви завжди можете змінити своє рішення в налаштуваннях додатку.</value>
+    <value>Ви завжди можете змінити своє рішення в налаштуваннях застосунку.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
@@ -870,11 +870,11 @@ Fuzzy</comment>
   <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
     <value>Переконайтеся, що ваш сканер увімкнено та підключено через Wi-Fi або USB-кабель. Якщо ваш сканер не містить у списку налаштувань Windows, вам потрібно спочатку додати його звідти.
 
-Як тільки ви побачите свій сканер у додатку налаштувань, і він більше не помічений як &quot;Не в мережі&quot;, з&apos;єднання працює, і все готове!
+Як тільки ви побачите свій сканер у застосунку налаштувань, і він більше не помічений як &quot;Не в мережі&quot;, з&apos;єднання працює, і все готове!
 
 &amp;nbsp;
 
-**Порада.** Якщо Windows надто довго знаходить вже встановлений бездротовий сканер, ви можете просто вимкнути і знову увімкнути Wi-Fi, щоб негайно запустити пошук мережі. Майте на увазі, що це може призупинити доступ до Інтернету для всіх програм на вашому пристрої.</value>
+**Порада.** Якщо Windows надто довго знаходить вже встановлений бездротовий сканер, ви можете просто вимкнути і знову увімкнути Wi-Fi, щоб негайно запустити пошук мережі. Майте на увазі, що це може призупинити доступ до Інтернету для всіх застосунків на вашому пристрої.</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
@@ -904,11 +904,11 @@ Fuzzy</comment>
     <comment>The help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="TextHelpSaveChanges.Text" xml:space="preserve">
-    <value>Якщо ви редагуєте свої сканування в програмі, зміни відразу ж зберігаються у фоновому режимі. Просто відскануйте кілька сторінок, відредагуйте результат і готово!</value>
+    <value>Якщо ви редагуєте свої сканування в застосунку, зміни відразу ж зберігаються у фоновому режимі. Просто відскануйте кілька сторінок, відредагуйте результат і готово!</value>
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Якщо ви хочете відсканувати в новий PDF-файл замість того, щоб додавати сторінки до наявного, вам не потрібно перезапускати програму. Просто виберіть маленьку стрілку біля кнопки сканування та почніть заново.</value>
+    <value>Якщо ви хочете відсканувати в новий PDF-файл замість того, щоб додавати сторінки до наявного, вам не потрібно перезапускати застосунок. Просто виберіть маленьку стрілку біля кнопки сканування та почніть заново.</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
@@ -953,7 +953,7 @@ PDF є дуже популярним форматом документа, яки
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
-    <value>Щось заважає програмі використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
+    <value>Щось заважає застосунку використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
     <comment>The body for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
@@ -961,7 +961,7 @@ PDF є дуже популярним форматом документа, яки
     <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
-    <value>Щось заважає програмі використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
+    <value>Щось заважає застосунку використовувати встановлену теку на вашому ПК, тому вам доведеться вибирати одну для кожного сканування. Переконайтеся, що жодні налаштування чи будь-яке антивірусне програмне забезпечення не заважають.</value>
     <comment>The error message that appears when using a set save location fails.</comment>
   </data>
   <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
@@ -1041,11 +1041,11 @@ PDF є дуже популярним форматом документа, яки
     <comment>The text for the button that confirms cropping multiple pages at once.</comment>
   </data>
   <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
-    <value>Показати всі додатки</value>
+    <value>Показати всі застосунки</value>
     <comment>The text for the button that shows all available apps to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithStore.Text" xml:space="preserve">
-    <value>Знайдіть більше програм у магазині</value>
+    <value>Знайдіть більше застосунків у магазині</value>
     <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
@@ -1077,7 +1077,7 @@ PDF є дуже популярним форматом документа, яки
     <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="TextOpenWithWarning.Text" xml:space="preserve">
-    <value>Якщо обрати програму в наступному меню, усі сторінки тут будуть закриті.</value>
+    <value>Якщо обрати застосунок в наступному меню, усі сторінки тут будуть закриті.</value>
     <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
@@ -1149,7 +1149,7 @@ PDF є дуже популярним форматом документа, яки
     <comment>The heading for the contrast adjustment section in the scan options.</comment>
   </data>
   <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value>Завжди зберігається в різних сеансах програми</value>
+    <value>Завжди зберігається в різних сеансах застосунка</value>
     <comment>The text for scan options that are always saved across app sessions.</comment>
   </data>
   <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
@@ -1175,11 +1175,11 @@ PDF є дуже популярним форматом документа, яки
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
-    <value>Зміни до цього налаштування застосовуються після перезапуску додатку.</value>
+    <value>Зміни до цього налаштування застосовуються після перезапуску застосунку.</value>
     <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
   </data>
   <data name="TextSettingsTranslations.Text" xml:space="preserve">
-    <value>Windows підтримує понад 100 мов – ви можете допомогти зробити цю програму доступною для людей з усього світу.</value>
+    <value>Windows підтримує понад 100 мов – ви можете допомогти зробити цей застосунок доступним для людей з усього світу.</value>
     <comment>The text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
@@ -1191,7 +1191,7 @@ PDF є дуже популярним форматом документа, яки
     <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
-    <value>Редагувати орієнтацію</value>
+    <value>Орієнтація редактора</value>
     <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
@@ -1345,7 +1345,7 @@ Fuzzy</comment>
     <comment>The survey question on ease of use.</comment>
   </data>
   <data name="TextSurveyFeatures.Text" xml:space="preserve">
-    <value>Чи є у додатку усі функції, які ви очікували?</value>
+    <value>Чи є у застосунку усі функції, які ви очікували?</value>
     <comment>The survey question on the offered features.</comment>
   </data>
   <data name="TextSurveyFileFormats.Text" xml:space="preserve">
@@ -1357,11 +1357,11 @@ Fuzzy</comment>
     <comment>The survey question on file sizes.</comment>
   </data>
   <data name="TextSurveyInterface.Text" xml:space="preserve">
-    <value>Як би ви оцінили інтерфейс програми?</value>
+    <value>Як би ви оцінили інтерфейс застосунка?</value>
     <comment>The survey question on the app interface.</comment>
   </data>
   <data name="TextSurveyPerformance.Text" xml:space="preserve">
-    <value>Як швидко програма працює на вашому пристрої?</value>
+    <value>Як швидко застосунок працює на вашому пристрої?</value>
     <comment>The survey question on performance.</comment>
   </data>
   <data name="TextSurveyRecommend.Text" xml:space="preserve">
@@ -1369,14 +1369,14 @@ Fuzzy</comment>
     <comment>The survey question on recommending the app to others.</comment>
   </data>
   <data name="TextSurveyUsage.Text" xml:space="preserve">
-    <value>Для чого ви в основному використовуєте програму?</value>
+    <value>Для чого ви в основному використовуєте застосунок?</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
     <value>Сканування документів і фотографій тепер так просто, як і має бути. Скануйте деякі сторінки як файли зображень, обертайте та обрізайте їх за допомогою вбудованих попередніх налаштувань і швидко надсилайте їх електронною поштою — або створіть багатосторінковий PDF-файл, дайте йому виразну назву та заархівуйте його в потрібній папці.
 За допомогою Scanner ви можете зробити все в одному місці, не потребуючи додаткових редакторів зображень або дорогого програмного забезпечення для PDF.
 
-Майже кожен сканер, який використовується сьогодні, підтримується цим додатком, тому вам не потрібно використовувати застаріле та незграбне програмне забезпечення, надане виробником вашого пристрою. Він розроблений з урахуванням простоти та зручності використання, а також пропонує розширені інструменти та функції.
+Майже кожен сканер, який використовується сьогодні, підтримується цим застосунком, тому вам не потрібно використовувати застаріле та незграбне програмне забезпечення, надане виробником вашого пристрою. Він розроблений з урахуванням простоти та зручності використання, а також пропонує розширені інструменти та функції.
 
 Підтримувані формати: PDF, JPG, PNG, TIF і BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
@@ -1390,7 +1390,7 @@ Fuzzy</comment>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Скануйте документи та фотографії, редагуйте сторінки та зберігайте їх у форматі PDF чи файлів зображень – і все це в одному простому додатку.</value>
+    <value>Скануйте документи та фотографії, редагуйте сторінки та зберігайте їх у форматі PDF чи файлів зображень – і все це в одному простому застосунку.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
@@ -1402,7 +1402,7 @@ Fuzzy</comment>
     <comment>App title for voice control.</comment>
   </data>
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
-    <value>Лого додатку</value>
+    <value>Лого застосунку</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
   <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
@@ -1434,7 +1434,7 @@ Fuzzy</comment>
     <comment>The option for trying to add new pages to existing ones in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
-    <value>Додати до наявних сторінок</value>
+    <value>Розпочати спочатку</value>
     <comment>The option for always starting fresh in settings.</comment>
   </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
@@ -1522,7 +1522,7 @@ Fuzzy</comment>
     <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
-    <value>Файл, який ви намагаєтеся редагувати/використовувати, недоступний. Будь ласка, не переміщуйте, не перейменуйте та не відкривайте файли за межами програми, доки ви не закінчите редагувати тут.</value>
+    <value>Файл, який ви намагаєтеся редагувати/використовувати, недоступний. Будь ласка, не переміщуйте, не перейменуйте та не відкривайте файли за межами застосунку, доки ви не закінчите редагувати тут.</value>
     <comment>The error message body that appears when a file is unavailable.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
@@ -1578,7 +1578,7 @@ Fuzzy</comment>
 Ви виглядаєте як людина, яка любить бути організованою, і Scanner тут, щоб допомогти! Спробуйте нові надгнучкі налаштування іменування файлів, щоб витрачати більше часу на сканування та менше часу на перейменування.
 
 Вибір мови 
-Двомовний? Тримовний? Чотиримовний? Виберіть мову додатку, яка не залежить від мови вашої системи (але лише по одній за раз).
+Двомовний? Тримовний? Чотиримовний? Виберіть мову застосунку, яка не залежить від мови вашої системи (але лише по одній за раз).
 
 Покращений список роздільних можливостей 
 Якщо ваш список роздільних здатностей на межі виходу з-під контролю, тепер ви можете просто ввести потрібну роздільну здатність у поле замість того, щоб прокручувати кілька годин.</value>
@@ -1601,7 +1601,7 @@ Fuzzy</comment>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Двомовний? Тримовний? Чотиримовний? Виберіть мову додатку, яка не залежить від мови вашої системи (але лише по одній за раз).</value>
+    <value>Двомовний? Тримовний? Чотиримовний? Виберіть мову застосунку, яка не залежить від мови вашої системи (але лише по одній за раз).</value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
@@ -1625,7 +1625,7 @@ Fuzzy</comment>
     <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
   </data>
   <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
-    <value>Мова додатку</value>
+    <value>Мова застосунку</value>
     <comment>The heading for the &quot;App language&quot; option in settings.</comment>
   </data>
   <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
@@ -1677,11 +1677,11 @@ Fuzzy</comment>
     <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
-    <value>Програма автоматично зберігає зміни щоразу, коли ви скануєте сторінки або редагуєте наявні – не потрібно турбуватися про те, що щось забудете.</value>
+    <value>Застосунок автоматично зберігає зміни щоразу, коли ви скануєте сторінки або редагуєте наявні – не потрібно турбуватися про те, що щось забудете.</value>
     <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
-    <value>Ви завжди можете змінити свою думку в налаштуваннях програми.</value>
+    <value>Ви завжди можете змінити свою думку в налаштуваннях застосунку.</value>
     <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
@@ -1705,9 +1705,8 @@ Fuzzy</comment>
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
-    <value>Годинний період</value>
-    <comment>The title for the &quot;Hour period&quot; file naming block.
-Fuzzy</comment>
+    <value>Період доби</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
     <value>Хвилина</value>
@@ -1852,5 +1851,25 @@ Fuzzy</comment>
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
     <value>Недійсна назва файлу</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Пересунути назад</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Пересунути вперед</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Пересунути в кінець</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Пересунути на початок</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Видалити блок</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
