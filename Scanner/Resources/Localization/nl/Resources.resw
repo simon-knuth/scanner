@@ -470,7 +470,7 @@
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>grijswaarden</value>
+    <value>Grijswaarden</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
@@ -978,7 +978,7 @@
     <comment>The heading for the auto crop section in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
-    <value>Gehandicapt</value>
+    <value>Uitgeschakeld</value>
     <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
@@ -1534,8 +1534,304 @@ Fuzzy</comment>
     <value>Rechtsgeldigheid</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
+  <data name="StoreUpdate3_2_0_0" xml:space="preserve">
+    <value>Aangepaste bestandsnaamgeving
+Je ziet eruit als iemand die graag georganiseerd blijft, en Scanner is er om je te helpen! Probeer de nieuwe superflexibele bestandsnaamgevingsinstellingen uit om meer tijd te besteden aan scannen en minder aan hernoemen.
+
+Taal selectie
+Tweetalig? Drietalig? Viertalig? Kies een app-taal die onafhankelijk is van uw systeemtaal (maar slechts één per keer).
+
+Verbeterde lijst met resoluties
+Als je lijst met resoluties op het punt staat uit de hand te lopen, kan je nu gewoon de gewenste resolutie in het vak typen in plaats van urenlang te scrollen.</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>Aangepaste bestandsnaamgeving</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>Taal selectie</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>Verbeterde oplossingen lijst</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>Je ziet eruit als iemand die graag georganiseerd blijft, en Scanner is er om je te helpen! Probeer de nieuwe superflexibele bestandsnaamgevingsinstellingen uit om meer tijd te besteden aan scannen en minder aan hernoemen.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>Tweetalig? Drietalig? Viertalig? Kies een app-taal die onafhankelijk is van uw systeemtaal (maar slechts één per keer).</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>Als je lijst met resoluties op het punt staat uit de hand te lopen, kan je nu gewoon de gewenste resolutie in het vak typen in plaats van urenlang te scrollen.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
+    <value>Bestandsnaamgeving instellingen</value>
+    <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
+  </data>
+  <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Omgekeerde volgorde van ingevoegde pagina&apos;s</value>
+    <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>Laatst gescande pagina</value>
+    <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>Laatste pagina</value>
+    <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
+  </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>App taal</value>
+    <comment>The heading for the &quot;App language&quot; option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>Systeeminstellingen</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>Automatisch draaien...</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>Bijna klaar...</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>PDF voorbereiden...</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>Verwerken...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>Opslaan...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>Scannen...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
+    <value>Terug</value>
+    <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
+  </data>
   <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
     <value>Bevestigen</value>
     <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>Opslaglocatie instellingen</value>
+    <comment>The text for the button that opens the save location settings.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Locatie opslaan</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>Kies een vaste locatie of selecteer een nieuwe voor elke scan.</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>De app slaat automatisch alle wijzigingen op als je pagina&apos;s scant of bestaande bewerkt - zo hoef je nooit iets te vergeten.</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>Je kan het altijd nog veranderen in de instellingen van de app.</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.
+Fuzzy</comment>
+  </data>
+  <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
+    <value>Helderheid aanpassing</value>
+    <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
+    <value>Contrast aanpassing</value>
+    <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
+    <value>Dag</value>
+    <comment>The title for the &quot;Day&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
+    <value>Bestandstype</value>
+    <comment>The title for the &quot;File type&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
+    <value>Uur</value>
+    <comment>The title for the &quot;Hour&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+    <value>AM/PM</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
+    <value>Minuut</value>
+    <comment>The title for the &quot;Minute&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
+    <value>Maand</value>
+    <comment>The title for the &quot;Month&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
+    <value>Resolutie</value>
+    <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
+    <value>Naam van scanner</value>
+    <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
+    <value>Tweede</value>
+    <comment>The title for the &quot;Second&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
+    <value>Tekst</value>
+    <comment>The title for the &quot;Text&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
+    <value>Jaar</value>
+    <comment>The title for the &quot;Year&quot; file naming block.</comment>
+  </data>
+  <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
+    <value>Voeg blok toe</value>
+    <comment>The text for the button that adds a file naming block to the pattern.</comment>
+  </data>
+  <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Leeg patroon</value>
+    <comment>The tooltip for the button that removes all file naming blocks in the pattern.</comment>
+  </data>
+  <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
+    <value>Bewerk aangepast patroon</value>
+    <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
+    <value>Aangepaste bestandsnaam patroon</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
+    <value>Voorbeeld</value>
+    <comment>The heading for the custom file naming preview.</comment>
+  </data>
+  <data name="HeadingScanMergePreview.Text" xml:space="preserve">
+    <value>Voorbeeld</value>
+    <comment>The heading for the scan and merge preview.</comment>
+  </data>
+  <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
+    <value>24-uurs</value>
+    <comment>The option for using the 24-hours system for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
+    <value>In hoofdletters</value>
+    <comment>The option for upper-case letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
+    <value>Dag van de maand</value>
+    <comment>The option for outputting the day of the month for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
+    <value>Dag van de week</value>
+    <comment>The option for outputting the day of the week for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
+    <value>Dag van het jaar</value>
+    <comment>The option for outputting the day of the year for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
+    <value>Aantal letters beperken</value>
+    <comment>The option for limitting the number of letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
+    <value>Gebruik altijd een minimaal aantal cijfers</value>
+    <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
+    <value>Naam van de maand</value>
+    <comment>The option for outputting the name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
+    <value>Nummer van de maand</value>
+    <comment>The option for outputting the number of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
+    <value>Korte naam van de maand</value>
+    <comment>The option for outputting the short name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
+    <value>Overslaan bij standaardwaarde</value>
+    <comment>The option for skipping a file naming block when its value is the default.</comment>
+  </data>
+  <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
+    <value>Altijd twee cijfers</value>
+    <comment>The option for always outputting two digits for a file naming block.</comment>
+  </data>
+  <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
+    <value>Aangepast patroon</value>
+    <comment>The option for the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
+    <value>Datum</value>
+    <comment>The option for the date file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
+    <value>Datum en tijd (standaard)</value>
+    <comment>The option for the date and time file naming pattern in the settings.</comment>
+  </data>
+  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
+    <value>Sleep blokken om je eigen dynamische bestandsnaamgevingspatroon te bouwen. Selecteer een blok om de uitvoer te wijzigen of sleep het naar de prullenbak om het te verwijderen.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ongeldig blok</value>
+    <comment>The tooltip for an invalid file naming block.</comment>
+  </data>
+  <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
+    <value>Dit blok wordt altijd overgeslagen voor scans met automatische configuratie.</value>
+    <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
+    <value>Datum</value>
+    <comment>The title for the &quot;Date&quot; file naming block section.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
+    <value>Tijd</value>
+    <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>Bevestigen</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>Annuleren</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>Ongeldige bestandsnaam</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Naar achteren verplaatsen</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Naar voren verplaatsen</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Helemaal naar achteren verplaatsen</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Helemaal naar voren verplaatsen</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Blok verwijderen</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
