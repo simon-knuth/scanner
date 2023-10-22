@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Please try again.</value>
+    <value>Prosím, zkuste to znovu</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copy page to clipboard (Ctrl+C)</value>
+    <value>Zkopírovat stránku do schránky (Ctrl+C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Crop page</value>
+    <value>Oříznout stránku</value>
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Aspect Ratio</value>
+    <value>Poměr stran</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>Aspect Ratio</value>
+    <value>Poměr stran</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
@@ -158,11 +158,11 @@
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>Custom</value>
+    <value>Vlastní</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>Flip</value>
+    <value>Převrátit</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
@@ -182,539 +182,551 @@
     <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
-    <value>Square</value>
+    <value>Čtverec</value>
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Delete page</value>
+    <value>Smazat stranu</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Discard changes</value>
+    <value>Zahodit změny</value>
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Draw and highlight using Windows Ink</value>
+    <value>Kreslit nebo zvýraznit pomocí Windows Ink</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Draw with touch</value>
+    <value>Kreslení dotykem</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Open in another app</value>
+    <value>Otevřít v jiném programu</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rename file</value>
+    <value>Přejmenovat soubor</value>
     <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
-    <value>Rotate 90°</value>
+    <value>Otočit o 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
-    <value>Rotate 180°</value>
+    <value>Otočit o 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
-    <value>Rotate 270°</value>
+    <value>Otočit o 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rotate page (right-click for more)</value>
+    <value>Otočit stránku (klikněte pravým tlačítkem pro možnosti)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Save changes</value>
+    <value>Uložit změny</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Save changes as copy</value>
+    <value>Uložit změny jako kopii</value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Share</value>
+    <value>Sdílet</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Page list</value>
+    <value>Seznam stran</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copy selected pages</value>
+    <value>Kopírovat označené strany</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Delete selected pages</value>
+    <value>Smazat označené strany</value>
     <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
-    <value>Rotate selected pages 90°</value>
+    <value>Otočit vybrané o 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
-    <value>Rotate selected pages 180°</value>
+    <value>Otočit vybrané o 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
-    <value>Rotate selected pages 270°</value>
+    <value>Otočit vybrané o 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rotate selected pages (right-click for more)</value>
+    <value>Otočit vybrané (klikněte pravým tlačítkem pro možnosti)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Select pages</value>
+    <value>Vybrat strany</value>
     <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Share selected pages</value>
+    <value>Sdílet označené strany</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Scan options</value>
+    <value>Možnosti skenu</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Show save location in File Explorer</value>
+    <value>Zobrazit umístění ve správci souborů</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
-    <value>Scan</value>
+    <value>Skenovat</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>Scan and start fresh</value>
+    <value>Skenovat a začít znovu</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
   <data name="HeadingDialogDelete.Text" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Jste si jistí?</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="TextDialogDelete.Text" xml:space="preserve">
-    <value>The page will be deleted permanently.</value>
+    <value>Strana bude trvale smazána</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
-    <value>Delete</value>
+    <value>Smazat</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Jste si jistí?</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
-    <value>The selected pages will be deleted permanently.</value>
+    <value>Vybrané strany budou permanentně smazány.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
-    <value>Delete</value>
+    <value>Smazat</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>Are you enjoying the app?</value>
+    <value>Líbí se vám tento program?</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>I would love to hear from you:</value>
-    <comment>The subtitle of the dialog that asks the user for feedback.</comment>
+    <value>Rád si poslechnu váš názor:</value>
+    <comment>The subtitle of the dialog that asks the user for feedback.
+Fuzzy</comment>
   </data>
   <data name="HeadingDialogRename.Text" xml:space="preserve">
-    <value>Rename</value>
+    <value>Přejmenovat</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="TextDialogRename.Text" xml:space="preserve">
-    <value>Enter a new name for the file:</value>
+    <value>Nový název souboru:</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Potvrdit</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
-    <value>Copying to the clipboard failed.</value>
+    <value>Chyba při kopírování do schránky.</value>
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
-    <value>Cropping is not available right now.</value>
+    <value>Funkce oříznutí není momentálně dostupná.</value>
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>Deleting this is not possible right now.</value>
-    <comment>The error message body that appears when deleting something fails.</comment>
+    <value>Momentálně není možné smazat.</value>
+    <comment>The error message body that appears when deleting something fails.
+Fuzzy</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>Oops!</value>
-    <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
+    <value>Jejda!</value>
+    <comment>The error message heading that appears when no format was selected before starting a scan.
+Fuzzy</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>Please select a file format.</value>
+    <value>Prosím vyberte formát souboru.</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>Renaming this is not possible right now. Perhaps a file with the same name already exists?</value>
+    <value>Tento soubor momentálně nelze přejmenovat. Možná již existuje soubor se stejným názvem?</value>
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>Rotating this is not possible right now. Please try again.</value>
+    <value>Momentálně nelze otočit. Zkuste to znovu.</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>Saving these changes failed. Please make sure that the file is still available and try again.</value>
+    <value>Chyba při ukládání změn. Prosím ujistěte se, že je soubor stále dostupný a zkuste to znovu.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>The scanner is currently not accepting the app&apos;s request to cancel scanning.</value>
+    <value>Skener momentálně neodpovídá na požadavek o zrušení.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>The scan failed due to an unknown error.</value>
+    <value>Sken selhal kvůli neznámé chybě.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
-    <value>Chinese</value>
-    <comment>The heading for Chinese aspect ratio options.</comment>
+    <value>Čínský</value>
+    <comment>The heading for Chinese aspect ratio options.
+Fuzzy</comment>
   </data>
   <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
-    <value>International</value>
-    <comment>The heading for international aspect ratio options.</comment>
+    <value>Mezinárodní</value>
+    <comment>The heading for international aspect ratio options.
+Fuzzy</comment>
   </data>
   <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
-    <value>North American</value>
-    <comment>The heading for North American aspect ratio options.</comment>
+    <value>Severoamerický</value>
+    <comment>The heading for North American aspect ratio options.
+Fuzzy</comment>
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
-    <value>Scanner</value>
+    <value>Skener</value>
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>Color mode</value>
+    <value>Barevný režim</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
-    <value>Save as</value>
+    <value>Uložit jako</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
-    <value>Feeder options</value>
-    <comment>The heading for additional options in the scan options section.</comment>
+    <value>Možnosti feederu</value>
+    <comment>The heading for additional options in the scan options section.
+Fuzzy</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Rozlišení</value>
     <comment>The heading for resolution options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
-    <value>Source</value>
+    <value>Zdroj</value>
     <comment>The heading for source options in the scan options section.</comment>
   </data>
   <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
-    <value>Scan up to 10 pages consecutively</value>
+    <value>Skenujte až 10 stran za sebou</value>
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>Color</value>
+    <value>Barva</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>Grayscale</value>
+    <value>Odstíny šedi</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>Monochrome</value>
-    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
+    <value>Jednobarevné</value>
+    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.
+Fuzzy</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
-    <value>Duplex (front &amp; back)</value>
+    <value>Duplex (oboustranně)</value>
     <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
-    <value>Automatic configuration</value>
+    <value>Automaticky</value>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
     <value>Feeder</value>
-    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+    <comment>The &quot;Feeder&quot; source option in the scan options section.
+Fuzzy</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Flatbed</value>
-    <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
+    <value>Plošný</value>
+    <comment>The &quot;Flatbed&quot; source option in the scan options section.
+Fuzzy</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>Scanned pages will appear here</value>
+    <value>Zde se zobrazí naskenované strany</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Supports preview</value>
+    <value>Podporuje náhled</value>
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Something went wrong. Please make sure that a page has been inserted and try again.</value>
+    <value>Něco se pokazilo. Zkontrolujte, zda byla stránka vložena, a zkuste to znovu.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Choose folder</value>
+    <value>Vybrat složku</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>Výchozí nastavení</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>Third-party licenses</value>
+    <value>Licence třetích stran</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>The selected folder is not available. Please try selecting another one.</value>
+    <value>Vybraná složka není dostupná. Vyberte prosím jinou.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Něco se pokazilo</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>Resetting the folder location failed.</value>
+    <value>Chyba při obnovování výchozího nastavení</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
-    <value>Access denied</value>
+    <value>Přístup odepřen</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>The app is not allowed to use this folder. Please try selecting another one.</value>
+    <value>Aplikace nemá povoleno využívat tuto složku. Vyberte prosím jinou.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>About this app</value>
+    <value>O aplikaci</value>
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Give feedback</value>
+    <value>Dát zpětnou vazbu</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Save location</value>
+    <value>Umístění pro ukládání</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Translations</value>
+    <value>Překlady</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>Append time to file name</value>
+    <value>Vložit čas do názvu souboru</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
-    <value>Third-party licenses</value>
+    <value>Licence třetích stran</value>
     <comment>The hyperlink text for viewing third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Ochrana soukromí</value>
     <comment>The hyperlink text for viewing the privacy policy.</comment>
   </data>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
-    <value>Website</value>
+    <value>Web</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Pomáhejte s překladem</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
     <comment>The heading for the settings.</comment>
   </data>
   <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tmavé</value>
     <comment>The dark theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>Světlé</value>
     <comment>The light theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
-    <value>System setting</value>
-    <comment>The system theme option in the settings.</comment>
+    <value>Použít systémové nastavení</value>
+    <comment>The system theme option in the settings.
+Fuzzy</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
-    <value>Scan completed</value>
+    <value>Skenování dokončeno</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
-    <value>Multiple pages</value>
+    <value>Více stran</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>Return to the app to view and edit the result.</value>
+    <value>Vraťte se do aplikace pro zobrazení a úpravu výsledku</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>The app collects all the pages you scan, as long as you don&apos;t change the file format or &quot;start fresh&quot; when scanning. If you are creating a PDF file, you can also reorder the pages here.</value>
+    <value>Tento program uchovává veškeré naskenované stránky dokud nezměníte formát nebo nestisknete &quot;začít znovu&quot;. Pokud vytváříte soubor PDF, zde můžete změnit pořadí stran.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
-    <value>Your pages are here</value>
+    <value>Vaše strany se zobrazují zde</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
-    <value>Contributors</value>
+    <value>Přispívající</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>Scans are saved to the default save location. You can select another folder in the settings.</value>
+    <value>Skeny se ukládají do výchozí složky. Jinou složku můžete zvolit v nastavení.</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>Save location</value>
+    <value>Umístění pro ukládání</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Seznam změn</value>
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>You can take a look at what&apos;s new and improved in the changelog (may not be available in every language).</value>
+    <value>Můžete se podívat na seznam novinek a změn (nemusí být dostupné v každém jazyce).</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
-    <value>App updated</value>
+    <value>Program aktualizován</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>What&apos;s new?</value>
+    <value>Co nového?</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Credits</value>
+    <value>Kredity</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Send error reports and usage statistics</value>
+    <value>Odesílat zprávy o chybách a statistiky využití</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>This allows me to investigate app crashes and identify which features are most valuable to users. Rest assured that your scanned pages are never included in these reports.</value>
+    <value>To mi umožňuje zkoumat pády aplikace a zjišťovat, které funkce jsou pro uživatele nejcennější. Buďte si jisti, že vaše naskenované stránky nejsou v těchto zprávách nikdy zahrnuty.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Privacy first</value>
+    <value>Soukromí především</value>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>You can always change your mind in the app settings.</value>
-    <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
+    <value>V nastavení programu vždy můžete změnit názor.</value>
+    <comment>The footer for the dialog that appears when privacy settings have to be checked.
+Fuzzy</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Export event log</value>
+    <value>Exportovat protokol událostí</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Export event log</value>
+    <value>Exportovat protokol událostí</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportovat</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>None of your scanned pages are included in these logs.</value>
+    <value>Tyto protokoly neobsahují žádné z vašich naskenovaných dokumentů.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Please confirm the following settings.</value>
+    <value>Prosím potvrďte následující nastavení.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Credits</value>
+    <value>Kredity</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -726,7 +738,7 @@
     <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
   </data>
   <data name="TextEditSave.Text" xml:space="preserve">
-    <value>Save</value>
+    <value>Uložit</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
@@ -734,7 +746,7 @@
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Scanner - Quick and Easy Document Scanning</value>
+    <value>Scanner - Rychlé a snadné skenování dokumentů</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
@@ -742,23 +754,23 @@
     <comment>App name as displayed on tile.</comment>
   </data>
   <data name="TextPageListDescriptor" xml:space="preserve">
-    <value>Page {0}</value>
+    <value>Strana {0}</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
-    <value>Scans</value>
+    <value>Skeny</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>Ask every time</value>
+    <value>Zeptat se pokaždé</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Use a set location</value>
+    <value>Použít nastavené umístění</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Back</value>
+    <value>Zpět</value>
     <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
   </data>
   <data name="TextZoomFactor" xml:space="preserve">
@@ -766,15 +778,15 @@
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
   </data>
   <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zoom In (Ctrl + Mouse Wheel Up)</value>
+    <value>Přiblížit (Ctrl + Kolečko myši nahoru)</value>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zoom Out (Ctrl + Mouse Wheel Down)</value>
+    <value>Přiblížit (Ctrl + Kolečko myši dolů)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
-    <value>{0} of {1}</value>
+    <value>{0} z {1}</value>
     <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
   </data>
   <data name="OptionScanOptionsResolution" xml:space="preserve">
@@ -782,67 +794,68 @@
     <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
-    <value>{0:0} DPI (Default)</value>
+    <value>{0:0} DPI (Výchozí)</value>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0:0} DPI (Best for documents)</value>
+    <value>{0:0} DPI (Nejlepší pro dokumenty)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (Best for photos)</value>
+    <value>{0:0} DPI (Nejlepší pro fotografie)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
-    <value>Scan complete, added {0} pages</value>
+    <value>Skenování dokončeno, přidáno {0} stránek</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
   </data>
   <data name="TextScanFailAccessibility" xml:space="preserve">
-    <value>Scan failed</value>
+    <value>Skenování selhalo</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
   </data>
   <data name="TextSavedChangesAccessibility" xml:space="preserve">
-    <value>Changes saved</value>
+    <value>Změny uloženy</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
   </data>
   <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
-    <value>Scan complete, added one page</value>
+    <value>Skenování dokončeno, přidána jedna stránka</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
   </data>
   <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
-    <value>Changes saved as copy</value>
+    <value>Změny uložené jako kopie</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
-    <value>Page overview</value>
-    <comment>The name of the page management area for use by accessibility tools.</comment>
+    <value>Přehled strany</value>
+    <comment>The name of the page management area for use by accessibility tools.
+Fuzzy</comment>
   </data>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
-    <value>Scan options</value>
+    <value>Možnosti skenu</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
   <data name="HeadingDialogDonate.Text" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Podpořte vývojáře</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Podpořit vývoj</value>
     <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Podpořit vývoj</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cancel currently running scan</value>
+    <value>Zrušit momentálně probíhající sken</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
-    <value>Theme</value>
+    <value>Motiv</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>Rate in the Microsoft Store</value>
+    <value>Ohodnotit na Microsoft Store</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
@@ -850,119 +863,120 @@
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value>One or more pages were automatically rotated. This feature can be disabled in the settings.</value>
+    <value>Jedna nebo více stránek byly automaticky otočeny. Tuto funkci lze vypnout v nastavení.</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
-    <value>Automatic rotation</value>
+    <value>Automatické otáčení</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
-    <value>Latest changelog</value>
+    <value>Seznam posledních změn</value>
     <comment>The hyperlink text for viewing the latest changelog.</comment>
   </data>
   <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
-    <value>And much more!</value>
+    <value>A mnoho dalšího!</value>
     <comment>Heading for the fourth changelog section.</comment>
   </data>
   <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Please make sure that your scanner is switched on and either connected via Wi-Fi or a USB cable. If your scanner isn&apos;t listed in the Windows settings app, you&apos;ll first need to add it from there.
+    <value>Prosím ujistěte se, že je skener zapnutý a připojený přes USB kabel nebo Wi-Fi. Pokud se skener nezobrazuje v nastavení Windows, musíte ho nejprve přidat.
 
-Once you see your scanner in the settings app and it isn&apos;t labeled &quot;Offline&quot; anymore, the connection is working and you&apos;re good to go!
+Až se skener zobrazí v nastavení a nebude označen jako &quot;Offline,&quot; spojení je funkční a můžete začít!
 
 &amp;nbsp;
 
-**Tip:** If Windows takes too long to find your already installed wireless scanner, you can just turn off and on Wi-Fi to immediately trigger a network search. Keep in mind that this may interrupt internet access across all apps on your device.</value>
+**Tip:** Pokud Windows trvá příliš dlouho najít dříve nainstalovaný bezdrátový skener, můžete vypnout a zapnout Wi-Fi pro okamžité prohledání sítě. Mějte na paměti, že toto může přerušit spojení všech ostatních aplikací na vašem zařízení.</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
-    <value>Restarting a scanner usually solves most issues that you might experience. Sometimes the Windows scanning interface itself doesn&apos;t behave as expected, which may require restarting your PC.
+    <value>Restartování skeneru vyřeší většinu problémů, které mohou nastat. Windows někdy může mít problém skener najít, což může vyžadovat restartování PC.
 
-In very rare cases, the scanner installation can be faulty and you need to remove and then add the scanner in the settings again.
+Ve velmi vzácných případech může být instalace skeneru chybná a je zapotřebí ho odebrat a znovu přidat v nastavení.
 
 &amp;nbsp;
 
-Please also consult your scanner manual for additional guidance or contact the manufacturer.</value>
+Pro podrobnější postup prosím nahlédněte do manuálu vašeho zařízení nebo kontaktujte výrobce.</value>
     <comment>The help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>You can change the save location for new scans in the settings. If you like, you can also be asked every time you scan something new - great for always putting stuff right where it belongs, instead of having to organize it afterwards.</value>
+    <value>Umístění pro ukládání nových skenů můžete změnit v nastavení. Pokud chcete, můžete být také dotázáni pokaždé, když skenujete něco nového - skvělé pro to, abyste věci vždy ukládali tam, kam patří, místo toho, abyste je museli dodatečně organizovat.</value>
     <comment>The help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
-    <value>The resolution determines the overall sharpness of the scan and also heavily influences the file size. Scanning at a high resolution can inflate the file and increase the required time for each page to be scanned. Scanning at a low resolution can result in a loss of detail and even produce illegible text.
+    <value>Rozlišení určuje celkovou ostrost skenu a také výrazně ovlivňuje velikost souboru. Skenování ve vysokém rozlišení může soubor zvětšit a prodloužit dobu potřebnou pro naskenování každé stránky. Skenování v nízkém rozlišení může vést ke ztrátě detailů a dokonce k nečitelnému textu.
 
-Selecting a resolution is possible in **flatbed or feeder** mode. The app always chooses a default resolution for you, which works great for all kinds of scans. Sometimes it even recommends a resolution for documents and a separate one for photos.
+Výběr rozlišení je možný v režimu **plochého tisku nebo podavače**. Aplikace za vás vždy vybere výchozí rozlišení, které skvěle funguje pro všechny druhy skenování. Někdy dokonce doporučí rozlišení pro dokumenty a samostatné rozlišení pro fotografie.
 
-As a rule of thumb, documents only require a resolution of about 300 DPI, whereas photos benefit from a higher resolution of about 500 DPI.</value>
+Obecně platí, že pro dokumenty stačí rozlišení přibližně 300 DPI, zatímco pro fotografie je vhodné vyšší rozlišení, přibližně 500 DPI.</value>
     <comment>The help text on choosing the right resolution.</comment>
   </data>
   <data name="TextHelpReorderPdf.Text" xml:space="preserve">
-    <value>Mixed up some pages while scanning? No need to start over, you can quickly reorder the pages in your PDF file after scanning. Just drag and drop pages in the page list and put everything where it belongs.</value>
+    <value>Pomíchali jste při skenování některé stránky? Nemusíte začínat znovu, po skenování můžete rychle změnit pořadí stránek v souboru PDF. Stačí přetáhnout stránky v seznamu stránek a vše zařadit tam, kam patří.</value>
     <comment>The help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="TextHelpSaveChanges.Text" xml:space="preserve">
-    <value>If you edit your scans in the app, the changes are saved immediately in the background. Just scan some pages, edit the result and you&apos;re done!</value>
+    <value>Pokud v aplikaci upravíte skenování, změny se okamžitě uloží na pozadí. Stačí naskenovat několik stránek, upravit výsledek a je hotovo!</value>
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>If you&apos;d like to scan to a new PDF file instead of adding pages to an existing one, you don&apos;t need to restart the app. Just select the little arrow next to the scan button and start fresh.</value>
+    <value>Pokud chcete skenovat do nového souboru PDF namísto přidávání stránek do stávajícího souboru, nemusíte aplikaci restartovat. Stačí vybrat malou šipku vedle tlačítka skenování a začít znovu.</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>If you are unsure which file format to choose, you should concentrate on **JPG, PNG and PDF**.
+    <value>Pokud si nejste jisti, který formát souboru zvolit, měli byste se zaměřit na **JPG, PNG a PDF**.
 
-JPG and PNG are image formats, which means that every page will be saved as a separate file. These files can be viewed on just about every device and edited later with ease. JPGs are usually smaller than PNGs, especially at high resolutions, but PNGs offer a better overall quality, which can be important when scanning photos.
+JPG a PNG jsou obrazové formáty, což znamená, že každá stránka bude uložena jako samostatný soubor. Tyto soubory lze prohlížet na téměř každém zařízení a později je snadno upravovat. Soubory JPG jsou obvykle menší než PNG, zejména při vysokém rozlišení, ale PNG nabízí lepší celkovou kvalitu, což může být důležité při skenování fotografií.
 
-PDF is a very popular document format and allows you to save multiple pages in a single file. This format can be viewed on just about every device, but editing these files later is not easy and may require advanced software.</value>
+PDF je velmi oblíbený formát dokumentů, který umožňuje uložit více stránek do jednoho souboru. Tento formát lze zobrazit téměř na každém zařízení, ale pozdější úprava těchto souborů není snadná a může vyžadovat pokročilý software.</value>
     <comment>The help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>Change the folder that scans are saved to</value>
+    <value>Vyberte složku pro ukládání skenů</value>
     <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>Choose a file format</value>
+    <value>Vyberte formát souboru</value>
     <comment>The heading for the help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
-    <value>Choose a resolution</value>
+    <value>Vyberte rozlišení</value>
     <comment>The heading for the help text on choosing the right resolution.</comment>
   </data>
   <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
-    <value>Reorder PDF pages</value>
-    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+    <value>Změnit pořadí stránek dokumentu</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.
+Fuzzy</comment>
   </data>
   <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
-    <value>Save changes</value>
+    <value>Uložit změny</value>
     <comment>The heading for the help text on how to save changes made in the app.</comment>
   </data>
   <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Install and use a scanner</value>
+    <value>Nainstalovat a použít skener</value>
     <comment>The heading for the help text on how to install and use a scanner.</comment>
   </data>
   <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
-    <value>Troubleshoot scanner issues</value>
+    <value>Diagnostikovat problémy se skenerem</value>
     <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Start a new PDF</value>
+    <value>Začít nové PDF</value>
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
-    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <value>Něco brání aplikaci používat nastavenou složku v počítači, takže ji budete muset vybrat pro každé skenování. Ujistěte se, že tomu nebrání žádné nastavení ani antivirový software.</value>
     <comment>The body for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
-    <value>Loading a save location failed</value>
+    <value>Načítání místa pro uložení se nezdařilo</value>
     <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
-    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <value>Něco brání aplikaci používat nastavenou složku v počítači, takže ji budete muset vybrat pro každé skenování. Ujistěte se, že tomu nebrání žádné nastavení ani antivirový software.</value>
     <comment>The error message that appears when using a set save location fails.</comment>
   </data>
   <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Podpořte vývojáře</value>
     <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
@@ -970,289 +984,294 @@ PDF is a very popular document format and allows you to save multiple pages in a
     <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Help</value>
+    <value>Nápověda</value>
     <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Get help</value>
-    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+    <value>Otevřít nápovědu</value>
+    <comment>The tooltip for a button that offers help regarding some topic.
+Fuzzy</comment>
   </data>
   <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
-    <value>Scanner settings</value>
+    <value>Nastavení skeneru</value>
     <comment>The text for the button in the help section that opens the scanner settings.</comment>
   </data>
   <data name="ButtonHelpSettings.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
     <comment>The text for the button in the help section that opens the settings.</comment>
   </data>
   <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
-    <value>Wi-Fi settings</value>
+    <value>Nastavení Wi-Fi</value>
     <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
   </data>
   <data name="HeadingHelp.Text" xml:space="preserve">
-    <value>Help</value>
+    <value>Nápověda</value>
     <comment>The heading for the help.</comment>
   </data>
   <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
-    <value>Automatic crop</value>
+    <value>Automatické oříznutí</value>
     <comment>The heading for the auto crop section in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Vypnuto</value>
     <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
-    <value>Multiple regions</value>
+    <value>Více oblastí</value>
     <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
-    <value>Single region</value>
+    <value>Jedna oblast</value>
     <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
-    <value>Automatic</value>
+    <value>Automaticky</value>
     <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
   </data>
   <data name="TextScannerSearchRunning.Text" xml:space="preserve">
-    <value>Searching scanners...</value>
+    <value>Hledám skenery...</value>
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
-    <value>Your scanner needs to be connected, turned on and installed to be used. Please consult the help page for more information.</value>
+    <value>Pro použití musí být skener připojen, zapnut a nainstalován. Pro další informace prosím nahlédněte do nápovědy.</value>
     <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
   <data name="DialogScannerSearchTip.Title" xml:space="preserve">
-    <value>Use a scanner</value>
+    <value>Použít skener</value>
     <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
   <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Crop similar pages</value>
+    <value>Oříznout podobné strany</value>
     <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The text for the button that cancels cropping multiple pages at once.</comment>
   </data>
   <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Potvrdit</value>
     <comment>The text for the button that confirms cropping multiple pages at once.</comment>
   </data>
   <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
-    <value>Show all apps</value>
+    <value>Zobrazit všechny programy</value>
     <comment>The text for the button that shows all available apps to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithStore.Text" xml:space="preserve">
-    <value>Find more apps in the Store</value>
+    <value>Další aplikace najdete v obchodě</value>
     <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
-    <value>Okay</value>
+    <value>OK</value>
     <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="HeadingEditCrop.Text" xml:space="preserve">
-    <value>Crop</value>
+    <value>Oříznout</value>
     <comment>The heading for the crop editor.</comment>
   </data>
   <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Crop similar pages</value>
+    <value>Oříznout podobné strany</value>
     <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="HeadingEditDraw.Text" xml:space="preserve">
-    <value>Draw</value>
+    <value>Kreslit</value>
     <comment>The heading for the draw editor.</comment>
   </data>
   <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
-    <value>Heads-up</value>
-    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+    <value>Pozor</value>
+    <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.
+Fuzzy</comment>
   </data>
   <data name="OptionDontShowAgain.Text" xml:space="preserve">
-    <value>Don&apos;t show again</value>
+    <value>Znovu nezobrazovat</value>
     <comment>The option that prevents something from being shown again.</comment>
   </data>
   <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Apply the current crop to multiple pages with the same measurements at once.</value>
+    <value>Aplikovat oříznutí na více stran se stejnou velikostí najednou.</value>
     <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="TextOpenWithWarning.Text" xml:space="preserve">
-    <value>By choosing an app in the next menu, all pages will be closed here.</value>
+    <value>Vybrání aplikace v následujícím menu zavře všechny strany.</value>
     <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Print selected pages</value>
+    <value>Vytisknout vybrané strany</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Print</value>
+    <value>Vytisknout</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
   <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
   <data name="DialogPreview.Title" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The heading for the scan preview.</comment>
   </data>
   <data name="TextPromisePrivacy.Text" xml:space="preserve">
-    <value>Personal data stays on your device</value>
+    <value>Osobní údaje zůstávají na vašem zařízení</value>
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
-    <value>Donate</value>
+    <value>Přispět</value>
     <comment>The donation button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
-    <value>No thanks</value>
+    <value>Ne, díky</value>
     <comment>The cancel button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="TextPromiseNoAds.Text" xml:space="preserve">
-    <value>No ads</value>
+    <value>Žádné reklamy</value>
     <comment>The text promising an ads-free experience.</comment>
   </data>
   <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
-    <value>No subscriptions</value>
+    <value>Žádné předplatné</value>
     <comment>The text promising a subscription-free experience.</comment>
   </data>
   <data name="TextPromiseUpdates.Text" xml:space="preserve">
-    <value>Free updates</value>
+    <value>Aktualizace zdarma</value>
     <comment>The text promising free updates.</comment>
   </data>
   <data name="TextDonateDialog.Text" xml:space="preserve">
-    <value>This app is available at no cost for everyone to use.
+    <value>Tento program je všem zdarma dostupný.
 
-If you like it, you can directly support the development with a donation.
+Pokud se vám líbí, můžete podpořit jeho vývoj příspěvkem.
 
-Thank you! ❤️</value>
+Díky! ❤️</value>
     <comment>The body for the dialog asking the user to support the development.</comment>
   </data>
   <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
-    <value>Duplicate page</value>
+    <value>Duplicitní strana</value>
     <comment>The text for the button that duplicates a page.</comment>
   </data>
   <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
-    <value>Show in File Explorer</value>
+    <value>Zobrazit ve správci souborů</value>
     <comment>The text for the button that shows a selected file in File Explorer.</comment>
   </data>
   <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Restore default</value>
+    <value>Obnovit výchozí</value>
     <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
   </data>
   <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
-    <value>Brightness adjustment</value>
+    <value>Úprava jasu</value>
     <comment>The heading for the brightness adjustment section in the scan options.</comment>
   </data>
   <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
-    <value>Contrast adjustment</value>
+    <value>Úprava kontrastu</value>
     <comment>The heading for the contrast adjustment section in the scan options.</comment>
   </data>
   <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value>Always saved across app sessions</value>
+    <value>Vždy uloženo napříč relacemi aplikace</value>
     <comment>The text for scan options that are always saved across app sessions.</comment>
   </data>
   <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
-    <value>Adjust brightness &amp; contrast</value>
+    <value>Upravit jas a kontrast</value>
     <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Choose where scans are saved</value>
+    <value>Vybrat, kam se skeny ukládají</value>
     <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
-    <value>Unavailable while scanning</value>
+    <value>Během skenování nedostupné</value>
     <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
   </data>
   <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
-    <value>Brightness and contrast are advanced scan options and can be enabled in the settings. If these options aren&apos;t supported by your scanner, they will remain hidden.
+    <value>Jas a kontrast jsou pokročilé možnosti skenování a lze je povolit v nastavení. Pokud tyto možnosti váš skener nepodporuje, zůstanou skryté.
 
-Adjusting the brightness and contrast is only possible in **flatbed or feeder** mode.</value>
+Nastavení jasu a kontrastu je možné pouze v režimu **plochého skeneru nebo podavače**.</value>
     <comment>The help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value>You can rate Scanner in the Microsoft Store to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on GitHub.</value>
+    <value>Aplikaci Scanner můžete v obchodě Microsoft Store ohodnotit, navrhnout nové funkce a pomoci ostatním rozhodnout, zda je to pro ně ta správná aplikace. Profesionální uživatelé mohou také ovlivnit další vývoj na GitHubu.</value>
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
-    <value>Changes to this setting are applied once the app has been restarted.</value>
+    <value>Změny tohoto nastavení se projeví po restartu programu</value>
     <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
   </data>
   <data name="TextSettingsTranslations.Text" xml:space="preserve">
-    <value>Windows offers support for over 100 languages - you can help make this app accessible for people all around the world.</value>
+    <value>Windows podporuje více než 100 jazyků - můžete tento program zpřístupnit lidem po celém světě.</value>
     <comment>The text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
-    <value>Add another language</value>
+    <value>Přidat další jazyk</value>
     <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
   </data>
   <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value>Automatic rotation</value>
+    <value>Automatické otočení</value>
     <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
-    <value>Editor orientation</value>
-    <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
+    <value>Orientace editoru</value>
+    <comment>The heading for the &quot;Editor orientation&quot; section in settings.
+Fuzzy</comment>
   </data>
   <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
-    <value>Error reports and logs</value>
+    <value>Zprávy o chybách a protokoly</value>
     <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
-    <value>File naming</value>
+    <value>Pojmenování souborů</value>
     <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Přizpůsobení</value>
     <comment>The heading for personalization settings.</comment>
   </data>
   <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
-    <value>Scan options</value>
+    <value>Možnosti skenu</value>
     <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
-    <value>Surveys</value>
+    <value>Průzkumy</value>
     <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
-    <value>Rotate pages automatically</value>
+    <value>Automaticky otáčet strany</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
-    <value>Recognizer language</value>
+    <value>Jazyk rozpoznávání</value>
     <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
-    <value>Horizontal</value>
+    <value>Na šířku</value>
     <comment>The option for the horizontal editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
-    <value>Vertical</value>
+    <value>Na výšku</value>
     <comment>The option for the vertical editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
-    <value>Remember last used scan options</value>
+    <value>Zapamatovat si poslední nastavení skenu</value>
     <comment>The option for remembering the last used scan options.</comment>
   </data>
   <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
-    <value>Show advanced scan options supported by your scanner</value>
-    <comment>The option for showing advanced scan options.</comment>
+    <value>Zobrazit pokročilá nastavení</value>
+    <comment>The option for showing advanced scan options.
+Fuzzy</comment>
   </data>
   <data name="OptionSettingsSurveys.Content" xml:space="preserve">
-    <value>Take part in occasional surveys</value>
+    <value>Zůčastnit se příležitostných průzkumů</value>
     <comment>The option for showing occasional surveys in settings.</comment>
   </data>
   <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value>Automatically determine the correct orientation of scanned pages</value>
+    <value>Automaticky vybrat správnou orientaci naskenovaných stran</value>
     <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
-    <value>This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device.</value>
-    <comment>The text explaining the automatic rotation of pages.</comment>
+    <value>Tato funkce zkoumá obsah naskenovaných stran a určí správnou orientaci. Tento proces využívá software běžící na zařízení a rozpoznaný text nikdy není odesílán externím službám.</value>
+    <comment>The text explaining the automatic rotation of pages.
+Fuzzy</comment>
   </data>
   <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value>Scanner works best on Windows 11. Please keep your system up-to-date for an optimal experience.</value>
+    <value>Scanner funguje nejlépe na Windows 11. Pro optimální funkci prosím udržujte svůj systém aktuální.</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
   <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
-    <value>New status message available</value>
+    <value>Nová stavová zpráva</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
   </data>
   <data name="HeadingEditor.Text" xml:space="preserve">
@@ -1260,51 +1279,52 @@ Adjusting the brightness and contrast is only possible in **flatbed or feeder** 
     <comment>The heading for the editor.</comment>
   </data>
   <data name="HeadingPageList.Text" xml:space="preserve">
-    <value>Page list</value>
+    <value>Seznam stran</value>
     <comment>The heading for the page list.</comment>
   </data>
   <data name="HeadingScanOptions.Text" xml:space="preserve">
-    <value>Scan options</value>
+    <value>Možnosti skenu</value>
     <comment>The heading for the scan options.</comment>
   </data>
   <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
-    <value>Crop scans automatically</value>
+    <value>Automaticky ořezávat skeny</value>
     <comment>The heading for the help text on how to use automatic cropping.</comment>
   </data>
   <data name="TextHelpAutoCrop.Text" xml:space="preserve">
-    <value>The options for automatic cropping are hidden by default and can be enabled in the settings. If these options aren&apos;t supported by your scanner, they will remain hidden.
+    <value>Možnosti automatického ořezu jsou ve výchozím nastavení skryté a lze je povolit v nastavení. Pokud tyto možnosti váš skener nepodporuje, zůstanou skryté.
 
-Automatic cropping is only possible in **flatbed or feeder** mode.
+Automatické oříznutí je možné pouze v režimu **ploché desky nebo podavače**.
 
-&quot;Single region&quot; cropping creates a single image, which is especially useful for scanning documents. &quot;Multiple regions&quot; cropping can identify more than one element in a single scan, which is useful for putting multiple photos on a flatbed.</value>
+Oříznutí &quot;jedné oblasti&quot; vytvoří jediný obrázek, což je užitečné zejména při skenování dokumentů. Oříznutí &quot;Více oblastí&quot; dokáže identifikovat více prvků v jednom skenu, což je užitečné při vkládání více fotografií na plochou podložku.</value>
     <comment>The help text on how to use automatic cropping.</comment>
   </data>
   <data name="DialogSurvey.Subtitle" xml:space="preserve">
-    <value>Your answers are confidential.</value>
+    <value>Vaše odpovědi jsou důvěrné.</value>
     <comment>The subtitle for the survey dialog.</comment>
   </data>
   <data name="DialogSurvey.Title" xml:space="preserve">
-    <value>Survey</value>
+    <value>Průzkum</value>
     <comment>The title for the survey dialog.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
-    <value>It was already installed</value>
-    <comment>A survey option for how the user discovered the app.</comment>
+    <value>Byl předinstalovaný</value>
+    <comment>A survey option for how the user discovered the app.
+Fuzzy</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
-    <value>Website/article</value>
+    <value>Webová stránka/článek</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
-    <value>I don&apos;t know</value>
+    <value>Nevím</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
-    <value>Other</value>
+    <value>Jiné</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
-    <value>Recommendation by someone</value>
+    <value>Osobní doporučení</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
@@ -1312,80 +1332,81 @@ Automatic cropping is only possible in **flatbed or feeder** mode.
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyUsageOther" xml:space="preserve">
-    <value>Other</value>
+    <value>Jiné</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsagePrivate" xml:space="preserve">
-    <value>Private</value>
+    <value>Soukromé</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageSchool" xml:space="preserve">
-    <value>School</value>
+    <value>Škola</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageStudy" xml:space="preserve">
-    <value>Study</value>
+    <value>Studium</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageWork" xml:space="preserve">
-    <value>Work</value>
+    <value>Práce</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
-    <value>How did you discover this app?</value>
+    <value>Jak jste objevili tuto aplikaci?</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
-    <value>How easy to use is this app?</value>
+    <value>Jak jednoduché je používat tuto aplikaci?</value>
     <comment>The survey question on ease of use.</comment>
   </data>
   <data name="TextSurveyFeatures.Text" xml:space="preserve">
-    <value>Does the app offer all the features you expected?</value>
+    <value>Nabízí aplikace všechny funkce, které jste očekávali?</value>
     <comment>The survey question on the offered features.</comment>
   </data>
   <data name="TextSurveyFileFormats.Text" xml:space="preserve">
-    <value>How happy are you with the available file formats?</value>
+    <value>Jak jste spokojeni s dostupnými formáty souborů?</value>
     <comment>The survey question on available file formats.</comment>
   </data>
   <data name="TextSurveyFileSize.Text" xml:space="preserve">
-    <value>How happy are you with the size of created files?</value>
+    <value>Jak jste spokojeni s velikostí vytvořených souborů?</value>
     <comment>The survey question on file sizes.</comment>
   </data>
   <data name="TextSurveyInterface.Text" xml:space="preserve">
-    <value>How would you rate the app interface?</value>
+    <value>Jak hodnotíte rozhraní aplikace?</value>
     <comment>The survey question on the app interface.</comment>
   </data>
   <data name="TextSurveyPerformance.Text" xml:space="preserve">
-    <value>How fast does the app feel on your device?</value>
+    <value>Jak rychlá je aplikace na vašem zařízení?</value>
     <comment>The survey question on performance.</comment>
   </data>
   <data name="TextSurveyRecommend.Text" xml:space="preserve">
-    <value>How likely are you to recommend this app to someone who wants to use a scanner?</value>
-    <comment>The survey question on recommending the app to others.</comment>
+    <value>Jak je pravděpodobné, že tuto aplikaci doporučíte někomu kdo vlastní skener?</value>
+    <comment>The survey question on recommending the app to others.
+Fuzzy</comment>
   </data>
   <data name="TextSurveyUsage.Text" xml:space="preserve">
-    <value>What do you mainly use the app for?</value>
+    <value>K čemu aplikaci hlavně používáte?</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
-    <value>Scanning documents and photos is now as effortless as it’s supposed to be. Scan some pages as image files, rotate and crop them with the built-in presets and quickly share them via email — or create a multi-page PDF file, give it an expressive name and archive it in the right folder.
-With Scanner you can get everything done in one place, no additional image editors or expensive PDF software needed.
+    <value>Skenování dokumentů a fotografií je nyní tak snadné, jak má být. Naskenujte několik stránek jako obrazové soubory, otočte je a ořízněte pomocí vestavěných předvoleb a rychle je sdílejte e-mailem - nebo vytvořte vícestránkový soubor PDF, dejte mu výstižný název a archivujte ho ve správné složce.
+Se Skenerem můžete vše vyřídit na jednom místě, nepotřebujete žádné další grafické editory ani drahý software pro práci s PDF.
 
-Almost every scanner in use today is supported by this app, so you don’t need to use the antiquated and clunky software provided by your device manufacturer. It’s designed with simplicity and ease-of-use in mind while also offering advanced tools and features.
+Tato aplikace podporuje téměř všechny dnes používané skenery, takže nemusíte používat zastaralý a neohrabaný software poskytovaný výrobcem zařízení. Je navržena s ohledem na jednoduchost a snadné používání a zároveň nabízí pokročilé nástroje a funkce.
 
-The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
+Podporované formáty jsou PDF, JPG, PNG, TIF a BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
-    <value>Scanner - Quick and Easy Document Scanning</value>
+    <value>Scanner - Rychlé a snadné skenování dokumentů</value>
     <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
-    <value>Scanner|Windows-Scan|scan document|Scan|Windows Scan|Scanner Windows 10</value>
+    <value>Skener|Windows-Scan|Skenovat dokument|Sken|Skener Windows 10</value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Scan documents and photos, edit the pages and save them as PDF or image files - all in a single easy-to-use app.</value>
+    <value>Skenujte dokumenty a fotografie, upravujte stránky a ukládejte je jako soubory PDF nebo obrázky - to vše v jediné snadno použitelné aplikaci.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
@@ -1397,11 +1418,11 @@ The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
     <comment>App title for voice control.</comment>
   </data>
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
-    <value>App logo</value>
+    <value>Logo aplikace</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
   <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
-    <value>Files &amp; save location</value>
+    <value>Soubory a místo uložení</value>
     <comment>The heading for files and save location help.</comment>
   </data>
   <data name="HeadingHelpPdf.Text" xml:space="preserve">
@@ -1409,51 +1430,51 @@ The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
     <comment>The heading for PDF help.</comment>
   </data>
   <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
-    <value>Scanner usage</value>
+    <value>Použití skeneru</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
   <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
-    <value>Animations</value>
+    <value>Animace</value>
     <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAnimations.Content" xml:space="preserve">
-    <value>Show animations</value>
+    <value>Zobrazit animace</value>
     <comment>The text for the option for showing animations.</comment>
   </data>
   <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
-    <value>Default scan action</value>
+    <value>Výchozí akce skenování</value>
     <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
-    <value>Add to existing pages</value>
+    <value>Přidat k existujícím stránkám</value>
     <comment>The option for trying to add new pages to existing ones in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
-    <value>Start fresh</value>
+    <value>Začít nanovo</value>
     <comment>The option for always starting fresh in settings.</comment>
   </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
   </data>
   <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
-    <value>Automatic rotation is currently unavailable, because none of your installed languages support text recognition. Please install a supported language (including all of its individual parts) and restart your PC to use this feature.</value>
+    <value>Automatické otáčení není v současné době k dispozici, protože žádný z nainstalovaných jazyků nepodporuje rozpoznávání textu. Chcete-li tuto funkci používat, nainstalujte si podporovaný jazyk (včetně všech jeho jednotlivých částí) a restartujte počítač.</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
   <data name="TextClose.Text" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
-    <value>Units of measurement</value>
+    <value>Jednotky měření</value>
     <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
-    <value>Imperial/US</value>
+    <value>Imperiální/USA</value>
     <comment>The option for the imperial/US measurement units in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
-    <value>Metric</value>
+    <value>Metrický</value>
     <comment>The option for the metric measurement units in settings.</comment>
   </data>
   <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
@@ -1461,266 +1482,266 @@ The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
     <comment>The unit text that appears after a centimeter value.</comment>
   </data>
   <data name="TextMeasurementsUnitInches" xml:space="preserve">
-    <value>in</value>
+    <value>palce</value>
     <comment>The unit text that appears after an inch value.</comment>
   </data>
   <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
-    <value>Scan and merge</value>
+    <value>Skenovat a sloučit</value>
     <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
-    <value>Scan and merge into PDF</value>
+    <value>Skenovat a sloučit do PDF</value>
     <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="TextScanMergeElementSinglePage" xml:space="preserve">
-    <value>Single scanned page</value>
+    <value>Jedna naskenovaná stránka</value>
     <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
   </data>
   <data name="TextScanMergeElementStartPage" xml:space="preserve">
-    <value>First scanned page</value>
+    <value>První naskenovaná stránka</value>
     <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
   </data>
   <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
-    <value>All surplus pages</value>
+    <value>Všechny přebytečné stránky</value>
     <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
   </data>
   <data name="TextScanMergeExplanation.Text" xml:space="preserve">
-    <value>You can use this tool to insert new pages in a specific spot. This also allows you to scan multiple two-sided sheets without duplex, by scanning the front sides normally first and then merging all the flip sides into the first batch.</value>
+    <value>Pomocí tohoto nástroje můžete vložit nové stránky na určité místo. Umožňuje také skenovat více oboustranných listů bez oboustranného skenování, a to tak, že nejprve normálně naskenujete přední strany a poté všechny překlopené strany sloučíte do první dávky.</value>
     <comment>The explanation for &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
-    <value>In-between pages</value>
+    <value>Mezistránky</value>
     <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeStartPage.Text" xml:space="preserve">
-    <value>First page</value>
+    <value>První stránka</value>
     <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
-    <value>Scan and add to PDF</value>
+    <value>Skenovat a přidat do PDF</value>
     <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
   </data>
   <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
-    <value>Scan and merge into PDF...</value>
+    <value>Skenovat a sloučit do PDF...</value>
     <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
   </data>
   <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
-    <value>You can select &quot;Scan and merge into PDF&quot; from the scan menu to insert new pages in specific spots. This makes scanning two-sided sheets a piece of cake.</value>
+    <value>V nabídce skenování můžete vybrat možnost &quot;Skenovat a sloučit do PDF&quot; a vložit nové stránky na určitá místa. Díky tomu je skenování oboustranných listů hračkou.</value>
     <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="DialogScanMergeTip.Title" xml:space="preserve">
-    <value>Scan and merge</value>
+    <value>Skenovat a sloučit</value>
     <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
-    <value>The file you are trying to edit/use is unavailable. Please don&apos;t move, rename or open files outside of the app, until you are done editing here.</value>
+    <value>Soubor, který se snažíte upravit/použít, není k dispozici. Nepřesouvejte, nepřejmenovávejte ani neotvírejte soubory mimo aplikaci, dokud zde neskončíte s úpravami.</value>
     <comment>The error message body that appears when a file is unavailable.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
-    <value>File unavailable</value>
+    <value>Soubor není k dispozici</value>
     <comment>The error message heading that appears when a file is unavailable.</comment>
   </data>
   <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
-    <value>Discard selected scan region</value>
+    <value>Zahodit vybranou oblast skenování</value>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
   </data>
   <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavřít</value>
     <comment>The close button tooltip of the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
-    <value>Apply selection</value>
+    <value>Použít výběr</value>
     <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Select scan region</value>
+    <value>Výběr oblasti skenování</value>
     <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
   </data>
   <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
-    <value>Scan region selection</value>
+    <value>Výběr oblasti skenování</value>
     <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
   </data>
   <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Height of entire preview</value>
+    <value>Výška celého náhledu</value>
     <comment>The tooltip that appears while hovering the height value of the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Height of selected scan region</value>
+    <value>Výška vybrané oblasti skenování</value>
     <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Width of selected scan region</value>
+    <value>Šířka vybrané oblasti skenování</value>
     <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Width of entire preview</value>
+    <value>Šířka celého náhledu</value>
     <comment>The tooltip that appears while hovering the width value of the preview.</comment>
   </data>
   <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
-    <value>Preview (scan region selected)</value>
+    <value>Náhled (vybraná oblast skenování)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
-    <value>Legal</value>
+    <value>Právní</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
   <data name="StoreUpdate3_2_0_0" xml:space="preserve">
-    <value>Customized file naming
-You look like someone who loves to stay organized, and Scanner is here to help! Try out the new super-flexible file naming settings to spend more time scanning and less time renaming.
+    <value>Přizpůsobené pojmenování souborů
+Vypadáte jako někdo, kdo si rád udržuje pořádek, a aplikace Scanner je tu, aby vám pomohla! Vyzkoušejte nové super pružné nastavení pojmenování souborů, abyste strávili více času skenováním a méně přejmenováváním.
 
-Language selection
-Bilingual? Trilingual? Quadrilingual? Choose an app language that&apos;s independent from your system language (only one at a time though).
+Výběr jazyka
+Doujjazyčný? Trojjazyčný? Čtyřjazyčný? Vyberte si jazyk aplikace, který je nezávislý na systémovém jazyce (vždy však pouze jeden).
 
-Improved resolutions list
-If your resolutions list is on the verge of getting out of control, you can now just type the desired resolution into the box instead of scrolling for hours.</value>
+Vylepšený seznam rozlišení
+Pokud je váš seznam rozlišení na hranici zvládnutelnosti, můžete nyní požadované rozlišení jednoduše zadat do pole místo několikahodinového procházení.</value>
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>Customized file naming</value>
+    <value>Přizpůsobené pojmenování souborů</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Language selection</value>
+    <value>Výběr jazyka</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>Improved resolutions list</value>
+    <value>Vylepšený seznam rozlišení</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>You look like someone who loves to stay organized, and Scanner is here to help! Try out the new super-flexible file naming settings to spend more time scanning and less time renaming.</value>
+    <value>Vypadáte jako někdo, kdo si rád udržuje pořádek, a aplikace Scanner vám s tím pomůže! Vyzkoušejte nové super flexibilní nastavení pojmenování souborů, abyste strávili více času skenováním a méně přejmenováváním.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Bilingual? Trilingual? Quadrilingual? Choose an app language that&apos;s independent from your system language (only one at a time though).</value>
+    <value>Dvojjazyčný? Trojjazyčný? Čtyřjazyčný? Zvolte si jazyk aplikace, který je nezávislý na systémovém jazyce (vždy však pouze jeden).</value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>If your resolutions list is on the verge of getting out of control, you can now just type the desired resolution into the box instead of scrolling for hours.</value>
+    <value>Pokud je váš seznam rozlišení na hranici zvládnutelnosti, můžete nyní místo několikahodinového procházení zadat požadované rozlišení do pole.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
-    <value>File naming settings</value>
+    <value>Nastavení pojmenování souboru</value>
     <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
   </data>
   <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reverse order of inserted pages</value>
+    <value>Obrátit pořadí vložených stránek</value>
     <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeElementLastPage" xml:space="preserve">
-    <value>Last scanned page</value>
+    <value>Poslední naskenovaná strana</value>
     <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
   </data>
   <data name="TextScanMergeLastPage.Text" xml:space="preserve">
-    <value>Last page</value>
+    <value>Poslední stránka</value>
     <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
   </data>
   <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
-    <value>App language</value>
+    <value>Jazyk aplikace</value>
     <comment>The heading for the &quot;App language&quot; option in settings.</comment>
   </data>
   <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
-    <value>System setting</value>
+    <value>Systémové nastavení</value>
     <comment>The system setting option in the app language settings.</comment>
   </data>
   <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
-    <value>Automatic rotation...</value>
+    <value>Automatické otáčení...</value>
     <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
   </data>
   <data name="TextScanProgressFinishing.Text" xml:space="preserve">
-    <value>Almost done...</value>
+    <value>Skoro hotovo...</value>
     <comment>The text that indicates that a scan is almost done.</comment>
   </data>
   <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
-    <value>Preparing PDF...</value>
+    <value>Připravování PDF...</value>
     <comment>The text that indicates that a PDF is currently being generated.</comment>
   </data>
   <data name="TextScanProgressProcessing.Text" xml:space="preserve">
-    <value>Processing...</value>
+    <value>Zpracovávání...</value>
     <comment>The text that indicates that a scan is currently being processed.</comment>
   </data>
   <data name="TextScanProgressSaving.Text" xml:space="preserve">
-    <value>Saving...</value>
+    <value>Ukládání...</value>
     <comment>The text that indicates that a changes are currently being saved.</comment>
   </data>
   <data name="TextScanProgressScanning.Text" xml:space="preserve">
-    <value>Scanning...</value>
+    <value>Skenování...</value>
     <comment>The text that indicates that a scan is currently running.</comment>
   </data>
   <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
-    <value>Back</value>
+    <value>Zpět</value>
     <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
   </data>
   <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Potvrdit</value>
     <comment>The confirm button text of the setup dialog.</comment>
   </data>
   <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
-    <value>Save location settings</value>
+    <value>Uložení nastavení umístění</value>
     <comment>The text for the button that opens the save location settings.</comment>
   </data>
   <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
-    <value>Save location</value>
+    <value>Umístění pro ukládání</value>
     <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
-    <value>Choose a set location or select a new one for every scan.</value>
+    <value>Vybrat nastavené umístění nebo vybrat nové pro každý sken.</value>
     <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
-    <value>The app automatically saves changes each time you scan pages or edit existing ones - no need to worry about forgetting something.</value>
+    <value>Aplikace automaticky ukládá změny při každém skenování stránek nebo úpravě stávajících stránek - nemusíte se bát, že byste na něco zapomněli.</value>
     <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
-    <value>You can always change your mind in the app settings.</value>
+    <value>V nastavení aplikace si to můžete kdykoli rozmyslet.</value>
     <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
-    <value>Brightness adjustment</value>
+    <value>Nastavení jasu</value>
     <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
-    <value>Contrast adjustment</value>
+    <value>Nastavení kontrastu</value>
     <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
-    <value>Day</value>
+    <value>Den</value>
     <comment>The title for the &quot;Day&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
-    <value>File type</value>
+    <value>Typ souboru</value>
     <comment>The title for the &quot;File type&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
-    <value>Hour</value>
+    <value>Hodina</value>
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
-    <value>AM/PM</value>
+    <value>Dop./Odp.</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
-    <value>Minute</value>
+    <value>Minuta</value>
     <comment>The title for the &quot;Minute&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
-    <value>Month</value>
+    <value>Měsíc</value>
     <comment>The title for the &quot;Month&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Rozlišení</value>
     <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
-    <value>Scanner name</value>
+    <value>Název skeneru</value>
     <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
-    <value>Second</value>
+    <value>Vteřina</value>
     <comment>The title for the &quot;Second&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
@@ -1728,143 +1749,143 @@ If your resolutions list is on the verge of getting out of control, you can now 
     <comment>The title for the &quot;Text&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
-    <value>Year</value>
+    <value>Rok</value>
     <comment>The title for the &quot;Year&quot; file naming block.</comment>
   </data>
   <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
-    <value>Add block</value>
+    <value>Přidat blok</value>
     <comment>The text for the button that adds a file naming block to the pattern.</comment>
   </data>
   <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Clear pattern</value>
+    <value>Smazat masku</value>
     <comment>The tooltip for the button that removes all file naming blocks in the pattern.</comment>
   </data>
   <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
-    <value>Edit custom pattern</value>
+    <value>Upravit vlastní masku</value>
     <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
   </data>
   <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
-    <value>Custom file naming pattern</value>
+    <value>Vlastní maska pojmenování souborů</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
   <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The heading for the custom file naming preview.</comment>
   </data>
   <data name="HeadingScanMergePreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>Náhled</value>
     <comment>The heading for the scan and merge preview.</comment>
   </data>
   <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
-    <value>24-hours</value>
+    <value>24-hodinový</value>
     <comment>The option for using the 24-hours system for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
-    <value>In upper case</value>
+    <value>Velkými písmeny</value>
     <comment>The option for upper-case letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
-    <value>Day of month</value>
+    <value>Den měsíce</value>
     <comment>The option for outputting the day of the month for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
-    <value>Day of week</value>
+    <value>Den týdne</value>
     <comment>The option for outputting the day of the week for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
-    <value>Day of year</value>
+    <value>Den roku</value>
     <comment>The option for outputting the day of the year for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
-    <value>Limit number of letters</value>
+    <value>Omezit počet písmen</value>
     <comment>The option for limitting the number of letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
-    <value>Always use minimum number of digits</value>
+    <value>Vždy použít minimální počet číslic</value>
     <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
-    <value>Name of month</value>
+    <value>Název měsíce</value>
     <comment>The option for outputting the name of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
-    <value>Number of month</value>
+    <value>Číslo měsíce</value>
     <comment>The option for outputting the number of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
-    <value>Short name of month</value>
+    <value>Zkrácený název měsíce</value>
     <comment>The option for outputting the short name of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
-    <value>Skip if default</value>
+    <value>Přeskočit, pokud je výchozí</value>
     <comment>The option for skipping a file naming block when its value is the default.</comment>
   </data>
   <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
-    <value>Always two digits</value>
+    <value>Vždy dvě číslice</value>
     <comment>The option for always outputting two digits for a file naming block.</comment>
   </data>
   <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
-    <value>Custom pattern</value>
+    <value>Vlastní maska</value>
     <comment>The option for the custom file naming pattern in the settings.</comment>
   </data>
   <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
-    <value>Date</value>
+    <value>Datum</value>
     <comment>The option for the date file naming pattern in the settings.</comment>
   </data>
   <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
-    <value>Date and time (Default)</value>
+    <value>Datum a čas (výchozí)</value>
     <comment>The option for the date and time file naming pattern in the settings.</comment>
   </data>
   <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
+    <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
   <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Invalid block</value>
+    <value>Chybný blok</value>
     <comment>The tooltip for an invalid file naming block.</comment>
   </data>
   <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
-    <value>This block will always be skipped for scans with the automatic configuration.</value>
+    <value>Tento blok bude při skenování s automatickou konfigurací vždy vynechán.</value>
     <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
   </data>
   <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
-    <value>Date</value>
+    <value>Datum</value>
     <comment>The title for the &quot;Date&quot; file naming block section.</comment>
   </data>
   <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
-    <value>Time</value>
+    <value>Čas</value>
     <comment>The title for the &quot;Time&quot; file naming block section.</comment>
   </data>
   <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Potvrdit</value>
     <comment>The confirmation button in the custom file naming dialog.</comment>
   </data>
   <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
     <comment>The cancel button in the custom file naming dialog.</comment>
   </data>
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
-    <value>Invalid file name</value>
+    <value>Chybný název souboru</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
   <data name="ButtonMoveBackward.Text" xml:space="preserve">
-    <value>Move backward</value>
+    <value>Posun zpět</value>
     <comment>The text for the button that moves an element one place backward in a list.</comment>
   </data>
   <data name="ButtonMoveForward.Text" xml:space="preserve">
-    <value>Move forward</value>
+    <value>Přesunout vpřed</value>
     <comment>The text for the button that moves an element one place forward in a list.</comment>
   </data>
   <data name="ButtonMoveToBack.Text" xml:space="preserve">
-    <value>Move to back</value>
+    <value>Přesunout dozadu</value>
     <comment>The text for the button that moves an element to the back of list.</comment>
   </data>
   <data name="ButtonMoveToFront.Text" xml:space="preserve">
-    <value>Move to front</value>
+    <value>Přesunout dopředu</value>
     <comment>The text for the button that moves an element to the front of a list.</comment>
   </data>
   <data name="ButtonDeleteBlock.Text" xml:space="preserve">
-    <value>Delete block</value>
+    <value>Smazat blok</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
