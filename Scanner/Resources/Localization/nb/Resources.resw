@@ -158,11 +158,11 @@
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>Tilpasset</value>
+    <value>Skikk</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>Snu</value>
+    <value>Bladde</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
@@ -186,7 +186,7 @@
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Fjern siden</value>
+    <value>Fjerne siden</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
@@ -490,7 +490,7 @@
     <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Flatseng</value>
+    <value>Blomstereng</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.
 Fuzzy</comment>
   </data>
@@ -1111,7 +1111,7 @@ PDF er veldig populært dokumentformat å tillater deg å lagre flere filer samt
     <comment>The text promising an ads-free experience.</comment>
   </data>
   <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
-    <value>Ingen abonnement</value>
+    <value>Ingen abonnementer</value>
     <comment>The text promising a subscription-free experience.</comment>
   </data>
   <data name="TextPromiseUpdates.Text" xml:space="preserve">
@@ -1123,7 +1123,7 @@ PDF er veldig populært dokumentformat å tillater deg å lagre flere filer samt
 
 Hvis du liker dette, Du kan direkte støtte for utviklingen med donasjon.
 
-Takk! ❤️</value>
+Takk skal du ha! ❤️</value>
     <comment>The body for the dialog asking the user to support the development.</comment>
   </data>
   <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
@@ -1131,7 +1131,7 @@ Takk! ❤️</value>
     <comment>The text for the button that duplicates a page.</comment>
   </data>
   <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
-    <value>Vis frem i Fil Utforsker </value>
+    <value>Vis frem i Filutforskeren</value>
     <comment>The text for the button that shows a selected file in File Explorer.</comment>
   </data>
   <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
@@ -1139,15 +1139,15 @@ Takk! ❤️</value>
     <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
   </data>
   <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
-    <value>Lyshet justering</value>
+    <value>Lysstyrkejustering</value>
     <comment>The heading for the brightness adjustment section in the scan options.</comment>
   </data>
   <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
-    <value>Kontrast justering</value>
+    <value>Kontrastjustering</value>
     <comment>The heading for the contrast adjustment section in the scan options.</comment>
   </data>
   <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value>Alltid lagret igjennom app-økter</value>
+    <value>Alltid lagret igjennom appøkter</value>
     <comment>The text for scan options that are always saved across app sessions.</comment>
   </data>
   <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
@@ -1193,11 +1193,11 @@ Takk! ❤️</value>
     <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
-    <value>Error rapporter og logger</value>
+    <value>Feilrapporter og logger</value>
     <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
-    <value>Fil navngivning</value>
+    <value>Filnavn</value>
     <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
@@ -1205,7 +1205,7 @@ Takk! ❤️</value>
     <comment>The heading for personalization settings.</comment>
   </data>
   <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
-    <value>Skanne alternativ</value>
+    <value>Skanneralternativer</value>
     <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
@@ -1217,28 +1217,28 @@ Takk! ❤️</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
-    <value>Gjenkjennings språk</value>
+    <value>Gjenkjenner språk</value>
     <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
-    <value>Horisontal</value>
+    <value>Horisontalt</value>
     <comment>The option for the horizontal editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
-    <value>Vertikal</value>
+    <value>Vertikalt</value>
     <comment>The option for the vertical editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
-    <value>Husk sist brukte skanner-alternativer</value>
+    <value>Husk siste brukte skannealternativer</value>
     <comment>The option for remembering the last used scan options.</comment>
   </data>
   <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
-    <value>Vis avanserte skann-alternativ støttet av din skannere
+    <value>Vis avanserte skannealternativer støttet av din skanner
 </value>
     <comment>The option for showing advanced scan options.</comment>
   </data>
   <data name="OptionSettingsSurveys.Content" xml:space="preserve">
-    <value>Ta del i jevne undersøkelser</value>
+    <value>Delta i sporadiske undersøkelser</value>
     <comment>The option for showing occasional surveys in settings.</comment>
   </data>
   <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
@@ -1246,11 +1246,11 @@ Takk! ❤️</value>
     <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
-    <value>Denne funksjonen undersøker tekstinnholdet på skannede sider for å finne riktig orientering.  prosessen drives av tekstgjenkjenning på enheten - vær trygg på at gjenkjent tekst aldri forlater enheten din. </value>
+    <value>Denne funksjonen undersøker tekstinnholdet på skannede sider for å finne riktig orientering.  Prosessen drives av tekstgjenkjenning på enheten - vær trygg på at gjenkjent tekst aldri forlater enheten din. </value>
     <comment>The text explaining the automatic rotation of pages.</comment>
   </data>
   <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value>Skanner fungerer best på windows 11. Vennligsto hold systemet oppdatert for en optimal opplevelse. </value>
+    <value>Scanner fungerer best på windows 11. Vennligsto hold systemet oppdatert for en optimal opplevelse. </value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
   <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
@@ -1266,7 +1266,7 @@ Takk! ❤️</value>
     <comment>The heading for the page list.</comment>
   </data>
   <data name="HeadingScanOptions.Text" xml:space="preserve">
-    <value>Skanne alternativ</value>
+    <value>Scan alternativ</value>
     <comment>The heading for the scan options.</comment>
   </data>
   <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
@@ -1276,7 +1276,7 @@ Takk! ❤️</value>
   <data name="TextHelpAutoCrop.Text" xml:space="preserve">
     <value>Alternativene for automatisk beskjæring er skjult som standard og kan aktiveres i innstillingene.  hvis disse alternativene ikke støttes av skanneren, forblir de skjult.
 
- automatisk beskjæring er kun mulig i **flatbed eller matermodus\feedmodus**.
+Automatisk beskjæring er kun mulig i **liggende eller mater** modus.
 
  &quot;enkelt område&quot;-beskjæring skaper ett enkelt bilde, noe som er spesielt nyttig for skanning av dokumenter.  beskjæring med &quot;flere regioner&quot; kan identifisere mer enn ett element i en enkelt skanning, noe som er nyttig for å legge flere bilder på en plan. </value>
     <comment>The help text on how to use automatic cropping.</comment>
@@ -1298,7 +1298,7 @@ Takk! ❤️</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
-    <value>Jeg viste ikke</value>
+    <value>Jeg vet ikke</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
@@ -1354,7 +1354,7 @@ Takk! ❤️</value>
     <comment>The survey question on file sizes.</comment>
   </data>
   <data name="TextSurveyInterface.Text" xml:space="preserve">
-    <value>Hvor mange stjerner vil du gi som stemme for appgrensesnittet?</value>
+    <value>Hvilken karakter vil du gi for dette app grensesnittet?</value>
     <comment>The survey question on the app interface.</comment>
   </data>
   <data name="TextSurveyPerformance.Text" xml:space="preserve">
@@ -1362,11 +1362,11 @@ Takk! ❤️</value>
     <comment>The survey question on performance.</comment>
   </data>
   <data name="TextSurveyRecommend.Text" xml:space="preserve">
-    <value>Hvor sannsynlig er det for deg å anbefale denne appen til noen som vil benytte seg med en skanner.</value>
+    <value>Hvor sannsynlig er det for deg å anbefale denne appen til noen som vil bruke en skanner.</value>
     <comment>The survey question on recommending the app to others.</comment>
   </data>
   <data name="TextSurveyUsage.Text" xml:space="preserve">
-    <value>Hva bruker du denne appen til?</value>
+    <value>Hva bruker du hovedsaklig denne appen til?</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
@@ -1379,23 +1379,23 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
-    <value>Skanner - Kjapp og Enkel Dokument Skanning</value>
+    <value>Scanner - Kjapp og Enkel Dokument Skanning</value>
     <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
-    <value>Skanner|Windows-Scan|Skann Dokument|Skanning|WindowsSkanning|Skanner Windows 10 </value>
+    <value>Scanner|Windows-Scan|Skann Dokument|Skanning|WindowsSkanning|Skanner Windows 10 </value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Skann dokumenter å fotografier, Endre sidene og lagre de som PDF eller bildefiler - alt i en singel lett-å-bruke ap.</value>
+    <value>Skann dokumenter å fotografier, Endre sidene og lagre de som PDF eller bildefiler - alt i en singel lett-å-bruke app.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
-    <value>Skanner</value>
+    <value>Scanner</value>
     <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
   </data>
   <data name="StoreVoiceTitle" xml:space="preserve">
-    <value>Skanner</value>
+    <value>Scanner</value>
     <comment>App title for voice control.</comment>
   </data>
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
@@ -1411,7 +1411,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The heading for PDF help.</comment>
   </data>
   <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
-    <value>Skanner bruk</value>
+    <value>Scanner bruk</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
   <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
@@ -1431,7 +1431,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The option for trying to add new pages to existing ones in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
-    <value>Starte nytt</value>
+    <value>Starte blankt</value>
     <comment>The option for always starting fresh in settings.</comment>
   </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
@@ -1507,7 +1507,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
   </data>
   <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
-    <value>Skann å sammenføye inntil PDF</value>
+    <value>Skanne å slå sammen til PDF…</value>
     <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
   </data>
   <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
@@ -1515,7 +1515,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="DialogScanMergeTip.Title" xml:space="preserve">
-    <value>Skann å sammenføye</value>
+    <value>Skanne å sammenføye</value>
     <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
@@ -1523,27 +1523,27 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The error message body that appears when a file is unavailable.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
-    <value>Fil utilgjengelig</value>
+    <value>Filen er utilgjengelig</value>
     <comment>The error message heading that appears when a file is unavailable.</comment>
   </data>
   <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
-    <value>Avlyse utvalgt skanner-region</value>
+    <value>Kast utvalgte skanningregion</value>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
   </data>
   <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Lukke</value>
+    <value>Lukk</value>
     <comment>The close button tooltip of the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
-    <value>Påsette utvalg</value>
+    <value>Bruk utvalg</value>
     <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Velg skanne region</value>
+    <value>Velg skanneregion</value>
     <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
   </data>
   <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
-    <value>Skanner region utvalg</value>
+    <value>Skanneregion utvalg</value>
     <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
   </data>
   <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
@@ -1551,11 +1551,11 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The tooltip that appears while hovering the height value of the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Høyde av markerte skannerregion</value>
+    <value>Høyde av markerte skanneregion</value>
     <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Bredden av den markerte skanner region</value>
+    <value>Bredden av den markerte skanneregion</value>
     <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
@@ -1572,21 +1572,21 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
   </data>
   <data name="StoreUpdate3_2_0_0" xml:space="preserve">
     <value>Tilpasset filnavn
- du ser ut som noen som elsker å holde orden, og scanner er her for å hjelpe!  prøv de nye superfleksible filnavninnstillingene for å bruke mer tid på skanning og mindre tid på å gi nytt navn.
+Du ser ut som noen som elsker å holde orden, og scanner er her for å hjelpe!  prøv de nye superfleksible filnavninnstillingene for å bruke mer tid på skanning og mindre tid på å gi nytt navn.
 
- språkvalg
- tospråklig?  trespråklig?  firespråklig?  velg et appspråk som er uavhengig av systemspråket ditt (men bare ett om gangen).
+Språkvalg
+Tospråklig?  trespråklig?  firespråklig?  velg et appspråk som er uavhengig av systemspråket ditt (men bare ett om gangen).
 
- forbedret oppløsningsliste
- hvis oppløsningslisten din er på nippet til å komme ut av kontroll, kan du nå bare skrive inn ønsket oppløsning i boksen i stedet for å bla i timevis.</value>
+Forbedret oppløsningsliste
+Hvis oppløsningslisten din er på nippet til å komme ut av kontroll, kan du nå bare skrive inn ønsket oppløsning i boksen i stedet for å bla igjennom i timesvis.</value>
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>Endret filnavngivingsvalg</value>
+    <value>Kostumisert filnavn</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Språkvalg</value>
+    <value>Språkutvalg</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
@@ -1594,11 +1594,12 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>Du ser ut som en som elsker å holde orden, og scanner er her for å hjelpe!  prøv de nye superfleksible filnavninnstillingene for å bruke mer tid på skanning og mindre tid på å gi nytt navn. </value>
+    <value>Du ser ut som en som elsker å holde orden, og scanner er her for å hjelpe! Prøv ut de nye superfleksible filnavninnstillingene for å bruke mer tid på skanning og mindre tid på navnendring</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Tospråklig?  trespråklig?  firespråklig?  velg et appspråk som er uavhengig av systemspråket ditt (men bare ett om gangen). </value>
+    <value>Tospråklig?  trespråklig?  firespråklig? 
+Velg ut et appspråk som er uavhengig av systemspråket ditt (men bare ett om gangen). </value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
@@ -1606,15 +1607,15 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
-    <value>Fil navning innstillinger</value>
+    <value>Fil navngiving innstillinger</value>
     <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
   </data>
   <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reverser ordenen på innsatte sider</value>
+    <value>Reverser rekkefølgen på innsatte sider</value>
     <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeElementLastPage" xml:space="preserve">
-    <value>Siste skannet side</value>
+    <value>Siste skannede side</value>
     <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
   </data>
   <data name="TextScanMergeLastPage.Text" xml:space="preserve">
@@ -1646,7 +1647,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The text that indicates that a scan is currently being processed.</comment>
   </data>
   <data name="TextScanProgressSaving.Text" xml:space="preserve">
-    <value>Lagrer</value>
+    <value>Lagrer…</value>
     <comment>The text that indicates that a changes are currently being saved.</comment>
   </data>
   <data name="TextScanProgressScanning.Text" xml:space="preserve">
@@ -1658,15 +1659,15 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
   </data>
   <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
-    <value>Godkjenn</value>
+    <value>Bekrefte</value>
     <comment>The confirm button text of the setup dialog.</comment>
   </data>
   <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
-    <value>Lagring plassering instillinger</value>
+    <value>Lagrings plassering instillinger</value>
     <comment>The text for the button that opens the save location settings.</comment>
   </data>
   <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
-    <value>Sparingsplassering</value>
+    <value>Lagrings plassering</value>
     <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
@@ -1674,7 +1675,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
-    <value>Appen lagrer automatisk endringer hver gang du skanner sider eller redigerer eksisterende – du trenger ikke å bekymre deg for å glemme noe. </value>
+    <value>Appen lagrer automatisk endringer hver gang du skanner sider eller redigerer eksisterende endringer – du trenger ikke å bekymre deg for å glemme noe. </value>
     <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
@@ -1694,7 +1695,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The title for the &quot;Day&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
-    <value>Filtypen</value>
+    <value>Filtype</value>
     <comment>The title for the &quot;File type&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
@@ -1722,7 +1723,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
-    <value>Sekunnet</value>
+    <value>Andre</value>
     <comment>The title for the &quot;Second&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
@@ -1750,7 +1751,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
   <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
-    <value>Forhåndsvise</value>
+    <value>Forhåndsvis</value>
     <comment>The heading for the custom file naming preview.</comment>
   </data>
   <data name="HeadingScanMergePreview.Text" xml:space="preserve">
@@ -1762,7 +1763,7 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
     <comment>The option for using the 24-hours system for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
-    <value>Store bokstaver</value>
+    <value>I store bokstaver</value>
     <comment>The option for upper-case letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
@@ -1848,5 +1849,25 @@ De støttede formatene er; *.PDF, *.JPG, *.PNG, *.TIF og *.BMP.</value>
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
     <value>Ugyldig filnavn</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Flytte baklengs</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Flytt fremover</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Flytt bakerst</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Flytte til front</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Delete blokk</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
