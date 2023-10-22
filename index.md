@@ -65,8 +65,10 @@ If you like the app, you can directly [support the development with a donation](
 ## Translations
 The currently supported languages are:
 <ul>
+  <li>Tunisian Arabic (AR-TN)</li>
   <li>Catalan (CA)</li>
   <li>Chinese Simplified (ZH-HANS, ZH-CN, ZH-HANS-CN, ZH-SG, ZH-HANS-SG)</li>
+  <li>Czech (CS)</li>
   <li>Dutch (NL)</li>
   <li>English (EN)</li>
   <li>English (EN-GB)</li>
@@ -74,6 +76,7 @@ The currently supported languages are:
   <li>German (DE)</li>
   <li>Hindi (HI)</li>
   <li>Hungarian (HU)</li>
+  <li>Indonesian (ID)</li>
   <li>Italian (IT)</li>
   <li>Norwegian (NB)</li>
   <li>Polish (PL)</li>
