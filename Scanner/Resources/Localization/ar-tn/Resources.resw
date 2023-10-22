@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMessageHeader" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The header for a generic error message.</comment>
   </data>
   <data name="ErrorMessageBody" xml:space="preserve">
-    <value>Please try again.</value>
+    <value>الرجاء إعادة المحاولة.</value>
     <comment>The body for a generic error message.</comment>
   </data>
   <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copy page to clipboard (Ctrl+C)</value>
+    <value>نسخ الصفحة إلى الحافظة(Ctrl+C)</value>
     <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Crop page</value>
+    <value>إقتصاص الصفحة</value>
     <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Aspect Ratio</value>
+    <value>نسبة الأبعاد</value>
     <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
-    <value>Aspect Ratio</value>
+    <value>نسبة الأبعاد</value>
     <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
@@ -158,11 +158,11 @@
     <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
-    <value>Custom</value>
+    <value>مخصص</value>
     <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
-    <value>Flip</value>
+    <value>قلب</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
@@ -182,259 +182,259 @@
     <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
-    <value>Square</value>
+    <value>مربع</value>
     <comment>The aspect ratio description for a square aspect ratio.</comment>
   </data>
   <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Delete page</value>
+    <value>حذف الصفحة</value>
     <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Discard changes</value>
+    <value>تجاهل التغييرات</value>
     <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Draw and highlight using Windows Ink</value>
+    <value>الرسم والتمييز بواسطة Windows Ink</value>
     <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Draw with touch</value>
+    <value>الرسم باللمس</value>
     <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Open in another app</value>
+    <value>فتح في تطبيق أخر</value>
     <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rename file</value>
+    <value>إعادة تسمية الملف</value>
     <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditRotate90.Text" xml:space="preserve">
-    <value>Rotate 90°</value>
+    <value>تدوير 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate180.Text" xml:space="preserve">
-    <value>Rotate 180°</value>
+    <value>تدوير 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate270.Text" xml:space="preserve">
-    <value>Rotate 270°</value>
+    <value>تدوير 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rotate page (right-click for more)</value>
+    <value>تدوير الصفحة (نقرة-يمين للمزيد)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Save changes</value>
+    <value>حفظ التغييرات</value>
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Save changes as copy</value>
+    <value>حفظ التغييرات كنسخة</value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Share</value>
+    <value>مشاركة</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Page list</value>
+    <value>قائمة الصفحات</value>
     <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Copy selected pages</value>
+    <value>نسخ الصفحات المحددة</value>
     <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Delete selected pages</value>
+    <value>حذف الصفحات المحددة</value>
     <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate90.Text" xml:space="preserve">
-    <value>Rotate selected pages 90°</value>
+    <value>تدوير الصفحات المحددة 90°</value>
     <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate180.Text" xml:space="preserve">
-    <value>Rotate selected pages 180°</value>
+    <value>تدوير الصفحات المحددة 180°</value>
     <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate270.Text" xml:space="preserve">
-    <value>Rotate selected pages 270°</value>
+    <value>تدوير الصفحات المحددة 270°</value>
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rotate selected pages (right-click for more)</value>
+    <value>تدوير الصفحات المحددة (نقرة-يمين للمزيد)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Select pages</value>
+    <value>تحديد صفحات</value>
     <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Share selected pages</value>
+    <value>مشاركة الصفحات المحددة</value>
     <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Scan options</value>
+    <value>خيارات المسح الضوئي</value>
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Show save location in File Explorer</value>
+    <value>أظهر موقع الحفظ في File Explorer</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
-    <value>Scan</value>
+    <value>مسح ضوئي</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
-    <value>Scan and start fresh</value>
+    <value>المسح الضوئي والبدء من جديد</value>
     <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
   </data>
   <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Settings</value>
+    <value>إعدادات</value>
     <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
   </data>
   <data name="HeadingDialogDelete.Text" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>هل أنت متأكد؟</value>
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="TextDialogDelete.Text" xml:space="preserve">
-    <value>The page will be deleted permanently.</value>
+    <value>سيتم حذف الصفحة نهائياً.</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
-    <value>Delete</value>
+    <value>حذف</value>
     <comment>The action button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The close button text of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>هل أنت متأكد؟</value>
     <comment>The title of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
-    <value>The selected pages will be deleted permanently.</value>
+    <value>سيتم حذف الصفحات المحددة نهائياً.</value>
     <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
-    <value>Delete</value>
+    <value>حذف</value>
     <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
   </data>
   <data name="DialogFeedback.Title" xml:space="preserve">
-    <value>Are you enjoying the app?</value>
+    <value>هل أعجبك التطبيق؟</value>
     <comment>The title of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogFeedback.Subtitle" xml:space="preserve">
-    <value>I would love to hear from you:</value>
+    <value>أحب أن أسمع منك:</value>
     <comment>The subtitle of the dialog that asks the user for feedback.</comment>
   </data>
   <data name="HeadingDialogRename.Text" xml:space="preserve">
-    <value>Rename</value>
+    <value>إعادة تسمية</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="TextDialogRename.Text" xml:space="preserve">
-    <value>Enter a new name for the file:</value>
+    <value>أدخل أسم جديد للملف:</value>
     <comment>The title of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>تأكيد</value>
     <comment>The action button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The close button text of the dialog that allows the user to rename a page.</comment>
   </data>
   <data name="ErrorMessageCopyHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطاء ما</value>
     <comment>The error message heading that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCopyBody" xml:space="preserve">
-    <value>Copying to the clipboard failed.</value>
+    <value>فشل النسخ إلى لوحة المقتطفات.</value>
     <comment>The error message body that appears when copying something fails.</comment>
   </data>
   <data name="ErrorMessageCropHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageCropBody" xml:space="preserve">
-    <value>Cropping is not available right now.</value>
+    <value>الاقتصاص غير متوفر حاليا.</value>
     <comment>The error message body that appears when cropping something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageDeleteBody" xml:space="preserve">
-    <value>Deleting this is not possible right now.</value>
+    <value>الحذف غير ممكن حاليا.</value>
     <comment>The error message body that appears when deleting something fails.</comment>
   </data>
   <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
-    <value>Oops!</value>
+    <value>عذراً!</value>
     <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageNoFormatBody" xml:space="preserve">
-    <value>Please select a file format.</value>
+    <value>الرجاء حدد صيغة الملف.</value>
     <comment>The error message body that appears when no format was selected before starting a scan.</comment>
   </data>
   <data name="ErrorMessageRenameHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRenameBody" xml:space="preserve">
-    <value>Renaming this is not possible right now. Perhaps a file with the same name already exists?</value>
+    <value>إعادة التسمية غير ممكنة حاليا. ربما يوجد ملف آخر بنفس الأسم؟</value>
     <comment>The error message body that appears when renaming something fails.</comment>
   </data>
   <data name="ErrorMessageRotateHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageRotateBody" xml:space="preserve">
-    <value>Rotating this is not possible right now. Please try again.</value>
+    <value>التدوير غير مككن حاليا. حاول مرة أخرى.</value>
     <comment>The error message body that appears when rotating something fails.</comment>
   </data>
   <data name="ErrorMessageSaveHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageSaveBody" xml:space="preserve">
-    <value>Saving these changes failed. Please make sure that the file is still available and try again.</value>
+    <value>فشل حفظ التغيير. الرجاء التأكد من وجود الملف والمحاولة مرة أخرى.</value>
     <comment>The error message body that appears when saving changes fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>The scanner is currently not accepting the app&apos;s request to cancel scanning.</value>
+    <value>لا يقبل الماسح الضوئي حاليا طلب التطبيق إلغاء المسح.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when a scan fails without more information.</comment>
   </data>
   <data name="ErrorMessageScanErrorBody" xml:space="preserve">
-    <value>The scan failed due to an unknown error.</value>
+    <value>فشل المسح نتيجة حطأ غير معروف.</value>
     <comment>The error message body that appears when a scan fails without more information.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
-    <value>Chinese</value>
+    <value>الصينية</value>
     <comment>The heading for Chinese aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
-    <value>International</value>
+    <value>دولي</value>
     <comment>The heading for international aspect ratio options.</comment>
   </data>
   <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
-    <value>North American</value>
+    <value>أمريكا الشمالية</value>
     <comment>The heading for North American aspect ratio options.</comment>
   </data>
   <data name="HeadingScanner.Text" xml:space="preserve">
@@ -442,279 +442,279 @@
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>Color mode</value>
+    <value>نمط اللون</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
-    <value>Save as</value>
+    <value>حفظ بأسم</value>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
-    <value>Feeder options</value>
+    <value>خيارات المغذي</value>
     <comment>The heading for additional options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
-    <value>Resolution</value>
+    <value>الدقة</value>
     <comment>The heading for resolution options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
-    <value>Source</value>
+    <value>المصدر</value>
     <comment>The heading for source options in the scan options section.</comment>
   </data>
   <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
-    <value>Scan up to 10 pages consecutively</value>
+    <value>مسح 10 صفحات متتالية</value>
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>Color</value>
+    <value>ملون</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
-    <value>Grayscale</value>
+    <value>تدرج الرمادي</value>
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>Monochrome</value>
+    <value>احادي اللون</value>
     <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
-    <value>Duplex (front &amp; back)</value>
+    <value>وجهين (الوجه والخلف)</value>
     <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
-    <value>Automatic configuration</value>
+    <value>تجهيز آلي</value>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>Feeder</value>
+    <value>المغذي</value>
     <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
-    <value>Flatbed</value>
+    <value>المسطحة</value>
     <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
   </data>
   <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
-    <value>Scanned pages will appear here</value>
+    <value>ستظهر الصفجات الممسوحة هنا</value>
     <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
   </data>
   <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Supports preview</value>
+    <value>يدعم المعاينة</value>
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
-    <value>Something went wrong. Please make sure that a page has been inserted and try again.</value>
+    <value>حدث خطأ ما. الرجاء التأكد من إدخال الصفحة والمحاولة مرة أخرى.</value>
     <comment>The error message that appears when previewing fails.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
-    <value>Choose folder</value>
+    <value>أختر المجلد</value>
     <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
   </data>
   <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>إعادة الضبط</value>
     <comment>The text of the button that allows the user reset the folder to save files to.</comment>
   </data>
   <data name="HeadingDialogLicenses.Text" xml:space="preserve">
-    <value>Third-party licenses</value>
+    <value>ترخيص الطرف الثالث</value>
     <comment>The title of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessagePickFolderBody" xml:space="preserve">
-    <value>The selected folder is not available. Please try selecting another one.</value>
+    <value>المجلد غير متاح. الرجاء إختيار ملف آخر.</value>
     <comment>The error message body that appears when selecting a new save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>حدث خطأ ما</value>
     <comment>The error message heading that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderBody" xml:space="preserve">
-    <value>Resetting the folder location failed.</value>
+    <value>فشلت عملية إعادة تعيين موقع المجلد.</value>
     <comment>The error message body that appears when resetting the save location failed.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
-    <value>Access denied</value>
+    <value>تم رفض الوصول</value>
     <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
-    <value>The app is not allowed to use this folder. Please try selecting another one.</value>
+    <value>لا يسمح للتطبيق استخدام هذا المجلد. يرجى محاولة اختيار مجلد آخر.</value>
     <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
   </data>
   <data name="HeadingSettingsAbout.Text" xml:space="preserve">
-    <value>About this app</value>
+    <value>حول هذا التطبيق</value>
     <comment>The heading for the &quot;About&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
-    <value>Give feedback</value>
+    <value>ملاحظات؟</value>
     <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Save location</value>
+    <value>موقع الحفظ</value>
     <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
-    <value>Translations</value>
+    <value>الترجمة</value>
     <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
-    <value>Append time to file name</value>
+    <value>إدراج الوقت باسم الملف</value>
     <comment>The text for the option for appending the time to file names.</comment>
   </data>
   <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
-    <value>Third-party licenses</value>
+    <value>تراخيص الطرف الثالث</value>
     <comment>The hyperlink text for viewing third-party licenses.</comment>
   </data>
   <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>سياسة الخصوصية</value>
     <comment>The hyperlink text for viewing the privacy policy.</comment>
   </data>
   <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
-    <value>Website</value>
+    <value>الموقع الإلكتروني</value>
     <comment>The hyperlink text for viewing the website.</comment>
   </data>
   <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
-    <value>Help translate</value>
+    <value>ساعد في الترجمة</value>
     <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
   </data>
   <data name="HeadingSettings.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>اعدادات</value>
     <comment>The heading for the settings.</comment>
   </data>
   <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>غامق</value>
     <comment>The dark theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>فاتح</value>
     <comment>The light theme option in the settings.</comment>
   </data>
   <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
-    <value>System setting</value>
+    <value>إعدادات النظام</value>
     <comment>The system theme option in the settings.</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
-    <value>Scan completed</value>
+    <value>تم المسح</value>
     <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="ShareUITitleMultipleFiles" xml:space="preserve">
-    <value>Multiple pages</value>
+    <value>صفحات متعددة</value>
     <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
   </data>
   <data name="TextNotificationScanComplete" xml:space="preserve">
-    <value>Return to the app to view and edit the result.</value>
+    <value>العودة إلى التطبيق لعرض النتيجةوتحريرها.</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
   <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
-    <value>The app collects all the pages you scan, as long as you don&apos;t change the file format or &quot;start fresh&quot; when scanning. If you are creating a PDF file, you can also reorder the pages here.</value>
+    <value>يستمر التطبيق بجمع الصفحات التي تقوم بمسحها ضوئيا، طالما أنك لم تغير تنسيق الملف أو &quot;البدء من جديد&quot;. إذا كنت تقوم بإنشاء ملف PDF ، فيمكنك أيضا إعادة ترتيب الصفحات هنا.</value>
     <comment>The subtitle of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogTutorialManage.Title" xml:space="preserve">
-    <value>Your pages are here</value>
+    <value>صفحاتك موجودة هنا</value>
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
-    <value>Contributors</value>
+    <value>المساهمون</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
-    <value>Settings</value>
+    <value>إعدادات</value>
     <comment>The settings button of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
-    <value>Scans are saved to the default save location. You can select another folder in the settings.</value>
+    <value>يتم حفظ المستندات في موقع الحفظ الافتراضي. يمكنك تحديد مجلد آخر في الإعدادات.</value>
     <comment>The subtitle of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
-    <value>Save location</value>
+    <value>موقع الحفظ</value>
     <comment>The heading of the dialog that explains the save location.</comment>
   </data>
   <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
-    <value>Changelog</value>
+    <value>سجل التغيير</value>
     <comment>The action button text of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Subtitle" xml:space="preserve">
-    <value>You can take a look at what&apos;s new and improved in the changelog (may not be available in every language).</value>
+    <value>يمكنك الإطلاع على كل ما هو جديد ومحسن في سجل التغيير (غير متوفر في كل اللغات).</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogUpdated.Title" xml:space="preserve">
-    <value>App updated</value>
+    <value>تم تحديث التطبيق</value>
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
-    <value>What&apos;s new?</value>
+    <value>ما الجديد؟</value>
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>Credits</value>
+    <value>التيترات</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>Send error reports and usage statistics</value>
+    <value>أرسل تقارير الأخطاء وإحصائيات الإستخدام</value>
     <comment>The option for sending error reports and usage statistics.</comment>
   </data>
   <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
-    <value>This allows me to investigate app crashes and identify which features are most valuable to users. Rest assured that your scanned pages are never included in these reports.</value>
+    <value>يمكنني هذا من التحقق من أعطال التطبيق وتحديد الميزات الأكثر قيمة للمستخدمين. كن مطمئنا أن التقارير لا تتضمن مطلقا صفحاتك الممسوحة ضوئيا.</value>
     <comment>The additional text for the option for sending error reports and usage statistics.</comment>
   </data>
   <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Privacy first</value>
+    <value>الخصوصية أولاً</value>
     <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
-    <value>You can always change your mind in the app settings.</value>
+    <value>يمكنك تغيير رأئيك دائماً في إعدادات التطبيق.</value>
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Export event log</value>
+    <value>سجل وقائع التصدير</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Export event log</value>
+    <value>سجل وقائع التصدير</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
-    <value>Export</value>
+    <value>تصدير</value>
     <comment>The text of the button that allows the user to export a single event log.</comment>
   </data>
   <data name="TextDialogExportLog.Text" xml:space="preserve">
-    <value>None of your scanned pages are included in these logs.</value>
+    <value>لا تتضمن هذه السجلات أي من الصفحات الممسوحة ضوئيا.</value>
     <comment>The text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
-    <value>Please confirm the following settings.</value>
+    <value>الرجاء تأكيد الإعدادات التالية.</value>
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>Credits</value>
+    <value>تيترات</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -726,7 +726,7 @@
     <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
   </data>
   <data name="TextEditSave.Text" xml:space="preserve">
-    <value>Save</value>
+    <value>حفظ</value>
     <comment>The text of the button that saves changes.</comment>
   </data>
   <data name="ManifestDisplayName" xml:space="preserve">
@@ -734,7 +734,7 @@
     <comment>App name as displayed in app list.</comment>
   </data>
   <data name="ManifestPackageDisplayName" xml:space="preserve">
-    <value>Scanner - Quick and Easy Document Scanning</value>
+    <value>Scanner -مسح ضوئي سريع وسهل للمستندات</value>
     <comment>App package name.</comment>
   </data>
   <data name="ManifestShortName" xml:space="preserve">
@@ -742,107 +742,107 @@
     <comment>App name as displayed on tile.</comment>
   </data>
   <data name="TextPageListDescriptor" xml:space="preserve">
-    <value>Page {0}</value>
+    <value>صفحة{0}</value>
     <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
   </data>
   <data name="DefaultScanFolderName" xml:space="preserve">
-    <value>Scans</value>
+    <value>مستندات</value>
     <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
   </data>
   <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
-    <value>Ask every time</value>
+    <value>أسأل في كل مرة</value>
     <comment>The option to ask for a save location for each scan.</comment>
   </data>
   <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
-    <value>Use a set location</value>
+    <value>أستخدم موقع محدد</value>
     <comment>The option to use a set save location.</comment>
   </data>
   <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Back</value>
+    <value>عودة</value>
     <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
   </data>
   <data name="TextZoomFactor" xml:space="preserve">
-    <value>{0:000} %</value>
+    <value>%{0:000}</value>
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
   </data>
   <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zoom In (Ctrl + Mouse Wheel Up)</value>
+    <value>تقريب (Ctrl + Mouse Wheel Up)</value>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zoom Out (Ctrl + Mouse Wheel Down)</value>
+    <value>تكبير (Ctrl + Mouse Wheel Down)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
-    <value>{0} of {1}</value>
+    <value>{0}من{1}</value>
     <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
   </data>
   <data name="OptionScanOptionsResolution" xml:space="preserve">
-    <value>{0:0} DPI</value>
+    <value>{0:0} نقطة في البوصة الواحدة</value>
     <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
-    <value>{0:0} DPI (Default)</value>
+    <value>{0:0} نقطة في البوصة الواحدة</value>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0:0} DPI (Best for documents)</value>
+    <value>{0:0} نقطة في البوصة الواحدة (الأفضل للمستندات)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0:0} DPI (Best for photos)</value>
+    <value>{0:0} نقطة في البوصة الواحدة (الأفضل للصور)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
-    <value>Scan complete, added {0} pages</value>
+    <value>انتهى المسح الضوئي، تم إضافة {0} صفحة</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
   </data>
   <data name="TextScanFailAccessibility" xml:space="preserve">
-    <value>Scan failed</value>
+    <value>فشل المسح الضوئي</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
   </data>
   <data name="TextSavedChangesAccessibility" xml:space="preserve">
-    <value>Changes saved</value>
+    <value>حفظت التغييرات</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
   </data>
   <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
-    <value>Scan complete, added one page</value>
+    <value>انتهى المسح الضوئي، تم إضافة صفحة واحدة</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
   </data>
   <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
-    <value>Changes saved as copy</value>
+    <value>تم حفظ التغييرات كنسخة</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
-    <value>Page overview</value>
+    <value>لمحة عامة للصفحة</value>
     <comment>The name of the page management area for use by accessibility tools.</comment>
   </data>
   <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
-    <value>Scan options</value>
+    <value>خيارات المسح الضوئي</value>
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
   <data name="HeadingDialogDonate.Text" xml:space="preserve">
-    <value>Support the development</value>
+    <value>أدعم تطوير البرنامج</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
-    <value>Support the development</value>
+    <value>أدعم تطوير البرنامج</value>
     <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
-    <value>Support the development</value>
+    <value>أدعم تطوير البرنامج</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cancel currently running scan</value>
+    <value>إلغاء المسح الضوئي الجاري</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="HeadingSettingsTheme.Text" xml:space="preserve">
-    <value>Theme</value>
+    <value>تنسيق</value>
     <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
-    <value>Rate in the Microsoft Store</value>
+    <value>قيم في متجر مايكروسوفت</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
   <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
@@ -850,542 +850,543 @@
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value>One or more pages were automatically rotated. This feature can be disabled in the settings.</value>
+    <value>تم التدوير الآلي لصفحة أو أكثر. يمكنك تعطيل هذه الميزة في الإعدادات.</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
-    <value>Automatic rotation</value>
+    <value>التدوير الآلي</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
-    <value>Latest changelog</value>
+    <value>أخر سجل للتعديل</value>
     <comment>The hyperlink text for viewing the latest changelog.</comment>
   </data>
   <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
-    <value>And much more!</value>
+    <value>وأكثر بكثير!</value>
     <comment>Heading for the fourth changelog section.</comment>
   </data>
   <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Please make sure that your scanner is switched on and either connected via Wi-Fi or a USB cable. If your scanner isn&apos;t listed in the Windows settings app, you&apos;ll first need to add it from there.
+    <value>يرجى التأكد من تشغيل الماسح الضوئي وتوصيله عبر ال Wi-Fi أو كابل USB. إذا لم ترى الماسح الضوئي في تطبيق إعدادات Windows ، فستحتاج أولاً إلى إضافته من هناك.
 
-Once you see your scanner in the settings app and it isn&apos;t labeled &quot;Offline&quot; anymore, the connection is working and you&apos;re good to go!
+بمجرد رؤية الماسح الضوئي في تطبيق الإعدادات ولم تظهر الحالة بأنه “غير متصل” ، فمعنى ذلك بأنه جاهز للعمل!
 
 &amp;nbsp;
 
-**Tip:** If Windows takes too long to find your already installed wireless scanner, you can just turn off and on Wi-Fi to immediately trigger a network search. Keep in mind that this may interrupt internet access across all apps on your device.</value>
+**نصيحة:** إذا استغرق Windows وقتًا طويلاً في العثور على الماسح الضوئي اللاسلكي المثبت بالفعل، يمكنك إيقاف تشغيل Wi-Fi وإعادة تشغيله للبدء الفورى للبحث على الأجهزة المتصلة بالشبكة. يرجى الملاحظة أن هذا الإجراء قد يؤدي إلى انقطاع الاتصال بالإنترنت على كافة التطبيقات في جهازك.</value>
     <comment>The help text on how to install and use a scanner.</comment>
   </data>
   <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
-    <value>Restarting a scanner usually solves most issues that you might experience. Sometimes the Windows scanning interface itself doesn&apos;t behave as expected, which may require restarting your PC.
+    <value>إعادة التشغيل يحل معظم المشكلات التي قد تواجهها. في بعض الأحيان، لا تتصرف واجهة المسح الضوئي فيWindows كما هو متوقع، مما يتطلب إعادة تشغيل جهاز الكمبيوتر.
 
-In very rare cases, the scanner installation can be faulty and you need to remove and then add the scanner in the settings again.
+في حالات نادرة جداً، قد يكون تثبيت الماسح الضوئي فيه عيباً وفي هذه الحالة عليك إزالة التثبيت وإضافة الماسح في الإعدادات مجدداً.
 
 &amp;nbsp;
 
-Please also consult your scanner manual for additional guidance or contact the manufacturer.</value>
+الرجاء الرجوع إلى دليل الماسح الضوئي للحضول على إرشادات إضافية او مراجعة الشركة المصنعة.</value>
     <comment>The help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>You can change the save location for new scans in the settings. If you like, you can also be asked every time you scan something new - great for always putting stuff right where it belongs, instead of having to organize it afterwards.</value>
+    <value>يمكنك تغيير موقع الحفظ لعمليات المسح الضوئي الجديدة في الإعدادات. وإذا أردت، يمكن سؤالك في كل مرة تقوم فيها بمسح ضوئي جديد -هذا رائع لأنه يتيح لك دائما وضع المستندات في المكان المناسب، ويوفر لك عناء تنظيمها فيما بعد.</value>
     <comment>The help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
-    <value>The resolution determines the overall sharpness of the scan and also heavily influences the file size. Scanning at a high resolution can inflate the file and increase the required time for each page to be scanned. Scanning at a low resolution can result in a loss of detail and even produce illegible text.
+    <value>تحدد الدقة مدى وضوح المستند الذي يتم مسحه ضوئياً، كما أنها تؤثر بشكل كبير على حجم الملف. يمكن أن يؤدي المسح الضوئي بدقة عالية إلى تضخيم الملف وزيادة وقت المسح المطلوب لكل صفحة. كما يمكن أن يؤدي المسح الضوئي بدقة منخفضة إلى فقدان التفاصيل وحتى إنتاج نص غير مقروء.
 
-Selecting a resolution is possible in **flatbed or feeder** mode. The app always chooses a default resolution for you, which works great for all kinds of scans. Sometimes it even recommends a resolution for documents and a separate one for photos.
+طريقةإختيار الدقة في وضعيتي ** الماسح المسطح أو وحدة التغذية **. يختار التطبيق دائما دقة افتراضية، وهذه الدقة تعمل بشكل رائع لكافة أنواع عمليات المسح الضوئي. في بعض الأحيان قد ينصح التطبيق بدقة معينة للوثائق وأخرى للصور.
 
-As a rule of thumb, documents only require a resolution of about 300 DPI, whereas photos benefit from a higher resolution of about 500 DPI.</value>
+ولكن كقاعدة عامة، تحتاج المستندات إلى دقة 300 نقطة في البوصة فقط، بينما الحصول على صور نقية، يحتاج إلى دقة أعلى - أي حوالي 500 نقطة في البوصة.</value>
     <comment>The help text on choosing the right resolution.</comment>
   </data>
   <data name="TextHelpReorderPdf.Text" xml:space="preserve">
-    <value>Mixed up some pages while scanning? No need to start over, you can quickly reorder the pages in your PDF file after scanning. Just drag and drop pages in the page list and put everything where it belongs.</value>
+    <value>إذا أختلطت عليك بعض الصفحات أثناء المسح الضوئي، لا حاجة لإعادة العمل من جديد. يمكنك إعادة ترتيب صفحات ملف الPDF بسرعة بعد المسح الضوئي. ما عليك سوى سحب الصفحات ووضعها في مكانها الصحيح في القائمة.</value>
     <comment>The help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="TextHelpSaveChanges.Text" xml:space="preserve">
-    <value>If you edit your scans in the app, the changes are saved immediately in the background. Just scan some pages, edit the result and you&apos;re done!</value>
+    <value>إذا قمت بتحرير المستندات التي تم مسحها ضوئياً في التطبيق، تحفظ التغييرات تلقائياً في الخلفية. ما عليك سوى مسح بعض الصفحات، وتعديل النتيجة، وأنتهيت من العمل!</value>
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>If you&apos;d like to scan to a new PDF file instead of adding pages to an existing one, you don&apos;t need to restart the app. Just select the little arrow next to the scan button and start fresh.</value>
+    <value>إذا كنت ترغب في المسح الضوئي إلى ملف PDF جديد بدلا من إضافة صفحات إلى ملف موجود، فلن تحتاج إلى إعادة تشغيل التطبيق. ما عليك سوى اختيار السهم الصغير بجوار زر المسح الضوئي والبدء من جديد.</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>If you are unsure which file format to choose, you should concentrate on **JPG, PNG and PDF**.
+    <value>إذا لم تكن متأكدا من أي تنسيق تختاره للملف، ينبغي التركيز على تنسيقات ** JPG و PNG و PDF **.
 
-JPG and PNG are image formats, which means that every page will be saved as a separate file. These files can be viewed on just about every device and edited later with ease. JPGs are usually smaller than PNGs, especially at high resolutions, but PNGs offer a better overall quality, which can be important when scanning photos.
+JPG و PNG هي تنسيقات للصور، مما يعني أنه سيتم حفظ كل صفحة كملف منفصل.  الملفات بهذان التنسيقان يمكن عرضهما في كافة الأجهزة تقريبا ويمكن تحريرهما بسهولة لاحقا. عادة ما تكون ملفات JPG أصغر من ملفات PNG، خاصة عند الدقة العالية، لكن ملفات PNG تكون جودتها أفضل بشكل عام، وهذا أمر مهم عند مسح الصور ضوئيا.
 
-PDF is a very popular document format and allows you to save multiple pages in a single file. This format can be viewed on just about every device, but editing these files later is not easy and may require advanced software.</value>
+تنسيق PDF هو تنسيق شائع جدا للمستندات، ويسمح لك بحفظ صفحات متعددة في ملف واحد. يمكن عرض هذا التنسيق على كل جهاز تقريبا، ولكن تحرير هذه الملفات لاحقا ليس بالأمر السهل وقد يتطلب برامج متقدمة.</value>
     <comment>The help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
-    <value>Change the folder that scans are saved to</value>
+    <value>تغيير مجلد حفظ المستندات التي تم مسحها ضوئيا</value>
     <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
   </data>
   <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
-    <value>Choose a file format</value>
+    <value>أختر تنسيق للملف</value>
     <comment>The heading for the help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
-    <value>Choose a resolution</value>
+    <value>أختر الدقة المطلوبة</value>
     <comment>The heading for the help text on choosing the right resolution.</comment>
   </data>
   <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
-    <value>Reorder PDF pages</value>
+    <value>إعادة ترتيب صفحات الPDF</value>
     <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
   </data>
   <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
-    <value>Save changes</value>
+    <value>حفظ التغييرات</value>
     <comment>The heading for the help text on how to save changes made in the app.</comment>
   </data>
   <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Install and use a scanner</value>
+    <value>تثبيت الماسح الضوئي وأستخدامه</value>
     <comment>The heading for the help text on how to install and use a scanner.</comment>
   </data>
   <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
-    <value>Troubleshoot scanner issues</value>
+    <value>استكشاف مشكلات الماسح الضوئي وإصلاحها</value>
     <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
   </data>
   <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Start a new PDF</value>
+    <value>أنشاء ملف PDF جديد</value>
     <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
-    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <value>شيء ما يمنع التطبيق من استخدام مجلد محدد على جهازك، لذلك عليك تحديد مجلدا لكل عملية مسح ضوئي. يرجى التأكد من عدم التداخل في الإعدادات أو في برنامج مكافحة الفيروسات.</value>
     <comment>The body for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
-    <value>Loading a save location failed</value>
+    <value>فشل في تحميل موقع الحفظ</value>
     <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
   </data>
   <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
-    <value>Something is preventing the app from using a set folder on your PC, so you will have to select one for every scan. Please ensure that no settings or any antivirus software are interfering.</value>
+    <value>شيء ما يمنع التطبيق من استخدام مجلد محدد على جهازك، لذلك عليك تحديد مجلدا لكل عملية مسح ضوئي. يرجى التأكد من عدم التداخل في الإعدادات أو في برنامج مكافحة الفيروسات.</value>
     <comment>The error message that appears when using a set save location fails.</comment>
   </data>
   <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Support the development</value>
+    <value>أدعم تطوير البرنامج</value>
     <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Editor</value>
+    <value>المحرر</value>
     <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Help</value>
+    <value>مساعدة</value>
     <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Get help</value>
+    <value>أحصل على مساعدة</value>
     <comment>The tooltip for a button that offers help regarding some topic.</comment>
   </data>
   <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
-    <value>Scanner settings</value>
+    <value>إعدادات الماسح الضوئي</value>
     <comment>The text for the button in the help section that opens the scanner settings.</comment>
   </data>
   <data name="ButtonHelpSettings.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>الإعدادات</value>
     <comment>The text for the button in the help section that opens the settings.</comment>
   </data>
   <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
-    <value>Wi-Fi settings</value>
+    <value>إعدادات ال Wi Fi</value>
     <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
   </data>
   <data name="HeadingHelp.Text" xml:space="preserve">
-    <value>Help</value>
+    <value>مساعدة</value>
     <comment>The heading for the help.</comment>
   </data>
   <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
-    <value>Automatic crop</value>
+    <value>اقتصاص آلي</value>
     <comment>The heading for the auto crop section in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
-    <value>Disabled</value>
+    <value>معطل</value>
     <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
-    <value>Multiple regions</value>
+    <value>جهات متعدد</value>
     <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
-    <value>Single region</value>
+    <value>جهة واحدة</value>
     <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
   </data>
   <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
-    <value>Automatic</value>
+    <value>آلياً</value>
     <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
   </data>
   <data name="TextScannerSearchRunning.Text" xml:space="preserve">
-    <value>Searching scanners...</value>
+    <value>البحث عن المساحات الضوئية...</value>
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
-    <value>Your scanner needs to be connected, turned on and installed to be used. Please consult the help page for more information.</value>
+    <value>ينبغي ان يكون ماسحك الضوئي موصل بالجهاز، ومشغل، ومثبت للاستخدام. الرجاء مراجعة صفحة المساعدة للمزيد من المعلومات.</value>
     <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
   <data name="DialogScannerSearchTip.Title" xml:space="preserve">
-    <value>Use a scanner</value>
+    <value>أستخدم الماسح الضوئي</value>
     <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
   </data>
   <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Crop similar pages</value>
+    <value>اقتصاص الصفحات المشابهة</value>
     <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The text for the button that cancels cropping multiple pages at once.</comment>
   </data>
   <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>تأكيد</value>
     <comment>The text for the button that confirms cropping multiple pages at once.</comment>
   </data>
   <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
-    <value>Show all apps</value>
+    <value>أعرض كافة التطبيقات</value>
     <comment>The text for the button that shows all available apps to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithStore.Text" xml:space="preserve">
-    <value>Find more apps in the Store</value>
+    <value>أبحث عن المزيد من التطبيقات في المتجر</value>
     <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
   </data>
   <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
-    <value>Okay</value>
+    <value>حسناً</value>
     <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="HeadingEditCrop.Text" xml:space="preserve">
-    <value>Crop</value>
+    <value>اقتصاص</value>
     <comment>The heading for the crop editor.</comment>
   </data>
   <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Crop similar pages</value>
+    <value>اقتصاص الصفحات المشابهة</value>
     <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="HeadingEditDraw.Text" xml:space="preserve">
-    <value>Draw</value>
+    <value>رسم</value>
     <comment>The heading for the draw editor.</comment>
   </data>
   <data name="HeadingOpenWithWarning.Text" xml:space="preserve">
-    <value>Heads-up</value>
+    <value>تنبيه</value>
     <comment>The heading for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="OptionDontShowAgain.Text" xml:space="preserve">
-    <value>Don&apos;t show again</value>
+    <value>لا تظهر مرة أخرى</value>
     <comment>The option that prevents something from being shown again.</comment>
   </data>
   <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
-    <value>Apply the current crop to multiple pages with the same measurements at once.</value>
+    <value>قم بتطبيق الاقتصاص الحالي على صفحات متعددة بنفس القياسات دفعة واحدة.</value>
     <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
   </data>
   <data name="TextOpenWithWarning.Text" xml:space="preserve">
-    <value>By choosing an app in the next menu, all pages will be closed here.</value>
+    <value>سيتم إغلاق جميع الصفحات هنا عند اختيار تطبيق في القائمة التالية.</value>
     <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
   </data>
   <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Print selected pages</value>
+    <value>طباعة صفحات محددة</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Print</value>
+    <value>طباعة</value>
     <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
   </data>
   <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The tooltip for the scan preview button.</comment>
   </data>
   <data name="DialogPreview.Title" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The heading for the scan preview.</comment>
   </data>
   <data name="TextPromisePrivacy.Text" xml:space="preserve">
-    <value>Personal data stays on your device</value>
+    <value>تبقى البيانات الشخصية في جهازك</value>
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
-    <value>Donate</value>
+    <value>تبرع</value>
     <comment>The donation button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
-    <value>No thanks</value>
+    <value>لا شكراً</value>
     <comment>The cancel button in the dialog asking the user to support the development.</comment>
   </data>
   <data name="TextPromiseNoAds.Text" xml:space="preserve">
-    <value>No ads</value>
+    <value>خال من الإعلانات</value>
     <comment>The text promising an ads-free experience.</comment>
   </data>
   <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
-    <value>No subscriptions</value>
+    <value>بدون إشتراك</value>
     <comment>The text promising a subscription-free experience.</comment>
   </data>
   <data name="TextPromiseUpdates.Text" xml:space="preserve">
-    <value>Free updates</value>
+    <value>تحديثات مجانية</value>
     <comment>The text promising free updates.</comment>
   </data>
   <data name="TextDonateDialog.Text" xml:space="preserve">
-    <value>This app is available at no cost for everyone to use.
+    <value>هذا التطبيق متوفر مجاناً لإستخدام الجميع.
 
-If you like it, you can directly support the development with a donation.
+إذا أعجبكم، يمكنكم دعم تطوير التطبيق بالتبرع.
 
-Thank you! ❤️</value>
+شكرا لكم!❤️</value>
     <comment>The body for the dialog asking the user to support the development.</comment>
   </data>
   <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
-    <value>Duplicate page</value>
+    <value>صفحات مكررة</value>
     <comment>The text for the button that duplicates a page.</comment>
   </data>
   <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
-    <value>Show in File Explorer</value>
+    <value>إظهر في مستكشف الملفات</value>
     <comment>The text for the button that shows a selected file in File Explorer.</comment>
   </data>
   <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Restore default</value>
+    <value>العودة إلى الإفتراضي</value>
     <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
   </data>
   <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
-    <value>Brightness adjustment</value>
+    <value>تعديل السطوع</value>
     <comment>The heading for the brightness adjustment section in the scan options.</comment>
   </data>
   <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
-    <value>Contrast adjustment</value>
+    <value>تعديل التباين</value>
     <comment>The heading for the contrast adjustment section in the scan options.</comment>
   </data>
   <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
-    <value>Always saved across app sessions</value>
+    <value>يتم الحفظ باستمرار في كل جلسات التطبيق</value>
     <comment>The text for scan options that are always saved across app sessions.</comment>
   </data>
   <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
-    <value>Adjust brightness &amp; contrast</value>
+    <value>تعديل السطوع والتباين</value>
     <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
-    <value>Choose where scans are saved</value>
+    <value>أختر مكان حفظ المستندات التي يتم مسحها ضوئياً</value>
     <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
   </data>
   <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
-    <value>Unavailable while scanning</value>
+    <value>غير متاح أثناء عملية المسح الضوئي</value>
     <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
   </data>
   <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
-    <value>Brightness and contrast are advanced scan options and can be enabled in the settings. If these options aren&apos;t supported by your scanner, they will remain hidden.
+    <value>السطوع والتباين هي من خيارات المسح الضوئي المتقدمة، ويمكن تفعيلها في الإعدادات. ستظل مخفية إذا ماسحك الضوئي لا يدعم هذه الخيارات.
 
-Adjusting the brightness and contrast is only possible in **flatbed or feeder** mode.</value>
+لن تتمكن من ضبط السطوع والتباين إلا في وضع ** المسح السطحي أو وحدة التغذية **.</value>
     <comment>The help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value>You can rate Scanner in the Microsoft Store to suggest new features and help others decide whether this is the right app for them. Professional users can also influence the further development on GitHub.</value>
+    <value>يمكنك تقييم  تطبيقScanner في Microsoft Store، وإقتراح ميزات جديدة لمساعدة الآخرين على التعرف على التطبيق وهل هو مناسب لهم. كما يمكن للمستخدمين المحترفين تقديم مقترحاتهم لتطوير التطبيق على GitHub.</value>
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
-    <value>Changes to this setting are applied once the app has been restarted.</value>
+    <value>يتم تطبيق تعديل هذه الإعدادات بمجرد إعادة تشغيل التطبيق.</value>
     <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
   </data>
   <data name="TextSettingsTranslations.Text" xml:space="preserve">
-    <value>Windows offers support for over 100 languages - you can help make this app accessible for people all around the world.</value>
+    <value>يوفر Windows دعما لأكثر من 100 لغة، ويمكنك المساعدة في جعل هذا التطبيق متاحا للناس في جميع أنحاء العالم.</value>
     <comment>The text for the &quot;Translation&quot; section in settings.</comment>
   </data>
   <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
-    <value>Add another language</value>
+    <value>إضافة لغة جديدة</value>
     <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
   </data>
   <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value>Automatic rotation</value>
+    <value>تدوير تلقائي</value>
     <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsEditorOrientation.Text" xml:space="preserve">
-    <value>Editor orientation</value>
+    <value>واجهة المحرر</value>
     <comment>The heading for the &quot;Editor orientation&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
-    <value>Error reports and logs</value>
+    <value>تقارير الأخطاء والسجلات</value>
     <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
-    <value>File naming</value>
+    <value>تسمية الملف</value>
     <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>التخصيص</value>
     <comment>The heading for personalization settings.</comment>
   </data>
   <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
-    <value>Scan options</value>
+    <value>خيارات المسح الضوئي</value>
     <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
   </data>
   <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
-    <value>Surveys</value>
+    <value>الاستطلاعات</value>
     <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
-    <value>Rotate pages automatically</value>
+    <value>تدوير الصفحات تلقائيا</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
-    <value>Recognizer language</value>
+    <value>لغة أداة التعرف</value>
     <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
-    <value>Horizontal</value>
+    <value>أفقي</value>
     <comment>The option for the horizontal editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
-    <value>Vertical</value>
+    <value>عمودي</value>
     <comment>The option for the vertical editor orientation in settings.</comment>
   </data>
   <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
-    <value>Remember last used scan options</value>
+    <value>تذكر آخر خيارات المسح المستخدمة</value>
     <comment>The option for remembering the last used scan options.</comment>
   </data>
   <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
-    <value>Show advanced scan options supported by your scanner</value>
+    <value>إظهار الخيارات المتقدمة للمسح المدعومة في ماسحك الضوئي</value>
     <comment>The option for showing advanced scan options.</comment>
   </data>
   <data name="OptionSettingsSurveys.Content" xml:space="preserve">
-    <value>Take part in occasional surveys</value>
+    <value>المشاركة في الاستطلاعات العرضية</value>
     <comment>The option for showing occasional surveys in settings.</comment>
   </data>
   <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
-    <value>Automatically determine the correct orientation of scanned pages</value>
+    <value>التحديد التلقائي للاتجاه الصحيح للصفحات الممسوحة ضوئيا</value>
     <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
-    <value>This feature examines the text contents of scanned pages to determine their correct orientation. The process is powered by on-device text recognition - rest assured that recognized text never leaves your device.</value>
+    <value>تفحص هذه الميزة النصوص في الصفحة الممسوحة ضوئيا لتحديد الإتجاه الصحيح. كما أن العملية مدعومة بخاصية التعرف عل النصوص المثبتة في الجهاز - كن مطمئنا إلى أن النصوص التي يتم التعرف عليها لن تغادر جهازك أبدا.</value>
     <comment>The text explaining the automatic rotation of pages.</comment>
   </data>
   <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value>Scanner works best on Windows 11. Please keep your system up-to-date for an optimal experience.</value>
+    <value>يعمل تطبيق Scanner بشكل الأمثل على نظام التشغيل Windows 11. يرجى تحديث نظامك باستمرار لتكون تجربتك مثالية.
+</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
   <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
-    <value>New status message available</value>
+    <value>رسالة حالة جديدة متاحة</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
   </data>
   <data name="HeadingEditor.Text" xml:space="preserve">
-    <value>Editor</value>
+    <value>المحرر</value>
     <comment>The heading for the editor.</comment>
   </data>
   <data name="HeadingPageList.Text" xml:space="preserve">
-    <value>Page list</value>
+    <value>قائمة الصفحات</value>
     <comment>The heading for the page list.</comment>
   </data>
   <data name="HeadingScanOptions.Text" xml:space="preserve">
-    <value>Scan options</value>
+    <value>خيارات المسح الضوئي</value>
     <comment>The heading for the scan options.</comment>
   </data>
   <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
-    <value>Crop scans automatically</value>
+    <value>اقتصاص تلقائي للمستندات</value>
     <comment>The heading for the help text on how to use automatic cropping.</comment>
   </data>
   <data name="TextHelpAutoCrop.Text" xml:space="preserve">
-    <value>The options for automatic cropping are hidden by default and can be enabled in the settings. If these options aren&apos;t supported by your scanner, they will remain hidden.
+    <value>يتم إخفاء خيارات الاقتصاص التلقائي افتراضيا، ويمكن تفعيلها في الإعدادات، غير أنها ستظل مخفية في حال عدم دعمها من قبل الماسح الضوئي.
 
-Automatic cropping is only possible in **flatbed or feeder** mode.
+يتوفر الاقتصاص التلقائي في وضع ** المسح السطحي أو وحدة التغذية** فقط.
 
-&quot;Single region&quot; cropping creates a single image, which is especially useful for scanning documents. &quot;Multiple regions&quot; cropping can identify more than one element in a single scan, which is useful for putting multiple photos on a flatbed.</value>
+يؤدي اقتصاص &quot;جزء واحد&quot; إلى إنشاء صورة واحدة، وهذا أمر مفيد خصوصا عند مسح المستندات ضوئيا، في حين أن إقتصاص &quot;أجزاء متعددة&quot; يمكن أن يحدد أكثر من عنصر في الصفحة الواحدة، مما يجعله مفيدا في حالة مسح صور متعددة عن طريق سطح الماسح الضوئي.</value>
     <comment>The help text on how to use automatic cropping.</comment>
   </data>
   <data name="DialogSurvey.Subtitle" xml:space="preserve">
-    <value>Your answers are confidential.</value>
+    <value>سيتم الحفاظ على سرية إجاباتك.</value>
     <comment>The subtitle for the survey dialog.</comment>
   </data>
   <data name="DialogSurvey.Title" xml:space="preserve">
-    <value>Survey</value>
+    <value>إستطلاع</value>
     <comment>The title for the survey dialog.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
-    <value>It was already installed</value>
+    <value>كان مثبت بالفعل</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
-    <value>Website/article</value>
+    <value>الموقع/المقال</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
-    <value>I don&apos;t know</value>
+    <value>لا أعرف</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
-    <value>Other</value>
+    <value>آخر</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
-    <value>Recommendation by someone</value>
+    <value>توصية من قبل شخص ما</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
-    <value>Microsoft Store</value>
+    <value>متجر مايكروسوفت</value>
     <comment>A survey option for how the user discovered the app.</comment>
   </data>
   <data name="OptionSurveyUsageOther" xml:space="preserve">
-    <value>Other</value>
+    <value>آخر</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsagePrivate" xml:space="preserve">
-    <value>Private</value>
+    <value>خاص</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageSchool" xml:space="preserve">
-    <value>School</value>
+    <value>مدرسة</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageStudy" xml:space="preserve">
-    <value>Study</value>
+    <value>دراسة</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="OptionSurveyUsageWork" xml:space="preserve">
-    <value>Work</value>
+    <value>عمل</value>
     <comment>A survey option for how the user mainly uses the app.</comment>
   </data>
   <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
-    <value>How did you discover this app?</value>
+    <value>كيف أكتشفت هذا التطبيق؟</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
-    <value>How easy to use is this app?</value>
+    <value>ما مدى سهولة استخدام هذا التطبيق؟</value>
     <comment>The survey question on ease of use.</comment>
   </data>
   <data name="TextSurveyFeatures.Text" xml:space="preserve">
-    <value>Does the app offer all the features you expected?</value>
+    <value>هل يوفر التطبيق كل الميزات المتوقعة؟</value>
     <comment>The survey question on the offered features.</comment>
   </data>
   <data name="TextSurveyFileFormats.Text" xml:space="preserve">
-    <value>How happy are you with the available file formats?</value>
+    <value>هل أنت راض عن التنسيقات المتوفرة؟</value>
     <comment>The survey question on available file formats.</comment>
   </data>
   <data name="TextSurveyFileSize.Text" xml:space="preserve">
-    <value>How happy are you with the size of created files?</value>
+    <value>هل أنت راض عن حجم الملفات التي تم إنشاؤها؟</value>
     <comment>The survey question on file sizes.</comment>
   </data>
   <data name="TextSurveyInterface.Text" xml:space="preserve">
-    <value>How would you rate the app interface?</value>
+    <value>كيف تقيم واجهة التطبيق؟</value>
     <comment>The survey question on the app interface.</comment>
   </data>
   <data name="TextSurveyPerformance.Text" xml:space="preserve">
-    <value>How fast does the app feel on your device?</value>
+    <value>هل تشعر بأن التطبيق سريع على جهازك؟</value>
     <comment>The survey question on performance.</comment>
   </data>
   <data name="TextSurveyRecommend.Text" xml:space="preserve">
-    <value>How likely are you to recommend this app to someone who wants to use a scanner?</value>
+    <value>ما مدى إحتمال أنك ستنصح شخص آخر بإستخدام التطبيق؟</value>
     <comment>The survey question on recommending the app to others.</comment>
   </data>
   <data name="TextSurveyUsage.Text" xml:space="preserve">
-    <value>What do you mainly use the app for?</value>
+    <value>ما هو الغرض الرئيسي من إستخدام هذا التطبيق؟</value>
     <comment>The survey question on how the user discovered the app.</comment>
   </data>
   <data name="StoreDescription" xml:space="preserve">
-    <value>Scanning documents and photos is now as effortless as it’s supposed to be. Scan some pages as image files, rotate and crop them with the built-in presets and quickly share them via email — or create a multi-page PDF file, give it an expressive name and archive it in the right folder.
-With Scanner you can get everything done in one place, no additional image editors or expensive PDF software needed.
+    <value>بات المسح الضوئي للمستندات والصور أمر سهل ولا يحتاج ذلك الجهد الذي كان المتخيل. أمسح بعض ملفات الصفحات والصور ضوئياً وقم بتدويرها وإقتصاصها عن طريق الإعدادات المسبقة وشاركها بسرعة وبسهولة عبر البريد الإلكتروني، أو قم بانشأ ملف PDF مكون من عدة صفحات، وأعطه أسم يعبر عن المحتوى، وأرشفه في المجلد المناسب لذلك.
+مع تطبيق &quot;سكانر&quot; (Scanner)، بإمكانك القيام بكل هذا في مكان واحد، ولا تحتاج لتطبيقات تحرير صور إضافية او برنامج PDF مكلف.
 
-Almost every scanner in use today is supported by this app, so you don’t need to use the antiquated and clunky software provided by your device manufacturer. It’s designed with simplicity and ease-of-use in mind while also offering advanced tools and features.
+يدعم التطبيق كافة الماسحات الضوئية المستخدمة هذه الأيام تقريباً، لكي لا تضطر لإستخدام التطبيقات العتيقة والبالية التي توفرها شركة تصنيع جهازك. تم تصميم التطبيق لتوفير أدوات وميزات متقدمة، ولكنه بسيط وسهل الإستخدام.
 
-The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
+يدعم التطبيق التنسيقات التالية: PDF, JPG, PNG, TIF and BMP.</value>
     <comment>The Microsoft Store description of the app.</comment>
   </data>
   <data name="StoreProductName" xml:space="preserve">
-    <value>Scanner - Quick and Easy Document Scanning</value>
+    <value>Scanner - مسح ضوئي سريع وسهل للمستندات</value>
     <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
   </data>
   <data name="StoreSearchTerms" xml:space="preserve">
-    <value>Scanner|Windows-Scan|scan document|Scan|Windows Scan|Scanner Windows 10</value>
+    <value>سكانر| ويندوز-المسح الضوئي|مسح مستندات ضوئياً| المسح الضوئي | مسح ضوئي|الماسح ويندوز 10</value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Scan documents and photos, edit the pages and save them as PDF or image files - all in a single easy-to-use app.</value>
+    <value>قم بمسح المستندات والصور ضوئياً، وتحرير الصفحات وحفظها بتنسيق PDF وملفات الصور - كل هذا في تطبيق واحد سهل الإستخدام.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
@@ -1397,11 +1398,11 @@ The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
     <comment>App title for voice control.</comment>
   </data>
   <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
-    <value>App logo</value>
+    <value>شعار التطبيق</value>
     <comment>The accessibility description for the app logo.</comment>
   </data>
   <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
-    <value>Files &amp; save location</value>
+    <value>موقع الملفات والحفظ</value>
     <comment>The heading for files and save location help.</comment>
   </data>
   <data name="HeadingHelpPdf.Text" xml:space="preserve">
@@ -1409,462 +1410,459 @@ The supported formats are PDF, JPG, PNG, TIF and BMP.</value>
     <comment>The heading for PDF help.</comment>
   </data>
   <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
-    <value>Scanner usage</value>
+    <value>استخدام تطبيق &quot;Scanner&quot;</value>
     <comment>The heading for scanner usage help.</comment>
   </data>
   <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
-    <value>Animations</value>
+    <value>الرسوم المتحركة</value>
     <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAnimations.Content" xml:space="preserve">
-    <value>Show animations</value>
+    <value>أظهر الرسوم المتحركة</value>
     <comment>The text for the option for showing animations.</comment>
   </data>
   <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
-    <value>Default scan action</value>
+    <value>إجراء أفتراضي للمسح الضوئي</value>
     <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
-    <value>Add to existing pages</value>
+    <value>إضافة إلى الصفحات الموجودة</value>
     <comment>The option for trying to add new pages to existing ones in settings.</comment>
   </data>
   <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
-    <value>Start fresh</value>
+    <value>أبدأ من جديد</value>
     <comment>The option for always starting fresh in settings.</comment>
   </data>
   <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>إعدادات</value>
     <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
   </data>
   <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
-    <value>Automatic rotation is currently unavailable, because none of your installed languages support text recognition. Please install a supported language (including all of its individual parts) and restart your PC to use this feature.</value>
+    <value>التدوير التلقائي غير متوفر حاليا، ذلك لان اللغات المثبتة في جهازك لا تدعم التعرف على النص. لاستخدام هذه الميزة، الرجاء تثبيت لغة مدعومة (بمافي ذلك جميع أجزائها المنفصلة) وإعادة تشغيل جهازك.</value>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
   <data name="TextClose.Text" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
-    <value>Units of measurement</value>
+    <value>وحدات قياس</value>
     <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
-    <value>Imperial/US</value>
+    <value>إمبراطوري/الولايات المتحدة</value>
     <comment>The option for the imperial/US measurement units in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
-    <value>Metric</value>
+    <value>متري</value>
     <comment>The option for the metric measurement units in settings.</comment>
   </data>
   <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
-    <value>cm</value>
+    <value>سنتيمتر</value>
     <comment>The unit text that appears after a centimeter value.</comment>
   </data>
   <data name="TextMeasurementsUnitInches" xml:space="preserve">
-    <value>in</value>
+    <value>بوصة</value>
     <comment>The unit text that appears after an inch value.</comment>
   </data>
   <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
-    <value>Scan and merge</value>
+    <value>المسح الضوئي والدمج</value>
     <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
-    <value>Scan and merge into PDF</value>
+    <value>المسح الضوئي والدمج في ملفPDF</value>
     <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
   </data>
   <data name="TextScanMergeElementSinglePage" xml:space="preserve">
-    <value>Single scanned page</value>
+    <value>مسح ضوئي لصفحة واحدة</value>
     <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
   </data>
   <data name="TextScanMergeElementStartPage" xml:space="preserve">
-    <value>First scanned page</value>
+    <value>الصفحة الأولى التي مسحت ضوئياً</value>
     <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
   </data>
   <data name="TextScanMergeElementSurplusPages" xml:space="preserve">
-    <value>All surplus pages</value>
+    <value>كافة الصفحات الفائضة</value>
     <comment>The preview description for all surplus pages added in &quot;Scan and merge&quot;. This will be all the pages that need to be inserted when every previous spot has already been filled.</comment>
   </data>
   <data name="TextScanMergeExplanation.Text" xml:space="preserve">
-    <value>You can use this tool to insert new pages in a specific spot. This also allows you to scan multiple two-sided sheets without duplex, by scanning the front sides normally first and then merging all the flip sides into the first batch.</value>
+    <value>يمكنك استخدام هذه الأدوات لادراج صفحات جديدة في مكان معين. كما يتيح لك هذا المسح الضوئي لصفحات متعددة بوجهين وبدون استخدام  خاصية الدوبلكس، وذلك بواسطة المسح الضوئي للوجه الأمامي للصفحات أولاً، ومن ثم دمج كل الوجوه المقلوبة مع الدفعة الأولى.</value>
     <comment>The explanation for &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
-    <value>In-between pages</value>
+    <value>صفحة بينية</value>
     <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeStartPage.Text" xml:space="preserve">
-    <value>First page</value>
+    <value>الصفحة الأولى</value>
     <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
-    <value>Scan and add to PDF</value>
+    <value>المسح الضوئي والإضافة إلى PDF</value>
     <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
   </data>
   <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
-    <value>Scan and merge into PDF...</value>
+    <value>المسح الضوئي والدمج في PDF...</value>
     <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
   </data>
   <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
-    <value>You can select &quot;Scan and merge into PDF&quot; from the scan menu to insert new pages in specific spots. This makes scanning two-sided sheets a piece of cake.</value>
+    <value>بامكانك تحديد &quot;المسح الضوئي والدمج في PDF&quot; من قائمة المسح الضوئي وإدراج صفحات جديدة في أماكن محددة، وهذا يجعل المسح الضوئي للورق ذو الوجهين أمر سهل للغاية.</value>
     <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="DialogScanMergeTip.Title" xml:space="preserve">
-    <value>Scan and merge</value>
+    <value>المسح الضوئي والدمج</value>
     <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
-    <value>The file you are trying to edit/use is unavailable. Please don&apos;t move, rename or open files outside of the app, until you are done editing here.</value>
+    <value>الملف الذي تحاول تحريره/استخدامه غير متوفر. الرجاء عدم نقل أو إعادة تسمية او فتح الملفات خارج التطبيق الا بعد الانتهاء من عملية التحرير فيه.</value>
     <comment>The error message body that appears when a file is unavailable.</comment>
   </data>
   <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
-    <value>File unavailable</value>
+    <value>الملف غير متوفر</value>
     <comment>The error message heading that appears when a file is unavailable.</comment>
   </data>
   <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
-    <value>Discard selected scan region</value>
+    <value>تجاهل الجزء المحدد للمسح الضوئي</value>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
   </data>
   <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Close</value>
+    <value>إغلاق</value>
     <comment>The close button tooltip of the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
-    <value>Apply selection</value>
+    <value>تطبيق التحديد</value>
     <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Select scan region</value>
+    <value>تحديد جزء للمسح الضوئي</value>
     <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
   </data>
   <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
-    <value>Scan region selection</value>
+    <value>الجزء المحدد للمسح الضوئي</value>
     <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
   </data>
   <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Height of entire preview</value>
+    <value>إرتفاع المعاينة بأكملها</value>
     <comment>The tooltip that appears while hovering the height value of the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Height of selected scan region</value>
+    <value>إرتفاع الجزء المحدد للمسح الضوئي</value>
     <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Width of selected scan region</value>
+    <value>عرض منطقة المسح المختارة</value>
     <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Width of entire preview</value>
+    <value>عرض المعاينة الكاملة</value>
     <comment>The tooltip that appears while hovering the width value of the preview.</comment>
   </data>
   <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
-    <value>Preview (scan region selected)</value>
+    <value>معاينة (منطقة المسح الضوئي المختارة)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
-    <value>Legal</value>
+    <value>قانوني</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
   <data name="StoreUpdate3_2_0_0" xml:space="preserve">
-    <value>Customized file naming
-You look like someone who loves to stay organized, and Scanner is here to help! Try out the new super-flexible file naming settings to spend more time scanning and less time renaming.
+    <value>تسمة الملفات بشكل مخصص
+تبدو لنا بانك شخص تحب التنظيم، وتطبيق Scanner متوفر لمساعدتك! جرب الإعدادات التي تتسم بمرونة كبيرة لكي تقضي وقتاً أكثر في المسح الضوئي وتوفر  الوقت الضائع في تسمية الملفات.
 
-Language selection
-Bilingual? Trilingual? Quadrilingual? Choose an app language that&apos;s independent from your system language (only one at a time though).
+إختيار اللغة
+هل تتحدث بلغتين، ثلاث، أو أر بع لغات؟ يمكنك إختيار لغة للتطبيق مستقلة عن لغة نظام الحاسوب (للأسف لغة واحدة فقط في كل مرة).
 
-Improved resolutions list
-If your resolutions list is on the verge of getting out of control, you can now just type the desired resolution into the box instead of scrolling for hours.</value>
+قائمة الدقة المحسنة
+في حال وصلت قائمة الدقة إلى حد الخروج عن السيطرة، بإمكانك الآن طباعة الدقة المطلوبة في المربع بدلا من البحث في القائمة لساعات.</value>
     <comment>A description of what&apos;s new with this update.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>Customized file naming</value>
+    <value>التسمية المخصصة للملفات</value>
     <comment>Heading for the first changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Language selection</value>
+    <value>إختيار اللغة</value>
     <comment>Heading for the second changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>Improved resolutions list</value>
+    <value>قائمة الدقة المحسنة</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>You look like someone who loves to stay organized, and Scanner is here to help! Try out the new super-flexible file naming settings to spend more time scanning and less time renaming.</value>
+    <value>تبدو لنا بانك شخص تحب التنظيم، وتطبيق Scanner متوفر لمساعدتك! جرب الإعدادات التي تتسم بمرونة كبيرة لكي تقضي وقتاً أكثر في المسح الضوئي وتوفر الوقت الضائع في تسمية الملفات.
+</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
-    <value>Bilingual? Trilingual? Quadrilingual? Choose an app language that&apos;s independent from your system language (only one at a time though).</value>
+    <value>هل تتحدث بلغتين، ثلاث، أو أر بع لغات؟  يمكنك اختيار لغة للتطبيق مستقلة عن لغة نظام الحاسوب (للأسف لغة واحدة فقط في كل مرة).</value>
     <comment>Text for the second changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>If your resolutions list is on the verge of getting out of control, you can now just type the desired resolution into the box instead of scrolling for hours.</value>
+    <value>في حال وصلت قائمة الدقة إلى حد الخروج عن السيطرة، بإمكانك الآن طباعة الدقة المطلوبة في المربع بدلا من البحث في القائمة لساعات.</value>
     <comment>Text for the third changelog section.</comment>
   </data>
   <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
-    <value>File naming settings</value>
+    <value>إعدادات تسمية الملفات</value>
     <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
   </data>
   <data name="ButtonScanMergeReverseOrder.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reverse order of inserted pages</value>
+    <value>الترتيب العكسي للصفحات المدرجة</value>
     <comment>The tooltip text that appears while hovering the button for reversing the insertion direction in &quot;Scan and merge&quot;.</comment>
   </data>
   <data name="TextScanMergeElementLastPage" xml:space="preserve">
-    <value>Last scanned page</value>
+    <value>الصفحة الأخيرة التي تم مسحها ضوئياً</value>
     <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
   </data>
   <data name="TextScanMergeLastPage.Text" xml:space="preserve">
-    <value>Last page</value>
+    <value>الصفحة الأخيرة</value>
     <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
   </data>
   <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
-    <value>App language</value>
+    <value>لغة التطبيق</value>
     <comment>The heading for the &quot;App language&quot; option in settings.</comment>
   </data>
   <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
-    <value>System setting</value>
+    <value>إعدادات النظام</value>
     <comment>The system setting option in the app language settings.</comment>
   </data>
   <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
-    <value>Automatic rotation...</value>
+    <value>التدوير الآلي...</value>
     <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
   </data>
   <data name="TextScanProgressFinishing.Text" xml:space="preserve">
-    <value>Almost done...</value>
+    <value>أوشكت على الإنتهاء...</value>
     <comment>The text that indicates that a scan is almost done.</comment>
   </data>
   <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
-    <value>Preparing PDF...</value>
+    <value>تحضير الPDF...</value>
     <comment>The text that indicates that a PDF is currently being generated.</comment>
   </data>
   <data name="TextScanProgressProcessing.Text" xml:space="preserve">
-    <value>Processing...</value>
+    <value>جار المعالجة...</value>
     <comment>The text that indicates that a scan is currently being processed.</comment>
   </data>
   <data name="TextScanProgressSaving.Text" xml:space="preserve">
-    <value>Saving...</value>
+    <value>يتم الحفظ...</value>
     <comment>The text that indicates that a changes are currently being saved.</comment>
   </data>
   <data name="TextScanProgressScanning.Text" xml:space="preserve">
-    <value>Scanning...</value>
+    <value>جار المسح الضوئي...</value>
     <comment>The text that indicates that a scan is currently running.</comment>
   </data>
   <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
-    <value>Back</value>
+    <value>عودة</value>
     <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
   </data>
   <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
-    <value>Confirm</value>
+    <value>التأكيد</value>
     <comment>The confirm button text of the setup dialog.</comment>
   </data>
   <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
-    <value>Save location settings</value>
+    <value>حفظ إعدادات الموقع</value>
     <comment>The text for the button that opens the save location settings.</comment>
   </data>
   <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
-    <value>Save location</value>
+    <value>حفظ الموقع</value>
     <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
-    <value>Choose a set location or select a new one for every scan.</value>
+    <value>أختر موقع معين او موقع جديد لكل عملية مسح ضوئي.</value>
     <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
-    <value>The app automatically saves changes each time you scan pages or edit existing ones - no need to worry about forgetting something.</value>
+    <value>التطبيق يحفظ التغيرات آليا في كل مرة تقوم بالمسح الضوئي لصفحات جديدة او تحرير الموجود منها- لا داعي للقلق أن نسيت شيء ما.</value>
     <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
-    <value>You can always change your mind in the app settings.</value>
+    <value>بإمكانك تغير رأيك في أي وقت في إعدادات التطبيق.</value>
     <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
   </data>
   <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
-    <value>Brightness adjustment</value>
+    <value>تعديل السطوع</value>
     <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
-    <value>Contrast adjustment</value>
+    <value>تعديل التباين</value>
     <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
-    <value>Day</value>
+    <value>اليوم</value>
     <comment>The title for the &quot;Day&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
-    <value>File type</value>
+    <value>نوع الملف</value>
     <comment>The title for the &quot;File type&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
-    <value>Hour</value>
+    <value>الساعة</value>
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
-    <value>AM/PM</value>
+    <value>صباحاً/مساءاً</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
-    <value>Minute</value>
+    <value>دقيقة</value>
     <comment>The title for the &quot;Minute&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
-    <value>Month</value>
+    <value>الشهر</value>
     <comment>The title for the &quot;Month&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
-    <value>Resolution</value>
+    <value>الدقة</value>
     <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
-    <value>Scanner name</value>
+    <value>أسم جهاز المسح الضوئي</value>
     <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
-    <value>Second</value>
+    <value>ثانية</value>
     <comment>The title for the &quot;Second&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
-    <value>Text</value>
+    <value>النص</value>
     <comment>The title for the &quot;Text&quot; file naming block.</comment>
   </data>
   <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
-    <value>Year</value>
+    <value>السنة</value>
     <comment>The title for the &quot;Year&quot; file naming block.</comment>
   </data>
   <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
-    <value>Add block</value>
+    <value>إضافة مربع</value>
     <comment>The text for the button that adds a file naming block to the pattern.</comment>
   </data>
   <data name="ButtonFileNamingClearPattern.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Clear pattern</value>
+    <value>مسح النمط</value>
     <comment>The tooltip for the button that removes all file naming blocks in the pattern.</comment>
   </data>
   <data name="HyperlinkSettingsEditCustomPattern.Text" xml:space="preserve">
-    <value>Edit custom pattern</value>
+    <value>تحرير النمط المخصص</value>
     <comment>The text for the button to edit the custom file naming pattern in the settings.</comment>
   </data>
   <data name="HeadingDialogCustomFileNaming.Text" xml:space="preserve">
-    <value>Custom file naming pattern</value>
+    <value>نط تسمية الملفات المخصصة</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
   <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The heading for the custom file naming preview.</comment>
   </data>
   <data name="HeadingScanMergePreview.Text" xml:space="preserve">
-    <value>Preview</value>
+    <value>معاينة</value>
     <comment>The heading for the scan and merge preview.</comment>
   </data>
   <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
-    <value>24-hours</value>
+    <value>24 ساعة</value>
     <comment>The option for using the 24-hours system for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockAllCaps.Content" xml:space="preserve">
-    <value>In upper case</value>
+    <value>حروف كبيرة</value>
     <comment>The option for upper-case letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
-    <value>Day of month</value>
+    <value>اليوم في الشهر</value>
     <comment>The option for outputting the day of the month for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
-    <value>Day of week</value>
+    <value>اليوم في الأسبوع</value>
     <comment>The option for outputting the day of the week for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
-    <value>Day of year</value>
+    <value>اليوم في السنة</value>
     <comment>The option for outputting the day of the year for a day file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
-    <value>Limit number of letters</value>
+    <value>أختصر عدد الحروف</value>
     <comment>The option for limitting the number of letters for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
-    <value>Always use minimum number of digits</value>
+    <value>استخدم الحد الأدنى من الخانات دائماً</value>
     <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
-    <value>Name of month</value>
+    <value>أسم الشهر</value>
     <comment>The option for outputting the name of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
-    <value>Number of month</value>
+    <value>رقم الشهر</value>
     <comment>The option for outputting the number of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
-    <value>Short name of month</value>
+    <value>اسم الشهر باختصار</value>
     <comment>The option for outputting the short name of the month for a month file naming block.</comment>
   </data>
   <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
-    <value>Skip if default</value>
+    <value>تخطى إذا كان إفتراضيا</value>
     <comment>The option for skipping a file naming block when its value is the default.</comment>
   </data>
   <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
-    <value>Always two digits</value>
+    <value>خانتين فقط</value>
     <comment>The option for always outputting two digits for a file naming block.</comment>
   </data>
   <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
-    <value>Custom pattern</value>
+    <value>نمط مخصص</value>
     <comment>The option for the custom file naming pattern in the settings.</comment>
   </data>
   <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
-    <value>Date</value>
+    <value>التاريخ</value>
     <comment>The option for the date file naming pattern in the settings.</comment>
   </data>
   <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
-    <value>Date and time (Default)</value>
+    <value>التاريخ والوقت (الإفتراضي)</value>
     <comment>The option for the date and time file naming pattern in the settings.</comment>
   </data>
-  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
   <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Invalid block</value>
+    <value>مربع غير صالح</value>
     <comment>The tooltip for an invalid file naming block.</comment>
   </data>
   <data name="TextFileNamingBlockSkippedForAuto.Text" xml:space="preserve">
-    <value>This block will always be skipped for scans with the automatic configuration.</value>
+    <value>سيتم تخطي هذا المربع دائما في كافة عمليات المسح الضوئي ذات التكوين الآلي.</value>
     <comment>The text indicating that a file naming block will always be skipped when scanning with the automatic configuration selected.</comment>
   </data>
   <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
-    <value>Date</value>
+    <value>التاريخ</value>
     <comment>The title for the &quot;Date&quot; file naming block section.</comment>
   </data>
   <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
-    <value>Time</value>
+    <value>الوقت</value>
     <comment>The title for the &quot;Time&quot; file naming block section.</comment>
   </data>
   <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
-    <value>Confirm</value>
+    <value>تأكيد</value>
     <comment>The confirmation button in the custom file naming dialog.</comment>
   </data>
   <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
     <comment>The cancel button in the custom file naming dialog.</comment>
   </data>
   <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
-    <value>Invalid file name</value>
+    <value>اسم ملف غير صالح</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
   <data name="ButtonMoveBackward.Text" xml:space="preserve">
-    <value>Move backward</value>
+    <value>انتقل إلى الخلف</value>
     <comment>The text for the button that moves an element one place backward in a list.</comment>
   </data>
   <data name="ButtonMoveForward.Text" xml:space="preserve">
-    <value>Move forward</value>
+    <value>أنتقل إلى الأمام</value>
     <comment>The text for the button that moves an element one place forward in a list.</comment>
   </data>
   <data name="ButtonMoveToBack.Text" xml:space="preserve">
-    <value>Move to back</value>
+    <value>الإنتقال إلى الخلف</value>
     <comment>The text for the button that moves an element to the back of list.</comment>
   </data>
   <data name="ButtonMoveToFront.Text" xml:space="preserve">
-    <value>Move to front</value>
+    <value>الإنتقال إلى الأمام</value>
     <comment>The text for the button that moves an element to the front of a list.</comment>
   </data>
   <data name="ButtonDeleteBlock.Text" xml:space="preserve">
-    <value>Delete block</value>
+    <value>حذف المربع</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
 </root>
