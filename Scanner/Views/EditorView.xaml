@@ -775,7 +775,7 @@
                                                 </ListViewItem>
                                             </ListView>
                                             <MenuFlyoutSeparator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
-                                            <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
+                                            <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" ScrollViewer.VerticalScrollMode="Auto" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate x:DataType="scanner:ScanResultElement">
                                                         <ListViewItem x:Name="ListViewItemCropSimilarPages">

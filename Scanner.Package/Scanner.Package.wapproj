@@ -61,7 +61,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>F9CBFE626C0C5FA2B6F13A6DA6F366A594BEF3E0</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>E0B5241AC9CBDA08A18376F9994B10A0DFD2D05C</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

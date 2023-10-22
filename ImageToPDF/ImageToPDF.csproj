@@ -59,7 +59,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9E804161293785A2B8F7758AA3C36DB0DFBE690B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E0B5241AC9CBDA08A18376F9994B10A0DFD2D05C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
