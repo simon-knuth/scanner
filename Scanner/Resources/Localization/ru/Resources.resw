@@ -262,7 +262,7 @@
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Повернуть выбранные страницы (правый щелчёк мыши для вариантов)</value>
+    <value>Повернуть выбранные страницы (ПКМ для вариантов)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
@@ -278,11 +278,11 @@
     <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
   </data>
   <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Показать место сохранения в проводнике</value>
+    <value>Показать место сохранения в Проводнике</value>
     <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
-    <value>Просмотр</value>
+    <value>Предпросмотр</value>
     <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
   </data>
   <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
@@ -302,7 +302,7 @@
     <comment>The title of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="TextDialogDelete.Text" xml:space="preserve">
-    <value>Страница будет удалена без возможности восстановления.</value>
+    <value>Страница будет удалена без возможности восстановления!</value>
     <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
   </data>
   <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
@@ -414,7 +414,7 @@
     <comment>The error message heading that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanCancelBody" xml:space="preserve">
-    <value>Сейчас сканер не принимает запрос на отмену сканирования.</value>
+    <value>В данный момент сканер не принимает запрос на отмену сканирования.</value>
     <comment>The error message body that appears when canceling a scan fails.</comment>
   </data>
   <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
@@ -442,7 +442,7 @@
     <comment>The heading for the app&apos;s main page.</comment>
   </data>
   <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
-    <value>Цветной режим</value>
+    <value>Цветовой режим</value>
     <comment>The heading for the color mode options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
@@ -502,7 +502,7 @@
     <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
   </data>
   <data name="HeadingPreview.Text" xml:space="preserve">
-    <value>Просмотр</value>
+    <value>Предпросмотр</value>
     <comment>The heading of the preview functionality.</comment>
   </data>
   <data name="TextPreviewError.Text" xml:space="preserve">
@@ -694,11 +694,11 @@
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
-    <value>Экспорт журнала событий</value>
+    <value>Экспорт журналов событий</value>
     <comment>The heading for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
-    <value>Экспорт журнала событий</value>
+    <value>Просмотр журналов событий</value>
     <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
   </data>
   <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
@@ -766,11 +766,11 @@
     <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
   </data>
   <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Увеличить масштаб (Ctrl + колесо мыши вверх)</value>
+    <value>Увеличить масштаб (Ctrl + прокрутка вверх)</value>
     <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
   </data>
   <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Уменьшить масштаб (Ctrl + колесо мыши вниз)</value>
+    <value>Уменьшить масштаб (Ctrl + прокрутка вниз)</value>
     <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
   </data>
   <data name="TextPageIndicator" xml:space="preserve">
@@ -786,11 +786,11 @@
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
-    <value>{0: 0} DPI (лучше всего для документов)</value>
+    <value>{0: 0} DPI (Для документов)</value>
     <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
-    <value>{0: 0} DPI (лучше всего для фотографий)</value>
+    <value>{0: 0} DPI (Для фотографий)</value>
     <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
@@ -822,15 +822,15 @@
     <comment>The name of the scan options area for use by accessibility tools.</comment>
   </data>
   <data name="HeadingDialogDonate.Text" xml:space="preserve">
-    <value>Поддержите развитие</value>
+    <value>Поддержите разработку</value>
     <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
   </data>
   <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
-    <value>Поддержите развитие</value>
+    <value>Поддержите разработку</value>
     <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
   </data>
   <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
-    <value>Поддержите развитие</value>
+    <value>Поддержите разработку</value>
     <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
   </data>
   <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
@@ -850,7 +850,7 @@
     <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
-    <value>Одна или несколько страниц были автоматически повернуты. Эту функцию можно отключить в настройках.</value>
+    <value>Одна или несколько страниц были автоматически повёрнуты. Эту функцию можно отключить в настройках.</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
   <data name="PerformedAutoRotationHeading" xml:space="preserve">
@@ -868,7 +868,7 @@
   <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
     <value>Убедитесь, что ваш сканер включен и подключен через Wi-Fi или USB-кабель. Если вашего сканера нет в списке в приложении настроек Windows, вам сначала нужно добавить его туда. 
 
-Как только вы видите свой сканер в приложении настроек, и он больше не помечен как «Отключён», соединение работает, и всё готово! 
+Как только вы видите свой сканер в приложении настроек, и он больше не помечен как «Отключён», соединение работает — можно сканировать! 
 
 &amp;nbsp; 
 
@@ -892,9 +892,8 @@
   <data name="TextHelpChooseResolution.Text" xml:space="preserve">
     <value>Разрешение определяет общую чёткость сканирования, а также сильно влияет на размер файла. Сканирование с высоким разрешением может утяжелять файл и увеличивать необходимое время для сканирования каждой страницы. Сканирование с низким разрешением может привести к потере детализации и даже к нечитаемому тексту.
 
-Выбор разрешения возможен в режиме **планшета или податчика**. Приложение всегда выбирает для вас разрешение по умолчанию, которое отлично работает для всех видов сканирования. Иногда даже рекомендует разрешение для документов и отдельное разрешение для фотографий.
-
-Как правило, документы требуют разрешения около 300 DPI, тогда как фотографии имеют более высокое разрешение около 500 DPI.</value>
+Выбор разрешения возможен в режиме **планшета или податчика**. Приложение всегда выбирает для вас разрешение по умолчанию, которое отлично работает для всех видов сканирования: от документов до фотографий!
+Как правило, документы требуют разрешения около 300 DPI, тогда как для фотографий требуется более высокое разрешение около 500 DPI.</value>
     <comment>The help text on choosing the right resolution.</comment>
   </data>
   <data name="TextHelpReorderPdf.Text" xml:space="preserve">
@@ -906,15 +905,15 @@
     <comment>The help text on how to save changes made in the app.</comment>
   </data>
   <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
-    <value>Если вы хотите сканировать в новый файл PDF вместо добавления страниц в существующий, вам не нужно перезапускать приложение. Просто выберите маленькую стрелку рядом с кнопкой сканирования и начните заново.</value>
+    <value>Если вы хотите сканировать в новый файл PDF вместо добавления страниц в существующий, вам не нужно перезапускать приложение. Просто нажмите маленькую стрелку рядом с кнопкой сканирования и выберите пункт «Сканировать и начать заново».</value>
     <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
   </data>
   <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
     <value>Если вы не уверены, какой формат файла выбрать, вам следует сосредоточиться на **JPG, PNG и PDF**.
 
-JPG и PNG — это форматы изображений, что означает, что каждая страница будет сохранена как отдельный файл. Эти файлы можно просматривать практически на каждом устройстве, а затем легко редактировать. JPG обычно меньше PNG, особенно в высоком разрешении, но PNG предлагают лучшее общее качество, которое может быть важно при сканировании фотографий.
+JPG и PNG — это форматы изображений, т.е. каждая страница будет сохранена как отдельный файл. Эти файлы можно просматривать практически на каждом устройстве, а затем легко редактировать. JPG обычно меньше PNG, особенно в высоком разрешении, но PNG в целом предлагает более лучшее качество, которое может быть важно при сканировании фотографий.
 
-PDF — очень популярный формат документов, позволяющий сохранять несколько страниц в одном файле. Этот формат можно просматривать практически на любом устройстве, но редактировать эти файлы позже непросто и может потребоваться дополнительное программное обеспечение.</value>
+PDF — очень популярный формат документов, позволяющий сохранять несколько страниц в одном файле. Этот формат можно просматривать практически на любом устройстве, но редактировать эти файлы позже непросто и может потребовать дополнительное программное обеспечение.</value>
     <comment>The help text on choosing a file format.</comment>
   </data>
   <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
@@ -1094,7 +1093,7 @@ PDF — очень популярный формат документов, по�
     <comment>The heading for the scan preview.</comment>
   </data>
   <data name="TextPromisePrivacy.Text" xml:space="preserve">
-    <value>Персональные данные остаются на вашем устройстве</value>
+    <value>Личные данные остаются на вашем устройстве</value>
     <comment>The text promising privacy.</comment>
   </data>
   <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
@@ -1130,11 +1129,11 @@ PDF — очень популярный формат документов, по�
     <comment>The text for the button that duplicates a page.</comment>
   </data>
   <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
-    <value>Показать в проводнике</value>
+    <value>Показать в Проводнике</value>
     <comment>The text for the button that shows a selected file in File Explorer.</comment>
   </data>
   <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Сброс настроек</value>
+    <value>Вернуть значение по умолчанию</value>
     <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
   </data>
   <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
@@ -1168,7 +1167,7 @@ PDF — очень популярный формат документов, по�
     <comment>The help text on how to adjust the brightness and contrast.</comment>
   </data>
   <data name="TextSettingsFeedback.Text" xml:space="preserve">
-    <value>Вы можете оценить Scanner в Microsoft Store, чтобы предложить новые функции и помочь другим решить, подходит ли им это приложение. Профессиональные пользователи также могут влиять на дальнейшую разработку на GitHub.</value>
+    <value>Вы можете оценить Сканер в Microsoft Store, чтобы предложить новые функции и помочь другим решить, подходит ли им это приложение. Профессиональные пользователи также могут влиять на дальнейшую разработку на GitHub.</value>
     <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
   </data>
   <data name="TextSettingsRestart.Text" xml:space="preserve">
@@ -1248,7 +1247,7 @@ PDF — очень популярный формат документов, по�
     <comment>The text explaining the automatic rotation of pages.</comment>
   </data>
   <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
-    <value>Сканер лучше всего работает в Windows 11. Для оптимальной работы обновляйте свою систему.</value>
+    <value>Приложение Сканер лучше всего работает в Windows 11, для оптимальной работы обновляйте свою систему.</value>
     <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
   </data>
   <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
@@ -1369,7 +1368,7 @@ PDF — очень популярный формат документов, по�
   </data>
   <data name="StoreDescription" xml:space="preserve">
     <value>Сканирование документов и фотографий теперь так же просто, как и должно быть. Сканируйте некоторые страницы как файлы изображений, поворачивайте и обрезайте их с помощью встроенных предустановок и быстро делитесь ими по электронной почте — или создайте многостраничный PDF-файл, дайте ему выразительное имя и сохраните в нужную папку.
-Со Scanner вы можете сделать всё в одном месте, без дополнительных редакторов изображений или дорогого программного обеспечения PDF.
+С приложением Сканер вы можете сделать всё в одном месте, без дополнительных редакторов изображений или дорогого программного обеспечения PDF.
 
 Это приложение поддерживает почти каждый используемый сегодня сканер, поэтому вам не нужно использовать устаревшее и неуклюжее программное обеспечение, предоставляемое производителем вашего устройства. Он разработан с учетом простоты и удобства использования, а также предлагает расширенные инструменты и функции.
 
@@ -1449,7 +1448,7 @@ PDF — очень популярный формат документов, по�
     <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
-    <value>Имперская/США</value>
+    <value>Имперская (США)</value>
     <comment>The option for the imperial/US measurement units in settings.</comment>
   </data>
   <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
@@ -1545,7 +1544,7 @@ PDF — очень популярный формат документов, по�
     <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
   </data>
   <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Высота всего предварительного просмотра</value>
+    <value>Высота всего предпросмотра</value>
     <comment>The tooltip that appears while hovering the height value of the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
@@ -1553,24 +1552,24 @@ PDF — очень популярный формат документов, по�
     <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ширина выбранной области сканирования</value>
+    <value>Ширина выбранного предпросмотра</value>
     <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
   </data>
   <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ширина всего предварительного просмотра</value>
+    <value>Ширина всего предпросмотра</value>
     <comment>The tooltip that appears while hovering the width value of the preview.</comment>
   </data>
   <data name="TextButtonPreviewToolTipRegion" xml:space="preserve">
-    <value>Предварительный просмотр (выбраная область сканирования)</value>
+    <value>Предпросмотр (выбранная область сканирования)</value>
     <comment>The tooltip for the scan preview button when a scan region is selected.</comment>
   </data>
   <data name="ButtonEditCropAspectRatioNALegal.Text" xml:space="preserve">
-    <value>Юридический</value>
+    <value>Legal</value>
     <comment>The aspect ratio description for the North American &quot;Legal&quot;.</comment>
   </data>
   <data name="StoreUpdate3_2_0_0" xml:space="preserve">
     <value>Индивидуальное именование файлов 
-Вы похожи на человека, который любит быть организованным, и Scanner здесь, чтобы помочь! Попробуйте новые сверхгибкие настройки именования файлов, чтобы тратить больше времени на сканирование и меньше времени на переименование.
+Вы похожи на человека, который любит быть организованным, и приложение Сканер здесь, чтобы помочь! Попробуйте новые сверхгибкие настройки именования файлов, чтобы тратить больше времени на сканирование и меньше времени на переименование.
 
 Выбор языка 
 Владеете двумя, тремя, четырьмя языками? Выберите язык приложения, независимый от языка вашей системы (только по одному за раз).
@@ -1588,11 +1587,11 @@ PDF — очень популярный формат документов, по�
     <comment>Heading for the second changelog section.</comment>
   </data>
   <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
-    <value>Улучшенный список разрешений </value>
+    <value>Улучшенный список разрешений</value>
     <comment>Heading for the third changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
-    <value>Вы похожи на человека, который любит быть организованным, и Scanner здесь, чтобы помочь! Попробуйте новые сверхгибкие настройки именования файлов, чтобы тратить больше времени на сканирование и меньше времени на переименование.</value>
+    <value>Вы похожи на человека, который любит быть организованным, и приложение Сканер здесь, чтобы помочь! Попробуйте новые сверхгибкие настройки именования файлов, чтобы тратить больше времени на сканирование и меньше времени на переименование.</value>
     <comment>Text for the first changelog section.</comment>
   </data>
   <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
@@ -1748,11 +1747,11 @@ PDF — очень популярный формат документов, по�
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
   <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
-    <value>Предварительный просмотр</value>
+    <value>Предпросмотр</value>
     <comment>The heading for the custom file naming preview.</comment>
   </data>
   <data name="HeadingScanMergePreview.Text" xml:space="preserve">
-    <value>Предварительный просмотр</value>
+    <value>Предпросмотр</value>
     <comment>The heading for the scan and merge preview.</comment>
   </data>
   <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
