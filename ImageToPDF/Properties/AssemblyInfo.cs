@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ImageToPDF")]
-[assembly: AssemblyCopyright("Copyright © 2021 Simon Knuth")]
+[assembly: AssemblyCopyright("Copyright © 2023 Simon Knuth")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

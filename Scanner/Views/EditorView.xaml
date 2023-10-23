@@ -23,7 +23,7 @@
     d:DesignWidth="350"
     d:DesignHeight="600"
     NavigationCacheMode="Required"
-    
+    IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}"
     Loaded="Page_Loaded">
 
     <Page.DataContext>
@@ -143,28 +143,13 @@
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="NormalState">
+                <VisualState x:Name="NormalState" >
                     <Storyboard>
 
                     </Storyboard>
 
                     <VisualState.Setters>
-
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="LoadingState">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"/>
-                    </VisualState.StateTriggers>
-
-                    <Storyboard>
-
-                    </Storyboard>
-
-                    <VisualState.Setters>
-                        <Setter Target="FrameToolbar.IsEnabled" Value="False"/>
-                        <Setter Target="FrameFooter.IsEnabled" Value="False"/>
+                        
                     </VisualState.Setters>
                 </VisualState>
 
@@ -711,143 +696,127 @@
 
                 <!-- Crop -->
                 <controls:Case Value="1">
-                    <Frame x:Name="FrameFooterCrop" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{x:Bind FrameFooter.IsEnabled, Mode=OneWay}">
-                        <interactivity:Interaction.Behaviors>
-                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                            </core:DataTriggerBehavior>
-                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                            </core:DataTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                    <Frame x:Name="FrameFooterCrop" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Frame IsEnabled="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="40">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                                <Button x:Name="ButtonCropSimilarPages" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}" Click="ButtonCropSimilarPages_Click" AutomationProperties.Name="{x:Bind ButtonCropSimilarPages, Converter={StaticResource ToolTipConverter}}">
+                                    <Grid Padding="6,0,6,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
 
-                            <Button x:Name="ButtonCropSimilarPages" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,6,0" IsEnabled="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay, Converter={StaticResource ListNotNullOrEmptyConverter}}" Click="ButtonCropSimilarPages_Click" AutomationProperties.Name="{x:Bind ButtonCropSimilarPages, Converter={StaticResource ToolTipConverter}}">
-                                <Grid Padding="6,0,6,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF168;" FontSize="16" Margin="0,0,12,0"/>
+                                        <TextBlock Grid.Column="1" x:Uid="ButtonEditCropSimilarPages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    </Grid>
 
-                                    <FontIcon Grid.Column="0" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xF168;" FontSize="16" Margin="0,0,12,0"/>
-                                    <TextBlock Grid.Column="1" x:Uid="ButtonEditCropSimilarPages" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                </Grid>
+                                    <FlyoutBase.AttachedFlyout>
+                                        <Flyout x:Name="FlyoutCropSimilarPages">
+                                            <Grid MinWidth="300" MaxWidth="300">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
 
-                                <FlyoutBase.AttachedFlyout>
-                                    <Flyout x:Name="FlyoutCropSimilarPages">
-                                        <Grid MinWidth="300" MaxWidth="300">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingEditCropSimilarPages" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="TextEditCropSimilarPages" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
-
-                                            <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8">
-                                                <ListViewItem IsSelected="True" IsEnabled="False">
-                                                    <Grid Margin="0,6,24,6" ColumnSpacing="3">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition/>
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <controls:ImageEx Grid.Column="0" Source="{x:Bind ViewModel.SelectedPage.Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
-                                                        <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}"/>
-                                                    </Grid>
-                                                </ListViewItem>
-                                            </ListView>
-                                            <MenuFlyoutSeparator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
-                                            <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" ScrollViewer.VerticalScrollMode="Auto" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate x:DataType="scanner:ScanResultElement">
-                                                        <ListViewItem x:Name="ListViewItemCropSimilarPages">
-                                                            <Grid Margin="0,6,24,6" ColumnSpacing="3">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition/>
-                                                                </Grid.ColumnDefinitions>
-
-                                                                <controls:ImageEx Grid.Column="0" Source="{x:Bind Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
-                                                                <TextBlock Grid.Column="1" Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
-                                                            </Grid>
-                                                        </ListViewItem>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-
-                                            <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
-                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Button Grid.Column="0" x:Uid="ButtonEditCropSimilarPagesConfirm" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CropPagesCommand}" CommandParameter="{x:Bind ImageCropperPage}" IsEnabled="{x:Bind ViewModel.SelectedRangesCropSimilarPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Click="ButtonCropSimilarPagesSave_Click"/>
-                                                <Button Grid.Column="1" x:Uid="ButtonEditCropSimilarPagesCancel" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonCropSimilarPagesCancel_Click"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingEditCropSimilarPages" Style="{StaticResource BaseTextBlockStyle}"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="TextEditCropSimilarPages" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
+
+                                                <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8">
+                                                    <ListViewItem IsSelected="True" IsEnabled="False">
+                                                        <Grid Margin="0,6,24,6" ColumnSpacing="3">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <controls:ImageEx Grid.Column="0" Source="{x:Bind ViewModel.SelectedPage.Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
+                                                            <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedPage.ItemDescriptor, Mode=OneWay}"/>
+                                                        </Grid>
+                                                    </ListViewItem>
+                                                </ListView>
+                                                <MenuFlyoutSeparator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+                                                <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" ScrollViewer.VerticalScrollMode="Auto" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate x:DataType="scanner:ScanResultElement">
+                                                            <ListViewItem x:Name="ListViewItemCropSimilarPages">
+                                                                <Grid Margin="0,6,24,6" ColumnSpacing="3">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition/>
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <controls:ImageEx Grid.Column="0" Source="{x:Bind Thumbnail, Mode=OneWay}" MaxWidth="100" MaxHeight="100" HorizontalAlignment="Center" CornerRadius="{StaticResource ControlCornerRadius}"/>
+                                                                    <TextBlock Grid.Column="1" Text="{x:Bind ItemDescriptor, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="Clip" ToolTipService.ToolTip="{x:Bind ItemDescriptor, Mode=OneWay}"/>
+                                                                </Grid>
+                                                            </ListViewItem>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+
+                                                <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Button Grid.Column="0" x:Uid="ButtonEditCropSimilarPagesConfirm" Margin="0,0,3,0" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CropPagesCommand}" CommandParameter="{x:Bind ImageCropperPage}" IsEnabled="{x:Bind ViewModel.SelectedRangesCropSimilarPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}, FallbackValue=False}" Click="ButtonCropSimilarPagesSave_Click"/>
+                                                    <Button Grid.Column="1" x:Uid="ButtonEditCropSimilarPagesCancel" Margin="3,0,0,0" HorizontalAlignment="Stretch" Click="ButtonCropSimilarPagesCancel_Click"/>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </Flyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </Button>
-                            <AppBarSeparator Grid.Column="1"/>
-                            <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage}">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
-                                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
-                                        <TextBlock x:Uid="TextEditSave" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Button>
-                            <Button x:Name="ButtonFooterCropSaveCopy" Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage}" AutomationProperties.Name="{x:Bind ButtonFooterCropSaveCopy, Converter={StaticResource ToolTipConverter}}">
-                                <Grid Padding="0" Margin="0">
-                                    <FontIcon x:Name="FontIconCropAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
-                                        <FontIcon.RenderTransform>
-                                            <CompositeTransform ScaleX="1" ScaleY="1"/>
-                                        </FontIcon.RenderTransform>
-                                    </FontIcon>
-                                    <FontIcon x:Name="FontIconCropAsCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
-                                        <FontIcon.RenderTransform>
-                                            <CompositeTransform ScaleX="0" ScaleY="0"/>
-                                        </FontIcon.RenderTransform>
-                                    </FontIcon>
-                                </Grid>
-                            </Button>
-                            <Button x:Name="ButtonFooterCropDiscard" Grid.Column="4" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}" AutomationProperties.Name="{x:Bind ButtonFooterCropDiscard, Converter={StaticResource ToolTipConverter}}">
-                                <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
-                            </Button>
-                        </Grid>
+                                        </Flyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </Button>
+                                <AppBarSeparator Grid.Column="1"/>
+                                <Button Grid.Column="2" x:Uid="ButtonEditSave" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Stretch" Margin="6,0,3,0" Command="{x:Bind ViewModel.CropPageCommand}" CommandParameter="{x:Bind ImageCropperPage}">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="6,0,6,0" VerticalAlignment="Center">
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE74E;" FontSize="16" Margin="0,0,12,0"/>
+                                            <TextBlock x:Uid="TextEditSave" Style="{ThemeResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                                <Button x:Name="ButtonFooterCropSaveCopy" Grid.Column="3" x:Uid="ButtonEditSaveCopy" VerticalAlignment="Stretch" Margin="3,0,3,0" Command="{x:Bind ViewModel.CropPageAsCopyCommand}" CommandParameter="{x:Bind ImageCropperPage}" AutomationProperties.Name="{x:Bind ButtonFooterCropSaveCopy, Converter={StaticResource ToolTipConverter}}">
+                                    <Grid Padding="0" Margin="0">
+                                        <FontIcon x:Name="FontIconCropAsCopy" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEA35;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <CompositeTransform ScaleX="1" ScaleY="1"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <FontIcon x:Name="FontIconCropAsCopyDone" Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC61;" FontSize="16" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <CompositeTransform ScaleX="0" ScaleY="0"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                    </Grid>
+                                </Button>
+                                <Button x:Name="ButtonFooterCropDiscard" Grid.Column="4" x:Uid="ButtonEditDiscard" VerticalAlignment="Stretch" Margin="3,0,0,0" Command="{x:Bind ViewModel.LeaveCropModeCommand}" AutomationProperties.Name="{x:Bind ButtonFooterCropDiscard, Converter={StaticResource ToolTipConverter}}">
+                                    <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE711;" FontSize="16"/>
+                                </Button>
+                            </Grid>
+                        </Frame>
                     </Frame>
                 </controls:Case>
 
                 <!-- Draw -->
                 <controls:Case Value="2">
-                    <Frame x:Name="FrameFooterDraw" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                        <interactivity:Interaction.Behaviors>
-                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                            </core:DataTriggerBehavior>
-                            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                            </core:DataTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-
+                    <Frame x:Name="FrameFooterDraw" IsEnabled="{x:Bind ViewModel.IsScanResultChanging, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                         <Grid x:Name="GridFooterDraw" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SizeChanged="GridFooterDraw_SizeChanged">
                             <Grid x:Name="GridFooterDrawButtons" HorizontalAlignment="Left" Height="40">
                                 <Grid.ColumnDefinitions>
