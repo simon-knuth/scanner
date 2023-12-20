@@ -456,7 +456,7 @@ Fuzzy</comment>
     <comment>The heading for the format options in the scan options section.</comment>
   </data>
   <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
-    <value>Možnosti feederu</value>
+    <value>Možnosti podavače</value>
     <comment>The heading for additional options in the scan options section.
 Fuzzy</comment>
   </data>
@@ -494,7 +494,7 @@ Fuzzy</comment>
     <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
-    <value>Feeder</value>
+    <value>Podavač</value>
     <comment>The &quot;Feeder&quot; source option in the scan options section.
 Fuzzy</comment>
   </data>
