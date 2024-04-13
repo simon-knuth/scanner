@@ -506,7 +506,7 @@
                             <TextBlock x:Uid="HeadingScanOptionsFeederOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
                             <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                            <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                            <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" Visibility="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=Collapsed}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                         </StackPanel>
                     </Frame>
 
