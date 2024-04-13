@@ -117,7 +117,7 @@ namespace Scanner.ViewModels
             if (Pattern.IsValid)
             {
                 SettingsService.SetSetting(AppSetting.CustomFileNamingPattern, Pattern.GetSerialized(false));
-                LogService.Log.Information("Changes in file naming {pattern} confirmed", Pattern.GetSerialized(false));
+                LogService.Log.Information("Changes in file naming pattern confirmed");
             }
         }
 

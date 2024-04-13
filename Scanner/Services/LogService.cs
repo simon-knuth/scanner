@@ -2,6 +2,7 @@
 using Scanner.Models;
 using Serilog;
 using Serilog.Exceptions;
+using Serilog.Formatting.Compact;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -95,7 +96,7 @@ namespace Scanner.Services
                     .MinimumLevel.Debug()
                     .WriteTo.Async(a => a.File(
                         path: logPath,
-                        formatter: new Serilog.Formatting.Json.JsonFormatter(),
+                        formatter: new CompactJsonFormatter(),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 8,
                         fileSizeLimitBytes: 6900000))       // Microsoft App Center supports attachments up to 7 MB
@@ -114,7 +115,7 @@ namespace Scanner.Services
                             Contrast = o.Contrast
                         })
                     .Destructure.ByTransforming<DeviceInformation>(
-                        i => new { Name = i.Name, IsEnabled = i.IsEnabled, IsDefault = i.IsDefault, Kind = i.Kind, Id = i.Id })
+                        i => new { Id = i.Id, IsEnabled = i.IsEnabled, IsDefault = i.IsDefault, Kind = i.Kind })
                     .Destructure.ByTransforming<ScannerFileFormat>(
                         f => new
                         {
@@ -126,7 +127,6 @@ namespace Scanner.Services
                         s => new
                         {
                             Id = s.Id,
-                            Name = s.Name,
                             IsAutoAllowed = s.IsAutoAllowed,
                             IsAutoPreviewAllowed = s.IsAutoPreviewAllowed,
                             AutoFormats = s.AutoFormats,

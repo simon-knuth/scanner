@@ -97,9 +97,9 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "Generating the PDF failed. Attempted to generate " + newName);
-                var files = await AppDataService.FolderTemp.GetFilesAsync();
-                LogService?.Log.Information("State of temp folder: {@Folder}", files.Select(f => f.Name).ToList());
+                LogService?.Log.Error(exc, "Generating the PDF failed");
+                var files = await AppDataService.FolderConversion.GetFilesAsync();
+                LogService?.Log.Information("State of conversion folder: {@Folder}", files.Select(f => f.Name).ToList());
                 AppCenterService.TrackError(exc);
                 throw;
             }

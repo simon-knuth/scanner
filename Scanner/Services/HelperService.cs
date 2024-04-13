@@ -56,7 +56,7 @@ namespace Scanner.Services
         {
             ILogService logService = Ioc.Default.GetService<ILogService>();
 
-            logService?.Log.Information("Requested to move file to folder. [desiredName={Name}|replaceExisting={Replace}]", desiredName, replaceExisting);
+            logService?.Log.Information("Requested to move file to folder. [replaceExisting={Replace}]", replaceExisting);
             try
             {
                 if (replaceExisting) await file.MoveAsync(targetFolder, desiredName, NameCollisionOption.ReplaceExisting);
