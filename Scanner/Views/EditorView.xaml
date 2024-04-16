@@ -722,23 +722,24 @@
                                         <Flyout x:Name="FlyoutCropSimilarPages">
                                             <Grid MinWidth="300" MaxWidth="300">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
                                                 </Grid.RowDefinitions>
 
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="HeadingEditCropSimilarPages" Style="{StaticResource BaseTextBlockStyle}"/>
                                                 <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Uid="TextEditCropSimilarPages" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                                <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8">
+                                                <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,0,0,8" ScrollViewer.VerticalScrollMode="Disabled">
                                                     <ListViewItem IsSelected="True" IsEnabled="False">
                                                         <Grid Margin="0,6,24,6" ColumnSpacing="3">
                                                             <Grid.ColumnDefinitions>
@@ -752,7 +753,8 @@
                                                     </ListViewItem>
                                                 </ListView>
                                                 <MenuFlyoutSeparator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
-                                                <ListView x:Name="ListViewCropSimilarPages" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" ScrollViewer.VerticalScrollMode="Auto" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
+                                                <CheckBox x:Name="CheckBoxCropSimilarPagesSelectAll" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Select all" Margin="14,8,14,0" Padding="12,0,12,0" VerticalContentAlignment="Center" IsThreeState="True" Checked="CheckBoxCropSimilarPagesSelectAll_Checked" Unchecked="CheckBoxCropSimilarPagesSelectAll_Unchecked" Indeterminate="CheckBoxCropSimilarPagesSelectAll_Indeterminate" />
+                                                <ListView x:Name="ListViewCropSimilarPages" x:Uid="" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="-16,8,-16,0" Padding="16,0,16,0" ItemsSource="{x:Bind ViewModel.SimilarPagesForCrop, Mode=OneWay}" SelectionMode="Multiple" MaxHeight="300" ScrollViewer.VerticalScrollMode="Auto" SelectionChanged="ListViewCropSimilarPages_SelectionChanged">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate x:DataType="scanner:ScanResultElement">
                                                             <ListViewItem x:Name="ListViewItemCropSimilarPages">
@@ -770,7 +772,7 @@
                                                     </ListView.ItemTemplate>
                                                 </ListView>
 
-                                                <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
+                                                <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,16,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition/>
                                                         <ColumnDefinition/>
