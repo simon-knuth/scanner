@@ -591,9 +591,6 @@
     <PRIResource Include="Resources\Localization\es\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Resources\Localization\de\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Resources\Localization\fr-be\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
