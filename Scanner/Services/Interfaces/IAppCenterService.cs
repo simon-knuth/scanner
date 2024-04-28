@@ -47,5 +47,6 @@ namespace Scanner.Services
         SettingsRequested,
         ChangelogOpened,
         ArchitectureDetected,
+        OtherAppsDialogOpened,
     }
 }
