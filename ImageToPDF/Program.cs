@@ -91,12 +91,12 @@ namespace ImageToPDF
                 {
                     foreach (StorageFile file in sortedConversionFiles)
                     {
-                        int imageWidth, imageHeight;
+                        float imageWidth, imageHeight;
 
-                        using (Bitmap bitmap = new Bitmap(file.Path))
+                        using (Image image = Image.FromFile(file.Path))
                         {
-                            imageWidth = bitmap.Width;
-                            imageHeight = bitmap.Height;
+                            imageWidth = image.Width / image.HorizontalResolution;
+                            imageHeight = image.Height / image.VerticalResolution;
                         }
 
                         using (FileStream srcFile = File.OpenRead(file.Path))
@@ -105,8 +105,8 @@ namespace ImageToPDF
                             PdfPage page = document.AddPage();
 
                             // get measurements
-                            page.Width = imageWidth;
-                            page.Height = imageHeight;
+                            page.Width = XUnit.FromInch(imageWidth);
+                            page.Height = XUnit.FromInch(imageHeight);
 
                             // draw image on page
                             using (XGraphics gfx = XGraphics.FromPdfPage(page))

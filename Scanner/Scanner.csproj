@@ -322,7 +322,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\ClipShelf\Hero Image Alt.jpg" />
+    <Content Include="Assets\ClipShelf\Hero Image Alt Close-Up.jpg" />
     <Content Include="Assets\ClipShelf\Logo.svg" />
     <Content Include="Assets\contrast-black\Logo small.svg" />
     <Content Include="Assets\contrast-black\Logo.svg" />

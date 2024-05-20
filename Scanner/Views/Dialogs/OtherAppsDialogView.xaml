@@ -59,7 +59,7 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="1" Source="/Assets/ClipShelf/Hero Image Alt.jpg" HorizontalAlignment="Center" VerticalAlignment="Stretch" Stretch="UniformToFill" />
+            <Image Grid.Column="1" Source="/Assets/ClipShelf/Hero Image Alt Close-Up.jpg" HorizontalAlignment="Center" VerticalAlignment="Stretch" Stretch="UniformToFill" />
 
             <Grid Grid.Column="0" RowSpacing="24" ColumnSpacing="16" Padding="20" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                 <Grid.RowDefinitions>
