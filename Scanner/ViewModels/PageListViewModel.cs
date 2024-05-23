@@ -8,9 +8,11 @@ using Scanner.Services.Messenger;
 using Scanner.Views.Converters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI.Xaml.Data;
 using static Utilities;
@@ -39,6 +41,7 @@ namespace Scanner.ViewModels
         public RelayCommand ShareCommand;
         public AsyncRelayCommand<StorageFile> ShowInFileExplorerCommand;
         public AsyncRelayCommand<ScanResultElement> DuplicatePageCommand;
+        public AsyncRelayCommand<ScanResultElement> ExportCommand;
         public AsyncRelayCommand DragDropPage;
         #endregion
 
@@ -77,6 +80,9 @@ namespace Scanner.ViewModels
             get => _SelectedRanges;
             set => SetProperty(ref _SelectedRanges, value);
         }
+
+        public bool AreMultiplePagesSelected => SelectedRanges != null &&
+            (SelectedRanges.Count > 1 || SelectedRanges.First().Length > 1);
 
         private bool _IsScanRunning;
         public bool IsScanRunning
@@ -133,6 +139,7 @@ namespace Scanner.ViewModels
             DragDropPage = new AsyncRelayCommand(async () => await ScanResultService.ApplyElementOrderToFilesAsync()); ;
             ShowInFileExplorerCommand = new AsyncRelayCommand<StorageFile>((x) => ShowFileInFileExplorerAsync(x));
             DuplicatePageCommand = new AsyncRelayCommand<ScanResultElement>((x) => DuplicatePageAsync(x));
+            ExportCommand = new AsyncRelayCommand<ScanResultElement>(ExportAsync);
 
             Messenger.Register<EditorCurrentIndexChangedMessage>(this, (r, m) => SelectedPageIndex = m.Value);
             SelectedPageIndex = Messenger.Send(new EditorCurrentIndexRequestMessage());
@@ -251,6 +258,7 @@ namespace Scanner.ViewModels
                 AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
             });
         }
+
         private async Task DeleteAsync()
         {
             // collect files
@@ -347,6 +355,56 @@ namespace Scanner.ViewModels
             {
                 AnnouncementText = LocalizedString("TextSavedChangesAccessibility")
             });
+        }
+
+        private async Task ExportAsync(ScanResultElement element)
+        {
+            LogService?.Log.Information("ExportAsync");
+
+            // collect files
+            int indexInResult = ScanResult.Elements.IndexOf(element);
+            List<int> indices = new List<int>()
+            {
+                indexInResult
+            };
+
+            if (AreMultiplePagesSelected)
+            {
+                List<int> selectedIndices = GetSelectedIndices();
+                if (selectedIndices.Count > 1 && selectedIndices.Contains(indexInResult))
+                {
+                    // selection takes precedent
+                    indices = selectedIndices;
+                }
+            }
+
+            // export
+            if (indices.Count == 1)
+            {
+                // select target file
+                FileSavePicker picker = new FileSavePicker();
+                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                picker.FileTypeChoices.Add(ScanResult.Elements[indices[0]].ScanFile.DisplayType, new List<string>() { ScanResult.Elements[indices[0]].ScanFile.FileType });
+
+                StorageFile file = await picker.PickSaveFileAsync();
+                if (file == null) return;
+
+                // export file
+                await ScanResultService.ExportScanAsync(indices[0], file, file.Name);
+            }
+            else
+            {
+                // select target folder
+                FolderPicker picker = new FolderPicker();
+                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                picker.FileTypeFilter.Add("*");
+
+                StorageFolder folder = await picker.PickSingleFolderAsync();
+                if (folder == null) return;
+
+                // export files
+                await ScanResultService.ExportScansAsync(indices, folder);
+            }
         }
     }
 }

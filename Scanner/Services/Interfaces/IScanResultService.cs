@@ -67,6 +67,9 @@ namespace Scanner.Services
         Task<bool> OpenImageWithAsync(int index);
         Task<bool> OpenImageWithAsync(int index, AppInfo appInfo);
         Task<bool> DuplicatePageAsync(int index);
+        Task ExportScansAsync(List<int> indices, StorageFolder targetFolder);
+        Task ExportScanAsync(int index, StorageFolder targetFolder, string name);
+        Task ExportScanAsync(int index, StorageFile targetFile, string name);
         Task ApplyElementOrderToFilesAsync();
     }
 }

@@ -2042,5 +2042,61 @@ namespace Scanner
                 await GeneratePDF();
             }
         }
+
+        /// <summary>
+        ///     Exports a single page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScanAsync(int index, StorageFolder targetFolder, string name)
+        {
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                throw new ArgumentOutOfRangeException("Invalid index for exporting file.");
+            }
+
+            await _Elements[index].ScanFile.CopyAsync(targetFolder, name, NameCollisionOption.ReplaceExisting);
+        }
+
+        /// <summary>
+        ///     Exports a single page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScanAsync(int index, StorageFile targetFile, string name)
+        {
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                throw new ArgumentOutOfRangeException("Invalid index for exporting file.");
+            }
+
+            await _Elements[index].ScanFile.CopyAndReplaceAsync(targetFile);
+        }
+
+        /// <summary>
+        ///     Exports a multiple page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's indices.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScansAsync(List<int> indices, StorageFolder targetFolder)
+        {
+            // check indices
+            foreach (int index in indices)
+            {
+                if (!IsValidIndex(index))
+                {
+                    LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                    throw new ArgumentOutOfRangeException("Invalid index for export.");
+                }
+            }
+
+            // export files
+            foreach (int index in indices)
+            {
+                await _Elements[index].ScanFile.CopyAsync(targetFolder, Pdf.DisplayName + _Elements[index].ScanFile.FileType, NameCollisionOption.GenerateUniqueName);
+            }
+        }
     }
 }

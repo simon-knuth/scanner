@@ -1895,4 +1895,8 @@ If your resolutions list is on the verge of getting out of control, you can now 
     <value>Close</value>
     <comment>The text on the button to close the "Discover more" dialog.</comment>
   </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Export as image</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
+  </data>
 </root>

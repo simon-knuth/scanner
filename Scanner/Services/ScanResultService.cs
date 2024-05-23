@@ -815,5 +815,20 @@ namespace Scanner.Services
 
             IsScanResultChanging = false;
         }
+
+        public async Task ExportScansAsync(List<int> indices, StorageFolder targetFolder)
+        {
+            await Result.ExportScansAsync(indices, targetFolder);
+        }
+
+        public async Task ExportScanAsync(int index, StorageFolder targetFolder, string name)
+        {
+            await Result.ExportScanAsync(index, targetFolder, name);
+        }
+
+        public async Task ExportScanAsync(int index, StorageFile targetFile, string name)
+        {
+            await Result.ExportScanAsync(index, targetFile, name);
+        }
     }
 }

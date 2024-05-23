@@ -609,7 +609,7 @@
                     <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="Medium" x:Uid="HeadingScanner"/>
-                            <LineBreak/><Run>Copyright © 2023</Run>
+                            <LineBreak/><Run>Copyright © 2024</Run>
                             <Hyperlink UnderlineStyle="None" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">Simon Knuth</Hyperlink>
                             <LineBreak/><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
