@@ -1590,7 +1590,7 @@ namespace Scanner.ViewModels
 
                 // right source mode selected?
                 ScanOptions scanOptions = CreateScanOptions();
-                if (scanOptions.Source != Enums.ScannerSource.Feeder && scanOptions.Source != Enums.ScannerSource.Auto) return;
+                if (scanOptions.Source != Enums.ScannerSource.Auto) return;
 
                 // all conditions met
                 ScanMergeTipRequested?.Invoke(this, EventArgs.Empty);
