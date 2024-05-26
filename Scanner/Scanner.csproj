@@ -481,7 +481,7 @@
       <Version>5.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite.Core">
-      <Version>8.0.4</Version>
+      <Version>8.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>8.0.0</Version>
