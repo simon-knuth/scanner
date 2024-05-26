@@ -588,38 +588,6 @@ namespace Scanner.Services
         }
 
         /// <summary>
-        ///     Crops the page at <paramref name="index"/> using <paramref name="imageCropper"/>.
-        /// </summary>
-        public async Task<bool> CropScanAsync(int index, ImageCropper imageCropper)
-        {
-            IsScanResultChanging = true;
-
-            try
-            {
-                await Result.CropScanAsync(index, imageCropper);
-            }
-            catch (Exception exc)
-            {
-                Messenger.Send(new AppWideStatusMessage
-                {
-                    Title = LocalizedString("ErrorMessageCropHeading"),
-                    MessageText = LocalizedString("ErrorMessageCropBody"),
-                    Severity = AppWideStatusMessageSeverity.Error,
-                    AdditionalText = exc.Message
-                });
-                LogService?.Log.Error(exc, "Cropping page failed.");
-
-                return false;
-            }
-            finally
-            {
-                IsScanResultChanging = false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         ///     Crops the pages at <paramref name="indices"/> using <paramref name="cropRegion"/>.
         /// </summary>
         public async Task<bool> CropScansAsync(List<int> indices, Rect cropRegion)
@@ -628,7 +596,7 @@ namespace Scanner.Services
 
             try
             {
-                await Result.CropScansAsync(indices, cropRegion);
+                await Result.CropScansAsync(indices, cropRegion, false);
             }
             catch (Exception exc)
             {
@@ -654,13 +622,13 @@ namespace Scanner.Services
         /// <summary>
         ///     Crops the page at <paramref name="index"/> using <paramref name="imageCropper"/> as copy.
         /// </summary>
-        public async Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper)
+        public async Task<bool> CropScanAsCopyAsync(List<int> indices, Rect cropRegion)
         {
             IsScanResultChanging = true;
 
             try
             {
-                await Result.CropScanAsCopyAsync(index, imageCropper);
+                await Result.CropScansAsync(indices, cropRegion, true);
             }
             catch (Exception exc)
             {
