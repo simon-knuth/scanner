@@ -598,11 +598,11 @@
     <comment>The system theme option in the settings.</comment>
   </data>
   <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button text of the dialog that displays all third-party licenses.</comment>
   </data>
   <data name="ButtonCloseText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingNotificationScanComplete" xml:space="preserve">
@@ -626,7 +626,7 @@
     <comment>The title of the dialog that explains the page management.</comment>
   </data>
   <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
@@ -658,7 +658,7 @@
     <comment>The title of the dialog that appears after an app update.</comment>
   </data>
   <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button text of the changelog dialog.</comment>
   </data>
   <data name="HeadingDialogChangelog.Text" xml:space="preserve">
@@ -666,11 +666,11 @@
     <comment>The title of the changelog dialog.</comment>
   </data>
   <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button text of the translation contributors dialog.</comment>
   </data>
   <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
-    <value>tegoeden</value>
+    <value>Credits</value>
     <comment>The title of the dialog that shows the translation contributors.</comment>
   </data>
   <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
@@ -690,7 +690,7 @@
     <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button text for the dialog that allows the user to export event logs.</comment>
   </data>
   <data name="HeadingDialogExportLog.Text" xml:space="preserve">
@@ -714,7 +714,7 @@
     <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
   </data>
   <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
-    <value>tegoeden</value>
+    <value>Credits</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
   <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
@@ -1407,7 +1407,7 @@ Fuzzy</comment>
     <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
   </data>
   <data name="TextClose.Text" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The button text for a generic close button.</comment>
   </data>
   <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
@@ -1495,7 +1495,7 @@ Fuzzy</comment>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
   </data>
   <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
     <comment>The close button tooltip of the preview dialog.</comment>
   </data>
   <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
@@ -1833,5 +1833,25 @@ Fuzzy</comment>
   <data name="ButtonDeleteBlock.Text" xml:space="preserve">
     <value>Blok verwijderen</value>
     <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Gratis</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Meer ontdekken</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Meer ontdekken</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Probeer ook mijn andere apps als deze je bevalt.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Zet je klembord vast op de taakbalk en krijg overal toegang tot de klembordgeschiedenis.</value>
+    <comment>The description for ClipShelf.</comment>
   </data>
 </root>
