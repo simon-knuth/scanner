@@ -1865,4 +1865,24 @@ JPG و PNG هي تنسيقات للصور، مما يعني أنه سيتم حف
     <value>حذف المربع</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>مجاناً</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اكتشف المزيد</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>اكتشف المزيد</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>جرّب تطبيقاتي الأخرى أيضاً إذا أعجبك هذا التطبيق.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>قم بتثبيت الحافظة في شريط المهام والوصول إلى محفوظات الحافظة من أي مكان.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>
