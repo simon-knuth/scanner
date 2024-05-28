@@ -1872,4 +1872,24 @@ Fuzzy</comment>
     <value>Видалити блок</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Безкоштовно</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Дізнайтеся більше</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Дізнайтеся більше</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Перевірте інші мої програми, якщо вам сподобався цей.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Закріпіть буфер обміну на панелі завдань і отримуйте доступ до історії буфера обміну з будь-якого місця.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>
