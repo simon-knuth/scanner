@@ -1868,4 +1868,24 @@ Fuzzy</comment>
     <value>Eliminar bloco</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Gratuito</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descobrir mais</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Descobrir mais</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Se gostar desta, experimente também as minhas outras aplicações.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Fixe a sua área de transferência na barra de tarefas e aceda ao histórico da área de transferência a partir de qualquer lugar.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>

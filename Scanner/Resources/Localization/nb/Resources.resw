@@ -1870,4 +1870,24 @@ Velg ut et appspråk som er uavhengig av systemspråket ditt (men bare ett om ga
     <value>Delete blokk</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Kostnadsfritt</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Oppdag mer</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Oppdag mer</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Prøv også de andre appene mine hvis du liker denne.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Fest utklippstavlen til oppgavelinjen og få tilgang til utklippstavlehistorikken fra hvor som helst.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>
