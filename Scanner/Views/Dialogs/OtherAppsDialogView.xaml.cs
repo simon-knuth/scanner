@@ -16,7 +16,7 @@ namespace Scanner.Views.Dialogs
 
         private async void ButtonGetClipShelf_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?productid=9NV7F7JGLRPL"));
+            await Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?productid=9NV7F7JGLRPL&cid=scanner"));
         }
     }
 }

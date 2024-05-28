@@ -43,7 +43,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <ContentDialog.Title>
         <StackPanel Orientation="Vertical" Spacing="4" Margin="0,0,0,12">
-            <TextBlock x:Uid="HeadingDialogOtherApps"/>
+            <TextBlock x:Uid="HeadingDialogOtherApps" AutomationProperties.HeadingLevel="Level1"/>
             <TextBlock x:Uid="SubheadingDialogOtherApps" Style="{StaticResource BodyTextBlockStyle}"/>
         </StackPanel>
     </ContentDialog.Title>
@@ -61,7 +61,7 @@
 
             <Image Grid.Column="1" Source="/Assets/ClipShelf/Hero Image Alt Close-Up.jpg" HorizontalAlignment="Center" VerticalAlignment="Stretch" Stretch="UniformToFill" />
 
-            <Grid Grid.Column="0" RowSpacing="24" ColumnSpacing="16" Padding="20" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+            <Grid Grid.Column="0" RowSpacing="24" ColumnSpacing="12" Padding="20" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -73,8 +73,8 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Source="/Assets/ClipShelf/Logo.svg" MaxWidth="24" MaxHeight="24" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="ClipShelf" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <Image Grid.Row="0" Grid.Column="0" Source="/Assets/ClipShelf/Logo.svg" MaxWidth="28" MaxHeight="28" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="ClipShelf" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level2" />
                 <TextBlock x:Uid="TextDialogOtherAppsClipShelf" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                 <Button x:Name="ButtonGetClipShelf" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MinWidth="120" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Click="ButtonGetClipShelf_Click">
                     <StackPanel Orientation="Horizontal" Spacing="8">
