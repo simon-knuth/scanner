@@ -1385,7 +1385,7 @@ Die unterstützten Formate sind PDF, JPG, PNG, TIF und BMP.</value>
     <comment>Up to 7 search terms; max. 40 characters each; separated by &quot;|&quot;; should include language-specific name of the official Windows-Scan app.</comment>
   </data>
   <data name="StoreShortDescription" xml:space="preserve">
-    <value>Scannen Sie Dokumente und Fotos, Bearbeiten Sie die Seiten und speichern Sie sie als PDF oder Bilddateien - alles in einer einzelnen, einfach zu bedienenden App.</value>
+    <value>Scannen Sie Dokumente und Fotos, bearbeiten Sie die Seiten und speichern Sie sie als PDF oder Bilddateien - alles in einer einzelnen, einfach zu bedienenden App.</value>
     <comment>A short and concise description of the app.</comment>
   </data>
   <data name="StoreShortTitle" xml:space="preserve">
@@ -1866,5 +1866,37 @@ Falls Ihre Auflösungsliste aus allen Nähten platzt, können Sie nun einfach di
   <data name="ButtonDeleteBlock.Text" xml:space="preserve">
     <value>Block löschen</value>
     <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Alle auswählen</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Gratis</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mehr entdecken</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Mehr entdecken</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Probieren Sie auch meine anderen Apps aus, wenn Ihnen Scanner gefällt.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Pinnen Sie Ihre Zwischenablage an die Taskleiste und greifen Sie von überall aus auf den Zwischenablageverlauf zu.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Als Bild exportieren</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>
