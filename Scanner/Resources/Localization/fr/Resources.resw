@@ -1844,4 +1844,24 @@ Si votre liste de résolutions est sur le point de devenir incontrôlable, vous 
     <value>Nom de fichier invalide</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Gratuit</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>En savoir plus</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>En savoir plus</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Essayez aussi mes autres applications si celle-ci vous plaît.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Épinglez votre presse-papier à la barre des tâches et accédez à l&apos;historique du presse-papier où que vous soyez.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>
