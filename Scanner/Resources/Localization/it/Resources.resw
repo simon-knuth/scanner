@@ -222,7 +222,7 @@
     <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
   </data>
   <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ruota la pagina</value>
+    <value>Ruota la pagina (clic destro per altro)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
@@ -230,7 +230,7 @@
     <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Salva le modifiche come una copia</value>
+    <value>Salva le modifiche in un nuovo documento</value>
     <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
   </data>
   <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
@@ -810,7 +810,7 @@
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
   </data>
   <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
-    <value>Modifiche salvate come copia</value>
+    <value>Modifiche salvate in un nuovo documento</value>
     <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
   </data>
   <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
@@ -1866,5 +1866,37 @@ Se il tuo elenco di risoluzioni è troppo lungo, ora puoi semplicemente digitare
   <data name="ButtonDeleteBlock.Text" xml:space="preserve">
     <value>Elimina blocco</value>
     <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Seleziona tutto</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Gratuito</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scoprire di più</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Scoprire di più</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Provate anche le altre applicazioni se vi piace questa.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Appuntate gli appunti sulla barra delle applicazioni e accedete alla cronologia degli appunti da qualsiasi punto.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Chiudi</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Esporta come immagine</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>

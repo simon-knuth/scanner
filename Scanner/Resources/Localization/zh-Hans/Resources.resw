@@ -1848,4 +1848,24 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <value>文件名无效</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>免费</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>了解更多</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>了解更多</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>如果你喜欢这个应用程序，也可以试试我的其他应用程序。</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>将剪贴板固定在任务栏上，随时随地访问剪贴板历史记录。</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>

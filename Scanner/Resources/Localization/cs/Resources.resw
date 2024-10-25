@@ -1888,4 +1888,24 @@ Pokud je váš seznam rozlišení na hranici zvládnutelnosti, můžete nyní po
     <value>Smazat blok</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
+    <value>Zdarma</value>
+    <comment>The text on the button to go to a free app download.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Objevte více</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Objevte více</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>Pokud se vám tato aplikace líbí, vyzkoušejte i mé další aplikace.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>Připněte si schránku na hlavní panel a přistupujte k historii schránky odkudkoli.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
 </root>
