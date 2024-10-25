@@ -42,7 +42,7 @@ namespace Scanner.Services
         ///     Generates a PDF named <paramref name="name"/> based on the files in
         ///     <see cref="AppDataService.FolderConversion"/> and moves it to <paramref name="targetFolder"/>.
         /// </summary>
-        public async Task<StorageFile> GeneratePdfAsync(string name, StorageFolder targetFolder)
+        public async Task<StorageFile> GeneratePdfAsync(string name, StorageFolder targetFolder, bool replaceExisting)
         {
             taskCompletionSource = new TaskCompletionSource<bool>();
 
@@ -91,7 +91,7 @@ namespace Scanner.Services
                 }
 
                 // move PDF file to target folder
-                await HelperService.MoveFileToFolderAsync(newPdf, targetFolder, newName, true);
+                await HelperService.MoveFileToFolderAsync(newPdf, targetFolder, newName, replaceExisting);
 
                 return newPdf;
             }

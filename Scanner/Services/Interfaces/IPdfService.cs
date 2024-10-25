@@ -16,6 +16,6 @@ namespace Scanner.Services
     {
         event EventHandler<bool> GenerationEnded;
 
-        Task<StorageFile> GeneratePdfAsync(string name, StorageFolder targetFolder);
+        Task<StorageFile> GeneratePdfAsync(string name, StorageFolder targetFolder, bool replaceExisting);
     }
 }
