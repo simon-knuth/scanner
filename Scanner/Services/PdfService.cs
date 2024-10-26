@@ -91,7 +91,16 @@ namespace Scanner.Services
                 }
 
                 // move PDF file to target folder
-                await HelperService.MoveFileToFolderAsync(newPdf, targetFolder, newName, replaceExisting);
+                try
+                {
+                    await HelperService.MoveFileToFolderAsync(newPdf, targetFolder, newName, replaceExisting);
+                }
+                catch (Exception)
+                {
+                    LogService?.Log.Warning("GeneratePdfAsync: Moving PDF to folder failed, retrying in 3 seconds");
+                    await Task.Delay(3000);
+                    await HelperService.MoveFileToFolderAsync(newPdf, targetFolder, newName, replaceExisting);
+                }
 
                 return newPdf;
             }
