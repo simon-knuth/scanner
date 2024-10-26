@@ -1867,6 +1867,10 @@ Jika daftar resolusi anda hampir lepas kendali, anda sekarang dapat mengetikkan 
     <value>Hapus blok</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Pilih semua</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
   <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
     <value>Tidak dipungut biaya</value>
     <comment>The text on the button to go to a free app download.</comment>
@@ -1886,5 +1890,13 @@ Jika daftar resolusi anda hampir lepas kendali, anda sekarang dapat mengetikkan 
   <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
     <value>Sematkan papan klip Anda ke bilah tugas dan akses riwayat papan klip dari mana saja.</value>
     <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Tutup</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Ekspor sebagai gambar</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>

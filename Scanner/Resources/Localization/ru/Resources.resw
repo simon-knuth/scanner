@@ -466,7 +466,7 @@
     <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
-    <value>Цветное</value>
+    <value>Цветной</value>
     <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
@@ -474,7 +474,7 @@
     <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
-    <value>Монохромное</value>
+    <value>Монохромный</value>
     <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
   </data>
   <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
@@ -782,7 +782,7 @@
     <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
-    <value>{0: 0} DPI (по умолчанию)</value>
+    <value>{0: 0} DPI (По умолчанию)</value>
     <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
   </data>
   <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
@@ -1211,7 +1211,7 @@ PDF — очень популярный формат документов, по�
     <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
   </data>
   <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
-    <value>Автоматический поворачивать страницы</value>
+    <value>Автоматически разворачивать страницы</value>
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
@@ -1627,7 +1627,7 @@ PDF — очень популярный формат документов, по�
     <comment>The system setting option in the app language settings.</comment>
   </data>
   <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
-    <value>Автоматическое вращение..</value>
+    <value>Автоматическое вращение...</value>
     <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
   </data>
   <data name="TextScanProgressFinishing.Text" xml:space="preserve">
@@ -1866,6 +1866,10 @@ PDF — очень популярный формат документов, по�
     <value>Удалить блок</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Выбрать всё</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
   <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
     <value>Бесплатно</value>
     <comment>The text on the button to go to a free app download.</comment>
@@ -1885,5 +1889,13 @@ PDF — очень популярный формат документов, по�
   <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
     <value>Закрепите буфер обмена на панели задач и получайте доступ к истории буфера обмена из любого места.</value>
     <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Экспортировать как изображение</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>

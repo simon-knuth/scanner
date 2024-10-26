@@ -1891,6 +1891,10 @@ Fuzzy</comment>
     <value>Usuń blok</value>
     <comment>The text for the button that deletes a file naming block.</comment>
   </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Zaznacz wszystkie</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
   <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
     <value>Bezpłatnie</value>
     <comment>The text on the button to go to a free app download.</comment>
@@ -1910,5 +1914,13 @@ Fuzzy</comment>
   <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
     <value>Przypięcie schowka do paska zadań i dostęp do historii schowka z dowolnego miejsca.</value>
     <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Zamknij</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Wyeksportuj jako obraz</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>
