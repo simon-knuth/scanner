@@ -1014,7 +1014,7 @@ PDF est un format de document très populaire et vous permet d&apos;enregistrer 
     <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
   </data>
   <data name="TextScannerSearchRunning.Text" xml:space="preserve">
-    <value>A la recherche des scanneurs...</value>
+    <value>Détection des scanners...</value>
     <comment>The text that indicates that the app is searching for installed scanners.</comment>
   </data>
   <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
@@ -1216,7 +1216,7 @@ Le réglage de la luminosité et du contraste n&apos;est possible qu&apos;en mod
     <comment>The option for automatically rotating scanned pages.</comment>
   </data>
   <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
-    <value>Reconnaissance de la langue</value>
+    <value>Détection de la langue</value>
     <comment>The option for choosing the language of the recognizer used to automatically rotate pages.
 Fuzzy</comment>
   </data>
@@ -1844,6 +1844,30 @@ Si votre liste de résolutions est sur le point de devenir incontrôlable, vous 
     <value>Nom de fichier invalide</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>Déplacer en arrière</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>Déplacer en avant</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>Déplacer vers l&apos;arrière</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>Déplacer vers l&apos;avant</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>Supprimer le bloc</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>Tout sélectionner</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
   <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
     <value>Gratuit</value>
     <comment>The text on the button to go to a free app download.</comment>
@@ -1863,5 +1887,13 @@ Si votre liste de résolutions est sur le point de devenir incontrôlable, vous 
   <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
     <value>Épinglez votre presse-papier à la barre des tâches et accédez à l&apos;historique du presse-papier où que vous soyez.</value>
     <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>Exporter sous forme d&apos;image</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
   </data>
 </root>
