@@ -1731,12 +1731,12 @@ namespace Scanner
             if (Pdf == null)
             {
                 LogService?.Log.Information("PDF doesn't exist yet.");
-                Pdf = await PdfService.GeneratePdfAsync(fileName, OriginalTargetFolder);
+                Pdf = await PdfService.GeneratePdfAsync(fileName, OriginalTargetFolder, false);
             }
             else
             {
                 LogService?.Log.Information("PDF already exists.");
-                Pdf = await PdfService.GeneratePdfAsync(Pdf.Name, OriginalTargetFolder);
+                Pdf = await PdfService.GeneratePdfAsync(Pdf.Name, OriginalTargetFolder, true);
             }
         }
 
