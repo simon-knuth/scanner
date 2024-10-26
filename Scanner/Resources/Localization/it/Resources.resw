@@ -262,7 +262,7 @@
     <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
   </data>
   <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ruota le pagine selezionate</value>
+    <value>Ruota le pagine selezionate (clic destro per altro)</value>
     <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
   </data>
   <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
@@ -866,7 +866,7 @@
     <comment>Heading for the fourth changelog section.</comment>
   </data>
   <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
-    <value>Per favore, assicurati che il tuo scanner sia acceso e connesso via Wi-Fi o attraverso un cavo USB. Se il tuo scanner non elencato nelle impostazioni di Windows, devi prima aggiungerlo da lì.
+    <value>Per favore, assicurati che il tuo scanner sia acceso e connesso via Wi-Fi o attraverso un cavo USB. Se il tuo scanner non è elencato nelle impostazioni di Windows, devi prima aggiungerlo da lì.
 
 Quando vedrai lo scanner nell&apos;app Impostazioni senza più l&apos;etichetta &quot;Offline&quot;, la connessione sarà stabilita e potrai procedere con le scansioni!
 
@@ -1525,7 +1525,7 @@ I formati supportati sono: PDF, JPG, PNG, TIF e BMP.</value>
     <comment>The error message heading that appears when a file is unavailable.</comment>
   </data>
   <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
-    <value>Cancella l&apos;area di scansione selezionata</value>
+    <value>Annulla selezione area scansione</value>
     <comment>The text for the button that discards the selected scan region in the scan options.</comment>
   </data>
   <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
