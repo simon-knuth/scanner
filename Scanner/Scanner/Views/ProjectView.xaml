@@ -1,0 +1,267 @@
+<Page
+    x:Class="Scanner.Views.ProjectView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner.Views"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <viewModels:ProjectViewModel x:Name="ViewModel"/>
+    </Page.DataContext>
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridRoot">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,20,0" SizeChanged="GridHeader_SizeChanged">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-9,0,-9,0" Padding="8,4,8,4" MinHeight="0" FontWeight="Bold" Style="{StaticResource MutedTextBoxStyle}" />
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="PDF" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="7 pages" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="40" Height="40" Style="{StaticResource MutedButtonStyle}">
+                        <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button x:Name="ButtonMore" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="40" Height="40" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
+                        <AnimatedIcon Height="16">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                            </AnimatedIcon.Source>
+                            <AnimatedIcon.FallbackIconSource>
+                                <FontIconSource Glyph="&#xE70D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </AnimatedIcon.FallbackIconSource>
+                        </AnimatedIcon>
+                    </Button>
+                </StackPanel>
+
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem Text="New project" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Save">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Save as...">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Convert...">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xEA4E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Show in File Explorer">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Rename">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Delete">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Copy">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Open with">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Print">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Share">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Close project">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE711;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Grid>
+
+            <!-- Content -->
+            <Grid x:Name="GridContent" Grid.Row="1" Margin="0,8,0,0" ui:UIElementExtensions.ClipToBounds="True">
+                <!-- Carousel -->
+                <Grid x:Name="GridCarousel" Height="80" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                    </animations:Implicit.ShowAnimations>
+
+                    <animations:Implicit.HideAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                    </animations:Implicit.HideAnimations>
+
+                    <Button Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                        <Button.RenderTransform>
+                            <RotateTransform Angle="90" CenterX="12" CenterY="12" />
+                        </Button.RenderTransform>
+
+                        <AnimatedIcon Height="12">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                            </AnimatedIcon.Source>
+                            <AnimatedIcon.FallbackIconSource>
+                                <FontIconSource Glyph="&#xE76B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </AnimatedIcon.FallbackIconSource>
+                        </AnimatedIcon>
+                    </Button>
+                    <Button Margin="20" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                        <Button.RenderTransform>
+                            <RotateTransform Angle="270" CenterX="12" CenterY="12" />
+                        </Button.RenderTransform>
+
+                        <AnimatedIcon Height="12">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                            </AnimatedIcon.Source>
+                            <AnimatedIcon.FallbackIconSource>
+                                <FontIconSource Glyph="&#xE76C;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </AnimatedIcon.FallbackIconSource>
+                        </AnimatedIcon>
+                    </Button>
+                </Grid>
+                
+                <!-- Page list -->
+                <Grid x:Name="GridPageList" x:Load="{x:Bind IsExpanded, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
+                    </animations:Implicit.ShowAnimations>
+
+                    <animations:Implicit.HideAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
+                    </animations:Implicit.HideAnimations>
+
+                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <ui:Effects.Shadow>
+                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.02" CornerRadius="8" />
+                        </ui:Effects.Shadow>
+                        
+                        <Border>
+                            <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
+                                <ToggleButton Width="36" Height="36" Style="{StaticResource MutedToggleButtonStyle}">
+                                    <FontIcon Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </ToggleButton>
+                                <AppBarSeparator />
+                                <Button x:Name="ButtonRotate" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
+                                    <Grid>
+                                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Grid>
+
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
+                                            <MenuFlyoutItem Text="Rotate 180 degrees" />
+                                            <MenuFlyoutItem Text="Rotate 270 degrees" />
+                                            <MenuFlyoutSeparator />
+                                            <MenuFlyoutItem Text="Rotate automatically">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </Button>
+                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                    <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                    <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                    <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </Frame>
+                    <ItemsView Grid.Row="1">
+                        
+                    </ItemsView>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

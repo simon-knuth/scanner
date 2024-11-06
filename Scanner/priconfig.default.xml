@@ -1,4 +1,0 @@
-﻿<!-- // include all language resources by default regardless of installed language packs -->
-<default>
-	<qualifier name="Language" value="ar-tn;ca;cs;de;en;en-ca;en-gb;es;fr;fr-be;hi;hu;id;it;nb;nl;pl;pt;pt-br;ru;sk;uk;zh-Hans" />
-</default>
