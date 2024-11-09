@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -54,6 +55,8 @@ namespace Scanner.Views
         public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
         public bool IsPreviewButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 500;
 
+        private bool showEntranceAnimations;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,6 +84,21 @@ namespace Scanner.Views
         {
             OnPropertyChanged(nameof(IsTemplatesButtonVisible));
             OnPropertyChanged(nameof(IsPreviewButtonVisible));
+        }
+
+        private void ButtonAnimated_Loading(FrameworkElement sender, object args)
+        {
+            // prevent animations during application startup
+            if (!showEntranceAnimations)
+            {
+                Implicit.SetShowAnimations(sender, new ImplicitAnimationSet());
+            }
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(500);
+            showEntranceAnimations = true;
         }
     }
 }

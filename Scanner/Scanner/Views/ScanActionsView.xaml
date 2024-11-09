@@ -12,7 +12,8 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Page.DataContext>
         <viewModels:ScanActionsViewModel x:Name="ViewModel"/>
@@ -37,17 +38,6 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
-            
-            <!-- AnimationSets -->
-            <animations:ImplicitAnimationSet x:Name="AnimationSetEntrance">
-                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
-            </animations:ImplicitAnimationSet>
-
-            <animations:ImplicitAnimationSet x:Name="AnimationSetExit">
-                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
-            </animations:ImplicitAnimationSet>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -64,13 +54,22 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}">
-                <FontIcon Glyph="&#xE8F1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-
+            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
                 <animations:Implicit.ShowAnimations>
-                    <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                    <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                    </animations:ImplicitAnimationSet>
                 </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                    </animations:ImplicitAnimationSet>
+                </animations:Implicit.HideAnimations>
+
+                <FontIcon Glyph="&#xE8F1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
 
             <!-- Scan options -->
@@ -88,15 +87,19 @@
                 <TextBlock Text="Scan options" Style="{StaticResource CaptionTextBlockStyle}" />
             </Button>
 
-            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}">
+            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
                 <animations:Implicit.ShowAnimations>
-                    <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                    <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                    </animations:ImplicitAnimationSet>
                 </animations:Implicit.ShowAnimations>
 
                 <animations:Implicit.HideAnimations>
-                    <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                    <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                    </animations:ImplicitAnimationSet>
                 </animations:Implicit.HideAnimations>
 
                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

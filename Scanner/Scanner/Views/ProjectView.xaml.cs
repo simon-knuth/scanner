@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -40,6 +42,8 @@ namespace Scanner.Views
         [ObservableProperty]
         private double projectFlyoutWidth;
 
+        private bool showEntranceExitAnimations;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,6 +70,22 @@ namespace Scanner.Views
         private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
         {
             FlyoutBase.ShowAttachedFlyout(ButtonRotate);
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(500);
+            showEntranceExitAnimations = true;
+        }
+
+        private void ControlAnimated_Loading(FrameworkElement sender, object args)
+        {
+            // prevent animations during application startup
+            if (!showEntranceExitAnimations)
+            {
+                Implicit.SetShowAnimations(sender, new ImplicitAnimationSet());
+                Implicit.SetHideAnimations(sender, new ImplicitAnimationSet());
+            }
         }
     }
 }

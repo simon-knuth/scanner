@@ -13,7 +13,8 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Page.DataContext>
         <viewModels:ProjectViewModel x:Name="ViewModel"/>
@@ -156,7 +157,7 @@
             <!-- Content -->
             <Grid x:Name="GridContent" Grid.Row="1" Margin="0,8,0,0" ui:UIElementExtensions.ClipToBounds="True">
                 <!-- Carousel -->
-                <Grid x:Name="GridCarousel" Height="80" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                <Grid x:Name="GridCarousel" Height="80" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
@@ -198,7 +199,7 @@
                 </Grid>
                 
                 <!-- Page list -->
-                <Grid x:Name="GridPageList" x:Load="{x:Bind IsExpanded, Mode=OneWay}">
+                <Grid x:Name="GridPageList" x:Load="{x:Bind IsExpanded, Mode=OneWay}" Loading="ControlAnimated_Loading">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="1*" />
