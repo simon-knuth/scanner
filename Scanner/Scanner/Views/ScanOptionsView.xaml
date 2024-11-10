@@ -86,6 +86,12 @@
                                     <TextBlock Text="Canon PIXMA" MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
                                 </StackPanel>
                             </ComboBoxItem>
+                            <ComboBoxItem IsEnabled="False">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <ProgressRing Width="16" Height="16" />
+                                    <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
+                                </StackPanel>
+                            </ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
                     <InfoBadge Value="8" IsHitTestVisible="False" Margin="0,0,40,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" />

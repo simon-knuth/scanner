@@ -53,6 +53,15 @@
     <Folder Include="Assets\contrast-white\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\HistoryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TemplatesView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Flyouts\TemplatesFlyout.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\ScanActionsView.xaml">
       <SubType>Designer</SubType>
     </Page>

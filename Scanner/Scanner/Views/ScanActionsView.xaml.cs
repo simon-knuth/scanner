@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Views.Flyouts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,18 +33,20 @@ namespace Scanner.Views
 
         #region Dependency Properties
         public static readonly DependencyProperty AreScanOptionsVisibleProperty =
-            DependencyProperty.Register(nameof(AreScanOptionsVisible), typeof(bool), typeof(ScanActionsView), null);
+            DependencyProperty.Register(nameof(AreScanOptionsVisible), typeof(bool), typeof(ScanActionsView),
+                new PropertyMetadata(false, OnAreScanOptionsVisibleChanged));
         #endregion
 
         public bool AreScanOptionsVisible
         {
             get => (bool)GetValue(AreScanOptionsVisibleProperty);
-            set
-            {
-                SetValue(AreScanOptionsVisibleProperty, value);
-                OnPropertyChanged(nameof(IsTemplatesButtonVisible));
-                OnPropertyChanged(nameof(IsPreviewButtonVisible));
-            }
+            set => SetValue(AreScanOptionsVisibleProperty, value);
+        }
+
+        private void OnAreScanOptionsVisibleChanged(bool newValue)
+        {
+            OnPropertyChanged(nameof(IsTemplatesButtonVisible));
+            OnPropertyChanged(nameof(IsPreviewButtonVisible));
         }
 
         [ObservableProperty]
@@ -99,6 +102,29 @@ namespace Scanner.Views
         {
             await Task.Delay(500);
             showEntranceAnimations = true;
+        }
+
+        private void ShowTemplates()
+        {
+            TemplatesFlyout flyout = new TemplatesFlyout(GridRoot.ActualWidth);
+            flyout.Placement = FlyoutPlacementMode.Top;
+            flyout.ShowAt(GridRoot);
+        }
+
+        private void ButtonTemplates_Click(object sender, RoutedEventArgs e)
+        {
+            ShowTemplates();
+        }
+
+        private void MenuFlyoutItemTemplates_Click(object sender, RoutedEventArgs e)
+        {
+            ShowTemplates();
+        }
+
+        private static void OnAreScanOptionsVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var view = (ScanActionsView)d;
+            view.OnAreScanOptionsVisibleChanged((bool)e.NewValue);
         }
     }
 }

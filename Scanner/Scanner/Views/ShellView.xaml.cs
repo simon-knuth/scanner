@@ -138,5 +138,27 @@ namespace Scanner.Views
         {
             //ApplyVisualState(VisualStateGroup.CurrentState);
         }
+
+        private void MenuFlyoutItemHistory_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHistory(ButtonTitlebarMore);
+        }
+
+        private void ButtonHistory_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHistory(ButtonHistory);
+        }
+
+        private void ShowHistory(FrameworkElement target)
+        {
+            Flyout flyout = new Flyout();
+            flyout.Content = new HistoryView
+            {
+                Margin = new Thickness(-16),
+                MinWidth = 348,
+                MinHeight = 400
+            };
+            flyout.ShowAt(target);
+        }
     }
 }

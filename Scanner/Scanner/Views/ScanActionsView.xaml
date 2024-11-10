@@ -54,7 +54,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
+            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -73,7 +73,7 @@
             </Button>
 
             <!-- Scan options -->
-            <Button x:Name="ButtonScanOptions" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
+            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,4,8,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                     <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
@@ -85,6 +85,16 @@
                 </animations:Implicit.HideAnimations>
 
                 <TextBlock Text="Scan options" Style="{StaticResource CaptionTextBlockStyle}" />
+
+                <Button.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemTemplates" Text="Templates" Click="MenuFlyoutItemTemplates_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8F1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.ContextFlyout>
             </Button>
 
             <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">

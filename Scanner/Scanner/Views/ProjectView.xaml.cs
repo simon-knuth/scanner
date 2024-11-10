@@ -64,7 +64,7 @@ namespace Scanner.Views
 
         private void GridHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ProjectFlyoutWidth = e.NewSize.Width - 16;
+            ProjectFlyoutWidth = e.NewSize.Width - 24;
         }
 
         private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)

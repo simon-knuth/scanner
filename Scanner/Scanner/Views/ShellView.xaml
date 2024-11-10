@@ -154,7 +154,7 @@
                 </StackPanel>
                 <StackPanel x:Name="StackPanelTitlebarButtonsRight" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <StackPanel x:Name="StackPanelTitlebarButtonsRightExpanded" Orientation="Horizontal" Spacing="8">
-                        <Button ToolTipService.ToolTip="History" Style="{StaticResource TitlebarButtonStyle}">
+                        <Button x:Name="ButtonHistory" ToolTipService.ToolTip="History" Style="{StaticResource TitlebarButtonStyle}" Click="ButtonHistory_Click">
                             <FontIcon Glyph="&#xE81C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button ToolTipService.ToolTip="Help" Style="{StaticResource TitlebarButtonStyle}">
@@ -182,7 +182,7 @@
 
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Text="History">
+                                <MenuFlyoutItem x:Name="MenuFlyoutItemHistory" Text="History" Click="MenuFlyoutItemHistory_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE81C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
@@ -230,12 +230,6 @@
                     <views:ProjectView x:Name="ProjectView" />
                 </Border>
                 <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Margin="0,164,0,0" ui:UIElementExtensions.ClipToBounds="True">
-                    <Border.Transitions>
-                        <TransitionCollection>
-                            <RepositionThemeTransition IsStaggeringEnabled="False" />
-                        </TransitionCollection>
-                    </Border.Transitions>
-                    
                     <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ScanOptionsView_ExpandPageListRequested">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />

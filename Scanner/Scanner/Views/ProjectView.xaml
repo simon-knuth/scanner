@@ -102,11 +102,44 @@
                                 <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Convert...">
-                            <MenuFlyoutItem.Icon>
+                        <MenuFlyoutSubItem Text="Convert to">
+                            <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xEA4E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+                            </MenuFlyoutSubItem.Icon>
+
+                            <MenuFlyoutSubItem.Items>
+                                <MenuFlyoutItem Text="PDF">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xEA90;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="JPG">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="PNG">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="BMP">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="TIFF">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="RAW">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyoutSubItem.Items>
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Show in File Explorer">
                             <MenuFlyoutItem.Icon>
