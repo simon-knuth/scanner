@@ -11,7 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI" xmlns:customcontrols="using:Scanner.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -73,7 +73,7 @@
             </Button>
 
             <!-- Scan options -->
-            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,4,8,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
+            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,8,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                     <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
@@ -84,8 +84,8 @@
                     <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                 </animations:Implicit.HideAnimations>
 
-                <TextBlock Text="Scan options" Style="{StaticResource CaptionTextBlockStyle}" />
-
+                <customcontrols:ScanOptionsPresenter ScanOptions="{x:Bind ScanOptions, Mode=OneWay}" />
+                
                 <Button.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemTemplates" Text="Templates" Click="MenuFlyoutItemTemplates_Click">

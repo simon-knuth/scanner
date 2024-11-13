@@ -242,7 +242,7 @@
                         </animations:Implicit.HideAnimations>
                     </views:ScanOptionsView>
                 </Border>
-                <views:ScanActionsView x:Name="ScanActionsView" Grid.Row="1" Grid.Column="0" Height="72" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" />
+                <views:ScanActionsView x:Name="ScanActionsView" Grid.Row="1" Grid.Column="0" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" />
 
                 <Border x:Name="BorderEditor" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0">
                     <views:EditorView />

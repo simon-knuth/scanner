@@ -1,46 +1,41 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Scanner.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Scanner.Views;
 
-namespace Scanner.ViewModels
+namespace Scanner.Controls
 {
-    partial class ScanActionsViewModel : ObservableRecipient, IDisposable
+    [ObservableObject]
+    public sealed partial class ScanOptionsPresenter : UserControl
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-
+        #region Dependency Properties
+        public static readonly DependencyProperty ScanOptionsProperty =
+            DependencyProperty.Register(nameof(ScanOptions), typeof(ScanOptions), typeof(ScanOptionsPresenter), null);
         #endregion
 
-        #region Commands
-        public RelayCommand DisposeCommand => new RelayCommand(Dispose);
-        #endregion
-
-        [ObservableProperty]
-        private ScanOptions scanOptions;
+        public ScanOptions ScanOptions
+        {
+            get => (ScanOptions)GetValue(ScanOptionsProperty);
+            set => SetValue(ScanOptionsProperty, value);
+        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanActionsViewModel()
+        public ScanOptionsPresenter()
         {
-            
+            this.InitializeComponent();
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void Dispose()
-        {
-            Messenger.UnregisterAll(this);
-        }
+
     }
 }

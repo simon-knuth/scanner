@@ -102,7 +102,7 @@
                         <!-- Source -->
                         <StackPanel Orientation="Vertical" Spacing="12">
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -113,7 +113,7 @@
                                         <FontIcon Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </Grid>
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -124,7 +124,7 @@
                                         <FontIcon Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </Grid>
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -141,7 +141,7 @@
                         <!-- File format -->
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
                             <TextBlock Text="Save as" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,5,28,5" Height="32" SizeChanged="ComboBoxFileFormats_SizeChanged">
+                            <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,5,28,5" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
                                 <ComboBox.Items>
                                     <ComboBoxItem Content="Multi-page formats" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -255,13 +255,13 @@
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
                             <TextBlock Text="Color mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}">
                                     <TextBlock Text="Color" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeGrayscale, Mode=TwoWay}">
                                     <TextBlock Text="Grayscale" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeMonochrome, Mode=TwoWay}">
                                     <TextBlock Text="Monochrome" Margin="4,0,0,0" />
                                 </RadioButton>
                             </StackPanel>

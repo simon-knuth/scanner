@@ -1,0 +1,93 @@
+﻿<UserControl
+    x:Name="Root"
+    x:Class="Scanner.Controls.ScanOptionsPresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:Scanner.Views.Converters"
+    mc:Ignorable="d"
+    IsHitTestVisible="False"
+    HighContrastAdjustment="None">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- XAML Converters -->
+            <converters:EnumStringConverter x:Key="EnumStringConverter" />
+            <converters:NegativeEnumIntComparisonConverter x:Key="NegativeEnumIntComparisonConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   CONTROL CONTENT  - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Scanner Name" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+        <ItemsControl Grid.Row="1" Margin="-4,2,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="4" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.Items>
+                <!-- Source mode -->
+                <Border Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8">
+                    <TextBlock Text="{x:Bind ScanOptions.SourceMode, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                </Border>
+
+                <!-- File format -->
+                <Border Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8">
+                    <TextBlock Text="{x:Bind ScanOptions.TargetFormat, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                </Border>
+
+                <!-- Color mode -->
+                <Border x:Name="BorderColorMode" Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                    <controls:SwitchPresenter Value="{x:Bind ScanOptions.ColorMode, Mode=OneWay, Converter={StaticResource EnumStringConverter}}">
+                        <controls:Case Value="Color">
+                            <FontIcon Glyph="&#xE790;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </controls:Case>
+
+                        <controls:Case Value="Grayscale">
+                            <Grid>
+                                <FontIcon Glyph="&#xEA3B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}">
+                                    <FontIcon.Foreground>
+                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStop Offset="0.0" Color="{ThemeResource TextFillColorSecondary}" />
+                                                <GradientStop Offset="0.8" Color="Transparent" />
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </FontIcon.Foreground>
+                                </FontIcon>
+                                <FontIcon Glyph="&#xEA3A;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Grid>
+                        </controls:Case>
+
+                        <controls:Case Value="Monochrome">
+                            <FontIcon Glyph="&#xE7A1;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </controls:Case>
+                    </controls:SwitchPresenter>
+                </Border>
+
+                <!-- Resolution -->
+                <Border x:Name="BorderResolution" Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                    <TextBlock Text="{x:Bind ScanOptions.Resolution, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                </Border>
+            </ItemsControl.Items>
+        </ItemsControl>
+    </Grid>
+</UserControl>

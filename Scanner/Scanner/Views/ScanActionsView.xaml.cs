@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Models;
 using Scanner.Views.Flyouts;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,9 @@ namespace Scanner.Views
         public static readonly DependencyProperty AreScanOptionsVisibleProperty =
             DependencyProperty.Register(nameof(AreScanOptionsVisible), typeof(bool), typeof(ScanActionsView),
                 new PropertyMetadata(false, OnAreScanOptionsVisibleChanged));
+
+        public static readonly DependencyProperty ScanOptionsProperty =
+            DependencyProperty.Register(nameof(AreScanOptionsVisible), typeof(ScanOptions), typeof(ScanActionsView), null);
         #endregion
 
         public bool AreScanOptionsVisible
@@ -43,10 +47,14 @@ namespace Scanner.Views
             set => SetValue(AreScanOptionsVisibleProperty, value);
         }
 
-        private void OnAreScanOptionsVisibleChanged(bool newValue)
+        public ScanOptions ScanOptions
         {
-            OnPropertyChanged(nameof(IsTemplatesButtonVisible));
-            OnPropertyChanged(nameof(IsPreviewButtonVisible));
+            get => ViewModel.ScanOptions;
+            set
+            {
+                SetValue(ScanOptionsProperty, value);
+                ViewModel.ScanOptions = value;
+            }
         }
 
         [ObservableProperty]
@@ -121,10 +129,11 @@ namespace Scanner.Views
             ShowTemplates();
         }
 
-        private static void OnAreScanOptionsVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnAreScanOptionsVisibleChanged(DependencyObject source, DependencyPropertyChangedEventArgs args)
         {
-            var view = (ScanActionsView)d;
-            view.OnAreScanOptionsVisibleChanged((bool)e.NewValue);
+            var view = (ScanActionsView)source;
+            view.OnPropertyChanged(nameof(IsTemplatesButtonVisible));
+            view.OnPropertyChanged(nameof(IsPreviewButtonVisible));
         }
     }
 }

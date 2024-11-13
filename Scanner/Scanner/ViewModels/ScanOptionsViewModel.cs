@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scanner.ViewModels
 {
-    class ScanOptionsViewModel : ObservableRecipient, IDisposable
+    partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,9 @@ namespace Scanner.ViewModels
         #region Commands
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
+
+        [ObservableProperty]
+        private ScanOptions scanOptions = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
