@@ -38,7 +38,7 @@ namespace Scanner.Views
                 new PropertyMetadata(false, OnAreScanOptionsVisibleChanged));
 
         public static readonly DependencyProperty ScanOptionsProperty =
-            DependencyProperty.Register(nameof(AreScanOptionsVisible), typeof(ScanOptions), typeof(ScanActionsView), null);
+            DependencyProperty.Register(nameof(ScanOptions), typeof(ScanOptions), typeof(ScanActionsView), null);
         #endregion
 
         public bool AreScanOptionsVisible
