@@ -141,7 +141,7 @@
                         <!-- File format -->
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
                             <TextBlock Text="Save as" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,5,28,5" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
+                            <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
                                 <ComboBox.Items>
                                     <ComboBoxItem Content="Multi-page formats" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -161,7 +161,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="Best for grouping multiple pages. Viewable on any device, but difficult to edit later." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
-                                    <ComboBoxItem Content="Single-page formats" Margin="0,8,0,0" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                    <ComboBoxItem Content="Single-page formats" Padding="8,12,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
