@@ -1872,7 +1872,7 @@ Jika daftar resolusi anda hampir lepas kendali, anda sekarang dapat mengetikkan 
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
   <data name="ButtonDialogOtherAppsFree.Text" xml:space="preserve">
-    <value>Tidak dipungut biaya</value>
+    <value>Unduh</value>
     <comment>The text on the button to go to a free app download.</comment>
   </data>
   <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
