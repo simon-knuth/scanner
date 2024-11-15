@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
@@ -816,65 +817,24 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Crops the selected scan.
-        /// </summary>
-        /// <param name="index">The index of the scan that the crop is to be applied to.</param>
-        /// <param name="imageCropper">The source of the crop.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        /// <exception cref="Exception">Applying the crop failed.</exception>
-        public async Task CropScanAsync(int index, ImageCropper imageCropper)
-        {
-            AppCenterService.TrackEvent(AppCenterEvent.Crop);
-            LogService?.Log.Information("Requested crop for index {Index}.", index);
-
-            // check index
-            if (!IsValidIndex(index))
-            {
-                LogService?.Log.Error("Crop for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
-                throw new ArgumentOutOfRangeException("Invalid index for crop.");
-            }
-
-            // save changes to original file
-            IRandomAccessStream stream = null;
-            try
-            {
-                stream = await _Elements[index].ScanFile.OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(_Elements[index].ScanFile), true);
-            }
-            catch (Exception)
-            {
-                stream.Dispose();
-                throw;
-            }
-
-            stream.Dispose();
-
-            // refresh cached image, delete image without rotation and reset rotation
-            _Elements[index].CachedImage = null;
-            await _Elements[index].GetImageAsync();
-            if (_Elements[index].ImageWithoutRotation != null)
-            {
-                await _Elements[index].ImageWithoutRotation.DeleteAsync();
-            }
-            _Elements[index].ImageWithoutRotation = null;
-            _Elements[index].CurrentRotation = BitmapRotation.None;
-
-            // if necessary, generate PDF
-            if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
-        }
-
-
-        /// <summary>
         ///     Crops the selected scans.
         /// </summary>
         /// <param name="indices">The indices of the scan that the crop is to be applied to.</param>
         /// <param name="cropRegion">The desired crop region.</param>
+        /// <param name="asCopy">Whether to save the result as a copy.</param>
         /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
         /// <exception cref="Exception">Applying the crop failed.</exception>
-        public async Task CropScansAsync(List<int> indices, Rect cropRegion)
+        public async Task CropScansAsync(List<int> indices, Rect cropRegion, bool asCopy)
         {
-            AppCenterService?.TrackEvent(AppCenterEvent.CropMultiple);
-            LogService?.Log.Information("Requested crop for indices {@Indices}.", indices);
+            if (asCopy)
+            {
+                AppCenterService?.TrackEvent(AppCenterEvent.CropAsCopy);
+            }
+            else
+            {
+                AppCenterService?.TrackEvent(indices.Count == 1 ? AppCenterEvent.Crop : AppCenterEvent.CropMultiple);
+            }
+            LogService?.Log.Information("Requested crop for indices {@Indices} with {AsCopy}.", indices, asCopy);
 
             // check indices
             foreach (int index in indices)
@@ -886,10 +846,12 @@ namespace Scanner
                 }
             }
 
-            // save changes to original files
+            // crop images
             foreach (int index in indices)
             {
                 // loosely based on CropImageAsync(...) used by the ImageCropper control
+                LogService?.Log.Information("Cropping at {Index}", index);
+
                 cropRegion.X = Math.Max(cropRegion.X, 0);
                 cropRegion.Y = Math.Max(cropRegion.Y, 0);
                 var x = (uint)Math.Floor(cropRegion.X);
@@ -897,110 +859,101 @@ namespace Scanner
                 var width = (uint)Math.Floor(cropRegion.Width);
                 var height = (uint)Math.Floor(cropRegion.Height);
 
-                using (IRandomAccessStream stream = await GetImageFile(index).OpenAsync(FileAccessMode.ReadWrite))
+                // get source file
+                StorageFile sourceFile = GetImageFile(index);
+
+                // get target file
+                StorageFile targetFile;
+                if (asCopy)
                 {
-                    BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, stream);
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-                    encoder.BitmapTransform.Bounds = new BitmapBounds
+                    if (ScanResultFormat == ImageScannerFormat.Pdf)
                     {
-                        X = x,
-                        Y = y,
-                        Width = width,
-                        Height = height
-                    };
-                    await encoder.FlushAsync();
+                        targetFile = await AppDataService.FolderConversion.CreateFileAsync(
+                            _Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
+                    }
+                    else
+                    {
+                        StorageFolder targetFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
+                        targetFile = await targetFolder.CreateFileAsync(
+                            _Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
+                    }
                 }
-
-                // refresh cached image, delete image without rotation and reset rotation
-                _Elements[index].CachedImage = null;
-                await _Elements[index].GetImageAsync();
-                if (_Elements[index].ImageWithoutRotation != null)
+                else
                 {
-                    await _Elements[index].ImageWithoutRotation.DeleteAsync();
+                    targetFile = sourceFile;
                 }
-                _Elements[index].ImageWithoutRotation = null;
-                _Elements[index].CurrentRotation = BitmapRotation.None;
 
-                // if necessary, generate PDF
-                if (ScanResultFormat == ImageScannerFormat.Pdf) await GeneratePDF();
+                using (IRandomAccessStream sourceStream = await sourceFile.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    using (IRandomAccessStream targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        BitmapEncoder encoder = await HelperService.CreateOptimizedBitmapEncoderAsync(PagesFormat, targetStream);
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+                        encoder.BitmapTransform.Bounds = new BitmapBounds
+                        {
+                            X = x,
+                            Y = y,
+                            Width = width,
+                            Height = height
+                        };
+                        await encoder.FlushAsync();
+                    }
+                }
+
+
+                if (asCopy)
+                {
+                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        _Elements.Insert(index + 1, new ScanResultElement(targetFile, _Elements[index].FutureAccessListIndex,
+                            _Elements[index].IsPartOfDocument));
+                        NumberOfPages += 1;
+                    });
+
+                    RefreshItemDescriptors();
+                    await _Elements[index + 1].GetImageAsync();
+                }
+                else
+                {
+                    // refresh cached image, delete image without rotation and reset rotation
+                    _Elements[index].CachedImage = null;
+                    await _Elements[index].GetImageAsync();
+                    if (_Elements[index].ImageWithoutRotation != null)
+                    {
+                        await _Elements[index].ImageWithoutRotation.DeleteAsync();
+                    }
+                    _Elements[index].ImageWithoutRotation = null;
+                    _Elements[index].CurrentRotation = BitmapRotation.None;
+                }
             }
-        }
-
-
-        /// <summary>
-        ///     Crops the selected scan and saves the changes to a new file. The copy is then added to this instance.
-        /// </summary>
-        /// <param name="index">The scan of which a copy is to be cropped.</param>
-        /// <param name="imageCropper">The source of the crop.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
-        /// <exception cref="Exception">Applying the crop to a copy failed.</exception>
-        public async Task CropScanAsCopyAsync(int index, ImageCropper imageCropper)
-        {
-            AppCenterService.TrackEvent(AppCenterEvent.CropAsCopy);
-            LogService?.Log.Information("Requested crop as copy for index {Index}.", index);
-
-            // check index
-            if (!IsValidIndex(index))
-            {
-                LogService?.Log.Error("Crop as copy index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
-                throw new ArgumentOutOfRangeException("Invalid index for crop.");
-            }
-
-            // save crop as new file
-            StorageFile file;
-            IRandomAccessStream stream = null;
-            try
-            {
-                StorageFolder folder = null;
-                if (ScanResultFormat == ImageScannerFormat.Pdf) folder = AppDataService.FolderConversion;
-                else folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("Scan_" + _Elements[index].FutureAccessListIndex.ToString());
-
-                file = await folder.CreateFileAsync(_Elements[index].ScanFile.Name, CreationCollisionOption.GenerateUniqueName);
-                stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                await imageCropper.SaveAsync(stream, GetBitmapFileFormat(_Elements[index].ScanFile), true);
-            }
-            catch (Exception)
-            {
-                stream.Dispose();
-                throw;
-            }
-            stream.Dispose();
-
-            await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                _Elements.Insert(index + 1, new ScanResultElement(file, _Elements[index].FutureAccessListIndex,
-                    _Elements[index].IsPartOfDocument));
-                NumberOfPages += 1;
-            });
-
-            RefreshItemDescriptors();
-            await _Elements[index + 1].GetImageAsync();
 
             // if necessary, generate PDF
             if (ScanResultFormat == ImageScannerFormat.Pdf)
             {
-                try
+                if (asCopy)
                 {
-                    List<StorageFile> filesNumbering = new List<StorageFile>();
-                    for (int i = index + 1; i < _Elements.Count; i++)
+                    // prepare data for conversion
+                    int firstIndex = indices.OrderBy((x) => x).ElementAt(0);
+                    try
                     {
-                        await _Elements[i].ScanFile.RenameAsync("_" + _Elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
-                        filesNumbering.Add(_Elements[i].ScanFile);
+                        List<StorageFile> filesNumbering = new List<StorageFile>();
+                        for (int i = firstIndex + 1; i < _Elements.Count; i++)
+                        {
+                            await _Elements[i].ScanFile.RenameAsync("_" + _Elements[i].ScanFile.Name, NameCollisionOption.ReplaceExisting);
+                            filesNumbering.Add(_Elements[i].ScanFile);
+                        }
+                        await PrepareNewConversionFiles(filesNumbering, firstIndex + 1);
                     }
-                    await PrepareNewConversionFiles(filesNumbering, index + 1);
+                    catch (Exception exc)
+                    {
+                        LogService?.Log.Error(exc, "Failed to generate PDF after cropping as copy.");
+                        AppCenterService.TrackError(exc);
+                        throw;
+                    }
                 }
-                catch (Exception exc)
-                {
-                    LogService?.Log.Error(exc, "Failed to generate PDF after cropping index {Index} as copy. Attempting to get rid of copy.", index);
-                    AppCenterService.TrackError(exc);
-                    await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.RemoveAt(index + 1));
-                    NumberOfPages = _Elements.Count;
-                    try { await file.DeleteAsync(); } catch (Exception e) { LogService?.Log.Error(e, "Undo failed as well."); }
-                    RefreshItemDescriptors();
-                    throw;
-                }
+
                 await GeneratePDF();
             }
         }
@@ -1513,7 +1466,7 @@ namespace Scanner
                     }
                     else
                     {
-                        insertIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count());
+                        insertIndex = GetNewIndexAccordingToMergeConfig(mergeConfig, i, files.Count(), true);
                     }
 
                     await RunOnUIThreadAndWaitAsync(CoreDispatcherPriority.High, () => _Elements.Insert(
@@ -1707,12 +1660,12 @@ namespace Scanner
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
                             { "DisplayName", appInfo.DisplayInfo.DisplayName },
                         });
-            LogService?.Log.Information($"Requested opening with of index {index} with app '{appInfo.DisplayInfo.DisplayName}'.");
+            LogService?.Log.Information("Requested opening with of index {Index} with app '{DisplayName}'.", index, appInfo.DisplayInfo.DisplayName);
 
             // check index
             if (!IsValidIndex(index))
             {
-                LogService?.Log.Error($"Opening with of index {index} requested, but there are only {_Elements.Count} pages.");
+                LogService?.Log.Error("Opening with of index {Index} requested, but there are only {Count} pages.", index, _Elements.Count);
                 throw new ArgumentOutOfRangeException("Invalid index for opening file.");
             }
 
@@ -1748,7 +1701,7 @@ namespace Scanner
             AppCenterService?.TrackEvent(AppCenterEvent.OpenWith, new Dictionary<string, string> {
                             { "DisplayName", appInfo.DisplayInfo.DisplayName },
                         });
-            LogService?.Log.Information($"Requested opening with of document with app '{appInfo.DisplayInfo.DisplayName}'.");
+            LogService?.Log.Information("Requested opening with of document with {App}.", appInfo.DisplayInfo.DisplayName);
 
             LauncherOptions options = new LauncherOptions();
             options.TargetApplicationPackageFamilyName = appInfo.PackageFamilyName;
@@ -1778,12 +1731,12 @@ namespace Scanner
             if (Pdf == null)
             {
                 LogService?.Log.Information("PDF doesn't exist yet.");
-                Pdf = await PdfService.GeneratePdfAsync(fileName, OriginalTargetFolder);
+                Pdf = await PdfService.GeneratePdfAsync(fileName, OriginalTargetFolder, false);
             }
             else
             {
                 LogService?.Log.Information("PDF already exists.");
-                Pdf = await PdfService.GeneratePdfAsync(Pdf.Name, OriginalTargetFolder);
+                Pdf = await PdfService.GeneratePdfAsync(Pdf.Name, OriginalTargetFolder, true);
             }
         }
 
@@ -1821,11 +1774,14 @@ namespace Scanner
 
 
         /// <summary>
-        ///     Calculates the index a new page will have in the <see cref="ScanResult"/>.
+        ///     Calculates the index where a new page will be placed in the <see cref="ScanResult"/>. If the insertion is
+        ///     reversed, the index is shifted accordingly to accomodate inserting pages starting from the back unless
+        ///     <paramref name="forInsertion"/> is false.
         /// </summary>
         /// <param name="indexOfNewPage">Index of the new page among all new pages.</param>
         /// <param name="totalNewPages">The number of pages being added in total.</param>
-        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages)
+        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages,
+            bool forInsertion = false)
         {
             if (!mergeConfig.InsertReversed)
             {
@@ -1843,14 +1799,29 @@ namespace Scanner
             else
             {
                 // insert reversed
-                if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                if (forInsertion)
                 {
-                    return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage] - (totalNewPages - 1 - indexOfNewPage);
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex - mergeConfig.InsertIndices.Count;
+                    }
                 }
                 else
                 {
-                    // surplus page
-                    return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                    }
                 }
             }
         }
@@ -2021,6 +1992,62 @@ namespace Scanner
                     throw;
                 }
                 await GeneratePDF();
+            }
+        }
+
+        /// <summary>
+        ///     Exports a single page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScanAsync(int index, StorageFolder targetFolder, string name)
+        {
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                throw new ArgumentOutOfRangeException("Invalid index for exporting file.");
+            }
+
+            await _Elements[index].ScanFile.CopyAsync(targetFolder, name, NameCollisionOption.ReplaceExisting);
+        }
+
+        /// <summary>
+        ///     Exports a single page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScanAsync(int index, StorageFile targetFile, string name)
+        {
+            if (!IsValidIndex(index))
+            {
+                LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                throw new ArgumentOutOfRangeException("Invalid index for exporting file.");
+            }
+
+            await _Elements[index].ScanFile.CopyAndReplaceAsync(targetFile);
+        }
+
+        /// <summary>
+        ///     Exports a multiple page of the scan.
+        /// </summary>
+        /// <param name="index">The desired scan's indices.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid index.</exception>
+        public async Task ExportScansAsync(List<int> indices, StorageFolder targetFolder)
+        {
+            // check indices
+            foreach (int index in indices)
+            {
+                if (!IsValidIndex(index))
+                {
+                    LogService?.Log.Error("Export for index {Index} requested, but there are only {Num} pages.", index, _Elements.Count);
+                    throw new ArgumentOutOfRangeException("Invalid index for export.");
+                }
+            }
+
+            // export files
+            foreach (int index in indices)
+            {
+                await _Elements[index].ScanFile.CopyAsync(targetFolder, Pdf.DisplayName + _Elements[index].ScanFile.FileType, NameCollisionOption.GenerateUniqueName);
             }
         }
     }

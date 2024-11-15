@@ -360,6 +360,30 @@
                                     </StackPanel>
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
+                            
+                            <!-- Movement menu -->
+                            <ListViewItem.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="ButtonMoveToFront" Command="{x:Bind ViewModel.MoveBlockToFrontCommand}" CommandParameter="{x:Bind}" />
+                                    <MenuFlyoutItem x:Uid="ButtonMoveForward" Command="{x:Bind ViewModel.MoveBlockForwardCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE76B;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="ButtonMoveBackward" Command="{x:Bind ViewModel.MoveBlockBackwardCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE76C;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="ButtonMoveToBack" Command="{x:Bind ViewModel.MoveBlockToBackCommand}" CommandParameter="{x:Bind}" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem x:Uid="ButtonDeleteBlock" Command="{x:Bind ViewModel.DeleteBlockCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE107;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </ListViewItem.ContextFlyout>
                         </ListViewItem>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -87,40 +87,43 @@ namespace ImageToPDF
                 sortedConversionFiles.Sort(new ConversionFilesComparer());
 
                 // construct PDF
-                PdfDocument document = new PdfDocument();
-                foreach (StorageFile file in sortedConversionFiles)
+                using (PdfDocument document = new PdfDocument())
                 {
-                    int imageWidth, imageHeight;
-
-                    using (Bitmap bitmap = new Bitmap(file.Path))
+                    foreach (StorageFile file in sortedConversionFiles)
                     {
-                        imageWidth = bitmap.Width;
-                        imageHeight = bitmap.Height;
+                        float imageWidth, imageHeight;
+
+                        using (Image image = Image.FromFile(file.Path))
+                        {
+                            imageWidth = image.Width / image.HorizontalResolution;
+                            imageHeight = image.Height / image.VerticalResolution;
+                        }
+
+                        using (FileStream srcFile = File.OpenRead(file.Path))
+                        {
+                            // start new page
+                            PdfPage page = document.AddPage();
+
+                            // get measurements
+                            page.Width = XUnit.FromInch(imageWidth);
+                            page.Height = XUnit.FromInch(imageHeight);
+
+                            // draw image on page
+                            using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                            {
+                                gfx.DrawImage(XImage.FromStream(srcFile), 0, 0, page.Width, page.Height);
+                            }
+                        }
                     }
 
-                    using (FileStream srcFile = File.OpenRead(file.Path))
+                    // save to target file
+                    string trgFileName = (string)ApplicationData.Current.LocalSettings.Values["targetFileName"];
+                    using (FileStream resultStream = new FileStream(ApplicationData.Current.TemporaryFolder.Path + Path.DirectorySeparatorChar + trgFileName,
+                                                                    FileMode.OpenOrCreate, FileAccess.Write))
                     {
-                        // start new page
-                        PdfPage page = document.AddPage();
-
-                        // get measurements
-                        page.Width = imageWidth;
-                        page.Height = imageHeight;
-
-                        // draw image on page
-                        XGraphics gfx = XGraphics.FromPdfPage(page);
-                        gfx.DrawImage(XImage.FromStream(srcFile), 0, 0, page.Width, page.Height);
+                        document.Save(resultStream, true);
                     }
                 }
-
-                // save to target file
-                FileStream resultStream;
-                //resultStream = new FileStream(conversionFolder.Path + Path.DirectorySeparatorChar + "result.pdf", FileMode.OpenOrCreate, FileAccess.Write);
-                string trgFileName = (string)ApplicationData.Current.LocalSettings.Values["targetFileName"];
-                resultStream = new FileStream(ApplicationData.Current.TemporaryFolder.Path + Path.DirectorySeparatorChar + trgFileName,
-                                                                FileMode.OpenOrCreate, FileAccess.Write);
-
-                document.Save(resultStream, true);
             }
             catch (Exception exc)
             {

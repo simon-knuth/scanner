@@ -24,6 +24,7 @@ namespace Scanner.ViewModels
         public readonly IAppCenterService AppCenterService = Ioc.Default.GetService<IAppCenterService>();
         public readonly ILogService LogService = Ioc.Default.GetService<ILogService>();
         public readonly IScanResultService ScanResultService = Ioc.Default.GetRequiredService<IScanResultService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Commands
@@ -105,6 +106,8 @@ namespace Scanner.ViewModels
                     CloseRequested?.Invoke(this, EventArgs.Empty);
                 }
             });
+
+            ReversePages = (bool)SettingsService.GetSetting(AppSetting.LastScanMergeReversed);
             
             if (ScanResultService.Result == null || ScanResultService.Result.NumberOfPages == 0)
             {
@@ -237,6 +240,7 @@ namespace Scanner.ViewModels
             ScanMergeConfig config = CreateMergeConfig();
             if (config != null)
             {
+                SettingsService.SetSetting(AppSetting.LastScanMergeReversed, config.InsertReversed);
                 Messenger.Send(new ScanMergeRequestMessage(config));
             }
         }

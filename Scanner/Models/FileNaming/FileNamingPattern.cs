@@ -59,7 +59,7 @@ namespace Scanner.Models.FileNaming
                 ILogService logService = Ioc.Default.GetService<ILogService>();
                 IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
-                logService?.Log.Error(exc, "Generating file naming pattern from {source} failed", serialized);
+                logService?.Log.Error(exc, "Generating file naming pattern failed");
                 appCenterService.TrackError(exc);
                 throw;
             }
@@ -110,7 +110,7 @@ namespace Scanner.Models.FileNaming
                 ILogService logService = Ioc.Default.GetService<ILogService>();
                 IAppCenterService appCenterService = Ioc.Default.GetService<IAppCenterService>();
 
-                logService.Log.Error(exc, "Generating file name from {pattern} failed", GetSerialized(true));
+                logService.Log.Error(exc, "Generating file name failed");
                 appCenterService.TrackError(exc);
 
                 // fallback to rudimentary legacy file naming

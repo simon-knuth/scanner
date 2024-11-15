@@ -299,6 +299,9 @@ namespace Scanner.Services
                 case AppSetting.CustomFileNamingPattern:
                     return SettingsContainer.Values[name] ?? FileNamingStatics.DefaultCustomPattern.GetSerialized(false);
 
+                case AppSetting.LastScanMergeReversed:
+                    return SettingsContainer.Values[name] ?? true;
+
                 default:
                     throw new ArgumentException("Can not retrieve value for unknown setting " + setting + ".");
             }
@@ -423,6 +426,10 @@ namespace Scanner.Services
 
                 case AppSetting.CustomFileNamingPattern:
                     SettingsContainer.Values[name] = (string)value;
+                    break;
+
+                case AppSetting.LastScanMergeReversed:
+                    SettingsContainer.Values[name] = (bool)value;
                     break;
 
                 default:

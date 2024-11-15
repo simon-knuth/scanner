@@ -390,18 +390,9 @@
 
                             <GridViewItem.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False"/>
+                                    <MenuFlyoutItem Text="{x:Bind ItemDescriptor, Mode=OneWay}" IsEnabled="False" FontWeight="SemiBold"/>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Uid="ButtonManageShowinFileExplorer" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="True">
-                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="False"/>
-                                            </core:DataTriggerBehavior>
-                                            <core:DataTriggerBehavior Binding="{x:Bind IsPartOfDocument}" ComparisonCondition="Equal" Value="False">
-                                                <core:ChangePropertyAction PropertyName="IsEnabled" Value="True"/>
-                                            </core:DataTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                            
+                                    <MenuFlyoutItem x:Uid="ButtonManageShowinFileExplorer" Visibility="{x:Bind IsPartOfDocument}" CommandParameter="{x:Bind ScanFile}" Loaded="MenuFlyoutItemShowFileInFileExplorer_Loaded">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEC50;"/>
                                         </MenuFlyoutItem.Icon>
@@ -409,6 +400,11 @@
                                     <MenuFlyoutItem x:Uid="ButtonManageDuplicatePage" CommandParameter="{x:Bind}" Loaded="MenuFlyoutItemDuplicate_Loaded">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE8C8;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="ButtonManageExportPage" Visibility="{x:Bind IsPartOfDocument}" Command="{x:Bind ViewModel.ExportCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xEDE1;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                 </MenuFlyout>

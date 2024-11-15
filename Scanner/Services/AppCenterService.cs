@@ -54,6 +54,7 @@ namespace Scanner.Services
             { AppCenterEvent.SettingsRequested, "Settings requested" },
             { AppCenterEvent.ChangelogOpened, "Changelog opened" },
             { AppCenterEvent.ArchitectureDetected, "Architecture detected" },
+            { AppCenterEvent.OtherAppsDialogOpened, "Other apps dialog opened" },
         };
 
 

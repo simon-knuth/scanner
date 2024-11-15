@@ -122,13 +122,13 @@ namespace Scanner.Services
 
                 Connection.Close();
 
-                LogService?.Log.Information($"GetPersistentScanOptionsForScanner: Returning scan options for {scanner.Name}");
+                LogService?.Log.Information($"GetPersistentScanOptionsForScanner: Returning scan options for {scanner.Id}");
                 return result;
             }
             catch (Exception exc)
             {
                 AppCenterService?.TrackError(exc);
-                LogService.Log.Error(exc, $"Getting persistent scan options for {scanner.Name} failed.");
+                LogService?.Log.Error(exc, $"Getting persistent scan options for {scanner.Id} failed.");
                 return null;
             }
         }

@@ -16,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using static Enums;
@@ -542,10 +543,26 @@ namespace Scanner.Views
                     if (ListViewCropSimilarPages.SelectedRanges.Count == 0)
                     {
                         ViewModel.SelectedRangesCropSimilarPages = null;
+                        CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
                     }
                     else
                     {
                         ViewModel.SelectedRangesCropSimilarPages = ListViewCropSimilarPages.SelectedRanges;
+
+                        uint selectedItems = 0;
+                        foreach (ItemIndexRange range in ListViewCropSimilarPages.SelectedRanges)
+                        {
+                            selectedItems += range.Length;
+                        }
+
+                        if (selectedItems == ListViewCropSimilarPages.Items.Count)
+                        {
+                            CheckBoxCropSimilarPagesSelectAll.IsChecked = true;
+                        }
+                        else
+                        {
+                            CheckBoxCropSimilarPagesSelectAll.IsChecked = null;
+                        }
                     }
                 }
             });
@@ -836,6 +853,31 @@ namespace Scanner.Views
 
             // valid name
             ButtonRenameConfirm.IsEnabled = true;
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            ListViewCropSimilarPages.SelectAll();
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ListViewCropSimilarPages.SelectedItem = null;
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Indeterminate(object sender, RoutedEventArgs e)
+        {
+            // prevent indeterminate state if caused by selecting CheckBox
+            uint selectedItems = 0;
+            foreach (ItemIndexRange range in ListViewCropSimilarPages.SelectedRanges)
+            {
+                selectedItems += range.Length;
+            }
+
+            if (selectedItems == ListViewCropSimilarPages.Items.Count)
+            {
+                CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
+            }
         }
     }
 

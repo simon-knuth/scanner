@@ -506,7 +506,7 @@
                             <TextBlock x:Uid="HeadingScanOptionsFeederOptions" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,0,6" AutomationProperties.HeadingLevel="Level2"/>
 
                             <CheckBox x:Uid="OptionScanOptions10Pages" IsChecked="{x:Bind ViewModel.FeederMultiplePages, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
-                            <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=False}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
+                            <CheckBox x:Uid="OptionScanOptionsDuplex" IsChecked="{x:Bind ViewModel.FeederDuplex, Mode=TwoWay}" Visibility="{x:Bind ViewModel.SelectedScanner.IsFeederDuplexAllowed, Mode=OneWay, FallbackValue=Collapsed}" HorizontalAlignment="Stretch" Margin="0,3,0,0"/>
                         </StackPanel>
                     </Frame>
 
@@ -735,20 +735,51 @@
                         <TextBlock x:Name="TextBlockButtonScan" x:Uid="ButtonScanOptionsScan" Style="{StaticResource BaseTextBlockStyle}"/>
                     </StackPanel>
                     <muxc:ProgressRing x:Name="ProgressRingScan" IsActive="True" Foreground="{ThemeResource AccentButtonForegroundDisabled}" Width="24" Height="24" Visibility="Collapsed"/>
+
+                    <Border x:Name="BorderKeyboardAccelerators" IsHitTestVisible="False">
+                        <Border.KeyboardAccelerators>
+                            <KeyboardAccelerator x:Name="KeyboardAcceleratorScanAddToDocument" Modifiers="Control" Key="B" IsEnabled="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Invoked">
+                                        <core:InvokeCommandAction Command="{x:Bind ViewModel.ScanCommand}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </KeyboardAccelerator>
+                            <KeyboardAccelerator x:Name="KeyboardAcceleratorScanFresh" Modifiers="Control" Key="N">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Invoked">
+                                        <core:InvokeCommandAction Command="{x:Bind ViewModel.ScanFreshCommand}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </KeyboardAccelerator>
+                        </Border.KeyboardAccelerators>
+                    </Border>
                 </Grid>
 
                 <muxc:SplitButton.Flyout>
                     <MenuFlyout Placement="Bottom" Opening="MenuFlyoutButtonScan_Opening">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScan" x:Uid="ButtonScanOptionsScan" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="Enter" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanAddToDocument" x:Uid="ButtonScanOptionsScanAddToDocument" FontWeight="SemiBold" Command="{x:Bind ViewModel.ScanCommand}" IsEnabled="{x:Bind ViewModel.NextScanMustBeFresh, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind ViewModel.CanAddToScanResultDocument, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE710;"/>
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="B" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanFresh" x:Uid="ButtonScanOptionsScanFresh" Command="{x:Bind ViewModel.ScanFreshCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE7C3;"/>
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="N" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemButtonScanMerge" x:Uid="ButtonScanOptionsScanMerge" Command="{x:Bind ViewModel.ScanMergeConfigCommand}">
                             <MenuFlyoutItem.Icon>
@@ -763,6 +794,10 @@
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </muxc:SplitButton.Flyout>
+
+                <muxc:SplitButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="S" />
+                </muxc:SplitButton.KeyboardAccelerators>
 
                 <!-- Debug Flyout -->
                 <FlyoutBase.AttachedFlyout>

@@ -36,6 +36,10 @@ namespace Scanner.ViewModels
         public RelayCommand<string> AddBlockCommand => new RelayCommand<string>((x) => AddBlock(x));
         public RelayCommand<IFileNamingBlock> DeleteBlockCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteBlock(x));
         public RelayCommand<IFileNamingBlock> DeleteAllBlocksCommand => new RelayCommand<IFileNamingBlock>((x) => DeleteAllBlocks());
+        public RelayCommand<IFileNamingBlock> MoveBlockForwardCommand => new RelayCommand<IFileNamingBlock>((x) => MoveBlockForward(x));
+        public RelayCommand<IFileNamingBlock> MoveBlockBackwardCommand => new RelayCommand<IFileNamingBlock>((x) => MoveBlockBackward(x));
+        public RelayCommand<IFileNamingBlock> MoveBlockToFrontCommand => new RelayCommand<IFileNamingBlock>((x) => MoveBlockToFront(x));
+        public RelayCommand<IFileNamingBlock> MoveBlockToBackCommand => new RelayCommand<IFileNamingBlock>((x) => MoveBlockToBack(x));
         #endregion
 
         #region Events
@@ -113,7 +117,7 @@ namespace Scanner.ViewModels
             if (Pattern.IsValid)
             {
                 SettingsService.SetSetting(AppSetting.CustomFileNamingPattern, Pattern.GetSerialized(false));
-                LogService.Log.Information("Changes in file naming {pattern} confirmed", Pattern.GetSerialized(false));
+                LogService.Log.Information("Changes in file naming pattern confirmed");
             }
         }
 
@@ -177,6 +181,42 @@ namespace Scanner.ViewModels
 
             // generate new preview
             PreviewResult = Pattern.GenerateResult(FileNamingStatics.PreviewScanOptions, _PreviewScanner);
+        }
+
+        private void MoveBlockForward(IFileNamingBlock block)
+        {
+            int oldIndex = SelectedBlocks.IndexOf(block);
+            if (oldIndex > 0)
+            {
+                SelectedBlocks.Move(oldIndex, oldIndex - 1);
+            }
+        }
+
+        private void MoveBlockBackward(IFileNamingBlock block)
+        {
+            int oldIndex = SelectedBlocks.IndexOf(block);
+            if (oldIndex < SelectedBlocks.Count - 1)
+            {
+                SelectedBlocks.Move(oldIndex, oldIndex + 1);
+            }
+        }
+
+        private void MoveBlockToFront(IFileNamingBlock block)
+        {
+            int oldIndex = SelectedBlocks.IndexOf(block);
+            if (oldIndex > 0)
+            {
+                SelectedBlocks.Move(oldIndex, 0);
+            }
+        }
+
+        private void MoveBlockToBack(IFileNamingBlock block)
+        {
+            int oldIndex = SelectedBlocks.IndexOf(block);
+            if (oldIndex < SelectedBlocks.Count - 1)
+            {
+                SelectedBlocks.Move(oldIndex, SelectedBlocks.Count - 1);
+            }
         }
     }
 }

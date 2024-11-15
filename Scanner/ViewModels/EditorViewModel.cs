@@ -682,7 +682,8 @@ namespace Scanner.ViewModels
 
         private async Task CropAsync(ImageCropper imageCropper)
         {
-            bool success = await ScanResultService.CropScanAsync(SelectedPageIndex, imageCropper);
+            List<int> indices = new List<int> { SelectedPageIndex };
+            bool success = await ScanResultService.CropScansAsync(indices, imageCropper.CroppedRegion);
 
             if (!success) return;
 
@@ -710,7 +711,8 @@ namespace Scanner.ViewModels
 
         private async Task CropAsCopyAsync(ImageCropper imageCropper)
         {
-            bool success = await ScanResultService.CropScanAsCopyAsync(SelectedPageIndex, imageCropper);
+            List<int> indices = new List<int>() { SelectedPageIndex };
+            bool success = await ScanResultService.CropScanAsCopyAsync(indices, imageCropper.CroppedRegion);
 
             if (!success) return;
 

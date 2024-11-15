@@ -59,7 +59,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9E804161293785A2B8F7758AA3C36DB0DFBE690B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E0B5241AC9CBDA08A18376F9994B10A0DFD2D05C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -86,10 +86,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.17763.1000</Version>
+      <Version>10.0.18362.2005</Version>
     </PackageReference>
     <PackageReference Include="PDFsharp">
-      <Version>1.50.5147</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

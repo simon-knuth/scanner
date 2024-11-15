@@ -46,9 +46,8 @@ namespace Scanner.Services
         
         void DismissScanResult();
 
-        Task<bool> CropScanAsync(int index, ImageCropper imageCropper);
         Task<bool> CropScansAsync(List<int> indices, Rect cropRegion);
-        Task<bool> CropScanAsCopyAsync(int index, ImageCropper imageCropper);
+        Task<bool> CropScanAsCopyAsync(List<int> indices, Rect cropRegion);
         Task<bool> RotatePagesAsync(IList<Tuple<int, BitmapRotation>> instructions);
         Task<bool> DrawOnScanAsync(int index, InkCanvas inkCanvas);
         Task<bool> DrawOnScanAsCopyAsync(int index, InkCanvas inkCanvas);
@@ -67,6 +66,9 @@ namespace Scanner.Services
         Task<bool> OpenImageWithAsync(int index);
         Task<bool> OpenImageWithAsync(int index, AppInfo appInfo);
         Task<bool> DuplicatePageAsync(int index);
+        Task ExportScansAsync(List<int> indices, StorageFolder targetFolder);
+        Task ExportScanAsync(int index, StorageFolder targetFolder, string name);
+        Task ExportScanAsync(int index, StorageFile targetFile, string name);
         Task ApplyElementOrderToFilesAsync();
     }
 }

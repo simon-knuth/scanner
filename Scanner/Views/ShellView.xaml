@@ -273,6 +273,11 @@
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xED56;" FontSize="16"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainOtherApps" x:Uid="ButtonOtherApps" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainOtherApps, Converter={StaticResource ToolTipConverter}}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xECAD;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
 
             <Grid x:Name="GridMainContent" Padding="0,0,6,6">

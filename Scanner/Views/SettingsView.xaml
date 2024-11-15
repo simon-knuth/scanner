@@ -544,18 +544,25 @@
                     
                     <TextBlock LineHeight="28" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True">
                         <Run FontWeight="SemiBold">David</Run> - British English
+                        <LineBreak/><Run FontWeight="SemiBold">Abdulkareem Morshid</Run> - Tunisian Arabic
+                        <LineBreak/><Run FontWeight="SemiBold">Abdullah Ishtiwy</Run> - Tunisian Arabic
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Catalan
                         <LineBreak/><Run FontWeight="SemiBold">conql</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="SemiBold">Edi</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="SemiBold">xvzhenduo</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="SemiBold">赵大官人</Run> - Chinese (Simplified)
                         <LineBreak/><Run FontWeight="SemiBold">1055773545</Run> - Chinese (Simplified)
+                        <LineBreak/><Run FontWeight="SemiBold">lzlesak</Run> - Czech
+                        <LineBreak/><Run FontWeight="SemiBold">x10102</Run> - Czech
                         <LineBreak/><Run FontWeight="SemiBold">Cas Sprenger</Run> - Dutch
+                        <LineBreak/><Run FontWeight="SemiBold">Erik</Run> - Dutch
                         <LineBreak/><Run FontWeight="SemiBold">Astreptocoque</Run> - French
+                        <LineBreak/><Run FontWeight="SemiBold">י. פל.</Run> - Hebrew
                         <LineBreak/><Run FontWeight="SemiBold">Ashish Upadhyay</Run> - Hindi
                         <LineBreak/><Run FontWeight="SemiBold">Andras Kovi</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">gidano</Run> - Hungarian
                         <LineBreak/><Run FontWeight="SemiBold">nvi9</Run> - Hungarian
+                        <LineBreak/><Run FontWeight="SemiBold">Rafiuddin</Run> - Indonesian
                         <LineBreak/><Run FontWeight="SemiBold">Francesco</Run> - Italian
                         <LineBreak/><Run FontWeight="SemiBold">Marcello</Run> - Italian
                         <LineBreak/><Run FontWeight="SemiBold">Tomas Øvrebust</Run> - Norwegian
@@ -564,20 +571,25 @@
                         <LineBreak/><Run FontWeight="SemiBold">wrongway</Run> - Polish
                         <LineBreak/><Run FontWeight="SemiBold">Zaptyp (Patryk)</Run> - Polish
                         <LineBreak/><Run FontWeight="SemiBold">Brendo Paulino dos Santos</Run> - Portuguese (Brazil)
+                        <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Brazil)
                         <LineBreak/><Run FontWeight="SemiBold">Marcelo Caetano Mello</Run> - Portuguese (Brazil)
                         <LineBreak/><Run FontWeight="SemiBold">Bruno Tiago</Run> - Portuguese (Portugal)
                         <LineBreak/><Run FontWeight="SemiBold">João Tavares</Run> - Portuguese (Portugal)
+                        <LineBreak/><Run FontWeight="SemiBold">Tiberiu</Run> - Romanian
                         <LineBreak/><Run FontWeight="SemiBold">Андрей</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">Almas</Run> - Russian
+                        <LineBreak/><Run FontWeight="SemiBold">Platon Ostanin</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Russian
                         <LineBreak/><Run FontWeight="SemiBold">00000051</Run> - Russian
-                        <LineBreak/><Run FontWeight="SemiBold">Peter Verres</Run> - Slovak
+                        <LineBreak/><Run FontWeight="SemiBold">Peter Veres</Run> - Slovak
+                        <LineBreak/><Run FontWeight="SemiBold">Grega</Run> - Slovenian
                         <LineBreak/><Run FontWeight="SemiBold">Angel Leon</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Geroncity2201</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">kant</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Kenneth</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Martinet101</Run> - Spanish
                         <LineBreak/><Run FontWeight="SemiBold">Mr. BURR!</Run> - Spanish
+                        <LineBreak/><Run FontWeight="SemiBold">Bogdan</Run> - Ukrainian
                         <LineBreak/><Run FontWeight="SemiBold">Danylo</Run> - Ukrainian
                         <LineBreak/><Run FontWeight="SemiBold">RaFaeLL0</Run> - Ukrainian
                     </TextBlock>
@@ -598,7 +610,7 @@
                     <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="16,0,0,0" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="Medium" x:Uid="HeadingScanner"/>
-                            <LineBreak/><Run>Copyright © 2022</Run>
+                            <LineBreak/><Run>Copyright © 2024</Run>
                             <Hyperlink UnderlineStyle="None" NavigateUri="{x:Bind helpers:AppConstants.UriSimon}">Simon Knuth</Hyperlink>
                             <LineBreak/><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>

@@ -162,9 +162,14 @@ namespace Scanner.Views
         {
             await RunOnUIThreadAsync(CoreDispatcherPriority.High, () =>
             {
-                MenuFlyoutItemButtonScanMerge.IsEnabled =
-                    ViewModel.CanAddToScanResultDocument
-                    && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder);
+                if (ViewModel.CanAddToScanResultDocument && (ViewModel.ScannerSource == Enums.ScannerSource.Feeder))
+                {
+                    MenuFlyoutItemButtonScanMerge.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MenuFlyoutItemButtonScanMerge.Visibility = Visibility.Collapsed;
+                }
 
                 TeachingTipScanMerge.IsOpen = false;
             });
