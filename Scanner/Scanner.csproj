@@ -380,6 +380,7 @@
     <None Include="priconfig.default.xml" />
     <None Include="priconfig.packaging.xml" />
     <Content Include="Properties\Default.rd.xml" />
+    <PRIResource Include="Resources\Localization\he\Resources.resw" />
     <PRIResource Include="Resources\Localization\id\Resources.resw" />
     <PRIResource Include="Resources\Localization\cs\Resources.resw" />
     <PRIResource Include="Resources\Localization\ar-tn\Resources.resw" />
