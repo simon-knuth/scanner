@@ -117,4 +117,1736 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorMessageHeader" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The header for a generic error message.</comment>
+  </data>
+  <data name="ErrorMessageBody" xml:space="preserve">
+    <value>בבקשה נסה שנית.</value>
+    <comment>The body for a generic error message.</comment>
+  </data>
+  <data name="ButtonEditCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק עמוד ללוח גזירים (Ctrl + C)</value>
+    <comment>The tooltip text that appears while hovering the copy button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditCrop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חתוך עמוד</value>
+    <comment>The tooltip text that appears while hovering the crop button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יחס רוחב גובה</value>
+    <comment>The tooltip text that appears while hovering the aspect ratio button in the crop toolbar.</comment>
+  </data>
+  <data name="TextEditCropAspectRatio.Text" xml:space="preserve">
+    <value>יחס רוחב גובה</value>
+    <comment>The intitial text of the aspect ratio button in the crop toolbar.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai4.Text" xml:space="preserve">
+    <value>Kai 4</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 4&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai8.Text" xml:space="preserve">
+    <value>Kai 8</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 8&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai16.Text" xml:space="preserve">
+    <value>Kai 16</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 16&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioChineseKai32.Text" xml:space="preserve">
+    <value>Kai 32</value>
+    <comment>The aspect ratio description for the Chinese &quot;Kai 32&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioCustom.Text" xml:space="preserve">
+    <value>מותאם אישית</value>
+    <comment>The aspect ratio description for a custom/free aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioFlip.Text" xml:space="preserve">
+    <value>הפך</value>
+    <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioInternationalDINA.Text" xml:space="preserve">
+    <value>DIN A</value>
+    <comment>The aspect ratio description for the international &quot;DIN A&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIA.Text" xml:space="preserve">
+    <value>ANSI A - מכתב</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI A - Letter&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIB.Text" xml:space="preserve">
+    <value>ANSI B - פנקס/עתונון</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI B - Ledger/Tabloid&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioNAANSIC.Text" xml:space="preserve">
+    <value>ANSI C - גיליון רחב</value>
+    <comment>The aspect ratio description for the North American &quot;ANSI C - Broadsheet&quot;.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatioSquare.Text" xml:space="preserve">
+    <value>ריבוע</value>
+    <comment>The aspect ratio description for a square aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditDelete.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק עמוד</value>
+    <comment>The tooltip text that appears while hovering the delete button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDiscard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל שינויים</value>
+    <comment>The tooltip text that appears while hovering the button for discarding changes in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDraw.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צייר והדגש באמצעות Windows Ink</value>
+    <comment>The tooltip text that appears while hovering the &quot;Draw&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditDrawTouch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צייר באמצעות מגע</value>
+    <comment>The tooltip text that appears while hovering the button that allows to draw with touch in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditOpenWith.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח באפליקציה אחרת</value>
+    <comment>The tooltip text that appears while hovering the &quot;Open with&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditRename.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שינוי שם קובץ</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rename&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate90.Text" xml:space="preserve">
+    <value>סיבוב 90°</value>
+    <comment>The text of the &quot;Rotate 90°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate180.Text" xml:space="preserve">
+    <value>סיבוב 180°</value>
+    <comment>The text of the &quot;Rotate 180°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate270.Text" xml:space="preserve">
+    <value>סיבוב 270°</value>
+    <comment>The text of the &quot;Rotate 270°&quot; option in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditRotate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סיבוב עמוד (לחץ לחיצה ימנית לעוד)</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditSave.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמירת שינויים</value>
+    <comment>The tooltip text that appears while hovering the &quot;Save&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditSaveCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמירת שינויים כעותק</value>
+    <comment>The tooltip text that appears while hovering the &quot;Save as copy&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonEditShare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שתף</value>
+    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the edit toolbar.</comment>
+  </data>
+  <data name="ButtonManage.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רשימת עמודים</value>
+    <comment>The text of the &quot;Manage scan&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonManageCopy.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את העמודים שנבחרו</value>
+    <comment>The tooltip text that appears while hovering the &quot;Copy&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageDelete.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את העמודים שנבחרו</value>
+    <comment>The tooltip text that appears while hovering the &quot;Delete&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate90.Text" xml:space="preserve">
+    <value>סיבוב עמודים שנבחרו ב-90°</value>
+    <comment>The text of the &quot;Rotate 90°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate180.Text" xml:space="preserve">
+    <value>סיבוב עמודים שנבחרו ב-180°</value>
+    <comment>The text of the &quot;Rotate 180°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate270.Text" xml:space="preserve">
+    <value>סיבוב עמודים שנבחרו ב-270°</value>
+    <comment>The text of the &quot;Rotate 270°&quot; option in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageRotate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סיבוב עמודים שנבחרו (לחץ לחיצה ימנית לעוד)</value>
+    <comment>The tooltip text that appears while hovering the &quot;Rotate&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageSelect.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחירת עמודים</value>
+    <comment>The tooltip text that appears while hovering the &quot;Select&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManageShare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שיתוף עמודים נבחרים</value>
+    <comment>The tooltip text that appears while hovering the &quot;Share&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonScanOptions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפשרויות סריקה</value>
+    <comment>The tooltip text that appears while hovering the &quot;Scan Options&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonShowSaveLocation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג מיקום שמירה בסייר הקבצים</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsPreview.Text" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The text of the &quot;Preview&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsScan.Text" xml:space="preserve">
+    <value>סריקה</value>
+    <comment>The text of the &quot;Scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanFresh.Text" xml:space="preserve">
+    <value>סרוק והתחל מחדש</value>
+    <comment>The text of the &quot;Scan&quot; button in the scan options for starting fresh.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדרות</value>
+    <comment>The tooltip text that appears while hovering the &quot;Settings&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingDialogDelete.Text" xml:space="preserve">
+    <value>האם אתה בטוח?</value>
+    <comment>The title of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="TextDialogDelete.Text" xml:space="preserve">
+    <value>העמוד יימחק לצמיתות.</value>
+    <comment>The subtitle of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="ButtonDialogDeleteConfirm.Content" xml:space="preserve">
+    <value>מחיקה</value>
+    <comment>The action button text of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="ButtonDialogDeleteCancel.Content" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The close button text of the dialog that appears before deleting a single page.</comment>
+  </data>
+  <data name="HeadingDialogDeleteSelected.Text" xml:space="preserve">
+    <value>האם אתה בטוח?</value>
+    <comment>The title of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="TextDialogDeleteSelected.Text" xml:space="preserve">
+    <value>העמודים שנבחרו יימחקו לצמיתות.</value>
+    <comment>The subtitle of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="ButtonDialogDeleteSelectedConfirm.Content" xml:space="preserve">
+    <value>מחיקה</value>
+    <comment>The action button text of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="ButtonDialogDeleteSelectedCancel.Content" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The close button text of the dialog that appears before deleting one or more pages.</comment>
+  </data>
+  <data name="DialogFeedback.Title" xml:space="preserve">
+    <value>האם אתה נהנה מהאפליקציה?</value>
+    <comment>The title of the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogFeedback.Subtitle" xml:space="preserve">
+    <value>אשמח לשמוע מכם:</value>
+    <comment>The subtitle of the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="HeadingDialogRename.Text" xml:space="preserve">
+    <value>שנה שם</value>
+    <comment>The title of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="TextDialogRename.Text" xml:space="preserve">
+    <value>הזן שם חדש עבור הקובץ:</value>
+    <comment>The title of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ButtonDialogRenameConfirm.Content" xml:space="preserve">
+    <value>אשר</value>
+    <comment>The action button text of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ButtonDialogRenameCancel.Content" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The close button text of the dialog that allows the user to rename a page.</comment>
+  </data>
+  <data name="ErrorMessageCopyHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when copying something fails.</comment>
+  </data>
+  <data name="ErrorMessageCopyBody" xml:space="preserve">
+    <value>ההעתקה ללוח נכשלה.</value>
+    <comment>The error message body that appears when copying something fails.</comment>
+  </data>
+  <data name="ErrorMessageCropHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when cropping something fails.</comment>
+  </data>
+  <data name="ErrorMessageCropBody" xml:space="preserve">
+    <value>חיתוך אינו זמין כעת.</value>
+    <comment>The error message body that appears when cropping something fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when deleting something fails.</comment>
+  </data>
+  <data name="ErrorMessageDeleteBody" xml:space="preserve">
+    <value>מחיקה זו אינה אפשרית כרגע.</value>
+    <comment>The error message body that appears when deleting something fails.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatHeading" xml:space="preserve">
+    <value>אופפס!</value>
+    <comment>The error message heading that appears when no format was selected before starting a scan.</comment>
+  </data>
+  <data name="ErrorMessageNoFormatBody" xml:space="preserve">
+    <value>אנא בחר פורמט קובץ.</value>
+    <comment>The error message body that appears when no format was selected before starting a scan.</comment>
+  </data>
+  <data name="ErrorMessageRenameHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when renaming something fails.</comment>
+  </data>
+  <data name="ErrorMessageRenameBody" xml:space="preserve">
+    <value>שינוי לשם זה אינו אפשרי כרגע. אולי קובץ עם אותו שם כבר קיים?</value>
+    <comment>The error message body that appears when renaming something fails.</comment>
+  </data>
+  <data name="ErrorMessageRotateHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when rotating something fails.</comment>
+  </data>
+  <data name="ErrorMessageRotateBody" xml:space="preserve">
+    <value>סיבוב זה אינו אפשרי כעת. אנא נסה שוב.</value>
+    <comment>The error message body that appears when rotating something fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageSaveBody" xml:space="preserve">
+    <value>שמירת השינויים הללו נכשלה. ודא שהקובץ עדיין זמין ונסה שוב.</value>
+    <comment>The error message body that appears when saving changes fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when canceling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanCancelBody" xml:space="preserve">
+    <value>בשלב זה הסורק אינו מקבל את בקשת האפליקציה לבטל את הסריקה.</value>
+    <comment>The error message body that appears when canceling a scan fails.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when a scan fails without more information.</comment>
+  </data>
+  <data name="ErrorMessageScanErrorBody" xml:space="preserve">
+    <value>הסריקה נכשלה עקב שגיאה לא ידועה.</value>
+    <comment>The error message body that appears when a scan fails without more information.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioChinese.Text" xml:space="preserve">
+    <value>סינית</value>
+    <comment>The heading for Chinese aspect ratio options.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioInternational.Text" xml:space="preserve">
+    <value>בינלאומח</value>
+    <comment>The heading for international aspect ratio options.</comment>
+  </data>
+  <data name="HeadingEditCropAspectRatioNA.Text" xml:space="preserve">
+    <value>צפון אמריקה</value>
+    <comment>The heading for North American aspect ratio options.</comment>
+  </data>
+  <data name="HeadingScanner.Text" xml:space="preserve">
+    <value>סורק</value>
+    <comment>The heading for the app&apos;s main page.</comment>
+  </data>
+  <data name="HeadingScanOptionsColor.Text" xml:space="preserve">
+    <value>מצב צבע</value>
+    <comment>The heading for the color mode options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsFormat.Text" xml:space="preserve">
+    <value>שמור בשם</value>
+    <comment>The heading for the format options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsFeederOptions.Text" xml:space="preserve">
+    <value>אפשרויות מזין</value>
+    <comment>The heading for additional options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsResolution.Text" xml:space="preserve">
+    <value>רזולוציה</value>
+    <comment>The heading for resolution options in the scan options section.</comment>
+  </data>
+  <data name="HeadingScanOptionsSource.Text" xml:space="preserve">
+    <value>מקור</value>
+    <comment>The heading for source options in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptions10Pages.Content" xml:space="preserve">
+    <value>סרוק עד 10 עמודים ברציפות</value>
+    <comment>The option for scanning up to 10 pages consecutively in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorColor.Content" xml:space="preserve">
+    <value>צבע</value>
+    <comment>The color mode &quot;Color&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorGrayscale.Content" xml:space="preserve">
+    <value>גווני אפור</value>
+    <comment>The color mode &quot;Grayscale&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsColorMonochrome.Content" xml:space="preserve">
+    <value>מונוכרום</value>
+    <comment>The color mode &quot;Monochrome&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsDuplex.Content" xml:space="preserve">
+    <value>דו-צדדי (מלפנים ומאחור)</value>
+    <comment>The &quot;Duplex&quot; option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceAutomatic.Content" xml:space="preserve">
+    <value>קביעת תצורה אוטומטית</value>
+    <comment>The &quot;Automatic&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceFeeder.Content" xml:space="preserve">
+    <value>מזין</value>
+    <comment>The &quot;Feeder&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="OptionScanOptionsSourceFlatbed.Content" xml:space="preserve">
+    <value>משטח אופקי</value>
+    <comment>The &quot;Flatbed&quot; source option in the scan options section.</comment>
+  </data>
+  <data name="TextManageInitialPlaceholder.Text" xml:space="preserve">
+    <value>דפים סרוקים יופיעו כאן</value>
+    <comment>The initial text in the management menu which appears when no page has been scanned yet.</comment>
+  </data>
+  <data name="TextScanOptionsSourcePreviewSupported.ToolTipService.ToolTip" xml:space="preserve">
+    <value>תומך בתצוגה מקדימה</value>
+    <comment>The text that appears when hovering an icon that indicates the support for previewing a certain source mode.</comment>
+  </data>
+  <data name="HeadingPreview.Text" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The heading of the preview functionality.</comment>
+  </data>
+  <data name="TextPreviewError.Text" xml:space="preserve">
+    <value>משהו השתבש. ודא שנוסף דף ונסה שוב.</value>
+    <comment>The error message that appears when previewing fails.</comment>
+  </data>
+  <data name="ButtonSettingsSaveLocationChoose.Content" xml:space="preserve">
+    <value>בחר תיקיה</value>
+    <comment>The text of the button that allows the user to select a new folder to save files to.</comment>
+  </data>
+  <data name="ButtonSettingsSaveLocationReset.Content" xml:space="preserve">
+    <value>איפוס לברירת המחדל</value>
+    <comment>The text of the button that allows the user reset the folder to save files to.</comment>
+  </data>
+  <data name="HeadingDialogLicenses.Text" xml:space="preserve">
+    <value>רישיונות צד שלישי</value>
+    <comment>The title of the dialog that displays all third-party licenses.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when selecting a new save location failed.</comment>
+  </data>
+  <data name="ErrorMessagePickFolderBody" xml:space="preserve">
+    <value>התיקיה שנבחרה אינה זמינה. נסה לבחור מיקום אחר.</value>
+    <comment>The error message body that appears when selecting a new save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderHeading" xml:space="preserve">
+    <value>משהו השתבש</value>
+    <comment>The error message heading that appears when resetting the save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderBody" xml:space="preserve">
+    <value>איפוס מיקום התיקיה נכשל.</value>
+    <comment>The error message body that appears when resetting the save location failed.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedHeading" xml:space="preserve">
+    <value>הגישה נדחתה</value>
+    <comment>The error message heading that appears when resetting the save location failed due to an access restriction.</comment>
+  </data>
+  <data name="ErrorMessageResetFolderUnauthorizedBody" xml:space="preserve">
+    <value>האפליקציה אינה מורשית להשתמש בתיקיה זו. נסה לבחור מיקום אחר.</value>
+    <comment>The error message body that appears when resetting the save location failed due to an access restriction.</comment>
+  </data>
+  <data name="HeadingSettingsAbout.Text" xml:space="preserve">
+    <value>אודות אפליקציה זו</value>
+    <comment>The heading for the &quot;About&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFeedback.Text" xml:space="preserve">
+    <value>תן משוב</value>
+    <comment>The heading for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>שמור מיקום</value>
+    <comment>The heading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="HeadingSettingsTranslations.Text" xml:space="preserve">
+    <value>תרגומים</value>
+    <comment>The heading for the &quot;Translations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppendTime.Content" xml:space="preserve">
+    <value>הוסף זמן לשם הקובץ</value>
+    <comment>The text for the option for appending the time to file names.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutLicenses.Text" xml:space="preserve">
+    <value>רישיונות צד שלישי</value>
+    <comment>The hyperlink text for viewing third-party licenses.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutPrivacyPolicy.Text" xml:space="preserve">
+    <value>מדיניות פרטיות</value>
+    <comment>The hyperlink text for viewing the privacy policy.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutWebsite.Text" xml:space="preserve">
+    <value>דף הבית</value>
+    <comment>The hyperlink text for viewing the website.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslations.Text" xml:space="preserve">
+    <value>עזרה בתרגום</value>
+    <comment>The hyperlink text directing the user to the webpage for assisting in translating the app.</comment>
+  </data>
+  <data name="HeadingSettings.Text" xml:space="preserve">
+    <value>הגדרות</value>
+    <comment>The heading for the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeDark.Content" xml:space="preserve">
+    <value>כהה</value>
+    <comment>The dark theme option in the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeLight.Content" xml:space="preserve">
+    <value>מואר</value>
+    <comment>The light theme option in the settings.</comment>
+  </data>
+  <data name="OptionSettingsThemeSystem.Content" xml:space="preserve">
+    <value>הגדרת מערכת</value>
+    <comment>The system theme option in the settings.</comment>
+  </data>
+  <data name="DialogSettingsLicenses.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button text of the dialog that displays all third-party licenses.</comment>
+  </data>
+  <data name="ButtonCloseText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingNotificationScanComplete" xml:space="preserve">
+    <value>הסריקה הושלמה</value>
+    <comment>The heading for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="ShareUITitleMultipleFiles" xml:space="preserve">
+    <value>עמודים מרובים</value>
+    <comment>The title of the Windows share flyout for sharing multiple pages.</comment>
+  </data>
+  <data name="TextNotificationScanComplete" xml:space="preserve">
+    <value>חזור לאפליקציה כדי להציג ולערוך את התוצאה.</value>
+    <comment>The body for the notification that appears when a scan is completed in the background.</comment>
+  </data>
+  <data name="DialogTutorialManage.Subtitle" xml:space="preserve">
+    <value>האפליקציה אוספת את כל הדפים שאתם סורקים, כל עוד לא שינית את פורמט הקובץ או &quot;התחלת מחדש&quot; בעת הסריקה. אם אתה יוצר קובץ PDF, אתה יכול גם לסדר מחדש את הדפים כאן.</value>
+    <comment>The subtitle of the dialog that explains the page management.</comment>
+  </data>
+  <data name="DialogTutorialManage.Title" xml:space="preserve">
+    <value>הדפים שלך נמצאים כאן</value>
+    <comment>The title of the dialog that explains the page management.</comment>
+  </data>
+  <data name="DialogSettingsTranslationsContributors.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button text of the translation contributors dialog.</comment>
+  </data>
+  <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
+    <value>תורמים</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.ActionButtonContent" xml:space="preserve">
+    <value>הגדרות</value>
+    <comment>The settings button of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Subtitle" xml:space="preserve">
+    <value>הסריקות נשמרות במיקום השמירה המוגדר כברירת מחדל. באפשרותך לבחור תיקיה אחרת בהגדרות.</value>
+    <comment>The subtitle of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogTutorialSaveLocation.Title" xml:space="preserve">
+    <value>שמור מיקום</value>
+    <comment>The heading of the dialog that explains the save location.</comment>
+  </data>
+  <data name="DialogUpdated.ActionButtonContent" xml:space="preserve">
+    <value>יומן שינויים</value>
+    <comment>The action button text of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Subtitle" xml:space="preserve">
+    <value>אתה יכול לראות מה חדש ומה השתפר ביומן השינויים (ייתכן שזה לא יהיה זמין בכל השפות).</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogUpdated.Title" xml:space="preserve">
+    <value>האפליקציה עודכנה</value>
+    <comment>The title of the dialog that appears after an app update.</comment>
+  </data>
+  <data name="DialogChangelog.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button text of the changelog dialog.</comment>
+  </data>
+  <data name="HeadingDialogChangelog.Text" xml:space="preserve">
+    <value>מה חדש?
+</value>
+    <comment>The title of the changelog dialog.</comment>
+  </data>
+  <data name="DialogSettingsAboutCredits.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button text of the translation contributors dialog.</comment>
+  </data>
+  <data name="HeadingDialogAboutCredits.Text" xml:space="preserve">
+    <value>קרדיטים
+</value>
+    <comment>The title of the dialog that shows the translation contributors.</comment>
+  </data>
+  <data name="OptionSettingsErrorStatistics.Text" xml:space="preserve">
+    <value>שליחת דוחות שגיאות וסטטיסטיקות שימוש</value>
+    <comment>The option for sending error reports and usage statistics.</comment>
+  </data>
+  <data name="TextSettingsErrorStatistics.Text" xml:space="preserve">
+    <value>זה מאפשר לי לחקור קריסות של אפליקציות ולזהות אילו תכונות הן בעלות הערך הרב ביותר למשתמשים. היה בטוח שהדפים הסרוקים שלך לעולם אינם כלולים בדוחות אלה.</value>
+    <comment>The additional text for the option for sending error reports and usage statistics.</comment>
+  </data>
+  <data name="HeadingDialogPrivacySetup.Text" xml:space="preserve">
+    <value>פרטיות לפני הכל</value>
+    <comment>The heading for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="TextDialogPrivacySetupFooter.Text" xml:space="preserve">
+    <value>תמיד תוכל לשנות את העדפותיך בהגדרות האפליקציה.</value>
+    <comment>The footer for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="DialogExportLog.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button text for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="HeadingDialogExportLog.Text" xml:space="preserve">
+    <value>ייצוא יומן אירועים</value>
+    <comment>The heading for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="HyperlinkSettingsExportLog.Text" xml:space="preserve">
+    <value>ייצוא יומן אירועים</value>
+    <comment>The hyperlink that opens the dialog for exporting event logs.</comment>
+  </data>
+  <data name="ButtonDialogExportLogExport.Text" xml:space="preserve">
+    <value>ייצא</value>
+    <comment>The text of the button that allows the user to export a single event log.</comment>
+  </data>
+  <data name="TextDialogExportLog.Text" xml:space="preserve">
+    <value>אף אחד מהדפים הסרוקים שלך אינו כלול ביומנים אלה.</value>
+    <comment>The text for the dialog that allows the user to export event logs.</comment>
+  </data>
+  <data name="TextDialogPrivacySetup.Text" xml:space="preserve">
+    <value>אנא אשר את ההגדרות הבאות.</value>
+    <comment>The main text for the dialog that appears when privacy settings have to be checked.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutCredits.Text" xml:space="preserve">
+    <value>קרדיטים</value>
+    <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio3by2.Text" xml:space="preserve">
+    <value>3:2</value>
+    <comment>The aspect ratio description for a 3:2 aspect ratio.</comment>
+  </data>
+  <data name="ButtonEditCropAspectRatio4by3.Text" xml:space="preserve">
+    <value>4:3</value>
+    <comment>The aspect ratio description for a 4:3 aspect ratio.</comment>
+  </data>
+  <data name="TextEditSave.Text" xml:space="preserve">
+    <value>שמור</value>
+    <comment>The text of the button that saves changes.</comment>
+  </data>
+  <data name="ManifestDisplayName" xml:space="preserve">
+    <value>סורק</value>
+    <comment>App name as displayed in app list.</comment>
+  </data>
+  <data name="ManifestPackageDisplayName" xml:space="preserve">
+    <value>סורק - סריקת מסמכים מהירה וקלה</value>
+    <comment>App package name.</comment>
+  </data>
+  <data name="ManifestShortName" xml:space="preserve">
+    <value>סורק</value>
+    <comment>App name as displayed on tile.</comment>
+  </data>
+  <data name="TextPageListDescriptor" xml:space="preserve">
+    <value>עמוד {0}</value>
+    <comment>The text that describes a page in the page list. The placeholder {0} is replaced with the page number.</comment>
+  </data>
+  <data name="DefaultScanFolderName" xml:space="preserve">
+    <value>סריקות</value>
+    <comment>The name of the folder that&apos;s used by default as the save location in the Pictures Library. Can only contain letters.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationAsk.Content" xml:space="preserve">
+    <value>שאל בכל פעם</value>
+    <comment>The option to ask for a save location for each scan.</comment>
+  </data>
+  <data name="OptionSettingsSaveLocationSet.Content" xml:space="preserve">
+    <value>שימוש במיקום מוגדר</value>
+    <comment>The option to use a set save location.</comment>
+  </data>
+  <data name="ButtonBack.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חזור</value>
+    <comment>The tooltip for a generic &quot;Back&quot; button.</comment>
+  </data>
+  <data name="TextZoomFactor" xml:space="preserve">
+    <value>{0:000} %</value>
+    <comment>The current zoom factor. The placeholder {0:000} is replaced with the actual percentage value.</comment>
+  </data>
+  <data name="ButtonZoomIn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדל (Ctrl + גלגל עכבר למעלה)</value>
+    <comment>The tooltip text that appears while hovering button for zooming in on a page.</comment>
+  </data>
+  <data name="ButtonZoomOut.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הקטן (Ctrl + גלגל העכבר כלפי מטה)</value>
+    <comment>The tooltip text that appears while hovering button for zooming out on a page.</comment>
+  </data>
+  <data name="TextPageIndicator" xml:space="preserve">
+    <value>{0} מתוך {1}</value>
+    <comment>The page indicator. The placeholder {0} is replaced with the current page and {1} is replaced with the total number of pages.</comment>
+  </data>
+  <data name="OptionScanOptionsResolution" xml:space="preserve">
+    <value>{0:0} DPI</value>
+    <comment>A generic resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDefault" xml:space="preserve">
+    <value>{0:0} DPI (ברירת מחדל)</value>
+    <comment>The default resolution option. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionDocuments" xml:space="preserve">
+    <value>{0:0} DPI (מומלץ למסמכים)</value>
+    <comment>The best resolution option for documents. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="OptionScanOptionsResolutionPhotos" xml:space="preserve">
+    <value>{0:0} DPI (מומלץ לתמונות)</value>
+    <comment>The best resolution option for photos. The placeholder {0:0} is replaced with the actual resolution value.</comment>
+  </data>
+  <data name="TextScanCompleteMultipleAccessibility" xml:space="preserve">
+    <value>הסריקה הושלמה, נוספו {0} דפים</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with multiple pages is completed successfully. The placeholder {0} is replaced with the number of added pages.</comment>
+  </data>
+  <data name="TextScanFailAccessibility" xml:space="preserve">
+    <value>הסריקה נכשלה</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan failed.</comment>
+  </data>
+  <data name="TextSavedChangesAccessibility" xml:space="preserve">
+    <value>השינויים נשמרו</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved.</comment>
+  </data>
+  <data name="TextScanCompleteSingleAccessibility" xml:space="preserve">
+    <value>הסריקה הושלמה, נוסף עמוד אחד</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a scan with a single page is completed successfully.</comment>
+  </data>
+  <data name="TextSavedChangesCopyAccessibility" xml:space="preserve">
+    <value>השינויים נשמרו כעותק</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when changes have been saved as copy.</comment>
+  </data>
+  <data name="LeftPaneManage.AutomationProperties.Name" xml:space="preserve">
+    <value>סקירה כללית של הדף</value>
+    <comment>The name of the page management area for use by accessibility tools.</comment>
+  </data>
+  <data name="LeftPaneScanOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>אפשרויות סריקה</value>
+    <comment>The name of the scan options area for use by accessibility tools.</comment>
+  </data>
+  <data name="HeadingDialogDonate.Text" xml:space="preserve">
+    <value>תמכו בפיתוח</value>
+    <comment>The heading for the &quot;Donation&quot; section in settings.</comment>
+  </data>
+  <data name="DialogFeedbackButtonDonate.Text" xml:space="preserve">
+    <value>תמכו בפיתוח</value>
+    <comment>The link to the &quot;Donate&quot; section in the dialog that asks the user for feedback.</comment>
+  </data>
+  <data name="DialogChangelog.PrimaryButtonText" xml:space="preserve">
+    <value>תמכו בפיתוח</value>
+    <comment>The text of the button that links to the &quot;Donate&quot; section in the changelog dialog. This is constrained in size and shouldn&apos;t be much longer than the English version.</comment>
+  </data>
+  <data name="ButtonScanOptionsCancel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל את הסריקה הפועלת כעת</value>
+    <comment>The tooltip text that appears while hovering the &quot;Cancel scan&quot; button in the scan options.</comment>
+  </data>
+  <data name="HeadingSettingsTheme.Text" xml:space="preserve">
+    <value>ערכת נושא</value>
+    <comment>The heading for the &quot;Theme&quot; option in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackRate.Text" xml:space="preserve">
+    <value>דירוג ב- Microsoft Store</value>
+    <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
+  </data>
+  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
+    <value>גיטהאב</value>
+    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="PerformedAutoRotationBody" xml:space="preserve">
+    <value>עמוד אחד או יותר סובבו באופן אוטומטי. ניתן להשבית תכונה זו בהגדרות.</value>
+    <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="PerformedAutoRotationHeading" xml:space="preserve">
+    <value>סיבוב אוטומטי</value>
+    <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
+  </data>
+  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+    <value>יומן שינויים אחרון</value>
+    <comment>The hyperlink text for viewing the latest changelog.</comment>
+  </data>
+  <data name="HeadingChangelog3_0_0_0Section4.Text" xml:space="preserve">
+    <value>ועוד ועוד!</value>
+    <comment>Heading for the fourth changelog section.</comment>
+  </data>
+  <data name="TextHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>ודא שהסורק מופעל ומחובר באמצעות Wi-Fi או כבל USB. אם הסורק שלך אינו מופיע באפליקציית ההגדרות של Windows, תחילה יהיה עליך להוסיף אותו משם.
+
+ברגע שאתה רואה את הסורק שלך באפליקציית ההגדרות והוא כבר לא מסומן כ&quot;לא מקוון&quot;, החיבור עובד ואתה מוכן לצאת לדרך!
+
+&amp;nbsp;
+
+**טיפ:** אם לוקח ל- Windows זמן רב מדי למצוא את הסורק האלחוטי שכבר מותקן, תוכל פשוט לכבות ולהפעיל את ה- Wi-Fi כדי להפעיל חיפוש רשת באופן מיידי. זכור שהדבר עלול להפריע לגישה לאינטרנט בכל האפליקציות במכשיר שלך.</value>
+    <comment>The help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="TextHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>הפעלה מחדש של סורק פותרת בדרך כלל את רוב הבעיות שאתה עשוי להיתקל בהן. לעתים ממשק הסריקה של Windows עצמו אינו פועל כצפוי, דבר שעשוי לדרוש הפעלה מחדש של המחשב.
+
+במקרים נדירים מאוד, התקנת הסורק עלולה להיות פגומה ועליך להסיר ולאחר מכן להוסיף שוב את הסורק בהגדרות.
+
+&amp;nbsp;
+
+עיין גם במדריך הסורק לקבלת הנחיות נוספות או פנה ליצרן.</value>
+    <comment>The help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="TextHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>באפשרותך לשנות את מיקום השמירה עבור סריקות חדשות בהגדרות. אם אתה רוצה, אתה יכול גם להגדיר שהאפליקציה תשאל בכל פעם שאתה סורק משהו חדש - נהדר תמיד לשים דברים בדיוק במיקום הנכון, במקום לארגן זאת לאחר מכן.</value>
+    <comment>The help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="TextHelpChooseResolution.Text" xml:space="preserve">
+    <value>הרזולוציה קובעת את החדות הכוללת של הסריקה וגם משפיעה מאוד על גודל הקובץ. סריקה ברזולוציה גבוהה עלולה לנפח את הקובץ ולהאריך את הזמן הדרוש לכל עמוד לסריקה. סריקה ברזולוציה נמוכה עלולה לגרום לאובדן פרטים ואולי אף ליצור טקסט בלתי קריא.
+
+בחירת רזולוציה אפשרית במצב **משטח אופקי או מזין**. האפליקציה תמיד בוחרת עבורך רזולוציית ברירת מחדל, שעובדת נהדר עבור כל סוגי הסריקות. לפעמים היא אפילו ממליצה על רזולוציה למסמכים ואחת נפרדת לתמונות.
+
+ככלל, מסמכים דורשים רזולוציה של כ- 300 DPI בלבד, בעוד שתמונות נהנות מרזולוציה גבוהה יותר של כ- 500 DPI.</value>
+    <comment>The help text on choosing the right resolution.</comment>
+  </data>
+  <data name="TextHelpReorderPdf.Text" xml:space="preserve">
+    <value>ערבבת כמה דפים בזמן הסריקה? אין צורך להתחיל מחדש, ניתן לסדר מחדש במהירות את העמודים בקובץ PDF לאחר הסריקה. פשוט גרור ושחרר דפים ברשימת הדפים ומקם את הכל במקום שאליו הוא שייך.</value>
+    <comment>The help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="TextHelpSaveChanges.Text" xml:space="preserve">
+    <value>אם תערוך את הסריקות שלך ביישום, השינויים יישמרו מיד ברקע. פשוט סרוק כמה דפים, ערוך את התוצאה וסיימת!</value>
+    <comment>The help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="TextHelpStartNewPdf.Text" xml:space="preserve">
+    <value>אם ברצונך לסרוק לקובץ PDF חדש במקום להוסיף עמודים לקובץ קיים, אינך צריך להפעיל מחדש את היישום. פשוט בחר את החץ הקטן לצד לחצן הסריקה והתחל מחדש.</value>
+    <comment>The help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="TextHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>אם אינך בטוח באיזו תבנית קובץ לבחור, עליך להתרכז ב- **JPG, PNG ו- PDF**.
+
+JPG ו- PNG הם פורמטים של תמונות, מה שאומר שכל דף יישמר כקובץ נפרד. ניתן להציג קבצים אלה כמעט בכל מכשיר ולערוך אותם מאוחר יותר בקלות. JPGs הם בדרך כלל קטנים יותר מאשר PNGs, במיוחד ברזולוציות גבוהות, אבל PNG מציעים איכות כוללת טובה יותר, אשר יכול להיות חשוב בעת סריקת תמונות.
+
+PDF הוא פורמט מסמך פופולרי מאוד המאפשר לך לשמור עמודים מרובים בקובץ אחד. ניתן לצפות בפורמט זה כמעט בכל מכשיר, אך עריכת קבצים אלה מאוחר יותר אינה קלה ועשויה לדרוש תוכנה מתקדמת.</value>
+    <comment>The help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChangeScanFolder.Text" xml:space="preserve">
+    <value>שינוי התיקיה שבה נשמרות סריקות</value>
+    <comment>The heading for the help text on how to change the folder that scans are saved to.</comment>
+  </data>
+  <data name="HeadingHelpChooseFileFormat.Text" xml:space="preserve">
+    <value>בחר תבנית קובץ</value>
+    <comment>The heading for the help text on choosing a file format.</comment>
+  </data>
+  <data name="HeadingHelpChooseResolution.Text" xml:space="preserve">
+    <value>בחר רזולוציה</value>
+    <comment>The heading for the help text on choosing the right resolution.</comment>
+  </data>
+  <data name="HeadingHelpReorderPdf.Text" xml:space="preserve">
+    <value>סידור מחדש של עמודי PDF</value>
+    <comment>The heading for the help text on how to reorder the pages in a PDF file.</comment>
+  </data>
+  <data name="HeadingHelpSaveChanges.Text" xml:space="preserve">
+    <value>שמירת השינויים</value>
+    <comment>The heading for the help text on how to save changes made in the app.</comment>
+  </data>
+  <data name="HeadingHelpScannerDiscovery.Text" xml:space="preserve">
+    <value>התקנת סורק ושימוש בו</value>
+    <comment>The heading for the help text on how to install and use a scanner.</comment>
+  </data>
+  <data name="HeadingHelpScannerNotWorking.Text" xml:space="preserve">
+    <value>פתרון בעיות בסורק</value>
+    <comment>The heading for the help text on how to troubleshoot scanner issues.</comment>
+  </data>
+  <data name="HeadingHelpStartNewPdf.Text" xml:space="preserve">
+    <value>התחלת מסמך PDF חדש</value>
+    <comment>The heading for the help text on how to start a new PDF file instead of adding pages to an existing one.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderBody" xml:space="preserve">
+    <value>משהו מונע מהאפליקציה להשתמש בתיקיה מוגדרת במחשב, כך שיהיה עליך לבחור תיקיה עבור כל סריקה. ודא שאין הגדרות או תוכנת אנטי-וירוס כלשהי מפריעות.</value>
+    <comment>The body for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="ErrorMessageLoadScanFolderHeading" xml:space="preserve">
+    <value>טעינת מיקום שמירה נכשלה</value>
+    <comment>The heading for the error message that appears when loading any scan folder fails.</comment>
+  </data>
+  <data name="InfoBarSetSaveLocationUnavailable.Title" xml:space="preserve">
+    <value>משהו מונע מהאפליקציה להשתמש בתיקיה מוגדרת במחשב, כך שיהיה עליך לבחור תיקיה עבור כל סריקה. ודא שאין הגדרות או תוכנת אנטי-וירוס כלשהי מפריעות.</value>
+    <comment>The error message that appears when using a set save location fails.</comment>
+  </data>
+  <data name="ButtonDonate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>תמכו בפיתוח</value>
+    <comment>The text of the &quot;Support the development&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonEditor.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עורך</value>
+    <comment>The text of the &quot;Editor&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עזרה</value>
+    <comment>The text of the &quot;Help&quot; button in the toolbar.</comment>
+  </data>
+  <data name="ButtonGetHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבלת עזרה</value>
+    <comment>The tooltip for a button that offers help regarding some topic.</comment>
+  </data>
+  <data name="ButtonHelpScannerSettings.Text" xml:space="preserve">
+    <value>הגדרות סורק</value>
+    <comment>The text for the button in the help section that opens the scanner settings.</comment>
+  </data>
+  <data name="ButtonHelpSettings.Text" xml:space="preserve">
+    <value>הגדרות</value>
+    <comment>The text for the button in the help section that opens the settings.</comment>
+  </data>
+  <data name="ButtonHelpWiFiSettings.Text" xml:space="preserve">
+    <value>הגדרות Wi-Fi</value>
+    <comment>The text for the button in the help section that opens the Wi-Fi settings.</comment>
+  </data>
+  <data name="HeadingHelp.Text" xml:space="preserve">
+    <value>עזרה</value>
+    <comment>The heading for the help.</comment>
+  </data>
+  <data name="HeadingScanOptionsAutoCrop.Text" xml:space="preserve">
+    <value>חיתוך אוטומטי</value>
+    <comment>The heading for the auto crop section in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropDisabled.Content" xml:space="preserve">
+    <value>כבוי</value>
+    <comment>The auto crop setting for &quot;Disabled&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropMultiple.Content" xml:space="preserve">
+    <value>אזורים מרובים</value>
+    <comment>The auto crop setting for &quot;Multiple regions&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsAutoCropSingle.Content" xml:space="preserve">
+    <value>אזור יחיד</value>
+    <comment>The auto crop setting for &quot;Single region&quot; in the scan options.</comment>
+  </data>
+  <data name="OptionScanOptionsColorAuto.Content" xml:space="preserve">
+    <value>אוטומטי</value>
+    <comment>The color mode &quot;Automatic&quot; option in the scan options section.</comment>
+  </data>
+  <data name="TextScannerSearchRunning.Text" xml:space="preserve">
+    <value>מחפש סורקים...</value>
+    <comment>The text that indicates that the app is searching for installed scanners.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Subtitle" xml:space="preserve">
+    <value>הסורק צריך להיות מחובר, מופעל ומותקן כדי להשתמש בו. עיין בדף העזרה לקבלת מידע נוסף.</value>
+    <comment>The subtitle of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="DialogScannerSearchTip.Title" xml:space="preserve">
+    <value>שימוש בסורק</value>
+    <comment>The title of the dialog that quickly explains what&apos;s necessary to use a scanner.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPages.Text" xml:space="preserve">
+    <value>חתוך דפים דומים</value>
+    <comment>The text for the button in the crop settings that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesCancel.Content" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The text for the button that cancels cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonEditCropSimilarPagesConfirm.Content" xml:space="preserve">
+    <value>אישור</value>
+    <comment>The text for the button that confirms cropping multiple pages at once.</comment>
+  </data>
+  <data name="ButtonOpenWithAllApps.Text" xml:space="preserve">
+    <value>הצג את כל האפליקציות</value>
+    <comment>The text for the button that shows all available apps to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithStore.Text" xml:space="preserve">
+    <value>מצא אפליקציות נוספות בחנות</value>
+    <comment>The text for the button that allows the user to find new apps in the store to open a file with.</comment>
+  </data>
+  <data name="ButtonOpenWithWarningConfirm.Content" xml:space="preserve">
+    <value>בסדר</value>
+    <comment>The button that confirms the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="HeadingEditCrop.Text" xml:space="preserve">
+    <value>חתוך</value>
+    <comment>The heading for the crop editor.</comment>
+  </data>
+  <data name="HeadingEditCropSimilarPages.Text" xml:space="preserve">
+    <value>חתוך דפים דומים</value>
+    <comment>The heading for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="HeadingEditDraw.Text" xml:space="preserve">
+    <value>צייר</value>
+    <comment>The heading for the draw editor.</comment>
+  </data>
+  <data name="OptionDontShowAgain.Text" xml:space="preserve">
+    <value>אל תציג שוב</value>
+    <comment>The option that prevents something from being shown again.</comment>
+  </data>
+  <data name="TextEditCropSimilarPages.Text" xml:space="preserve">
+    <value>החל את החיתוך הנוכחי על עמודים מרובים עם אותן מידות בבת אחת.</value>
+    <comment>The body for the menu that allows the user to crop multiple pages at once.</comment>
+  </data>
+  <data name="TextOpenWithWarning.Text" xml:space="preserve">
+    <value>על ידי בחירת אפליקציה בתפריט הבא, כל הדפים ייסגרו כאן.</value>
+    <comment>The body for the text that warns the user that choosing an app to open a file with will close all pages in Scanner.</comment>
+  </data>
+  <data name="ButtonManagePrint.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הדפס עמודים נבחרים</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar.</comment>
+  </data>
+  <data name="ButtonManagePrintSingle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הדפס</value>
+    <comment>The tooltip text that appears while hovering the &quot;Print&quot; button in the management toolbar without anything selected.</comment>
+  </data>
+  <data name="TextButtonPreviewToolTipNoRegion" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The tooltip for the scan preview button.</comment>
+  </data>
+  <data name="DialogPreview.Title" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The heading for the scan preview.</comment>
+  </data>
+  <data name="TextPromisePrivacy.Text" xml:space="preserve">
+    <value>נתונים אישיים נשארים במכשיר שלך</value>
+    <comment>The text promising privacy.</comment>
+  </data>
+  <data name="DialogDonate.PrimaryButtonText" xml:space="preserve">
+    <value>תרום</value>
+    <comment>The donation button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="DialogDonate.SecondaryButtonText" xml:space="preserve">
+    <value>לא, תודה</value>
+    <comment>The cancel button in the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="TextPromiseNoAds.Text" xml:space="preserve">
+    <value>ללא פרסומות</value>
+    <comment>The text promising an ads-free experience.</comment>
+  </data>
+  <data name="TextPromiseNoSubscriptions.Text" xml:space="preserve">
+    <value>ללא מינויים</value>
+    <comment>The text promising a subscription-free experience.</comment>
+  </data>
+  <data name="TextPromiseUpdates.Text" xml:space="preserve">
+    <value>עדכונים בחינם</value>
+    <comment>The text promising free updates.</comment>
+  </data>
+  <data name="TextDonateDialog.Text" xml:space="preserve">
+    <value>אפליקציה זו זמינה ללא עלות לשימוש כולם.
+
+אם אהבת אותה, אתה יכול לתמוך ישירות בפיתוח עם תרומה.
+
+תודה! ❤️</value>
+    <comment>The body for the dialog asking the user to support the development.</comment>
+  </data>
+  <data name="ButtonManageDuplicatePage.Text" xml:space="preserve">
+    <value>שכפל את העמוד</value>
+    <comment>The text for the button that duplicates a page.</comment>
+  </data>
+  <data name="ButtonManageShowinFileExplorer.Text" xml:space="preserve">
+    <value>הצג בסייר הקבצים</value>
+    <comment>The text for the button that shows a selected file in File Explorer.</comment>
+  </data>
+  <data name="ButtonScanOptionsReset.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שחזר לברירת המחדל</value>
+    <comment>The tooltip text that appears while hovering the button that resets a scan option to its default value.</comment>
+  </data>
+  <data name="HeadingScanOptionsBrightness.Text" xml:space="preserve">
+    <value>התאמת בהירות</value>
+    <comment>The heading for the brightness adjustment section in the scan options.</comment>
+  </data>
+  <data name="HeadingScanOptionsContrast.Text" xml:space="preserve">
+    <value>התאמת ניגודיות</value>
+    <comment>The heading for the contrast adjustment section in the scan options.</comment>
+  </data>
+  <data name="TextScanOptionsAlwaysSaved.Text" xml:space="preserve">
+    <value>נשמר תמיד בהפעלות האפליקציה</value>
+    <comment>The text for scan options that are always saved across app sessions.</comment>
+  </data>
+  <data name="HeadingHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>התאמת בהירות וניגודיות</value>
+    <comment>The heading for the help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="SubheadingSettingsSaveLocation.Text" xml:space="preserve">
+    <value>בחר היכן יישמרו סריקות</value>
+    <comment>The subheading for the &quot;Save location&quot; option in settings.</comment>
+  </data>
+  <data name="TextErrorUnavailableWhileScanning.Text" xml:space="preserve">
+    <value>לא זמין בזמן סריקה</value>
+    <comment>The error that appears when something is unavailable while a scan is in progress.</comment>
+  </data>
+  <data name="TextHelpBrightnessContrast.Text" xml:space="preserve">
+    <value>בהירות וניגודיות הן אפשרויות סריקה מתקדמות וניתן להפעיל אותן בהגדרות. אם הסורק אינו תומך באפשרויות אלה, הן יישארו מוסתרות.
+
+התאמת הבהירות והניגודיות אפשרית רק במצב **משטח או מזין**.</value>
+    <comment>The help text on how to adjust the brightness and contrast.</comment>
+  </data>
+  <data name="TextSettingsFeedback.Text" xml:space="preserve">
+    <value>באפשרותך לדרג את סורק ב- Microsoft Store כדי להציע תכונות חדשות ולעזור לאחרים להחליט אם זו האפליקציה המתאימה להם. משתמשים מקצועיים יכולים גם להשפיע על המשך הפיתוח ב- GitHub.</value>
+    <comment>The text for the &quot;Feedback&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsRestart.Text" xml:space="preserve">
+    <value>שינויים בהגדרה זו יוצגו רק לאחר ההפעלה מחדש של האפליקציה.</value>
+    <comment>The text indicating that changes to a setting are only applied after restarting the app.</comment>
+  </data>
+  <data name="TextSettingsTranslations.Text" xml:space="preserve">
+    <value>Windows מציע תמיכה עבור למעלה מ- 100 שפות - באפשרותך לסייע בהפיכת אפליקציה זו לנגישה לאנשים בכל רחבי העולם.</value>
+    <comment>The text for the &quot;Translation&quot; section in settings.</comment>
+  </data>
+  <data name="ButtonSettingsAutoRotationAddLanguage.Text" xml:space="preserve">
+    <value>הוסף שפה נוספת</value>
+    <comment>The text for the button that allows the user to add a new language for the automatic rotation recognizer.</comment>
+  </data>
+  <data name="HeadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>סיבוב אוטומטי</value>
+    <comment>The heading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsErrorReports.Text" xml:space="preserve">
+    <value>דוחות שגיאות ויומני רישום</value>
+    <comment>The heading for the &quot;Error reports and logs&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsFileNaming.Text" xml:space="preserve">
+    <value>מתן שמות לקבצים</value>
+    <comment>The heading for the &quot;File naming&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsPersonalization.Text" xml:space="preserve">
+    <value>התאמה אישית</value>
+    <comment>The heading for personalization settings.</comment>
+  </data>
+  <data name="HeadingSettingsScanOptions.Text" xml:space="preserve">
+    <value>אפשרויות סריקה</value>
+    <comment>The heading for the &quot;Scan options&quot; section in settings.</comment>
+  </data>
+  <data name="HeadingSettingsSurveys.Text" xml:space="preserve">
+    <value>סקרים</value>
+    <comment>The heading for the &quot;Surveys&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAutoRotation.Content" xml:space="preserve">
+    <value>סובב עמודים באופן אוטומטי</value>
+    <comment>The option for automatically rotating scanned pages.</comment>
+  </data>
+  <data name="HyperlinkSettingsAutoRotationLanguage.Text" xml:space="preserve">
+    <value>שפת זיהוי</value>
+    <comment>The option for choosing the language of the recognizer used to automatically rotate pages.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationHorizontal.Content" xml:space="preserve">
+    <value>אופקי</value>
+    <comment>The option for the horizontal editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsEditorOrientationVertical.Content" xml:space="preserve">
+    <value>אנכי</value>
+    <comment>The option for the vertical editor orientation in settings.</comment>
+  </data>
+  <data name="OptionSettingsRememberScanOptions.Content" xml:space="preserve">
+    <value>זכור את אפשרויות הסריקה האחרונות שהיו בשימוש</value>
+    <comment>The option for remembering the last used scan options.</comment>
+  </data>
+  <data name="OptionSettingsShowAdvancedScanOptions.Content" xml:space="preserve">
+    <value>הצגת אפשרויות סריקה מתקדמות הנתמכות על-ידי הסורק</value>
+    <comment>The option for showing advanced scan options.</comment>
+  </data>
+  <data name="OptionSettingsSurveys.Content" xml:space="preserve">
+    <value>השתתף בסקרים מזדמנים</value>
+    <comment>The option for showing occasional surveys in settings.</comment>
+  </data>
+  <data name="SubheadingSettingsAutoRotation.Text" xml:space="preserve">
+    <value>קביעה אוטומטית של כיוון נכון לעמודים סרוקים</value>
+    <comment>The subheading for the &quot;Automatic rotation&quot; section in settings.</comment>
+  </data>
+  <data name="TextSettingsAutoRotationExplanation.Text" xml:space="preserve">
+    <value>תכונה זו בוחנת את תוכן הטקסט של עמודים סרוקים כדי לקבוע את הכיוון הנכון שלהם. התהליך מופעל באמצעות זיהוי טקסט במכשיר - היה בטוח שטקסט מזוהה לעולם לא עוזב את המכשיר שלך.</value>
+    <comment>The text explaining the automatic rotation of pages.</comment>
+  </data>
+  <data name="InfoBarDialogChangelogWindowsVersion.Title" xml:space="preserve">
+    <value>הסורק פועל בצורה הטובה ביותר ב-Windows 11. אנא שמור על המערכת שלך מעודכנת לקבלת חוויה מיטבית.</value>
+    <comment>The text in the changelog reminding the user to keep Windows up-to-date.</comment>
+  </data>
+  <data name="TextNewStatusMessageAccessibility" xml:space="preserve">
+    <value>הודעת מצב חדשה זמינה</value>
+    <comment>The text that can be presented by assistive technologies (e.g. read to the user) when a new status message is available.</comment>
+  </data>
+  <data name="HeadingEditor.Text" xml:space="preserve">
+    <value>עורך</value>
+    <comment>The heading for the editor.</comment>
+  </data>
+  <data name="HeadingPageList.Text" xml:space="preserve">
+    <value>רשימת דפים</value>
+    <comment>The heading for the page list.</comment>
+  </data>
+  <data name="HeadingScanOptions.Text" xml:space="preserve">
+    <value>אפשרויות סריקה</value>
+    <comment>The heading for the scan options.</comment>
+  </data>
+  <data name="HeadingHelpAutoCrop.Text" xml:space="preserve">
+    <value>חיתוך סריקות באופן אוטומטי</value>
+    <comment>The heading for the help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="TextHelpAutoCrop.Text" xml:space="preserve">
+    <value>האפשרויות לחיתוך אוטומטי מוסתרות כברירת מחדל וניתן להפעיל אותן בהגדרות. אם הסורק אינו תומך באפשרויות אלה, הן יישארו מוסתרות.
+
+חיתוך אוטומטי אפשרי רק במצב **משטח או מזין**.
+
+חיתוך &quot;אזור יחיד&quot; יוצר תמונה אחת, שימושית במיוחד לסריקת מסמכים. חיתוך &quot;אזורים מרובים&quot; יכול לזהות יותר מאלמנט אחד בסריקה אחת, דבר שימושי להצבת תמונות מרובות על משטח אופקי.</value>
+    <comment>The help text on how to use automatic cropping.</comment>
+  </data>
+  <data name="DialogSurvey.Subtitle" xml:space="preserve">
+    <value>תשובותיך חסויות.</value>
+    <comment>The subtitle for the survey dialog.</comment>
+  </data>
+  <data name="DialogSurvey.Title" xml:space="preserve">
+    <value>סקר</value>
+    <comment>The title for the survey dialog.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryAlreadyInstalled" xml:space="preserve">
+    <value>כבר הותקן</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryArticleWebsite" xml:space="preserve">
+    <value>אתר/מאמר</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryDontKnow" xml:space="preserve">
+    <value>אני לא יודע</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryOther" xml:space="preserve">
+    <value>אחר</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryRecommended" xml:space="preserve">
+    <value>המלצה של מישהו</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyAppDiscoveryStore" xml:space="preserve">
+    <value>Microsoft Store</value>
+    <comment>A survey option for how the user discovered the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageOther" xml:space="preserve">
+    <value>אחר</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsagePrivate" xml:space="preserve">
+    <value>פרטי</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageSchool" xml:space="preserve">
+    <value>בית ספר</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageStudy" xml:space="preserve">
+    <value>מחקר</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="OptionSurveyUsageWork" xml:space="preserve">
+    <value>עבודה</value>
+    <comment>A survey option for how the user mainly uses the app.</comment>
+  </data>
+  <data name="TextSurveyAppDiscovery.Text" xml:space="preserve">
+    <value>איך גילית את האפליקציה הזו?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="TextSurveyEaseOfUse.Text" xml:space="preserve">
+    <value>כמה קל להשתמש באפליקציה זו?</value>
+    <comment>The survey question on ease of use.</comment>
+  </data>
+  <data name="TextSurveyFeatures.Text" xml:space="preserve">
+    <value>האם האפליקציה מציעה את כל התכונות שציפית להן?</value>
+    <comment>The survey question on the offered features.</comment>
+  </data>
+  <data name="TextSurveyFileFormats.Text" xml:space="preserve">
+    <value>עד כמה אתה מרוצה מפורמטי הקבצים הזמינים?</value>
+    <comment>The survey question on available file formats.</comment>
+  </data>
+  <data name="TextSurveyFileSize.Text" xml:space="preserve">
+    <value>עד כמה אתה מרוצה מגודל הקבצים שנוצרו?</value>
+    <comment>The survey question on file sizes.</comment>
+  </data>
+  <data name="TextSurveyInterface.Text" xml:space="preserve">
+    <value>כיצד היית מדרג את ממשק האפליקציה?</value>
+    <comment>The survey question on the app interface.</comment>
+  </data>
+  <data name="TextSurveyPerformance.Text" xml:space="preserve">
+    <value>כמה מהר האפליקציה רצה במכשיר שלך?</value>
+    <comment>The survey question on performance.</comment>
+  </data>
+  <data name="TextSurveyRecommend.Text" xml:space="preserve">
+    <value>מה הסיכוי שתמליץ על אפליקציה זו למישהו שרוצה להשתמש בסורק?</value>
+    <comment>The survey question on recommending the app to others.</comment>
+  </data>
+  <data name="TextSurveyUsage.Text" xml:space="preserve">
+    <value>למה אתה משתמש בעיקר באפליקציה?</value>
+    <comment>The survey question on how the user discovered the app.</comment>
+  </data>
+  <data name="StoreDescription" xml:space="preserve">
+    <value>סריקת מסמכים ותמונות מתבצעת כעת ללא מאמץ כפי שהיא אמורה להיות. סרוק עמודים מסוימים כקובצי תמונה, סובב וחתוך אותם באמצעות ההגדרות המוגדרות מראש המובנות ושתף אותם במהירות באמצעות דוא&quot;ל - או צור קובץ PDF מרובה עמודים, תן לו שם אקספרסיבי ואחסן אותו בארכיון בתיקייה הנכונה.
+עם סורק אתה יכול לעשות הכל במקום אחד, ללא צורך בעורכי תמונות נוספים או בתוכנת PDF יקרה.
+
+כמעט כל סורק שנמצא בשימוש כיום נתמך על ידי אפליקציה זו, כך שאינך צריך להשתמש בתוכנה המיושנת והמסורבלת שמספק יצרן המכשיר שלך. הוא תוכנן מתוך מחשבה על פשטות וקלות שימוש, תוך שהוא מציע גם כלים ותכונות מתקדמים.
+
+הפורמטים הנתמכים הם PDF, JPG, PNG, TIF ו- BMP.</value>
+    <comment>The Microsoft Store description of the app.</comment>
+  </data>
+  <data name="StoreProductName" xml:space="preserve">
+    <value>סורק - סריקת מסמכים מהירה וקלה</value>
+    <comment>The full official title of the app. This will be displayed in the Store and has to include &quot;Scanner&quot; (and preferably start with it).</comment>
+  </data>
+  <data name="StoreShortDescription" xml:space="preserve">
+    <value>סרוק מסמכים ותמונות, ערוך את העמודים ושמור אותם כקובצי PDF או תמונה - והכל באפליקציה אחת קלה לשימוש.</value>
+    <comment>A short and concise description of the app.</comment>
+  </data>
+  <data name="StoreShortTitle" xml:space="preserve">
+    <value>סורק</value>
+    <comment>Shorter version of the app name, should usually be &quot;Scanner&quot;.</comment>
+  </data>
+  <data name="StoreVoiceTitle" xml:space="preserve">
+    <value>סורק</value>
+    <comment>App title for voice control.</comment>
+  </data>
+  <data name="ImageAppLogo.AutomationProperties.Name" xml:space="preserve">
+    <value>סמל אפליקציה</value>
+    <comment>The accessibility description for the app logo.</comment>
+  </data>
+  <data name="HeadingHelpFilesSaveLocation.Text" xml:space="preserve">
+    <value>קבצים ומיקום שמירה</value>
+    <comment>The heading for files and save location help.</comment>
+  </data>
+  <data name="HeadingHelpPdf.Text" xml:space="preserve">
+    <value>PDF</value>
+    <comment>The heading for PDF help.</comment>
+  </data>
+  <data name="HeadingHelpScannerUsage.Text" xml:space="preserve">
+    <value>שימוש בסורק</value>
+    <comment>The heading for scanner usage help.</comment>
+  </data>
+  <data name="HeadingSettingsAnimations.Text" xml:space="preserve">
+    <value>הנפשות</value>
+    <comment>The heading for the &quot;Animations&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsAnimations.Content" xml:space="preserve">
+    <value>הצגת הנפשות</value>
+    <comment>The text for the option for showing animations.</comment>
+  </data>
+  <data name="HeadingSettingsScanAction.Text" xml:space="preserve">
+    <value>פעולת סריקה המוגדרת כברירת מחדל</value>
+    <comment>The heading for the &quot;Default scan action&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionAdd.Content" xml:space="preserve">
+    <value>הוסף לעמודים קיימים</value>
+    <comment>The option for trying to add new pages to existing ones in settings.</comment>
+  </data>
+  <data name="OptionSettingsScanActionStartFresh.Content" xml:space="preserve">
+    <value>התחל מחדש</value>
+    <comment>The option for always starting fresh in settings.</comment>
+  </data>
+  <data name="ButtonScanOptionsSettingsScanAction.Text" xml:space="preserve">
+    <value>הגדרות</value>
+    <comment>The text for the button in the scan options that opens the scan action section in the settings.</comment>
+  </data>
+  <data name="TextErrorSettingsAutoRotationNoLanguage.Text" xml:space="preserve">
+    <value>סיבוב אוטומטי אינו זמין כעת, מכיוון שאף אחת מהשפות המותקנות אינה תומכת בזיהוי טקסט. התקן שפה נתמכת (כולל כל חלקיה הנפרדים) והפעל מחדש את המחשב כדי להשתמש בתכונה זו.</value>
+    <comment>The error message that appears when automatic rotation is unavailable because none of the installed languages support text recognition.</comment>
+  </data>
+  <data name="TextClose.Text" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The button text for a generic close button.</comment>
+  </data>
+  <data name="HeadingSettingsMeasurementUnits.Text" xml:space="preserve">
+    <value>אמות מידה</value>
+    <comment>The heading for the &quot;Measurement Units&quot; section in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsImperialUS.Content" xml:space="preserve">
+    <value>אימפריאלי/ארה&quot;ב</value>
+    <comment>The option for the imperial/US measurement units in settings.</comment>
+  </data>
+  <data name="OptionSettingsMeasurementUnitsMetric.Content" xml:space="preserve">
+    <value>מטרי</value>
+    <comment>The option for the metric measurement units in settings.</comment>
+  </data>
+  <data name="TextMeasurementsUnitCentimeters" xml:space="preserve">
+    <value>ס&quot;מ</value>
+    <comment>The unit text that appears after a centimeter value.</comment>
+  </data>
+  <data name="TextMeasurementsUnitInches" xml:space="preserve">
+    <value>ב</value>
+    <comment>The unit text that appears after an inch value.</comment>
+  </data>
+  <data name="DialogScanMerge.CloseButtonText" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The close button text of the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="DialogScanMerge.PrimaryButtonText" xml:space="preserve">
+    <value>סרוק ומזג</value>
+    <comment>The text of the button that starts a scan from the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="HeadingDialogScanMerge.Text" xml:space="preserve">
+    <value>סריקה ומיזוג ל- PDF</value>
+    <comment>The heading for the &quot;Scan and merge&quot; dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementSinglePage" xml:space="preserve">
+    <value>עמוד סרוק יחיד</value>
+    <comment>The preview description for a single page added in &quot;Scan and merge&quot;. This is a single page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeElementStartPage" xml:space="preserve">
+    <value>העמוד הסרוק הראשון</value>
+    <comment>The preview description for the first page added in &quot;Scan and merge&quot;. This is the first page that will be inserted after the scan.</comment>
+  </data>
+  <data name="TextScanMergeExplanation.Text" xml:space="preserve">
+    <value>ניתן להשתמש בכלי זה להוספת עמודים חדשים במקום מסוים. הכלי גם מאפשר לך לסרוק גיליונות דו-צדדיים מרובים ללא סורק דו-צדדי, על ידי סריקת הצדדים הקדמיים תחילה ולאחר מכן מיזוג כל הצדדים האחוריים לסריקה הראשונה.</value>
+    <comment>The explanation for &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeInBetweenPages.Text" xml:space="preserve">
+    <value>בין עמודים</value>
+    <comment>The desciption for the in-between pages in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="TextScanMergeStartPage.Text" xml:space="preserve">
+    <value>עמוד ראשון</value>
+    <comment>The desciption for the first page added in &quot;Scan and merge&quot;.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanAddToDocument.Text" xml:space="preserve">
+    <value>סריקה והוספה ל- PDF</value>
+    <comment>The text of the &quot;Scan and add to document&quot; button in the scan options for adding pages to the existing document.</comment>
+  </data>
+  <data name="ButtonScanOptionsScanMerge.Text" xml:space="preserve">
+    <value>סרוק ומזג ל- PDF...</value>
+    <comment>The text of the &quot;Scan and merge into PDF&quot; button in the scan options for merging new pages into an existing document.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Subtitle" xml:space="preserve">
+    <value>ניתן לבחור באפשרות &quot;סרק ומזג ל-PDF&quot; בתפריט הסריקה כדי להוסיף עמודים חדשים במקומות מסוימים. זה הופך את סריקת הדפים הדו-צדדיים לחתיכת עוגה.</value>
+    <comment>The subtitle of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="DialogScanMergeTip.Title" xml:space="preserve">
+    <value>סריקה ומיזוג</value>
+    <comment>The title of the dialog that quickly highlights the &quot;Scan and merge&quot; tool.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableBody" xml:space="preserve">
+    <value>הקובץ שאתה מנסה לערוך או להשתמש בו אינו זמין. אל תעביר, תשנה שם או תפתח קבצים מחוץ לאפליקציה, עד שתסיים לערוך את הקובץ כאן.</value>
+    <comment>The error message body that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ErrorMessageFileUnavailableHeading" xml:space="preserve">
+    <value>הקובץ אינו זמין</value>
+    <comment>The error message heading that appears when a file is unavailable.</comment>
+  </data>
+  <data name="ButtonScanOptionsDiscardScanRegion.Text" xml:space="preserve">
+    <value>מחק את אזור הסריקה שנבחר</value>
+    <comment>The text for the button that discards the selected scan region in the scan options.</comment>
+  </data>
+  <data name="ButtonClosePreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The close button tooltip of the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewApplyRegion.Text" xml:space="preserve">
+    <value>החלת בחירה</value>
+    <comment>The text of the button that applies the selected scan region in the preview dialog.</comment>
+  </data>
+  <data name="ButtonPreviewSelectRegion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר אזור סריקה</value>
+    <comment>The tooltip that appears while hovering the button in the preview for selecting a scan region.</comment>
+  </data>
+  <data name="HeadingPreviewSelectRegion.Text" xml:space="preserve">
+    <value>בחירת אזור סריקה</value>
+    <comment>The heading for the tool that allows the user to select a scan region from the preview.</comment>
+  </data>
+  <data name="OptionPreviewHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גובה התצוגה המקדימה כולה</value>
+    <comment>The tooltip that appears while hovering the height value of the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedHeight.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גובה אזור הסריקה שנבחר</value>
+    <comment>The tooltip that appears while hovering the height value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewSelectedWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רוחב אזור הסריקה שנבחר</value>
+    <comment>The tooltip that appears while hovering the width value of the selected region in the preview.</comment>
+  </data>
+  <data name="OptionPreviewWidth.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רוחב התצוגה המקדימה כולה</value>
+    <comment>The tooltip that appears while hovering the width value of the preview.</comment>
+  </data>
+  <data name="StoreUpdate3_2_0_0" xml:space="preserve">
+    <value>מתן שמות לקבצים בהתאמה אישית
+אתה נראה כמו מישהו שאוהב להישאר מאורגן, וסורק כאן כדי לעזור! נסה את ההגדרות החדשות והגמישות במיוחד למתן שמות לקבצים כדי להקדיש זמן רב יותר לסריקה ופחות זמן לשינוי שם.
+
+בחירת שפה
+האם אתה דו-לשוני? תלת לשוני? בחר שפת אפליקציה שאינה תלויה בשפת המערכת שלך (עם זאת, האפליקציה תוצג בשפה אחת בלבד).
+
+רשימת רזולוציות משופרת
+אם רשימת הרזולוציות שלך ארוכה מדי, כעת תוכל פשוט להקליד את הרזולוציה הרצויה בתיבה במקום לגלול במשך שעות.</value>
+    <comment>A description of what&apos;s new with this update.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>מתן שמות לקבצים בהתאמה אישית</value>
+    <comment>Heading for the first changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>בחירת שפה</value>
+    <comment>Heading for the second changelog section.</comment>
+  </data>
+  <data name="HeadingChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>רשימת רזולוציות משופרת</value>
+    <comment>Heading for the third changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section1.Text" xml:space="preserve">
+    <value>אתה נראה כמו מישהו שאוהב להישאר מאורגן, וסורק כאן כדי לעזור! נסה את ההגדרות החדשות והגמישות במיוחד למתן שמות לקבצים כדי להקדיש זמן רב יותר לסריקה ופחות זמן לשינוי שם.</value>
+    <comment>Text for the first changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section2.Text" xml:space="preserve">
+    <value>האם אתה דו-לשוני? תלת לשוני? בחר שפת אפליקציה שאינה תלויה בשפת המערכת שלך (עם זאת, האפליקציה תוצג בשפה אחת בלבד).</value>
+    <comment>Text for the second changelog section.</comment>
+  </data>
+  <data name="TextChangelog3_2_0_0Section3.Text" xml:space="preserve">
+    <value>אם רשימת הרזולוציות שלך ארוכה מדי, כעת תוכל פשוט להקליד את הרזולוציה הרצויה בתיבה במקום לגלול במשך שעות.</value>
+    <comment>Text for the third changelog section.</comment>
+  </data>
+  <data name="ButtonDialogRenameFileNamingSettings.Text" xml:space="preserve">
+    <value>הגדרות מתן שמות לקבצים</value>
+    <comment>The text for the button that opens the file naming settings from the rename dialog.</comment>
+  </data>
+  <data name="TextScanMergeElementLastPage" xml:space="preserve">
+    <value>עמוד סרוק אחרון</value>
+    <comment>The preview description for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed. This is the first page that will be inserted after the scan, but the last one that was actually scanned by the scanner.</comment>
+  </data>
+  <data name="TextScanMergeLastPage.Text" xml:space="preserve">
+    <value>עמוד אחרון</value>
+    <comment>The desciption for the last page added in &quot;Scan and merge&quot; when the insertion direction is reversed.</comment>
+  </data>
+  <data name="HeadingSettingsAppLanguage.Text" xml:space="preserve">
+    <value>שפת האפליקציה</value>
+    <comment>The heading for the &quot;App language&quot; option in settings.</comment>
+  </data>
+  <data name="OptionSettingsAppLanguageSystem" xml:space="preserve">
+    <value>הגדרת מערכת</value>
+    <comment>The system setting option in the app language settings.</comment>
+  </data>
+  <data name="TextScanProgressAutomaticRotation.Text" xml:space="preserve">
+    <value>סיבוב אוטומטי...</value>
+    <comment>The text that indicates that a scan is currently being automatically rotated.</comment>
+  </data>
+  <data name="TextScanProgressFinishing.Text" xml:space="preserve">
+    <value>כמעט סיימתי. . .</value>
+    <comment>The text that indicates that a scan is almost done.</comment>
+  </data>
+  <data name="TextScanProgressPdfGeneration.Text" xml:space="preserve">
+    <value>מכין PDF...</value>
+    <comment>The text that indicates that a PDF is currently being generated.</comment>
+  </data>
+  <data name="TextScanProgressProcessing.Text" xml:space="preserve">
+    <value>מעבד...</value>
+    <comment>The text that indicates that a scan is currently being processed.</comment>
+  </data>
+  <data name="TextScanProgressSaving.Text" xml:space="preserve">
+    <value>שומר...</value>
+    <comment>The text that indicates that a changes are currently being saved.</comment>
+  </data>
+  <data name="TextScanProgressScanning.Text" xml:space="preserve">
+    <value>סורק...</value>
+    <comment>The text that indicates that a scan is currently running.</comment>
+  </data>
+  <data name="ButtonDialogSetupBack.Content" xml:space="preserve">
+    <value>אחורה</value>
+    <comment>The text for the &quot;Back&quot; button in the setup dialog.</comment>
+  </data>
+  <data name="ButtonDialogSetupConfirm.Content" xml:space="preserve">
+    <value>אשר</value>
+    <comment>The confirm button text of the setup dialog.</comment>
+  </data>
+  <data name="ButtonSaveLocationSettings.Text" xml:space="preserve">
+    <value>שמירת הגדרות מיקום</value>
+    <comment>The text for the button that opens the save location settings.</comment>
+  </data>
+  <data name="HeadingDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>שמור מיקום</value>
+    <comment>The heading for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetup.Text" xml:space="preserve">
+    <value>בחר מיקום מוגדר או בחר מיקום חדש עבור כל סריקה.</value>
+    <comment>The main text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupFooter.Text" xml:space="preserve">
+    <value>האפליקציה שומרת שינויים באופן אוטומטי בכל פעם שאתה סורק דפים או עורך דפים קיימים - אינך צריך לדאוג ששכחת לשמור משהו.</value>
+    <comment>The footer text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="TextDialogSaveLocationSetupSecondary.Text" xml:space="preserve">
+    <value>תמיד תוכל לשנות את דעתך בהגדרות האפליקציה.</value>
+    <comment>The secondary text for the dialog that appears when the save location needs to be set up.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockBrightness.Text" xml:space="preserve">
+    <value>התאמת בהירות</value>
+    <comment>The title for the &quot;Brightness&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockContrast.Text" xml:space="preserve">
+    <value>התאמת ניגודיות</value>
+    <comment>The title for the &quot;Contrast&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDay.Text" xml:space="preserve">
+    <value>יום</value>
+    <comment>The title for the &quot;Day&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockFileType.Text" xml:space="preserve">
+    <value>סוג הקובץ</value>
+    <comment>The title for the &quot;File type&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHour.Text" xml:space="preserve">
+    <value>שעה</value>
+    <comment>The title for the &quot;Hour&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+    <value>AM/PM</value>
+    <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMinute.Text" xml:space="preserve">
+    <value>דקה</value>
+    <comment>The title for the &quot;Minute&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockMonth.Text" xml:space="preserve">
+    <value>חודש</value>
+    <comment>The title for the &quot;Month&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockResolution.Text" xml:space="preserve">
+    <value>רזולוציה</value>
+    <comment>The title for the &quot;Resolution&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockScannerName.Text" xml:space="preserve">
+    <value>שם הסורק</value>
+    <comment>The title for the &quot;Scanner name&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockSecond.Text" xml:space="preserve">
+    <value>שניה</value>
+    <comment>The title for the &quot;Second&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockText.Text" xml:space="preserve">
+    <value>טקסט</value>
+    <comment>The title for the &quot;Text&quot; file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockYear.Text" xml:space="preserve">
+    <value>שנה</value>
+    <comment>The title for the &quot;Year&quot; file naming block.</comment>
+  </data>
+  <data name="ButtonFileNamingAddBlock.Content" xml:space="preserve">
+    <value>הוספת בלוק</value>
+    <comment>The text for the button that adds a file naming block to the pattern.</comment>
+  </data>
+  <data name="HeadingFileNamingPreview.Text" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The heading for the custom file naming preview.</comment>
+  </data>
+  <data name="HeadingScanMergePreview.Text" xml:space="preserve">
+    <value>תצוגה מקדימה</value>
+    <comment>The heading for the scan and merge preview.</comment>
+  </data>
+  <data name="OptionFileNamingBlock24Hours.Content" xml:space="preserve">
+    <value>24 שעות</value>
+    <comment>The option for using the 24-hours system for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayMonth.Content" xml:space="preserve">
+    <value>יום בחודש</value>
+    <comment>The option for outputting the day of the month for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayWeek.Content" xml:space="preserve">
+    <value>יום בשבוע</value>
+    <comment>The option for outputting the day of the week for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockDayYear.Content" xml:space="preserve">
+    <value>יום בשנה</value>
+    <comment>The option for outputting the day of the year for a day file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMaximumLetters.Content" xml:space="preserve">
+    <value>הגבל את מספר האותיות</value>
+    <comment>The option for limitting the number of letters for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMinimumDigits.Content" xml:space="preserve">
+    <value>השתמש תמיד במספר מינימלי של ספרות</value>
+    <comment>The option for always outputting a minimum number of digits for a file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthName.Content" xml:space="preserve">
+    <value>שם החודש</value>
+    <comment>The option for outputting the name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthNumber.Content" xml:space="preserve">
+    <value>מספר חודשים</value>
+    <comment>The option for outputting the number of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockMonthShortName.Content" xml:space="preserve">
+    <value>שם קצר של חודש</value>
+    <comment>The option for outputting the short name of the month for a month file naming block.</comment>
+  </data>
+  <data name="OptionFileNamingBlockSkipIfDefault.Content" xml:space="preserve">
+    <value>דלג אם ברירת המחדל</value>
+    <comment>The option for skipping a file naming block when its value is the default.</comment>
+  </data>
+  <data name="OptionFileNamingBlockTwoDigits.Content" xml:space="preserve">
+    <value>תמיד שתי ספרות</value>
+    <comment>The option for always outputting two digits for a file naming block.</comment>
+  </data>
+  <data name="OptionSettingsCustomPattern.Content" xml:space="preserve">
+    <value>תבנית מותאמת אישית</value>
+    <comment>The option for the custom file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDatePattern.Content" xml:space="preserve">
+    <value>תאריך</value>
+    <comment>The option for the date file naming pattern in the settings.</comment>
+  </data>
+  <data name="OptionSettingsDateTimePattern.Content" xml:space="preserve">
+    <value>תאריך ושעה (ברירת מחדל)</value>
+    <comment>The option for the date and time file naming pattern in the settings.</comment>
+  </data>
+  <data name="TextCustomFileNamingExplanation.Text" xml:space="preserve">
+    <value>גרור ושחרר בלוקים כדי לבנות דפוס שמות קבצים דינמי משלך. בחר בלוק כדי לשנות את הפלט שלו או גרור אותו לפח כדי להסיר אותו.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="TextFileNamingBlockInvalid.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בלוק לא חוקי</value>
+    <comment>The tooltip for an invalid file naming block.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockDate.Text" xml:space="preserve">
+    <value>תאריך</value>
+    <comment>The title for the &quot;Date&quot; file naming block section.</comment>
+  </data>
+  <data name="HeadingFileNamingBlockTime.Text" xml:space="preserve">
+    <value>זמן</value>
+    <comment>The title for the &quot;Time&quot; file naming block section.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.PrimaryButtonText" xml:space="preserve">
+    <value>אישור</value>
+    <comment>The confirmation button in the custom file naming dialog.</comment>
+  </data>
+  <data name="DialogCustomFileNaming.SecondaryButtonText" xml:space="preserve">
+    <value>ביטול</value>
+    <comment>The cancel button in the custom file naming dialog.</comment>
+  </data>
+  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+    <value>שם קובץ לא חוקי</value>
+    <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
+  </data>
+  <data name="ButtonMoveBackward.Text" xml:space="preserve">
+    <value>הזז אחורה</value>
+    <comment>The text for the button that moves an element one place backward in a list.</comment>
+  </data>
+  <data name="ButtonMoveForward.Text" xml:space="preserve">
+    <value>הזז קדימה</value>
+    <comment>The text for the button that moves an element one place forward in a list.</comment>
+  </data>
+  <data name="ButtonMoveToBack.Text" xml:space="preserve">
+    <value>העבר לאחור</value>
+    <comment>The text for the button that moves an element to the back of list.</comment>
+  </data>
+  <data name="ButtonMoveToFront.Text" xml:space="preserve">
+    <value>העבר לחזית</value>
+    <comment>The text for the button that moves an element to the front of a list.</comment>
+  </data>
+  <data name="ButtonDeleteBlock.Text" xml:space="preserve">
+    <value>מחק בלוק</value>
+    <comment>The text for the button that deletes a file naming block.</comment>
+  </data>
+  <data name="OptionEditCropSimilarPagesSelectAll.Content" xml:space="preserve">
+    <value>בחר הכל</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ButtonOtherApps.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מידע נוסף</value>
+    <comment>The text of the &quot;Discover more&quot; button in the toolbar.</comment>
+  </data>
+  <data name="HeadingDialogOtherApps.Text" xml:space="preserve">
+    <value>מידע נוסף</value>
+    <comment>The heading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="SubheadingDialogOtherApps.Text" xml:space="preserve">
+    <value>בדוק את האפליקציות האחרות שלי, אם נהנית מהאפליקציה הזו.</value>
+    <comment>The subheading for the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="TextDialogOtherAppsClipShelf.Text" xml:space="preserve">
+    <value>הצמד את הלוח שלך לשורת המשימות וקבל גישה להיסטוריית הלוח מכל מקום.</value>
+    <comment>The description for ClipShelf.</comment>
+  </data>
+  <data name="DialogOtherApps.CloseButtonText" xml:space="preserve">
+    <value>סגור</value>
+    <comment>The text on the button to close the &quot;Discover more&quot; dialog.</comment>
+  </data>
+  <data name="ButtonManageExportPage.Text" xml:space="preserve">
+    <value>ייצוא כתמונה</value>
+    <comment>The text for the button that exports a single page of a document.</comment>
+  </data>
 </root>
