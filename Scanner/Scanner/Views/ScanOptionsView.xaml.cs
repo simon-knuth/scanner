@@ -247,6 +247,11 @@ namespace Scanner.Views
         }
         #endregion
 
+        #region Brightness & Contrast
+        public bool CanResetBrightness => ViewModel.ScanOptions.Brightness != 0;
+        public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
+        #endregion
+
         private bool IsColorModeResolutionBrightnessContrastVisible => ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
         private bool IsAutoCropVisible => ViewModel.SelectedScanner != null
             && ((ViewModel.ScanOptions.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
@@ -338,6 +343,8 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeMonochrome));
                         OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
                         OnPropertyChanged(nameof(TargetFormat));
+                        OnPropertyChanged(nameof(CanResetBrightness));
+                        OnPropertyChanged(nameof(CanResetContrast));
                         // TODO: Auto crop
 
                         OnPropertyChanged(nameof(ScanOptions));
@@ -372,6 +379,18 @@ namespace Scanner.Views
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         OnPropertyChanged(nameof(TargetFormat));
+                    });
+                    break;
+                case nameof(ScanOptions.Brightness):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(CanResetBrightness));
+                    });
+                    break;
+                case nameof(ScanOptions.Contrast):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(CanResetContrast));
                     });
                     break;
                     // TODO: Auto crop
@@ -483,6 +502,16 @@ namespace Scanner.Views
 #if DEBUG
             FlyoutBase.ShowAttachedFlyout(ComboBoxScanners);
 #endif
+        }
+
+        private void ButtonBrightnessReset_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ScanOptions.Brightness = 0;
+        }
+
+        private void ButtonContrastReset_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ScanOptions.Contrast = 0;
         }
     }
 }

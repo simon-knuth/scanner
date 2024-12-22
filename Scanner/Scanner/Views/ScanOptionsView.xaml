@@ -181,42 +181,40 @@
                 <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" IsEnabled="{x:Bind ViewModel.AreScanOptionsAvailable, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" Spacing="24" Padding="20,12,20,48">
                         <!-- Source -->
-                        <StackPanel Orientation="Vertical" Spacing="12">
-                            <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}">
-                                    <Grid Padding="4,0,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="24" />
-                                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical" Spacing="4">
+                            <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}">
+                                <Grid Padding="4,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="Automatic configuration" />
-                                        <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
-                                    </Grid>
-                                </RadioButton>
-                                <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}">
-                                    <Grid Padding="4,0,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="24" />
-                                        </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Automatic configuration" />
+                                    <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}">
+                                <Grid Padding="4,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="Flatbed" />
-                                        <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
-                                    </Grid>
-                                </RadioButton>
-                                <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}">
-                                    <Grid Padding="4,0,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="24" />
-                                        </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Flatbed" />
+                                    <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}">
+                                <Grid Padding="4,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="24" />
+                                    </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="Feeder" />
-                                        <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
-                                    </Grid>
-                                </RadioButton>
-                            </StackPanel>
+                                    <TextBlock Grid.Column="0" Text="Feeder" />
+                                    <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
+                                </Grid>
+                            </RadioButton>
                         </StackPanel>
 
                         <!-- File format -->
@@ -333,7 +331,7 @@
                         </StackPanel>
                         
                         <!-- Color mode -->
-                        <StackPanel x:Name="StackPanelColorMode" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
+                        <StackPanel x:Name="StackPanelColorMode" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Color mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}" Visibility="{x:Bind IsColorModeColorSupported, Mode=OneWay}">
@@ -375,32 +373,32 @@
                         </StackPanel>
 
                         <!-- Brightness -->
-                        <StackPanel x:Name="StackPanelBrightness" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
+                        <StackPanel x:Name="StackPanelBrightness" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Brightness" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <Grid ColumnSpacing="12">
+                            <Grid ColumnSpacing="12" Margin="0,0,4,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
-                                <Button Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
+                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetBrightness, Mode=OneWay}" Click="ButtonBrightnessReset_Click">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>
                         </StackPanel>
 
                         <!-- Contrast -->
-                        <StackPanel x:Name="StackPanelContrast" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
+                        <StackPanel x:Name="StackPanelContrast" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Contrast" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <Grid ColumnSpacing="12">
+                            <Grid ColumnSpacing="12" Margin="0,0,4,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
-                                <Button Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
+                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetContrast, Mode=OneWay}" Click="ButtonContrastReset_Click">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>

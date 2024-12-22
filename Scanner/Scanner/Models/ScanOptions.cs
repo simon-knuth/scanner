@@ -38,8 +38,11 @@ namespace Scanner.Models
         public ScannerAutoCropMode AutoCropMode;
         public bool FeederDuplex;
 
-        public int Brightness;
-        public int Contrast;
+        [ObservableProperty]
+        private int brightness;
+
+        [ObservableProperty]
+        private int contrast;
 
         public Rect? SelectedRegion;
 
