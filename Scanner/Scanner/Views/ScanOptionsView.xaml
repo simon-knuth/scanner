@@ -336,13 +336,13 @@
                         <StackPanel x:Name="StackPanelColorMode" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Color mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}" Visibility="{x:Bind IsColorModeColorSupported, Mode=OneWay}">
                                     <TextBlock Text="Color" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeGrayscale, Mode=TwoWay}">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeGrayscale, Mode=TwoWay}" Visibility="{x:Bind IsColorModeGrayscaleSupported, Mode=OneWay}">
                                     <TextBlock Text="Grayscale" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeMonochrome, Mode=TwoWay}">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeMonochrome, Mode=TwoWay}" Visibility="{x:Bind IsColorModeMonochromeSupported, Mode=OneWay}">
                                     <TextBlock Text="Monochrome" Margin="4,0,0,0" />
                                 </RadioButton>
                             </StackPanel>

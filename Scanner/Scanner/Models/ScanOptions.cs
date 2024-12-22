@@ -167,6 +167,8 @@ namespace Scanner.Models
                 // duplex
                 FeederDuplex = Scanner.IsFeederDuplexSupported;
             }
+
+            TargetFormat = TargetFormat.PDF;
         }
     }
 

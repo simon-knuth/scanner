@@ -146,6 +146,26 @@ namespace Scanner.Views
             }
         }
 
+        public bool IsColorModeColorSupported
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return false;
+
+                switch (ViewModel.ScanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        return ViewModel.SelectedScanner.IsFlatbedColorAllowed;
+                    case ScannerSource.Feeder:
+                        return ViewModel.SelectedScanner.IsFeederColorAllowed;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                        default:
+                            return false;
+                }
+            }
+        }
+
         public bool IsColorModeGrayscale
         {
             get => ViewModel.ScanOptions.ColorMode == ScannerColorMode.Grayscale;
@@ -158,6 +178,34 @@ namespace Scanner.Views
             }
         }
 
+        public bool IsColorModeGrayscaleSupported
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return false;
+
+                if (IsColorModeColorSupported)
+                {
+                    // can apply filter
+                    return true;
+                }
+                else
+                {
+                    switch (ViewModel.ScanOptions.SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            return ViewModel.SelectedScanner.IsFlatbedGrayscaleAllowed;
+                        case ScannerSource.Feeder:
+                            return ViewModel.SelectedScanner.IsFeederGrayscaleAllowed;
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            return false;
+                    }
+                }
+            }
+        }
+
         public bool IsColorModeMonochrome
         {
             get => ViewModel.ScanOptions.ColorMode == ScannerColorMode.Monochrome;
@@ -166,6 +214,34 @@ namespace Scanner.Views
                 if (value)
                 {
                     ViewModel.ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                }
+            }
+        }
+
+        public bool IsColorModeMonochromeSupported
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return false;
+
+                if (IsColorModeColorSupported || IsColorModeGrayscaleSupported)
+                {
+                    // can apply filter
+                    return true;
+                }
+                else
+                {
+                    switch (ViewModel.ScanOptions.SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            return ViewModel.SelectedScanner.IsFlatbedMonochromeAllowed;
+                        case ScannerSource.Feeder:
+                            return ViewModel.SelectedScanner.IsFeederMonochromeAllowed;
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            return false;
+                    }
                 }
             }
         }
@@ -256,8 +332,11 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
                         OnPropertyChanged(nameof(IsAutoCropVisible));
                         OnPropertyChanged(nameof(IsColorModeColor));
+                        OnPropertyChanged(nameof(IsColorModeColorSupported));
                         OnPropertyChanged(nameof(IsColorModeGrayscale));
+                        OnPropertyChanged(nameof(IsColorModeGrayscaleSupported));
                         OnPropertyChanged(nameof(IsColorModeMonochrome));
+                        OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
                         OnPropertyChanged(nameof(TargetFormat));
                         // TODO: Auto crop
 
@@ -275,6 +354,9 @@ namespace Scanner.Views
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
+                        OnPropertyChanged(nameof(IsColorModeColorSupported));
+                        OnPropertyChanged(nameof(IsColorModeGrayscaleSupported));
+                        OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
                         OnPropertyChanged(nameof(IsAutoCropVisible));
                     });
                     break;
