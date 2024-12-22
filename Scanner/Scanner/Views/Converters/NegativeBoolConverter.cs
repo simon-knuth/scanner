@@ -3,7 +3,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class NegativeBoolConverter : IValueConverter
+    public partial class NegativeBoolConverter : IValueConverter
     {
         /// <summary>
         ///     Inverts the given bool value.

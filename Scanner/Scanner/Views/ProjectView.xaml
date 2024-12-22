@@ -53,7 +53,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,20,0" SizeChanged="GridHeader_SizeChanged">
+            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,12,0" SizeChanged="GridHeader_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

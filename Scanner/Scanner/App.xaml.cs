@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,40 +14,121 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Scanner.AppWindows;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
+using Scanner.Services.Interfaces;
+using Scanner.Services;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using Microsoft.Windows.AppLifecycle;
+using Sentry;
+using Microsoft.UI.Dispatching;
+using Scanner.Extensions;
 
 namespace Scanner
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     public partial class App : Application
     {
-        public MainWindow MainWindow;
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
+        private ILogService? LogService;
+        #endregion
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        public MainWindow MainWindow;
+        public DispatcherQueue MainDispatcherQueue;
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public App()
         {
             this.InitializeComponent();
+
+            // configure service landscape
+            Ioc.Default.ConfigureServices(new ServiceCollection()
+                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
+                .AddSingleton<ILogService, LogService>()
+                .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                .BuildServiceProvider());
         }
 
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
+            // get the activation args
+            var appArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+
+            // get or register the main instance
+            var mainInstance = AppInstance.FindOrRegisterForKey("main");
+            MainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+            _ = Task.Run(async () =>
+            {
+                // if the main instance isn't this current instance
+                if (!mainInstance.IsCurrent)
+                {
+                    // redirect activation to that instance
+                    await mainInstance.RedirectActivationToAsync(appArgs);
+
+                    // exit this instance and stop
+                    Process.GetCurrentProcess().Kill();
+                    return;
+                }
+
+                // register event handler
+                UnhandledException += App_UnhandledException;
+
+                // initialize essential singleton services
+                LogService = Ioc.Default.GetService<ILogService>();
+                await LogService?.InitializeAsync();
+
+                MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                {
+                    MainWindow = new MainWindow();
+                    MainWindow.Activate();
+                });
+
+                //try
+                //{
+                //    // analytics
+                //    IActivatedEventArgs activatedEventArgs = Windows.ApplicationModel.AppInstance.GetActivatedEventArgs();
+                //    if (activatedEventArgs != null)
+                //    {
+                //        Dictionary<string, string> properties = new Dictionary<string, string>();
+                //        switch (activatedEventArgs.Kind)
+                //        {
+                //            case ActivationKind.Launch:
+                //            default:
+                //                properties.Add("Kind", "Launch");
+                //                break;
+                //            case ActivationKind.StartupTask:
+                //                properties.Add("Kind", "StartupTask");
+                //                break;
+                //        }
+                //        Ioc.Default.GetService<ISentryService>()?.TrackEvent(AnalyticsEvent.Launch, properties);
+                //    }
+                //}
+                //catch (Exception exc)
+                //{
+                //    Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
+                //}
+            });
+        }
+
+        private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            LogService?.Log.Fatal(e.Exception, "CRASH");
+            LogService?.CloseAndFlush();
+
+            //Ioc.Default.GetService<ISentryService>().TrackError(e.Exception, true);
+            //SentrySdk.Flush();
         }
     }
 }

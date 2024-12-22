@@ -3,7 +3,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class EnumIntComparisonConverter : IValueConverter
+    public partial class EnumIntComparisonConverter : IValueConverter
     {
         /// <summary>
         ///     Converts the given enum to its int representation and compares it to the given parameter.

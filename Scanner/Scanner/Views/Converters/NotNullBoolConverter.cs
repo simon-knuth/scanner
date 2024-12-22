@@ -3,7 +3,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class NotNullBoolConverter : IValueConverter
+    public partial class NotNullBoolConverter : IValueConverter
     {
         /// <summary>
         ///     Converts the given object into a bool based on it not equaling null.

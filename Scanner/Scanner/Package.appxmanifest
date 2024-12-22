@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Scanner"
+        DisplayName="Scanner Preview"
         Description="Scanner"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

@@ -3,7 +3,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class EnumStringConverter : IValueConverter
+    public partial class EnumStringConverter : IValueConverter
     {
         /// <summary>
         ///     Converts the given enum to its string representation.

@@ -1,0 +1,76 @@
+﻿using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WinRT.Interop;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using Scanner.Models.Interfaces;
+using System.Globalization;
+using Windows.Storage;
+using Serilog;
+
+namespace Scanner.Services.Interfaces
+{
+    /// <summary>
+    ///     Manages and exposes the application event log.
+    /// </summary>
+    public interface ILogService
+    {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Events
+        event EventHandler<string> LogFilePathChanged;
+        #endregion
+
+        ILogger Log { get; }
+
+        StorageFolder LogFolder { get; }
+
+        string LogFilePath { get; }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Task InitializeAsync();
+        void CloseAndFlush();
+        Task<List<LogFile>> GetLogFilesAsync();
+        Task OpenLatestLogFileAsync();
+        Task OpenLogFolderAsync();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public class LogFile
+    {
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public StorageFile File;
+        public DateTimeOffset LastModified;
+        public string FileSize;
+
+
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        private LogFile(StorageFile file)
+        {
+            File = file;
+        }
+
+        public static async Task<LogFile> CreateLogFile(StorageFile file)
+        {
+            LogFile logFile = new LogFile(file);
+            var properties = await file.GetBasicPropertiesAsync();
+            logFile.FileSize = Math.Ceiling((double)properties.Size / 1000).ToString(CultureInfo.CurrentCulture) + " KB";
+            logFile.LastModified = properties.DateModified;
+
+            return logFile;
+        }
+    }
+}

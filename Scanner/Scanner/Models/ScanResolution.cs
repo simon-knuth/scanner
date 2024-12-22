@@ -10,70 +10,73 @@ using WinRT.Interop;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
-using Windows.Foundation;
+
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
-    public partial class ScannerFileFormat
+    public partial class ScanResolution
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public readonly ImageScannerFormat TargetFormat;
+        public ImageScannerResolution Resolution;
 
-        public readonly ImageScannerFormat? OriginalFormat;
+        public ResolutionAnnotation Annotation;
 
-        public readonly string FriendlyName;
-
-        public bool RequiresConversion => TargetFormat != OriginalFormat;
+        public string FriendlyText;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScannerFileFormat(ImageScannerFormat targetFormat, ImageScannerFormat originalFormat)
+        public ScanResolution(ImageScannerResolution resolution, ResolutionAnnotation annotation)
         {
-            TargetFormat = targetFormat;
-            OriginalFormat = originalFormat;
-            FriendlyName = GenerateFriendlyName(TargetFormat);
+            Resolution = resolution;
+            Annotation = annotation;
+            FriendlyText = GenerateFriendlyText();
         }
 
-        public ScannerFileFormat(ImageScannerFormat targetFormat)
+        public ScanResolution(float resolution, ResolutionAnnotation annotation)
         {
-            TargetFormat = targetFormat;
-            FriendlyName = GenerateFriendlyName(TargetFormat);
+            Resolution = new ImageScannerResolution { DpiX = resolution, DpiY = resolution };
+            Annotation = annotation;
+            FriendlyText = GenerateFriendlyText();
         }
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private string GenerateFriendlyName(ImageScannerFormat targetFormat)
+        private string GenerateFriendlyText()
         {
-            switch (targetFormat)
+            switch (Annotation)
             {
-                case ImageScannerFormat.Jpeg:
-                    return "JPG";
-                case ImageScannerFormat.Png:
-                    return "PNG";
-                case ImageScannerFormat.DeviceIndependentBitmap:
-                    return "BMP";
-                case ImageScannerFormat.Tiff:
-                    return "TIF";
-                case ImageScannerFormat.Xps:
-                    return "XPS";
-                case ImageScannerFormat.OpenXps:
-                    return "OpenXPS";
-                case ImageScannerFormat.Pdf:
-                    return "PDF";
+                case ResolutionAnnotation.Default:
+                    return String.Format(GetLocalized("OptionScanOptionsResolutionDefault"), Resolution.DpiX);
+                case ResolutionAnnotation.Documents:
+                    return String.Format(GetLocalized("OptionScanOptionsResolutionDocuments"), Resolution.DpiX);
+                case ResolutionAnnotation.Photos:
+                    return String.Format(GetLocalized("OptionScanOptionsResolutionPhotos"), Resolution.DpiX);
+                case ResolutionAnnotation.None:
                 default:
-                    throw new ArgumentException("Unable to generate FriendlyName from format " + targetFormat + ".");
+                    return String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
             }
         }
 
         public override string ToString()
         {
-            return FriendlyName;
+            return FriendlyText;
         }
+    }
+
+    /// <summary>
+    ///     The possible properties a resolution value can have.
+    /// </summary>
+    public enum ResolutionAnnotation
+    {
+        None = 0,
+        Default = 1,
+        Documents = 2,
+        Photos = 3,
     }
 }

@@ -94,7 +94,7 @@ namespace Scanner.Helpers
             return $"{(Math.Sign(byteCount) * num):n1} {suffix}";
         }
 
-        public static string GetLocalizedResource(string resourceName)
+        public static string GetLocalized(string resourceName)
         {
             return resourceLoader.GetString(resourceName);
         }

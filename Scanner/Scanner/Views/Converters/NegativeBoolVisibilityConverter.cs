@@ -4,7 +4,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class NegativeBoolVisibilityConverter : IValueConverter
+    public partial class NegativeBoolVisibilityConverter : IValueConverter
     {
         /// <summary>
         ///     Inverts the given bool value and converts it to a <see cref="Visibility"/>.

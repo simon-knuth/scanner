@@ -4,7 +4,7 @@ using System;
 
 namespace Scanner.Views.Converters
 {
-    public class NotNullVisibilityConverter : IValueConverter
+    public partial class NotNullVisibilityConverter : IValueConverter
     {
         /// <summary>
         ///     Converts the given object into a <see cref="Visibility"/> based on it not equaling null.

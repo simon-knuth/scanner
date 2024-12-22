@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
+using Scanner.Models.Interfaces;
 
 namespace Scanner.Models
 {
@@ -19,6 +20,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                
+        [ObservableProperty]
+        private IScanningDevice? scanner;
+
         [ObservableProperty]
         private ScannerSource sourceMode;
 
@@ -34,8 +38,8 @@ namespace Scanner.Models
         public ScannerAutoCropMode AutoCropMode;
         public bool FeederDuplex;
 
-        public int? Brightness;
-        public int? Contrast;
+        public int Brightness;
+        public int Contrast;
 
         public Rect? SelectedRegion;
 
@@ -43,9 +47,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanOptions()
+        public ScanOptions(IScanningDevice? scanner = null)
         {
-            
+            SetScanOptionsForScanner(scanner);
         }
 
 
@@ -85,6 +89,85 @@ namespace Scanner.Models
                     throw new ArgumentOutOfRangeException(String.Format("Can't convert {0} to ImageScannerAutoCroppingMode.", AutoCropMode));
             }
         }
+
+        private void SetScanOptionsForScanner(IScanningDevice? scanner)
+        {
+            Scanner = scanner;
+            if (Scanner == null) return;
+
+            // source mode
+            if (Scanner.IsAutoAllowed)
+            {
+                SourceMode = ScannerSource.Auto;
+            }
+            else if (Scanner.IsFlatbedAllowed)
+            {
+                SourceMode = ScannerSource.Flatbed;
+
+                // color mode
+                if (Scanner.IsFlatbedColorAllowed)
+                {
+                    ColorMode = ScannerColorMode.Color;
+                }
+                else if (Scanner.IsFlatbedGrayscaleAllowed)
+                {
+                    ColorMode = ScannerColorMode.Grayscale;
+                }
+                else if (Scanner.IsFlatbedMonochromeAllowed)
+                {
+                    ColorMode = ScannerColorMode.Monochrome;
+                }
+                else if (Scanner.IsFlatbedAutoColorAllowed)
+                {
+                    ColorMode = ScannerColorMode.Automatic;
+                }
+
+                // auto crop mode
+                if (Scanner.IsFlatbedAutoCropSupported)
+                {
+                    AutoCropMode = ScannerAutoCropMode.Disabled;
+                }
+                else
+                {
+                    AutoCropMode = ScannerAutoCropMode.None;
+                }
+            }
+            else if (Scanner.IsFeederAllowed)
+            {
+                SourceMode = ScannerSource.Feeder;
+
+                // color mode
+                if (Scanner.IsFeederColorAllowed)
+                {
+                    ColorMode = ScannerColorMode.Color;
+                }
+                else if (Scanner.IsFeederGrayscaleAllowed)
+                {
+                    ColorMode = ScannerColorMode.Grayscale;
+                }
+                else if (Scanner.IsFeederMonochromeAllowed)
+                {
+                    ColorMode = ScannerColorMode.Monochrome;
+                }
+                else if (Scanner.IsFeederAutoColorAllowed)
+                {
+                    ColorMode = ScannerColorMode.Automatic;
+                }
+
+                // auto crop mode
+                if (Scanner.IsFeederAutoCropSupported)
+                {
+                    AutoCropMode = ScannerAutoCropMode.Disabled;
+                }
+                else
+                {
+                    AutoCropMode = ScannerAutoCropMode.None;
+                }
+
+                // duplex
+                FeederDuplex = Scanner.IsFeederDuplexSupported;
+            }
+        }
     }
 
 
@@ -107,12 +190,13 @@ namespace Scanner.Models
     /// </summary>
     public enum TargetFormat
     {
-        PDF = 0,
-        JPG = 1,
-        PNG = 2,
-        BMP = 3,
-        TIFF = 4,
-        RAW = 5
+        None = 0,
+        PDF = 1,
+        JPG = 2,
+        PNG = 3,
+        BMP = 4,
+        TIFF = 5,
+        RAW = 6
     }
 
     /// <summary>

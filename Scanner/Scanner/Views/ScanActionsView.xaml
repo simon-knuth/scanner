@@ -45,7 +45,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridRoot" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True" SizeChanged="GridRoot_SizeChanged">
+    <Grid x:Name="GridRoot" ui:UIElementExtensions.ClipToBounds="True" SizeChanged="GridRoot_SizeChanged">
         <Grid Padding="12,12,16,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

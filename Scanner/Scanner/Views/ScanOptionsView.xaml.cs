@@ -5,12 +5,17 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -33,16 +38,13 @@ namespace Scanner.Views
             DependencyProperty.Register(nameof(CanExpandPageList), typeof(bool), typeof(ScanOptionsView), null);
 
         public static readonly DependencyProperty ScanOptionsProperty =
-            DependencyProperty.Register(nameof(ViewModel.ScanOptions), typeof(ScanOptions), typeof(ScanOptionsView), null);
+            DependencyProperty.Register(nameof(ScanOptions), typeof(ScanOptions), typeof(ScanOptionsView), null);
         #endregion
 
         public bool CanExpandPageList
         {
             get => (bool)GetValue(CanExpandPageListProperty);
-            set
-            {
-                SetValue(CanExpandPageListProperty, value);
-            }
+            set => SetValue(CanExpandPageListProperty, value);
         }
 
         public ScanOptions ScanOptions
@@ -54,6 +56,9 @@ namespace Scanner.Views
                 ViewModel.ScanOptions = value;
             }
         }
+
+        [ObservableProperty]
+        private int scannerCount = 0;
 
         #region Source mode
         public bool IsSourceModeAutomatic
@@ -98,6 +103,10 @@ namespace Scanner.Views
             // work around additional ComboBoxItems
             get
             {
+                if (ViewModel.ScanOptions.TargetFormat == Models.TargetFormat.None)
+                {
+                    return -1;
+                }
                 if ((int)ViewModel.ScanOptions.TargetFormat > 0)
                 {
                     return (int)ViewModel.ScanOptions.TargetFormat + 2;
@@ -109,13 +118,17 @@ namespace Scanner.Views
             }
             set
             {
+                if (value == -1)
+                {
+                    ViewModel.ScanOptions.TargetFormat = Models.TargetFormat.None;
+                }
                 if (value > 1)
                 {
                     ViewModel.ScanOptions.TargetFormat = (TargetFormat)value - 2;
                 }
                 else
                 {
-                    ViewModel.ScanOptions.TargetFormat = (TargetFormat)value - 1;
+                    ViewModel.ScanOptions.TargetFormat = Models.TargetFormat.PDF;
                 }
             }
         }
@@ -158,6 +171,11 @@ namespace Scanner.Views
         }
         #endregion
 
+        private bool IsColorModeResolutionBrightnessContrastVisible => ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
+        private bool IsAutoCropVisible => ViewModel.SelectedScanner != null
+            && ((ViewModel.ScanOptions.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
+            || (ViewModel.ScanOptions.SourceMode == ScannerSource.Feeder && ViewModel.SelectedScanner.IsFeederAutoCropSupported));
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,12 +183,117 @@ namespace Scanner.Views
         public ScanOptionsView()
         {
             this.InitializeComponent();
+
+            ViewModel.PropertyChanging += ViewModel_PropertyChanging;
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.Scanners.CollectionChanged += Scanners_CollectionChanged;
+            ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.ScanOptions):
+                    if (ViewModel.ScanOptions != null)
+                    {
+                        ViewModel.ScanOptions.PropertyChanged -= ScanOptions_PropertyChanged;
+                    }
+                    break;
+            }
+        }
+
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.SelectedScanner):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.High, () =>
+                    {
+                        if (ComboBoxScanners.SelectedItem == null || ((FrameworkElement)ComboBoxScanners.SelectedItem).Tag != ViewModel.SelectedScanner)
+                        {
+                            // find corresponding ComboBoxItem
+                            int index = -1;
+                            for (int i = 0; i < ComboBoxScanners.Items.Count - 1; i++)
+                            {
+                                if (((FrameworkElement)ComboBoxScanners.Items[i]).Tag == ViewModel.SelectedScanner)
+                                {
+                                    index = i;
+                                    break;
+                                }
+                            }
+
+                            // select correct scanner
+                            if (index != -1)
+                            {
+                                ComboBoxScanners.SelectedIndex = index;
+                            }
+                            else
+                            {
+                                ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - 1;
+                            }
+                        }
+
+                        OnPropertyChanged(nameof(IsAutoCropVisible));
+                    });
+                    break;
+                case nameof(ViewModel.ScanOptions):
+                    if (ViewModel.ScanOptions != null)
+                    {
+                        ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
+                    }
+
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(IsSourceModeAutomatic));
+                        OnPropertyChanged(nameof(IsSourceModeFlatbed));
+                        OnPropertyChanged(nameof(IsSourceModeFeeder));
+                        OnPropertyChanged(nameof(TargetFormat));
+                        OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
+                        OnPropertyChanged(nameof(IsAutoCropVisible));
+                        OnPropertyChanged(nameof(IsColorModeColor));
+                        OnPropertyChanged(nameof(IsColorModeGrayscale));
+                        OnPropertyChanged(nameof(IsColorModeMonochrome));
+                        OnPropertyChanged(nameof(TargetFormat));
+                        // TODO: Auto crop
+                    });
+                    break;
+            }
+        }
+
+        private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ScanOptions.SourceMode):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
+                        OnPropertyChanged(nameof(IsAutoCropVisible));
+                    });
+                    break;
+                case nameof(ScanOptions.ColorMode):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(IsColorModeColor));
+                        OnPropertyChanged(nameof(IsColorModeGrayscale));
+                        OnPropertyChanged(nameof(IsColorModeMonochrome));
+                    });
+                    break;
+                case nameof(ScanOptions.TargetFormat):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(TargetFormat));
+                    });
+                    break;
+                    // TODO: Auto crop
+            }
+        }
+
         private void ComboBoxFileFormats_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             foreach (ComboBoxItem item in ComboBoxFileFormats.Items)
@@ -187,6 +310,88 @@ namespace Scanner.Views
         private void ButtonPageList_Click(object sender, RoutedEventArgs e)
         {
             ExpandPageListRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0) return;
+            
+            ViewModel.SelectedScanner = (IScanningDevice)((ComboBoxItem)e.AddedItems[0]).Tag;
+        }
+
+        private void Scanners_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                switch (e.Action)
+                {
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                        if (e.NewItems == null) return;
+                        for (int i = 0; i < e.NewItems.Count; i++)
+                        {
+                            // generate ComboBoxItem
+                            StackPanel stackPanel = (StackPanel)DataTemplateScanner.LoadContent();
+                            stackPanel.DataContext = e.NewItems[i] as IScanningDevice;
+                            ComboBoxItem item = new()
+                            {
+                                Content = stackPanel,
+                                Tag = e.NewItems[i] as IScanningDevice
+                            };
+
+                            ComboBoxScanners.Items.Insert(e.NewStartingIndex + i, item);
+                        }
+                        break;
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                        if (e.OldItems == null) return;
+                        foreach (IScanningDevice oldItem in e.OldItems)
+                        {
+                            // find corresponding ComboBoxItem
+                            ComboBoxItem? item = null;
+                            for (int i = 0; i < ComboBoxScanners.Items.Count - 2; i++)
+                            {
+                                if (((FrameworkElement)ComboBoxScanners.Items[i]).Tag == oldItem)
+                                {
+                                    item = (ComboBoxItem)ComboBoxScanners.Items[i];
+                                    break;
+                                }
+                            }
+
+                            if (item != null)
+                            {
+                                ComboBoxScanners.Items.Remove(item);
+                            }
+                        }
+                        break;
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                        if (e.NewItems == null || e.OldItems == null) return;                        
+                        for (int i = 0; i < e.OldItems.Count; i++)
+                        {
+                            // generate ComboBoxItem
+                            StackPanel stackPanel = (StackPanel)DataTemplateScanner.LoadContent();
+                            stackPanel.DataContext = e.NewItems[i] as IScanningDevice;
+                            ComboBoxItem item = new()
+                            {
+                                Content = stackPanel,
+                                Tag = e.NewItems[i] as IScanningDevice
+                            };
+
+                            ComboBoxScanners.Items[e.OldStartingIndex + i] = item;
+                        }
+                        break;
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                        var movedItem = ComboBoxScanners.Items[e.OldStartingIndex];
+                        ComboBoxScanners.Items.RemoveAt(e.OldStartingIndex);
+                        ComboBoxScanners.Items.Insert(e.NewStartingIndex, movedItem);
+                        break;
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                        while (ComboBoxScanners.Items.Count > 1)
+                        {
+                            ComboBoxScanners.Items.RemoveAt(0);
+                        }
+                        break;
+                }
+                ScannerCount = ViewModel.Scanners.Count;
+            });
         }
     }
 }

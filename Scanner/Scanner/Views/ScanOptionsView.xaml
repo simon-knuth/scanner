@@ -9,6 +9,8 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:converters="using:Scanner.Views.Converters"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -16,8 +18,11 @@
     </Page.DataContext>
 
     <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loading">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadingCommand}" CommandParameter="{x:Bind DispatcherQueue}" />
+        </core:EventTriggerBehavior>
         <core:EventTriggerBehavior EventName="Unloaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}" />
         </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 
@@ -30,6 +35,17 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- DataTemplates -->
+            <DataTemplate x:Name="DataTemplateScanner" x:DataType="interfaces:IScanningDevice">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <FontIcon Glyph="&#xE8FE;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <TextBlock Text="{x:Bind Name}" MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </DataTemplate>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -78,31 +94,96 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Padding="16,16,16,4">
-                    <ComboBox Padding="12,5,28,5" HorizontalAlignment="Stretch">
+                    <ComboBox x:Name="ComboBoxScanners" Padding="12,5,28,5" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged">
                         <ComboBox.Items>
-                            <ComboBoxItem>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon Glyph="&#xE8FE;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    <TextBlock Text="Canon PIXMA" MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
-                                </StackPanel>
-                            </ComboBoxItem>
                             <ComboBoxItem IsEnabled="False">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <ProgressRing Width="16" Height="16" />
-                                    <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
+                                    <ProgressRing Width="16" Height="16" Foreground="{ThemeResource AccentFillColorSecondaryBrush}" />
+                                    <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox.Items>
+
+                        <ComboBox.ContextFlyout>
+                            <Flyout Placement="Bottom">
+                                <StackPanel Orientation="Vertical" MaxWidth="400">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                        <FontIcon Glyph="&#xEBE8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                                        <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
+                                    </StackPanel>
+                                    <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Name, Mode=TwoWay}"/>
+                                    <Grid Margin="0,12,0,0" HorizontalAlignment="Stretch">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                            <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerAuto.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                                            <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                                            <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedColorAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedGrayscaleAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedMonochromeAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
+                                            <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropSingleRegionAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropMultiRegionAllowed, Mode=TwoWay}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+                                            <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederPreviewAllowed, Mode=TwoWay}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
+                                            <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederColorAllowed, Mode=TwoWay}"/>
+                                            <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederGrayscaleAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederMonochromeAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
+                                            <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropSingleRegionAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropMultiRegionAllowed, Mode=TwoWay}" />
+                                            <CheckBox Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederDuplexSupported, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <MenuFlyoutSeparator Margin="0,12,0,12" />
+
+                                    <StackPanel Orientation="Vertical" Spacing="8">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
+                                            <Button Content="Restart ScannerDiscoveryService" Margin="8,0,0,0" />
+                                        </StackPanel>
+                                        <Button Content="Delete current scanner's scan options from databases" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
+                                        <Button Content="Show scanner search tip" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Flyout>
+                        </ComboBox.ContextFlyout>
                     </ComboBox>
-                    <InfoBadge Value="8" IsHitTestVisible="False" Margin="0,0,40,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" />
+                    <InfoBadge IsHitTestVisible="False" Margin="0,0,40,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
+                    <Grid/>
                 </Grid>
 
-                <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" IsEnabled="{x:Bind ViewModel.AreScanOptionsAvailable, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" Spacing="24" Padding="20,12,20,48">
                         <!-- Source -->
                         <StackPanel Orientation="Vertical" Spacing="12">
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}">
+                                <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -110,10 +191,10 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Grid.Column="0" Text="Automatic configuration" />
-                                        <FontIcon Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
                                     </Grid>
                                 </RadioButton>
-                                <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}">
+                                <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -121,10 +202,10 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Grid.Column="0" Text="Flatbed" />
-                                        <FontIcon Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
                                     </Grid>
                                 </RadioButton>
-                                <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}">
+                                <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}">
                                     <Grid Padding="4,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*" />
@@ -132,7 +213,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Grid.Column="0" Text="Feeder" />
-                                        <FontIcon Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
                                     </Grid>
                                 </RadioButton>
                             </StackPanel>
@@ -252,7 +333,7 @@
                         </StackPanel>
                         
                         <!-- Color mode -->
-                        <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
+                        <StackPanel x:Name="StackPanelColorMode" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Color mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}">
@@ -268,7 +349,7 @@
                         </StackPanel>
                         
                         <!-- Resolution -->
-                        <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
+                        <StackPanel x:Name="StackPanelResolution" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Resolution" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <ComboBox HorizontalAlignment="Stretch" IsEditable="True">
                                 <ComboBox.Items>
@@ -278,7 +359,7 @@
                         </StackPanel>
 
                         <!-- Auto crop -->
-                        <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
+                        <StackPanel x:Name="StackPanelAutoCrop" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                             <TextBlock Text="Automatic crop" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
@@ -294,7 +375,7 @@
                         </StackPanel>
 
                         <!-- Brightness -->
-                        <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
+                        <StackPanel x:Name="StackPanelBrightness" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Brightness" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
@@ -302,7 +383,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="250" SnapsTo="StepValues" />
+                                <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
                                 <Button Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
@@ -310,7 +391,7 @@
                         </StackPanel>
 
                         <!-- Contrast -->
-                        <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
+                        <StackPanel x:Name="StackPanelContrast" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Contrast" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
@@ -318,7 +399,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="250" SnapsTo="StepValues" />
+                                <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
                                 <Button Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
