@@ -179,7 +179,7 @@
                 </Grid>
 
                 <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" IsEnabled="{x:Bind ViewModel.AreScanOptionsAvailable, Mode=OneWay}">
-                    <StackPanel Orientation="Vertical" Spacing="24" Padding="20,12,20,48">
+                    <StackPanel Orientation="Vertical" Spacing="24" Padding="20,8,20,48">
                         <!-- Source -->
                         <StackPanel Orientation="Vertical" Spacing="4">
                             <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}">

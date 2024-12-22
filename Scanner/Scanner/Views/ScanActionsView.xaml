@@ -38,6 +38,8 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:NullBoolConverter x:Key="NullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -84,8 +86,11 @@
                     <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                 </animations:Implicit.HideAnimations>
 
-                <customcontrols:ScanOptionsPresenter ScanOptions="{x:Bind ViewModel.ScanOptions, Mode=OneWay}" />
-                
+                <Grid>
+                    <customcontrols:ScanOptionsPresenter x:Name="ScanOptionsPresenter" ScanOptions="{x:Bind ViewModel.ScanOptions, Mode=OneWay}" x:Load="{x:Bind ViewModel.ScanOptions.Scanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
+                    <TextBlock x:Name="TextBlockScanOptionsNoScanner" Text="Select a scanner" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" x:Load="{x:Bind ViewModel.ScanOptions.Scanner, Mode=OneWay, Converter={StaticResource NullBoolConverter}}" />
+                </Grid>
+
                 <Button.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemTemplates" Text="Templates" Click="MenuFlyoutItemTemplates_Click">
