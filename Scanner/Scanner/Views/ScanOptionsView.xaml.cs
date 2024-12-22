@@ -107,13 +107,13 @@ namespace Scanner.Views
                 {
                     return -1;
                 }
-                if ((int)ViewModel.ScanOptions.TargetFormat > 0)
+                if ((int)ViewModel.ScanOptions.TargetFormat > 1)
                 {
-                    return (int)ViewModel.ScanOptions.TargetFormat + 2;
+                    return (int)ViewModel.ScanOptions.TargetFormat + 1;
                 }
                 else
                 {
-                    return (int)ViewModel.ScanOptions.TargetFormat + 1;
+                    return (int)Models.TargetFormat.PDF;
                 }
             }
             set
@@ -124,7 +124,7 @@ namespace Scanner.Views
                 }
                 if (value > 1)
                 {
-                    ViewModel.ScanOptions.TargetFormat = (TargetFormat)value - 2;
+                    ViewModel.ScanOptions.TargetFormat = (TargetFormat)value - 1;
                 }
                 else
                 {
@@ -260,6 +260,8 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeMonochrome));
                         OnPropertyChanged(nameof(TargetFormat));
                         // TODO: Auto crop
+
+                        OnPropertyChanged(nameof(ScanOptions));
                     });
                     break;
             }
@@ -392,6 +394,13 @@ namespace Scanner.Views
                 }
                 ScannerCount = ViewModel.Scanners.Count;
             });
+        }
+
+        private void ComboBoxScanners_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+#if DEBUG
+            FlyoutBase.ShowAttachedFlyout(ComboBoxScanners);
+#endif
         }
     }
 }

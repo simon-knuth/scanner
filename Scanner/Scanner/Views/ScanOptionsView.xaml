@@ -94,7 +94,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Padding="16,16,16,4">
-                    <ComboBox x:Name="ComboBoxScanners" Padding="12,5,28,5" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged">
+                    <ComboBox x:Name="ComboBoxScanners" Padding="12,5,28,5" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                         <ComboBox.Items>
                             <ComboBoxItem IsEnabled="False">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
@@ -104,7 +104,7 @@
                             </ComboBoxItem>
                         </ComboBox.Items>
 
-                        <ComboBox.ContextFlyout>
+                        <FlyoutBase.AttachedFlyout>
                             <Flyout Placement="Bottom">
                                 <StackPanel Orientation="Vertical" MaxWidth="400">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
@@ -172,7 +172,7 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Flyout>
-                        </ComboBox.ContextFlyout>
+                        </FlyoutBase.AttachedFlyout>
                     </ComboBox>
                     <InfoBadge IsHitTestVisible="False" Margin="0,0,40,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
                     <Grid/>
