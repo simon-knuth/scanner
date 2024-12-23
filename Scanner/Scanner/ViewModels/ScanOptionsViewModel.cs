@@ -33,8 +33,25 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        [ObservableProperty]
-        private ScanOptions scanOptions = new();
+        private ScanOptions scanOptions;
+        public ScanOptions ScanOptions
+        {
+            get => scanOptions;
+            set
+            {
+                if (scanOptions != null)
+                {
+                    scanOptions.PropertyChanged -= ScanOptions_PropertyChanged;
+                }
+
+                SetProperty(ref scanOptions, value);
+
+                if (scanOptions != null)
+                {
+                    scanOptions.PropertyChanged += ScanOptions_PropertyChanged;
+                }
+            }
+        }
 
         private IScanningDevice selectedScanner;
         public IScanningDevice SelectedScanner
@@ -129,6 +146,209 @@ namespace Scanner.ViewModels
         {
             DebugScanner debugScanner = new(DebugScannerSetupProperties);
             await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
+        }
+
+        private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ScanOptions.SourceMode):
+                    UpdateScanOptionsForSourceMode();
+                    break;
+            }
+        }
+
+        private void UpdateScanOptionsForSourceMode()
+        {
+            switch (ScanOptions.SourceMode)
+            {
+                case ScannerSource.Flatbed:
+                    // color mode
+                    switch (ScanOptions.ColorMode)
+                    {
+                        case ScannerColorMode.None:
+                        case ScannerColorMode.Color:
+                            if (ScanOptions.Scanner.IsFlatbedColorAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Color;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            break;
+                        case ScannerColorMode.Grayscale:
+                            if (ScanOptions.Scanner.IsFlatbedColorAllowed || ScanOptions.Scanner.IsFlatbedGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            break;
+                        case ScannerColorMode.Monochrome:
+                            if (ScanOptions.Scanner.IsFlatbedColorAllowed || ScanOptions.Scanner.IsFlatbedMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            break;
+                    }
+
+                    // auto crop mode
+                    switch (ScanOptions.AutoCropMode)
+                    {
+                        case ScannerAutoCropMode.Disabled:
+                            if (ScanOptions.Scanner.IsFlatbedAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                        case ScannerAutoCropMode.SingleRegion:
+                            if (ScanOptions.Scanner.IsFlatbedAutoCropSingleRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedAutoCropMultiRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                        case ScannerAutoCropMode.None:
+                        case ScannerAutoCropMode.MultipleRegions:
+                            if (ScanOptions.Scanner.IsFlatbedAutoCropMultiRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedAutoCropSingleRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                            }
+                            else if (ScanOptions.Scanner.IsFlatbedAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                    }
+                    break;
+                case ScannerSource.Feeder:
+                    // color mode
+                    switch (ScanOptions.ColorMode)
+                    {
+                        case ScannerColorMode.None:
+                        case ScannerColorMode.Color:
+                            if (ScanOptions.Scanner.IsFeederColorAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Color;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            break;
+                        case ScannerColorMode.Grayscale:
+                            if (ScanOptions.Scanner.IsFeederColorAllowed || ScanOptions.Scanner.IsFeederGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            break;
+                        case ScannerColorMode.Monochrome:
+                            if (ScanOptions.Scanner.IsFeederColorAllowed || ScanOptions.Scanner.IsFeederMonochromeAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Monochrome;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederGrayscaleAllowed)
+                            {
+                                ScanOptions.ColorMode = ScannerColorMode.Grayscale;
+                            }
+                            break;
+                    }
+
+                    // auto crop mode
+                    switch (ScanOptions.AutoCropMode)
+                    {
+                        case ScannerAutoCropMode.Disabled:
+                            if (ScanOptions.Scanner.IsFeederAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                        case ScannerAutoCropMode.SingleRegion:
+                            if (ScanOptions.Scanner.IsFeederAutoCropSingleRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederAutoCropMultiRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                        case ScannerAutoCropMode.None:
+                        case ScannerAutoCropMode.MultipleRegions:
+                            if (ScanOptions.Scanner.IsFeederAutoCropMultiRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederAutoCropSingleRegionAllowed)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                            }
+                            else if (ScanOptions.Scanner.IsFeederAutoCropSupported)
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                            }
+                            else
+                            {
+                                ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }
