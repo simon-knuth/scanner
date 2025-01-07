@@ -360,13 +360,13 @@
                         <StackPanel x:Name="StackPanelAutoCrop" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                             <TextBlock Text="Automatic crop" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropDisabled, Mode=TwoWay}">
                                     <TextBlock Text="Disabled" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropSingle, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}">
                                     <TextBlock Text="Single region" Margin="4,0,0,0" />
                                 </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropMulti, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropMultiSupported, Mode=OneWay}">
                                     <TextBlock Text="Multiple regions" Margin="4,0,0,0" />
                                 </RadioButton>
                             </StackPanel>

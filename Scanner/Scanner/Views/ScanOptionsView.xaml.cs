@@ -247,6 +247,84 @@ namespace Scanner.Views
         }
         #endregion
 
+        #region Color mode
+        public bool IsAutoCropDisabled
+        {
+            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.Disabled;
+            set
+            {
+                if (value)
+                {
+                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                }
+            }
+        }
+
+        public bool IsAutoCropSingle
+        {
+            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.SingleRegion;
+            set
+            {
+                if (value)
+                {
+                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                }
+            }
+        }
+
+        public bool IsAutoCropSingleSupported
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return false;
+
+                switch (ViewModel.ScanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        return ViewModel.SelectedScanner.IsFlatbedAutoCropSingleRegionAllowed;
+                    case ScannerSource.Feeder:
+                        return ViewModel.SelectedScanner.IsFeederAutoCropSingleRegionAllowed;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        public bool IsAutoCropMulti
+        {
+            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.MultipleRegions;
+            set
+            {
+                if (value)
+                {
+                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                }
+            }
+        }
+
+        public bool IsAutoCropMultiSupported
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return false;
+
+                switch (ViewModel.ScanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        return ViewModel.SelectedScanner.IsFlatbedAutoCropMultiRegionAllowed;
+                    case ScannerSource.Feeder:
+                        return ViewModel.SelectedScanner.IsFeederAutoCropMultiRegionAllowed;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        return false;
+                }
+            }
+        }
+        #endregion
+
         #region Brightness & Contrast
         public bool CanResetBrightness => ViewModel.ScanOptions.Brightness != 0;
         public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
@@ -335,7 +413,6 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsSourceModeFeeder));
                         OnPropertyChanged(nameof(TargetFormat));
                         OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
-                        OnPropertyChanged(nameof(IsAutoCropVisible));
                         OnPropertyChanged(nameof(IsColorModeColor));
                         OnPropertyChanged(nameof(IsColorModeColorSupported));
                         OnPropertyChanged(nameof(IsColorModeGrayscale));
@@ -345,7 +422,12 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(TargetFormat));
                         OnPropertyChanged(nameof(CanResetBrightness));
                         OnPropertyChanged(nameof(CanResetContrast));
-                        // TODO: Auto crop
+                        OnPropertyChanged(nameof(IsAutoCropVisible));
+                        OnPropertyChanged(nameof(IsAutoCropDisabled));
+                        OnPropertyChanged(nameof(IsAutoCropSingle));
+                        OnPropertyChanged(nameof(IsAutoCropSingleSupported));
+                        OnPropertyChanged(nameof(IsAutoCropMulti));
+                        OnPropertyChanged(nameof(IsAutoCropMultiSupported));
 
                         OnPropertyChanged(nameof(ScanOptions));
                     });
@@ -365,6 +447,8 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeGrayscaleSupported));
                         OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
                         OnPropertyChanged(nameof(IsAutoCropVisible));
+                        OnPropertyChanged(nameof(IsAutoCropSingleSupported));
+                        OnPropertyChanged(nameof(IsAutoCropMultiSupported));
                     });
                     break;
                 case nameof(ScanOptions.ColorMode):
@@ -393,7 +477,16 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(CanResetContrast));
                     });
                     break;
-                    // TODO: Auto crop
+                case nameof(ScanOptions.AutoCropMode):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(IsAutoCropDisabled));
+                        OnPropertyChanged(nameof(IsAutoCropSingle));
+                        OnPropertyChanged(nameof(IsAutoCropSingleSupported));
+                        OnPropertyChanged(nameof(IsAutoCropMulti));
+                        OnPropertyChanged(nameof(IsAutoCropMultiSupported));
+                    });
+                    break;
             }
         }
 
