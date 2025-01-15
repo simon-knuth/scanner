@@ -61,7 +61,7 @@
             </Grid.RowDefinitions>
             
             <!-- Header -->
-            <Grid x:Name="GridHeader" Grid.Row="0">
+            <Grid x:Name="GridHeader" Grid.Row="0" Height="56">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
@@ -71,7 +71,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Line Grid.Column="0" Margin="0,0,8,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
-                <TextBlock Grid.Column="1" Text="Scan options" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Grid.Column="1" Text="Scan options" VerticalAlignment="Center" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" />
                 <Line Grid.Column="2" Margin="8,0,8,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
                 <Button x:Name="ButtonPageList" Grid.Column="3" Padding="12,4,16,4" VerticalAlignment="Center" CornerRadius="12" Background="{ThemeResource SubtleFillColorTertiaryBrush}" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" Click="ButtonPageList_Click">
                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -80,7 +80,7 @@
                                 <RotateTransform Angle="270" />
                             </FontIcon.RenderTransform>
                         </FontIcon>
-                        <TextBlock Text="Page list" MaxLines="1" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                        <TextBlock Text="Pages" MaxLines="1" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                     </StackPanel>
                 </Button>
                 <Line Grid.Column="4" Margin="8,0,0,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
@@ -93,7 +93,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Padding="16,16,16,4">
+                <Grid Grid.Row="0" Padding="16,4,16,4">
                     <ComboBox x:Name="ComboBoxScanners" Padding="12,5,28,5" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                         <ComboBox.Items>
                             <ComboBoxItem IsEnabled="False">
@@ -175,7 +175,6 @@
                         </FlyoutBase.AttachedFlyout>
                     </ComboBox>
                     <InfoBadge IsHitTestVisible="False" Margin="0,0,40,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
-                    <Grid/>
                 </Grid>
 
                 <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" IsEnabled="{x:Bind ViewModel.AreScanOptionsAvailable, Mode=OneWay}">

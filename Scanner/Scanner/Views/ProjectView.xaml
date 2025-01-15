@@ -53,7 +53,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,12,0" SizeChanged="GridHeader_SizeChanged">
+            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,12,0" Height="56" SizeChanged="GridHeader_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -64,7 +64,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-9,0,-9,0" Padding="8,4,8,4" MinHeight="0" FontWeight="Bold" Style="{StaticResource MutedTextBoxStyle}" />
+                <TextBox Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-9,0,-9,0" Padding="8,4,8,4" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" Style="{StaticResource MutedTextBoxStyle}" />
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8">
                     <TextBlock Text="PDF" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                     <TextBlock Text="7 pages" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />

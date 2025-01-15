@@ -88,7 +88,7 @@
                         <Setter Target="BorderProjectView.(Grid.Column)" Value="2" />
                         <Setter Target="BorderProjectView.(Grid.RowSpan)" Value="2" />
                         <Setter Target="ProjectView.IsExpanded" Value="True" />
-                        <Setter Target="BorderScanOptions.Margin" Value="0,16,0,0" />
+                        <Setter Target="BorderScanOptions.Margin" Value="0,4,0,0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                         <Setter Target="ScanOptionsView.Visibility" Value="Visible" />
                         <Setter Target="ScanActionsView.AreScanOptionsVisible" Value="False" />
@@ -229,7 +229,7 @@
                 <Border x:Name="BorderProjectView" Grid.Row="0" Grid.Column="0" Margin="0,8,0,0">
                     <views:ProjectView x:Name="ProjectView" />
                 </Border>
-                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Margin="0,164,0,0" ui:UIElementExtensions.ClipToBounds="True">
+                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Margin="0,156,0,0" ui:UIElementExtensions.ClipToBounds="True">
                     <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ScanOptionsView_ExpandPageListRequested">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />
