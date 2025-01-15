@@ -85,7 +85,7 @@
 
                 <!-- Resolution -->
                 <Border x:Name="BorderResolution" Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
-                    <TextBlock Text="{x:Bind ScanOptions.Resolution, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ScanOptions.Resolution.FriendlyShortText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Border>
             </ItemsControl.Items>
         </ItemsControl>
