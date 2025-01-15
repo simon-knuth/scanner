@@ -535,6 +535,12 @@ namespace Scanner.Views
                             };
 
                             ComboBoxScanners.Items.Insert(e.NewStartingIndex + i, item);
+
+                            // select if necessary
+                            if (ViewModel.SelectedScanner == e.NewItems[i])
+                            {
+                                ComboBoxScanners.SelectedItem = item;
+                            }
                         }
                         break;
                     case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
