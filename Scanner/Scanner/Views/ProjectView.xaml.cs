@@ -87,5 +87,10 @@ namespace Scanner.Views
                 Implicit.SetHideAnimations(sender, new ImplicitAnimationSet());
             }
         }
+
+        private void TextBoxProjectName_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
     }
 }

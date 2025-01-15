@@ -396,8 +396,6 @@ namespace Scanner.Views
                                 ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - 1;
                             }
                         }
-
-                        OnPropertyChanged(nameof(IsAutoCropVisible));
                     });
                     break;
                 case nameof(ViewModel.ScanOptions):
@@ -437,6 +435,7 @@ namespace Scanner.Views
 
         private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            // force update for dependant properties
             switch (e.PropertyName)
             {
                 case nameof(ScanOptions.SourceMode):
@@ -512,6 +511,7 @@ namespace Scanner.Views
         {
             if (e.AddedItems.Count == 0) return;
             
+            // apply scanner selection
             ViewModel.SelectedScanner = (IScanningDevice)((ComboBoxItem)e.AddedItems[0]).Tag;
         }
 
@@ -599,11 +599,13 @@ namespace Scanner.Views
 
         private void ButtonBrightnessReset_Click(object sender, RoutedEventArgs e)
         {
+            // reset brightness
             ViewModel.ScanOptions.Brightness = 0;
         }
 
         private void ButtonContrastReset_Click(object sender, RoutedEventArgs e)
         {
+            // reset contrast
             ViewModel.ScanOptions.Contrast = 0;
         }
     }
