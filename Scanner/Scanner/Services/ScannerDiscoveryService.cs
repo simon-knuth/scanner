@@ -99,15 +99,34 @@ namespace Scanner.Services
 
         private async void Watcher_ScannerFound(DeviceWatcher sender, DeviceInformation args)
         {
-            // construct scanner
-            ImageScanner imageScanner = await ImageScanner.FromIdAsync(args.Id);
-            HardwareScanner scanner = new HardwareScanner(imageScanner, args.Name);
-            
-            await TryAddScannerAsync(scanner);
-            LogService?.Log.Information("ScannerDiscoveryScanner - Found and added {@Scanner}", scanner);
+            int attempt = 1;
+            while (attempt <= 2)
+            {
+                try
+                {
+                    // construct scanner
+                    ImageScanner imageScanner = await ImageScanner.FromIdAsync(args.Id);
+                    HardwareScanner scanner = new HardwareScanner(imageScanner, args.Name);
 
-            // analytics
-            if (scanner != null) SendScannerAnalytics(scanner);
+                    await TryAddScannerAsync(scanner);
+                    LogService?.Log.Information("ScannerDiscoveryScanner - Found and added {@Scanner}", scanner);
+
+                    // analytics
+                    if (scanner != null) SendScannerAnalytics(scanner);
+
+                    return;
+                }
+                catch (Exception exc)
+                {
+                    LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to add scanner ({Attempt})", attempt);
+                    if (attempt < 2)
+                    {
+                        // scanner may just be blocked by another app, try again
+                        await Task.Delay(5000);
+                    }
+                    attempt++;
+                }
+            }
         }
 
         private async void Watcher_ScannerLost(DeviceWatcher sender, DeviceInformationUpdate args)
