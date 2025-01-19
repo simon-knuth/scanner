@@ -33,7 +33,7 @@ namespace Scanner.Models
         private ScannerColorMode colorMode;
 
         [ObservableProperty]
-        private float resolution;
+        private ScanResolution resolution;
 
         public ScannerAutoCropMode AutoCropMode;
         public bool FeederDuplex;
@@ -125,6 +125,9 @@ namespace Scanner.Models
                     ColorMode = ScannerColorMode.Automatic;
                 }
 
+                // resolution
+                SetDefaultResolution(Scanner.FlatbedResolutions);
+
                 // auto crop mode
                 if (Scanner.IsFlatbedAutoCropSupported)
                 {
@@ -157,6 +160,9 @@ namespace Scanner.Models
                     ColorMode = ScannerColorMode.Automatic;
                 }
 
+                // resolution
+                SetDefaultResolution(Scanner.FeederResolutions);
+
                 // auto crop mode
                 if (Scanner.IsFeederAutoCropSupported)
                 {
@@ -172,6 +178,29 @@ namespace Scanner.Models
             }
 
             TargetFormat = TargetFormat.PDF;
+        }
+
+        public void SetDefaultResolution(List<ScanResolution> resolutions)
+        {
+            ScanResolution? resolution = resolutions.FirstOrDefault((x) => x.Annotation == ResolutionAnnotation.Default);
+            if (resolution == null)
+            {
+                // fall back to documents resolution
+                resolution = resolutions.FirstOrDefault((x) => x.Annotation == ResolutionAnnotation.Documents);
+
+                if (resolution == null)
+                {
+                    // fall back to photos resolution
+                    resolution = resolutions.FirstOrDefault((x) => x.Annotation == ResolutionAnnotation.Photos);
+
+                    if (resolution == null)
+                    {
+                        // fall back to first resolution
+                        resolution = resolutions[0];
+                    }
+                }
+            }
+            Resolution = resolution;
         }
     }
 

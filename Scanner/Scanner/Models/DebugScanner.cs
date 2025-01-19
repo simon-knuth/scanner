@@ -87,6 +87,7 @@ namespace Scanner.Models
 
             IsAutoAllowed = setupProperties.IsAutoAllowed;
             IsAutoPreviewAllowed = setupProperties.IsAutoPreviewAllowed;
+            AutoFormats = new List<ImageScannerFormat> { ImageScannerFormat.Jpeg, ImageScannerFormat.DeviceIndependentBitmap };
 
             IsFlatbedAllowed = setupProperties.IsFlatbedAllowed;
             IsFlatbedPreviewAllowed = setupProperties.IsFlatbedPreviewAllowed;
@@ -96,6 +97,14 @@ namespace Scanner.Models
             IsFlatbedAutoColorAllowed = setupProperties.IsFlatbedAutoColorAllowed;
             IsFlatbedAutoCropSingleRegionAllowed = setupProperties.IsFlatbedAutoCropSingleRegionAllowed;
             IsFlatbedAutoCropMultiRegionAllowed = setupProperties.IsFlatbedAutoCropMultiRegionAllowed;
+            FlatbedFormats = new List<ImageScannerFormat> { ImageScannerFormat.Png, ImageScannerFormat.DeviceIndependentBitmap };
+            FlatbedResolutions = new List<ScanResolution>
+            {
+                new ScanResolution(100, ResolutionAnnotation.None),
+                new ScanResolution(300, ResolutionAnnotation.Documents),
+                new ScanResolution(500, ResolutionAnnotation.None),
+                new ScanResolution(700, ResolutionAnnotation.Photos),
+            };
 
             IsFeederAllowed = setupProperties.IsFeederAllowed;
             IsFeederPreviewAllowed = setupProperties.IsFeederPreviewAllowed;
@@ -106,6 +115,20 @@ namespace Scanner.Models
             IsFeederAutoCropSingleRegionAllowed = setupProperties.IsFeederAutoCropSingleRegionAllowed;
             IsFeederAutoCropMultiRegionAllowed = setupProperties.IsFeederAutoCropMultiRegionAllowed;
             IsFeederDuplexSupported = setupProperties.IsFeederDuplexSupported;
+            FeederFormats = new List<ImageScannerFormat> { ImageScannerFormat.Jpeg, ImageScannerFormat.Pdf, ImageScannerFormat.Xps };
+            FeederResolutions = new List<ScanResolution>
+            {
+                new ScanResolution(100, ResolutionAnnotation.None),
+                new ScanResolution(150, ResolutionAnnotation.None),
+                new ScanResolution(200, ResolutionAnnotation.None),
+                new ScanResolution(250, ResolutionAnnotation.None),
+                new ScanResolution(300, ResolutionAnnotation.Documents),
+                new ScanResolution(400, ResolutionAnnotation.Default),
+                new ScanResolution(500, ResolutionAnnotation.None),
+                new ScanResolution(600, ResolutionAnnotation.Photos),
+                new ScanResolution(700, ResolutionAnnotation.None),
+                new ScanResolution(800, ResolutionAnnotation.None),
+            };
         }
 
 

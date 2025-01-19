@@ -25,6 +25,7 @@ namespace Scanner.Models
         public ResolutionAnnotation Annotation;
 
         public string FriendlyText;
+        public string FriendlyShortText;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ namespace Scanner.Models
             Resolution = resolution;
             Annotation = annotation;
             FriendlyText = GenerateFriendlyText();
+            FriendlyShortText = String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
         }
 
         public ScanResolution(float resolution, ResolutionAnnotation annotation)
@@ -42,7 +44,9 @@ namespace Scanner.Models
             Resolution = new ImageScannerResolution { DpiX = resolution, DpiY = resolution };
             Annotation = annotation;
             FriendlyText = GenerateFriendlyText();
+            FriendlyShortText = String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +74,7 @@ namespace Scanner.Models
     }
 
     /// <summary>
-    ///     The possible properties a resolution value can have.
+    ///     The possible annotations a resolution value can have.
     /// </summary>
     public enum ResolutionAnnotation
     {

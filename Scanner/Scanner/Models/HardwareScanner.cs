@@ -146,7 +146,26 @@ namespace Scanner.Models
                     }
 
                     FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
-                    LogService?.Log.Information("HardwareScanner - Generated {@Formats} for flatbed", FlatbedFormats);
+                    if (FlatbedFormats.Count == 0)
+                    {
+                        LogService?.Log.Warning("HardwareScanner - No formats generated for flatbed, invalid source mode");
+                        IsFeederAllowed = false;
+                    }
+                    else
+                    {
+                        LogService?.Log.Information("HardwareScanner - Generated {@Formats} for flatbed", FlatbedFormats);
+                    }
+
+                    FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
+                    if (FlatbedResolutions.Count == 0)
+                    {
+                        LogService?.Log.Warning("HardwareScanner - No resolutions generated for flatbed, invalid source mode");
+                        IsFeederAllowed = false;
+                    }
+                    else
+                    {
+                        LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for flatbed", FlatbedResolutions);
+                    }
                 }
             }
 
@@ -200,7 +219,26 @@ namespace Scanner.Models
                     }
 
                     FeederFormats = GenerateFormats(device.FeederConfiguration);
-                    LogService?.Log.Information("HardwareScanner - Generated {@Formats} for feeder", FeederFormats);
+                    if (FeederFormats.Count == 0)
+                    {
+                        LogService?.Log.Warning("HardwareScanner - No formats generated for feeder, invalid source mode");
+                        IsFeederAllowed = false;
+                    }
+                    else
+                    {
+                        LogService?.Log.Information("HardwareScanner - Generated {@Formats} for feeder", FeederFormats);
+                    }
+
+                    FeederResolutions = GenerateResolutions(device.FeederConfiguration);
+                    if (FeederResolutions.Count == 0)
+                    {
+                        LogService?.Log.Warning("HardwareScanner - No resolutions generated for feeder, invalid source mode");
+                        IsFeederAllowed = false;
+                    }
+                    else
+                    {
+                        LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for feeder", FeederResolutions);
+                    }
                 }
             }
 
@@ -259,6 +297,66 @@ namespace Scanner.Models
             if (config.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
             {
                 result.Add(ImageScannerFormat.DeviceIndependentBitmap);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Generates the true available resolution values for a flatbed/feeder configuration. Also enriches the resolution
+        ///     values with the related <see cref="ResolutionAnnotation"/> and a friendly string.
+        ///     Assumption: DpiX = DpiY
+        /// </summary>
+        /// <param name="config">The configuration for which resolution values are to be determined.</param>
+        private List<ScanResolution> GenerateResolutions(IImageScannerSourceConfiguration config)
+        {
+            float currentValue = config.MinResolution.DpiX;
+            float lastValue = -1;
+            List<ScanResolution> result = new();
+            int bestDocumentsResolution = -1, bestPhotosResolution = -1;
+
+            while (currentValue <= config.MaxResolution.DpiX)
+            {
+                config.DesiredResolution = new ImageScannerResolution { DpiX = currentValue, DpiY = currentValue };
+
+                if (config.ActualResolution.DpiX != lastValue)
+                {
+                    ScanResolution newRes = new ScanResolution(config.ActualResolution.DpiX, ResolutionAnnotation.None);
+                    result.Add(newRes);
+                    lastValue = config.ActualResolution.DpiX;
+
+                    // check how suitable these resolutions are for scanning documents and photos
+                    if (bestDocumentsResolution == -1
+                        || Math.Abs(AppConfig.DocumentsResolution - newRes.Resolution.DpiX) < Math.Abs(AppConfig.DocumentsResolution - result[bestDocumentsResolution].Resolution.DpiX))
+                    {
+                        bestDocumentsResolution = result.Count - 1;
+                    }
+                    if (bestPhotosResolution == -1
+                        || Math.Abs(AppConfig.PhotosResolution - newRes.Resolution.DpiX) < Math.Abs(AppConfig.PhotosResolution - result[bestPhotosResolution].Resolution.DpiX))
+                    {
+                        bestPhotosResolution = result.Count - 1;
+                    }
+                }
+
+                if (lastValue <= currentValue) currentValue += 1;
+                else currentValue = config.ActualResolution.DpiX + 1;
+            }
+
+            if (result.Count == 0)
+            {
+                //log.Error("Generating resolutions for {@Config} failed.", config);
+                throw new ApplicationException("Unable to generate any resolutions for given scanner.");
+            }
+
+            // determine the final properties
+            if (bestDocumentsResolution == bestPhotosResolution)
+            {
+                result[bestDocumentsResolution] = new ScanResolution(result[bestDocumentsResolution].Resolution.DpiX, ResolutionAnnotation.Default);
+            }
+            else
+            {
+                result[bestDocumentsResolution] = new ScanResolution(result[bestDocumentsResolution].Resolution.DpiX, ResolutionAnnotation.Documents);
+                result[bestPhotosResolution] = new ScanResolution(result[bestPhotosResolution].Resolution.DpiX, ResolutionAnnotation.Photos);
             }
 
             return result;

@@ -247,7 +247,37 @@ namespace Scanner.Views
         }
         #endregion
 
-        #region Color mode
+        #region Resolutions
+        public List<ScanResolution> Resolutions
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null) return new();
+                switch (ViewModel.ScanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        return ViewModel.SelectedScanner.FlatbedResolutions;
+                    case ScannerSource.Feeder:
+                        return ViewModel.SelectedScanner.FeederResolutions;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        return new();
+                }
+            }
+        }
+
+        public ScanResolution SelectedResolution        // required to make sure Resolutions list is ready before the ComboBox applies this value
+        {
+            get => ViewModel.ScanOptions.Resolution;
+            set
+            {
+                ViewModel.ScanOptions.Resolution = value;
+            }
+        }
+        #endregion
+
+        #region Auto crop
         public bool IsAutoCropDisabled
         {
             get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.Disabled;
@@ -418,6 +448,8 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeMonochrome));
                         OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
                         OnPropertyChanged(nameof(TargetFormat));
+                        OnPropertyChanged(nameof(Resolutions));
+                        OnPropertyChanged(nameof(SelectedResolution));
                         OnPropertyChanged(nameof(CanResetBrightness));
                         OnPropertyChanged(nameof(CanResetContrast));
                         OnPropertyChanged(nameof(IsAutoCropVisible));
@@ -445,6 +477,8 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsColorModeColorSupported));
                         OnPropertyChanged(nameof(IsColorModeGrayscaleSupported));
                         OnPropertyChanged(nameof(IsColorModeMonochromeSupported));
+                        OnPropertyChanged(nameof(Resolutions));
+                        OnPropertyChanged(nameof(SelectedResolution));
                         OnPropertyChanged(nameof(IsAutoCropVisible));
                         OnPropertyChanged(nameof(IsAutoCropSingleSupported));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
@@ -462,6 +496,12 @@ namespace Scanner.Views
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         OnPropertyChanged(nameof(TargetFormat));
+                    });
+                    break;
+                case nameof(ScanOptions.Resolution):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(SelectedResolution));
                     });
                     break;
                 case nameof(ScanOptions.Brightness):
@@ -613,6 +653,41 @@ namespace Scanner.Views
         {
             // reset contrast
             ViewModel.ScanOptions.Contrast = 0;
+        }
+
+        private void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+        {
+            if (int.TryParse(args.Text, out int intValue))
+            {
+                // entered pure number, try to apply it
+                ScanResolution? resolution = Resolutions.FirstOrDefault((x) => x.Resolution.DpiX == intValue);
+                if (resolution != null)
+                {
+                    // found corresponding resolution
+                    SelectedResolution = resolution;
+                }
+                else
+                {
+                    // no resolution for number, find the closest available one
+                    resolution = Resolutions.Aggregate((x, y) => Math.Abs(x.Resolution.DpiX - intValue) < Math.Abs(y.Resolution.DpiX - intValue) ? x : y);
+                    SelectedResolution = resolution;
+                }
+            }
+            else
+            {
+                args.Handled = true;
+            }
+
+            // ensure ComboBox text reflects selected resolution, even if it didn't change
+            OnPropertyChanged(nameof(SelectedResolution));
+        }
+
+        private void ComboBoxResolution_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 1)
+            {
+                SelectedResolution = (ScanResolution)e.AddedItems[0];
+            }
         }
     }
 }

@@ -203,6 +203,9 @@ namespace Scanner.ViewModels
                             break;
                     }
 
+                    // resolution
+                    ScanOptions.SetDefaultResolution(ScanOptions.Scanner.FlatbedResolutions);
+
                     // auto crop mode
                     switch (ScanOptions.AutoCropMode)
                     {
@@ -295,6 +298,9 @@ namespace Scanner.ViewModels
                             }
                             break;
                     }
+
+                    // resolution
+                    ScanOptions.SetDefaultResolution(ScanOptions.Scanner.FeederResolutions);
 
                     // auto crop mode
                     switch (ScanOptions.AutoCropMode)

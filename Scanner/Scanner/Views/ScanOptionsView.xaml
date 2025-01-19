@@ -165,10 +165,7 @@
                                     <StackPanel Orientation="Vertical" Spacing="8">
                                         <StackPanel Orientation="Horizontal">
                                             <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
-                                            <Button Content="Restart ScannerDiscoveryService" Margin="8,0,0,0" />
                                         </StackPanel>
-                                        <Button Content="Delete current scanner's scan options from databases" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
-                                        <Button Content="Show scanner search tip" />
                                     </StackPanel>
                                 </StackPanel>
                             </Flyout>
@@ -348,11 +345,7 @@
                         <!-- Resolution -->
                         <StackPanel x:Name="StackPanelResolution" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
                             <TextBlock Text="Resolution" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <ComboBox HorizontalAlignment="Stretch" IsEditable="True">
-                                <ComboBox.Items>
-                                    <ComboBoxItem Content="300 DPI" />
-                                </ComboBox.Items>
-                            </ComboBox>
+                            <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" IsEditable="True" SelectedItem="{x:Bind SelectedResolution, Mode=OneWay}" ItemsSource="{x:Bind Resolutions, Mode=OneWay}" TextSubmitted="ComboBoxResolution_TextSubmitted" SelectionChanged="ComboBoxResolution_SelectionChanged" />
                         </StackPanel>
 
                         <!-- Auto crop -->

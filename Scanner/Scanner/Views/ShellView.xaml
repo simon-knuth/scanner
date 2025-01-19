@@ -39,10 +39,10 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridRoot" SizeChanged="GridRoot_SizeChanged" Loading="GridRoot_Loading" Loaded="GridRoot_Loaded">
+    <Grid x:Name="GridRoot" SizeChanged="GridRoot_SizeChanged" Loaded="GridRoot_Loaded">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
+            <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0" />

@@ -87,39 +87,6 @@ namespace Scanner.Views
             SetRegionsForCustomTitleBar();
         }
 
-        private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
-        {
-            //ApplyVisualState(e.NewState);
-        }
-
-        //private void ApplyVisualState(VisualState state)
-        //{
-        //    if (state == VisualStateNarrow)
-        //    {
-        //        BorderScanOptionsRight.Child = null;
-        //        BorderScanActionsRight.Child = null;
-
-        //        BorderScanOptionsLeft.Child = ScanOptionsView;
-        //        BorderScanActionsLeft.Child = ScanActionsView;
-        //    }
-        //    else if (state == VisualStateDefault)
-        //    {
-        //        BorderScanOptionsRight.Child = null;
-        //        BorderScanActionsRight.Child = null;
-
-        //        BorderScanOptionsLeft.Child = ScanOptionsView;
-        //        BorderScanActionsLeft.Child = ScanActionsView;
-        //    }
-        //    else if (state == VisualStateWide)
-        //    {
-        //        BorderScanOptionsLeft.Child = null;
-        //        BorderScanActionsLeft.Child = null;
-
-        //        BorderScanOptionsRight.Child = ScanOptionsView;
-        //        BorderScanActionsRight.Child = ScanActionsView;
-        //    }
-        //}
-
         private void ScanOptionsView_ExpandPageListRequested(object sender, EventArgs e)
         {
             ProjectView.IsExpanded = true;
@@ -132,11 +99,6 @@ namespace Scanner.Views
             ScanActionsView.AreScanOptionsVisible = false;
             ScanOptionsView.Visibility = Visibility.Visible;
             ProjectView.IsExpanded = false;
-        }
-
-        private void GridRoot_Loading(FrameworkElement sender, object args)
-        {
-            //ApplyVisualState(VisualStateGroup.CurrentState);
         }
 
         private void MenuFlyoutItemHistory_Click(object sender, RoutedEventArgs e)
