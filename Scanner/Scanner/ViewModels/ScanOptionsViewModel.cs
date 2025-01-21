@@ -65,6 +65,9 @@ namespace Scanner.ViewModels
             }
         }
 
+        [ObservableProperty]
+        private bool isScanning;
+
         public bool AreScanOptionsAvailable => SelectedScanner != null;
 
         public ObservableCollection<IScanningDevice> Scanners = new();

@@ -47,7 +47,7 @@ namespace Scanner.Views
             set => SetValue(AreScanOptionsVisibleProperty, value);
         }
 
-        public ScanOptions ScanOptions
+        public ScanOptions? ScanOptions
         {
             get => ViewModel.ScanOptions;
             set
@@ -62,6 +62,9 @@ namespace Scanner.Views
 
         [ObservableProperty]
         private bool isAddToProject;
+
+        [ObservableProperty]
+        private bool isHoveringCancelButton;
 
         public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
         public bool IsPreviewButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 500;
@@ -95,6 +98,12 @@ namespace Scanner.Views
         {
             OnPropertyChanged(nameof(IsTemplatesButtonVisible));
             OnPropertyChanged(nameof(IsPreviewButtonVisible));
+
+            if (double.IsFinite(e.NewSize.Width))
+            {
+                DoubleAnimationScanAnimation.From = -e.NewSize.Width;
+                DoubleAnimationScanAnimation.To = e.NewSize.Width;
+            }
         }
 
         private void ButtonAnimated_Loading(FrameworkElement sender, object args)
@@ -134,6 +143,28 @@ namespace Scanner.Views
             var view = (ScanActionsView)source;
             view.OnPropertyChanged(nameof(IsTemplatesButtonVisible));
             view.OnPropertyChanged(nameof(IsPreviewButtonVisible));
+        }
+
+        private async void BorderScanAnimation_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await StoryboardScanAnimation.BeginAsync();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void ButtonCancel_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            IsHoveringCancelButton = true;
+        }
+
+        private void ButtonCancel_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            IsHoveringCancelButton = false;
         }
     }
 }

@@ -34,6 +34,21 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Storyboards -->
+            <Storyboard x:Name="StoryboardScanAnimation" RepeatBehavior="Forever">
+                <DoubleAnimation
+                    x:Name="DoubleAnimationScanAnimation"
+                    Storyboard.TargetName="BorderScanAnimation"
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                    From="-348"
+                    To="348" 
+                    Duration="0:0:2.5">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseInOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
 
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
@@ -48,6 +63,33 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot" ui:UIElementExtensions.ClipToBounds="True" SizeChanged="GridRoot_SizeChanged">
+        <Border x:Name="BorderScanAnimationBackground" Background="{ThemeResource SystemAccentColor}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation To="0.05" Duration="0:0:0.75" />
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0.0" Duration="0:0:0.75" />
+            </animations:Implicit.HideAnimations>
+        </Border>
+        <Border x:Name="BorderScanAnimation" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" Loaded="BorderScanAnimation_Loaded">
+            <Border.RenderTransform>
+                <TranslateTransform X="-2000" />
+            </Border.RenderTransform>
+            
+            <Border.Background>
+                <LinearGradientBrush Opacity="0.15">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Offset="0" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
+                        <GradientStop Offset="0.3" Color="{ThemeResource SystemAccentColorDark1}" />
+                        <GradientStop Offset="0.5" Color="{ThemeResource SystemAccentColor}" />
+                        <GradientStop Offset="0.7" Color="{ThemeResource SystemAccentColorDark1}" />
+                        <GradientStop Offset="1" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
         <Grid Padding="12,12,16,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -56,7 +98,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
+            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -102,7 +144,14 @@
                 </Button.ContextFlyout>
             </Button>
 
-            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
+            <!-- Right buttons -->
+            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
+                <Button.Transitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </Button.Transitions>
+                
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -119,7 +168,21 @@
 
                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
-            <SplitButton Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}">
+            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" ToolTipService.ToolTip="Cancel scan" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.2" Delay="0:0:0.2" To="1.0" />
+                </animations:Implicit.ShowAnimations>
+                
+                <StackPanel Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Scanning" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="Click to cancel" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+               </StackPanel>
+            </Button>
+            <SplitButton x:Name="SplitButtonScan" Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}">
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
+                </animations:Implicit.HideAnimations>
+
                 <Grid ColumnSpacing="4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
