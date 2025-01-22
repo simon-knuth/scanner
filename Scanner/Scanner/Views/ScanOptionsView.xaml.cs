@@ -482,6 +482,9 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropVisible));
                         OnPropertyChanged(nameof(IsAutoCropSingleSupported));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
+                        OnPropertyChanged(nameof(IsAutoCropDisabled));
+                        OnPropertyChanged(nameof(IsAutoCropSingle));
+                        OnPropertyChanged(nameof(IsAutoCropMulti));
                     });
                     break;
                 case nameof(ScanOptions.ColorMode):

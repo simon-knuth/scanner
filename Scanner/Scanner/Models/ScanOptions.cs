@@ -35,8 +35,10 @@ namespace Scanner.Models
         [ObservableProperty]
         private ScanResolution resolution;
 
-        public ScannerAutoCropMode AutoCropMode;
-        public bool FeederDuplex;
+        [ObservableProperty]
+        private ScannerAutoCropMode autoCropMode;
+
+        public bool IsFeederDuplexSupported;
 
         [ObservableProperty]
         private int brightness;
@@ -174,7 +176,7 @@ namespace Scanner.Models
                 }
 
                 // duplex
-                FeederDuplex = Scanner.IsFeederDuplexSupported;
+                IsFeederDuplexSupported = Scanner.IsFeederDuplexSupported;
             }
 
             TargetFormat = TargetFormat.PDF;

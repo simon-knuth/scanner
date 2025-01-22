@@ -29,33 +29,33 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - -   CONTROL CONTENT  - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid>
+    <Grid VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="{x:Bind ScanOptions.Scanner.Name, Mode=OneWay}" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-        <ItemsControl Grid.Row="1" Margin="-4,2,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+        <ItemsControl Grid.Row="1" Margin="-4,0,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="4" />
+                    <StackPanel Orientation="Horizontal" Spacing="0" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             
             <ItemsControl.Items>
                 <!-- Source mode -->
-                <Border Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8">
+                <Border Padding="4,2,4,2" Background="Transparent" CornerRadius="8">
                     <TextBlock Text="{x:Bind ScanOptions.SourceMode, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Border>
 
                 <!-- File format -->
-                <Border Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8">
+                <Border Padding="4,2,4,2" Background="Transparent" CornerRadius="8">
                     <TextBlock Text="{x:Bind ScanOptions.TargetFormat, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Border>
 
                 <!-- Color mode -->
-                <Border x:Name="BorderColorMode" Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                <Border x:Name="BorderColorMode" Padding="4,2,4,2" Background="Transparent" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
                     <controls:SwitchPresenter Value="{x:Bind ScanOptions.ColorMode, Mode=OneWay, Converter={StaticResource EnumStringConverter}}">
                         <controls:Case Value="Color">
                             <FontIcon Glyph="&#xE790;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -84,7 +84,7 @@
                 </Border>
 
                 <!-- Resolution -->
-                <Border x:Name="BorderResolution" Padding="4,2,4,2" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                <Border x:Name="BorderResolution" Padding="4,2,4,2" Background="Transparent" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
                     <TextBlock Text="{x:Bind ScanOptions.Resolution.FriendlyShortText, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Border>
             </ItemsControl.Items>

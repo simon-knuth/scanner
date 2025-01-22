@@ -212,6 +212,7 @@ namespace Scanner.ViewModels
                     // auto crop mode
                     switch (ScanOptions.AutoCropMode)
                     {
+                        case ScannerAutoCropMode.None:
                         case ScannerAutoCropMode.Disabled:
                             if (ScanOptions.Scanner.IsFlatbedAutoCropSupported)
                             {
@@ -240,7 +241,6 @@ namespace Scanner.ViewModels
                                 ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
                             }
                             break;
-                        case ScannerAutoCropMode.None:
                         case ScannerAutoCropMode.MultipleRegions:
                             if (ScanOptions.Scanner.IsFlatbedAutoCropMultiRegionAllowed)
                             {
@@ -308,6 +308,7 @@ namespace Scanner.ViewModels
                     // auto crop mode
                     switch (ScanOptions.AutoCropMode)
                     {
+                        case ScannerAutoCropMode.None:
                         case ScannerAutoCropMode.Disabled:
                             if (ScanOptions.Scanner.IsFeederAutoCropSupported)
                             {
@@ -336,7 +337,6 @@ namespace Scanner.ViewModels
                                 ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
                             }
                             break;
-                        case ScannerAutoCropMode.None:
                         case ScannerAutoCropMode.MultipleRegions:
                             if (ScanOptions.Scanner.IsFeederAutoCropMultiRegionAllowed)
                             {

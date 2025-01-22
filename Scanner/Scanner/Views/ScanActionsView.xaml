@@ -11,7 +11,8 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI" xmlns:customcontrols="using:Scanner.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customcontrols="using:Scanner.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -117,7 +118,7 @@
             </Button>
 
             <!-- Scan options -->
-            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,8,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
+            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                     <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
@@ -168,7 +169,7 @@
 
                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
-            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" ToolTipService.ToolTip="Cancel scan" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
+            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.2" Delay="0:0:0.2" To="1.0" />
                 </animations:Implicit.ShowAnimations>
