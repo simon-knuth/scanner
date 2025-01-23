@@ -592,7 +592,7 @@ namespace Scanner.Views
                         {
                             // find corresponding ComboBoxItem
                             ComboBoxItem? item = null;
-                            for (int i = 0; i < ComboBoxScanners.Items.Count - 2; i++)
+                            for (int i = 0; i < ComboBoxScanners.Items.Count - 1; i++)
                             {
                                 if (((FrameworkElement)ComboBoxScanners.Items[i]).Tag == oldItem)
                                 {
@@ -604,6 +604,11 @@ namespace Scanner.Views
                             if (item != null)
                             {
                                 ComboBoxScanners.Items.Remove(item);
+                            }
+
+                            if (ComboBoxScanners.SelectedIndex == -1)
+                            {
+                                ComboBoxScanners.SelectedIndex = 0;
                             }
                         }
                         break;

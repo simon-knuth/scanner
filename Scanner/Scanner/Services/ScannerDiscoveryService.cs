@@ -131,21 +131,46 @@ namespace Scanner.Services
 
         private async void Watcher_ScannerLost(DeviceWatcher sender, DeviceInformationUpdate args)
         {
+            await TryRemoveScannerByIdAsync(args.Id);
+        }
+
+        private async Task TryRemoveScannerAsync(IScanningDevice scanner)
+        {
+            try
+            {
+                await semaphoreDevices.WaitAsync();
+                Devices.Remove(scanner);
+                ScanningDeviceLost?.Invoke(this, scanner);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to remove {@Device}", scanner);
+                return;
+            }
+            finally
+            {
+                semaphoreDevices.Release();
+            }
+        }
+
+        private async Task TryRemoveScannerByIdAsync(string scannerId)
+        {
             try
             {
                 // search for scanner
                 await semaphoreDevices.WaitAsync();
-                IScanningDevice? device = Devices.FirstOrDefault((x) => x.Id == args.Id);
+                IScanningDevice? device = Devices.FirstOrDefault((x) => x.Id == scannerId);
 
                 // remove scanner
                 if (device != null)
                 {
                     Devices.Remove(device);
+                    ScanningDeviceLost?.Invoke(this, device);
                 }
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to remove lost {@Device}", args);
+                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to remove device by {Id}", scannerId);
                 return;
             }
             finally
@@ -157,6 +182,11 @@ namespace Scanner.Services
         public async Task AddDebugScannerAsync(DebugScanner scanner)
         {
             await TryAddScannerAsync(scanner);
+        }
+
+        public async Task RemoveDebugScannerAsync(DebugScanner scanner)
+        {
+            await TryRemoveScannerAsync(scanner);
         }
 
         private async Task TryAddScannerAsync(IScanningDevice scanner)

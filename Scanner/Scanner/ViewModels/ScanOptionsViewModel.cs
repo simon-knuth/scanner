@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Appointments.AppointmentsProvider;
 using Windows.UI.WebUI;
 
 namespace Scanner.ViewModels
@@ -29,6 +30,7 @@ namespace Scanner.ViewModels
 
         #region Commands
         public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(AddDebugScannerAsync);
+        public AsyncRelayCommand DebugRemoveScannerCommand => new AsyncRelayCommand(RemoveDebugScannerAsync);
         public RelayCommand<DispatcherQueue> LoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -149,6 +151,14 @@ namespace Scanner.ViewModels
         {
             DebugScanner debugScanner = new(DebugScannerSetupProperties);
             await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
+        }
+
+        private async Task RemoveDebugScannerAsync()
+        {
+            if (SelectedScanner is DebugScanner debugScanner)
+            {
+                await ScannerDiscoveryService.RemoveDebugScannerAsync(debugScanner);
+            }
         }
 
         private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

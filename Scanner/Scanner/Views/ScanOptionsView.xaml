@@ -163,8 +163,9 @@
                                     <MenuFlyoutSeparator Margin="0,12,0,12" />
 
                                     <StackPanel Orientation="Vertical" Spacing="8">
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
                                             <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
+                                            <Button Content="Remove scanner" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.DebugRemoveScannerCommand}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>

@@ -37,5 +37,6 @@ namespace Scanner.Services.Interfaces
         Task<List<IScanningDevice>> GetScanningDevicesAsync();
         Task InitializeSearchAsync();
         Task AddDebugScannerAsync(DebugScanner scanner);
+        Task RemoveDebugScannerAsync(DebugScanner scanner);
     }
 }

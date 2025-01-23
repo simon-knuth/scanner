@@ -46,7 +46,7 @@ namespace Scanner.Services
             private set;
         }
 
-        public string LogFilePath => hook?.Path;
+        public string LogFilePath => hook.Path;
 
         private CaptureFilePathHook hook;
 
@@ -87,7 +87,7 @@ namespace Scanner.Services
 
             ILogger log;
             log = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
+                    .MinimumLevel.Is(Serilog.Events.LogEventLevel.Information)
                     .WriteTo.Async(a => a.File(
                         path: logPath,
                         formatter: new CompactJsonFormatter(),
