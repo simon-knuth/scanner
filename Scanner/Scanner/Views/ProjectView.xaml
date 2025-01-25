@@ -248,7 +248,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.02" CornerRadius="8" />
                         </ui:Effects.Shadow>
