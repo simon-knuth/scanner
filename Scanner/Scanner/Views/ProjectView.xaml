@@ -53,7 +53,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,4,12,0" Height="56" SizeChanged="GridHeader_SizeChanged">
+            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -70,10 +70,10 @@
                     <TextBlock Text="7 pages" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="40" Height="40" Style="{StaticResource MutedButtonStyle}">
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
                         <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
-                    <Button x:Name="ButtonMore" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="40" Height="40" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
+                    <Button x:Name="ButtonMore" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
                         <AnimatedIcon Height="16">
                             <AnimatedIcon.Source>
                                 <animatedvisuals:AnimatedChevronDownSmallVisualSource />
@@ -188,7 +188,7 @@
             </Grid>
 
             <!-- Content -->
-            <Grid x:Name="GridContent" Grid.Row="1" Margin="0,8,0,0" ui:UIElementExtensions.ClipToBounds="True">
+            <Grid x:Name="GridContent" Grid.Row="1" Margin="0,4,0,0" ui:UIElementExtensions.ClipToBounds="True">
                 <!-- Carousel -->
                 <Grid x:Name="GridCarousel" Height="80" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
                     <animations:Implicit.ShowAnimations>
@@ -255,11 +255,11 @@
                         
                         <Border>
                             <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
-                                <ToggleButton Width="36" Height="36" Style="{StaticResource MutedToggleButtonStyle}">
+                                <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
                                     <FontIcon Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </ToggleButton>
                                 <AppBarSeparator />
-                                <Button x:Name="ButtonRotate" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
+                                <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
                                     <Grid>
                                         <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -279,13 +279,13 @@
                                         </MenuFlyout>
                                     </FlyoutBase.AttachedFlyout>
                                 </Button>
-                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
                                     <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
-                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
                                     <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
-                                <Button Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
                                     <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </StackPanel>
