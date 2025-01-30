@@ -1,0 +1,42 @@
+﻿using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WinRT.Interop;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using Scanner.Models.Interfaces;
+using Scanner.Models;
+
+namespace Scanner.Services.Interfaces
+{
+    /// <summary>
+    ///     Manages the current <see cref="Project"/>.
+    /// </summary>
+    public interface IProjectService
+    {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Events
+        event EventHandler<Project> ProjectChanged;
+        event EventHandler<bool> IsProcessRunningChanged;
+        event EventHandler<bool> IsScanProcessRunningChanged;
+        #endregion
+
+        Project CurrentProject { get; }
+
+        bool IsProcessRunning { get; }
+        bool IsScanProcessRunning { get; }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Task TryCreateProjectAsync(IScanningDevice scanner);
+    }
+}

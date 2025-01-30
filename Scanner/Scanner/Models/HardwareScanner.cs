@@ -17,6 +17,7 @@ using Scanner.Services.Interfaces;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Collections.ObjectModel;
 using Windows.Foundation.Metadata;
+using Windows.Storage;
 
 namespace Scanner.Models
 {
@@ -270,7 +271,7 @@ namespace Scanner.Models
             throw new NotImplementedException();
         }
 
-        public Task<ImageScannerScanResult> GetScanAsync()
+        public Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder)
         {
             throw new NotImplementedException();
         }

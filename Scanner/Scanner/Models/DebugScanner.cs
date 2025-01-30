@@ -17,6 +17,13 @@ using Scanner.Services.Interfaces;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Collections.ObjectModel;
 using Windows.Foundation.Metadata;
+using Scanner.AppWindows;
+using System.Security.Principal;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using Windows.UI.WindowManagement;
+using Microsoft.UI.Xaml;
+using Windows.Foundation;
 
 namespace Scanner.Models
 {
@@ -150,9 +157,38 @@ namespace Scanner.Models
             throw new NotImplementedException();
         }
 
-        public Task<ImageScannerScanResult> GetScanAsync()
+        public async Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder)
         {
-            throw new NotImplementedException();
+            // select files to simulate scan
+            FileOpenPicker picker = new();
+
+            // connect picker to window
+            IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
+            InitializeWithWindow.Initialize(picker, hwnd);
+
+            // set picker properties
+            picker.ViewMode = PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
+            picker.FileTypeFilter.Add(".tif");
+            picker.FileTypeFilter.Add(".tiff");
+
+            // pick files
+            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+            if (files == null || files.Count == 0) return new List<StorageFile>();
+
+            // copy to target folder
+            List<Task<StorageFile>> copytasks = new(); 
+            foreach (StorageFile file in files)
+            {
+                copytasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+            }
+            StorageFile[] results = await Task.WhenAll(copytasks);
+
+            return results;
         }
 
         private List<ImageScannerFormat> GenerateFormats(IImageScannerFormatConfiguration config)

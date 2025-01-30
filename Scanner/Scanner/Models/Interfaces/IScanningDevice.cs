@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
+using Windows.Storage;
 
 namespace Scanner.Models.Interfaces
 {
@@ -81,7 +82,7 @@ namespace Scanner.Models.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Task<BitmapImage> GetPreviewAsync();
-        Task<ImageScannerScanResult> GetScanAsync();
+        Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder);
         void CancelPreview();
         void CancelScan();
     }

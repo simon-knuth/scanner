@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Scanner.Models;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
-
+        private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
         #region Commands
@@ -57,7 +59,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanActionsViewModel()
         {
-            
+            ProjectService.IsScanProcessRunningChanged += ProjectService_IsScanProcessRunningChanged;
         }
 
 
@@ -71,9 +73,7 @@ namespace Scanner.ViewModels
 
         private async Task ScanAsync()
         {
-            IsScanning = true;
-            await Task.Delay(5000);
-            IsScanning = false;
+            await ProjectService.TryCreateProjectAsync(ScanOptions.Scanner);
         }
 
         private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -84,6 +84,11 @@ namespace Scanner.ViewModels
                     OnPropertyChanged(nameof(CanScan));
                     break;
             }
+        }
+
+        private void ProjectService_IsScanProcessRunningChanged(object? sender, bool e)
+        {
+            IsScanning = e;
         }
     }
 }
