@@ -53,6 +53,8 @@ namespace Scanner
                 .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
                 .AddSingleton<ILogService, LogService>()
                 .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
+                .AddSingleton<IProjectService, ProjectService>()
+                .AddSingleton<IAppDataService, AppDataService>()
                 .BuildServiceProvider());
         }
 
@@ -88,6 +90,7 @@ namespace Scanner
                 // initialize essential singleton services
                 LogService = Ioc.Default.GetService<ILogService>();
                 await LogService?.InitializeAsync();
+                await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
 
                 MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                 {
