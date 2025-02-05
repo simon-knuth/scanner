@@ -13,6 +13,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -190,7 +191,7 @@
             <!-- Content -->
             <Grid x:Name="GridContent" Grid.Row="1" Margin="0,4,0,0" ui:UIElementExtensions.ClipToBounds="True">
                 <!-- Carousel -->
-                <Grid x:Name="GridCarousel" Height="80" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
+                <Grid x:Name="GridCarousel" Height="84" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
@@ -201,7 +202,38 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <Button Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                    <GridView Padding="0,4,0,12" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>
+                        
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="interfaces:IProjectPage">
+                                <GridViewItem Width="64" Height="64">
+                                    <Frame Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ui:Effects.Shadow>
+                                            <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                                        </ui:Effects.Shadow>
+
+                                        <Image>
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
+                                            </Image.Source>
+                                        </Image>
+                                    </Frame>
+                                </GridViewItem>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                    <Button Margin="20,4,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
                         <Button.RenderTransform>
                             <RotateTransform Angle="90" CenterX="12" CenterY="12" />
                         </Button.RenderTransform>
@@ -215,7 +247,7 @@
                             </AnimatedIcon.FallbackIconSource>
                         </AnimatedIcon>
                     </Button>
-                    <Button Margin="20" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                    <Button Margin="0,4,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
                         <Button.RenderTransform>
                             <RotateTransform Angle="270" CenterX="12" CenterY="12" />
                         </Button.RenderTransform>
