@@ -38,5 +38,7 @@ namespace Scanner.Services.Interfaces
 
         Task InitializeAsync();
         Task EmptyReceivedPagesFolderAsync();
+        Task EmptyProjectFolderAsync();
+        string GetUriForAppDataFolder(StorageFolder folder, string fileName);
     }
 }

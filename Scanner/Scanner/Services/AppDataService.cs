@@ -115,5 +115,38 @@ namespace Scanner.Services
                 await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
         }
+
+        /// <summary>
+        ///     Removes all files from the <see cref="ProjectFolder"/>.
+        /// </summary>
+        public async Task EmptyProjectFolderAsync()
+        {
+            var files = await ProjectFolder.GetFilesAsync();
+
+            foreach (StorageFile file in files)
+            {
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+        }
+
+        public string GetUriForAppDataFolder(StorageFolder folder, string fileName = "")
+        {
+            if (folder == TempFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", fileName);
+            }
+            else if (folder == ReceivedPagesFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", ReceivedPagesFolderName, fileName);
+            }
+            else if (folder == ProjectFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", ProjectFolderName, fileName);
+            }
+            else
+            {
+                throw new ArgumentException("Failed to get URI for unknown folder");
+            }
+        }
     }
 }
