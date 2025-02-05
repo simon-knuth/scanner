@@ -12,11 +12,10 @@ using Windows.Storage;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace Scanner.Models
 {
-    public partial class Project : ObservableObject
+    public partial class ImagePage : IProjectPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,13 +25,15 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        [ObservableProperty]
-        private bool isSaving;
+        private static string[] allowedFileExtensions = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff" };
 
-        [ObservableProperty]
-        private bool isSaved;
+        public StorageFile File
+        {
+            get;
+            private set;
+        }
 
-        public ObservableCollection<IProjectPage> Pages
+        public Uri BitmapUri
         {
             get;
             private set;
@@ -42,49 +43,39 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private Project(IList<IProjectPage> pages)
+        private ImagePage(StorageFile file, Uri uri)
         {
-            Pages = new ObservableCollection<IProjectPage>(pages);
+            File = file;
+            BitmapUri = uri;
         }
 
-        public static async Task<Project> CreateAsync(IList<StorageFile> files)
+        public static async Task<IProjectPage> CreateAsync(StorageFile file, int index)
         {
-            // empty folder
-            await AppDataService.EmptyProjectFolderAsync();
-
-            // create pages
-            List<IProjectPage> pages = new();
-            for (int i = 0; i < files.Count; i++)
+            // check file
+            if (file == null)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i));
+                throw new ArgumentException("Can't create ImagePage from null file");
             }
 
-            // create project
-            return new Project(pages);
+            // check file extension
+            string extension = file.FileType.ToLower();
+            if (!allowedFileExtensions.Contains(extension))
+            {
+                // unknown format
+                throw new ArgumentException("Failed to create ImagePage due to incompatible file format");
+            }
+
+            // move file to project folder
+            await file.MoveAsync(AppDataService.ProjectFolder, index.ToString() + file.FileType, NameCollisionOption.FailIfExists);
+
+            // create ImagePage
+            return new ImagePage(file, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, file.Name)));
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index)
-        {
-            if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
-            switch (file.FileType.ToLower())
-            {
-                case ".jpg":
-                case ".jpeg":
-                case ".png":
-                case ".bmp":
-                case ".tif":
-                case ".tiff":
-                    return await ImagePage.CreateAsync(file, index);
-                case ".pdf":
-                    throw new NotImplementedException();
-                default:
-                    throw new ArgumentException("Failed to create IProjectPage due to incompatible file format");
-            }
-        }
     }
 }
