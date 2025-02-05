@@ -60,6 +60,7 @@
     <Folder Include="Assets\contrast-black\" />
     <Folder Include="Assets\contrast-high\" />
     <Folder Include="Assets\contrast-white\" />
+    <Folder Include="Resources\Test Images\" />
     <Folder Include="Views\DataTemplateSelectors\" />
   </ItemGroup>
   <ItemGroup>
