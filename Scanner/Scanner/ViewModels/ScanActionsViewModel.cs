@@ -17,6 +17,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
@@ -53,6 +54,9 @@ namespace Scanner.ViewModels
 
         public bool CanScan => ScanOptions?.Scanner != null && !IsScanning;
 
+        [ObservableProperty]
+        private Project currentProject;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +64,8 @@ namespace Scanner.ViewModels
         public ScanActionsViewModel()
         {
             ProjectService.IsScanProcessRunningChanged += ProjectService_IsScanProcessRunningChanged;
+            ProjectService.ProjectChanged += ProjectService_ProjectChanged;
+            CurrentProject = ProjectService.CurrentProject;
         }
 
 
@@ -89,6 +95,11 @@ namespace Scanner.ViewModels
         private void ProjectService_IsScanProcessRunningChanged(object? sender, bool e)
         {
             IsScanning = e;
+        }
+
+        private void ProjectService_ProjectChanged(object? sender, Project e)
+        {
+            CurrentProject = e;
         }
     }
 }

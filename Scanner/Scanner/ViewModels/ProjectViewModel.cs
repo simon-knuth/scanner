@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Scanner.Models;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +11,22 @@ using System.Threading.Tasks;
 
 namespace Scanner.ViewModels
 {
-    class ProjectViewModel : ObservableRecipient, IDisposable
+    partial class ProjectViewModel : ObservableRecipient, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
-
+        private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
         #region Commands
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
+
+        [ObservableProperty]
+        private Project currentProject;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +34,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ProjectViewModel()
         {
-            
+            ProjectService.ProjectChanged += ProjectService_ProjectChanged;
+            CurrentProject = ProjectService.CurrentProject;
         }
 
 
@@ -37,6 +45,11 @@ namespace Scanner.ViewModels
         public void Dispose()
         {
             Messenger.UnregisterAll(this);
+        }
+
+        private void ProjectService_ProjectChanged(object? sender, Project e)
+        {
+            CurrentProject = e;
         }
     }
 }
