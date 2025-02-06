@@ -67,8 +67,13 @@
 
                 <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-4,4,-12,2" Padding="4,4,4,2" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource MutedTextBoxStyle}" GotFocus="TextBoxProjectName_GotFocus" />
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8" VerticalAlignment="Bottom">
-                    <TextBlock Text="PDF" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-                    <TextBlock Text="7 pages" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}">
+                        <Span>
+                            <Run Text="{x:Bind ViewModel.CurrentProject.Pages.Count, Mode=OneWay}" />
+                            <Run Text="pages" />
+                        </Span>
+                    </TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">

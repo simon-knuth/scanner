@@ -79,7 +79,7 @@ namespace Scanner.ViewModels
 
         private async Task ScanAsync()
         {
-            await ProjectService.TryCreateProjectAsync(ScanOptions.Scanner);
+            await ProjectService.TryCreateProjectAsync(ScanOptions);
         }
 
         private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

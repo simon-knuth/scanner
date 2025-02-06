@@ -100,16 +100,16 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task TryCreateProjectAsync(IScanningDevice scanner)
+        public async Task TryCreateProjectAsync(ScanOptions scanOptions)
         {
             // TODO: catch exceptions and notify user
             IsProcessRunning = IsScanProcessRunning = true;
 
             // scan
-            IList<StorageFile> files = await scanner.GetScanAsync(AppDataService.ReceivedPagesFolder);
+            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.ReceivedPagesFolder);
 
             // create project
-            CurrentProject = await Project.CreateAsync(files);
+            CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
 
             IsProcessRunning = IsScanProcessRunning = false;
         }

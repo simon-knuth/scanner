@@ -38,16 +38,19 @@ namespace Scanner.Models
             private set;
         }
 
+        public TargetFormat Format;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private Project(IList<IProjectPage> pages)
+        private Project(IList<IProjectPage> pages, TargetFormat format)
         {
             Pages = new ObservableCollection<IProjectPage>(pages);
+            Format = format;
         }
 
-        public static async Task<Project> CreateAsync(IList<StorageFile> files)
+        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format)
         {
             // empty folder
             await AppDataService.EmptyProjectFolderAsync();
@@ -60,7 +63,7 @@ namespace Scanner.Models
             }
 
             // create project
-            return new Project(pages);
+            return new Project(pages, format);
         }
 
 
