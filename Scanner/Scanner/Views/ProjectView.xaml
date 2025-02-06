@@ -202,7 +202,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <GridView Padding="0,4,0,12" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <GridView Padding="0,4,0,16" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 
@@ -217,7 +217,7 @@
 
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Width="64" Height="64">
+                                <GridViewItem Margin="0" Width="64" Height="64">
                                     <Frame Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <ui:Effects.Shadow>
                                             <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
@@ -233,34 +233,46 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Button Margin="20,4,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
-                        <Button.RenderTransform>
-                            <RotateTransform Angle="90" CenterX="12" CenterY="12" />
-                        </Button.RenderTransform>
+                    <Frame Margin="20,4,0,16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <ui:Effects.Shadow>
+                            <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
+                        </ui:Effects.Shadow>
 
-                        <AnimatedIcon Height="12">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                            </AnimatedIcon.Source>
-                            <AnimatedIcon.FallbackIconSource>
-                                <FontIconSource Glyph="&#xE76B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </AnimatedIcon.FallbackIconSource>
-                        </AnimatedIcon>
-                    </Button>
-                    <Button Margin="0,4,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
-                        <Button.RenderTransform>
-                            <RotateTransform Angle="270" CenterX="12" CenterY="12" />
-                        </Button.RenderTransform>
+                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                            <Button.RenderTransform>
+                                <RotateTransform Angle="90" CenterX="12" CenterY="12" />
+                            </Button.RenderTransform>
 
-                        <AnimatedIcon Height="12">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                            </AnimatedIcon.Source>
-                            <AnimatedIcon.FallbackIconSource>
-                                <FontIconSource Glyph="&#xE76C;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </AnimatedIcon.FallbackIconSource>
-                        </AnimatedIcon>
-                    </Button>
+                            <AnimatedIcon Height="12">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                                </AnimatedIcon.Source>
+                                <AnimatedIcon.FallbackIconSource>
+                                    <FontIconSource Glyph="&#xE76B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </AnimatedIcon.FallbackIconSource>
+                            </AnimatedIcon>
+                        </Button>
+                    </Frame>
+                    <Frame Margin="0,4,20,16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <ui:Effects.Shadow>
+                            <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
+                        </ui:Effects.Shadow>
+
+                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                            <Button.RenderTransform>
+                                <RotateTransform Angle="270" CenterX="12" CenterY="12" />
+                            </Button.RenderTransform>
+
+                            <AnimatedIcon Height="12">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                                </AnimatedIcon.Source>
+                                <AnimatedIcon.FallbackIconSource>
+                                    <FontIconSource Glyph="&#xE76C;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </AnimatedIcon.FallbackIconSource>
+                            </AnimatedIcon>
+                        </Button>
+                    </Frame>
                 </Grid>
                 
                 <!-- Page list -->

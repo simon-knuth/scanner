@@ -46,7 +46,7 @@
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>
                         <Border>
-                            <Frame Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Frame Margin="16" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <ui:Effects.Shadow>
                                     <media:AttachedCardShadow Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="0" />
                                 </ui:Effects.Shadow>

@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,12 +21,12 @@ using Windows.Security.Cryptography.Certificates;
 
 namespace Scanner.Views
 {
+    [ObservableObjectAttribute]
     public sealed partial class ShellView : Page
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,12 +35,60 @@ namespace Scanner.Views
         public ShellView()
         {
             this.InitializeComponent();
+
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.CurrentProject):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        UpdateVisualState(GridRoot.ActualWidth);
+                    });
+                    break;
+            }
+        }
+
+        private void UpdateVisualState(double width)
+        {
+            if (width < 700)
+            {
+                // narrow
+                if (ViewModel.CurrentProject == null)
+                {
+                    VisualStateManager.GoToState(this, nameof(VisualStateNarrowNoProject), false);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(this, nameof(VisualStateNarrow), false);
+                }
+            }
+            else if (width < 1500)
+            {
+                // default
+                if (ViewModel.CurrentProject == null)
+                {
+                    VisualStateManager.GoToState(this, nameof(VisualStateDefaultNoProject), false);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(this, nameof(VisualStateDefault), false);
+                }
+            }
+            else
+            {
+                // wide
+                VisualStateManager.GoToState(this, nameof(VisualStateWide), false);
+            }
+        }
+
         private void SetRegionsForCustomTitleBar()
         {
             AppWindowTitleBar titlebar = ((App)Application.Current).MainWindow.AppWindow.TitleBar;
@@ -79,6 +128,7 @@ namespace Scanner.Views
 
         private void GridRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            UpdateVisualState(e.NewSize.Width);
             SetRegionsForCustomTitleBar();
         }
 
