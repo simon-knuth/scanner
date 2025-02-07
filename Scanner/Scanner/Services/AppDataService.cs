@@ -79,28 +79,23 @@ namespace Scanner.Services
             }
 
             // replace folders
-            try
-            {
-                ReceivedPagesFolder = await TempFolder.CreateFolderAsync(ReceivedPagesFolderName, CreationCollisionOption.ReplaceExisting);
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "AppDataService - Failed to replace folder 'ReceivedPages' in temp folder");
-                throw;
-            }
-
-            try
-            {
-                ProjectFolder = await TempFolder.CreateFolderAsync(ProjectFolderName, CreationCollisionOption.ReplaceExisting);
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "AppDataService - Failed to replace folder 'Project' in temp folder");
-                throw;
-            }
-
+            ReceivedPagesFolder = await CreateOrReplaceFolderAsync(ReceivedPagesFolderName);
+            ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
 
             LogService?.Log.Information("AppDataService - Initialized temp folder");
+        }
+
+        private async Task<StorageFolder> CreateOrReplaceFolderAsync(string name)
+        {
+            try
+            {
+                return await TempFolder.CreateFolderAsync(name, CreationCollisionOption.ReplaceExisting);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, $"AppDataService - Failed to replace folder '{name}' in temp folder");
+                throw;
+            }
         }
 
         /// <summary>
@@ -108,12 +103,7 @@ namespace Scanner.Services
         /// </summary>
         public async Task EmptyReceivedPagesFolderAsync()
         {
-            var files = await ReceivedPagesFolder.GetFilesAsync();
-
-            foreach (StorageFile file in files)
-            {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
+            ReceivedPagesFolder = await CreateOrReplaceFolderAsync(ReceivedPagesFolderName);
         }
 
         /// <summary>
@@ -121,12 +111,7 @@ namespace Scanner.Services
         /// </summary>
         public async Task EmptyProjectFolderAsync()
         {
-            var files = await ProjectFolder.GetFilesAsync();
-
-            foreach (StorageFile file in files)
-            {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
+            ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
         }
 
         public string GetUriForAppDataFolder(StorageFolder folder, string fileName = "")
