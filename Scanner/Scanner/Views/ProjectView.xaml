@@ -37,6 +37,18 @@
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <StaticResource x:Key="GridViewItemBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemBackgroundSelected" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemSelectedDisabledBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
+
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
         </ResourceDictionary>
@@ -65,6 +77,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
                 <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-4,4,-12,2" Padding="4,4,4,2" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource MutedTextBoxStyle}" GotFocus="TextBoxProjectName_GotFocus" />
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8" VerticalAlignment="Bottom">
                     <TextBlock Text="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
@@ -196,7 +209,7 @@
             <!-- Content -->
             <Grid x:Name="GridContent" Grid.Row="1" Margin="0,4,0,0" ui:UIElementExtensions.ClipToBounds="True">
                 <!-- Carousel -->
-                <Grid x:Name="GridCarousel" Height="84" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
+                <Grid x:Name="GridCarousel" Height="92" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
@@ -207,7 +220,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <GridView Padding="0,4,0,16" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <GridView Padding="0,4,0,8" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 
@@ -222,23 +235,30 @@
 
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Margin="0" Width="64" Height="64">
-                                    <Frame Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <ui:Effects.Shadow>
-                                            <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
-                                        </ui:Effects.Shadow>
+                                <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource ProjectGridViewItemStyle}" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                    <Grid>
+                                        <Frame x:Name="FrameGridViewItemImage" Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <ui:Effects.Shadow>
+                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                                            </ui:Effects.Shadow>
 
-                                        <Image>
-                                            <Image.Source>
-                                                <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
-                                            </Image.Source>
-                                        </Image>
-                                    </Frame>
+                                            <Image>
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
+                                                </Image.Source>
+                                            </Image>
+                                        </Frame>
+                                        <Border x:Name="BorderSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource ControlSolidFillColorDefaultBrush}" />
+                                        <Border x:Name="BorderSelectionIndicatorOuter" Width="56" Height="56" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" />
+                                        <Grid Width="24" Height="24" Margin="0,0,0,4" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+                                            <TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </Grid>
                                 </GridViewItem>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame Margin="20,4,0,16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Frame Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
@@ -258,7 +278,7 @@
                             </AnimatedIcon>
                         </Button>
                     </Frame>
-                    <Frame Margin="0,4,20,16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Frame Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
@@ -297,11 +317,43 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
+                    <GridView Grid.Row="1" Padding="0,12,0,8" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>
+
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="interfaces:IProjectPage">
+                                <GridViewItem Margin="0" Width="116" Height="124" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource ProjectGridViewItemStyle}" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                    <Grid>
+                                        <Frame x:Name="FrameGridViewItemImage" Margin="16,4,16,32" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <ui:Effects.Shadow>
+                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                                            </ui:Effects.Shadow>
+
+                                            <Image>
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="88" />
+                                                </Image.Source>
+                                            </Image>
+                                        </Frame>
+                                        <Border x:Name="BorderSelectionIndicatorInner" Width="88" Height="88" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" />
+                                        <Border x:Name="BorderSelectionIndicatorOuter" Width="88" Height="88" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" />
+                                        <Grid Width="24" Height="24" Margin="0,0,0,36" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                            <TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </Grid>
+                                </GridViewItem>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
                     <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.02" CornerRadius="8" />
                         </ui:Effects.Shadow>
-                        
+
                         <Border>
                             <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
                                 <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
@@ -340,9 +392,6 @@
                             </StackPanel>
                         </Border>
                     </Frame>
-                    <ItemsView Grid.Row="1">
-                        
-                    </ItemsView>
                 </Grid>
             </Grid>
         </Grid>

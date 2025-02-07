@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
         #region Commands

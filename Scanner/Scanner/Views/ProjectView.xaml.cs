@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -91,6 +92,102 @@ namespace Scanner.Views
         private void TextBoxProjectName_GotFocus(object sender, RoutedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
+        }
+
+        private void GridViewItem_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            GridViewItem gridViewItem = (GridViewItem)sender;
+
+            Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
+            Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+            if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+            {
+                if (gridViewItem.IsSelected)
+                {
+                    innerSelectionIndicator.BorderThickness = new Thickness(3);
+                    outerSelectionIndicator.BorderThickness = new Thickness(2);
+                }
+                else
+                {
+                    innerSelectionIndicator.BorderThickness = new Thickness(1);
+                    outerSelectionIndicator.BorderThickness = new Thickness(0);
+                }
+            }
+        }
+
+        private void GridViewItem_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            GridViewItem gridViewItem = (GridViewItem)sender;
+
+            Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
+            Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+            if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+            {
+                if (gridViewItem.IsSelected)
+                {
+                    innerSelectionIndicator.BorderThickness = new Thickness(3);
+                    outerSelectionIndicator.BorderThickness = new Thickness(2);
+                }
+                else
+                {
+                    innerSelectionIndicator.BorderThickness = new Thickness(0);
+                    outerSelectionIndicator.BorderThickness = new Thickness(0);
+                }
+            }
+        }
+
+        private void OnIsSelectedChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (sender is GridViewItem gridViewItem)
+            {
+                Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
+                Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+                if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+                {
+                    if (gridViewItem.IsSelected)
+                    {
+                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
+                        innerSelectionIndicator.BorderThickness = new Thickness(3);
+                        outerSelectionIndicator.BorderThickness = new Thickness(2);
+                    }
+                    else
+                    {
+                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlStrokeColorOnAccentTertiaryBrush"] as SolidColorBrush;
+                        innerSelectionIndicator.BorderThickness = new Thickness(0);
+                        outerSelectionIndicator.BorderThickness = new Thickness(0);
+                    }
+                }
+            }
+        }
+
+        private void GridViewItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is GridViewItem gridViewItem)
+            {
+                if (gridViewItem.IsSelected)
+                {
+                    Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
+                    Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+                    if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+                    {
+                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
+                        innerSelectionIndicator.BorderThickness = new Thickness(3);
+                        outerSelectionIndicator.BorderThickness = new Thickness(2);
+                    }
+                }
+
+                long token = gridViewItem.RegisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, OnIsSelectedChanged);
+                RoutedEventHandler? handler = null;
+                handler = new RoutedEventHandler((s, e) =>
+                {
+                    if (s is GridViewItem item)
+                    {
+                        item.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, token);
+                        item.Unloaded -= handler;
+                    }
+                });
+                gridViewItem.Unloaded += handler;
+            }
         }
     }
 }
