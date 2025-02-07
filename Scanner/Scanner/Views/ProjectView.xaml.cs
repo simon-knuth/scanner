@@ -43,6 +43,9 @@ namespace Scanner.Views
         [ObservableProperty]
         private double projectFlyoutWidth;
 
+        [ObservableProperty]
+        private bool isHoveringCarousel;
+
         private bool showEntranceExitAnimations;
 
 
@@ -188,6 +191,16 @@ namespace Scanner.Views
                 });
                 gridViewItem.Unloaded += handler;
             }
+        }
+
+        private void GridCarousel_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            IsHoveringCarousel = true;
+        }
+
+        private void GridCarousel_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            IsHoveringCarousel = false;
         }
     }
 }

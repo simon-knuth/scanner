@@ -209,7 +209,7 @@
             <!-- Content -->
             <Grid x:Name="GridContent" Grid.Row="1" Margin="0,4,0,0" ui:UIElementExtensions.ClipToBounds="True">
                 <!-- Carousel -->
-                <Grid x:Name="GridCarousel" Height="92" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading">
+                <Grid x:Name="GridCarousel" Height="92" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading" PointerEntered="GridCarousel_PointerEntered" PointerExited="GridCarousel_PointerExited">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
@@ -237,7 +237,7 @@
                             <DataTemplate x:DataType="interfaces:IProjectPage">
                                 <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame x:Name="FrameGridViewItemImage" Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Frame Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <ui:Effects.Shadow>
                                                 <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
                                             </ui:Effects.Shadow>
@@ -258,7 +258,15 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" x:Load="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                        <animations:Implicit.ShowAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        </animations:Implicit.ShowAnimations>
+
+                        <animations:Implicit.HideAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        </animations:Implicit.HideAnimations>
+
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
@@ -278,7 +286,15 @@
                             </AnimatedIcon>
                         </Button>
                     </Frame>
-                    <Frame Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" x:Load="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                        <animations:Implicit.ShowAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        </animations:Implicit.ShowAnimations>
+
+                        <animations:Implicit.HideAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                        </animations:Implicit.HideAnimations>
+
                         <ui:Effects.Shadow>
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
@@ -328,7 +344,7 @@
                             <DataTemplate x:DataType="interfaces:IProjectPage">
                                 <GridViewItem Margin="0" Width="116" Height="124" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame x:Name="FrameGridViewItemImage" Margin="16,4,16,32" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Frame Margin="16,4,16,32" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <ui:Effects.Shadow>
                                                 <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
                                             </ui:Effects.Shadow>
