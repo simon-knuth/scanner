@@ -11,13 +11,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Scanner.Models.Interfaces;
 using Scanner.Models;
+using System.ComponentModel;
 
 namespace Scanner.Services.Interfaces
 {
     /// <summary>
     ///     Manages the current <see cref="Project"/>.
     /// </summary>
-    public interface IProjectService
+    public interface IProjectService : INotifyPropertyChanged
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,9 +30,11 @@ namespace Scanner.Services.Interfaces
         #endregion
 
         Project CurrentProject { get; }
+        IProjectPage SelectedPage { get; set; }
 
         bool IsProcessRunning { get; }
         bool IsScanProcessRunning { get; }
+
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

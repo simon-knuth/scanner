@@ -19,7 +19,7 @@ using Windows.Storage;
 
 namespace Scanner.Services
 {
-    internal partial class ProjectService : IProjectService
+    internal partial class ProjectService : ObservableObject, IProjectService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +58,9 @@ namespace Scanner.Services
                 }
             }
         }
+
+        [ObservableProperty]
+        private IProjectPage selectedPage;
 
         private bool isProcessRunning;
         public bool IsProcessRunning
