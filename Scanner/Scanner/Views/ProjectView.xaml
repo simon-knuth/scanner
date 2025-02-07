@@ -235,7 +235,7 @@
 
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource ProjectGridViewItemStyle}" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
                                         <Frame x:Name="FrameGridViewItemImage" Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <ui:Effects.Shadow>
@@ -326,7 +326,7 @@
 
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Margin="0" Width="116" Height="124" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource ProjectGridViewItemStyle}" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                <GridViewItem Margin="0" Width="116" Height="124" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
                                         <Frame x:Name="FrameGridViewItemImage" Margin="16,4,16,32" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <ui:Effects.Shadow>
