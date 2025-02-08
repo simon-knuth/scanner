@@ -46,6 +46,8 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool isHoveringCarousel;
 
+        private bool isCarouselScrollSelectionDisabled;
+
         private bool showEntranceExitAnimations;
 
 
@@ -206,6 +208,108 @@ namespace Scanner.Views
         private void GridCarousel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             IsHoveringCarousel = false;
+        }
+
+        private void GridViewCarousel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // scroll to item
+            try
+            {
+                GridViewItem? item = ((GridView)sender).ContainerFromItem(e.AddedItems[0]) as GridViewItem;
+                if (item != null)
+                {
+                    item.StartBringIntoView(new BringIntoViewOptions
+                    {
+                        AnimationDesired = true,
+                        HorizontalAlignmentRatio = 0.5
+                    });
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private void GridViewCarousel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // set padding
+            GridViewCarousel.Padding = new Thickness(e.NewSize.Width / 2 - 32, 4, e.NewSize.Width / 2 - 32, 8);
+        }
+
+        private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (e.IsIntermediate) return;
+
+            // select centered item
+            ScrollViewer? scrollViewer = sender as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                int index = Convert.ToInt32(Math.Round(scrollViewer.HorizontalOffset / 64));
+                GridViewCarousel.SelectedIndex = index;
+            }
+        }
+
+        private async void ItemsStackPanelCarousel_Loaded(object sender, RoutedEventArgs e)   // ScrollViewer access more reliable than in GridView's Loaded event
+        {
+            try
+            {
+                ScrollViewer? scrollViewer = VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(GridViewCarousel, 0), 0) as ScrollViewer;
+
+                if (scrollViewer != null)
+                {
+                    // enable carousel snap points
+                    scrollViewer.HorizontalSnapPointsType = SnapPointsType.Mandatory;
+                    scrollViewer.HorizontalSnapPointsAlignment = SnapPointsAlignment.Center;
+
+                    // scroll to selected item
+                    if (GridViewCarousel.SelectedItem != null)
+                    {
+                        //TaskCompletionSource initialScroll = new();
+                        //EventHandler<ScrollViewerViewChangedEventArgs>? handler = null;
+                        //handler = new EventHandler<ScrollViewerViewChangedEventArgs>((sender, args) =>
+                        //{
+                        //    initialScroll.TrySetResult();
+                        //    scrollViewer.ViewChanged -= handler;
+                        //});
+                        //scrollViewer.ViewChanged += handler;
+                        //GridViewCarousel.ScrollIntoView(GridViewCarousel.SelectedItem);
+                        //await initialScroll.Task;
+
+                        //// item container is now available ~> scroll to final position
+                        //GridViewItem? item = GridViewCarousel.ContainerFromItem(GridViewCarousel.SelectedItem) as GridViewItem;
+                        //if (item != null)
+                        //{
+                        //    item.StartBringIntoView(new BringIntoViewOptions
+                        //    {
+                        //        AnimationDesired = false,
+                        //        HorizontalOffset = 0.5
+                        //    });
+                        //}
+
+                        scrollViewer.ScrollToHorizontalOffset(64 * GridViewCarousel.SelectedIndex);
+                    }
+
+                    // enable carousel scroll selection
+                    scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private void GridViewPageList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // scroll to item
+            try
+            {
+                GridViewPageList.ScrollIntoView(GridViewPageList.SelectedItem);
+            }
+            catch (Exception) { }
+        }
+
+        private void GridViewPageList_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (GridViewPageList.SelectedItem != null)
+            {
+                GridViewPageList.ScrollIntoView(GridViewPageList.SelectedItem);
+            }
         }
     }
 }

@@ -220,7 +220,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <GridView Padding="0,4,0,8" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <GridView x:Name="GridViewCarousel" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionChanged="GridViewCarousel_SelectionChanged" SizeChanged="GridViewCarousel_SizeChanged">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 
@@ -229,7 +229,7 @@
                         
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Horizontal" />
+                                <ItemsStackPanel x:Name="ItemsStackPanelCarousel" Orientation="Horizontal" ItemsUpdatingScrollMode="KeepScrollOffset" Loaded="ItemsStackPanelCarousel_Loaded" />
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
 
@@ -258,7 +258,7 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" x:Load="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
@@ -286,7 +286,7 @@
                             </AnimatedIcon>
                         </Button>
                     </Frame>
-                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" x:Load="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
@@ -333,7 +333,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <GridView Grid.Row="1" Padding="12,12,12,8" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <GridView x:Name="GridViewPageList" Grid.Row="1" Padding="12,12,12,8" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
 
