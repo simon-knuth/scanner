@@ -32,7 +32,7 @@ namespace Scanner.ViewModels
         #endregion
 
         [ObservableProperty]
-        private Project currentProject;
+        private Project? currentProject;
 
         private TaskCompletionSource viewLoading = new();
         private DispatcherQueue viewDispatcherQueue;
@@ -45,7 +45,7 @@ namespace Scanner.ViewModels
         {
             _ = ScannerDiscoveryService.InitializeSearchAsync();
 
-            ProjectService.ProjectChanged += ProjectService_ProjectChanged;
+            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
         }
 
@@ -64,9 +64,14 @@ namespace Scanner.ViewModels
             viewLoading.TrySetResult();
         }
 
-        private void ProjectService_ProjectChanged(object? sender, Project e)
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            CurrentProject = e;
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.CurrentProject):
+                    CurrentProject = ProjectService.CurrentProject;
+                    break;
+            }
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Scanner.ViewModels
         public bool CanScan => ScanOptions?.Scanner != null && !IsScanning;
 
         [ObservableProperty]
-        private Project currentProject;
+        private Project? currentProject;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +63,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanActionsViewModel()
         {
-            ProjectService.IsScanProcessRunningChanged += ProjectService_IsScanProcessRunningChanged;
-            ProjectService.ProjectChanged += ProjectService_ProjectChanged;
+            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
         }
 
@@ -92,14 +91,17 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void ProjectService_IsScanProcessRunningChanged(object? sender, bool e)
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            IsScanning = e;
-        }
-
-        private void ProjectService_ProjectChanged(object? sender, Project e)
-        {
-            CurrentProject = e;
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.CurrentProject):
+                    CurrentProject = ProjectService.CurrentProject;
+                    break;
+                case nameof(IProjectService.IsScanProcessRunning):
+                    IsScanning = ProjectService.IsScanProcessRunning;
+                    break;
+            }
         }
     }
 }

@@ -271,7 +271,7 @@
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
 
-                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectPreviousPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectPreviousPageCommand}">
                             <Button.RenderTransform>
                                 <RotateTransform Angle="90" CenterX="12" CenterY="12" />
                             </Button.RenderTransform>
@@ -299,7 +299,7 @@
                             <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="0" />
                         </ui:Effects.Shadow>
 
-                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}">
+                        <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectNextPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectNextPageCommand}">
                             <Button.RenderTransform>
                                 <RotateTransform Angle="270" CenterX="12" CenterY="12" />
                             </Button.RenderTransform>

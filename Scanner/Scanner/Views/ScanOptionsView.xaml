@@ -98,7 +98,7 @@
                 <Grid Grid.Row="0" Padding="16,4,16,0">
                     <Frame>
                         <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.02" CornerRadius="8" />
+                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                         </ui:Effects.Shadow>
                         
                         <ComboBox x:Name="ComboBoxScanners" Margin="-8,0,-8,0" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">

@@ -29,14 +29,8 @@ namespace Scanner.Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        #region Events
-        public event EventHandler<Project> ProjectChanged;
-        public event EventHandler<bool> IsProcessRunningChanged;
-        public event EventHandler<bool> IsScanProcessRunningChanged;
-        #endregion
-
-        private Project currentProject;
-        public Project CurrentProject
+        private Project? currentProject;
+        public Project? CurrentProject
         {
             get => currentProject;
             private set
@@ -48,8 +42,11 @@ namespace Scanner.Services
                         currentProject.PropertyChanged -= CurrentProject_PropertyChanged;
                     }
 
-                    currentProject = value;
-                    ProjectChanged?.Invoke(this, value);
+                    if (SetProperty(ref currentProject, value))
+                    {
+                        OnPropertyChanged(nameof(CanSelectPreviousPage));
+                        OnPropertyChanged(nameof(CanSelectNextPage));
+                    }
 
                     if (value != null)
                     {
@@ -60,7 +57,9 @@ namespace Scanner.Services
         }
 
         [ObservableProperty]
-        private IProjectPage selectedPage;
+        [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
+        [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
+        private IProjectPage? selectedPage;
 
         private bool isProcessRunning;
         public bool IsProcessRunning
@@ -68,10 +67,10 @@ namespace Scanner.Services
             get => isProcessRunning;
             private set
             {
-                if (isProcessRunning != value)
+                if (SetProperty(ref isProcessRunning, value))
                 {
-                    isProcessRunning = value;
-                    IsProcessRunningChanged?.Invoke(this, value);
+                    OnPropertyChanged(nameof(CanSelectPreviousPage));
+                    OnPropertyChanged(nameof(CanSelectNextPage));
                 }
             }
         }
@@ -82,13 +81,13 @@ namespace Scanner.Services
             get => isScanProcessRunning;
             private set
             {
-                if (isScanProcessRunning != value)
-                {
-                    isScanProcessRunning = value;
-                    IsScanProcessRunningChanged?.Invoke(this, value);
-                }
+                SetProperty(ref isScanProcessRunning, value);
             }
         }
+
+        // TODO: Update properties if selected page is moved
+        public bool CanSelectPreviousPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
+        public bool CanSelectNextPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,6 +119,22 @@ namespace Scanner.Services
         private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             
+        }
+
+        public void SelectPreviousPage()
+        {
+            if (CanSelectPreviousPage)
+            {
+                SelectedPage = CurrentProject.Pages[SelectedPage.Index - 1];
+            }
+        }
+
+        public void SelectNextPage()
+        {
+            if (CanSelectNextPage)
+            {
+                SelectedPage = CurrentProject.Pages[SelectedPage.Index + 1];
+            }
         }
     }
 }

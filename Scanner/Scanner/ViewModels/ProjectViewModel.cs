@@ -23,11 +23,13 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
+        public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
         [ObservableProperty]
-        private Project currentProject;
+        private Project? currentProject;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +37,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ProjectViewModel()
         {
-            ProjectService.ProjectChanged += ProjectService_ProjectChanged;
+            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
         }
 
@@ -48,9 +50,24 @@ namespace Scanner.ViewModels
             Messenger.UnregisterAll(this);
         }
 
-        private void ProjectService_ProjectChanged(object? sender, Project e)
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            CurrentProject = e;
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.CurrentProject):
+                    CurrentProject = ProjectService.CurrentProject;
+                    break;
+            }
+        }
+
+        private void SelectPreviousPage()
+        {
+            ProjectService.SelectPreviousPage();
+        }
+
+        private void SelectNextPage()
+        {
+            ProjectService.SelectNextPage();
         }
     }
 }

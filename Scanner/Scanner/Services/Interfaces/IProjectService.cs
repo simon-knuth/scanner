@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using Scanner.Models.Interfaces;
 using Scanner.Models;
 using System.ComponentModel;
+using Microsoft.UI.Xaml.Documents;
 
 namespace Scanner.Services.Interfaces
 {
@@ -23,17 +24,14 @@ namespace Scanner.Services.Interfaces
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Events
-        event EventHandler<Project> ProjectChanged;
-        event EventHandler<bool> IsProcessRunningChanged;
-        event EventHandler<bool> IsScanProcessRunningChanged;
-        #endregion
-
-        Project CurrentProject { get; }
-        IProjectPage SelectedPage { get; set; }
+        Project? CurrentProject { get; }
+        IProjectPage? SelectedPage { get; set; }
 
         bool IsProcessRunning { get; }
         bool IsScanProcessRunning { get; }
+
+        bool CanSelectPreviousPage { get; }
+        bool CanSelectNextPage { get; }
 
 
 
@@ -41,5 +39,7 @@ namespace Scanner.Services.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Task TryCreateProjectAsync(ScanOptions scanOptions);
+        void SelectPreviousPage();
+        void SelectNextPage();
     }
 }
