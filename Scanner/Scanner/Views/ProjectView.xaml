@@ -248,10 +248,10 @@
                                                 </Image.Source>
                                             </Image>
                                         </Frame>
-                                        <Border x:Name="BorderSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource ControlSolidFillColorDefaultBrush}" />
+                                        <Border x:Name="BorderSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" />
                                         <Border x:Name="BorderSelectionIndicatorOuter" Width="56" Height="56" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" />
-                                        <Grid Width="24" Height="24" Margin="0,0,0,4" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
-                                            <TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        <Grid MinWidth="24" Height="24" Margin="0,0,0,4" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+                                            <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </Grid>
                                 </GridViewItem>
@@ -333,7 +333,7 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <GridView Grid.Row="1" Padding="0,12,0,8" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <GridView Grid.Row="1" Padding="12,12,12,8" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
 
@@ -342,23 +342,23 @@
 
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Margin="0" Width="116" Height="124" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame Margin="16,4,16,32" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <ui:Effects.Shadow>
-                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="0" />
                                             </ui:Effects.Shadow>
 
                                             <Image>
                                                 <Image.Source>
-                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="88" />
+                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
                                                 </Image.Source>
                                             </Image>
                                         </Frame>
-                                        <Border x:Name="BorderSelectionIndicatorInner" Width="88" Height="88" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" />
-                                        <Border x:Name="BorderSelectionIndicatorOuter" Width="88" Height="88" Margin="0,4,0,0" CornerRadius="4" VerticalAlignment="Top" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" />
-                                        <Grid Width="24" Height="24" Margin="0,0,0,36" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                                            <TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        <Border x:Name="BorderSelectionIndicatorInner" Width="92" Height="92" CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" />
+                                        <Border x:Name="BorderSelectionIndicatorOuter" Width="92" Height="92" CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" />
+                                        <Grid MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                            <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                                         </Grid>
                                     </Grid>
                                 </GridViewItem>
@@ -367,7 +367,7 @@
                     </GridView>
                     <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                         <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.02" CornerRadius="8" />
+                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                         </ui:Effects.Shadow>
 
                         <Border>

@@ -145,19 +145,22 @@ namespace Scanner.Views
             {
                 Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
                 Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
-                if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+                TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
+                if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
                 {
                     if (gridViewItem.IsSelected)
                     {
                         innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
                         innerSelectionIndicator.BorderThickness = new Thickness(3);
                         outerSelectionIndicator.BorderThickness = new Thickness(2);
+                        pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
                     }
                     else
                     {
                         innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlStrokeColorOnAccentTertiaryBrush"] as SolidColorBrush;
                         innerSelectionIndicator.BorderThickness = new Thickness(0);
                         outerSelectionIndicator.BorderThickness = new Thickness(0);
+                        pageNumber.Foreground = Application.Current.Resources["TextFillColorSecondaryBrush"] as SolidColorBrush;
                     }
                 }
             }
@@ -171,11 +174,13 @@ namespace Scanner.Views
                 {
                     Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
                     Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
-                    if (innerSelectionIndicator != null && outerSelectionIndicator != null)
+                    TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
+                    if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
                     {
                         innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
                         innerSelectionIndicator.BorderThickness = new Thickness(3);
                         outerSelectionIndicator.BorderThickness = new Thickness(2);
+                        pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
                     }
                 }
 

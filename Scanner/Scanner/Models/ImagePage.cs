@@ -12,10 +12,11 @@ using Windows.Storage;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
+using System.ComponentModel;
 
 namespace Scanner.Models
 {
-    public partial class ImagePage : IProjectPage
+    public partial class ImagePage : ObservableObject, IProjectPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,14 +40,21 @@ namespace Scanner.Models
             private set;
         }
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(PageNumber))]
+        private int index;
+
+        public int PageNumber => Index + 1;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile file, Uri uri)
+        private ImagePage(StorageFile file, Uri uri, int index)
         {
             File = file;
             BitmapUri = uri;
+            Index = index;
         }
 
         public static async Task<IProjectPage> CreateAsync(StorageFile file, int index)
@@ -69,7 +77,7 @@ namespace Scanner.Models
             await file.MoveAsync(AppDataService.ProjectFolder, index.ToString() + file.FileType, NameCollisionOption.FailIfExists);
 
             // create ImagePage
-            return new ImagePage(file, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, file.Name)));
+            return new ImagePage(file, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, file.Name)), index);
         }
 
 

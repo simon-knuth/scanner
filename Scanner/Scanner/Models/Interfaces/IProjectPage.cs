@@ -13,10 +13,11 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
 using Windows.Storage;
+using System.ComponentModel;
 
 namespace Scanner.Models.Interfaces
 {
-    public interface IProjectPage
+    public interface IProjectPage : INotifyPropertyChanged
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,6 +25,9 @@ namespace Scanner.Models.Interfaces
         StorageFile File { get; }
 
         Uri BitmapUri { get; }
+
+        int Index { get; set; }
+        int PageNumber { get; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
