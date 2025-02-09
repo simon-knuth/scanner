@@ -95,94 +95,6 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Padding="16,4,16,0">
-                    <Frame>
-                        <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
-                        </ui:Effects.Shadow>
-                        
-                        <ComboBox x:Name="ComboBoxScanners" Margin="-8,0,-8,0" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
-                            <ComboBox.Items>
-                                <ComboBoxItem IsEnabled="False">
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <ProgressRing Width="16" Height="16" Foreground="{ThemeResource AccentFillColorSecondaryBrush}" />
-                                        <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
-                                    </StackPanel>
-                                </ComboBoxItem>
-                            </ComboBox.Items>
-
-                            <FlyoutBase.AttachedFlyout>
-                                <Flyout Placement="Bottom">
-                                    <StackPanel Orientation="Vertical" MaxWidth="400">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                            <FontIcon Glyph="&#xEBE8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
-                                            <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
-                                        </StackPanel>
-                                        <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Name, Mode=TwoWay}"/>
-                                        <Grid Margin="0,12,0,0" HorizontalAlignment="Stretch">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="100"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerAuto.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
-                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
-                                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedColorAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedGrayscaleAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedMonochromeAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
-                                                <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropSingleRegionAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropMultiRegionAllowed, Mode=TwoWay}" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
-                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederPreviewAllowed, Mode=TwoWay}" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
-                                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederColorAllowed, Mode=TwoWay}"/>
-                                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederGrayscaleAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederMonochromeAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
-                                                <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropSingleRegionAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropMultiRegionAllowed, Mode=TwoWay}" />
-                                                <CheckBox Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederDuplexSupported, Mode=TwoWay}" />
-                                            </StackPanel>
-                                        </Grid>
-
-                                        <MenuFlyoutSeparator Margin="0,12,0,12" />
-
-                                        <StackPanel Orientation="Vertical" Spacing="8">
-                                            <StackPanel Orientation="Horizontal" Spacing="4">
-                                                <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
-                                                <Button Content="Remove scanner" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.DebugRemoveScannerCommand}" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Flyout>
-                            </FlyoutBase.AttachedFlyout>
-                        </ComboBox>
-                    </Frame>
-                    <InfoBadge IsHitTestVisible="False" Margin="0,0,36,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
-                </Grid>
-
                 <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" IsEnabled="{x:Bind ViewModel.AreScanOptionsAvailable, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" Spacing="24" Padding="20,12,20,48">
                         <!-- Source -->
@@ -406,6 +318,94 @@
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
+                
+                <Grid Grid.Row="0" Padding="16,4,16,0">
+                    <Frame Margin="-8,0,-8,0">
+                        <ui:Effects.Shadow>
+                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                        </ui:Effects.Shadow>
+
+                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
+                            <ComboBox.Items>
+                                <ComboBoxItem IsEnabled="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <ProgressRing Width="16" Height="16" Foreground="{ThemeResource AccentFillColorSecondaryBrush}" />
+                                        <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                    </StackPanel>
+                                </ComboBoxItem>
+                            </ComboBox.Items>
+
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout Placement="Bottom">
+                                    <StackPanel Orientation="Vertical" MaxWidth="400">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <FontIcon Glyph="&#xEBE8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                                            <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
+                                        </StackPanel>
+                                        <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Name, Mode=TwoWay}"/>
+                                        <Grid Margin="0,12,0,0" HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerAuto" Header="Automatic" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerAuto.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsAutoPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFlatbed" Header="Flatbed" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedPreviewAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedColorAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedGrayscaleAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedMonochromeAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
+                                                <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropSingleRegionAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFlatbed.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFlatbedAutoCropMultiRegionAllowed, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+                                                <ToggleSwitch x:Name="ToggleSwitchDebugFakeScannerFeeder" Header="Feeder" IsOn="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Preview" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederPreviewAllowed, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
+                                                <CheckBox Content="Color" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederColorAllowed, Mode=TwoWay}"/>
+                                                <CheckBox Content="Grayscale" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederGrayscaleAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Monochrome" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederMonochromeAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Automatic" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoColorAllowed, Mode=TwoWay}" Margin="0,0,0,12" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
+                                                <CheckBox Content="Auto Crop Single" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropSingleRegionAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Auto Crop Multi" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederAutoCropMultiRegionAllowed, Mode=TwoWay}" />
+                                                <CheckBox Content="Duplex" IsEnabled="{x:Bind ToggleSwitchDebugFakeScannerFeeder.IsOn, Mode=OneWay}" IsChecked="{x:Bind ViewModel.DebugScannerSetupProperties.IsFeederDuplexSupported, Mode=TwoWay}" />
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <MenuFlyoutSeparator Margin="0,12,0,12" />
+
+                                        <StackPanel Orientation="Vertical" Spacing="8">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
+                                                <Button Content="Remove scanner" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.DebugRemoveScannerCommand}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </ComboBox>
+                    </Frame>
+                    <InfoBadge IsHitTestVisible="False" Margin="0,0,36,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
