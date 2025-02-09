@@ -85,5 +85,6 @@ namespace Scanner.Models.Interfaces
         Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder);
         void CancelPreview();
         void CancelScan();
+        bool IsPreviewSupported(ScannerSource source);
     }
 }

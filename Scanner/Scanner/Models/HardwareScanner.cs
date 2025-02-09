@@ -362,5 +362,21 @@ namespace Scanner.Models
 
             return result;
         }
+
+        public bool IsPreviewSupported(ScannerSource source)
+        {
+            switch (source)
+            {
+                case ScannerSource.Auto:
+                    return IsAutoAllowed && IsAutoPreviewAllowed;
+                case ScannerSource.Flatbed:
+                    return IsFlatbedAllowed && IsFlatbedPreviewAllowed;
+                case ScannerSource.Feeder:
+                    return IsFeederAllowed && IsFeederPreviewAllowed;
+                case ScannerSource.None:
+                default:
+                    return false;
+            }
+        }
     }
 }

@@ -40,6 +40,7 @@ namespace Scanner.ViewModels
 
                 SetProperty(ref scanOptions, value);
                 OnPropertyChanged(nameof(CanScan));
+                OnPropertyChanged(nameof(CanPreviewScan));
 
                 if (value != null)
                 {
@@ -50,9 +51,11 @@ namespace Scanner.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanScan))]
+        [NotifyPropertyChangedFor(nameof(CanPreviewScan))]
         private bool isScanning;
 
         public bool CanScan => ScanOptions?.Scanner != null && !IsScanning;
+        public bool CanPreviewScan => ScanOptions?.Scanner != null && !IsScanning && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
 
         [ObservableProperty]
         private Project? currentProject;
@@ -87,6 +90,10 @@ namespace Scanner.ViewModels
             {
                 case nameof(ScanOptions.Scanner):
                     OnPropertyChanged(nameof(CanScan));
+                    OnPropertyChanged(nameof(CanPreviewScan));
+                    break;
+                case nameof(ScanOptions.SourceMode):
+                    OnPropertyChanged(nameof(CanPreviewScan));
                     break;
             }
         }
