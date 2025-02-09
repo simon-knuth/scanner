@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -103,19 +104,19 @@ namespace Scanner.Views
         {
             GridViewItem gridViewItem = (GridViewItem)sender;
 
-            Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
-            Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+            Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+            Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
             if (innerSelectionIndicator != null && outerSelectionIndicator != null)
             {
                 if (gridViewItem.IsSelected)
                 {
-                    innerSelectionIndicator.BorderThickness = new Thickness(3);
-                    outerSelectionIndicator.BorderThickness = new Thickness(2);
+                    innerSelectionIndicator.StrokeThickness = 3;
+                    outerSelectionIndicator.StrokeThickness = 2;
                 }
                 else
                 {
-                    innerSelectionIndicator.BorderThickness = new Thickness(1);
-                    outerSelectionIndicator.BorderThickness = new Thickness(0);
+                    innerSelectionIndicator.StrokeThickness = 1;
+                    outerSelectionIndicator.StrokeThickness = 0;
                 }
             }
         }
@@ -124,19 +125,19 @@ namespace Scanner.Views
         {
             GridViewItem gridViewItem = (GridViewItem)sender;
 
-            Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
-            Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+            Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+            Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
             if (innerSelectionIndicator != null && outerSelectionIndicator != null)
             {
                 if (gridViewItem.IsSelected)
                 {
-                    innerSelectionIndicator.BorderThickness = new Thickness(3);
-                    outerSelectionIndicator.BorderThickness = new Thickness(2);
+                    innerSelectionIndicator.StrokeThickness = 3;
+                    outerSelectionIndicator.StrokeThickness = 2;
                 }
                 else
                 {
-                    innerSelectionIndicator.BorderThickness = new Thickness(0);
-                    outerSelectionIndicator.BorderThickness = new Thickness(0);
+                    innerSelectionIndicator.StrokeThickness = 0;
+                    outerSelectionIndicator.StrokeThickness = 0;
                 }
             }
         }
@@ -145,23 +146,23 @@ namespace Scanner.Views
         {
             if (sender is GridViewItem gridViewItem)
             {
-                Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
-                Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+                Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+                Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
                 TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
                 if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
                 {
                     if (gridViewItem.IsSelected)
                     {
-                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
-                        innerSelectionIndicator.BorderThickness = new Thickness(3);
-                        outerSelectionIndicator.BorderThickness = new Thickness(2);
+                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
+                        innerSelectionIndicator.StrokeThickness = 3;
+                        outerSelectionIndicator.StrokeThickness = 2;
                         pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
                     }
                     else
                     {
-                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlStrokeColorOnAccentTertiaryBrush"] as SolidColorBrush;
-                        innerSelectionIndicator.BorderThickness = new Thickness(0);
-                        outerSelectionIndicator.BorderThickness = new Thickness(0);
+                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlStrokeColorOnAccentTertiaryBrush"] as Brush;
+                        innerSelectionIndicator.StrokeThickness = 0;
+                        outerSelectionIndicator.StrokeThickness = 0;
                         pageNumber.Foreground = Application.Current.Resources["TextFillColorSecondaryBrush"] as SolidColorBrush;
                     }
                 }
@@ -174,14 +175,14 @@ namespace Scanner.Views
             {
                 if (gridViewItem.IsSelected)
                 {
-                    Border? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorInner") as Border;
-                    Border? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("BorderSelectionIndicatorOuter") as Border;
+                    Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+                    Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
                     TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
                     if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
                     {
-                        innerSelectionIndicator.BorderBrush = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as SolidColorBrush;
-                        innerSelectionIndicator.BorderThickness = new Thickness(3);
-                        outerSelectionIndicator.BorderThickness = new Thickness(2);
+                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
+                        innerSelectionIndicator.StrokeThickness = 3;
+                        outerSelectionIndicator.StrokeThickness = 2;
                         pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
                     }
                 }
@@ -247,7 +248,7 @@ namespace Scanner.Views
             }
         }
 
-        private async void ItemsStackPanelCarousel_Loaded(object sender, RoutedEventArgs e)   // ScrollViewer access more reliable than in GridView's Loaded event
+        private void ItemsStackPanelCarousel_Loaded(object sender, RoutedEventArgs e)   // ScrollViewer access more reliable than in GridView's Loaded event
         {
             try
             {
@@ -262,28 +263,6 @@ namespace Scanner.Views
                     // scroll to selected item
                     if (GridViewCarousel.SelectedItem != null)
                     {
-                        //TaskCompletionSource initialScroll = new();
-                        //EventHandler<ScrollViewerViewChangedEventArgs>? handler = null;
-                        //handler = new EventHandler<ScrollViewerViewChangedEventArgs>((sender, args) =>
-                        //{
-                        //    initialScroll.TrySetResult();
-                        //    scrollViewer.ViewChanged -= handler;
-                        //});
-                        //scrollViewer.ViewChanged += handler;
-                        //GridViewCarousel.ScrollIntoView(GridViewCarousel.SelectedItem);
-                        //await initialScroll.Task;
-
-                        //// item container is now available ~> scroll to final position
-                        //GridViewItem? item = GridViewCarousel.ContainerFromItem(GridViewCarousel.SelectedItem) as GridViewItem;
-                        //if (item != null)
-                        //{
-                        //    item.StartBringIntoView(new BringIntoViewOptions
-                        //    {
-                        //        AnimationDesired = false,
-                        //        HorizontalOffset = 0.5
-                        //    });
-                        //}
-
                         scrollViewer.ScrollToHorizontalOffset(64 * GridViewCarousel.SelectedIndex);
                     }
 
