@@ -58,9 +58,10 @@
                         <Setter Target="ColumnDefinitionFirst.MaxWidth" Value="2000" />
                         <Setter Target="ColumnDefinitionMiddle.Width" Value="0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
+                        <Setter Target="BorderScanOptions.Margin" Value="0,148,0,0" />
+                        <Setter Target="BorderScanOptions.Padding" Value="0,0,0,0" />
                         <Setter Target="BorderScanOptions.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                         <Setter Target="BorderScanOptions.BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
-                        <Setter Target="BorderScanOptions.BorderThickness" Value="0,1,0,0" />
                         <Setter Target="BorderScanActionsView.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                     </VisualState.Setters>
                 </VisualState>
@@ -80,11 +81,10 @@
                         <Setter Target="ColumnDefinitionFirst.MaxWidth" Value="2000" />
                         <Setter Target="ColumnDefinitionMiddle.Width" Value="0" />
                         <Setter Target="BorderProjectView.Visibility" Value="Collapsed" />
-                        <Setter Target="BorderScanOptions.Margin" Value="0,8,0,0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
+                        <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
                         <Setter Target="BorderScanOptions.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                         <Setter Target="BorderScanOptions.BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
-                        <Setter Target="BorderScanOptions.BorderThickness" Value="0,1,0,0" />
                         <Setter Target="BorderScanActionsView.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                     </VisualState.Setters>
                 </VisualState>
@@ -114,7 +114,7 @@
 
                     <VisualState.Setters>
                         <Setter Target="BorderProjectView.Visibility" Value="Collapsed" />
-                        <Setter Target="BorderScanOptions.Margin" Value="0,8,0,0" />
+                        <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
@@ -133,7 +133,7 @@
                         <Setter Target="BorderProjectView.(Grid.Column)" Value="2" />
                         <Setter Target="BorderProjectView.(Grid.RowSpan)" Value="2" />
                         <Setter Target="ProjectView.IsExpanded" Value="True" />
-                        <Setter Target="BorderScanOptions.Margin" Value="0,8,0,0" />
+                        <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                         <Setter Target="ScanOptionsView.Visibility" Value="Visible" />
                         <Setter Target="ScanActionsView.AreScanOptionsVisible" Value="False" />
@@ -274,7 +274,7 @@
                 <Border x:Name="BorderProjectView" Grid.Row="0" Grid.Column="0" Margin="0,8,0,0">
                     <views:ProjectView x:Name="ProjectView" />
                 </Border>
-                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Margin="0,148,0,0" ui:UIElementExtensions.ClipToBounds="True">
+                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Padding="0,148,0,0" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True">
                     <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ScanOptionsView_ExpandPageListRequested">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />
