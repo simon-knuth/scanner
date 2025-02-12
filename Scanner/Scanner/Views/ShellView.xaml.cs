@@ -27,6 +27,7 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,17 +138,17 @@ namespace Scanner.Views
             SetRegionsForCustomTitleBar();
         }
 
-        private void ScanOptionsView_ExpandPageListRequested(object sender, EventArgs e)
+        private void ExpandPageListRequested(object sender, EventArgs e)
         {
             ProjectView.IsExpanded = true;
-            ScanOptionsView.Visibility = Visibility.Collapsed;
+            BorderScanOptions.Visibility = Visibility.Collapsed;
             ScanActionsView.AreScanOptionsVisible = true;
         }
 
         private void ScanActionsView_ExpandScanOptionsRequested(object sender, EventArgs e)
         {
             ScanActionsView.AreScanOptionsVisible = false;
-            ScanOptionsView.Visibility = Visibility.Visible;
+            BorderScanOptions.Visibility = Visibility.Visible;
             ProjectView.IsExpanded = false;
         }
 
@@ -171,6 +172,16 @@ namespace Scanner.Views
                 MinHeight = 400
             };
             flyout.ShowAt(target);
+        }
+
+        private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
+        }
+
+        private void ProjectView_IsExpandedChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
         }
     }
 }

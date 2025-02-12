@@ -27,10 +27,26 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Dependency Properties
-        public static readonly DependencyProperty IsExpandedProperty =
-            DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(ProjectView), null);
+        #region Events
+        public event EventHandler? ExpandPageListRequested;
+        public event EventHandler? IsExpandedChanged;
         #endregion
+
+
+        #region Dependency Properties
+        public static readonly DependencyProperty CanExpandPageListProperty =
+            DependencyProperty.Register(nameof(CanExpandPageList), typeof(bool), typeof(ProjectView), null);
+
+        public static readonly DependencyProperty IsExpandedProperty =
+            DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(ProjectView),
+            new PropertyMetadata(false, OnIsExpandedChanged));
+        #endregion
+
+        public bool CanExpandPageList
+        {
+            get => (bool)GetValue(CanExpandPageListProperty);
+            set => SetValue(CanExpandPageListProperty, value);
+        }
 
         public bool IsExpanded
         {
@@ -64,6 +80,14 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ProjectView view)
+            {
+                view.IsExpandedChanged?.Invoke(view, EventArgs.Empty);
+            }
+        }
+
         private void ButtonMore_Click(object sender, RoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(GridHeader);
@@ -289,6 +313,11 @@ namespace Scanner.Views
             {
                 GridViewPageList.ScrollIntoView(GridViewPageList.SelectedItem);
             }
+        }
+
+        private void ButtonPageList_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandPageListRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

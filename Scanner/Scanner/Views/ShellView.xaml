@@ -42,7 +42,7 @@
     <Grid x:Name="GridRoot" SizeChanged="GridRoot_SizeChanged" Loaded="GridRoot_Loaded">
         <!-- VisualStates -->
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
+            <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
                 <VisualState x:Name="VisualStateNarrow">
                     <VisualState.StateTriggers>
                         
@@ -58,7 +58,7 @@
                         <Setter Target="ColumnDefinitionFirst.MaxWidth" Value="2000" />
                         <Setter Target="ColumnDefinitionMiddle.Width" Value="0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
-                        <Setter Target="BorderScanOptions.Margin" Value="0,148,0,0" />
+                        <Setter Target="BorderScanOptions.Margin" Value="0,152,0,0" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,0,0,0" />
                         <Setter Target="BorderScanOptions.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                         <Setter Target="BorderScanOptions.BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
@@ -272,20 +272,20 @@
                 </Grid.ColumnDefinitions>
 
                 <Border x:Name="BorderProjectView" Grid.Row="0" Grid.Column="0" Margin="0,8,0,0">
-                    <views:ProjectView x:Name="ProjectView" />
+                    <views:ProjectView x:Name="ProjectView" CanExpandPageList="{x:Bind ShowExpandButtonInProjectView, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" IsExpandedChanged="ProjectView_IsExpandedChanged" />
                 </Border>
-                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Padding="0,148,0,0" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True">
-                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ScanOptionsView_ExpandPageListRequested">
-                        <animations:Implicit.ShowAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />
-                            <animations:TranslationAnimation Duration="0:0:0.25" To="0,0" EasingMode="EaseInOut" />
-                        </animations:Implicit.ShowAnimations>
+                <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Padding="0,152,0,0" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,0" EasingMode="EaseInOut" />
+                    </animations:Implicit.ShowAnimations>
 
-                        <animations:Implicit.HideAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
-                            <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
-                        </animations:Implicit.HideAnimations>
-                    </views:ScanOptionsView>
+                    <animations:Implicit.HideAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
+                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                    </animations:Implicit.HideAnimations>
+
+                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ExpandPageListRequested" />
                 </Border>
                 <Border x:Name="BorderScanActionsView" Grid.Row="1" Grid.Column="0">
                     <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" />

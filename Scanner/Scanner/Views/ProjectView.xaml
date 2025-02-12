@@ -89,10 +89,10 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
+                    <Button ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}">
                         <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
-                    <Button x:Name="ButtonMore" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
+                    <Button x:Name="ButtonMore" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
                         <AnimatedIcon Height="16">
                             <AnimatedIcon.Source>
                                 <animatedvisuals:AnimatedChevronDownSmallVisualSource />
@@ -101,6 +101,16 @@
                                 <FontIconSource Glyph="&#xE70D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </AnimatedIcon.FallbackIconSource>
                         </AnimatedIcon>
+                    </Button>
+                    <Button x:Name="ButtonPageList" Margin="4,0,0,0" Padding="12,4,16,4" VerticalAlignment="Center" CornerRadius="12" Background="{ThemeResource SubtleFillColorTertiaryBrush}" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" Click="ButtonPageList_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE7EA;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <RotateTransform Angle="270" />
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <TextBlock Text="Pages" MaxLines="1" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                        </StackPanel>
                     </Button>
                 </StackPanel>
 
