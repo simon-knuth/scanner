@@ -12,7 +12,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
-	<PublishAot>true</PublishAot>
+	<!--<PublishAot>true</PublishAot>-->
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\contrast-standard\Logo small.svg" />
