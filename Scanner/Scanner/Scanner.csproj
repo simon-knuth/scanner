@@ -67,6 +67,9 @@
     <Page Update="Controls\ScanOptionsPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Views\Dialogs\SaveChangesDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HistoryView.xaml">

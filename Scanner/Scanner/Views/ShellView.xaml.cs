@@ -9,11 +9,13 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
+using Scanner.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Cryptography.Certificates;
@@ -29,6 +31,8 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
 
+        private bool isDialogVisible;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +42,7 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
         }
 
 
@@ -182,6 +187,45 @@ namespace Scanner.Views
         private void ProjectView_IsExpandedChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
+        }
+
+        private void ViewModel_SaveChangesDialogRequested(object? sender, System.Threading.Tasks.TaskCompletionSource<bool> e)
+        {
+            ShowSaveChangesDialog(e);
+        }
+
+        private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+#if DEBUG
+            FlyoutBase.ShowAttachedFlyout(ButtonSettings);
+#endif
+        }
+
+        private void SettingsCardDebugDialogSaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSaveChangesDialog(new TaskCompletionSource<bool>());
+        }
+
+        private void ShowSaveChangesDialog(TaskCompletionSource<bool> task)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    task.SetResult(false);
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                SaveChangesDialogView dialog = new SaveChangesDialogView();
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+                task.SetResult(result != ContentDialogResult.None);
+
+                isDialogVisible = false;
+            });
         }
     }
 }

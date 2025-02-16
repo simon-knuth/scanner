@@ -10,7 +10,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -18,6 +18,9 @@
     </Page.DataContext>
 
     <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loading">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadingCommand}"/>
+        </core:EventTriggerBehavior>
         <core:EventTriggerBehavior EventName="Unloaded">
             <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
         </core:EventTriggerBehavior>
@@ -211,7 +214,7 @@
                         <Button ToolTipService.ToolTip="Discover more" Style="{StaticResource TitlebarButtonStyle}">
                             <FontIcon Glyph="&#xECAD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button ToolTipService.ToolTip="Settings" Style="{StaticResource TitlebarButtonStyle}">
+                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{StaticResource TitlebarButtonStyle}" RightTapped="ButtonSettings_RightTapped">
                             <AnimatedIcon Height="16">
                                 <AnimatedIcon.Source>
                                     <animatedvisuals:AnimatedSettingsVisualSource />
@@ -220,6 +223,26 @@
                                     <SymbolIconSource Symbol="Setting" />
                                 </AnimatedIcon.FallbackIconSource>
                             </AnimatedIcon>
+
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout>
+                                    <StackPanel Orientation="Vertical" Width="300" Height="400">
+                                        <controls:SettingsExpander Header="Dialogs">
+                                            <controls:SettingsExpander.HeaderIcon>
+                                                <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </controls:SettingsExpander.HeaderIcon>
+
+                                            <controls:SettingsExpander.Items>
+                                                <controls:SettingsCard x:Name="SettingsCardDebugDialogSaveChanges" Header="Save changes" IsClickEnabled="True" Click="SettingsCardDebugDialogSaveChanges_Click">
+                                                    <controls:SettingsCard.HeaderIcon>
+                                                        <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    </controls:SettingsCard.HeaderIcon>
+                                                </controls:SettingsCard>
+                                            </controls:SettingsExpander.Items>
+                                        </controls:SettingsExpander>
+                                    </StackPanel>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
                         </Button>
                     </StackPanel>
                     <Button x:Name="ButtonTitlebarMore" ToolTipService.ToolTip="More" Style="{StaticResource TitlebarButtonStyle}" Visibility="Collapsed">
@@ -264,7 +287,7 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="ColumnDefinitionFirst" Width="4*" MaxWidth="348" />
                     <ColumnDefinition x:Name="ColumnDefinitionMiddle" Width="6*" />
