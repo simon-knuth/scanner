@@ -23,6 +23,7 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
@@ -68,6 +69,11 @@ namespace Scanner.ViewModels
         private void SelectNextPage()
         {
             ProjectService.SelectNextPage();
+        }
+
+        private async Task TryCloseProjectAsync()
+        {
+            await ProjectService.TryCloseProjectAsync();
         }
     }
 }

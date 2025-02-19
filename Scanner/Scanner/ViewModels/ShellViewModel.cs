@@ -57,9 +57,9 @@ namespace Scanner.ViewModels
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
 
-            Messenger.Register<ShowSaveChangesDialogMessage>(this, async (r, m) =>
+            Messenger.Register<ShowSaveChangesDialogMessage>(this, (r, m) =>
             {
-                m.Reply(await ShowSaveChangesDialogAsync());
+                m.Reply(ShowSaveChangesDialogAsync());
             });
         }
 

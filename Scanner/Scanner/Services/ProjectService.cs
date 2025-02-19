@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinRT.Interop;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.Threading;
@@ -16,10 +17,11 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.Devices.Scanners;
 using Scanner.Models;
 using Windows.Storage;
+using Scanner.Messages;
 
 namespace Scanner.Services
 {
-    internal partial class ProjectService : ObservableObject, IProjectService
+    internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +121,35 @@ namespace Scanner.Services
         private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             
+        }
+
+        public async Task<bool> TrySaveProjectAsync()
+        {
+            if (CurrentProject == null) return true;
+
+            // handle unsaved changes
+            if (!CurrentProject.IsSaved && await Messenger.Send(new ShowSaveChangesDialogMessage()).Response == false)
+            {
+                // changes couldn't be saved
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TryCloseProjectAsync()
+        {
+            if (CurrentProject == null) return true;
+
+            // handle unsaved changes
+            if (await TrySaveProjectAsync() == false)
+            {
+                return false;
+            }
+
+            // close project
+            CurrentProject = null;
+            return true;
         }
 
         public void SelectPreviousPage()

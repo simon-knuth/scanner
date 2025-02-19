@@ -11,7 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:converters="using:Scanner.Views.Converters"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -33,6 +33,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -41,7 +44,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot" Padding="0,0,0,72">
-        <FlipView Background="Transparent" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}">
+        <FlipView x:Name="FlipViewPages" Background="Transparent" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>

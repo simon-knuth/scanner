@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scanner.Messages
 {
-    internal class ShowSaveChangesDialogMessage : AsyncRequestMessage<bool>
+    internal class ShowSaveChangesDialogMessage : RequestMessage<Task<bool>>
     {
         
     }
