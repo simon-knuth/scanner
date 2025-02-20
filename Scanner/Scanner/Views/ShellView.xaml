@@ -12,6 +12,8 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -227,7 +229,13 @@
 
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout>
-                                    <StackPanel Orientation="Vertical" Width="300" Height="400">
+                                    <StackPanel Orientation="Vertical" Spacing="4" Width="300" Height="400">
+                                        <StackPanel.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <RepositionThemeTransition IsStaggeringEnabled="False" />
+                                            </TransitionCollection>
+                                        </StackPanel.ChildrenTransitions>
+                                        
                                         <controls:SettingsExpander Header="Dialogs">
                                             <controls:SettingsExpander.HeaderIcon>
                                                 <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -238,6 +246,29 @@
                                                     <controls:SettingsCard.HeaderIcon>
                                                         <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                     </controls:SettingsCard.HeaderIcon>
+                                                </controls:SettingsCard>
+                                            </controls:SettingsExpander.Items>
+                                        </controls:SettingsExpander>
+                                        <controls:SettingsExpander Header="Notifications">
+                                            <controls:SettingsExpander.HeaderIcon>
+                                                <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </controls:SettingsExpander.HeaderIcon>
+
+                                            <controls:SettingsExpander.Items>
+                                                <controls:SettingsCard>
+                                                    <controls:SettingsCard.Content>
+                                                        <StackPanel Orientation="Vertical" Spacing="12">
+                                                            <TextBox Header="Title" Text="{x:Bind DebugNotification.Title, Mode=TwoWay}" />
+                                                            <TextBox Header="Message" Text="{x:Bind DebugNotification.Message, Mode=TwoWay}" />
+                                                            <ComboBox x:Name="ComboBoxDebugNotificationsSeverity" Header="Severity" SelectedIndex="0">
+                                                                <ComboBoxItem Content="Informational" />
+                                                                <ComboBoxItem Content="Success" />
+                                                                <ComboBoxItem Content="Warning" />
+                                                                <ComboBoxItem Content="Error" />
+                                                            </ComboBox>
+                                                            <Button x:Name="ButtonDebugNotification" Content="Show notification" Click="ButtonDebugNotification_Click" />
+                                                        </StackPanel>
+                                                    </controls:SettingsCard.Content>
                                                 </controls:SettingsCard>
                                             </controls:SettingsExpander.Items>
                                         </controls:SettingsExpander>
@@ -319,6 +350,24 @@
                     <views:EditorView />
                 </Border>
             </Grid>
+            
+            <!-- Notifications -->
+            <Frame Grid.Row="1" Grid.Column="0" Margin="24" CornerRadius="8" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="{x:Bind InfoBarNotifications.IsOpen, Mode=OneWay}" ui:VisualExtensions.Scale="0,0" ui:VisualExtensions.NormalizedCenterPoint="0.5,1">
+                <ui:Effects.Shadow>
+                    <media:AttachedCardShadow Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.1" CornerRadius="8" />
+                </ui:Effects.Shadow>
+
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" />
+                    <animations:ScaleAnimation Duration="0:0:0.5" From="0,0" To="1,1" EasingMode="EaseOut"/>
+                </animations:Implicit.ShowAnimations>
+
+                <InfoBar x:Name="InfoBarNotifications" MaxWidth="448" CornerRadius="8">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
+                    </interactivity:Interaction.Behaviors>
+                </InfoBar>
+            </Frame>
         </Grid>
     </Grid>
 </Page>

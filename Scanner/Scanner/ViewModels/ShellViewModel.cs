@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
@@ -33,6 +34,7 @@ namespace Scanner.ViewModels
 
         #region Events
         public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
+        public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
         #region Commands
@@ -60,6 +62,10 @@ namespace Scanner.ViewModels
             Messenger.Register<ShowSaveChangesDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowSaveChangesDialogAsync());
+            });
+            Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
+            {
+                ShowNotificationRequested?.Invoke(this, m.Notification);
             });
         }
 

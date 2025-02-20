@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -33,6 +34,13 @@ namespace Scanner.Views
 
         private bool isDialogVisible;
 
+        private Notification DebugNotification = new Notification
+        {
+            Title = "This is a test notification",
+            Message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.",
+            Severity = InfoBarSeverity.Informational
+        };
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +51,7 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
+            ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
         }
 
 
@@ -189,7 +198,7 @@ namespace Scanner.Views
             OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
         }
 
-        private void ViewModel_SaveChangesDialogRequested(object? sender, System.Threading.Tasks.TaskCompletionSource<bool> e)
+        private void ViewModel_SaveChangesDialogRequested(object? sender, TaskCompletionSource<bool> e)
         {
             ShowSaveChangesDialog(e);
         }
@@ -225,6 +234,25 @@ namespace Scanner.Views
                 task.SetResult(result != ContentDialogResult.None);
 
                 isDialogVisible = false;
+            });
+        }
+
+        private void ViewModel_ShowNotificationRequested(object? sender, CommunityToolkit.WinUI.Behaviors.Notification e)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                NotificationQueue.Show(e);
+            });
+        }
+
+        private void ButtonDebugNotification_Click(object sender, RoutedEventArgs e)
+        {
+            DebugNotification.Severity = (InfoBarSeverity)ComboBoxDebugNotificationsSeverity.SelectedIndex;
+            NotificationQueue.Show(new Notification
+            {
+                Title = DebugNotification.Title,
+                Message = DebugNotification.Message,
+                Severity = DebugNotification.Severity
             });
         }
     }
