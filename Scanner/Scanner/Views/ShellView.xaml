@@ -14,6 +14,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -38,6 +39,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -167,21 +171,21 @@
 
                 <Image Grid.Column="0" Source="/Assets/Logo small.svg" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <StackPanel x:Name="StackPanelTitlebarButtonsLeft" Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Button ToolTipService.ToolTip="New project" Style="{StaticResource TitlebarButtonStyle}">
+                    <Button ToolTipService.ToolTip="New project" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanStartNewProject, Mode=OneWay}">
                         <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="N" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Open" Style="{StaticResource TitlebarButtonStyle}">
+                    <Button ToolTipService.ToolTip="Open" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <FontIcon Glyph="&#xE838;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="O" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}">
+                    <Button ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanSaveProject, Mode=OneWay}">
                         <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>

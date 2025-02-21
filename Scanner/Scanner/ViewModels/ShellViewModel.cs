@@ -28,7 +28,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        public IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         private IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
         #endregion
 
@@ -43,7 +43,12 @@ namespace Scanner.ViewModels
         #endregion
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanStartNewProject))]
+        [NotifyPropertyChangedFor(nameof(CanSaveProject))]
         private Project? currentProject;
+
+        public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
+        public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaved && !ProjectService.IsProcessRunning;
 
         private TaskCompletionSource viewLoading = new();
         private DispatcherQueue? viewDispatcherQueue;
@@ -92,6 +97,10 @@ namespace Scanner.ViewModels
             {
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
+                    break;
+                case nameof(IProjectService.IsProcessRunning):
+                    OnPropertyChanged(nameof(CanStartNewProject));
+                    OnPropertyChanged(nameof(CanSaveProject));
                     break;
             }
         }

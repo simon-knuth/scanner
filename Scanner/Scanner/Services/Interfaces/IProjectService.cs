@@ -27,8 +27,8 @@ namespace Scanner.Services.Interfaces
         Project? CurrentProject { get; }
         IProjectPage? SelectedPage { get; set; }
 
-        bool IsProcessRunning { get; }
-        bool IsScanProcessRunning { get; }
+        bool IsProcessRunning { get; }          // scan or edit in progres
+        bool IsScanProcessRunning { get; }      // scan in progress
 
         bool CanSelectPreviousPage { get; }
         bool CanSelectNextPage { get; }
