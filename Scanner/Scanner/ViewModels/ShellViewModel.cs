@@ -38,6 +38,7 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -128,6 +129,11 @@ namespace Scanner.ViewModels
                     ((MainWindow)sender).Close();
                 }
             }
+        }
+
+        private async Task TryCloseProjectAsync()
+        {
+            await ProjectService.TryCloseProjectAsync();
         }
     }
 }
