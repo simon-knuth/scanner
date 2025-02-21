@@ -400,6 +400,12 @@
         <Setter Property="ToolTipService.Placement" Value="Bottom" />
     </Style>
 
+    <Style x:Key="EditorButtonStyle" TargetType="Button" BasedOn="{StaticResource MutedButtonStyle}">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
     <Style x:Key="AcrylicButtonStyle" TargetType="Button">
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
         <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
