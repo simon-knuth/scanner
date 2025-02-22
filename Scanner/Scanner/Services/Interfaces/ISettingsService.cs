@@ -1,0 +1,90 @@
+﻿using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WinRT.Interop;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using Scanner.Models.Interfaces;
+using System.Globalization;
+using Windows.Storage;
+using Serilog;
+using System.ComponentModel;
+using Scanner.ViewModels;
+
+namespace Scanner.Services.Interfaces
+{
+    /// <summary>
+    ///     Manages app settings and other persistent values.
+    /// </summary>
+    public interface ISettingsService : INotifyPropertyChanged
+    {
+        int Version { get; set; }
+        SettingSaveLocationType SettingSaveLocationType { get; set; }
+        SettingAppTheme SettingAppTheme { get; set; }
+        bool SettingAutoRotate { get; set; }
+        SettingEditorOrientation SettingEditorOrientation { get; set; }
+        bool SettingRememberScanOptions { get; set; }
+        bool SettingErrorStatistics { get; set; }
+        bool SettingShowSurveys { get; set; }
+        string LastKnownVersion { get; set; }
+        int ScanNumber { get; set; }
+        bool LastTouchDrawState { get; set; }
+        bool IsFirstAppLaunchWithThisVersion { get; set; }
+        bool IsFirstAppLaunchEver { get; set; }
+        AspectRatioOption LastUsedCropAspectRatio { get; set; }
+        bool ShowOpenWithWarning { get; set; }
+        bool ShowAutoRotationMessage { get; set; }
+        bool SetupCompleted { get; set; }
+        bool SettingAnimations { get; set; }
+        SettingScanAction SettingScanAction { get; set; }
+        SettingMeasurementUnit SettingMeasurementUnits { get; set; }
+        bool TutorialScanMergeShown { get; set; }
+        string SettingAppLanguage { get; set; }
+        bool LastScanMergeReversed { get; set; }
+
+        void TryLogAllSettings();
+    }
+
+    public enum SettingSaveLocationType
+    {
+        SetLocation = 0,
+        AskEveryTime = 1
+    }
+
+    public enum SettingAppTheme
+    {
+        System = 0,
+        Light = 1,
+        Dark = 2
+    }
+
+    public enum SettingEditorOrientation
+    {
+        Vertical = 1,
+        Horizontal = 0
+    }
+
+    public enum SettingScanAction
+    {
+        AddToExisting = 0,
+        StartFresh = 1
+    }
+
+    public enum SettingMeasurementUnit
+    {
+        Metric = 0,
+        ImperialUS = 1
+    }
+
+    public enum SettingFileNamingPattern
+    {
+        DateTime = 0,
+        Date = 1,
+        Custom = 2
+    }
+}

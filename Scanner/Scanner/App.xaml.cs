@@ -55,6 +55,7 @@ namespace Scanner
                 .AddSingleton<IScannerDiscoveryService, ScannerDiscoveryService>()
                 .AddSingleton<IProjectService, ProjectService>()
                 .AddSingleton<IAppDataService, AppDataService>()
+                .AddSingleton<ISettingsService, SettingsService>()
                 .BuildServiceProvider());
         }
 
