@@ -46,13 +46,13 @@ namespace Scanner.Services
         public SettingSaveLocationType SettingSaveLocationType
         {
             get => (SettingSaveLocationType)GetSetting<int>(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.SetLocation);
-            set => SetSetting(nameof(SettingSaveLocationType), value);
+            set => SetSetting(nameof(SettingSaveLocationType), (int)value);
         }
 
         public SettingAppTheme SettingAppTheme
         {
             get => (SettingAppTheme)GetSetting<int>(nameof(SettingAppTheme), (int)SettingAppTheme.System);
-            set => SetSetting(nameof(SettingAppTheme), value);
+            set => SetSetting(nameof(SettingAppTheme), (int)value);
         }
 
         public bool SettingAutoRotate
@@ -64,7 +64,7 @@ namespace Scanner.Services
         public SettingEditorOrientation SettingEditorOrientation
         {
             get => (SettingEditorOrientation)GetSetting<int>(nameof(SettingEditorOrientation), (int)SettingEditorOrientation.Horizontal);
-            set => SetSetting(nameof(SettingEditorOrientation), value);
+            set => SetSetting(nameof(SettingEditorOrientation), (int)value);
         }
 
         public bool SettingRememberScanOptions
@@ -118,7 +118,7 @@ namespace Scanner.Services
         public AspectRatioOption LastUsedCropAspectRatio
         {
             get => (AspectRatioOption)GetSetting<int>(nameof(LastUsedCropAspectRatio), (int)AspectRatioOption.Custom);
-            set => SetSetting(nameof(LastUsedCropAspectRatio), value);
+            set => SetSetting(nameof(LastUsedCropAspectRatio), (int)value);
         }
 
         public bool ShowOpenWithWarning
@@ -148,13 +148,13 @@ namespace Scanner.Services
         public SettingScanAction SettingScanAction
         {
             get => (SettingScanAction)GetSetting<int>(nameof(SettingScanAction), (int)SettingScanAction.AddToExisting);
-            set => SetSetting(nameof(SettingScanAction), value);
+            set => SetSetting(nameof(SettingScanAction), (int)value);
         }
 
         public SettingMeasurementUnit SettingMeasurementUnits
         {
             get => (SettingMeasurementUnit)GetSetting<int>(nameof(SettingMeasurementUnits), (int)SettingMeasurementUnit.Metric);
-            set => SetSetting(nameof(SettingMeasurementUnits), value);
+            set => SetSetting(nameof(SettingMeasurementUnits), (int)value);
         }
 
         public bool TutorialScanMergeShown
