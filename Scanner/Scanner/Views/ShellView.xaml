@@ -144,6 +144,7 @@
                         <Setter Target="BorderProjectView.(Grid.RowSpan)" Value="2" />
                         <Setter Target="ProjectView.IsExpanded" Value="True" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
+                        <Setter Target="BorderScanOptions.Visibility" Value="Visible" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                         <Setter Target="ScanOptionsView.Visibility" Value="Visible" />
                         <Setter Target="ScanActionsView.AreScanOptionsVisible" Value="False" />
