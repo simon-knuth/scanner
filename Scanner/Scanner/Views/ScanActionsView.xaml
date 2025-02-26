@@ -195,16 +195,16 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="0,0,4,0" Padding="8" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Style="{StaticResource MutedOnAccentButtonStyle}" VerticalAlignment="Center" x:Load="{x:Bind CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
+                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="2" Margin="0,0,4,0" Padding="8" Style="{StaticResource MutedOnAccentButtonStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
                         <Grid>
-                            <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind IsAddToProject, Mode=OneWay}">
+                            <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                                 <FontIcon.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromVerticalOffset="4" />
                                     </TransitionCollection>
                                 </FontIcon.Transitions>
                             </FontIcon>
-                            <FontIcon x:Name="FontIconScanModeNew" Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind IsAddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                            <FontIcon x:Name="FontIconScanModeNew" Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                                 <FontIcon.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromVerticalOffset="4" />
@@ -214,14 +214,14 @@
                         </Grid>
                     </Button>
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" />
-                    <TextBlock x:Name="TextBlockScanModeAdd" Grid.Row="1" Grid.Column="1" Text="Add" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind IsAddToProject, Mode=OneWay}">
+                    <TextBlock x:Name="TextBlockScanModeAdd" Grid.Row="1" Grid.Column="1" Text="Add" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                         <TextBlock.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="4" />
                             </TransitionCollection>
                         </TextBlock.Transitions>
                     </TextBlock>
-                    <TextBlock x:Name="TextBlockScanModeNew" Grid.Row="1" Grid.Column="1" Text="New" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind IsAddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <TextBlock x:Name="TextBlockScanModeNew" Grid.Row="1" Grid.Column="1" Text="New" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <TextBlock.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="4" />
@@ -232,17 +232,17 @@
 
                 <SplitButton.Flyout>
                     <MenuFlyout Placement="BottomEdgeAlignedRight">
-                        <MenuFlyoutItem Text="Scan and add to project" FontWeight="SemiBold">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="Scan and add to project" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Loading="MenuFlyoutItemAddToProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Scan to new project">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemNewProject" Text="Scan to new project" Loading="MenuFlyoutItemNewProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Scan and merge into project">
+                        <MenuFlyoutItem Text="Scan and merge into project" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xEA3C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>

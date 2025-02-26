@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Animations;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -18,6 +19,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Text;
 
 
 namespace Scanner.Views
@@ -58,12 +60,6 @@ namespace Scanner.Views
         }
 
         [ObservableProperty]
-        private bool canScanModeBeSwitched = true;
-
-        [ObservableProperty]
-        private bool isAddToProject;
-
-        [ObservableProperty]
         private bool isHoveringCancelButton;
 
         public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
@@ -86,7 +82,7 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void ButtonScanMode_Click(object sender, RoutedEventArgs e)
         {
-            IsAddToProject = !IsAddToProject;
+            ViewModel.AddToProject = !ViewModel.AddToProject;
         }
 
         private void ButtonScanOptions_Click(object sender, RoutedEventArgs e)
@@ -165,6 +161,30 @@ namespace Scanner.Views
         private void ButtonCancel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             IsHoveringCancelButton = false;
+        }
+
+        private void MenuFlyoutItemAddToProject_Loading(FrameworkElement sender, object args)
+        {
+            if (ViewModel.AddToProject)
+            {
+                ((MenuFlyoutItem)sender).FontWeight = FontWeights.SemiBold;
+            }
+            else
+            {
+                ((MenuFlyoutItem)sender).FontWeight = FontWeights.Normal;
+            }
+        }
+
+        private void MenuFlyoutItemNewProject_Loading(FrameworkElement sender, object args)
+        {
+            if (!ViewModel.AddToProject)
+            {
+                ((MenuFlyoutItem)sender).FontWeight = FontWeights.SemiBold;
+            }
+            else
+            {
+                ((MenuFlyoutItem)sender).FontWeight = FontWeights.Normal;
+            }
         }
     }
 }

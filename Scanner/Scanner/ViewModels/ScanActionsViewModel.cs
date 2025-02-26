@@ -19,6 +19,7 @@ namespace Scanner.ViewModels
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Commands
@@ -52,13 +53,47 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanScan))]
         [NotifyPropertyChangedFor(nameof(CanPreviewScan))]
+        [NotifyPropertyChangedFor(nameof(CanScanModeBeSwitched))]
         private bool isScanning;
 
         public bool CanScan => ScanOptions?.Scanner != null && !IsScanning;
         public bool CanPreviewScan => ScanOptions?.Scanner != null && !IsScanning && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
+        public bool CanScanModeBeSwitched => CurrentProject != null && !IsScanning && CanAddToProject;
+        public bool CanScanAndMerge => CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat && CurrentProject.Format == TargetFormat.PDF 
+            && ScanOptions?.SourceMode == ScannerSource.Feeder;
+
+        private bool canAddToProject;
+        public bool CanAddToProject
+        {
+            get => canAddToProject;
+            set
+            {
+                if (SetProperty(ref canAddToProject, value))
+                {
+                    if (value == true)
+                    {
+                        // can add to project
+                        if (SettingsService.SettingScanAction == SettingScanAction.AddToExisting)
+                        {
+                            AddToProject = true;
+                        }
+                    }
+                    else
+                    {
+                        // can't add to project anymore
+                        AddToProject = false;
+                    }
+                }
+            }
+        }
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanScanModeBeSwitched))]
+        [NotifyPropertyChangedFor(nameof(CanScanAndMerge))]
         private Project? currentProject;
+
+        [ObservableProperty]
+        private bool addToProject;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,8 +101,10 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanActionsViewModel()
         {
+            PropertyChanged += ScanActionsViewModel_PropertyChanged;
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
+            UpdateCanAddToProject();
         }
 
 
@@ -84,6 +121,17 @@ namespace Scanner.ViewModels
             await ProjectService.TryCreateProjectAsync(ScanOptions);
         }
 
+        private void ScanActionsViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(CurrentProject):
+                case nameof(CanScanModeBeSwitched):
+                    UpdateCanAddToProject();
+                    break;
+            }
+        }
+
         private void ScanOptions_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -94,6 +142,11 @@ namespace Scanner.ViewModels
                     break;
                 case nameof(ScanOptions.SourceMode):
                     OnPropertyChanged(nameof(CanPreviewScan));
+                    OnPropertyChanged(nameof(CanScanAndMerge));
+                    break;
+                case nameof(ScanOptions.TargetFormat):
+                    OnPropertyChanged(nameof(CanScanModeBeSwitched));
+                    UpdateCanAddToProject();
                     break;
             }
         }
@@ -109,6 +162,11 @@ namespace Scanner.ViewModels
                     IsScanning = ProjectService.IsScanProcessRunning;
                     break;
             }
+        }
+
+        private void UpdateCanAddToProject()
+        {
+            CanAddToProject = CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat;
         }
     }
 }
