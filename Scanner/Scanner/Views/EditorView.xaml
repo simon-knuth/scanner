@@ -44,7 +44,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
-        <FlipView x:Name="FlipViewPages" Margin="0,0,0,72" Background="Transparent" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <FlipView x:Name="FlipViewPages" Margin="0,0,0,72" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>
