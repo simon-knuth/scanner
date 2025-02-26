@@ -1,0 +1,102 @@
+<Page
+    x:Class="Scanner.Views.Settings.SettingsViewPersonalization"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridRoot">
+        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
+                <TextBlock Text="Personalization" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="App theme">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE793;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="System" />
+                            <ComboBoxItem Content="Light" />
+                            <ComboBoxItem Content="Dark" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Units of measurement">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xED5E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SettingMeasurementUnits, Mode=TwoWay}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="Metric" />
+                            <ComboBoxItem Content="Imperial/US" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Editor orientation">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xECE7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="Horizontal" />
+                            <ComboBoxItem Content="Vertical" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Mirror app layout">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE90D;" MirroredWhenRightToLeft="True" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingMirrorAppLayout, Mode=TwoWay}" />
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Language">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF2B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox />
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Animations">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE805;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAnimations, Mode=TwoWay}" />
+                </controls:SettingsCard>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

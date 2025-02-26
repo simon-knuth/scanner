@@ -42,10 +42,12 @@ namespace Scanner.Services.Interfaces
         bool SetupCompleted { get; set; }
         bool SettingAnimations { get; set; }
         SettingScanAction SettingScanAction { get; set; }
-        SettingMeasurementUnit SettingMeasurementUnits { get; set; }
+        SettingMeasurementUnits SettingMeasurementUnits { get; set; }
         bool TutorialScanMergeShown { get; set; }
         string SettingAppLanguage { get; set; }
         bool LastScanMergeReversed { get; set; }
+        bool SettingExpandPageList { get; set; }
+        bool SettingMirrorAppLayout { get; set; }
 
         void TryLogAllSettings();
     }
@@ -75,7 +77,7 @@ namespace Scanner.Services.Interfaces
         StartFresh = 1
     }
 
-    public enum SettingMeasurementUnit
+    public enum SettingMeasurementUnits
     {
         Metric = 0,
         ImperialUS = 1

@@ -11,31 +11,69 @@ using System.Threading.Tasks;
 
 namespace Scanner.ViewModels
 {
-    partial class EditorViewModel : ObservableRecipient, IDisposable
+    public partial class SettingsViewModel : ObservableRecipient, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetService<ISettingsService>();
         #endregion
 
         #region Commands
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
+        public SettingsPage[] HeaderSettingsPages =
+        [
+            new SettingsPage(SettingsPageType.General, "\uE713", "General"),
+            new SettingsPage(SettingsPageType.Personalization, "\uE771", "Personalization"),
+            new SettingsPage(SettingsPageType.Privacy, "\uEA18", "Privacy"),
+        ];
+
+        public SettingsPage[] FooterSettingsPages =
+        [
+            new SettingsPage(SettingsPageType.Feedback, "\uED15", "Feedback"),
+            new SettingsPage(SettingsPageType.About, "\uE946", "About"),
+        ];
+
         [ObservableProperty]
-        private Project? currentProject;
+        private SettingsPage selectedPage;
+
+        public int SettingScanAction
+        {
+            get => (int)SettingsService.SettingScanAction;
+            set => SettingsService.SettingScanAction = (SettingScanAction)value;
+        }
+
+        public int SettingAppTheme
+        {
+            get => (int)SettingsService.SettingAppTheme;
+            set => SettingsService.SettingAppTheme = (SettingAppTheme)value;
+        }
+
+        public int SettingMeasurementUnits
+        {
+            get => (int)SettingsService.SettingMeasurementUnits;
+            set => SettingsService.SettingMeasurementUnits = (SettingMeasurementUnits)value;
+        }
+
+        public int SettingEditorOrientation
+        {
+            get => (int)SettingsService.SettingEditorOrientation;
+            set => SettingsService.SettingEditorOrientation = (SettingEditorOrientation)value;
+        }
+
+        public string CurrentVersion => Helpers.Helpers.GetCurrentVersion();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public EditorViewModel()
+        public SettingsViewModel()
         {
-            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
-            CurrentProject = ProjectService.CurrentProject;
+            SelectedPage = HeaderSettingsPages[0];
         }
 
 
@@ -46,39 +84,20 @@ namespace Scanner.ViewModels
         {
             Messenger.UnregisterAll(this);
         }
-
-        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IProjectService.CurrentProject):
-                    CurrentProject = ProjectService.CurrentProject;
-                    break;
-            }
-        }
     }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    ///     Available aspect ratio options for cropping or selecting a region.
-    /// </summary>
-    public enum AspectRatioOption
+    public record SettingsPage(SettingsPageType PageType, string Glyph, string FriendlyName);
+
+    public enum SettingsPageType
     {
-        Custom = 0,
-        Square = 1,
-        ThreeByTwo = 2,
-        FourByThree = 3,
-        DinA = 4,
-        AnsiA = 5,
-        AnsiB = 6,
-        AnsiC = 7,
-        Kai4 = 8,
-        Kai8 = 9,
-        Kai16 = 10,
-        Kai32 = 11,
-        Legal = 12
+        General,
+        Personalization,
+        Privacy,
+        Feedback,
+        About
     }
 }

@@ -38,6 +38,7 @@ namespace Scanner
         #endregion
 
         public MainWindow MainWindow;
+        public SettingsWindow? SettingsWindow;
         public DispatcherQueue MainDispatcherQueue;
 
 
@@ -96,6 +97,7 @@ namespace Scanner
                 MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                 {
                     MainWindow = new MainWindow();
+                    MainWindow.Closed += MainWindow_Closed;
                     MainWindow.Activate();
                 });
 
@@ -124,6 +126,29 @@ namespace Scanner
                 //    Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
                 //}
             });
+        }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            if (SettingsWindow != null)
+            {
+                SettingsWindow.Close();
+            }
+        }
+
+        public void ShowSettings()
+        {
+            if (SettingsWindow == null)
+            {
+                SettingsWindow = new SettingsWindow();
+                SettingsWindow.Closed += SettingsWindow_Closed;
+            }
+            SettingsWindow.Activate();
+        }
+
+        private void SettingsWindow_Closed(object sender, WindowEventArgs args)
+        {
+            SettingsWindow = null;
         }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

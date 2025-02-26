@@ -221,7 +221,7 @@
                         <Button ToolTipService.ToolTip="Discover more" Style="{StaticResource TitlebarButtonStyle}">
                             <FontIcon Glyph="&#xECAD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{StaticResource TitlebarButtonStyle}" RightTapped="ButtonSettings_RightTapped">
+                        <Button x:Name="ButtonSettings" ToolTipService.ToolTip="Settings" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowSettingsCommand}" RightTapped="ButtonSettings_RightTapped">
                             <AnimatedIcon Height="16">
                                 <AnimatedIcon.Source>
                                     <animatedvisuals:AnimatedSettingsVisualSource />

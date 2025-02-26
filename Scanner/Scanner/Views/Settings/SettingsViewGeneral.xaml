@@ -1,0 +1,94 @@
+<Page
+    x:Class="Scanner.Views.Settings.SettingsViewGeneral"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridRoot">
+        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
+                <TextBlock Text="General" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsExpander Header="Save location">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsExpander.HeaderIcon>
+                    
+                    
+                </controls:SettingsExpander>
+                <controls:SettingsCard Header="Automatic rotation">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE7AD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAutoRotate, Mode=TwoWay}" />
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Remember last used scan options">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE8FE;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingRememberScanOptions, Mode=TwoWay}" />
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Default scan action">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE8A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SettingScanAction, Mode=TwoWay}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="Add to project" />
+                            <ComboBoxItem Content="Start new project" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Expand page list" Description="Automatically expand the page list when a second page has been scanned">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE7EA;" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
+                            <FontIcon.RenderTransform>
+                                <RotateTransform Angle="270" />
+                            </FontIcon.RenderTransform>
+                        </FontIcon>
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingExpandPageList, Mode=TwoWay}" />
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Favorite scanners">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE728;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <Button Content="Reset list" />
+                </controls:SettingsCard>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

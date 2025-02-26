@@ -39,19 +39,19 @@ namespace Scanner.Services
 
         public int Version
         {
-            get => GetSetting<int>(nameof(Version), 0);
+            get => GetSetting(nameof(Version), 0);
             set => SetSetting(nameof(Version), value);
         }
 
         public SettingSaveLocationType SettingSaveLocationType
         {
-            get => (SettingSaveLocationType)GetSetting<int>(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.SetLocation);
+            get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.SetLocation);
             set => SetSetting(nameof(SettingSaveLocationType), (int)value);
         }
 
         public SettingAppTheme SettingAppTheme
         {
-            get => (SettingAppTheme)GetSetting<int>(nameof(SettingAppTheme), (int)SettingAppTheme.System);
+            get => (SettingAppTheme)GetSetting(nameof(SettingAppTheme), (int)SettingAppTheme.System);
             set => SetSetting(nameof(SettingAppTheme), (int)value);
         }
 
@@ -63,7 +63,7 @@ namespace Scanner.Services
 
         public SettingEditorOrientation SettingEditorOrientation
         {
-            get => (SettingEditorOrientation)GetSetting<int>(nameof(SettingEditorOrientation), (int)SettingEditorOrientation.Horizontal);
+            get => (SettingEditorOrientation)GetSetting(nameof(SettingEditorOrientation), (int)SettingEditorOrientation.Horizontal);
             set => SetSetting(nameof(SettingEditorOrientation), (int)value);
         }
 
@@ -93,7 +93,7 @@ namespace Scanner.Services
 
         public int ScanNumber
         {
-            get => GetSetting<int>(nameof(ScanNumber), 0);
+            get => GetSetting(nameof(ScanNumber), 0);
             set => SetSetting(nameof(ScanNumber), value);
         }
 
@@ -117,7 +117,7 @@ namespace Scanner.Services
 
         public AspectRatioOption LastUsedCropAspectRatio
         {
-            get => (AspectRatioOption)GetSetting<int>(nameof(LastUsedCropAspectRatio), (int)AspectRatioOption.Custom);
+            get => (AspectRatioOption)GetSetting(nameof(LastUsedCropAspectRatio), (int)AspectRatioOption.Custom);
             set => SetSetting(nameof(LastUsedCropAspectRatio), (int)value);
         }
 
@@ -147,13 +147,13 @@ namespace Scanner.Services
 
         public SettingScanAction SettingScanAction
         {
-            get => (SettingScanAction)GetSetting<int>(nameof(SettingScanAction), (int)SettingScanAction.AddToExisting);
+            get => (SettingScanAction)GetSetting(nameof(SettingScanAction), (int)SettingScanAction.AddToExisting);
             set => SetSetting(nameof(SettingScanAction), (int)value);
         }
 
-        public SettingMeasurementUnit SettingMeasurementUnits
+        public SettingMeasurementUnits SettingMeasurementUnits
         {
-            get => (SettingMeasurementUnit)GetSetting<int>(nameof(SettingMeasurementUnits), (int)SettingMeasurementUnit.Metric);
+            get => (SettingMeasurementUnits)GetSetting(nameof(SettingMeasurementUnits), (int)SettingMeasurementUnits.Metric);
             set => SetSetting(nameof(SettingMeasurementUnits), (int)value);
         }
 
@@ -173,6 +173,18 @@ namespace Scanner.Services
         {
             get => GetSetting<bool>(nameof(LastScanMergeReversed), true);
             set => SetSetting(nameof(LastScanMergeReversed), value);
+        }
+
+        public bool SettingExpandPageList
+        {
+            get => GetSetting<bool>(nameof(SettingExpandPageList), true);
+            set => SetSetting(nameof(SettingExpandPageList), value);
+        }
+
+        public bool SettingMirrorAppLayout
+        {
+            get => GetSetting<bool>(nameof(SettingMirrorAppLayout), false);
+            set => SetSetting(nameof(SettingMirrorAppLayout), value);
         }
 
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;

@@ -56,7 +56,6 @@
     <PackageReference Include="WinUIEx" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AppWindows\" />
     <Folder Include="Assets\contrast-black\" />
     <Folder Include="Assets\contrast-high\" />
     <Folder Include="Assets\contrast-white\" />
@@ -70,9 +69,24 @@
     <Page Update="Views\Dialogs\SaveChangesDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HistoryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsViewAbout.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsViewFeedback.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsViewPrivacy.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsViewPersonalization.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\TemplatesView.xaml">
