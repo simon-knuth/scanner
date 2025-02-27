@@ -34,6 +34,18 @@
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="0" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.2" CornerRadius="0" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
@@ -49,11 +61,7 @@
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>
                         <Border>
-                            <Frame Margin="16" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <ui:Effects.Shadow>
-                                    <media:AttachedCardShadow Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="0" />
-                                </ui:Effects.Shadow>
-
+                            <Frame Margin="16" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                 <Image>
                                     <Image.Source>
                                         <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" />

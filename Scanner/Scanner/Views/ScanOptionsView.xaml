@@ -37,7 +37,19 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <media:AttachedCardShadow x:Key="ShadowScannersComboBox" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <media:AttachedCardShadow x:Key="ShadowScannersComboBox" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.08" CornerRadius="8" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <media:AttachedCardShadow x:Key="ShadowScannersComboBox" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <!-- DataTemplates -->
             <DataTemplate x:Name="DataTemplateScanner" x:DataType="interfaces:IScanningDevice">
                 <StackPanel Orientation="Horizontal" Spacing="12">
@@ -320,11 +332,7 @@
                 </ScrollViewer>
                 
                 <Grid Grid.Row="0" Padding="16,4,16,0">
-                    <Frame Margin="-8,0,-8,0">
-                        <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
-                        </ui:Effects.Shadow>
-
+                    <Frame Margin="-8,0,-8,0" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}">
                         <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                             <ComboBox.Items>
                                 <ComboBoxItem IsEnabled="False">

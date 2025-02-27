@@ -37,6 +37,27 @@
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="4" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.3" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.15" CornerRadius="4" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.5" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <StaticResource x:Key="GridViewItemBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="GridViewItemBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="GridViewItemBackgroundSelected" ResourceKey="SubtleFillColorTransparentBrush" />
@@ -250,11 +271,7 @@
                             <DataTemplate x:DataType="interfaces:IProjectPage">
                                 <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <ui:Effects.Shadow>
-                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
-                                            </ui:Effects.Shadow>
-
+                                        <Frame Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
                                             <Image>
                                                 <Image.Source>
                                                     <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
@@ -271,7 +288,7 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
@@ -279,10 +296,6 @@
                         <animations:Implicit.HideAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
                         </animations:Implicit.HideAnimations>
-
-                        <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="4" />
-                        </ui:Effects.Shadow>
 
                         <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectPreviousPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectPreviousPageCommand}">
                             <Button.RenderTransform>
@@ -299,7 +312,7 @@
                             </AnimatedIcon>
                         </Button>
                     </Frame>
-                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
@@ -307,10 +320,6 @@
                         <animations:Implicit.HideAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
                         </animations:Implicit.HideAnimations>
-
-                        <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="4" />
-                        </ui:Effects.Shadow>
 
                         <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectNextPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectNextPageCommand}">
                             <Button.RenderTransform>
@@ -357,11 +366,7 @@
                             <DataTemplate x:DataType="interfaces:IProjectPage">
                                 <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <ui:Effects.Shadow>
-                                                <media:AttachedCardShadow Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="0" />
-                                            </ui:Effects.Shadow>
-
+                                        <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                             <Image>
                                                 <Image.Source>
                                                     <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
@@ -378,11 +383,7 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                        <ui:Effects.Shadow>
-                            <media:AttachedCardShadow Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
-                        </ui:Effects.Shadow>
-
+                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
                         <Border>
                             <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
                                 <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
