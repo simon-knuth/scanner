@@ -307,7 +307,7 @@
                                         <FontIcon Glyph="&#xECAD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Settings">
+                                <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE713;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
