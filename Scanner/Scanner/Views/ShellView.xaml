@@ -345,11 +345,12 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ExpandPageListRequested" />
+                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ExpandPageListRequested" PropertyChanged="ScanOptionsView_PropertyChanged" />
                 </Border>
                 <Border x:Name="BorderScanActionsView" Grid.Row="1" Grid.Column="0">
-                    <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" />
+                    <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" AreScanOptionsVisibleChanged="ScanActionsView_AreScanOptionsVisibleChanged" />
                 </Border>
+                <Line Grid.Row="1" Grid.Column="0" X1="0" X2="1" Stretch="Fill" Stroke="{ThemeResource DividerStrokeColorDefault}" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="{x:Bind ShowScanActionsDivider, Mode=OneWay}" />
 
                 <Border x:Name="BorderEditor" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0">
                     <views:EditorView />

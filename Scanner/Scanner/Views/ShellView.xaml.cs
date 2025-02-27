@@ -32,6 +32,8 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
 
+        public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll;
+
         private bool isDialogVisible;
 
         private Notification DebugNotification = new Notification
@@ -196,6 +198,7 @@ namespace Scanner.Views
         private void ProjectView_IsExpandedChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
+            OnPropertyChanged(nameof(ShowScanActionsDivider));
         }
 
         private void ViewModel_SaveChangesDialogRequested(object? sender, TaskCompletionSource<bool> e)
@@ -254,6 +257,21 @@ namespace Scanner.Views
                 Message = DebugNotification.Message,
                 Severity = DebugNotification.Severity
             });
+        }
+
+        private void ScanActionsView_AreScanOptionsVisibleChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(ShowScanActionsDivider));
+        }
+
+        private void ScanOptionsView_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ScanOptionsView.CanScroll):
+                    OnPropertyChanged(nameof(ShowScanActionsDivider));
+                    break;
+            }
         }
     }
 }

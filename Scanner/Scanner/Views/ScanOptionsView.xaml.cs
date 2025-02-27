@@ -360,6 +360,8 @@ namespace Scanner.Views
         public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
         #endregion
 
+        public bool CanScroll => ScrollViewerContent.ScrollableHeight > 0;
+
         private bool IsColorModeResolutionBrightnessContrastVisible => ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
         private bool IsAutoCropVisible => ViewModel.SelectedScanner != null
             && ((ViewModel.ScanOptions.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
@@ -696,6 +698,16 @@ namespace Scanner.Views
             {
                 SelectedResolution = (ScanResolution)e.AddedItems[0];
             }
+        }
+
+        private void ScrollViewerContent_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(CanScroll));
+        }
+
+        private void StackPanelContent_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(CanScroll));
         }
     }
 }

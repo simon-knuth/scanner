@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Events
         public event EventHandler ExpandScanOptionsRequested;
+        public event EventHandler AreScanOptionsVisibleChanged;
         #endregion
 
         #region Dependency Properties
@@ -136,9 +138,13 @@ namespace Scanner.Views
 
         private static void OnAreScanOptionsVisibleChanged(DependencyObject source, DependencyPropertyChangedEventArgs args)
         {
-            var view = (ScanActionsView)source;
-            view.OnPropertyChanged(nameof(IsTemplatesButtonVisible));
-            view.OnPropertyChanged(nameof(IsPreviewButtonVisible));
+            if (source is ScanActionsView view)
+            {
+                view.OnPropertyChanged(nameof(IsTemplatesButtonVisible));
+                view.OnPropertyChanged(nameof(IsPreviewButtonVisible));
+
+                view.AreScanOptionsVisibleChanged?.Invoke(view, EventArgs.Empty);
+            }
         }
 
         private async void BorderScanAnimation_Loaded(object sender, RoutedEventArgs e)

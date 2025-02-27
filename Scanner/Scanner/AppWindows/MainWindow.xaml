@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     Title="Scanner"
     MinWidth="548"
-    MinHeight="600">
+    MinHeight="700">
 
     <views:ShellView />
 </winuiex:WindowEx>
