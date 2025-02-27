@@ -179,7 +179,7 @@
                     <TextBlock Text="Click to cancel" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                </StackPanel>
             </Button>
-            <SplitButton x:Name="SplitButtonScan" Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}">
+            <SplitButton x:Name="SplitButtonScan" Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}" CommandParameter="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
                 </animations:Implicit.HideAnimations>
@@ -232,15 +232,23 @@
 
                 <SplitButton.Flyout>
                     <MenuFlyout Placement="BottomEdgeAlignedRight">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="Scan and add to project" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Loading="MenuFlyoutItemAddToProject_Loading">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="Scan and add to project" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemAddToProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.CommandParameter>
+                                <x:Boolean>True</x:Boolean>
+                            </MenuFlyoutItem.CommandParameter>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemNewProject" Text="Scan to new project" Loading="MenuFlyoutItemNewProject_Loading">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemNewProject" Text="Scan to new project" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemNewProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.CommandParameter>
+                                <x:Boolean>False</x:Boolean>
+                            </MenuFlyoutItem.CommandParameter>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Scan and merge into project" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>

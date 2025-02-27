@@ -23,7 +23,7 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
-        public AsyncRelayCommand ScanCommand => new AsyncRelayCommand(ScanAsync);
+        public AsyncRelayCommand<bool> ScanCommand => new AsyncRelayCommand<bool>(ScanAsync);
 
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -116,7 +116,7 @@ namespace Scanner.ViewModels
             Messenger.UnregisterAll(this);
         }
 
-        private async Task ScanAsync()
+        private async Task ScanAsync(bool addToProject)
         {
             await ProjectService.TryCreateProjectAsync(ScanOptions);
         }
