@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
 using System;
@@ -24,6 +26,7 @@ namespace Scanner.ViewModels
 
         #region Commands
         public AsyncRelayCommand<bool> ScanCommand => new AsyncRelayCommand<bool>(ScanAsync);
+        public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
 
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -167,6 +170,11 @@ namespace Scanner.ViewModels
         private void UpdateCanAddToProject()
         {
             CanAddToProject = CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat;
+        }
+
+        private void ShowSettings()
+        {
+            Messenger.Send(new ShowSettingsMessage());
         }
     }
 }

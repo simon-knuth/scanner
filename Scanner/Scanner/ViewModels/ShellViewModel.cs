@@ -75,6 +75,10 @@ namespace Scanner.ViewModels
             {
                 ShowNotificationRequested?.Invoke(this, m.Notification);
             });
+            Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
+            {
+                ShowSettings();
+            });
         }
 
 
