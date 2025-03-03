@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
+using Scanner.Services.Interfaces;
 using Scanner.Views.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
 
-        public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll;
+        public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll || ViewModel.ProjectService.IsScanProcessRunning;
 
         private bool isDialogVisible;
 
@@ -54,6 +55,7 @@ namespace Scanner.Views
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
+            ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
 
 
@@ -270,6 +272,19 @@ namespace Scanner.Views
             {
                 case nameof(ScanOptionsView.CanScroll):
                     OnPropertyChanged(nameof(ShowScanActionsDivider));
+                    break;
+            }
+        }
+
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.IsScanProcessRunning):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        OnPropertyChanged(nameof(ShowScanActionsDivider));
+                    });
                     break;
             }
         }
