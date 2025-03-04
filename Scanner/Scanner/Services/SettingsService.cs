@@ -187,6 +187,18 @@ namespace Scanner.Services
             set => SetSetting(nameof(SettingMirrorAppLayout), value);
         }
 
+        public string UserId
+        {
+            get => GetSetting<string>(nameof(UserId), null);
+            set => SetSetting(nameof(UserId), value);
+        }
+
+        public int DiagnosticEventsSentThisSession
+        {
+            get => GetSetting(nameof(DiagnosticEventsSentThisSession), 0);
+            set => SetSetting(nameof(DiagnosticEventsSentThisSession), value);
+        }
+
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;
         private const int latestSettingsVersion = 0;
 
@@ -209,6 +221,12 @@ namespace Scanner.Services
             {
                 IsFirstAppLaunchWithThisVersion = true;
                 LastKnownVersion = currentVersion;
+            }
+
+            // initialize user ID
+            if (UserId == null)
+            {
+                UserId = Guid.NewGuid().ToString();
             }
         }
 

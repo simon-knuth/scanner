@@ -15,6 +15,17 @@ namespace Scanner
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Analytics & Diagnostics
+        public static int MaxDiagnosticEventsPerSession = 3;
+        public static double DefaultRate = 0.1;
+        public static double CrashRate = 1.0;
+        public static double ErrorRate = 0.3;
+        public static double WarningRate = 0.1;
+        public static double CrashAttachmentRate = 0.25;
+        public static double ErrorAttachmentRate = 0.05;
+        public static double WarningAttachmentRate = 0.01;
+        #endregion
+
         public const float DocumentsResolution = 300;      // the recommended resolution for documents
         public const float PhotosResolution = 500;         // the recommended resolution for photos
 

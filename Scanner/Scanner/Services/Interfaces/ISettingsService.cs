@@ -48,6 +48,8 @@ namespace Scanner.Services.Interfaces
         bool LastScanMergeReversed { get; set; }
         bool SettingExpandPageList { get; set; }
         bool SettingMirrorAppLayout { get; set; }
+        string UserId { get; set; }
+        int DiagnosticEventsSentThisSession { get; set; }
 
         void TryLogAllSettings();
     }

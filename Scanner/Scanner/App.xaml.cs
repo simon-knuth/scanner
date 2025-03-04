@@ -57,6 +57,7 @@ namespace Scanner
                 .AddSingleton<IProjectService, ProjectService>()
                 .AddSingleton<IAppDataService, AppDataService>()
                 .AddSingleton<ISettingsService, SettingsService>()
+                .AddSingleton<ISentryService, SentryService>()
                 .BuildServiceProvider());
         }
 
@@ -91,7 +92,11 @@ namespace Scanner
 
                 // initialize essential singleton services
                 LogService = Ioc.Default.GetService<ILogService>();
-                await LogService?.InitializeAsync();
+                if (LogService != null)
+                {
+                    await LogService.InitializeAsync();
+                }
+                Ioc.Default.GetService<ISentryService>()?.Initialize();
                 await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
 
                 MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
