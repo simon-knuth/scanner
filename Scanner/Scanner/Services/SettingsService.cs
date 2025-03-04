@@ -228,6 +228,7 @@ namespace Scanner.Services
             LogService?.Log.Information("SettingsService - Setting {Name} to {Value}", name, value);
 
             settingsContainer.Values[name.ToUpper()] = value;
+            OnPropertyChanged(name);
         }
 
         public void TryLogAllSettings()
