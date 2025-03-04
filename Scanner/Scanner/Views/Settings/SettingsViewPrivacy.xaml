@@ -8,11 +8,11 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:interfaces="using:Scanner.Services.Interfaces"
     mc:Ignorable="d">
 
 
@@ -27,6 +27,8 @@
 
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter" />
+            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -37,8 +39,72 @@
     <Grid x:Name="GridRoot">
         <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
-                <TextBlock Text="Privacy" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
                 
+                <TextBlock Text="Privacy" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="Send error reports and usage statistics" Description="This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your clipboard content is never included in these reports.">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEBE8;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingErrorStatistics, Mode=TwoWay}" />
+                </controls:SettingsCard>
+                <controls:SettingsExpander x:Name="SettingsExpanderExportLogs" Header="Export event logs" Expanded="SettingsExpanderExportLogs_Expanded">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D9;" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <Grid Height="300">
+                            <ListView x:Name="ListViewExportLogs" IsItemClickEnabled="False" SelectionMode="None" ItemsSource="{x:Bind ViewModel.Logs, Mode=OneWay}" Visibility="{x:Bind ViewModel.Logs, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="interfaces:LogFile">
+                                        <ListViewItem Padding="0" CornerRadius="0">
+                                            <controls:SettingsCard CornerRadius="0" Padding="64,4,32,4" Description="{x:Bind FileSize}" BorderBrush="Transparent" BorderThickness="0,0,0,1">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE160;" />
+                                                </controls:SettingsCard.HeaderIcon>
+
+                                                <controls:SettingsCard.Header>
+                                                    <TextBlock>
+                                <Span>
+                                    <Run Text="{x:Bind File.DateCreated.LocalDateTime}"/> <Run>-</Run> <Run Text="{x:Bind LastModified.LocalDateTime}"/>
+                                </Span>
+                                                    </TextBlock>
+                                                </controls:SettingsCard.Header>
+
+                                                <controls:SettingsCard.Content>
+                                                    <Button x:Name="ButtonExport" Content="Export" CommandParameter="{x:Bind}" Click="ButtonExport_Click" />
+                                                </controls:SettingsCard.Content>
+                                            </controls:SettingsCard>
+                                        </ListViewItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <ProgressRing x:Name="ProgressRingExportLogs" IsActive="True" IsIndeterminate="True" Width="32" Height="32" Margin="32" Visibility="{x:Bind ViewModel.Logs, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" />
+                        </Grid>
+                    </controls:SettingsExpander.ItemsHeader>
+                </controls:SettingsExpander>
+                <controls:SettingsCard Background="Transparent" BorderBrush="Transparent">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72E;" Foreground="{ThemeResource AccentTextFillColorTertiaryBrush}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <controls:SettingsCard.Header>
+                        <TextBlock Text="Personal data stays on your device" Style="{StaticResource BaseTextBlockStyle}" />
+                    </controls:SettingsCard.Header>
+
+                    <HyperlinkButton x:Name="HyperlinkButtonPrivacyPolicy" HorizontalAlignment="Center" Click="HyperlinkButtonPrivacyPolicy_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="Privacy policy" />
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
+                        </StackPanel>
+                    </HyperlinkButton>
+                </controls:SettingsCard>
             </StackPanel>
         </ScrollViewer>
     </Grid>
