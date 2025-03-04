@@ -93,7 +93,7 @@ namespace Scanner.Services
                         formatter: new CompactJsonFormatter(),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 8,
-                        fileSizeLimitBytes: 1000000,
+                        fileSizeLimitBytes: 500000,
                         hooks: hook))
                     .Enrich.WithExceptionDetails()
                     .CreateLogger();
