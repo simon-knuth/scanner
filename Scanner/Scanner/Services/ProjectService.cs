@@ -110,7 +110,7 @@ namespace Scanner.Services
             IsProcessRunning = IsScanProcessRunning = true;
 
             // scan
-            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.ReceivedPagesFolder);
+            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
 
             // create project
             CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);

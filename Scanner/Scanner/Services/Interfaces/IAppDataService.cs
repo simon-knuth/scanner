@@ -26,19 +26,40 @@ namespace Scanner.Services.Interfaces
             get;
         }
 
-        StorageFolder ReceivedPagesFolder
-        {
-            get;
-        }
-
+        /// <summary>
+        /// Holds the raw files that are ready to be saved to their target.
+        /// </summary>
         StorageFolder ProjectFolder
         {
             get;
         }
 
+        /// <summary>
+        /// Holds raw files that need to be added to the project.
+        /// </summary>
+        StorageFolder IncomingFolder
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Holds prior file states for undo.
+        /// </summary>
+        StorageFolder UndoFolder
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Holds prior file states for redo.
+        /// </summary>
+        StorageFolder RedoFolder
+        {
+            get;
+        }
+
         Task InitializeAsync();
-        Task EmptyReceivedPagesFolderAsync();
-        Task EmptyProjectFolderAsync();
+        Task EmptyFolderAsync(StorageFolder folder);
         string GetUriForAppDataFolder(StorageFolder folder, string fileName);
     }
 }

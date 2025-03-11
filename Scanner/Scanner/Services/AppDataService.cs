@@ -33,13 +33,16 @@ namespace Scanner.Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private const string ReceivedPagesFolderName = "ReceivedPages";
+        private const string IncomingPagesFolderName = "Incoming";
         private const string ProjectFolderName = "Project";
+        private const string UndoFolderName = "Undo";
+        private const string RedoFolderName = "Redo";
 
         public StorageFolder TempFolder { get; private set; }
-        public StorageFolder ReceivedPagesFolder { get; private set; }
+        public StorageFolder IncomingFolder { get; private set; }
         public StorageFolder ProjectFolder { get; private set; }
-
+        public StorageFolder UndoFolder { get; private set; }
+        public StorageFolder RedoFolder { get; private set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +82,10 @@ namespace Scanner.Services
             }
 
             // replace folders
-            ReceivedPagesFolder = await CreateOrReplaceFolderAsync(ReceivedPagesFolderName);
+            IncomingFolder = await CreateOrReplaceFolderAsync(IncomingPagesFolderName);
             ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
+            UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
+            RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
 
             LogService?.Log.Information("AppDataService - Initialized temp folder");
         }
@@ -99,19 +104,11 @@ namespace Scanner.Services
         }
 
         /// <summary>
-        ///     Removes all files from the <see cref="ReceivedPagesFolder"/>.
+        ///     Removes all files from the given <paramref name="folder"/>.
         /// </summary>
-        public async Task EmptyReceivedPagesFolderAsync()
+        public async Task EmptyFolderAsync(StorageFolder folder)
         {
-            ReceivedPagesFolder = await CreateOrReplaceFolderAsync(ReceivedPagesFolderName);
-        }
-
-        /// <summary>
-        ///     Removes all files from the <see cref="ProjectFolder"/>.
-        /// </summary>
-        public async Task EmptyProjectFolderAsync()
-        {
-            ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
+            IncomingFolder = await CreateOrReplaceFolderAsync(folder.Name);
         }
 
         public string GetUriForAppDataFolder(StorageFolder folder, string fileName = "")
@@ -120,9 +117,9 @@ namespace Scanner.Services
             {
                 return Path.Combine("ms-appdata:///temp/", fileName);
             }
-            else if (folder == ReceivedPagesFolder)
+            else if (folder == IncomingFolder)
             {
-                return Path.Combine("ms-appdata:///temp/", ReceivedPagesFolderName, fileName);
+                return Path.Combine("ms-appdata:///temp/", IncomingPagesFolderName, fileName);
             }
             else if (folder == ProjectFolder)
             {

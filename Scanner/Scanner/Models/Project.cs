@@ -55,7 +55,7 @@ namespace Scanner.Models
         public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format)
         {
             // empty folder
-            await AppDataService.EmptyProjectFolderAsync();
+            await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
 
             // create pages
             List<IProjectPage> pages = new();
