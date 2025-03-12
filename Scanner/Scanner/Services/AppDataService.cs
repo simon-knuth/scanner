@@ -33,7 +33,7 @@ namespace Scanner.Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private const string IncomingPagesFolderName = "Incoming";
+        private const string IncomingFolderName = "Incoming";
         private const string ProjectFolderName = "Project";
         private const string UndoFolderName = "Undo";
         private const string RedoFolderName = "Redo";
@@ -82,7 +82,7 @@ namespace Scanner.Services
             }
 
             // replace folders
-            IncomingFolder = await CreateOrReplaceFolderAsync(IncomingPagesFolderName);
+            IncomingFolder = await CreateOrReplaceFolderAsync(IncomingFolderName);
             ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
             UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
             RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
@@ -108,7 +108,7 @@ namespace Scanner.Services
         /// </summary>
         public async Task EmptyFolderAsync(StorageFolder folder)
         {
-            IncomingFolder = await CreateOrReplaceFolderAsync(folder.Name);
+            await CreateOrReplaceFolderAsync(folder.Name);
         }
 
         public string GetUriForAppDataFolder(StorageFolder folder, string fileName = "")
@@ -119,7 +119,7 @@ namespace Scanner.Services
             }
             else if (folder == IncomingFolder)
             {
-                return Path.Combine("ms-appdata:///temp/", IncomingPagesFolderName, fileName);
+                return Path.Combine("ms-appdata:///temp/", IncomingFolderName, fileName);
             }
             else if (folder == ProjectFolder)
             {
