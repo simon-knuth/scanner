@@ -193,14 +193,14 @@
                             <KeyboardAccelerator Modifiers="Control" Key="S" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Undo" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanUndo, Mode=OneWay}" Command="{x:Bind ViewModel.TryUndoAsyncCommand}">
+                    <Button ToolTipService.ToolTip="Undo" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanUndo, Mode=OneWay}" Command="{x:Bind ViewModel.TryUndoAsyncCommand}">
                         <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="Z" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Redo" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanRedo, Mode=OneWay}" Command="{x:Bind ViewModel.TryRedoAsyncCommand}">
+                    <Button ToolTipService.ToolTip="Redo" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanRedo, Mode=OneWay}" Command="{x:Bind ViewModel.TryRedoAsyncCommand}">
                         <FontIcon Glyph="&#xE7A6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>

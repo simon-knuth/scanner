@@ -55,6 +55,9 @@ namespace Scanner.ViewModels
         public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
         public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaved && !ProjectService.IsProcessRunning;
 
+        public bool CanUndo => ProjectService.CanUndo && !ProjectService.IsProcessRunning;
+        public bool CanRedo => ProjectService.CanRedo && !ProjectService.IsProcessRunning;
+
         private TaskCompletionSource viewLoading = new();
         private DispatcherQueue? viewDispatcherQueue;
 
@@ -110,6 +113,14 @@ namespace Scanner.ViewModels
                 case nameof(IProjectService.IsProcessRunning):
                     OnPropertyChanged(nameof(CanStartNewProject));
                     OnPropertyChanged(nameof(CanSaveProject));
+                    OnPropertyChanged(nameof(CanUndo));
+                    OnPropertyChanged(nameof(CanRedo));
+                    break;
+                case nameof(IProjectService.CanUndo):
+                    OnPropertyChanged(nameof(CanUndo));
+                    break;
+                case nameof(IProjectService.CanRedo):
+                    OnPropertyChanged(nameof(CanRedo));
                     break;
             }
         }
