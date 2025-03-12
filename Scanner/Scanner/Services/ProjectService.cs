@@ -63,19 +63,13 @@ namespace Scanner.Services
         [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
         private IProjectPage? selectedPage;
 
-        private bool isProcessRunning;
-        public bool IsProcessRunning
-        {
-            get => isProcessRunning;
-            private set
-            {
-                if (SetProperty(ref isProcessRunning, value))
-                {
-                    OnPropertyChanged(nameof(CanSelectPreviousPage));
-                    OnPropertyChanged(nameof(CanSelectNextPage));
-                }
-            }
-        }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
+        [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
+        [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
+        private bool isActionRunning;
+
+        public bool IsProcessRunning => IsScanProcessRunning || IsActionRunning;
 
         private bool isScanProcessRunning;
         public bool IsScanProcessRunning
@@ -107,15 +101,16 @@ namespace Scanner.Services
         public async Task TryCreateProjectAsync(ScanOptions scanOptions)
         {
             // TODO: catch exceptions and notify user
-            IsProcessRunning = IsScanProcessRunning = true;
+            IsActionRunning = IsScanProcessRunning = true;
 
             // scan
             IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
+            IsScanProcessRunning = false;
 
             // create project
             CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
 
-            IsProcessRunning = IsScanProcessRunning = false;
+            IsActionRunning = false;
         }
 
         private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
