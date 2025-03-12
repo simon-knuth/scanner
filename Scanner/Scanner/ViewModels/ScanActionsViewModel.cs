@@ -121,7 +121,16 @@ namespace Scanner.ViewModels
 
         private async Task ScanAsync(bool addToProject)
         {
-            await ProjectService.TryCreateProjectAsync(ScanOptions);
+            if (ScanOptions == null) return;
+
+            if (addToProject)
+            {
+                await ProjectService.TryScanToProjectAsync(ScanOptions);
+            }
+            else
+            {
+                await ProjectService.TryCreateProjectAsync(ScanOptions);
+            }
         }
 
         private void ScanActionsViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

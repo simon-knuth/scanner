@@ -41,6 +41,8 @@ namespace Scanner.ViewModels
         #region Commands
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
+        public AsyncRelayCommand TryUndoAsyncCommand => new AsyncRelayCommand(TryUndoAsync);
+        public AsyncRelayCommand TryRedoAsyncCommand => new AsyncRelayCommand(TryRedoAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -140,6 +142,16 @@ namespace Scanner.ViewModels
         private async Task TryCloseProjectAsync()
         {
             await ProjectService.TryCloseProjectAsync();
+        }
+
+        private async Task TryUndoAsync()
+        {
+            await ProjectService.TryUndoAsync();
+        }
+
+        private async Task TryRedoAsync()
+        {
+            await ProjectService.TryRedoAsync();
         }
 
         private void ShowSettings()

@@ -33,14 +33,24 @@ namespace Scanner.Services.Interfaces
         bool CanSelectPreviousPage { get; }
         bool CanSelectNextPage { get; }
 
+        bool CanUndo { get; }
+        bool CanRedo { get; }
+
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Task ApplyActionAsync(IProjectAction action);
+        Task TryUndoAsync();
+        Task TryRedoAsync();
+        
         Task TryCreateProjectAsync(ScanOptions scanOptions);
+        Task TryScanToProjectAsync(ScanOptions scanOptions);
+
         Task<bool> TrySaveProjectAsync();
-        Task<bool> TryCloseProjectAsync();
+        Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
+
         void SelectPreviousPage();
         void SelectNextPage();
     }

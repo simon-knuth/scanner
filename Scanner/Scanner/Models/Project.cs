@@ -72,6 +72,104 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<List<IProjectPage>> AddFilesAsync(Dictionary<StorageFile, int> insertions)
+        {
+            // keep track of changes in case of error
+            List<StorageFile> copiedFiles = new();
+            List<IProjectPage> insertedPages = new();
+
+            try
+            {
+                // add files
+                foreach (KeyValuePair<StorageFile, int> insertion in insertions)
+                {
+                    IProjectPage page = await CreatePageFromFileAsync(insertion.Key, insertion.Value);
+                    copiedFiles.Add(page.File);
+
+                    Pages.Insert(insertion.Value, page);
+                    insertedPages.Add(page);
+                }
+
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (StorageFile file in copiedFiles)
+                {
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+
+                foreach (IProjectPage page in insertedPages)
+                {
+                    Pages.Remove(page);
+                }
+
+                throw new ProjectException(exc);
+            }
+
+            // update indices
+            for (int i = 0; i < Pages.Count; i++)
+            {
+                Pages[i].Index = i;
+            }
+
+            return insertedPages;
+        }
+
+        public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
+        {
+            // keep track of changes in case of error
+            List<StorageFile> deletedFiles = new();
+            List<int> deletedIndices = new();
+
+            try
+            {
+                // remove pages
+                foreach (IProjectPage page in pages)
+                {
+                    deletedFiles.Add(page.File);
+                    deletedIndices.Add(page.Index);
+
+                    if (page is ImagePage)
+                    {
+                        if (isUndoing)
+                        {
+                            // move to redo folder
+                            await page.File.MoveAsync(AppDataService.RedoFolder, page.File.Name, NameCollisionOption.GenerateUniqueName);
+                        }
+                        else
+                        {
+                            // move to undo folder
+                            await page.File.MoveAsync(AppDataService.UndoFolder, page.File.Name, NameCollisionOption.GenerateUniqueName);
+                        }
+                    }
+
+                    Pages.Remove(page);
+                }
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (StorageFile file in deletedFiles)
+                {
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                for (int i = 0; i < deletedIndices.Count; i++)
+                {
+                    Pages.Insert(deletedIndices[i], pages[i]);
+                }
+                throw new ProjectException(exc);
+            }
+
+            // update indices
+            for (int i = 0; i < Pages.Count; i++)
+            {
+                Pages[i].Index = i;
+            }
+
+            IsSaved = false;
+        }
+
         private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");

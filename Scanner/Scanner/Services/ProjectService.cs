@@ -85,6 +85,12 @@ namespace Scanner.Services
         public bool CanSelectPreviousPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
         public bool CanSelectNextPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
 
+        public bool CanUndo => undoStack.Count > 0;
+        public bool CanRedo => redoStack.Count > 0;
+
+        private Stack<IProjectAction> undoStack = new();
+        private Stack<IProjectAction> redoStack = new();
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,15 +106,45 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task TryCreateProjectAsync(ScanOptions scanOptions)
         {
+            // close project
+            if (await TryCloseProjectAsync() == false) return;
+
             // TODO: catch exceptions and notify user
             IsActionRunning = IsScanProcessRunning = true;
 
             // scan
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
             IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
             IsScanProcessRunning = false;
 
             // create project
             CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
+
+            IsActionRunning = false;
+        }
+
+        public async Task TryScanToProjectAsync(ScanOptions scanOptions)
+        {
+            // TODO: catch exceptions and notify user
+            if (CurrentProject == null) return;
+
+            IsActionRunning = IsScanProcessRunning = true;
+
+            // scan
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
+            IsScanProcessRunning = false;
+
+            // construct action
+            Dictionary<StorageFile, int> insertions = new();
+            for (int i = 0; i < files.Count; i++)
+            {
+                insertions.Add(files[i], CurrentProject.Pages.Count + i);
+            }
+            IProjectAction action = new AddFilesAction(insertions);
+
+            // apply action
+            await ApplyActionAsync(action);
 
             IsActionRunning = false;
         }
@@ -132,23 +168,36 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task<bool> TryCloseProjectAsync()
+        public async Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false)
         {
             if (CurrentProject == null) return true;
 
             // handle unsaved changes
-            if (await TrySaveProjectAsync() == false)
+            if (!ignoreUnsavedChanges && await TrySaveProjectAsync() == false)
             {
                 return false;
             }
 
             // close project
             CurrentProject = null;
+            await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+
+            // update undo/redo stacks
+            undoStack.Clear();
+            redoStack.Clear();
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
+
             return true;
         }
 
         public void SelectPreviousPage()
         {
+            if (CurrentProject == null) return;
+            if (SelectedPage == null) return;
+
             if (CanSelectPreviousPage)
             {
                 SelectedPage = CurrentProject.Pages[SelectedPage.Index - 1];
@@ -157,10 +206,120 @@ namespace Scanner.Services
 
         public void SelectNextPage()
         {
+            if (CurrentProject == null) return;
+            if (SelectedPage == null) return;
+
             if (CanSelectNextPage)
             {
                 SelectedPage = CurrentProject.Pages[SelectedPage.Index + 1];
             }
+        }
+
+        public async Task ApplyActionAsync(IProjectAction action)
+        {
+            await InternalApplyActionAsync(action, false);
+        }
+
+        private async Task InternalApplyActionAsync(IProjectAction action, bool redoing)
+        {
+            if (CurrentProject == null) return;
+
+            try
+            {
+                IsActionRunning = true;
+                await action.ExecuteAsync(CurrentProject);
+
+                // update undo stack
+                undoStack.Push(action);
+                OnPropertyChanged(nameof(CanUndo));
+
+                // update redo
+                if (!redoing)
+                {
+                    redoStack.Clear();
+                    await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+                }
+                OnPropertyChanged(nameof(CanRedo));
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and your changes couldn't be completed"
+                }));
+
+                if (redoing)
+                {
+                    // update redo stack
+                    redoStack.Push(action);
+                    OnPropertyChanged(nameof(redoStack));
+                }
+            }
+            catch (Exception)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the project needs to be closed"
+                }));
+                await TryCloseProjectAsync(true);
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+        }
+
+        private async Task UndoActionAsync(IProjectAction action)
+        {
+            if (CurrentProject == null) return;
+
+            try
+            {
+                IsActionRunning = true;
+                await action.UndoAsync(CurrentProject);
+
+                // update undo/redo
+                redoStack.Push(action);
+                OnPropertyChanged(nameof(CanUndo));
+                OnPropertyChanged(nameof(CanRedo));
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and your changes couldn't be completed"
+                }));
+
+                // update undo stack
+                undoStack.Push(action);
+                OnPropertyChanged(nameof(CanUndo));
+            }
+            catch (Exception)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the project needs to be closed"
+                }));
+                await TryCloseProjectAsync(true);
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+        }
+
+        public async Task TryUndoAsync()
+        {
+            if (!CanUndo) return;
+
+            await UndoActionAsync(undoStack.Pop());
+        }
+
+        public async Task TryRedoAsync()
+        {
+            if (!CanRedo) return;
+
+            await InternalApplyActionAsync(redoStack.Pop(), true);
         }
     }
 }
