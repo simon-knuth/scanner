@@ -19,7 +19,7 @@ using System.Collections.ObjectModel;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 
-namespace Scanner.Models
+namespace Scanner.Models.ScanningDevices
 {
     internal partial class HardwareScanner : IScanningDevice
     {

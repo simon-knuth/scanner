@@ -5,6 +5,7 @@ using Microsoft.UI.Dispatching;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Models.ScanningDevices;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;

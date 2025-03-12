@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Scanner.Models.Interfaces;
 using Scanner.Models;
+using Scanner.Models.ScanningDevices;
 
 namespace Scanner.Services.Interfaces
 {

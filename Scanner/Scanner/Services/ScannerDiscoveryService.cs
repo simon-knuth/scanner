@@ -15,6 +15,7 @@ using Windows.Devices.Enumeration;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.Devices.Scanners;
 using Scanner.Models;
+using Scanner.Models.ScanningDevices;
 
 namespace Scanner.Services
 {

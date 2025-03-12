@@ -25,7 +25,7 @@ using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 
-namespace Scanner.Models
+namespace Scanner.Models.ScanningDevices
 {
     public partial class DebugScanner : IScanningDevice
     {
