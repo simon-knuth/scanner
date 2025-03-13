@@ -28,7 +28,13 @@ namespace Scanner.Models
 
         private static string[] allowedFileExtensions = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff" };
 
-        public StorageFile File
+        public StorageFile SourceFile
+        {
+            get;
+            private set;
+        }
+
+        public StorageFile? TargetFile
         {
             get;
             private set;
@@ -50,23 +56,23 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile file, Uri uri, int index)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index)
         {
-            File = file;
+            SourceFile = sourceFile;
             BitmapUri = uri;
             Index = index;
         }
 
-        public static async Task<IProjectPage> CreateAsync(StorageFile file, int index)
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index)
         {
             // check file
-            if (file == null)
+            if (sourceFile == null)
             {
                 throw new ArgumentException("Can't create ImagePage from null file");
             }
 
             // check file extension
-            string extension = file.FileType.ToLower();
+            string extension = sourceFile.FileType.ToLower();
             if (!allowedFileExtensions.Contains(extension))
             {
                 // unknown format
@@ -74,10 +80,10 @@ namespace Scanner.Models
             }
 
             // move file to project folder
-            await file.MoveAsync(AppDataService.ProjectFolder, index.ToString() + file.FileType, NameCollisionOption.FailIfExists);
+            await sourceFile.MoveAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.FailIfExists);
 
             // create ImagePage
-            return new ImagePage(file, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, file.Name)), index);
+            return new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);
         }
 
 

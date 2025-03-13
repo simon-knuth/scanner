@@ -84,7 +84,7 @@ namespace Scanner.Models
                 foreach (KeyValuePair<StorageFile, int> insertion in insertions)
                 {
                     IProjectPage page = await CreatePageFromFileAsync(insertion.Key, insertion.Value);
-                    copiedFiles.Add(page.File);
+                    copiedFiles.Add(page.SourceFile);
 
                     Pages.Insert(insertion.Value, page);
                     insertedPages.Add(page);
@@ -127,7 +127,7 @@ namespace Scanner.Models
                 // remove pages
                 foreach (IProjectPage page in pages)
                 {
-                    deletedFiles.Add(page.File);
+                    deletedFiles.Add(page.SourceFile);
                     deletedIndices.Add(page.Index);
 
                     if (page is ImagePage)
@@ -135,12 +135,12 @@ namespace Scanner.Models
                         if (isUndoing)
                         {
                             // move to redo folder
-                            await page.File.MoveAsync(AppDataService.RedoFolder, page.File.Name, NameCollisionOption.GenerateUniqueName);
+                            await page.SourceFile.MoveAsync(AppDataService.RedoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                         }
                         else
                         {
                             // move to undo folder
-                            await page.File.MoveAsync(AppDataService.UndoFolder, page.File.Name, NameCollisionOption.GenerateUniqueName);
+                            await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                         }
                     }
 
