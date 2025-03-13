@@ -72,6 +72,7 @@
 
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -98,7 +99,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
+                <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
                 <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="Project name" FontSize="16" Margin="-4,4,-12,2" Padding="4,4,4,2" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource MutedTextBoxStyle}" GotFocus="TextBoxProjectName_GotFocus" />
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8" VerticalAlignment="Bottom">
                     <TextBlock Text="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
