@@ -11,13 +11,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 
 namespace Scanner.Views.Dialogs
 {
-    public partial class SaveChangesDialogView : ContentDialog
+    public partial class SaveInProgressDialogView : ContentDialog
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +29,7 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveChangesDialogView(Project project)
+        public SaveInProgressDialogView(Project project)
         {
             this.project = project;
 
@@ -39,14 +40,14 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void ContentDialog_Loaded(object sender, RoutedEventArgs e)
         {
-            this.IsEnabled = false;
-
-            // save changes
-            ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-            await project.SaveAsync(this.DispatcherQueue);
-            deferral.Complete();
+            if (project.LatestSaveProcess != null)
+            {
+                await project.LatestSaveProcess.Task;
+            }
+            
+            this.Hide();
         }
     }
 }

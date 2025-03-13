@@ -13,6 +13,7 @@ using Scanner.Models.Interfaces;
 using Scanner.Models;
 using System.ComponentModel;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Services.Interfaces
 {
@@ -36,6 +37,7 @@ namespace Scanner.Services.Interfaces
         bool CanUndo { get; }
         bool CanRedo { get; }
 
+        DispatcherQueue? UiDispatcherQueue { get; set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

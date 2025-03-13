@@ -35,6 +35,7 @@ namespace Scanner.ViewModels
 
         #region Events
         public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
+        public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
@@ -43,14 +44,34 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand TryUndoAsyncCommand => new AsyncRelayCommand(TryUndoAsync);
         public AsyncRelayCommand TryRedoAsyncCommand => new AsyncRelayCommand(TryRedoAsync);
+        public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CanStartNewProject))]
-        [NotifyPropertyChangedFor(nameof(CanSaveProject))]
         private Project? currentProject;
+        public Project? CurrentProject
+        {
+            get => currentProject;
+            set
+            {
+                if (currentProject != null)
+                {
+                    currentProject.PropertyChanged -= Project_PropertyChanged;
+                }
+
+                if (SetProperty(ref currentProject, value))
+                {
+                    OnPropertyChanged(nameof(CanStartNewProject));
+                    OnPropertyChanged(nameof(CanSaveProject));
+
+                    if (value != null)
+                    {
+                        value.PropertyChanged += Project_PropertyChanged;
+                    }
+                }
+            }
+        }
 
         public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
         public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaved && !ProjectService.IsProcessRunning;
@@ -98,6 +119,7 @@ namespace Scanner.ViewModels
         private void ViewLoading(DispatcherQueue? dispatcherQueue)
         {
             viewDispatcherQueue = dispatcherQueue;
+            ProjectService.UiDispatcherQueue = dispatcherQueue;
             viewLoading.TrySetResult();
 
             ((App)Application.Current).MainWindow.Closed += MainWindow_Closed;
@@ -132,22 +154,53 @@ namespace Scanner.ViewModels
             return await result.Task;
         }
 
+        private async Task ShowSaveInProgressDialogAsync()
+        {
+            TaskCompletionSource result = new();
+            SaveInProgressDialogRequested?.Invoke(this, result);
+            await result.Task;
+        }
+
         private async void MainWindow_Closed(object sender, WindowEventArgs args)
         {
             if (CurrentProject != null && !CurrentProject.IsSaved)
             {
-                // unsaved changes present ~> ask user
                 args.Handled = true;
-                bool result = await ShowSaveChangesDialogAsync();
 
-                // process result
-                if (result)
+                // unsaved changes present
+                if (SettingsService.SettingAutoSave)
                 {
-                    // changes saved or discarded ~> close window for good
-                    ((MainWindow)sender).Closed -= MainWindow_Closed;
-                    ((MainWindow)sender).Close();
+                    // ask user
+                    await ShowSaveInProgressDialogAsync();
+
+                    // process result
+                    if (CurrentProject.IsSaved)
+                    {
+                        // changes saved successfully ~> close window for good
+                        ((MainWindow)sender).Closed -= MainWindow_Closed;
+                        ((MainWindow)sender).Close();
+                    }
+                }
+                else
+                {
+                    // ask user
+                    bool result = await ShowSaveChangesDialogAsync();
+
+                    // process result
+                    if (result)
+                    {
+                        // changes saved or discarded ~> close window for good
+                        ((MainWindow)sender).Closed -= MainWindow_Closed;
+                        ((MainWindow)sender).Close();
+                    }
                 }
             }
+        }
+
+        private async Task TrySaveAsync()
+        {
+            if (CurrentProject == null) return;
+            await CurrentProject.SaveAsync(viewDispatcherQueue);
         }
 
         private async Task TryCloseProjectAsync()
@@ -168,6 +221,16 @@ namespace Scanner.ViewModels
         private void ShowSettings()
         {
             ((App)Application.Current).ShowSettings();
+        }
+
+        private void Project_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Project.IsSaved):
+                    OnPropertyChanged(nameof(CanSaveProject));
+                    break;
+            }
         }
     }
 }

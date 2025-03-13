@@ -201,7 +201,7 @@ namespace Scanner.Services
 
         public bool SettingAutoSave
         {
-            get => GetSetting<bool>(nameof(SettingAutoSave), false);
+            get => GetSetting<bool>(nameof(SettingAutoSave), true);
             set => SetSetting(nameof(SettingAutoSave), value);
         }
 

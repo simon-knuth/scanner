@@ -18,6 +18,8 @@ using Windows.Devices.Scanners;
 using Scanner.Models;
 using Windows.Storage;
 using Scanner.Messages;
+using Windows.System.Threading;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Services
 {
@@ -29,6 +31,7 @@ namespace Scanner.Services
         #region Services
         private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISettingsService? SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         private Project? currentProject;
@@ -88,8 +91,12 @@ namespace Scanner.Services
         public bool CanUndo => undoStack.Count > 0;
         public bool CanRedo => redoStack.Count > 0;
 
+        public DispatcherQueue? UiDispatcherQueue { get; set; }
+
         private Stack<IProjectAction> undoStack = new();
         private Stack<IProjectAction> redoStack = new();
+
+        private ThreadPoolTimer? autoSaveTimer;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +104,8 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ProjectService()
         {
-            
+            SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+            ResetAutoSaveTimer();
         }
 
 
@@ -161,10 +169,11 @@ namespace Scanner.Services
             // handle unsaved changes
             if (!CurrentProject.IsSaved && await Messenger.Send(new ShowSaveChangesDialogMessage()).Response == false)
             {
-                // changes couldn't be saved
+                // changes couldn't be handled
                 return false;
             }
 
+            // changes were handled (saved or discarded)
             return true;
         }
 
@@ -320,6 +329,38 @@ namespace Scanner.Services
             if (!CanRedo) return;
 
             await InternalApplyActionAsync(redoStack.Pop(), true);
+        }
+
+        private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(SettingsService.SettingAutoSave):
+                    ResetAutoSaveTimer();
+                    break;
+            }
+        }
+
+        private void ResetAutoSaveTimer()
+        {
+            if (SettingsService?.SettingAutoSave == true)
+            {
+                TimerElapsedHandler? handler = null;
+                handler = new TimerElapsedHandler(async (source) =>
+                {
+                    if (CurrentProject != null && !CurrentProject.IsSaved)
+                    {
+                        await CurrentProject.SaveAsync(UiDispatcherQueue);
+                    }
+                    autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
+                });
+                autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                autoSaveTimer?.Cancel();
+                autoSaveTimer = null;
+            }
         }
     }
 }

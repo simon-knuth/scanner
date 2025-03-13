@@ -13,6 +13,9 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.Collections.ObjectModel;
+using System.Threading;
+using Microsoft.UI.Dispatching;
+using Scanner.Extensions;
 
 namespace Scanner.Models
 {
@@ -32,6 +35,11 @@ namespace Scanner.Models
         [ObservableProperty]
         private bool isSaved;
 
+        public TaskCompletionSource? LatestSaveProcess;
+
+        private bool saveProcessWaitingToStart;
+        private SemaphoreSlim saveSemaphore = new SemaphoreSlim(1, 1);
+
         public ObservableCollection<IProjectPage> Pages
         {
             get;
@@ -41,6 +49,8 @@ namespace Scanner.Models
         public TargetFormat Format;
 
         public bool IsPdf => Format == TargetFormat.PDF;
+
+        public StorageFolder TargetFolder;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +123,7 @@ namespace Scanner.Models
                 Pages[i].Index = i;
             }
 
+            IsSaved = false;
             return insertedPages;
         }
 
@@ -188,6 +199,61 @@ namespace Scanner.Models
                 default:
                     throw new ArgumentException("Failed to create IProjectPage due to incompatible file format");
             }
+        }
+
+        public async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
+        {
+            // ensure maximum of one thread waiting to save
+            if (saveProcessWaitingToStart)
+            {
+                if (LatestSaveProcess != null)
+                {
+                    await LatestSaveProcess.Task;
+                }
+                return;
+            }
+            saveProcessWaitingToStart = true;
+
+            // enable waiting for save process (even if it is waiting to start)
+            TaskCompletionSource saveProcess = new();
+            LatestSaveProcess = saveProcess;
+
+            // save
+            await Task.Run(async () =>
+            {
+                await saveSemaphore.WaitAsync();
+
+                try
+                {
+                    uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        IsSaving = true;
+                        saveProcessWaitingToStart = false;
+                    });
+                    await Task.Delay(3000);
+                }
+                catch (Exception exc)
+                {
+                    saveProcess.TrySetException(exc);
+                    throw;
+                }
+                finally
+                {
+                    uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        IsSaving = false;
+
+                        // update saved state
+                        if (!saveProcessWaitingToStart)
+                        {
+                            IsSaved = true;
+                        }
+
+                        saveProcess.TrySetResult();
+                    });
+                    saveSemaphore.Release();
+                }
+            });
         }
     }
 }

@@ -54,6 +54,7 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
+            ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -208,6 +209,11 @@ namespace Scanner.Views
             ShowSaveChangesDialog(e);
         }
 
+        private void ViewModel_SaveInProgressDialogRequested(object? sender, TaskCompletionSource e)
+        {
+            ShowSaveInProgressDialog(e);
+        }
+
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
 #if DEBUG
@@ -227,16 +233,38 @@ namespace Scanner.Views
                 // return if dialog is already visible
                 if (isDialogVisible)
                 {
-                    task.SetResult(false);
+                    task.TrySetResult(false);
                     return;
                 }
 
                 isDialogVisible = true;
 
-                SaveChangesDialogView dialog = new SaveChangesDialogView();
+                SaveChangesDialogView dialog = new SaveChangesDialogView(ViewModel.CurrentProject);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                task.SetResult(result != ContentDialogResult.None);
+                task.TrySetResult(result != ContentDialogResult.None);
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowSaveInProgressDialog(TaskCompletionSource task)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    task.TrySetResult();
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                SaveInProgressDialogView dialog = new SaveInProgressDialogView(ViewModel.CurrentProject);
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+                task.TrySetResult();
 
                 isDialogVisible = false;
             });

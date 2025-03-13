@@ -186,8 +186,11 @@
                             <KeyboardAccelerator Modifiers="Control" Key="O" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanSaveProject, Mode=OneWay}">
-                        <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <Button ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
+                        <Grid>
+                            <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <ProgressRing x:Name="ProgressRingSave" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
+                        </Grid>
 
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="S" />
