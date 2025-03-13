@@ -289,7 +289,7 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="20,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="8,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
@@ -313,7 +313,7 @@
                             </AnimatedIcon>
                         </Button>
                     </Frame>
-                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,20,16" HorizontalAlignment="Right" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
+                    <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,8,16" HorizontalAlignment="Right" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind IsHoveringCarousel, Mode=OneWay}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
