@@ -50,6 +50,7 @@ namespace Scanner.Services.Interfaces
         bool SettingMirrorAppLayout { get; set; }
         string UserId { get; set; }
         int DiagnosticEventsSentThisSession { get; set; }
+        bool SettingAutoSave { get; set; }
 
         void TryLogAllSettings();
     }

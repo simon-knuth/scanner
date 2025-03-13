@@ -199,6 +199,12 @@ namespace Scanner.Services
             set => SetSetting(nameof(DiagnosticEventsSentThisSession), value);
         }
 
+        public bool SettingAutoSave
+        {
+            get => GetSetting<bool>(nameof(SettingAutoSave), false);
+            set => SetSetting(nameof(SettingAutoSave), value);
+        }
+
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;
         private const int latestSettingsVersion = 0;
 
