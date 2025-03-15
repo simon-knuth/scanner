@@ -264,7 +264,7 @@
                         
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel x:Name="ItemsStackPanelCarousel" Orientation="Horizontal" ItemsUpdatingScrollMode="KeepScrollOffset" Loaded="ItemsStackPanelCarousel_Loaded" />
+                                <ItemsStackPanel x:Name="ItemsStackPanelCarousel" Orientation="Horizontal" ItemsUpdatingScrollMode="KeepScrollOffset" Loaded="ItemsStackPanelCarousel_Loaded" SizeChanged="ItemsStackPanelCarousel_SizeChanged" />
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
 

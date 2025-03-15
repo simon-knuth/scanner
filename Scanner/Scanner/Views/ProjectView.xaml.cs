@@ -9,6 +9,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Scanner.Extensions;
+using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,6 +68,8 @@ namespace Scanner.Views
         private bool isCarouselScrollSelectionDisabled;
 
         private bool showEntranceExitAnimations;
+
+        private ScrollViewer? carouselScrollViewer;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,9 +241,9 @@ namespace Scanner.Views
 
         private void GridViewCarousel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // scroll to item
             try
             {
+                // scroll to item
                 GridViewItem? item = ((GridView)sender).ContainerFromItem(e.AddedItems[0]) as GridViewItem;
                 if (item != null)
                 {
@@ -276,22 +280,22 @@ namespace Scanner.Views
         {
             try
             {
-                ScrollViewer? scrollViewer = VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(GridViewCarousel, 0), 0) as ScrollViewer;
+                carouselScrollViewer = VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(GridViewCarousel, 0), 0) as ScrollViewer;
 
-                if (scrollViewer != null)
+                if (carouselScrollViewer != null)
                 {
                     // enable carousel snap points
-                    scrollViewer.HorizontalSnapPointsType = SnapPointsType.Mandatory;
-                    scrollViewer.HorizontalSnapPointsAlignment = SnapPointsAlignment.Center;
+                    carouselScrollViewer.HorizontalSnapPointsType = SnapPointsType.Mandatory;
+                    carouselScrollViewer.HorizontalSnapPointsAlignment = SnapPointsAlignment.Center;
 
                     // scroll to selected item
                     if (GridViewCarousel.SelectedItem != null)
                     {
-                        scrollViewer.ScrollToHorizontalOffset(64 * GridViewCarousel.SelectedIndex);
+                        carouselScrollViewer.ScrollToHorizontalOffset(64 * GridViewCarousel.SelectedIndex);
                     }
 
                     // enable carousel scroll selection
-                    scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                    carouselScrollViewer.ViewChanged += ScrollViewer_ViewChanged;
                 }
             }
             catch (Exception) { }
@@ -318,6 +322,22 @@ namespace Scanner.Views
         private void ButtonPageList_Click(object sender, RoutedEventArgs e)
         {
             ExpandPageListRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ItemsStackPanelCarousel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // scroll carousel to end
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                try
+                {
+                    if (carouselScrollViewer != null && ViewModel.CurrentProject != null)
+                    {
+                        carouselScrollViewer.ChangeView(ViewModel.CurrentProject.Pages.Count * 64, null, null);
+                    }
+                }
+                catch (Exception) { }
+            });
         }
     }
 }

@@ -1,21 +1,22 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Extensions;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.Collections.ObjectModel;
 using System.Threading;
-using Microsoft.UI.Dispatching;
-using Scanner.Extensions;
+using System.Threading.Tasks;
+using Windows.Storage;
+using WinRT.Interop;
 
 namespace Scanner.Models
 {
@@ -27,6 +28,10 @@ namespace Scanner.Models
         #region Services
         private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        #endregion
+
+        #region Events
+        public event EventHandler PagesAdded;
         #endregion
 
         [ObservableProperty]
@@ -86,6 +91,7 @@ namespace Scanner.Models
         {
             // keep track of changes in case of error
             List<StorageFile> copiedFiles = new();
+            List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
             List<IProjectPage> insertedPages = new();
 
             try
@@ -96,10 +102,15 @@ namespace Scanner.Models
                     IProjectPage page = await CreatePageFromFileAsync(insertion.Key, insertion.Value);
                     copiedFiles.Add(page.SourceFile);
 
-                    Pages.Insert(insertion.Value, page);
-                    insertedPages.Add(page);
+                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Value));
                 }
 
+                // add pages
+                foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
+                {
+                    Pages.Insert(insertion.Value, insertion.Key);
+                    insertedPages.Add(insertion.Key);
+                }
             }
             catch (Exception exc)
             {
@@ -122,6 +133,8 @@ namespace Scanner.Models
             {
                 Pages[i].Index = i;
             }
+
+            PagesAdded?.Invoke(this, EventArgs.Empty);
 
             IsSaved = false;
             return insertedPages;

@@ -1,25 +1,26 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Messages;
+using Scanner.Models;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.Devices.Scanners;
-using Scanner.Models;
 using Windows.Storage;
-using Scanner.Messages;
 using Windows.System.Threading;
-using Microsoft.UI.Dispatching;
+using WinRT.Interop;
 
 namespace Scanner.Services
 {
@@ -44,7 +45,7 @@ namespace Scanner.Services
                 {
                     if (currentProject != null)
                     {
-                        currentProject.PropertyChanged -= CurrentProject_PropertyChanged;
+                        currentProject.PagesAdded -= CurrentProject_PagesAdded;
                     }
 
                     if (SetProperty(ref currentProject, value))
@@ -55,7 +56,7 @@ namespace Scanner.Services
 
                     if (value != null)
                     {
-                        value.PropertyChanged += CurrentProject_PropertyChanged;
+                        currentProject.PagesAdded += CurrentProject_PagesAdded;
                     }
                 }
             }
@@ -155,11 +156,6 @@ namespace Scanner.Services
             await ApplyActionAsync(action);
 
             IsActionRunning = false;
-        }
-
-        private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            
         }
 
         public async Task<bool> TrySaveProjectAsync()
@@ -360,6 +356,16 @@ namespace Scanner.Services
             {
                 autoSaveTimer?.Cancel();
                 autoSaveTimer = null;
+            }
+        }
+
+        private void CurrentProject_PagesAdded(object? sender, EventArgs e)
+        {
+            // automatically select last page when pages are added
+            if (sender is Project project && project.Pages is ObservableCollection<IProjectPage> pages)
+            {
+                if (pages.Count == 0) return;
+                SelectedPage = pages[pages.Count - 1];
             }
         }
     }
