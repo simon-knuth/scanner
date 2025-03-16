@@ -331,7 +331,8 @@ namespace Scanner.Views
             {
                 try
                 {
-                    if (carouselScrollViewer != null && ViewModel.CurrentProject != null)
+                    if (carouselScrollViewer != null && ViewModel.CurrentProject != null
+                        && ViewModel.ProjectService.SelectedPage.Index == ViewModel.CurrentProject.Pages.Count - 1)
                     {
                         carouselScrollViewer.ChangeView(ViewModel.CurrentProject.Pages.Count * 64, null, null);
                     }
