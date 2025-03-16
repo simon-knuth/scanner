@@ -340,5 +340,21 @@ namespace Scanner.Views
                 catch (Exception) { }
             });
         }
+
+        private void GridViewPageList_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // adjust padding to center items
+            GridView gridView = (GridView)sender;
+            double padding = e.NewSize.Width % 108;
+            padding = padding / 2;
+            if (padding < 12)
+            {
+                padding += 54;
+            }
+            padding -= 1;       // buffer for XAML rounding
+            padding = Math.Floor(padding);
+
+            gridView.Padding = new Thickness(padding, 12, padding, 8);
+        }
     }
 }
