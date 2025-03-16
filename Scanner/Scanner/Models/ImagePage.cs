@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.ComponentModel;
+using Windows.Graphics.Imaging;
 
 namespace Scanner.Models
 {
@@ -28,10 +29,14 @@ namespace Scanner.Models
 
         private static string[] allowedFileExtensions = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff" };
 
+        private StorageFile sourceFile;
         public StorageFile SourceFile
         {
-            get;
-            private set;
+            get => sourceFile;
+            private set
+            {
+                SetProperty(ref sourceFile, value);
+            }
         }
 
         public StorageFile? TargetFile
@@ -40,10 +45,14 @@ namespace Scanner.Models
             private set;
         }
 
+        private Uri bitmapUri;
         public Uri BitmapUri
         {
-            get;
-            private set;
+            get => bitmapUri;
+            private set
+            {
+                SetProperty(ref bitmapUri, value);
+            }
         }
 
         [ObservableProperty]
@@ -51,6 +60,8 @@ namespace Scanner.Models
         private int index;
 
         public int PageNumber => Index + 1;
+
+        public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +101,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        public void ChangeSourceFile(StorageFile file, Uri uri)
+        {
+            SourceFile = file;
+            BitmapUri = uri;
+        }
     }
 }

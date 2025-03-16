@@ -237,7 +237,7 @@ namespace Scanner.Services
             try
             {
                 IsActionRunning = true;
-                await action.ExecuteAsync(CurrentProject);
+                await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
 
                 // update undo stack
                 undoStack.Push(action);

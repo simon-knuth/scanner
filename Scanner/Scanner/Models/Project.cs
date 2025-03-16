@@ -15,7 +15,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Devices.Scanners;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using WinRT.Interop;
 
 namespace Scanner.Models
@@ -267,6 +270,130 @@ namespace Scanner.Models
                     saveSemaphore.Release();
                 }
             });
+        }
+
+
+        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> rotations)
+        {
+            foreach (KeyValuePair<IProjectPage, BitmapRotation> rotation in rotations)
+            {
+                try
+                {
+                    // create empty file to save to
+                    TaskCompletionSource<StorageFile> targetFileCreation = new();
+                    StorageFile targetFile;
+                    _ = Task.Run(async () =>
+                    {
+                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(rotation.Key.SourceFile.Name, CreationCollisionOption.GenerateUniqueName));
+                    });
+
+                    // perform edit
+                    using (IRandomAccessStream sourceFileStream = await rotation.Key.SourceFile.OpenAsync(FileAccessMode.Read))
+                    {
+                        // load bitmap
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
+                        SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                        // get target file
+                        targetFile = await targetFileCreation.Task;
+                        using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
+                        {
+                            // rotate
+                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(rotation.Key.SourceFile), targetFileStream);
+                            encoder.SetSoftwareBitmap(softwareBitmap);
+                            encoder.BitmapTransform.Rotation = rotation.Value;
+
+                            await encoder.FlushAsync();
+                        }
+                    }
+
+                    // delete old page
+                    StorageFile oldFile = rotation.Key.SourceFile;
+                    _ = Task.Run(async () =>
+                    {
+                        await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    });
+
+                    // update page
+                    rotation.Key.ChangeSourceFile(targetFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, targetFile.Name)));
+                    rotation.Key.Rotation = CombineRotations(rotation.Key.Rotation, rotation.Value);
+                }
+                catch (Exception e)
+                {
+                    throw new ApplicationException("Rotating page failed", e);
+                }
+            }
+        }
+
+        private Guid GetBitmapEncoderIdForFile(StorageFile file)
+        {
+            switch (file.FileType.ToLower())
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return BitmapEncoder.JpegEncoderId;
+                case ".png":
+                    return BitmapEncoder.PngEncoderId;
+                case ".tif":
+                case ".tiff":
+                    return BitmapEncoder.TiffEncoderId;
+                case ".bmp":
+                    return BitmapEncoder.BmpEncoderId;
+                default:
+                    throw new ArgumentException($"Failed to get BitmapEncoder ID for file");
+            }
+        }
+
+        private BitmapRotation CombineRotations(BitmapRotation rotation1, BitmapRotation rotation2)
+        {
+            switch (rotation1)
+            {
+                case BitmapRotation.None:
+                    return rotation2;
+                case BitmapRotation.Clockwise90Degrees:
+                    switch (rotation2)
+                    {
+                        case BitmapRotation.None:
+                            return rotation1;
+                        case BitmapRotation.Clockwise90Degrees:
+                            return BitmapRotation.Clockwise180Degrees;
+                        case BitmapRotation.Clockwise180Degrees:
+                            return BitmapRotation.Clockwise270Degrees;
+                        case BitmapRotation.Clockwise270Degrees:
+                            return BitmapRotation.None;
+                    }
+                    break;
+
+                case BitmapRotation.Clockwise180Degrees:
+                    switch (rotation2)
+                    {
+                        case BitmapRotation.None:
+                            return rotation1;
+                        case BitmapRotation.Clockwise90Degrees:
+                            return BitmapRotation.Clockwise270Degrees;
+                        case BitmapRotation.Clockwise180Degrees:
+                            return BitmapRotation.None;
+                        case BitmapRotation.Clockwise270Degrees:
+                            return BitmapRotation.Clockwise90Degrees;
+                    }
+                    break;
+
+                case BitmapRotation.Clockwise270Degrees:
+                    switch (rotation2)
+                    {
+                        case BitmapRotation.None:
+                            return rotation1;
+                        case BitmapRotation.Clockwise90Degrees:
+                            return BitmapRotation.None;
+                        case BitmapRotation.Clockwise180Degrees:
+                            return BitmapRotation.Clockwise90Degrees;
+                        case BitmapRotation.Clockwise270Degrees:
+                            return BitmapRotation.Clockwise180Degrees;
+                    }
+                    break;
+            }
+
+            throw new ApplicationException("Rotations could not be combined");
         }
     }
 }

@@ -94,7 +94,7 @@
                 <Button Style="{StaticResource EditorButtonStyle}">
                     <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 </Button>
-                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
+                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
                     <Grid>
                         <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -102,10 +102,10 @@
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout Placement="Top">
-                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
-                            <MenuFlyoutItem Text="Rotate 180 degrees" />
-                            <MenuFlyoutItem Text="Rotate 270 degrees" />
-                            <MenuFlyoutItem Text="Rotate automatically">
+                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
+                            <MenuFlyoutItem Text="Rotate 180 degrees" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
+                            <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
+                            <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>

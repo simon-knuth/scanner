@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.ComponentModel;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models
 {
@@ -49,7 +50,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task ExecuteAsync(Project project)
+        public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
             addedPages = await project.AddFilesAsync(insertions);
         }

@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using System.ComponentModel;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models.Interfaces
 {
@@ -37,11 +38,11 @@ namespace Scanner.Models.Interfaces
         /// <exception cref="Exception">
         /// Occurs when a fatal error occurred and the changes to the <see cref="Project"/> could not be rolled back.
         /// </exception>
-        Task ExecuteAsync(Project project);
+        Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
-        /// Undoes the action after <see cref="ExecuteAsync(Project)"/> has been run.
-        /// Once this method has been run, <see cref="ExecuteAsync(Project)"/> can be run again.
+        /// Undoes the action after <see cref="ExecuteAsync(Project, DispatcherQueue)"/> has been run.
+        /// Once this method has been run, <see cref="ExecuteAsync(Project, DispatcherQueue)"/> can be run again.
         /// </summary>
         /// <exception cref="ProjectException">
         /// Occurs when the action failed but changes to the <see cref="Project"/> could be rolled back.

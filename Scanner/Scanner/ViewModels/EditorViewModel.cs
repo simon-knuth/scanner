@@ -4,12 +4,14 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Scanner.Messages;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 
 namespace Scanner.ViewModels
 {
@@ -24,6 +26,10 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public AsyncRelayCommand RotateCurrentPage90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees90));
+        public AsyncRelayCommand RotateCurrentPage180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees180));
+        public AsyncRelayCommand RotateCurrentPage270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees270));
+        public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -63,6 +69,19 @@ namespace Scanner.ViewModels
         private void ShowSettings()
         {
             Messenger.Send(new ShowSettingsMessage());
+        }
+
+        private async Task RotateCurrentPageAsync(RotationIntent rotationIntent)
+        {
+            if (CurrentProject == null || ProjectService.SelectedPage == null)
+            {
+                return;
+            }
+
+            await ProjectService.ApplyActionAsync(new RotatePagesAction(new()
+            {
+                { ProjectService.SelectedPage, rotationIntent }
+            }));
         }
     }
 
