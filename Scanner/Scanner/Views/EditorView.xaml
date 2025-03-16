@@ -105,10 +105,15 @@
                             <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
                             <MenuFlyoutItem Text="Rotate 180 degrees" />
                             <MenuFlyoutItem Text="Rotate 270 degrees" />
-                            <MenuFlyoutSeparator />
                             <MenuFlyoutItem Text="Rotate automatically">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>

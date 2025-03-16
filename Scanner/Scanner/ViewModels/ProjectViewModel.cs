@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
@@ -27,6 +29,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
+        public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -75,6 +78,11 @@ namespace Scanner.ViewModels
         private async Task TryCloseProjectAsync()
         {
             await ProjectService.TryCloseProjectAsync();
+        }
+
+        private void ShowSettings()
+        {
+            Messenger.Send(new ShowSettingsMessage());
         }
     }
 }

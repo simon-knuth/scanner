@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
 using System;
@@ -22,6 +24,7 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -55,6 +58,11 @@ namespace Scanner.ViewModels
                     CurrentProject = ProjectService.CurrentProject;
                     break;
             }
+        }
+
+        private void ShowSettings()
+        {
+            Messenger.Send(new ShowSettingsMessage());
         }
     }
 
