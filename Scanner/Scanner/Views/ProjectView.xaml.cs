@@ -34,7 +34,6 @@ namespace Scanner.Views
         public event EventHandler? IsExpandedChanged;
         #endregion
 
-
         #region Dependency Properties
         public static readonly DependencyProperty CanExpandPageListProperty =
             DependencyProperty.Register(nameof(CanExpandPageList), typeof(bool), typeof(ProjectView), null);

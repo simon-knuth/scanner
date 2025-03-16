@@ -126,6 +126,11 @@ namespace Scanner.Services
             IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
             IsScanProcessRunning = false;
 
+            if (files.Count == 0)
+            {
+                return;
+            }
+
             // create project
             CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
 
