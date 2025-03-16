@@ -94,8 +94,25 @@
                 <Button Style="{StaticResource EditorButtonStyle}">
                     <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
+                    <Grid>
+                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Grid>
+
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout Placement="Top">
+                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
+                            <MenuFlyoutItem Text="Rotate 180 degrees" />
+                            <MenuFlyoutItem Text="Rotate 270 degrees" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Rotate automatically">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
                     <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
