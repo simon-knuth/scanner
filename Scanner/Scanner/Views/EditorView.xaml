@@ -2,66 +2,96 @@
     x:Class="Scanner.Views.EditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Scanner.Views"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Scanner.ViewModels"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:converters="using:Scanner.Views.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:local="using:Scanner.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:viewModels="using:Scanner.ViewModels"
     mc:Ignorable="d">
 
     <Page.DataContext>
-        <viewModels:EditorViewModel x:Name="ViewModel"/>
+        <viewModels:EditorViewModel x:Name="ViewModel" />
     </Page.DataContext>
 
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Unloaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}" />
         </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!--  - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - -  -->
+    <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow
+                        x:Key="ShadowPage"
+                        BlurRadius="24"
+                        CornerRadius="0"
+                        Opacity="0.04"
+                        Offset="0,4"
+                        Color="Black" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.2" CornerRadius="0" />
+                    <media:AttachedCardShadow
+                        x:Key="ShadowPage"
+                        BlurRadius="24"
+                        CornerRadius="0"
+                        Opacity="0.2"
+                        Offset="0,4"
+                        Color="Black" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow
+                        x:Key="ShadowPage"
+                        BlurRadius="0"
+                        CornerRadius="0"
+                        Opacity="0.0"
+                        Offset="0,0"
+                        Color="Transparent" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
-            <!-- XAML Converters -->
+            <!--  XAML Converters  -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
 
-    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
-    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!--  - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -  -->
+    <!--  - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - -  -->
+    <!--  - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -  -->
     <Grid x:Name="GridRoot">
-        <FlipView x:Name="FlipViewPages" Margin="0,0,0,72" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <FlipView
+            x:Name="FlipViewPages"
+            Margin="0,0,0,72"
+            x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}"
+            Background="Transparent"
+            ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}"
+            SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}"
+            Style="{StaticResource FlipViewStyleRoundedButtons}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>
                         <Border>
-                            <Frame Margin="16" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
+                            <Frame
+                                Margin="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                 <Image>
                                     <Image.Source>
                                         <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" />
@@ -73,16 +103,30 @@
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>
-        
-        <!-- Bottom toolbar -->
-        <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+
+        <!--  Bottom toolbar  -->
+        <Grid
+            x:Name="GridToolbar"
+            Height="72"
+            Padding="16,0,16,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}">
+            <TextBlock
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IsHitTestVisible="False"
+                MaxLines="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Typography.NumeralAlignment="Tabular">
                 <Span>
                     <Run Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" />
                     <Run Text="of" />
@@ -90,53 +134,101 @@
                 </Span>
             </TextBlock>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="8">
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xE7A8;" />
                 </Button>
-                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                <Button
+                    x:Name="ButtonRotate"
+                    Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}"
+                    ContextRequested="ButtonRotate_ContextRequested"
+                    Style="{StaticResource EditorButtonStyle}">
                     <Grid>
-                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        <FontIcon
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="16"
+                            Glyph="&#xE7AD;" />
+                        <FontIcon
+                            Margin="0,0,-8,-8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="8"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                            Glyph="&#xE96E;" />
                     </Grid>
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout Placement="Top">
-                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate 180 degrees" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
+                            <MenuFlyoutItem
+                                Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}"
+                                FontWeight="SemiBold"
+                                Text="Rotate 90 degrees" />
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" Text="Rotate 180 degrees" />
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" Text="Rotate 270 degrees" />
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}" Text="Rotate automatically">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF4A5;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowSettingsCommand}" Text="Settings">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xEDC6;" />
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xE790;" />
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xE706;" />
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xE7A1;" />
                 </Button>
                 <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="16"
+                        Glyph="&#xE74D;" />
                 </Button>
             </StackPanel>
 
-            <TextBlock Grid.Column="2" Text="100 %" HorizontalAlignment="Right" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
+            <TextBlock
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                MaxLines="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="100 %"
+                Typography.NumeralAlignment="Tabular" />
         </Grid>
     </Grid>
 </Page>
