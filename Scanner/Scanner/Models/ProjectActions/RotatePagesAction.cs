@@ -15,6 +15,7 @@ using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using Microsoft.UI.Dispatching;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Models
 {
@@ -52,13 +53,6 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            // convert RotationIntent to BitmapRotation
-            Dictionary<IProjectPage, BitmapRotation> rotations = new();
-            foreach (KeyValuePair<IProjectPage, RotationIntent> rotation in this.rotations)
-            {
-                rotations.Add(rotation.Key, RotationIntentToBitmapRotation(rotation.Value));
-            }
-
             await project.RotatePagesAsync(rotations);
         }
 
@@ -77,51 +71,5 @@ namespace Scanner.Models
 
             await project.RotatePagesAsync(invertedRotations);
         }
-
-        private BitmapRotation InvertRotation(BitmapRotation rotation)
-        {
-            return rotation switch
-            {
-                BitmapRotation.None => BitmapRotation.None,
-                BitmapRotation.Clockwise90Degrees => BitmapRotation.Clockwise270Degrees,
-                BitmapRotation.Clockwise180Degrees => BitmapRotation.Clockwise180Degrees,
-                BitmapRotation.Clockwise270Degrees => BitmapRotation.Clockwise90Degrees,
-                _ => throw new ArgumentException("Invalid rotation amount to invert", nameof(rotation)),
-            };
-        }
-
-        private RotationIntent RotationAmountToRotationIntent(BitmapRotation rotation)
-        {
-            return rotation switch
-            {
-                BitmapRotation.Clockwise90Degrees => RotationIntent.Degrees90,
-                BitmapRotation.Clockwise180Degrees => RotationIntent.Degrees180,
-                BitmapRotation.Clockwise270Degrees => RotationIntent.Degrees270,
-                _ => throw new ArgumentException("Invalid rotation amount to convert to intent", nameof(rotation)),
-            };
-        }
-
-        private BitmapRotation RotationIntentToBitmapRotation(RotationIntent rotation)
-        {
-            return rotation switch
-            {
-                RotationIntent.Degrees90 => BitmapRotation.Clockwise90Degrees,
-                RotationIntent.Degrees180 => BitmapRotation.Clockwise180Degrees,
-                RotationIntent.Degrees270 => BitmapRotation.Clockwise270Degrees,
-                _ => throw new ArgumentException("Invalid rotation intent to convert to amount", nameof(rotation)),
-            };
-        }
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public enum RotationIntent
-    {
-        Degrees90,
-        Degrees180,
-        Degrees270,
-        Automatic
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.ViewModels
 {

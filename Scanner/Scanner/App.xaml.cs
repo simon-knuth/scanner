@@ -58,6 +58,7 @@ namespace Scanner
                 .AddSingleton<IAppDataService, AppDataService>()
                 .AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<ISentryService, SentryService>()
+                .AddSingleton<ITesseractService, TesseractService>()
                 .BuildServiceProvider());
         }
 

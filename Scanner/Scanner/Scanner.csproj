@@ -17,7 +17,13 @@
   <ItemGroup>
     <None Remove="Assets\contrast-standard\Logo small.svg" />
     <None Remove="Controls\ScanOptionsPresenter.xaml" />
+    <None Remove="Resources\Tesseract Training Data\eng.traineddata" />
+    <None Remove="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
     <None Remove="Views\ShellView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Tesseract Training Data\tessdata\eng.traineddata" />
+    <Content Include="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +59,7 @@
     <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
     <PackageReference Include="WinUIEx" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>

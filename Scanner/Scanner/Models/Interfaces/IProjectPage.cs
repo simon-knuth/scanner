@@ -32,6 +32,7 @@ namespace Scanner.Models.Interfaces
         int PageNumber { get; }
 
         BitmapRotation Rotation { get; set; }
+        BitmapRotation? RecommendedRotation { get; set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Models
 {
@@ -31,6 +32,7 @@ namespace Scanner.Models
         #region Services
         private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
         #endregion
 
         #region Events
@@ -272,23 +274,24 @@ namespace Scanner.Models
             });
         }
 
-
-        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> rotations)
+        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions)
         {
-            foreach (KeyValuePair<IProjectPage, BitmapRotation> rotation in rotations)
+            foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
                 try
                 {
+                    if (instruction.Value == BitmapRotation.None) continue;
+
                     // create empty file to save to
                     TaskCompletionSource<StorageFile> targetFileCreation = new();
                     StorageFile targetFile;
                     _ = Task.Run(async () =>
                     {
-                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(rotation.Key.SourceFile.Name, CreationCollisionOption.GenerateUniqueName));
+                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(instruction.Key.SourceFile.Name, CreationCollisionOption.GenerateUniqueName));
                     });
 
                     // perform edit
-                    using (IRandomAccessStream sourceFileStream = await rotation.Key.SourceFile.OpenAsync(FileAccessMode.Read))
+                    using (IRandomAccessStream sourceFileStream = await instruction.Key.SourceFile.OpenAsync(FileAccessMode.Read))
                     {
                         // load bitmap
                         BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
@@ -299,30 +302,81 @@ namespace Scanner.Models
                         using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                         {
                             // rotate
-                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(rotation.Key.SourceFile), targetFileStream);
+                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(instruction.Key.SourceFile), targetFileStream);
                             encoder.SetSoftwareBitmap(softwareBitmap);
-                            encoder.BitmapTransform.Rotation = rotation.Value;
+                            encoder.BitmapTransform.Rotation = instruction.Value;
 
                             await encoder.FlushAsync();
                         }
                     }
 
                     // delete old page
-                    StorageFile oldFile = rotation.Key.SourceFile;
+                    StorageFile oldFile = instruction.Key.SourceFile;
                     _ = Task.Run(async () =>
                     {
                         await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     });
 
                     // update page
-                    rotation.Key.ChangeSourceFile(targetFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, targetFile.Name)));
-                    rotation.Key.Rotation = CombineRotations(rotation.Key.Rotation, rotation.Value);
+                    instruction.Key.ChangeSourceFile(targetFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, targetFile.Name)));
+                    instruction.Key.Rotation = CombineRotations(instruction.Key.Rotation, instruction.Value);
                 }
                 catch (Exception e)
                 {
                     throw new ApplicationException("Rotating page failed", e);
                 }
             }
+        }
+
+        public async Task RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
+        {
+            // split instructions
+            Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Key.RecommendedRotation == null && x.Value == RotationIntent.Automatic).ToDictionary();
+            Dictionary<IProjectPage, RotationIntent> predetermined = instructions.Where((x) => x.Key.RecommendedRotation != null || x.Value != RotationIntent.Automatic).ToDictionary();
+            Dictionary<IProjectPage, BitmapRotation> mergedInstructions = new();
+
+            // get recommended rotations first
+            if (autos.Count > 0)
+            {
+                List<Task<KeyValuePair<IProjectPage, BitmapRotation?>>> tasks = new();
+                foreach (KeyValuePair<IProjectPage, RotationIntent> auto in autos)
+                {
+                    tasks.Add(Task.Run(() =>
+                    {
+                        return new KeyValuePair<IProjectPage, BitmapRotation?>(auto.Key, TesseractService.GetRecommendedRotation(auto.Key.SourceFile));
+                    }));
+                }
+                KeyValuePair<IProjectPage, BitmapRotation?>[] recommendations = await Task.WhenAll(tasks);
+
+                // add instructions
+                foreach (KeyValuePair<IProjectPage, BitmapRotation?> recommendation in recommendations)
+                {
+                    if (recommendation.Value != null)
+                    {
+                        mergedInstructions.Add(recommendation.Key, (BitmapRotation)recommendation.Value);
+                    }
+
+                    // save recommended rotation for page
+                    recommendation.Key.RecommendedRotation = recommendation.Value;
+                }
+            }
+
+            // add predetermined instructions
+            foreach (KeyValuePair<IProjectPage, RotationIntent> instruction in predetermined)
+            {
+                if (instruction.Value == RotationIntent.Automatic && instruction.Key.RecommendedRotation != null)
+                {
+                    // already got recommendation earlier
+                    mergedInstructions.Add(instruction.Key, SubtractRotations(instruction.Key.Rotation, (BitmapRotation)instruction.Key.RecommendedRotation));
+                }
+                else
+                {
+                    mergedInstructions.Add(instruction.Key, RotationIntentToBitmapRotation(instruction.Value));
+                }
+            }
+
+            // process instructions
+            await RotatePagesAsync(mergedInstructions);
         }
 
         private Guid GetBitmapEncoderIdForFile(StorageFile file)
@@ -342,58 +396,6 @@ namespace Scanner.Models
                 default:
                     throw new ArgumentException($"Failed to get BitmapEncoder ID for file");
             }
-        }
-
-        private BitmapRotation CombineRotations(BitmapRotation rotation1, BitmapRotation rotation2)
-        {
-            switch (rotation1)
-            {
-                case BitmapRotation.None:
-                    return rotation2;
-                case BitmapRotation.Clockwise90Degrees:
-                    switch (rotation2)
-                    {
-                        case BitmapRotation.None:
-                            return rotation1;
-                        case BitmapRotation.Clockwise90Degrees:
-                            return BitmapRotation.Clockwise180Degrees;
-                        case BitmapRotation.Clockwise180Degrees:
-                            return BitmapRotation.Clockwise270Degrees;
-                        case BitmapRotation.Clockwise270Degrees:
-                            return BitmapRotation.None;
-                    }
-                    break;
-
-                case BitmapRotation.Clockwise180Degrees:
-                    switch (rotation2)
-                    {
-                        case BitmapRotation.None:
-                            return rotation1;
-                        case BitmapRotation.Clockwise90Degrees:
-                            return BitmapRotation.Clockwise270Degrees;
-                        case BitmapRotation.Clockwise180Degrees:
-                            return BitmapRotation.None;
-                        case BitmapRotation.Clockwise270Degrees:
-                            return BitmapRotation.Clockwise90Degrees;
-                    }
-                    break;
-
-                case BitmapRotation.Clockwise270Degrees:
-                    switch (rotation2)
-                    {
-                        case BitmapRotation.None:
-                            return rotation1;
-                        case BitmapRotation.Clockwise90Degrees:
-                            return BitmapRotation.None;
-                        case BitmapRotation.Clockwise180Degrees:
-                            return BitmapRotation.Clockwise90Degrees;
-                        case BitmapRotation.Clockwise270Degrees:
-                            return BitmapRotation.Clockwise180Degrees;
-                    }
-                    break;
-            }
-
-            throw new ApplicationException("Rotations could not be combined");
         }
     }
 }
