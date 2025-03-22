@@ -8,7 +8,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Services.Interfaces;
 using Scanner.Views.Flyouts;
 using System;
 using System.Collections.Generic;
@@ -64,6 +66,9 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool isHoveringCancelButton;
 
+        [ObservableProperty]
+        private string scanStateDescription;
+
         public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
         public bool IsPreviewButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 500;
 
@@ -76,6 +81,8 @@ namespace Scanner.Views
         public ScanActionsView()
         {
             this.InitializeComponent();
+
+            ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
 
 
@@ -190,6 +197,19 @@ namespace Scanner.Views
             else
             {
                 ((MenuFlyoutItem)sender).FontWeight = FontWeights.Normal;
+            }
+        }
+
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.CurrentScanState):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        ScanStateDescription = ViewModel.ProjectService.CurrentScanState.ToString();
+                    });
+                    break;
             }
         }
     }

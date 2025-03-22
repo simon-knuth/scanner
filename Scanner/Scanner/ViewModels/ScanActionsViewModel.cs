@@ -20,7 +20,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 

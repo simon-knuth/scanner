@@ -53,7 +53,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            await project.RotatePagesAsync(rotations);
+            await Project.RotatePagesAsync(rotations);
         }
 
         public async Task UndoAsync(Project project)
@@ -69,7 +69,7 @@ namespace Scanner.Models
                 invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
             }
 
-            await project.RotatePagesAsync(invertedRotations);
+            await Project.RotatePagesAsync(invertedRotations);
         }
     }
 }

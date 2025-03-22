@@ -18,9 +18,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System.Threading;
 using WinRT.Interop;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Services
 {
@@ -32,7 +34,7 @@ namespace Scanner.Services
         #region Services
         private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private readonly ISettingsService? SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         private Project? currentProject;
@@ -85,6 +87,17 @@ namespace Scanner.Services
             }
         }
 
+        private ScanState currentScanState;
+        public ScanState CurrentScanState
+        {
+            get => currentScanState;
+            private set
+            {
+                SetProperty(ref currentScanState, value);
+            }
+        }
+
+
         // TODO: Update properties if selected page is moved
         public bool CanSelectPreviousPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
         public bool CanSelectNextPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
@@ -115,6 +128,8 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task TryCreateProjectAsync(ScanOptions scanOptions)
         {
+            CurrentScanState = ScanState.Scanning;
+
             // close project
             if (await TryCloseProjectAsync() == false) return;
 
@@ -124,7 +139,6 @@ namespace Scanner.Services
             // scan
             await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
             IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
-            IsScanProcessRunning = false;
 
             if (files.Count == 0)
             {
@@ -132,13 +146,45 @@ namespace Scanner.Services
             }
 
             // create project
+            CurrentScanState = ScanState.Processing;
             CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
 
-            IsActionRunning = false;
+            // auto rotate and save if needed
+            if (SettingsService.SettingAutoSave)
+            {
+                // auto rotate
+                if (SettingsService.SettingAutoRotate)
+                {
+                    CurrentScanState = ScanState.AutomaticRotation;
+
+                    Dictionary<IProjectPage, RotationIntent> instructions = new();
+                    foreach (IProjectPage page in CurrentProject.Pages)
+                    {
+                        instructions.Add(page, RotationIntent.Automatic);
+                    }
+
+                    await Project.RotatePagesAsync(instructions);
+                }
+
+                // save
+                if (scanOptions.TargetFormat == TargetFormat.PDF)
+                {
+                    CurrentScanState = ScanState.GeneratingPDF;
+                }
+                else
+                {
+                    CurrentScanState = ScanState.Saving;
+                }
+                await CurrentProject.SaveAsync(UiDispatcherQueue!);
+            }
+
+            IsActionRunning = IsScanProcessRunning = false;
         }
 
         public async Task TryScanToProjectAsync(ScanOptions scanOptions)
         {
+            CurrentScanState = ScanState.Scanning;
+
             // TODO: catch exceptions and notify user
             if (CurrentProject == null) return;
 
@@ -149,7 +195,22 @@ namespace Scanner.Services
             IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
             IsScanProcessRunning = false;
 
-            // construct action
+            // automatic rotation
+            if (SettingsService.SettingAutoRotate)
+            {
+                CurrentScanState = ScanState.AutomaticRotation;
+
+                Dictionary<StorageFile, RotationIntent> instructions = new();
+                foreach (StorageFile file in files)
+                {
+                    instructions.Add(file, RotationIntent.Automatic);
+                }
+
+                await Project.RotatePagesAsync(instructions, true);
+            }
+
+            // add files
+            CurrentScanState = ScanState.Processing;
             Dictionary<StorageFile, int> insertions = new();
             for (int i = 0; i < files.Count; i++)
             {
@@ -157,7 +218,6 @@ namespace Scanner.Services
             }
             IProjectAction action = new AddFilesAction(insertions);
 
-            // apply action
             await ApplyActionAsync(action);
 
             IsActionRunning = false;

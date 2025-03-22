@@ -31,6 +31,8 @@ namespace Scanner.Services.Interfaces
         bool IsProcessRunning { get; }          // scan or edit in progres
         bool IsScanProcessRunning { get; }      // scan in progress
 
+        ScanState CurrentScanState { get; }
+
         bool CanSelectPreviousPage { get; }
         bool CanSelectNextPage { get; }
 
@@ -55,5 +57,18 @@ namespace Scanner.Services.Interfaces
 
         void SelectPreviousPage();
         void SelectNextPage();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public enum ScanState
+    {
+        Scanning,
+        AutomaticRotation,
+        GeneratingPDF,
+        Processing,
+        Saving
     }
 }

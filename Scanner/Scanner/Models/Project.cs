@@ -274,112 +274,139 @@ namespace Scanner.Models
             });
         }
 
-        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions)
+        public static async Task RotatePagesAsync(Dictionary<StorageFile, BitmapRotation> instructions, bool overwriteFiles)
+        {
+            foreach (KeyValuePair<StorageFile, BitmapRotation> instruction in instructions)
+            {
+                await RotatePageAsync(instruction.Key, instruction.Value, overwriteFiles);
+            }
+        }
+
+        public static async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions)
         {
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
-                try
-                {
-                    if (instruction.Value == BitmapRotation.None) continue;
+                StorageFile newFile = await RotatePageAsync(instruction.Key.SourceFile, instruction.Value, false);
+                instruction.Key.ChangeSourceFile(newFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, newFile.Name)));
+            }
+        }
 
-                    // create empty file to save to
-                    TaskCompletionSource<StorageFile> targetFileCreation = new();
-                    StorageFile targetFile;
+        private static async Task<StorageFile> RotatePageAsync(StorageFile file, BitmapRotation rotation, bool overwriteFile)
+        {
+            try
+            {
+                if (rotation == BitmapRotation.None) return file;
+
+                // create empty file to save to
+                TaskCompletionSource<StorageFile> targetFileCreation = new();
+                StorageFile targetFile = file;
+                if (!overwriteFile)
+                {
                     _ = Task.Run(async () =>
                     {
-                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(instruction.Key.SourceFile.Name, CreationCollisionOption.GenerateUniqueName));
+                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(file.Name, CreationCollisionOption.GenerateUniqueName));
                     });
+                }
 
-                    // perform edit
-                    using (IRandomAccessStream sourceFileStream = await instruction.Key.SourceFile.OpenAsync(FileAccessMode.Read))
+                // perform edit
+                using (IRandomAccessStream sourceFileStream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    // load bitmap
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                    // get target file
+                    if (!overwriteFile) targetFile = await targetFileCreation.Task;
+                    using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
-                        // load bitmap
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
-                        SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                        // rotate
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetFileStream);
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+                        encoder.BitmapTransform.Rotation = rotation;
 
-                        // get target file
-                        targetFile = await targetFileCreation.Task;
-                        using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
-                        {
-                            // rotate
-                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(instruction.Key.SourceFile), targetFileStream);
-                            encoder.SetSoftwareBitmap(softwareBitmap);
-                            encoder.BitmapTransform.Rotation = instruction.Value;
-
-                            await encoder.FlushAsync();
-                        }
+                        await encoder.FlushAsync();
                     }
+                }
 
-                    // delete old page
-                    StorageFile oldFile = instruction.Key.SourceFile;
+                // delete old page
+                if (!overwriteFile)
+                {
+                    StorageFile oldFile = file;
                     _ = Task.Run(async () =>
                     {
                         await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     });
+                }
 
-                    // update page
-                    instruction.Key.ChangeSourceFile(targetFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, targetFile.Name)));
-                    instruction.Key.Rotation = CombineRotations(instruction.Key.Rotation, instruction.Value);
-                }
-                catch (Exception e)
-                {
-                    throw new ApplicationException("Rotating page failed", e);
-                }
+                return targetFile;
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Rotating page failed", e);
             }
         }
 
-        public async Task RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
+        public static async Task RotatePagesAsync(Dictionary<StorageFile, RotationIntent> instructions, bool overwriteFiles)
         {
             // split instructions
-            Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Key.RecommendedRotation == null && x.Value == RotationIntent.Automatic).ToDictionary();
-            Dictionary<IProjectPage, RotationIntent> predetermined = instructions.Where((x) => x.Key.RecommendedRotation != null || x.Value != RotationIntent.Automatic).ToDictionary();
+            Dictionary<StorageFile, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
+            Dictionary<StorageFile, RotationIntent> predetermined = instructions.Where((x) => x.Value != RotationIntent.Automatic).ToDictionary();
+            Dictionary<StorageFile, BitmapRotation> mergedInstructions = new();
+
+            // get recommended rotations first
+            if (autos.Count > 0)
+            {
+                foreach (KeyValuePair<StorageFile, RotationIntent> auto in autos)
+                {
+                    BitmapRotation? rotation = TesseractService.GetRecommendedRotation(auto.Key);
+                    if (rotation != null)
+                    {
+                        mergedInstructions.Add(auto.Key, (BitmapRotation)rotation);
+                    }
+                }
+            }
+
+            // add predetermined instructions
+            foreach (KeyValuePair<StorageFile, RotationIntent> instruction in predetermined)
+            {
+                mergedInstructions.Add(instruction.Key, RotationIntentToBitmapRotation(instruction.Value));
+            }
+
+            // process instructions
+            await RotatePagesAsync(mergedInstructions, overwriteFiles);
+        }
+
+        public static async Task RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
+        {
+            // split instructions
+            Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
+            Dictionary<IProjectPage, RotationIntent> predetermined = instructions.Where((x) => x.Value != RotationIntent.Automatic).ToDictionary();
             Dictionary<IProjectPage, BitmapRotation> mergedInstructions = new();
 
             // get recommended rotations first
             if (autos.Count > 0)
             {
-                List<Task<KeyValuePair<IProjectPage, BitmapRotation?>>> tasks = new();
                 foreach (KeyValuePair<IProjectPage, RotationIntent> auto in autos)
                 {
-                    tasks.Add(Task.Run(() =>
+                    BitmapRotation? rotation = TesseractService.GetRecommendedRotation(auto.Key.SourceFile);
+                    if (rotation != null)
                     {
-                        return new KeyValuePair<IProjectPage, BitmapRotation?>(auto.Key, TesseractService.GetRecommendedRotation(auto.Key.SourceFile));
-                    }));
-                }
-                KeyValuePair<IProjectPage, BitmapRotation?>[] recommendations = await Task.WhenAll(tasks);
-
-                // add instructions
-                foreach (KeyValuePair<IProjectPage, BitmapRotation?> recommendation in recommendations)
-                {
-                    if (recommendation.Value != null)
-                    {
-                        mergedInstructions.Add(recommendation.Key, (BitmapRotation)recommendation.Value);
+                        mergedInstructions.Add(auto.Key, (BitmapRotation)rotation);
                     }
-
-                    // save recommended rotation for page
-                    recommendation.Key.RecommendedRotation = recommendation.Value;
                 }
             }
 
             // add predetermined instructions
             foreach (KeyValuePair<IProjectPage, RotationIntent> instruction in predetermined)
             {
-                if (instruction.Value == RotationIntent.Automatic && instruction.Key.RecommendedRotation != null)
-                {
-                    // already got recommendation earlier
-                    mergedInstructions.Add(instruction.Key, SubtractRotations(instruction.Key.Rotation, (BitmapRotation)instruction.Key.RecommendedRotation));
-                }
-                else
-                {
-                    mergedInstructions.Add(instruction.Key, RotationIntentToBitmapRotation(instruction.Value));
-                }
+                mergedInstructions.Add(instruction.Key, RotationIntentToBitmapRotation(instruction.Value));
             }
 
             // process instructions
             await RotatePagesAsync(mergedInstructions);
         }
 
-        private Guid GetBitmapEncoderIdForFile(StorageFile file)
+        private static Guid GetBitmapEncoderIdForFile(StorageFile file)
         {
             switch (file.FileType.ToLower())
             {

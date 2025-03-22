@@ -175,7 +175,7 @@
                 </animations:Implicit.ShowAnimations>
                 
                 <StackPanel Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="Scanning" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ScanStateDescription, Mode=OneWay}" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                     <TextBlock Text="Click to cancel" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                </StackPanel>
             </Button>
