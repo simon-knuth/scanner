@@ -45,9 +45,9 @@
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.3" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.2" CornerRadius="0" />
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.15" CornerRadius="4" />
-                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.5" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.3" CornerRadius="0" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
