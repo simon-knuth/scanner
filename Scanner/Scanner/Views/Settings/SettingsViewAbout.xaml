@@ -3,80 +3,54 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
 
-    <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-    <!--  - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - -  -->
-    <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml" />
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!--  XAML Converters  -->
+            <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
 
-    <!--  - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -  -->
-    <!--  - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - -  -->
-    <!--  - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
-        <ScrollViewer
-            HorizontalScrollBarVisibility="Hidden"
-            HorizontalScrollMode="Disabled"
-            VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto">
-            <StackPanel
-                Padding="32"
-                Orientation="Vertical"
-                Spacing="4">
-                <TextBlock
-                    Margin="0,0,0,24"
-                    FontSize="24"
-                    Style="{StaticResource BaseTextBlockStyle}"
-                    Text="About" />
-                <Grid
-                    Margin="0,0,0,16"
-                    HorizontalAlignment="Stretch"
-                    ColumnSpacing="16">
+        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
+                <TextBlock Text="About" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <Grid Margin="0,0,0,16" HorizontalAlignment="Stretch" ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image
-                        Grid.Column="0"
-                        Margin="4"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Source="/Assets/StoreLogo.png" />
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        IsTextSelectionEnabled="True"
-                        TextWrapping="WrapWholeWords">
+                    <Image Grid.Column="0" Source="/Assets/StoreLogo.png" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4" />
+                    <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="SemiBold">Scanner</Run>
                             <LineBreak /><Run>Version</Run>
-                            <Run Text="{x:Bind ViewModel.CurrentVersion}" />
-                            <LineBreak />
-                            Copyright © 2025<Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None">Simon Knuth</Hyperlink>
+                            <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
+                            <LineBreak />Copyright © 2025 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None">Simon Knuth</Hyperlink>
                         </Span>
                     </TextBlock>
                     <StackPanel Grid.Column="2" Orientation="Vertical">
