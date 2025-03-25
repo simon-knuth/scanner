@@ -54,14 +54,11 @@ namespace Scanner.ViewModels
         }
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CanScan))]
-        [NotifyPropertyChangedFor(nameof(CanPreviewScan))]
-        [NotifyPropertyChangedFor(nameof(CanScanModeBeSwitched))]
         private bool isScanning;
 
-        public bool CanScan => ScanOptions?.Scanner != null && !IsScanning;
-        public bool CanPreviewScan => ScanOptions?.Scanner != null && !IsScanning && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
-        public bool CanScanModeBeSwitched => CurrentProject != null && !IsScanning && CanAddToProject;
+        public bool CanScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunning;
+        public bool CanPreviewScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunning && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
+        public bool CanScanModeBeSwitched => CurrentProject != null && !ProjectService.IsProcessRunning && CanAddToProject;
         public bool CanScanAndMerge => CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat && CurrentProject.Format == TargetFormat.PDF 
             && ScanOptions?.SourceMode == ScannerSource.Feeder;
 
@@ -172,6 +169,11 @@ namespace Scanner.ViewModels
                     break;
                 case nameof(IProjectService.IsScanProcessRunning):
                     IsScanning = ProjectService.IsScanProcessRunning;
+                    break;
+                case nameof(IProjectService.IsProcessRunning):
+                    OnPropertyChanged(nameof(CanScan));
+                    OnPropertyChanged(nameof(CanPreviewScan));
+                    OnPropertyChanged(nameof(CanScanModeBeSwitched));
                     break;
             }
         }

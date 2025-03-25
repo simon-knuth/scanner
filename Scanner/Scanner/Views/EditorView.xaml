@@ -11,7 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:converters="using:Scanner.Views.Converters" xmlns:customcontrols="using:Scanner.Controls"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -47,6 +47,7 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
@@ -90,51 +91,53 @@
                 </Span>
             </TextBlock>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
-                    <Grid>
-                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                    </Grid>
+            <Frame Grid.Column="1" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                        <Grid>
+                            <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </Grid>
 
-                    <FlyoutBase.AttachedFlyout>
-                        <MenuFlyout Placement="Top">
-                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate 180 degrees" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
-                            <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                        </MenuFlyout>
-                    </FlyoutBase.AttachedFlyout>
-                </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-                <Button Style="{StaticResource EditorButtonStyle}">
-                    <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                </Button>
-            </StackPanel>
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout Placement="Top">
+                                <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
+                                <MenuFlyoutItem Text="Rotate 180 degrees" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
+                                <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
+                                <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </Button>
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                    <Button Style="{StaticResource EditorButtonStyle}">
+                        <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </Button>
+                </StackPanel>
+            </Frame>
 
             <TextBlock Grid.Column="2" Text="100 %" HorizontalAlignment="Right" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
         </Grid>
