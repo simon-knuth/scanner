@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
+using Scanner.Models;
 using Scanner.Services.Interfaces;
 using Scanner.Views.Dialogs;
 using System;
@@ -44,6 +45,8 @@ namespace Scanner.Views
             Severity = InfoBarSeverity.Informational
         };
 
+        private int lastPageCount = 0;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +74,34 @@ namespace Scanner.Views
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         UpdateVisualState(GridRoot.ActualWidth);
+                        if (ViewModel.CurrentProject != null)
+                        {
+                            ViewModel.CurrentProject.PagesAdded += CurrentProject_PagesAdded;
+
+                            if (lastPageCount < 2 && ViewModel.CurrentProject.Pages.Count >= 2 && ViewModel.SettingsService.SettingExpandPageList)
+                            {
+                                TryExpandPageList();
+                            }
+                            lastPageCount = ViewModel.CurrentProject.Pages.Count;
+                        }
+                        else
+                        {
+                            lastPageCount = 0;
+                        }
                     });
                     break;
             }
+        }
+
+        private void CurrentProject_PagesAdded(object? sender, EventArgs e)
+        {
+            if (sender == null) return;
+
+            if (lastPageCount < 2 && ((Project)sender).Pages.Count >= 2 && ViewModel.SettingsService.SettingExpandPageList)
+            {
+                this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, TryExpandPageList);
+            }
+            lastPageCount = ((Project)sender).Pages.Count;
         }
 
         private void UpdateVisualState(double width)
@@ -159,6 +187,13 @@ namespace Scanner.Views
 
         private void ExpandPageListRequested(object sender, EventArgs e)
         {
+            TryExpandPageList();
+        }
+
+        private void TryExpandPageList()
+        {
+            if (ProjectView.IsExpanded) return;
+
             ProjectView.IsExpanded = true;
             BorderScanOptions.Visibility = Visibility.Collapsed;
             ScanActionsView.AreScanOptionsVisible = true;

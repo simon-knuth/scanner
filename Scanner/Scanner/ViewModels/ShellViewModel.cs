@@ -30,7 +30,7 @@ namespace Scanner.ViewModels
         private ILogService? LogService = Ioc.Default.GetService<ILogService>();
         public IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         private IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
-        private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        public ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Events

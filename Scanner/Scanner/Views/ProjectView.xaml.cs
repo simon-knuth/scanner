@@ -268,7 +268,7 @@ namespace Scanner.Views
 
             // select centered item
             ScrollViewer? scrollViewer = sender as ScrollViewer;
-            if (scrollViewer != null)
+            if (scrollViewer != null && GridViewCarousel != null)
             {
                 int index = Convert.ToInt32(Math.Round(scrollViewer.HorizontalOffset / 64));
                 GridViewCarousel.SelectedIndex = index;
