@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="Scanner.Views.EditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -109,7 +109,11 @@
                                 <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
                                 <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <ImageIcon>
+                                            <ImageIcon.Source>
+                                                <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                            </ImageIcon.Source>
+                                        </ImageIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />

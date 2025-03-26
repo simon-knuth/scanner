@@ -404,7 +404,11 @@
                                             <MenuFlyoutItem Text="Rotate 270 degrees" />
                                             <MenuFlyoutItem Text="Rotate automatically">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xF4A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    <ImageIcon>
+                                                        <ImageIcon.Source>
+                                                            <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                                        </ImageIcon.Source>
+                                                    </ImageIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator />
