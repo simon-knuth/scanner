@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Dispatching;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
@@ -33,6 +34,32 @@ namespace Scanner.Extensions
                 {
                     agileCallback();
                     complete.SetResult(true);
+                });
+                await complete.Task;
+            }
+        }
+
+        public static async Task RunOnThreadAndWaitAsync(this DispatcherQueue queue, DispatcherQueuePriority priority,
+            Func<Task> agileCallback)
+        {
+            if (queue.HasThreadAccess)
+            {
+                await agileCallback();
+            }
+            else
+            {
+                TaskCompletionSource<bool> complete = new TaskCompletionSource<bool>();
+                queue.TryEnqueue(priority, async () =>
+                {
+                    try
+                    {
+                        await agileCallback();
+                        complete.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        complete.SetException(ex);
+                    }
                 });
                 await complete.Task;
             }
