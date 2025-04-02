@@ -45,6 +45,12 @@ namespace Scanner.Models
             private set;
         }
 
+        public StorageFolder? TargetFolder
+        {
+            get;
+            private set;
+        }
+
         private Uri bitmapUri;
         public Uri BitmapUri
         {
@@ -58,6 +64,9 @@ namespace Scanner.Models
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(PageNumber))]
         private int index;
+
+        [ObservableProperty]
+        private string fileName;
 
         public int PageNumber => Index + 1;
 
@@ -75,7 +84,21 @@ namespace Scanner.Models
             Index = index;
         }
 
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index)
+        /// <summary>
+        ///    Creates a new ImagePage from a file.
+        /// </summary>
+        /// <param name="sourceFile">The image source file.</param>
+        /// <param name="index">The index of the page in the <see cref="Project"/>.</param>
+        /// <param name="fileName">The desired target file name.</param>
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string fileName, StorageFolder targetFolder)
+        {
+            ImagePage result = await CreateAsyncInternal(sourceFile, index);
+            result.FileName = fileName;
+            result.TargetFolder = targetFolder;
+            return result;
+        }
+
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index)
         {
             // check file
             if (sourceFile == null)
@@ -91,11 +114,12 @@ namespace Scanner.Models
                 throw new ArgumentException("Failed to create ImagePage due to incompatible file format");
             }
 
-            // move file to project folder
-            await sourceFile.MoveAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.FailIfExists);
+            // copy file to project folder
+            sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.FailIfExists);
 
             // create ImagePage
-            return new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);
+            return result;
         }
 
 

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Messages;
 using Scanner.Models;
@@ -34,6 +35,7 @@ namespace Scanner.Services
         #region Services
         private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
@@ -128,30 +130,32 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task TryCreateProjectAsync(ScanOptions scanOptions)
         {
-            CurrentScanState = ScanState.Scanning;
-
-            // close project
-            if (await TryCloseProjectAsync() == false) return;
-
-            // TODO: catch exceptions and notify user
-            IsActionRunning = IsScanProcessRunning = true;
-
-            // scan
-            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
-
-            if (files.Count == 0)
+            try
             {
-                return;
-            }
+                CurrentScanState = ScanState.Scanning;
 
-            // create project
-            CurrentScanState = ScanState.Processing;
-            CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat);
+                // close project
+                if (await TryCloseProjectAsync() == false) return;
 
-            // auto rotate and save if needed
-            if (SettingsService.SettingAutoSave)
-            {
+                // get save options
+                IsActionRunning = true;
+                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject);
+                if (saveOptions == null) return;
+
+                // scan
+                IsScanProcessRunning = true;
+                await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+                IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
+
+                if (files.Count == 0)
+                {
+                    return;
+                }
+
+                // create project
+                CurrentScanState = ScanState.Processing;
+                CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder);
+
                 // auto rotate
                 if (SettingsService.SettingAutoRotate)
                 {
@@ -166,61 +170,89 @@ namespace Scanner.Services
                     await Project.RotatePagesAsync(instructions);
                 }
 
-                // save
-                if (scanOptions.TargetFormat == TargetFormat.PDF)
+                // save if needed
+                if (SettingsService.SettingAutoSave)
                 {
-                    CurrentScanState = ScanState.GeneratingPDF;
+                    // save
+                    if (scanOptions.TargetFormat == TargetFormat.PDF)
+                    {
+                        CurrentScanState = ScanState.GeneratingPDF;
+                    }
+                    else
+                    {
+                        CurrentScanState = ScanState.Saving;
+                    }
+                    await CurrentProject.SaveAsync(UiDispatcherQueue!);
                 }
-                else
-                {
-                    CurrentScanState = ScanState.Saving;
-                }
-                await CurrentProject.SaveAsync(UiDispatcherQueue!);
             }
-
-            IsActionRunning = IsScanProcessRunning = false;
+            catch (Exception)
+            {
+                // TODO: catch exceptions and notify user
+                throw;
+            }
+            finally
+            {
+                IsActionRunning = IsScanProcessRunning = false;
+            }
         }
 
         public async Task TryScanToProjectAsync(ScanOptions scanOptions)
         {
-            CurrentScanState = ScanState.Scanning;
-
-            // TODO: catch exceptions and notify user
-            if (CurrentProject == null) return;
-
-            IsActionRunning = IsScanProcessRunning = true;
-
-            // scan
-            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-            IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
-            IsScanProcessRunning = false;
-
-            // automatic rotation
-            if (SettingsService.SettingAutoRotate)
+            try
             {
-                CurrentScanState = ScanState.AutomaticRotation;
+                CurrentScanState = ScanState.Scanning;
 
-                Dictionary<StorageFile, RotationIntent> instructions = new();
-                foreach (StorageFile file in files)
+                if (CurrentProject == null) return;
+
+                // get save options
+                IsActionRunning = true;
+                SaveOptions? saveOptions = null;
+                if (scanOptions.TargetFormat != TargetFormat.PDF)
                 {
-                    instructions.Add(file, RotationIntent.Automatic);
+                    saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject);
+                    if (saveOptions == null) return;
                 }
 
-                await Project.RotatePagesAsync(instructions, true);
-            }
+                // scan
+                IsScanProcessRunning = true;
+                await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+                IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
+                IsScanProcessRunning = false;
 
-            // add files
-            CurrentScanState = ScanState.Processing;
-            Dictionary<StorageFile, int> insertions = new();
-            for (int i = 0; i < files.Count; i++)
+                // automatic rotation
+                if (SettingsService.SettingAutoRotate)
+                {
+                    CurrentScanState = ScanState.AutomaticRotation;
+
+                    Dictionary<StorageFile, RotationIntent> instructions = new();
+                    foreach (StorageFile file in files)
+                    {
+                        instructions.Add(file, RotationIntent.Automatic);
+                    }
+
+                    await Project.RotatePagesAsync(instructions, true);
+                }
+
+                // add files
+                CurrentScanState = ScanState.Processing;
+                List<ProjectFileInsertion> insertions = new();
+                for (int i = 0; i < files.Count; i++)
+                {
+                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder));
+                }
+                IProjectAction action = new AddFilesAction(insertions);
+
+                await ApplyActionAsync(action);
+            }
+            catch (Exception)
             {
-                insertions.Add(files[i], CurrentProject.Pages.Count + i);
+                // TODO: catch exceptions and notify user
+                throw;
             }
-            IProjectAction action = new AddFilesAction(insertions);
-
-            await ApplyActionAsync(action);
-
-            IsActionRunning = false;
+            finally
+            {
+                IsActionRunning = IsScanProcessRunning = false;
+            }
         }
 
         public async Task<bool> TrySaveProjectAsync()

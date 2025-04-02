@@ -26,7 +26,7 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private Dictionary<StorageFile, int> insertions;
+        private List<ProjectFileInsertion> insertions;
 
         private List<IProjectPage>? addedPages;
 
@@ -41,7 +41,7 @@ namespace Scanner.Models
         /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
         /// Ensure that the indices are valid when the insertion happens.
         /// </param>
-        public AddFilesAction(Dictionary<StorageFile, int> insertions)
+        public AddFilesAction(List<ProjectFileInsertion> insertions)
         {
             this.insertions = insertions;
         }

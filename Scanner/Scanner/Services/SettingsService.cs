@@ -45,7 +45,7 @@ namespace Scanner.Services
 
         public SettingSaveLocationType SettingSaveLocationType
         {
-            get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.SetLocation);
+            get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.FixedLocation);
             set => SetSetting(nameof(SettingSaveLocationType), (int)value);
         }
 

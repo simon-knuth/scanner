@@ -59,6 +59,7 @@ namespace Scanner
                 .AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<ISentryService, SentryService>()
                 .AddSingleton<ITesseractService, TesseractService>()
+                .AddSingleton<ISaveLocationService, SaveLocationService>()
                 .BuildServiceProvider());
         }
 
@@ -99,6 +100,7 @@ namespace Scanner
                 }
                 Ioc.Default.GetService<ISentryService>()?.Initialize();
                 await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
+                Ioc.Default.GetRequiredService<ISaveLocationService>();
 
                 MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                 {

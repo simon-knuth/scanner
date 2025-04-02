@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -5,6 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ using Windows.Foundation.Collections;
 
 namespace Scanner.Views.Settings
 {
+    [ObservableObjectAttribute]
     public sealed partial class SettingsViewGeneral : Page
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +45,12 @@ namespace Scanner.Views.Settings
             base.OnNavigatedTo(e);
 
             ViewModel = e.Parameter as SettingsViewModel;
+        }
+
+        private void Page_Loading(FrameworkElement sender, object args)
+        {
+            if (ViewModel == null) return;
+            ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
         }
     }
 }

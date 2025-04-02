@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Storage;
 
 
 namespace Scanner.Views
@@ -57,6 +58,7 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
+            ViewModel.SaveFileDialogRequested += ViewModel_SaveFileDialogRequested1;
             ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
@@ -244,6 +246,11 @@ namespace Scanner.Views
             ShowSaveChangesDialog(e);
         }
 
+        private void ViewModel_SaveFileDialogRequested1(object? sender, Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, Project?> e)
+        {
+            ShowSaveFileDialog(e.Item1, e.Item2, e.Item3);
+        }
+
         private void ViewModel_SaveInProgressDialogRequested(object? sender, TaskCompletionSource e)
         {
             ShowSaveInProgressDialog(e);
@@ -278,6 +285,28 @@ namespace Scanner.Views
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
                 task.TrySetResult(result != ContentDialogResult.None);
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, Project? project)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    task.TrySetResult(null);
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                SaveFileDialogView dialog = new SaveFileDialogView(scanOptions, project);
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+                task.TrySetResult(dialog.SaveOptions);
 
                 isDialogVisible = false;
             });

@@ -11,8 +11,10 @@
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
-    xmlns:converters="using:Scanner.Views.Converters" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    mc:Ignorable="d">
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d"
+    Loading="Page_Loading">
 
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -25,6 +27,9 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- XAML Converters -->
+            <converters:EnumIntComparisonConverter x:Key="EnumIntComparisonConverter" />
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
@@ -34,16 +39,45 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
-        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
                 <TextBlock Text="General" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-                <controls:SettingsExpander Header="Save location">
+                <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsExpander.HeaderIcon>
-                    
-                    
+
+                    <controls:SettingsExpander.Content>
+                        <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Fixed location" FontWeight="SemiBold" IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}" />
+                                <ComboBoxItem Content="Ask for every new project" />
+                                <ComboBoxItem Content="Ask every time" />
+                            </ComboBox.Items>
+                        </ComboBox>
+                    </controls:SettingsExpander.Content>
+
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard IsEnabled="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
+                            <controls:SettingsCard.Header>
+                                <TextBlock Text="{x:Bind ViewModel.FixedSaveLocationPath, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </controls:SettingsCard.Header>
+                            
+                            <controls:SettingsCard.Content>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Button Content="Select folder" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SelectFixedSaveLocationAsyncCommand}" />
+                                    <Button Content="Reset to default" Command="{x:Bind ViewModel.ResetFixedSaveLocationAsyncCommand}" />
+                                </StackPanel>
+                            </controls:SettingsCard.Content>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard Header="Fixed location is unavailable on this PC" Description="Windows is blocking Scanner from using a fixed save location across app sessions. This is a system limitation and can not be bypassed." Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Visibility="{x:Bind ViewModel.IsFixedSaveLocationSupported, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xEDB1;" Foreground="{ThemeResource SystemFillColorCautionBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
+                
                 <controls:SettingsCard Header="Save changes automatically">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE74E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -72,7 +106,7 @@
 
                     <ComboBox SelectedIndex="{x:Bind ViewModel.SettingScanAction, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="Add to project" />
+                            <ComboBoxItem Content="Add to project" FontWeight="SemiBold" />
                             <ComboBoxItem Content="Start new project" />
                         </ComboBox.Items>
                     </ComboBox>

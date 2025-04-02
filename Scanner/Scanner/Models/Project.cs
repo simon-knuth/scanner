@@ -58,21 +58,27 @@ namespace Scanner.Models
 
         public TargetFormat Format;
 
-        public bool IsPdf => Format == TargetFormat.PDF;
-
         public StorageFolder TargetFolder;
+
+        public bool IsPdf => Format == TargetFormat.PDF;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private Project(IList<IProjectPage> pages, TargetFormat format)
+        private Project(IList<IProjectPage> pages, TargetFormat format, StorageFolder targetFolder)
         {
             Pages = new ObservableCollection<IProjectPage>(pages);
             Format = format;
+
+            if (IsPdf)
+            {
+                // folder saved at project level for PDF and page level for all other formats
+                TargetFolder = targetFolder;
+            }
         }
 
-        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format)
+        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string fileName, StorageFolder targetFolder)
         {
             // empty folder
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -81,18 +87,18 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, fileName, targetFolder));
             }
 
             // create project
-            return new Project(pages, format);
+            return new Project(pages, format, targetFolder);
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<List<IProjectPage>> AddFilesAsync(Dictionary<StorageFile, int> insertions)
+        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions)
         {
             // keep track of changes in case of error
             List<StorageFile> copiedFiles = new();
@@ -102,12 +108,12 @@ namespace Scanner.Models
             try
             {
                 // add files
-                foreach (KeyValuePair<StorageFile, int> insertion in insertions)
+                foreach (ProjectFileInsertion insertion in insertions)
                 {
-                    IProjectPage page = await CreatePageFromFileAsync(insertion.Key, insertion.Value);
+                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder);
                     copiedFiles.Add(page.SourceFile);
 
-                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Value));
+                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
                 }
 
                 // add pages
@@ -199,7 +205,7 @@ namespace Scanner.Models
             IsSaved = false;
         }
 
-        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index)
+        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? fileName, StorageFolder? targetFolder)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -211,7 +217,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, index);
+                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:
@@ -425,4 +431,10 @@ namespace Scanner.Models
             }
         }
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder);
 }

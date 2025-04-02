@@ -1,7 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
+using Scanner.Models;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Services.Store;
@@ -117,6 +119,35 @@ namespace Scanner.Helpers
         public static DateTime Iso8601ToDateTime(string input)
         {
             return DateTime.ParseExact(input, "yyyy-MM-dd HH:mm:ssZ", null, DateTimeStyles.RoundtripKind);
+        }
+
+        public static string TargetFormatToFileExtension(TargetFormat targetFormat)
+        {
+            switch (targetFormat)
+            {
+                case TargetFormat.PDF:
+                    return ".pdf";
+                case TargetFormat.JPG:
+                    return ".jpg";
+                case TargetFormat.PNG:
+                    return ".png";
+                case TargetFormat.BMP:
+                    return ".bmp";
+                case TargetFormat.TIFF:
+                    return ".tiff";
+                case TargetFormat.RAW:
+                    return ".raw";
+                default:
+                    throw new ArgumentException("Can't get file extension for TargetFormat");
+            }
+        }
+
+        public static bool IsValidFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return false;
+            if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return false;
+            if (fileName.Length > 255) return false;
+            return true;
         }
     }
 }

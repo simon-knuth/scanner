@@ -73,6 +73,9 @@
     <Page Update="Controls\ScanOptionsPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Views\Dialogs\SaveFileDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Dialogs\SaveInProgressDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>

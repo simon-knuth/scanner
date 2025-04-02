@@ -57,8 +57,9 @@ namespace Scanner.Services.Interfaces
 
     public enum SettingSaveLocationType
     {
-        SetLocation = 0,
-        AskEveryTime = 1
+        FixedLocation = 0,
+        AskForEveryProject = 1,
+        AskEveryTime = 2
     }
 
     public enum SettingAppTheme
