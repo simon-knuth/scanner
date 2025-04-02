@@ -60,7 +60,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard IsEnabled="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                             <controls:SettingsCard.Header>
-                                <TextBlock Text="{x:Bind ViewModel.FixedSaveLocationPath, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Text="{x:Bind ViewModel.FixedSaveLocationPath, Mode=OneWay}" Margin="-8,-4,-8,-4" Padding="8,4,8,4" IsTextSelectionEnabled="True" Style="{StaticResource CaptionTextBlockStyle}" />
                             </controls:SettingsCard.Header>
                             
                             <controls:SettingsCard.Content>
