@@ -60,6 +60,12 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
         <FlipView x:Name="FlipViewPages" Margin="0,0,0,72" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+            <FlipView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" Loading="VirtualizingStackPanel_Loading" />
+                </ItemsPanelTemplate>
+            </FlipView.ItemsPanel>
+            
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem>
