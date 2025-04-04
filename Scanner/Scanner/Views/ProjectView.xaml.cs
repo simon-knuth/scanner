@@ -355,5 +355,20 @@ namespace Scanner.Views
 
             gridView.Padding = new Thickness(padding, 12, padding, 8);
         }
+
+        private void MenuFlyoutItemRename_Click(object sender, RoutedEventArgs e)
+        {
+            TextBoxProjectName.Focus(FocusState.Programmatic);
+        }
+
+        private void TextBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // scroll TextBox to beginning
+            ScrollViewer? scrollViewer = TextBoxProjectName.FindDescendant<ScrollViewer>();
+            if (scrollViewer != null)
+            {
+                scrollViewer.ChangeView(0, null, null);
+            }
+        }
     }
 }
