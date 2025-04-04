@@ -66,7 +66,7 @@ namespace Scanner.Models
         private int index;
 
         [ObservableProperty]
-        private string fileName;
+        private string targetFileName;
 
         public int PageNumber => Index + 1;
 
@@ -89,11 +89,11 @@ namespace Scanner.Models
         /// </summary>
         /// <param name="sourceFile">The image source file.</param>
         /// <param name="index">The index of the page in the <see cref="Project"/>.</param>
-        /// <param name="fileName">The desired target file name.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string fileName, StorageFolder targetFolder)
+        /// <param name="targetFileName">The desired target file name.</param>
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string targetFileName, StorageFolder targetFolder)
         {
             ImagePage result = await CreateAsyncInternal(sourceFile, index);
-            result.FileName = fileName;
+            result.TargetFileName = targetFileName;
             result.TargetFolder = targetFolder;
             return result;
         }

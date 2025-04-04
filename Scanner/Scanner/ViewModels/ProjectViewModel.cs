@@ -8,6 +8,7 @@ using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,24 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         private Project? currentProject;
 
+        public string FileName
+        {
+            get
+            {
+                if (CurrentProject == null) return string.Empty;
+
+                if (CurrentProject.IsPdf)
+                {
+                    return Path.GetFileNameWithoutExtension(CurrentProject.TargetFileName);
+                }
+                else if (ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    return Path.GetFileNameWithoutExtension(imagePage.TargetFileName);
+                }
+                return string.Empty;
+            }
+        }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +80,10 @@ namespace Scanner.ViewModels
             {
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
+                    OnPropertyChanged(nameof(FileName));
+                    break;
+                case nameof(IProjectService.SelectedPage):
+                    OnPropertyChanged(nameof(FileName));
                     break;
             }
         }

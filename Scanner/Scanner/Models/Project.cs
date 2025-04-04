@@ -60,13 +60,16 @@ namespace Scanner.Models
 
         public StorageFolder TargetFolder;
 
+        [ObservableProperty]
+        private string targetFileName;
+
         public bool IsPdf => Format == TargetFormat.PDF;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private Project(IList<IProjectPage> pages, TargetFormat format, StorageFolder targetFolder)
+        private Project(IList<IProjectPage> pages, TargetFormat format, string targetFileName, StorageFolder targetFolder)
         {
             Pages = new ObservableCollection<IProjectPage>(pages);
             Format = format;
@@ -75,10 +78,11 @@ namespace Scanner.Models
             {
                 // folder saved at project level for PDF and page level for all other formats
                 TargetFolder = targetFolder;
+                TargetFileName = targetFileName;
             }
         }
 
-        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string fileName, StorageFolder targetFolder)
+        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder)
         {
             // empty folder
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -87,11 +91,11 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, fileName, targetFolder));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder));
             }
 
             // create project
-            return new Project(pages, format, targetFolder);
+            return new Project(pages, format, targetFileName, targetFolder);
         }
 
 
