@@ -85,7 +85,10 @@ namespace Scanner.ViewModels
                     OnPropertyChanged(nameof(FileName));
                     break;
                 case nameof(IProjectService.SelectedPage):
-                    OnPropertyChanged(nameof(FileName));
+                    if (CurrentProject != null && CurrentProject.IsPdf)
+                    {
+                        OnPropertyChanged(nameof(FileName));
+                    }
                     break;
             }
         }

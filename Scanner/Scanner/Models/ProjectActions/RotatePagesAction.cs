@@ -54,6 +54,7 @@ namespace Scanner.Models
         public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
             await Project.RotatePagesAsync(rotations);
+            project.IsSaved = false;
         }
 
         public async Task UndoAsync(Project project)
