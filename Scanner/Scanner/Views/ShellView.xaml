@@ -124,8 +124,10 @@
 
                     <VisualState.Setters>
                         <Setter Target="BorderProjectView.Visibility" Value="Collapsed" />
+                        <Setter Target="BorderScanOptions.Visibility" Value="Visible" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
+                        <Setter Target="ScanActionsView.AreScanOptionsVisible" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
 
