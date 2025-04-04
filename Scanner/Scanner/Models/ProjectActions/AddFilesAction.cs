@@ -53,7 +53,13 @@ namespace Scanner.Models
         public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
             addedPages = await project.AddFilesAsync(insertions);
-            project.IsSaved = false;
+
+            if (addedPages != null && addedPages.Count > 0)
+            {
+                project.IsSaved = false;
+                return true;
+            }
+            return false;
         }
 
         public async Task UndoAsync(Project project)

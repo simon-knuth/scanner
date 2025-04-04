@@ -386,7 +386,7 @@ namespace Scanner.Models
             await RotatePagesAsync(mergedInstructions, overwriteFiles);
         }
 
-        public static async Task RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
+        public static async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
         {
             // split instructions
             Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
@@ -414,6 +414,8 @@ namespace Scanner.Models
 
             // process instructions
             await RotatePagesAsync(mergedInstructions);
+
+            return mergedInstructions;
         }
 
         private static Guid GetBitmapEncoderIdForFile(StorageFile file)

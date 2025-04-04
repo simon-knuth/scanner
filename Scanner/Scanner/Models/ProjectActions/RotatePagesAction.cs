@@ -53,8 +53,14 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            await Project.RotatePagesAsync(rotations);
-            project.IsSaved = false;
+            appliedRotations = await Project.RotatePagesAsync(rotations);
+
+            if (appliedRotations != null && appliedRotations.Count > 0)
+            {
+                project.IsSaved = false;
+                return true;
+            }
+            return false;
         }
 
         public async Task UndoAsync(Project project)
