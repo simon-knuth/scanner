@@ -145,6 +145,8 @@ namespace Scanner.Services
                 // scan
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+                await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
+                await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
                 IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
 
                 if (files.Count == 0)
