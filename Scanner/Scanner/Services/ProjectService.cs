@@ -329,19 +329,22 @@ namespace Scanner.Services
             try
             {
                 IsActionRunning = true;
-                await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
+                bool changesMade = await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
 
-                // update undo stack
-                undoStack.Push(action);
-                OnPropertyChanged(nameof(CanUndo));
-
-                // update redo
-                if (!redoing)
+                if (changesMade)
                 {
-                    redoStack.Clear();
-                    await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+                    // update undo stack
+                    undoStack.Push(action);
+                    OnPropertyChanged(nameof(CanUndo));
+
+                    // update redo
+                    if (!redoing)
+                    {
+                        redoStack.Clear();
+                        await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+                    }
+                    OnPropertyChanged(nameof(CanRedo));
                 }
-                OnPropertyChanged(nameof(CanRedo));
             }
             catch (ProjectException)
             {

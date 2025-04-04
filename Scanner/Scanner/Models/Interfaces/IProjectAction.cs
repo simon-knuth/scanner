@@ -32,13 +32,16 @@ namespace Scanner.Models.Interfaces
         /// <summary>
         /// Executes the action.
         /// </summary>
+        /// <returns>
+        /// Whether any changes were made.
+        /// </returns>
         /// <exception cref="ProjectException">
         /// Occurs when the action failed but changes to the <see cref="Project"/> could be rolled back.
         /// </exception>
         /// <exception cref="Exception">
         /// Occurs when a fatal error occurred and the changes to the <see cref="Project"/> could not be rolled back.
         /// </exception>
-        Task ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue);
+        Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
         /// Undoes the action after <see cref="ExecuteAsync(Project, DispatcherQueue)"/> has been run.
