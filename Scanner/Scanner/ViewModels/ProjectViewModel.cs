@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.System;
 
 namespace Scanner.ViewModels
 {
@@ -31,6 +32,7 @@ namespace Scanner.ViewModels
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
+        public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -106,6 +108,24 @@ namespace Scanner.ViewModels
         private void ShowSettings()
         {
             Messenger.Send(new ShowSettingsMessage());
+        }
+
+        private async Task ShowInFileExplorerAsync(IProjectPage? page)
+        {
+            if (CurrentProject == null) return;
+            if (CurrentProject.IsPdf)
+            {
+                await Launcher.LaunchFolderAsync(CurrentProject.TargetFolder);
+            }
+            else
+            {
+                // use currently selected page if no page is provided
+                if (page == null && ProjectService.SelectedPage != null) page = ProjectService.SelectedPage;
+
+                if (page is not ImagePage imagePage) return;
+
+                await Launcher.LaunchFolderAsync(imagePage.TargetFolder);
+            }
         }
     }
 }
