@@ -32,6 +32,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RotateCurrentPage180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees180));
         public AsyncRelayCommand RotateCurrentPage270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees270));
         public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
+        public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -75,14 +76,23 @@ namespace Scanner.ViewModels
 
         private async Task RotateCurrentPageAsync(RotationIntent rotationIntent)
         {
-            if (CurrentProject == null || ProjectService.SelectedPage == null)
-            {
-                return;
-            }
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
 
             await ProjectService.ApplyActionAsync(new RotatePagesAction(new()
             {
                 { ProjectService.SelectedPage, rotationIntent }
+            }));
+        }
+
+        private async Task RemoveCurrentPageAsync()
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
+            
+            await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
+            {
+                ProjectService.SelectedPage
             }));
         }
     }

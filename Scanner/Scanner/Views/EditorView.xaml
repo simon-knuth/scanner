@@ -145,7 +145,7 @@
                     <Button Style="{StaticResource EditorButtonStyle}">
                         <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
-                    <Button Style="{StaticResource EditorButtonStyle}">
+                    <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
                         <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
                 </StackPanel>

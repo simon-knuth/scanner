@@ -186,6 +186,9 @@ namespace Scanner.Services
                     }
                     await CurrentProject.SaveAsync(UiDispatcherQueue!);
                 }
+
+                // free up space
+                _ = Task.Run(() => _ = AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder));
             }
             catch (Exception)
             {

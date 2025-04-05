@@ -115,7 +115,7 @@ namespace Scanner.Models
             }
 
             // copy file to project folder
-            sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.FailIfExists);
+            sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
 
             // create ImagePage
             ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);

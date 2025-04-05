@@ -17,7 +17,7 @@ using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models
 {
-    public partial class AddFilesAction : IProjectAction
+    public partial class RemovePagesAction : IProjectAction
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,24 +26,23 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private List<ProjectFileInsertion> insertions;
+        private List<IProjectPage> removals;
 
-        private List<IProjectPage>? addedPages;
+        private List<IProjectPage>? removedPages;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Adds a set of files to a <see cref="Project"/> at specific indices.
+        /// Removes a set of pages from a <see cref="Project"/>.
         /// </summary>
-        /// <param name="insertions">
-        /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
-        /// Ensure that the indices are valid when the insertion happens.
+        /// <param name="removals">
+        /// A list of pages to remove.
         /// </param>
-        public AddFilesAction(List<ProjectFileInsertion> insertions)
+        public RemovePagesAction(List<IProjectPage> removals)
         {
-            this.insertions = insertions;
+            this.removals = removals;
         }
 
 
@@ -52,20 +51,35 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            addedPages = await project.AddFilesAsync(insertions);
-            
-            return addedPages != null && addedPages.Count > 0;
+            await project.RemovePagesAsync(removals, false);
+            removedPages = removals;
+
+            return removedPages != null && removedPages.Count > 0;
         }
 
         public async Task UndoAsync(Project project)
         {
-            if (addedPages == null)
+            if (removedPages == null)
             {
-                throw new ProjectException("Can't undo AddFilesAction without list of added pages");
+                throw new ProjectException("Can't undo RemovePagesAction without list of removed pages");
             }
 
-            await project.RemovePagesAsync(addedPages, true);
-            addedPages = null;
+            // gather instructions
+            List<ProjectFileInsertion> insertions = new();
+            foreach (IProjectPage page in removals)
+            {
+                if (page is ImagePage imagePage)
+                {
+                    insertions.Add(new ProjectFileInsertion(page.SourceFile, page.Index, imagePage.TargetFileName, imagePage.TargetFolder));
+                }
+                else
+                {
+                    insertions.Add(new ProjectFileInsertion(page.SourceFile, page.Index, null, null));
+                }
+            }
+
+            removals = await project.AddFilesAsync(insertions);
+            removedPages = null;
         }
     }
 }

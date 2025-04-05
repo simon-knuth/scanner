@@ -70,6 +70,7 @@ namespace Scanner.Models
                 throw new ProjectException("Can't undo RotatePagesAction without list of applied rotations");
             }
 
+            // gather instructions
             Dictionary<IProjectPage, BitmapRotation> invertedRotations = new();
             foreach (KeyValuePair<IProjectPage, BitmapRotation> rotation in appliedRotations)
             {
