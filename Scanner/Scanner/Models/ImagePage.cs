@@ -90,15 +90,15 @@ namespace Scanner.Models
         /// <param name="sourceFile">The image source file.</param>
         /// <param name="index">The index of the page in the <see cref="Project"/>.</param>
         /// <param name="targetFileName">The desired target file name.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string targetFileName, StorageFolder targetFolder)
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string targetFileName, StorageFolder targetFolder, bool keepSourceFile)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, index);
+            ImagePage result = await CreateAsyncInternal(sourceFile, index, keepSourceFile);
             result.TargetFileName = targetFileName;
             result.TargetFolder = targetFolder;
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index, bool keepSourceFile)
         {
             // check file
             if (sourceFile == null)
@@ -115,7 +115,14 @@ namespace Scanner.Models
             }
 
             // copy file to project folder
-            sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+            if (keepSourceFile)
+            {
+                sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+            }
+            else
+            {
+                await sourceFile.MoveAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+            }
 
             // create ImagePage
             ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);

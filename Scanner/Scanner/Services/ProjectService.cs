@@ -104,13 +104,12 @@ namespace Scanner.Services
         public bool CanSelectPreviousPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
         public bool CanSelectNextPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
 
-        public bool CanUndo => undoStack.Count > 0;
-        public bool CanRedo => redoStack.Count > 0;
+        public Stack<IProjectAction> UndoStack { get; private set; } = new();
+        public Stack<IProjectAction> RedoStack { get; private set; } = new();
+        public bool CanUndo => UndoStack.Count > 0;
+        public bool CanRedo => RedoStack.Count > 0;
 
         public DispatcherQueue? UiDispatcherQueue { get; set; }
-
-        private Stack<IProjectAction> undoStack = new();
-        private Stack<IProjectAction> redoStack = new();
 
         private ThreadPoolTimer? autoSaveTimer;
 
@@ -156,7 +155,7 @@ namespace Scanner.Services
 
                 // create project
                 CurrentScanState = ScanState.Processing;
-                CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder);
+                CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
 
                 // auto rotate
                 if (SettingsService.SettingAutoRotate)
@@ -245,7 +244,7 @@ namespace Scanner.Services
                 {
                     insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder));
                 }
-                IProjectAction action = new AddFilesAction(insertions);
+                IProjectAction action = new AddFilesAction(insertions, false);
 
                 await ApplyActionAsync(action);
             }
@@ -292,8 +291,8 @@ namespace Scanner.Services
             await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
 
             // update undo/redo stacks
-            undoStack.Clear();
-            redoStack.Clear();
+            UndoStack.Clear();
+            RedoStack.Clear();
             OnPropertyChanged(nameof(CanUndo));
             OnPropertyChanged(nameof(CanRedo));
 
@@ -339,13 +338,13 @@ namespace Scanner.Services
                 if (changesMade)
                 {
                     // update undo stack
-                    undoStack.Push(action);
+                    UndoStack.Push(action);
                     OnPropertyChanged(nameof(CanUndo));
 
                     // update redo
                     if (!redoing)
                     {
-                        redoStack.Clear();
+                        RedoStack.Clear();
                         await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
                     }
                     OnPropertyChanged(nameof(CanRedo));
@@ -361,8 +360,8 @@ namespace Scanner.Services
                 if (redoing)
                 {
                     // update redo stack
-                    redoStack.Push(action);
-                    OnPropertyChanged(nameof(redoStack));
+                    RedoStack.Push(action);
+                    OnPropertyChanged(nameof(RedoStack));
                 }
             }
             catch (Exception)
@@ -389,7 +388,7 @@ namespace Scanner.Services
                 await action.UndoAsync(CurrentProject);
 
                 // update undo/redo
-                redoStack.Push(action);
+                RedoStack.Push(action);
                 OnPropertyChanged(nameof(CanUndo));
                 OnPropertyChanged(nameof(CanRedo));
             }
@@ -401,7 +400,7 @@ namespace Scanner.Services
                 }));
 
                 // update undo stack
-                undoStack.Push(action);
+                UndoStack.Push(action);
                 OnPropertyChanged(nameof(CanUndo));
             }
             catch (Exception)
@@ -418,18 +417,32 @@ namespace Scanner.Services
             }
         }
 
-        public async Task TryUndoAsync()
+        public async Task TryUndoAsync(IProjectAction? upUntil = null)
         {
             if (!CanUndo) return;
+            if (upUntil != null && !UndoStack.Contains(upUntil)) return;
 
-            await UndoActionAsync(undoStack.Pop());
+            if (upUntil == null) upUntil = UndoStack.Peek();
+
+            while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil)
+            {
+                await UndoActionAsync(UndoStack.Pop());
+            }
+            if (UndoStack.Count > 0) await UndoActionAsync(UndoStack.Pop());
         }
 
-        public async Task TryRedoAsync()
+        public async Task TryRedoAsync(IProjectAction? upUntil = null)
         {
             if (!CanRedo) return;
+            if (upUntil != null && !RedoStack.Contains(upUntil)) return;
 
-            await InternalApplyActionAsync(redoStack.Pop(), true);
+            if (upUntil == null) upUntil = RedoStack.Peek();
+
+            while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil)
+            {
+                await InternalApplyActionAsync(RedoStack.Pop(), true);
+            }
+            if (RedoStack.Count > 0) await InternalApplyActionAsync(RedoStack.Pop(), true);
         }
 
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

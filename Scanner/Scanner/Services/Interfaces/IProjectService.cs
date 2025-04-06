@@ -36,6 +36,8 @@ namespace Scanner.Services.Interfaces
         bool CanSelectPreviousPage { get; }
         bool CanSelectNextPage { get; }
 
+        Stack<IProjectAction> UndoStack { get; }
+        Stack<IProjectAction> RedoStack { get; }
         bool CanUndo { get; }
         bool CanRedo { get; }
 
@@ -46,8 +48,8 @@ namespace Scanner.Services.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Task ApplyActionAsync(IProjectAction action);
-        Task TryUndoAsync();
-        Task TryRedoAsync();
+        Task TryUndoAsync(IProjectAction? upUntil = null);
+        Task TryRedoAsync(IProjectAction? upUntil = null);
         
         Task TryCreateProjectAsync(ScanOptions scanOptions);
         Task TryScanToProjectAsync(ScanOptions scanOptions);

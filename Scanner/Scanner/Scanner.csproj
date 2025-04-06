@@ -82,6 +82,9 @@
     <Page Update="Views\Dialogs\SaveChangesDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\Flyouts\UndoRedoStackFlyout.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
     </Page>

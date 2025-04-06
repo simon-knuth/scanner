@@ -13,6 +13,7 @@ using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
 using Scanner.Views.Dialogs;
+using Scanner.Views.Flyouts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -379,6 +380,20 @@ namespace Scanner.Views
                     });
                     break;
             }
+        }
+
+        private void ButtonUndo_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            UndoRedoStackFlyout flyout = new UndoRedoStackFlyout(ViewModel.ProjectService.UndoStack);
+            flyout.ActionSelected += async (sender, e) => await ViewModel.TryUndoAsyncCommand.ExecuteAsync(e);
+            flyout.ShowAt((FrameworkElement)sender);
+        }
+
+        private void ButtonRedo_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            UndoRedoStackFlyout flyout = new UndoRedoStackFlyout(ViewModel.ProjectService.RedoStack);
+            flyout.ActionSelected += async (sender, e) => await ViewModel.TryRedoAsyncCommand.ExecuteAsync(e);
+            flyout.ShowAt((FrameworkElement)sender);
         }
     }
 }

@@ -79,5 +79,10 @@ namespace Scanner.Models
 
             await Project.RotatePagesAsync(invertedRotations);
         }
+
+        public string GetFriendlyName()
+        {
+            return nameof(RotatePagesAction);
+        }
     }
 }

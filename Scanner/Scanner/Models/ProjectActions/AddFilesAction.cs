@@ -27,6 +27,7 @@ namespace Scanner.Models
         #endregion
 
         private List<ProjectFileInsertion> insertions;
+        private bool keepSourceFiles;
 
         private List<IProjectPage>? addedPages;
 
@@ -41,9 +42,10 @@ namespace Scanner.Models
         /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
         /// Ensure that the indices are valid when the insertion happens.
         /// </param>
-        public AddFilesAction(List<ProjectFileInsertion> insertions)
+        public AddFilesAction(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
         {
             this.insertions = insertions;
+            this.keepSourceFiles = keepSourceFiles;
         }
 
 
@@ -52,7 +54,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            addedPages = await project.AddFilesAsync(insertions);
+            addedPages = await project.AddFilesAsync(insertions, keepSourceFiles);
             
             return addedPages != null && addedPages.Count > 0;
         }
@@ -66,6 +68,11 @@ namespace Scanner.Models
 
             await project.RemovePagesAsync(addedPages, true);
             addedPages = null;
+        }
+
+        public string GetFriendlyName()
+        {
+            return nameof(AddFilesAction);
         }
     }
 }

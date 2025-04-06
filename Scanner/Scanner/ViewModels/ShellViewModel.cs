@@ -43,8 +43,8 @@ namespace Scanner.ViewModels
         #region Commands
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
-        public AsyncRelayCommand TryUndoAsyncCommand => new AsyncRelayCommand(TryUndoAsync);
-        public AsyncRelayCommand TryRedoAsyncCommand => new AsyncRelayCommand(TryRedoAsync);
+        public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
+        public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
         public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
@@ -220,14 +220,14 @@ namespace Scanner.ViewModels
             await ProjectService.TryCloseProjectAsync();
         }
 
-        private async Task TryUndoAsync()
+        private async Task TryUndoAsync(IProjectAction? upUntil = null)
         {
-            await ProjectService.TryUndoAsync();
+            await ProjectService.TryUndoAsync(upUntil);
         }
 
-        private async Task TryRedoAsync()
+        private async Task TryRedoAsync(IProjectAction? upUntil = null)
         {
-            await ProjectService.TryRedoAsync();
+            await ProjectService.TryRedoAsync(upUntil);
         }
 
         private void ShowSettings()

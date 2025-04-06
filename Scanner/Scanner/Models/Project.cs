@@ -82,7 +82,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder)
+        public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles)
         {
             // empty folder
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -91,7 +91,7 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles));
             }
 
             // create project
@@ -102,7 +102,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions)
+        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
         {
             // keep track of changes in case of error
             List<StorageFile> copiedFiles = new();
@@ -114,7 +114,7 @@ namespace Scanner.Models
                 // add files
                 foreach (ProjectFileInsertion insertion in insertions)
                 {
-                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder);
+                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles);
                     copiedFiles.Add(page.SourceFile);
 
                     preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
@@ -209,7 +209,7 @@ namespace Scanner.Models
             IsSaved = false;
         }
 
-        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? fileName, StorageFolder? targetFolder)
+        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? fileName, StorageFolder? targetFolder, bool keepSourceFile)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -221,7 +221,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder);
+                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder, keepSourceFile);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:

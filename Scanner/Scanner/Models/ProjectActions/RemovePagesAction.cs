@@ -78,8 +78,13 @@ namespace Scanner.Models
                 }
             }
 
-            removals = await project.AddFilesAsync(insertions);
+            removals = await project.AddFilesAsync(insertions, false);
             removedPages = null;
+        }
+
+        public string GetFriendlyName()
+        {
+            return nameof(RemovePagesAction);
         }
     }
 }

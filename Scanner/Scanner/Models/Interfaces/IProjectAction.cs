@@ -54,5 +54,10 @@ namespace Scanner.Models.Interfaces
         /// Occurs when a fatal error occurred and the changes to the <see cref="Project"/> could not be rolled back.
         /// </exception>
         Task UndoAsync(Project project);
+
+        /// <summary>
+        /// Gets the friendly name of the action.
+        /// </summary>
+        string GetFriendlyName();
     }
 }
