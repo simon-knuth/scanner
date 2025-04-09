@@ -37,6 +37,7 @@ namespace Scanner.ViewModels
         #endregion
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FileName))]
         private Project? currentProject;
 
         public string FileName
@@ -82,7 +83,6 @@ namespace Scanner.ViewModels
             {
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
-                    OnPropertyChanged(nameof(FileName));
                     break;
                 case nameof(IProjectService.SelectedPage):
                     if (CurrentProject != null && CurrentProject.IsPdf)

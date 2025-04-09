@@ -73,6 +73,8 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:NullBoolConverter x:Key="NullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -88,7 +90,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged">
+            <Grid x:Name="GridHeader" Grid.Row="0" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -338,100 +340,119 @@
                         </Button>
                     </Frame>
                 </Grid>
-                
-                <!-- Page list -->
-                <Grid x:Name="GridPageList" x:Load="{x:Bind IsExpanded, Mode=OneWay}" Loading="ControlAnimated_Loading">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="1*" />
-                    </Grid.RowDefinitions>
 
-                    <animations:Implicit.ShowAnimations>
-                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
-                    </animations:Implicit.ShowAnimations>
+                <Grid x:Name="GridExpanded" x:Load="{x:Bind IsExpanded, Mode=OneWay}">
+                    <!-- Page list -->
+                    <Grid x:Name="GridPageList" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Loading="ControlAnimated_Loading">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
 
-                    <animations:Implicit.HideAnimations>
-                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
-                    </animations:Implicit.HideAnimations>
+                        <animations:Implicit.ShowAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                            <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
+                        </animations:Implicit.ShowAnimations>
 
-                    <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged">
-                        <GridView.ItemContainerTransitions>
-                            <TransitionCollection>
+                        <animations:Implicit.HideAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                            <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
+                        </animations:Implicit.HideAnimations>
 
-                            </TransitionCollection>
-                        </GridView.ItemContainerTransitions>
+                        <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged">
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
 
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="interfaces:IProjectPage">
-                                <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
-                                    <Grid>
-                                        <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
-                                            <Image>
-                                                <Image.Source>
-                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
-                                                </Image.Source>
-                                            </Image>
-                                        </Frame>
-                                        <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" StrokeThickness="0" />
-                                        <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
-                                        <Grid MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                                            <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
+
+                            <GridView.ItemTemplate>
+                                <DataTemplate x:DataType="interfaces:IProjectPage">
+                                    <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                        <Grid>
+                                            <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
+                                                <Image>
+                                                    <Image.Source>
+                                                        <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
+                                                    </Image.Source>
+                                                </Image>
+                                            </Frame>
+                                            <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" StrokeThickness="0" />
+                                            <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
+                                            <Grid MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                                <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </GridViewItem>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
-                    <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
-                        <Border>
-                            <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
-                                <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
-                                    <FontIcon Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </ToggleButton>
-                                <AppBarSeparator />
-                                <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
-                                    <Grid>
-                                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    </Grid>
+                                    </GridViewItem>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
+                        <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
+                            <Border>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
+                                    <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
+                                        <FontIcon Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </ToggleButton>
+                                    <AppBarSeparator />
+                                    <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
+                                        <Grid>
+                                            <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </Grid>
 
-                                    <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout Placement="Bottom">
-                                            <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
-                                            <MenuFlyoutItem Text="Rotate 180 degrees" />
-                                            <MenuFlyoutItem Text="Rotate 270 degrees" />
-                                            <MenuFlyoutItem Text="Rotate automatically">
-                                                <MenuFlyoutItem.Icon>
-                                                    <ImageIcon>
-                                                        <ImageIcon.Source>
-                                                            <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
-                                                        </ImageIcon.Source>
-                                                    </ImageIcon>
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutSeparator />
-                                            <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                        </MenuFlyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                </Button>
-                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
-                                    <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </Button>
-                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </Button>
-                                <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
-                                    <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </Button>
-                            </StackPanel>
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout Placement="Bottom">
+                                                <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" />
+                                                <MenuFlyoutItem Text="Rotate 180 degrees" />
+                                                <MenuFlyoutItem Text="Rotate 270 degrees" />
+                                                <MenuFlyoutItem Text="Rotate automatically">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <ImageIcon>
+                                                            <ImageIcon.Source>
+                                                                <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                                            </ImageIcon.Source>
+                                                        </ImageIcon>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutSeparator />
+                                                <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
+                                    </Button>
+                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Button>
+                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
+                                        <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Button>
+                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
+                                        <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Placeholder -->
+                    <Grid x:Name="GridPlaceholder" RowSpacing="32" HorizontalAlignment="Center" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NullBoolConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.2" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="-12" />
+                        <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,4,12,0" Opacity="0.4" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="8" />
+                        <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.8" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="0">
+                            <ui:Effects.Shadow>
+                                <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.1" CornerRadius="4" />
+                            </ui:Effects.Shadow>
                         </Border>
-                    </Frame>
+                        <TextBlock Grid.Row="1" Text="Scanned pages will appear here" TextAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
