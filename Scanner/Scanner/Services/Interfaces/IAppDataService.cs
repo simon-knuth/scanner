@@ -43,6 +43,14 @@ namespace Scanner.Services.Interfaces
         }
 
         /// <summary>
+        /// Holds updated files that need to be reintegrated the next time the project is saved.
+        /// </summary>
+        StorageFolder ChangesFolder
+        {
+            get;
+        }
+
+        /// <summary>
         /// Holds prior file states for undo.
         /// </summary>
         StorageFolder UndoFolder

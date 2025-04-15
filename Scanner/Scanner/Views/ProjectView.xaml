@@ -448,7 +448,7 @@
                         <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,4,12,0" Opacity="0.4" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="8" />
                         <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.8" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="0">
                             <ui:Effects.Shadow>
-                                <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.1" CornerRadius="4" />
+                                <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.05" CornerRadius="4" />
                             </ui:Effects.Shadow>
                         </Border>
                         <TextBlock Grid.Row="1" Text="Scanned pages will appear here" TextAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />

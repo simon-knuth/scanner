@@ -25,6 +25,7 @@ namespace Scanner.Models
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         #region Services
+        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
@@ -53,7 +54,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            appliedRotations = await Project.RotatePagesAsync(rotations);
+            appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder);
 
             if (appliedRotations != null && appliedRotations.Count > 0)
             {
@@ -77,7 +78,7 @@ namespace Scanner.Models
                 invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
             }
 
-            await Project.RotatePagesAsync(invertedRotations);
+            await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder);
         }
 
         public string GetFriendlyName()

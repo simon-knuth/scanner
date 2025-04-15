@@ -35,12 +35,14 @@ namespace Scanner.Services
 
         private const string IncomingFolderName = "Incoming";
         private const string ProjectFolderName = "Project";
+        private const string ChangesFolderName = "Changes";
         private const string UndoFolderName = "Undo";
         private const string RedoFolderName = "Redo";
 
         public StorageFolder TempFolder { get; private set; }
         public StorageFolder IncomingFolder { get; private set; }
         public StorageFolder ProjectFolder { get; private set; }
+        public StorageFolder ChangesFolder { get; private set; }
         public StorageFolder UndoFolder { get; private set; }
         public StorageFolder RedoFolder { get; private set; }
 
@@ -84,6 +86,7 @@ namespace Scanner.Services
             // replace folders
             IncomingFolder = await CreateOrReplaceFolderAsync(IncomingFolderName);
             ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
+            ChangesFolder = await CreateOrReplaceFolderAsync(ChangesFolderName);
             UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
             RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
 
@@ -124,6 +127,10 @@ namespace Scanner.Services
             else if (folder == ProjectFolder)
             {
                 return Path.Combine("ms-appdata:///temp/", ProjectFolderName, fileName);
+            }
+            else if (folder == ChangesFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", ChangesFolderName, fileName);
             }
             else
             {

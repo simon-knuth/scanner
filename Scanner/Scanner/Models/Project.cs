@@ -48,7 +48,12 @@ namespace Scanner.Models
         public TaskCompletionSource? LatestSaveProcess;
 
         private bool saveProcessWaitingToStart;
-        private SemaphoreSlim saveSemaphore = new SemaphoreSlim(1, 1);
+
+        private SemaphoreSlim saveSemaphore = new(1, 1);                // needed to run a save process
+
+        private SemaphoreSlim projectObjectSemaphore = new(1, 1);       // needed to modify the Project object
+        private SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
+        private SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
 
         public ObservableCollection<IProjectPage> Pages
         {
@@ -61,7 +66,7 @@ namespace Scanner.Models
         public StorageFolder TargetFolder;
 
         [ObservableProperty]
-        private string targetFileName;
+        private string? targetFileName;
 
         public bool IsPdf => Format == TargetFormat.PDF;
 
@@ -73,7 +78,7 @@ namespace Scanner.Models
         {
             Pages = new ObservableCollection<IProjectPage>(pages);
             Format = format;
-
+            
             if (IsPdf)
             {
                 // folder saved at project level for PDF and page level for all other formats
@@ -84,14 +89,17 @@ namespace Scanner.Models
 
         public static async Task<Project> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles)
         {
-            // empty folder
+            // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
 
             // create pages
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder));
             }
 
             // create project
@@ -104,112 +112,194 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
         {
-            // keep track of changes in case of error
-            List<StorageFile> copiedFiles = new();
-            List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
-            List<IProjectPage> insertedPages = new();
+            await StartEditingAsync();
 
             try
             {
-                // add files
-                foreach (ProjectFileInsertion insertion in insertions)
-                {
-                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles);
-                    copiedFiles.Add(page.SourceFile);
+                // keep track of changes in case of error
+                List<StorageFile> copiedFiles = new();
+                List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
+                List<IProjectPage> insertedPages = new();
 
-                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
+                // revertable section
+                try
+                {
+                    // add files
+                    foreach (ProjectFileInsertion insertion in insertions)
+                    {
+                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder);
+                        copiedFiles.Add(page.SourceFile);
+
+                        preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
+                    }
+
+                    // add pages
+                    foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
+                    {
+                        Pages.Insert(insertion.Value, insertion.Key);
+                        insertedPages.Add(insertion.Key);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    // roll back changes
+                    foreach (StorageFile file in copiedFiles)
+                    {
+                        await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    }
+
+                    foreach (IProjectPage page in insertedPages)
+                    {
+                        Pages.Remove(page);
+                    }
+
+                    throw new ProjectException(exc);
                 }
 
-                // add pages
-                foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
+                // update indices
+                for (int i = 0; i < Pages.Count; i++)
                 {
-                    Pages.Insert(insertion.Value, insertion.Key);
-                    insertedPages.Add(insertion.Key);
+                    Pages[i].Index = i;
                 }
+
+                PagesAdded?.Invoke(this, EventArgs.Empty);
+
+                IsSaved = false;
+                return insertedPages;
             }
-            catch (Exception exc)
+            finally
             {
-                // roll back changes
-                foreach (StorageFile file in copiedFiles)
-                {
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                }
-
-                foreach (IProjectPage page in insertedPages)
-                {
-                    Pages.Remove(page);
-                }
-
-                throw new ProjectException(exc);
+                FinishEditing();
             }
+        }
 
-            // update indices
-            for (int i = 0; i < Pages.Count; i++)
+        public async Task AddPagesAsync(List<IProjectPage> insertions)
+        {
+            await StartEditingAsync();
+
+            try
             {
-                Pages[i].Index = i;
+                // keep track of changes in case of error
+                List<KeyValuePair<StorageFile, StorageFolder>> moves = new();
+                List<IProjectPage> insertedPages = new();
+
+                // revertable section
+                try
+                {
+                    // move files
+                    foreach (IProjectPage insertion in insertions)
+                    {
+                        StorageFolder previousFolder = await insertion.SourceFile.GetParentAsync();
+                        await insertion.SourceFile.MoveAsync(AppDataService.ChangesFolder, insertion.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                        insertion.ChangeSourceFile(AppDataService.ChangesFolder, insertion.SourceFile);
+                        moves.Add(new KeyValuePair<StorageFile, StorageFolder>(insertion.SourceFile, previousFolder));
+                    }
+
+                    // add pages
+                    foreach (IProjectPage insertion in insertions)
+                    {
+                        Pages.Insert(insertion.Index, insertion);
+                        insertedPages.Add(insertion);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    // roll back changes
+                    foreach (KeyValuePair<StorageFile, StorageFolder> move in moves)
+                    {
+                        await move.Key.MoveAsync(move.Value, move.Key.Name, NameCollisionOption.GenerateUniqueName);
+                    }
+
+                    foreach (IProjectPage page in insertedPages)
+                    {
+                        Pages.Remove(page);
+                        page.ChangeSourceFile(await page.SourceFile.GetParentAsync(), page.SourceFile);
+                    }
+
+                    throw new ProjectException(exc);
+                }
+
+                // update indices
+                for (int i = 0; i < Pages.Count; i++)
+                {
+                    Pages[i].Index = i;
+                }
+
+                PagesAdded?.Invoke(this, EventArgs.Empty);
+
+                IsSaved = false;
             }
-
-            PagesAdded?.Invoke(this, EventArgs.Empty);
-
-            IsSaved = false;
-            return insertedPages;
+            finally
+            {
+                FinishEditing();
+            }
         }
 
         public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
         {
-            // keep track of changes in case of error
-            List<StorageFile> deletedFiles = new();
-            List<int> deletedIndices = new();
+            await StartEditingAsync();
 
             try
             {
-                // remove pages
-                foreach (IProjectPage page in pages)
-                {
-                    deletedFiles.Add(page.SourceFile);
-                    deletedIndices.Add(page.Index);
+                // keep track of changes in case of error
+                List<StorageFile> deletedFiles = new();
+                List<int> deletedIndices = new();
 
-                    if (page is ImagePage)
+                // revertable section
+                try
+                {
+                    // remove pages
+                    foreach (IProjectPage page in pages)
                     {
-                        if (isUndoing)
+                        deletedFiles.Add(page.SourceFile);
+                        deletedIndices.Add(page.Index);
+
+                        if (page is ImagePage)
                         {
-                            // move to redo folder
-                            await page.SourceFile.MoveAsync(AppDataService.RedoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                            if (isUndoing)
+                            {
+                                // move to redo folder
+                                await page.SourceFile.MoveAsync(AppDataService.RedoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                            }
+                            else
+                            {
+                                // move to undo folder
+                                await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                            }
                         }
-                        else
-                        {
-                            // move to undo folder
-                            await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
-                        }
+
+                        Pages.Remove(page);
                     }
-
-                    Pages.Remove(page);
                 }
-            }
-            catch (Exception exc)
-            {
-                // roll back changes
-                foreach (StorageFile file in deletedFiles)
+                catch (Exception exc)
                 {
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    // roll back changes
+                    foreach (StorageFile file in deletedFiles)
+                    {
+                        await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    }
+                    for (int i = 0; i < deletedIndices.Count; i++)
+                    {
+                        Pages.Insert(deletedIndices[i], pages[i]);
+                    }
+                    throw new ProjectException(exc);
                 }
-                for (int i = 0; i < deletedIndices.Count; i++)
+
+                // update indices
+                for (int i = 0; i < Pages.Count; i++)
                 {
-                    Pages.Insert(deletedIndices[i], pages[i]);
+                    Pages[i].Index = i;
                 }
-                throw new ProjectException(exc);
-            }
 
-            // update indices
-            for (int i = 0; i < Pages.Count; i++)
+                IsSaved = false;
+            }
+            finally
             {
-                Pages[i].Index = i;
+                FinishEditing();
             }
-
-            IsSaved = false;
         }
 
-        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? fileName, StorageFolder? targetFolder, bool keepSourceFile)
+        private static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? fileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -221,7 +311,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder, keepSourceFile);
+                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder, keepSourceFile, pagesFolder);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:
@@ -258,7 +348,66 @@ namespace Scanner.Models
                         IsSaving = true;
                         saveProcessWaitingToStart = false;
                     });
-                    await Task.Delay(3000);
+
+                    // lock data
+                    await projectObjectSemaphore.WaitAsync();
+                    await projectFolderSemaphore.WaitAsync();
+                    await changesFolderSemaphore.WaitAsync();
+
+                    // commit changes
+                    foreach (IProjectPage page in Pages)
+                    {
+                        if (page.CommitNeeded)
+                        {
+                            // copy file to project folder
+                            StorageFile? fileToDelete = page.SourceFile;
+                            StorageFile newSourceFile;
+                            if (page.OutOfDateSourceFile != null)
+                            {
+                                newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                page.ClearOutOfDateSourceFile();
+                            }
+                            else
+                            {
+                                newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                            }
+
+                            // update page
+                            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                            {
+                                page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile);
+                            });
+
+                            // delete old file
+                            if (fileToDelete != null)
+                            {
+                                _ = Task.Run(async () =>
+                                {
+                                    await fileToDelete.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                                });
+                            }
+                        }
+                    }
+
+                    // take snapshot
+                    IProjectSnapshot snapshot;
+                    if (IsPdf)
+                    {
+                        snapshot = new PdfProjectSnapshot(this);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    // continue processing edits during save process
+                    projectObjectSemaphore.Release();
+                    changesFolderSemaphore.Release();
+
+                    // save
+                    await snapshot.SaveAsync();
+
+                    projectFolderSemaphore.Release();
                 }
                 catch (Exception exc)
                 {
@@ -284,38 +433,93 @@ namespace Scanner.Models
             });
         }
 
-        public static async Task RotatePagesAsync(Dictionary<StorageFile, BitmapRotation> instructions, bool overwriteFiles)
+        /// <summary>
+        /// Rotates image files.
+        /// </summary>
+        /// <param name="instructions">Which file to rotate how much.</param>
+        /// <param name="overwriteFilesDirectly">Whether to overwrite files directly or create a separate file first and then delete the old one.</param>
+        /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
+        public static async Task RotateFilesAsync(Dictionary<StorageFile, BitmapRotation> instructions, bool overwriteFilesDirectly, StorageFolder pagesFolder)
         {
             foreach (KeyValuePair<StorageFile, BitmapRotation> instruction in instructions)
             {
-                await RotatePageAsync(instruction.Key, instruction.Value, overwriteFiles);
+                StorageFile oldFile = instruction.Key;
+                await RotateFileAsync(instruction.Key, instruction.Value, overwriteFilesDirectly, pagesFolder);
+
+                if (!overwriteFilesDirectly)
+                {
+                    // delete old file
+                    _ = Task.Run(async () =>
+                    {
+                        await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    });
+                }
             }
         }
 
-        public static async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions)
+        /// <summary>
+        /// Rotates pages.
+        /// </summary>
+        /// <param name="instructions">Which page to rotate how much.</param>
+        /// <returns></returns>
+        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions, StorageFolder pagesFolder)
         {
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
-                StorageFile newFile = await RotatePageAsync(instruction.Key.SourceFile, instruction.Value, false);
-                instruction.Key.ChangeSourceFile(newFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, newFile.Name)));
+                StorageFile oldFile = instruction.Key.SourceFile;
+                StorageFile newFile;
+
+                await StartEditingAsync();
+                try
+                {
+                    newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
+                }
+                finally
+                {
+                    FinishEditing();
+                }
+                instruction.Key.ChangeSourceFile(pagesFolder, newFile);
+
+                // delete old file
+                if (oldFile != newFile)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    });
+                }
             }
         }
 
-        private static async Task<StorageFile> RotatePageAsync(StorageFile file, BitmapRotation rotation, bool overwriteFile)
+        /// <summary>
+        /// Rotates a file.
+        /// </summary>
+        /// <param name="file">The file to rotate.</param>
+        /// <param name="rotation">The amount to rotate the file by.</param>
+        /// <param name="overwriteFileDirectly">Whether to overwrite the file directly or create a separate file first and then delete the old one.</param>
+        /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
+        /// <returns>The resulting file. If <paramref name="overwriteFileDirectly"/> is true, <paramref name="file"/> is returned.</returns>
+        private static async Task<StorageFile> RotateFileAsync(StorageFile file, BitmapRotation rotation, bool overwriteFileDirectly, StorageFolder pagesFolder)
         {
             try
             {
                 if (rotation == BitmapRotation.None) return file;
 
+                bool isFolderChanging = pagesFolder.Path == (await file.GetParentAsync()).Path;
+
                 // create empty file to save to
                 TaskCompletionSource<StorageFile> targetFileCreation = new();
                 StorageFile targetFile = file;
-                if (!overwriteFile)
+                if (isFolderChanging || !overwriteFileDirectly)
                 {
                     _ = Task.Run(async () =>
                     {
-                        targetFileCreation.TrySetResult(await AppDataService.ProjectFolder.CreateFileAsync(file.Name, CreationCollisionOption.GenerateUniqueName));
+                        targetFileCreation.TrySetResult(await pagesFolder.CreateFileAsync(file.Name, CreationCollisionOption.GenerateUniqueName));
                     });
+                }
+                else
+                {
+                    targetFileCreation.TrySetResult(targetFile);
                 }
 
                 // perform edit
@@ -326,7 +530,7 @@ namespace Scanner.Models
                     SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
                     // get target file
-                    if (!overwriteFile) targetFile = await targetFileCreation.Task;
+                    targetFile = await targetFileCreation.Task;
                     using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
                         // rotate
@@ -338,16 +542,6 @@ namespace Scanner.Models
                     }
                 }
 
-                // delete old page
-                if (!overwriteFile)
-                {
-                    StorageFile oldFile = file;
-                    _ = Task.Run(async () =>
-                    {
-                        await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    });
-                }
-
                 return targetFile;
             }
             catch (Exception e)
@@ -356,7 +550,13 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task RotatePagesAsync(Dictionary<StorageFile, RotationIntent> instructions, bool overwriteFiles)
+        /// <summary>
+        /// Rotates files.
+        /// </summary>
+        /// <param name="instructions">Which file to rotate how much.</param>
+        /// <param name="overwriteFilesDirectly">Whether to overwrite the files directly or create a separate file first and then delete the old one.</param>
+        /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
+        public static async Task RotateFilesAsync(Dictionary<StorageFile, RotationIntent> instructions, bool overwriteFilesDirectly, StorageFolder pagesFolder)
         {
             // split instructions
             Dictionary<StorageFile, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
@@ -383,10 +583,16 @@ namespace Scanner.Models
             }
 
             // process instructions
-            await RotatePagesAsync(mergedInstructions, overwriteFiles);
+            await RotateFilesAsync(mergedInstructions, overwriteFilesDirectly, pagesFolder);
         }
 
-        public static async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions)
+        /// <summary>
+        /// Rotates pages.
+        /// </summary>
+        /// <param name="instructions">Which page to rotate how much.</param>
+        /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
+        /// <returns>The actual rotations performed for each file.</returns>
+        public async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions, StorageFolder pagesFolder)
         {
             // split instructions
             Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
@@ -413,7 +619,7 @@ namespace Scanner.Models
             }
 
             // process instructions
-            await RotatePagesAsync(mergedInstructions);
+            await RotatePagesAsync(mergedInstructions, pagesFolder);
 
             return mergedInstructions;
         }
@@ -435,6 +641,18 @@ namespace Scanner.Models
                 default:
                     throw new ArgumentException($"Failed to get BitmapEncoder ID for file");
             }
+        }
+
+        private async Task StartEditingAsync()
+        {
+            await projectObjectSemaphore.WaitAsync();
+            await changesFolderSemaphore.WaitAsync();
+        }
+
+        private void FinishEditing()
+        {
+            projectObjectSemaphore.Release();
+            changesFolderSemaphore.Release();
         }
     }
 

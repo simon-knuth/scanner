@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
-using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,39 +14,21 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using System.ComponentModel;
-using Windows.Graphics.Imaging;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models.Interfaces
 {
-    public interface IProjectPage : INotifyPropertyChanged
+    public interface IProjectSnapshot
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        StorageFile SourceFile { get; }
-        StorageFile? TargetFile { get; }
-
-        /// <summary>
-        /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
-        /// </summary>
-        bool CommitNeeded { get; }
-
-        /// <summary>
-        /// If the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>
-        /// and a file already exists, this is the file it will replace there.
-        /// </summary>
-        StorageFile? OutOfDateSourceFile { get; }
-
-        Uri BitmapUri { get; }
-
-        int Index { get; set; }
-        int PageNumber { get; }
+        TargetFormat Format { get; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void ChangeSourceFile(StorageFolder parentFolder, StorageFile file);
-        void ClearOutOfDateSourceFile();
+        Task SaveAsync();
     }
 }

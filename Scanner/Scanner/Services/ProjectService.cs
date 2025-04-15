@@ -144,8 +144,6 @@ namespace Scanner.Services
                 // scan
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-                await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
-                await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
                 IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
 
                 if (files.Count == 0)
@@ -168,7 +166,7 @@ namespace Scanner.Services
                         instructions.Add(page, RotationIntent.Automatic);
                     }
 
-                    await Project.RotatePagesAsync(instructions);
+                    await CurrentProject.RotatePagesAsync(instructions, AppDataService.ProjectFolder);
                 }
 
                 // save if needed
@@ -234,7 +232,7 @@ namespace Scanner.Services
                         instructions.Add(file, RotationIntent.Automatic);
                     }
 
-                    await Project.RotatePagesAsync(instructions, true);
+                    await Project.RotateFilesAsync(instructions, true, AppDataService.ProjectFolder);
                 }
 
                 // add files
@@ -457,6 +455,7 @@ namespace Scanner.Services
 
         private void ResetAutoSaveTimer()
         {
+            // TODO: ensure auto save continues after exception
             if (SettingsService?.SettingAutoSave == true)
             {
                 TimerElapsedHandler? handler = null;

@@ -14,6 +14,7 @@ using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
+using System.IO;
 
 namespace Scanner.Models
 {
@@ -38,6 +39,9 @@ namespace Scanner.Models
                 SetProperty(ref sourceFile, value);
             }
         }
+
+        public StorageFile? OutOfDateSourceFile {  get; private set; }
+        public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
 
         public StorageFile? TargetFile
         {
@@ -66,7 +70,7 @@ namespace Scanner.Models
         private int index;
 
         [ObservableProperty]
-        private string targetFileName;
+        private string? targetFileName;
 
         public int PageNumber => Index + 1;
 
@@ -90,15 +94,18 @@ namespace Scanner.Models
         /// <param name="sourceFile">The image source file.</param>
         /// <param name="index">The index of the page in the <see cref="Project"/>.</param>
         /// <param name="targetFileName">The desired target file name.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string targetFileName, StorageFolder targetFolder, bool keepSourceFile)
+        /// <param name="targetFolder">The target folder for this specific page.</param>
+        /// <param name="keepSourceFile">Whether to keep the source file or delete it after processing.</param>
+        /// <param name="pagesFolder">Which internal folder to copy/move the <paramref name="sourceFile"/> to.</param>
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, index, keepSourceFile);
+            ImagePage result = await CreateAsyncInternal(sourceFile, index, keepSourceFile, pagesFolder);
             result.TargetFileName = targetFileName;
             result.TargetFolder = targetFolder;
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index, bool keepSourceFile)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index, bool keepSourceFile, StorageFolder pagesFolder)
         {
             // check file
             if (sourceFile == null)
@@ -114,18 +121,19 @@ namespace Scanner.Models
                 throw new ArgumentException("Failed to create ImagePage due to incompatible file format");
             }
 
-            // copy file to project folder
+            // copy file to pages folder
             if (keepSourceFile)
             {
-                sourceFile = await sourceFile.CopyAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+                sourceFile = await sourceFile.CopyAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
             }
             else
             {
-                await sourceFile.MoveAsync(AppDataService.ProjectFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+                await sourceFile.MoveAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
             }
 
             // create ImagePage
-            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, sourceFile.Name)), index);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index);
+            
             return result;
         }
 
@@ -133,10 +141,21 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void ChangeSourceFile(StorageFile file, Uri uri)
+        public void ChangeSourceFile(StorageFolder parentFolder, StorageFile file)
         {
+            if (OutOfDateSourceFile == null && parentFolder == AppDataService.ChangesFolder)
+            {
+                // keep track of file that needs to be replaced once changes are committed
+                OutOfDateSourceFile = SourceFile;
+            }
+
             SourceFile = file;
-            BitmapUri = uri;
+            BitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+        }
+
+        public void ClearOutOfDateSourceFile()
+        {
+            OutOfDateSourceFile = null;
         }
     }
 }

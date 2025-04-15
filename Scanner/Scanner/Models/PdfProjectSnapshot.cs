@@ -13,64 +13,49 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.ComponentModel;
-using Microsoft.UI.Dispatching;
+using Windows.Graphics.Imaging;
 
 namespace Scanner.Models
 {
-    public partial class RemovePagesAction : IProjectAction
+    public partial class PdfProjectSnapshot : IProjectSnapshot
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private List<IProjectPage> removals;
+        public TargetFormat Format { get; private set; }
 
-        private List<IProjectPage>? removedPages;
+        public string? FileName { get; private set; }
+        public StorageFolder? TargetFolder { get; private set; }
+
+        public List<StorageFile> Pages { get; private set; } = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Removes a set of pages from a <see cref="Project"/>.
-        /// </summary>
-        /// <param name="removals">
-        /// A list of pages to remove.
-        /// </param>
-        public RemovePagesAction(List<IProjectPage> removals)
+        public PdfProjectSnapshot(Project project)
         {
-            this.removals = removals;
+            Format = project.Format;
+            FileName = project.TargetFileName;
+            TargetFolder = project.TargetFolder;
+
+            foreach (IProjectPage page in project.Pages)
+            {
+                Pages.Add(page.SourceFile);
+            }
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task SaveAsync()
         {
-            await project.RemovePagesAsync(removals, false);
-            removedPages = removals;
-
-            return removedPages != null && removedPages.Count > 0;
-        }
-
-        public async Task UndoAsync(Project project)
-        {
-            if (removedPages == null)
-            {
-                throw new ProjectException("Can't undo RemovePagesAction without list of removed pages");
-            }
-
-            await project.AddPagesAsync(removedPages);
-            removedPages = null;
-        }
-
-        public string GetFriendlyName()
-        {
-            return nameof(RemovePagesAction);
+            await Task.Delay(3000);
         }
     }
 }
