@@ -466,6 +466,8 @@ namespace Scanner.Models
         {
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
+                if (instruction.Value == BitmapRotation.None) continue;
+
                 StorageFile oldFile = instruction.Key.SourceFile;
                 StorageFile newFile;
 
