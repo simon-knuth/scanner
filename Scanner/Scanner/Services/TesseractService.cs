@@ -98,5 +98,26 @@ namespace Scanner.Services
                 }
             }
         }
+
+        public void GeneratePdf(List<StorageFile> Files, string targetFilePath)
+        {
+            using (TesseractEngine engine = new TesseractEngine(trainingDataFolderPath, "eng"))
+            {
+                using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, false))
+                {
+                    renderer.BeginDocument("Scan");
+                    foreach (StorageFile file in Files)
+                    {
+                        using (Pix image = Pix.LoadFromFile(file.Path))
+                        {
+                            using (Page page = engine.Process(image))
+                            {
+                                renderer.AddPage(page);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

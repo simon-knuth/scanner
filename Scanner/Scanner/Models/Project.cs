@@ -63,7 +63,9 @@ namespace Scanner.Models
 
         public TargetFormat Format;
 
-        public StorageFolder TargetFolder;
+        public StorageFolder? TargetFolder;
+
+        public StorageFile? TargetFile;
 
         [ObservableProperty]
         private string? targetFileName;
@@ -405,7 +407,10 @@ namespace Scanner.Models
                     changesFolderSemaphore.Release();
 
                     // save
-                    await snapshot.SaveAsync();
+                    if (await snapshot.TrySaveAsync())
+                    {
+                        throw new ApplicationException("Failed to save Project");
+                    }
 
                     projectFolderSemaphore.Release();
                 }

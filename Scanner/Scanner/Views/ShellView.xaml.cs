@@ -304,7 +304,7 @@ namespace Scanner.Views
 
                 isDialogVisible = true;
 
-                SaveFileDialogView dialog = new SaveFileDialogView(scanOptions, project);
+                SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
                 task.TrySetResult(dialog.SaveOptions);

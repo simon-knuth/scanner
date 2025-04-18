@@ -10,12 +10,12 @@ using Windows.Storage;
 
 namespace Scanner.Messages
 {
-    internal class ShowSaveFileDialogMessage : RequestMessage<Task<SaveOptions?>>
+    internal class ShowSaveOptionsDialogMessage : RequestMessage<Task<SaveOptions?>>
     {
         public ScanOptions ScanOptions;
         public Project? Project;
 
-        public ShowSaveFileDialogMessage(ScanOptions scanOptions, Project? project)
+        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, Project? project)
         {
             this.ScanOptions = scanOptions;
             this.Project = project;

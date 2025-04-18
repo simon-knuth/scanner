@@ -98,7 +98,7 @@ namespace Scanner.ViewModels
             {
                 m.Reply(ShowSaveChangesDialogAsync());
             });
-            Messenger.Register<ShowSaveFileDialogMessage>(this, (r, m) =>
+            Messenger.Register<ShowSaveOptionsDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project));
             });

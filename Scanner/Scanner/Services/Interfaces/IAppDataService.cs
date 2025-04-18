@@ -51,6 +51,14 @@ namespace Scanner.Services.Interfaces
         }
 
         /// <summary>
+        /// Contains the generated PDf file.
+        /// </summary>
+        StorageFolder PdfOutputFolder
+        {
+            get;
+        }
+
+        /// <summary>
         /// Holds prior file states for undo.
         /// </summary>
         StorageFolder UndoFolder

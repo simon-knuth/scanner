@@ -126,7 +126,7 @@ namespace Scanner.Services
                         return new SaveOptions(existingProject.TargetFolder!, fileName);
                     }
 
-                    return await Messenger.Send(new ShowSaveFileDialogMessage(scanOptions, existingProject)).Response;
+                    return await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
 
                 default:
                     throw new ArgumentException("Invalid save location type");
