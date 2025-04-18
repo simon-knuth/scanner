@@ -119,7 +119,11 @@ namespace Scanner.Services
             List<LogFile> sortedFiles = new List<LogFile>();
             foreach (var file in files)
             {
-                sortedFiles.Add(await LogFile.CreateLogFile(file));
+                var properties = await file.GetBasicPropertiesAsync();
+                if (properties.Size >= 1000)
+                {
+                    sortedFiles.Add(await LogFile.CreateLogFile(file));
+                }
             }
             sortedFiles.Sort(delegate (LogFile x, LogFile y)
             {
