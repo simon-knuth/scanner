@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
+using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,33 +32,13 @@ namespace Scanner.Views.Dialogs
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
-        #endregion
-
-        public SaveOptions? SaveOptions { get; private set; }
-
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(SelectedFolderPathWithoutFolder))]
-        [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
-        private StorageFolder? selectedFolder;
+        private double folderFlyoutWidth;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
-        private string fileDisplayName;
+        public SaveOptions? SaveOptions => ViewModel.SaveOptions;
 
-        public string? SelectedFolderPathWithoutFolder => SelectedFolder?.Path.Substring(0, SelectedFolder.Path.LastIndexOf(Path.DirectorySeparatorChar)) ?? string.Empty;
-
-        public string FileExtension => TargetFormatToFileExtension(scanOptions.TargetFormat);
-
-        public bool IsPdf => scanOptions.TargetFormat == TargetFormat.PDF;
-
-        public bool AreValidOptionsSelected => SelectedFolder != null && IsValidFileName(FileDisplayName);
-
-        private ScanOptions scanOptions;
-
-        private Project? project;
+        private SaveOptionsDialogViewModel ViewModel;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,8 +46,7 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SaveOptionsDialogView(ScanOptions scanOptions, Project? project)
         {
-            this.scanOptions = scanOptions;
-            this.project = project;
+            ViewModel = new SaveOptionsDialogViewModel(scanOptions, project);
 
             this.InitializeComponent();
         }
@@ -75,42 +55,47 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void TextBoxFileName_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (AreValidOptionsSelected)
+            ((TextBox)sender).SelectAll();
+        }
+
+        private void DropDownButtonFolder_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            FolderFlyoutWidth = e.NewSize.Width;
+        }
+
+        private void MenuFlyoutFolder_Opening(object sender, object e)
+        {
+            MenuFlyout menuFlyout = (MenuFlyout)sender;
+
+            // clear entries
+            while (menuFlyout.Items.Count > 2)
             {
-                SaveOptions = new SaveOptions(SelectedFolder!, FileDisplayName + FileExtension);
+                menuFlyout.Items.RemoveAt(0);
+            }
+
+            // generate entries
+            if (ViewModel.RecentFolders != null)
+            {
+                for (int i = 0; i < ViewModel.RecentFolders.Count; i++)
+                {
+                    MenuFlyoutItemBase item = (MenuFlyoutItemBase)DataTemplateRecentFolder.LoadContent();
+                    item.DataContext = ViewModel.RecentFolders[i];
+                    menuFlyout.Items.Insert(i, item);
+                }
+            }
+
+            // remove separator if list is empty
+            if (menuFlyout.Items.Count == 2)
+            {
+                menuFlyout.Items.RemoveAt(0);
             }
         }
 
-        private async void ButtonSelectFolder_Click(object sender, RoutedEventArgs e)
+        private void MenuFlyoutItemRecentFolder_Click(object sender, RoutedEventArgs e)
         {
-            // create picker
-            FolderPicker picker = new FolderPicker
-            {
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            };
-            picker.FileTypeFilter.Add("*");
-            InitializeWithWindow.Initialize(picker, ((App)Application.Current).MainWindow.GetWindowHandle());
-
-            // pick folder
-            StorageFolder? folder = await picker.PickSingleFolderAsync();
-            if (folder != null)
-            {
-                SelectedFolder = folder;
-            }
-        }
-
-        private async void ContentDialog_Loading(FrameworkElement sender, object args)
-        {
-            if (project != null && project.TargetFolder != null)
-            {
-                SelectedFolder = project.TargetFolder;
-            }
-            else
-            {
-                SelectedFolder = await SaveLocationService.GetFixedSaveLocationAsync();
-            }
+            ViewModel.SelectedFolder = (StorageFolder)((MenuFlyoutItem)sender).CommandParameter;
         }
     }
 }

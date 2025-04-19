@@ -12,18 +12,27 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:storage="using:Windows.Storage"
     mc:Ignorable="d"
     Style="{StaticResource DefaultContentDialogStyle}"
-    Title="Choose a save location"
+    Title="Choose file name and location"
     PrimaryButtonText="Save"
     CloseButtonText="Cancel"
     DefaultButton="Primary"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
-    IsPrimaryButtonEnabled="{x:Bind AreValidOptionsSelected, Mode=OneWay}"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    Loading="ContentDialog_Loading">
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.AreValidOptionsSelected, Mode=OneWay}">
 
-    
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loading">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadingAsyncCommand}"/>
+        </core:EventTriggerBehavior>
+        <core:EventTriggerBehavior EventName="Unloaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -35,6 +44,15 @@
 
             <x:Double x:Key="ContentDialogMinWidth">400</x:Double>
             <x:Double x:Key="ContentDialogMinHeight">200</x:Double>
+            
+            <!-- DataTemplates -->
+            <DataTemplate x:Name="DataTemplateRecentFolder" x:DataType="storage:StorageFolder">
+                <MenuFlyoutItem x:Name="MenuFlyoutItemRecentFolder" Text="{x:Bind Name}" CommandParameter="{x:Bind}" Click="MenuFlyoutItemRecentFolder_Click">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+            </DataTemplate>
 
             <!-- XAML Converters -->
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
@@ -45,13 +63,35 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <StackPanel Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
+    <StackPanel Orientation="Vertical" Spacing="24" Margin="0,8,0,0">
+        <!-- File name type -->
+        <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0">
+            <labs:SegmentedItem CornerRadius="4,4,0,0">
+                <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
+                    <FontIcon Glyph="&#xEC92;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                    <TextBlock Text="Time and date" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </labs:SegmentedItem>
+            <labs:SegmentedItem CornerRadius="4,4,0,0">
+                <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
+                    <FontIcon Glyph="&#xE787;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                    <TextBlock Text="Date" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </labs:SegmentedItem>
+            <labs:SegmentedItem CornerRadius="4,4,0,0">
+                <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
+                    <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                    <TextBlock Text="Custom pattern" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                </StackPanel>
+            </labs:SegmentedItem>
+        </labs:Segmented>
+        
         <!-- File name -->
-        <Grid ColumnSpacing="4">
-            <TextBox Text="{x:Bind FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" Style="{StaticResource NoClearButtonTextBoxStyle}" />
-            <FontIcon Glyph="&#xE91B;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsPdf, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
-            <FontIcon Glyph="&#xEA90;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsPdf}" />
-            <TextBlock Text="{x:Bind FileExtension}" HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Center" Width="48" Style="{StaticResource BodyTextBlockStyle}" />
+        <Grid ColumnSpacing="4" Margin="0,-24,0,0">
+            <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" CornerRadius="0,0,4,4" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBoxFileName_GotFocus" />
+            <FontIcon Glyph="&#xE91B;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+            <FontIcon Glyph="&#xEA90;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf}" />
+            <TextBlock Text="{x:Bind ViewModel.FileExtension}" HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Center" Width="48" Style="{StaticResource BodyTextBlockStyle}" />
         </Grid>
         
         <!-- Folder -->
@@ -61,7 +101,7 @@
                 <ColumnDefinition Width="48" />
             </Grid.ColumnDefinitions>
 
-            <DropDownButton Grid.Column="0" Height="64" MinWidth="348" Padding="12,0,12,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <DropDownButton x:Name="DropDownButtonFolder" Grid.Column="0" Height="64" MinWidth="348" Padding="12,0,12,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SizeChanged="DropDownButtonFolder_SizeChanged">
                 <Grid ColumnSpacing="12" Height="48">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="32" />
@@ -70,12 +110,23 @@
 
                     <FontIcon Grid.Column="0" Glyph="&#xE8B7;" FontSize="20" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                        <TextBlock Text="{x:Bind SelectedFolder.Name, Mode=OneWay}" Style="{StaticResource BaseTextBlockStyle}" />
-                        <TextBlock Text="{x:Bind SelectedFolderPathWithoutFolder, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind ViewModel.SelectedFolder.Name, Mode=OneWay}" Style="{StaticResource BaseTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind ViewModel.SelectedFolderPathWithoutFolder, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                     </StackPanel>
                 </Grid>
+
+                <DropDownButton.Flyout>
+                    <MenuFlyout x:Name="MenuFlyoutFolder" Placement="Bottom" Opening="MenuFlyoutFolder_Opening">
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Browse" Width="{x:Bind FolderFlyoutWidth, Mode=OneWay}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE712;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
             </DropDownButton>
-            <Button x:Name="ButtonSelectFolder" Grid.Column="1" Height="64" HorizontalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Click="ButtonSelectFolder_Click">
+            <Button x:Name="ButtonSelectFolder" Grid.Column="1" Height="64" HorizontalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
                 <FontIcon Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
         </Grid>

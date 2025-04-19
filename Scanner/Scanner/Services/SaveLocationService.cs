@@ -50,6 +50,8 @@ namespace Scanner.Services
 
         #region Constants
         private const string futureAccessListFixedLocationToken = "scanFolder";
+        private const string futureAccessListRecentFoldersToken = "recentFolder";
+        private const int recentFoldersLimit = 5;
         #endregion
 
         private TaskCompletionSource initializationCompleted = new();
@@ -59,6 +61,8 @@ namespace Scanner.Services
         private StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
 
         private bool isFixedSaveLocationSupported = true;
+
+        private List<StorageFolder> recentFolders = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,14 +98,32 @@ namespace Scanner.Services
                     {
                         isFixedSaveLocationSupported = false;
                         SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskForEveryProject;
-                        LogService?.Log.Error(exc2, "SaveLocationService - Fixed save lcoation is not supported");
+                        LogService?.Log.Error(exc2, "SaveLocationService - Fixed save location is not supported");
                         SentryService?.TrackError(exc2);
                     }
+                }
+
+                // recent folders may be cached
+                try
+                {
+                    for (int i = 0; i < recentFoldersLimit; i++)
+                    {
+                        string token = $"{futureAccessListRecentFoldersToken}{i}";
+                        if (futureAccessList.ContainsItem(token))
+                        {
+                            recentFolders.Add(await futureAccessList.GetFolderAsync(token));
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
                 }
             }
             else
             {
-                // save location needs to be reaquired
+                // no folders saved ~> save location needs to be acquired
                 await TryResetSaveLocationInternalAsync(false);
             }
 
@@ -117,6 +139,7 @@ namespace Scanner.Services
             {
                 case SettingSaveLocationType.FixedLocation:
                     await initializationCompleted.Task;
+                    TrackRecentlyUsedFolder(fixedSaveLocation!);
                     return new SaveOptions(fixedSaveLocation!, fileName);
 
                 case SettingSaveLocationType.AskForEveryProject:
@@ -126,7 +149,10 @@ namespace Scanner.Services
                         return new SaveOptions(existingProject.TargetFolder!, fileName);
                     }
 
-                    return await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                    // ask user for location
+                    SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                    if (result != null) TrackRecentlyUsedFolder(result.TargetFolder);
+                    return result;
 
                 default:
                     throw new ArgumentException("Invalid save location type");
@@ -243,19 +269,40 @@ namespace Scanner.Services
             return defaultScanFolderName;
         }
 
-        private string GetFileExtensionDescription(string fileExtension)
-        {
-            switch (fileExtension.ToLower())
-            {
-                default:
-                    return GetLocalized("TODO");
-            }
-        }
-
         public async Task<StorageFolder?> GetFixedSaveLocationAsync()
         {
             await initializationCompleted.Task;
             return fixedSaveLocation;
+        }
+
+        public async Task<List<StorageFolder>> GetRecentFoldersAsync()
+        {
+            await initializationCompleted.Task;
+            return new List<StorageFolder>(recentFolders);
+        }
+
+        private void TrackRecentlyUsedFolder(StorageFolder folder)
+        {
+            // remove existing entry
+            recentFolders.Remove(folder);
+
+            // add entry to front
+            recentFolders.Insert(0, folder);
+
+            // update FutureAccessList
+            for (int i = 0; i < recentFoldersLimit; i++)
+            {
+                if (i < recentFolders.Count)
+                {
+                    // write entry to FutureAccessList
+                    futureAccessList.AddOrReplace($"{futureAccessListRecentFoldersToken}{i}", recentFolders[i]);
+                }
+                else if (futureAccessList.ContainsItem($"{futureAccessListRecentFoldersToken}{i}"))
+                {
+                    // no more actual entries ~> clear in FutureAccessList
+                    futureAccessList.Remove($"{futureAccessListRecentFoldersToken}{i}");
+                }
+            }
         }
     }
 }

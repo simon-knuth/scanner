@@ -64,6 +64,13 @@ namespace Scanner.Services.Interfaces
         ///    Determines if using a fixed save location is supported.
         /// </summary>
         Task<bool> GetIsFixedSaveLocationSupportedAsync();
+
+
+        /// <summary>
+        ///     Provides a list of recently confirmed save locations, with the most recent one at the top. Can include the fixed
+        ///     save location.
+        /// </summary>
+        Task<List<StorageFolder>> GetRecentFoldersAsync();
     }
 
 
