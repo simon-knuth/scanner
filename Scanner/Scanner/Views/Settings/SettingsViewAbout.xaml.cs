@@ -17,7 +17,7 @@ using Windows.Foundation.Collections;
 
 namespace Scanner.Views.Settings
 {
-    public sealed partial class SettingsViewAbout : Page
+    public sealed partial class SettingsViewAbout : SettingsPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +42,11 @@ namespace Scanner.Views.Settings
             base.OnNavigatedTo(e);
 
             ViewModel = e.Parameter as SettingsViewModel;
+        }
+
+        private void SettingsCardLicenses_Click(object sender, RoutedEventArgs e)
+        {
+            OnPageNavigationRequested(typeof(SettingsViewLicenses));
         }
     }
 }

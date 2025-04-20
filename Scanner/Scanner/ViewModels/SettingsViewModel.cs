@@ -38,21 +38,21 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        public SettingsPage[] HeaderSettingsPages =
+        public SettingsPageEntry[] HeaderSettingsPages =
         [
-            new SettingsPage(SettingsPageType.General, "\uE713", "General"),
-            new SettingsPage(SettingsPageType.Personalization, "\uE771", "Personalization"),
-            new SettingsPage(SettingsPageType.Privacy, "\uEA18", "Privacy"),
+            new SettingsPageEntry(SettingsPageType.General, "\uE713", "General"),
+            new SettingsPageEntry(SettingsPageType.Personalization, "\uE771", "Personalization"),
+            new SettingsPageEntry(SettingsPageType.Privacy, "\uEA18", "Privacy"),
         ];
 
-        public SettingsPage[] FooterSettingsPages =
+        public SettingsPageEntry[] FooterSettingsPages =
         [
-            new SettingsPage(SettingsPageType.Feedback, "\uED15", "Feedback"),
-            new SettingsPage(SettingsPageType.About, "\uE946", "About"),
+            new SettingsPageEntry(SettingsPageType.Feedback, "\uED15", "Feedback"),
+            new SettingsPageEntry(SettingsPageType.About, "\uE946", "About"),
         ];
 
         [ObservableProperty]
-        private SettingsPage selectedPage;
+        private SettingsPageEntry selectedPage;
 
         [ObservableProperty]
         private List<LogFile>? logs;
@@ -196,7 +196,7 @@ namespace Scanner.ViewModels
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record SettingsPage(SettingsPageType PageType, string Glyph, string FriendlyName);
+    public record SettingsPageEntry(SettingsPageType PageType, string Glyph, string FriendlyName);
 
     public enum SettingsPageType
     {

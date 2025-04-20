@@ -1,4 +1,4 @@
-<Page
+<settings:SettingsPage
     x:Class="Scanner.Views.Settings.SettingsViewPrivacy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,13 +13,14 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:interfaces="using:Scanner.Services.Interfaces"
+    xmlns:settings="using:Scanner.Views.Settings"
     mc:Ignorable="d">
 
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <Page.Resources>
+    <settings:SettingsPage.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
@@ -30,7 +31,7 @@
             <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter" />
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
         </ResourceDictionary>
-    </Page.Resources>
+    </settings:SettingsPage.Resources>
 
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
@@ -108,4 +109,4 @@
             </StackPanel>
         </ScrollViewer>
     </Grid>
-</Page>
+</settings:SettingsPage>

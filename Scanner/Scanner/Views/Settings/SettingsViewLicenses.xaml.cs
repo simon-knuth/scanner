@@ -6,51 +6,85 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 
 
 namespace Scanner.Views.Settings
 {
-    [ObservableObjectAttribute]
-    public sealed partial class SettingsViewGeneral : SettingsPage
+    [ObservableObject]
+    public sealed partial class SettingsViewLicenses : SettingsPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewModel? ViewModel;
+        [ObservableProperty]
+        private List<License> licenses;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewGeneral()
+        public SettingsViewLicenses()
         {
             this.InitializeComponent();
+
+            _ = LoadLicensesAsync();
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private async Task LoadLicensesAsync()
         {
-            base.OnNavigatedTo(e);
+            List<License> result = new List<License>();
 
-            ViewModel = e.Parameter as SettingsViewModel;
+            // get licenses folder
+            string licensesFolderPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)
+                + Path.DirectorySeparatorChar
+                + "Resources"
+                + Path.DirectorySeparatorChar
+                + "Licenses";
+            StorageFolder licensesFolder = await StorageFolder.GetFolderFromPathAsync(licensesFolderPath);
+
+            // load licenses
+            foreach (StorageFile file in await licensesFolder.GetFilesAsync())
+            {
+                string text = await FileIO.ReadTextAsync(file);
+                result.Add(new License
+                {
+                    Title = file.DisplayName,
+                    Text = text
+                });
+            }
+
+            Licenses = result;
         }
 
-        private void Page_Loading(FrameworkElement sender, object args)
+        private void ButtonBack_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel == null) return;
-            ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
+            OnGoBackRequested();
         }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public class License
+    {
+        public string Title;
+        public string Text;
     }
 }

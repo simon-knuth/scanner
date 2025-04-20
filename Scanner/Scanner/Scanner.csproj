@@ -17,11 +17,23 @@
   <ItemGroup>
     <None Remove="Assets\contrast-standard\Logo small.svg" />
     <None Remove="Controls\ScanOptionsPresenter.xaml" />
+    <None Remove="Resources\Licenses\.NET Community Toolkit.txt" />
+    <None Remove="Resources\Licenses\.NET Platform.txt" />
+    <None Remove="Resources\Licenses\Sentry.txt" />
+    <None Remove="Resources\Licenses\Serilog.txt" />
+    <None Remove="Resources\Licenses\Windows App SDK.txt" />
+    <None Remove="Resources\Licenses\WinUIEx.txt" />
     <None Remove="Resources\Tesseract Training Data\eng.traineddata" />
     <None Remove="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
     <None Remove="Views\ShellView.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Licenses\.NET Community Toolkit.txt" />
+    <Content Include="Resources\Licenses\.NET Platform.txt" />
+    <Content Include="Resources\Licenses\Sentry.txt" />
+    <Content Include="Resources\Licenses\Serilog.txt" />
+    <Content Include="Resources\Licenses\Windows App SDK.txt" />
+    <Content Include="Resources\Licenses\WinUIEx.txt" />
     <Content Include="Resources\Tesseract Training Data\tessdata\eng.traineddata" />
     <Content Include="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
   </ItemGroup>
@@ -92,6 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HistoryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Settings\SettingsViewLicenses.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Settings\SettingsViewAbout.xaml">

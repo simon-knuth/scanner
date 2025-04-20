@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.ViewModels;
 using System;
@@ -33,57 +34,93 @@ namespace Scanner.Views.Settings
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ApplySettingsPage(ViewModel.SelectedPage);
+            ApplySettingsPageEntry(ViewModel.SelectedPage);
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void ApplySettingsPage(SettingsPage page)
+        private void ApplySettingsPageEntry(SettingsPageEntry page)
         {
             switch (page.PageType)
             {
                 case SettingsPageType.General:
                     if (FrameContent.Content is not SettingsViewGeneral)
                     {
-                        FrameContent.Navigate(typeof(SettingsViewGeneral), ViewModel);
+                        Navigate(typeof(SettingsViewGeneral), new EntranceNavigationTransitionInfo());
                     }
                     break;
                 case SettingsPageType.Personalization:
                     if (FrameContent.Content is not SettingsViewPersonalization)
                     {
-                        FrameContent.Navigate(typeof(SettingsViewPersonalization), ViewModel);
+                        Navigate(typeof(SettingsViewPersonalization), new EntranceNavigationTransitionInfo());
                     }
                     break;
                 case SettingsPageType.Privacy:
                     if (FrameContent.Content is not SettingsViewPrivacy)
                     {
-                        FrameContent.Navigate(typeof(SettingsViewPrivacy), ViewModel);
+                        Navigate(typeof(SettingsViewPrivacy), new EntranceNavigationTransitionInfo());
                     }
                     break;
                 case SettingsPageType.Feedback:
                     if (FrameContent.Content is not SettingsViewFeedback)
                     {
-                        FrameContent.Navigate(typeof(SettingsViewFeedback), ViewModel);
+                        Navigate(typeof(SettingsViewFeedback), new EntranceNavigationTransitionInfo());
                     }
                     break;
                 case SettingsPageType.About:
                     if (FrameContent.Content is not SettingsViewAbout)
                     {
-                        FrameContent.Navigate(typeof(SettingsViewAbout), ViewModel);
+                        Navigate(typeof(SettingsViewAbout), new EntranceNavigationTransitionInfo());
                     }
                     break;
             }
         }
-        
+
+        private void Navigate(Type pageType, NavigationTransitionInfo transition)
+        {
+            FrameContent.Navigate(pageType, ViewModel, transition);
+        }
+
+        private void SettingsView_GoBackRequested(object? sender, EventArgs e)
+        {
+            FrameContent.GoBack();
+        }
+
+        private void SettingsView_PageNavigationRequested(object? sender, Type e)
+        {
+            Navigate(e, new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromRight
+            });
+        }
+
         private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(ViewModel.SelectedPage):
-                    ApplySettingsPage(ViewModel.SelectedPage);
+                    ApplySettingsPageEntry(ViewModel.SelectedPage);
                     break;
+            }
+        }
+
+        private void FrameContent_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (FrameContent.Content != null && FrameContent.Content is SettingsPage settingsPage)
+            {
+                settingsPage.PageNavigationRequested -= SettingsView_PageNavigationRequested;
+                settingsPage.GoBackRequested -= SettingsView_GoBackRequested;
+            }
+        }
+
+        private void FrameContent_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (FrameContent.Content != null)
+            {
+                ((SettingsPage)FrameContent.Content).PageNavigationRequested += SettingsView_PageNavigationRequested;
+                ((SettingsPage)FrameContent.Content).GoBackRequested += SettingsView_GoBackRequested;
             }
         }
     }

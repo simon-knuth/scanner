@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
@@ -18,7 +19,7 @@ using Windows.Foundation.Collections;
 
 namespace Scanner.Views.Settings
 {
-    public sealed partial class SettingsViewPrivacy : Page
+    public sealed partial class SettingsViewPrivacy : SettingsPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////

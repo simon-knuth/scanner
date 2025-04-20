@@ -62,7 +62,7 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <NavigationView IsPaneToggleButtonVisible="False" IsSettingsVisible="False" Style="{StaticResource NavigationViewStyleNoContent}" IsBackButtonVisible="Collapsed" OpenPaneLength="232" CompactModeThresholdWidth="0" ExpandedModeThresholdWidth="0" MenuItemsSource="{x:Bind ViewModel.HeaderSettingsPages}" FooterMenuItemsSource="{x:Bind ViewModel.FooterSettingsPages}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}">
                 <NavigationView.MenuItemTemplate>
-                    <DataTemplate x:DataType="viewModels:SettingsPage">
+                    <DataTemplate x:DataType="viewModels:SettingsPageEntry">
                         <NavigationViewItem Content="{x:Bind FriendlyName}">
                             <NavigationViewItem.Icon>
                                 <FontIcon Glyph="{x:Bind Glyph}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -73,6 +73,6 @@
             </NavigationView>
         </Grid>
 
-        <Frame x:Name="FrameContent" Grid.Row="1" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0" />
+        <Frame x:Name="FrameContent" Grid.Row="1" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0" Navigating="FrameContent_Navigating" Navigated="FrameContent_Navigated" />
     </Grid>
 </Page>

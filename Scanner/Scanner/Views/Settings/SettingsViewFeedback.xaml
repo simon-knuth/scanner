@@ -1,4 +1,4 @@
-<Page
+<settings:SettingsPage
     x:Class="Scanner.Views.Settings.SettingsViewFeedback"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,13 +13,14 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:Scanner.Views.Settings"
     mc:Ignorable="d">
 
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <Page.Resources>
+    <settings:SettingsPage.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
@@ -28,7 +29,7 @@
             <!-- XAML Converters -->
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
-    </Page.Resources>
+    </settings:SettingsPage.Resources>
 
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
@@ -42,4 +43,4 @@
             </StackPanel>
         </ScrollViewer>
     </Grid>
-</Page>
+</settings:SettingsPage>
