@@ -1,9 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Scanner.Messages;
 using Scanner.Models;
+using Scanner.Models.FileNaming;
+using Scanner.Models.Interfaces;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
@@ -63,10 +67,19 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         private string? fixedSaveLocationPath;
 
+        [ObservableProperty]
+        private string fileNamingPatternPreview;
+
         public int SettingSaveLocationType
         {
             get => (int)SettingsService.SettingSaveLocationType;
             set => SettingsService.SettingSaveLocationType = (SettingSaveLocationType)value;
+        }
+
+        public int SettingFileNamingPattern
+        {
+            get => (int)SettingsService.SettingFileNamingPattern;
+            set => SettingsService.SettingFileNamingPattern = (SettingFileNamingPattern)value;
         }
 
         public int SettingScanAction
@@ -104,6 +117,10 @@ namespace Scanner.ViewModels
         public SettingsViewModel()
         {
             SelectedPage = HeaderSettingsPages[0];
+
+            SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+
+            UpdateFileNamingPatternPreview();
         }
 
 
@@ -189,6 +206,43 @@ namespace Scanner.ViewModels
         private async Task UpdateFixedSaveLocationPath()
         {
             FixedSaveLocationPath = (await SaveLocationService.GetFixedSaveLocationAsync())?.Path;
+        }
+
+        private void UpdateFileNamingPatternPreview()
+        {
+            // get pattern
+            FileNamingPattern previewPattern;
+            switch ((SettingFileNamingPattern)SettingFileNamingPattern)
+            {
+                default:
+                case Services.Interfaces.SettingFileNamingPattern.DateTime:
+                    previewPattern = FileNamingStatics.DateTimePattern;
+                    break;
+                case Services.Interfaces.SettingFileNamingPattern.Date:
+                    previewPattern = FileNamingStatics.DatePattern;
+                    break;
+                case Services.Interfaces.SettingFileNamingPattern.Custom:
+                    previewPattern = SettingsService.CustomFileNamingPattern;
+                    break;
+            }
+
+            // get currently selected scanner
+            IScanningDevice? selectedScanner = Messenger.Send(new SelectedScannerRequestMessage()).Response;
+
+            // generate preview
+            ScanOptions scanOptions = FileNamingStatics.GetPreviewScanOptions(selectedScanner);
+            FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions);
+        }
+
+        private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ISettingsService.SettingFileNamingPattern):
+                case nameof(ISettingsService.CustomFileNamingPattern):
+                    UpdateFileNamingPatternPreview();
+                    break;
+            }
         }
     }
 

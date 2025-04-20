@@ -78,7 +78,39 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                
+
+                <controls:SettingsExpander Header="File naming">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8AC;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.Content>
+                        <ComboBox SelectedIndex="{x:Bind ViewModel.SettingFileNamingPattern, Mode=TwoWay}">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Date and time" FontWeight="SemiBold" />
+                                <ComboBoxItem Content="Date" />
+                                <ComboBoxItem Content="Custom pattern" />
+                            </ComboBox.Items>
+                        </ComboBox>
+                    </controls:SettingsExpander.Content>
+
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard Header="Preview">
+                            <controls:SettingsCard.Description>
+                                <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,12,0,8">
+                                    <FontIcon Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <TextBlock Text="{x:Bind ViewModel.FileNamingPatternPreview, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                                </StackPanel>
+                            </controls:SettingsCard.Description>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Name="SettingsCardEditCustomPattern" Header="Edit custom pattern" IsClickEnabled="True" IsEnabled="{x:Bind ViewModel.SettingsService.SettingFileNamingPattern, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=2}" Click="SettingsCardEditCustomPattern_Click">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <controls:SettingsCard Header="Save changes automatically">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE74E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />

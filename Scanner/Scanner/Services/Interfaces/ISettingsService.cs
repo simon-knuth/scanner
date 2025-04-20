@@ -15,6 +15,7 @@ using Windows.Storage;
 using Serilog;
 using System.ComponentModel;
 using Scanner.ViewModels;
+using Scanner.Models.FileNaming;
 
 namespace Scanner.Services.Interfaces
 {
@@ -51,6 +52,8 @@ namespace Scanner.Services.Interfaces
         string UserId { get; set; }
         int DiagnosticEventsSentThisSession { get; set; }
         bool SettingAutoSave { get; set; }
+        SettingFileNamingPattern SettingFileNamingPattern { get; set; }
+        FileNamingPattern CustomFileNamingPattern { get; set; }
 
         void TryLogAllSettings();
     }

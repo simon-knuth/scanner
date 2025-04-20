@@ -25,6 +25,7 @@ using System.ComponentModel;
 using Scanner.ViewModels;
 using static Scanner.Helpers.Helpers;
 using System.Security.Cryptography;
+using Scanner.Models.FileNaming;
 
 namespace Scanner.Services
 {
@@ -203,6 +204,18 @@ namespace Scanner.Services
         {
             get => GetSetting<bool>(nameof(SettingAutoSave), true);
             set => SetSetting(nameof(SettingAutoSave), value);
+        }
+
+        public SettingFileNamingPattern SettingFileNamingPattern
+        {
+            get => (SettingFileNamingPattern)GetSetting(nameof(SettingFileNamingPattern), (int)SettingFileNamingPattern.DateTime);
+            set => SetSetting(nameof(SettingFileNamingPattern), (int)value);
+        }
+
+        public FileNamingPattern CustomFileNamingPattern
+        {
+            get => new FileNamingPattern(GetSetting(nameof(CustomFileNamingPattern), FileNamingStatics.DefaultCustomPattern.GetSerialized(false)));
+            set => SetSetting(nameof(CustomFileNamingPattern), value.GetSerialized(false));
         }
 
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;

@@ -2154,6 +2154,34 @@
         </Setter>
     </Style>
 
+    <Style x:Key="CompactRadioButtonsStyle" TargetType="RadioButtons">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButtons">
+                    <StackPanel>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderContentPresenter.Foreground" Value="{ThemeResource RadioButtonsHeaderForegroundDisabled}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource RadioButtonsHeaderForeground}" Margin="0"/>
+                        <ItemsRepeater x:Name="InnerRepeater">
+                            <ItemsRepeater.Layout>
+                                <primitiveContract7Present:ColumnMajorUniformToLargestGridLayout ColumnSpacing="{ThemeResource RadioButtonsColumnSpacing}" MaxColumns="{Binding MaxColumns, RelativeSource={RelativeSource Mode=TemplatedParent}}" RowSpacing="3"/>
+                            </ItemsRepeater.Layout>
+                        </ItemsRepeater>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <LinearGradientBrush x:Key="AIGradientBrush" MappingMode="RelativeToBoundingBox">
         <LinearGradientBrush.GradientStops>
             <GradientStop Offset="0.0" Color="#008FFF" />

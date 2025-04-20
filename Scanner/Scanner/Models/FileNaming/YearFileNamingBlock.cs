@@ -1,61 +1,60 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Scanner.Services.Interfaces;
-using Scanner.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using Windows.Devices.Scanners;
+using static Scanner.Helpers.Helpers;
 
-
-namespace Scanner.Views.Settings
+namespace Scanner.Models.FileNaming
 {
-    [ObservableObjectAttribute]
-    public sealed partial class SettingsViewGeneral : SettingsPage
+    public class YearFileNamingBlock : ObservableObject, IFileNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewModel? ViewModel;
+        public string Glyph => "\uE163";
+        public string Name => "YEAR";
+
+        public string DisplayName
+        {
+            get => GetLocalized("HeadingFileNamingBlockYear/Text");
+        }
+
+        public bool IsValid
+        {
+            get => true;
+        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewGeneral()
+        public YearFileNamingBlock()
         {
-            this.InitializeComponent();
+            
+        }
+
+        public YearFileNamingBlock(string serialized)
+        {
+            
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public string ToString(ScanOptions scanOptions)
         {
-            base.OnNavigatedTo(e);
+            DateTime currentTime = DateTime.Now;
 
-            ViewModel = e.Parameter as SettingsViewModel;
+            return CultureInfo.CurrentCulture.Calendar.GetYear(currentTime).ToString();
         }
 
-        private void Page_Loading(FrameworkElement sender, object args)
+        public string GetSerialized(bool obfuscated)
         {
-            if (ViewModel == null) return;
-            ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
-        }
-
-        private void SettingsCardEditCustomPattern_Click(object sender, RoutedEventArgs e)
-        {
-            OnPageNavigationRequested(typeof(SettingsViewCustomFileNaming));
+            return $"*{Name}";
         }
     }
 }

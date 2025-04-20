@@ -106,6 +106,9 @@
     <Page Update="Views\HistoryView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\Settings\SettingsViewCustomFileNaming.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Settings\SettingsViewLicenses.xaml">
       <SubType>Designer</SubType>
     </Page>

@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Scanner.Extensions;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Models.ScanningDevices;
@@ -36,8 +38,8 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        private ScanOptions scanOptions;
-        public ScanOptions ScanOptions
+        private ScanOptions? scanOptions;
+        public ScanOptions? ScanOptions
         {
             get => scanOptions;
             set
@@ -56,8 +58,8 @@ namespace Scanner.ViewModels
             }
         }
 
-        private IScanningDevice selectedScanner;
-        public IScanningDevice SelectedScanner
+        private IScanningDevice? selectedScanner;
+        public IScanningDevice? SelectedScanner
         {
             get => selectedScanner;
             set
@@ -79,7 +81,7 @@ namespace Scanner.ViewModels
         public DebugScannerSetupProperties DebugScannerSetupProperties = new();
 
         private TaskCompletionSource viewLoading = new();
-        private DispatcherQueue viewDispatcherQueue;
+        private DispatcherQueue? viewDispatcherQueue;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,11 @@ namespace Scanner.ViewModels
             ScannerDiscoveryService.ScanningDeviceFound += ScannerDiscoveryService_ScanningDeviceFound;
             ScannerDiscoveryService.ScanningDeviceLost += ScannerDiscoveryService_ScanningDeviceLost;
             ScannerDiscoveryService.InitialCrawlCompleted += ScannerDiscoveryService_InitialCrawlCompleted;
+
+            Messenger.Register<SelectedScannerRequestMessage>(this, (r, m) =>
+            {
+                m.Reply(SelectedScanner);
+            });
         }
 
 
@@ -140,7 +147,7 @@ namespace Scanner.ViewModels
             if (Scanners.Count > 0)
             {
                 await viewLoading.Task;
-                viewDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                viewDispatcherQueue!.RunOnThread(DispatcherQueuePriority.High, () =>
                 {
                     SelectedScanner = Scanners[0];
                 });
@@ -174,7 +181,7 @@ namespace Scanner.ViewModels
 
         private void UpdateScanOptionsForSourceMode()
         {
-            switch (ScanOptions.SourceMode)
+            switch (ScanOptions?.SourceMode)
             {
                 case ScannerSource.Flatbed:
                     // color mode
