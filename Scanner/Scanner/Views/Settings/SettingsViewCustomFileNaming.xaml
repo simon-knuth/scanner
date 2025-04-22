@@ -59,8 +59,8 @@
         <Grid Grid.Row="1" ColumnSpacing="12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MaxHeight="64" />
-                <RowDefinition Height="96" />
-                <RowDefinition Height="60" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="56" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="Auto" />
@@ -381,7 +381,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <Grid x:Name="GridPatternButtons" Grid.Row="2" Padding="32,12,32,0" ColumnSpacing="12" Background="Transparent">
+            <Grid x:Name="GridPatternButtons" Grid.Row="2" Padding="32,8,32,0" ColumnSpacing="12" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="48" />

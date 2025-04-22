@@ -160,7 +160,7 @@ namespace Scanner.ViewModels
             Pattern = new FileNamingPattern(SelectedBlocks.ToList());
 
             // generate new preview
-            PreviewResult = Pattern.GenerateResult(FileNamingStatics.GetPreviewScanOptions(previewScanner));
+            PreviewResult = Pattern.GenerateResult(FileNamingStatics.GetPreviewScanOptions(previewScanner), true);
         }
 
         private void MoveBlockForward(IFileNamingBlock block)

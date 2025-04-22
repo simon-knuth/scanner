@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
 using Scanner.Models;
+using Scanner.Models.FileNaming;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
+        private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Commands
@@ -55,7 +57,50 @@ namespace Scanner.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
+        [NotifyPropertyChangedFor(nameof(SelectedFileNamingPattern))]
         private string fileDisplayName;
+
+        public SettingFileNamingPattern? SelectedFileNamingPattern
+        {
+            get
+            {
+                if (FileDisplayName == DateTimeFileNamingPatternValue)
+                {
+                    return SettingFileNamingPattern.DateTime;
+                }
+                else if (FileDisplayName == DateFileNamingPatternValue)
+                {
+                    return SettingFileNamingPattern.Date;
+                }
+                else if (FileDisplayName == CustomFileNamingPatternValue)
+                {
+                    return SettingFileNamingPattern.Custom;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case SettingFileNamingPattern.DateTime:
+                        FileDisplayName = DateTimeFileNamingPatternValue;
+                        break;
+                    case SettingFileNamingPattern.Date:
+                        FileDisplayName = DateFileNamingPatternValue;
+                        break;
+                    case SettingFileNamingPattern.Custom:
+                        FileDisplayName = CustomFileNamingPatternValue;
+                        break;
+                }
+            }
+        }
+
+        public string DateTimeFileNamingPatternValue;
+        public string DateFileNamingPatternValue;
+        public string CustomFileNamingPatternValue;
 
         public string? SelectedFolderPathWithoutFolder => SelectedFolder?.Path.Substring(0, SelectedFolder.Path.LastIndexOf(Path.DirectorySeparatorChar)) ?? string.Empty;
 
@@ -81,6 +126,12 @@ namespace Scanner.ViewModels
             Project = project;
 
             PickFolderAsyncCommand = new AsyncRelayCommand(() => SelectFolderAsync());
+
+            SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+            DateTimeFileNamingPatternValue = FileNamingStatics.DateTimePattern.GenerateResult(ScanOptions, false);
+            DateFileNamingPatternValue = FileNamingStatics.DatePattern.GenerateResult(ScanOptions, false);
+            CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
+            SelectedFileNamingPattern = SettingsService.SettingFileNamingPattern;
         }
 
 
@@ -104,6 +155,21 @@ namespace Scanner.ViewModels
             }
 
             _ = GenerateRecentFoldersListAsync();
+        }
+
+        private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ISettingsService.CustomFileNamingPattern):
+                    bool updateFileName = SelectedFileNamingPattern == SettingFileNamingPattern.Custom;
+                    CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
+                    if (updateFileName)
+                    {
+                        FileDisplayName = CustomFileNamingPatternValue;
+                    }
+                    break;
+            }
         }
 
         private async Task SelectFolderAsync()

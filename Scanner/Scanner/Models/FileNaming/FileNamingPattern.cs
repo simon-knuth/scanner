@@ -88,7 +88,7 @@ namespace Scanner.Models.FileNaming
             return true;
         }
         
-        public string GenerateResult(ScanOptions scanOptions)
+        public string GenerateResult(ScanOptions scanOptions, bool includeFileExtension)
         {
             try
             {
@@ -99,7 +99,12 @@ namespace Scanner.Models.FileNaming
                     result += block.ToString(scanOptions);
                 }
 
-                return result + TargetFormatToFileExtension(scanOptions.TargetFormat);
+                if (includeFileExtension)
+                {
+                    result = result + TargetFormatToFileExtension(scanOptions.TargetFormat);
+                }
+
+                return result;
             }
             catch (Exception exc)
             {

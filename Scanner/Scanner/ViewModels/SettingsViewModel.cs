@@ -231,7 +231,7 @@ namespace Scanner.ViewModels
 
             // generate preview
             ScanOptions scanOptions = FileNamingStatics.GetPreviewScanOptions(selectedScanner);
-            FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions);
+            FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions, true);
         }
 
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -109,7 +109,7 @@
                                 </StackPanel>
                             </controls:SettingsCard.Description>
                         </controls:SettingsCard>
-                        <controls:SettingsCard x:Name="SettingsCardEditCustomPattern" Header="Edit custom pattern" IsClickEnabled="True" IsEnabled="{x:Bind ViewModel.SettingsService.SettingFileNamingPattern, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=2}" Click="SettingsCardEditCustomPattern_Click">
+                        <controls:SettingsCard x:Name="SettingsCardEditCustomPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomPattern_Click">
                             <controls:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>

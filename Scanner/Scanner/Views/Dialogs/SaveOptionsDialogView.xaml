@@ -65,7 +65,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <StackPanel Orientation="Vertical" Spacing="24" Margin="0,8,0,0">
         <!-- File name type -->
-        <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0">
+        <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}">
             <labs:SegmentedItem CornerRadius="4,4,0,0">
                 <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                     <FontIcon Glyph="&#xEC92;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
@@ -88,7 +88,7 @@
         
         <!-- File name -->
         <Grid ColumnSpacing="4" Margin="0,-24,0,0">
-            <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" CornerRadius="0,0,4,4" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBoxFileName_GotFocus" />
+            <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" CornerRadius="0,0,4,4" Typography.NumeralAlignment="Tabular" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBoxFileName_GotFocus" />
             <FontIcon Glyph="&#xE91B;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
             <FontIcon Glyph="&#xEA90;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf}" />
             <TextBlock Text="{x:Bind ViewModel.FileExtension}" HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Center" Width="48" Style="{StaticResource BodyTextBlockStyle}" />

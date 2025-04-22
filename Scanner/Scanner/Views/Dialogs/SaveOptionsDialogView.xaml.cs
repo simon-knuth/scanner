@@ -33,6 +33,12 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        private int SelectedFileNamingPatternIndex
+        {
+            get => ViewModel.SelectedFileNamingPattern != null ? (int)ViewModel.SelectedFileNamingPattern : -1;
+            set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+        }
+
         [ObservableProperty]
         private double folderFlyoutWidth;
 
@@ -47,6 +53,7 @@ namespace Scanner.Views.Dialogs
         public SaveOptionsDialogView(ScanOptions scanOptions, Project? project)
         {
             ViewModel = new SaveOptionsDialogViewModel(scanOptions, project);
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             this.InitializeComponent();
         }
@@ -55,6 +62,16 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.SelectedFileNamingPattern):
+                    OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
+                    break;
+            }
+        }
+
         private void TextBoxFileName_GotFocus(object sender, RoutedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
