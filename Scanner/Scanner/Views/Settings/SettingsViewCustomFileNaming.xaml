@@ -61,8 +61,8 @@
                 <RowDefinition Height="Auto" MaxHeight="64" />
                 <RowDefinition Height="96" />
                 <RowDefinition Height="60" />
-                <RowDefinition Height="1*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="1*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -76,7 +76,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ListView x:Name="ListViewPattern" Grid.Column="0" VerticalAlignment="Center" CanDragItems="True" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="20,16,20,16" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ItemClick="ListViewPattern_ItemClick" DragItemsStarting="ListViewPattern_DragItemsStarting" DragItemsCompleted="ListViewPattern_DragItemsCompleted">
+                <ListView x:Name="ListViewPattern" Grid.Column="0" VerticalAlignment="Center" CanDragItems="True" CanReorderItems="True" AllowDrop="True" IsItemClickEnabled="True" SelectionMode="None" Padding="28,16,20,16" ItemsSource="{x:Bind ViewModel.SelectedBlocks, Mode=TwoWay}" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ItemClick="ListViewPattern_ItemClick" DragItemsStarting="ListViewPattern_DragItemsStarting" DragItemsCompleted="ListViewPattern_DragItemsCompleted">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel Orientation="Horizontal" ItemsUpdatingScrollMode="KeepLastItemInView" />
@@ -95,7 +95,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="filenaming:IFileNamingBlock">
                             <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind DisplayName, Mode=OneWay}" KeyUp="ListViewItemPattern_KeyUp">
-                                <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorSecondaryBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8">
+                                <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorSecondaryBrush}" BorderBrush="{ThemeResource ControlElevationBorderBrush}" BorderThickness="1" Padding="8">
                                     <!-- Block -->
                                     <StackPanel Orientation="Horizontal" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Glyph}" FontSize="16" Margin="0,0,8,0" Visibility="{x:Bind Glyph, Converter={StaticResource StringNotEmptyVisibilityConverter}}"/>
@@ -444,21 +444,21 @@
             </Grid>
 
             <!-- Preview -->
-            <TextBlock Grid.Row="3" x:Uid="HeadingFileNamingPreview" Style="{StaticResource BaseTextBlockStyle}" Margin="32,32,32,12" VerticalAlignment="Bottom" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
-            <ScrollViewer Grid.Row="4" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Height="80" HorizontalAlignment="Stretch" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid>
+            <TextBlock Grid.Row="3" x:Uid="HeadingFileNamingPreview" Style="{StaticResource BaseTextBlockStyle}" Margin="32,32,32,0" VerticalAlignment="Bottom" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
+            <ScrollViewer Grid.Row="4" Height="80" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid ColumnSpacing="24" Margin="48,0,32,0">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="4*" />
                     </Grid.ColumnDefinitions>
 
-                    <FontIcon Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA90;" FontSize="24"/>
+                    <FontIcon Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA90;" FontSize="20"/>
                     <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewResult, Mode=OneWay}" VerticalAlignment="Center" />
                 </Grid>
             </ScrollViewer>
             
             <!-- Footer -->
-            <Grid Grid.Row="5" ColumnSpacing="8" Padding="32" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+            <Grid Grid.Row="5" ColumnSpacing="8" Padding="32" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
