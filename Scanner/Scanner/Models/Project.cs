@@ -407,12 +407,10 @@ namespace Scanner.Models
                     changesFolderSemaphore.Release();
 
                     // save
-                    if (await snapshot.TrySaveAsync())
-                    {
-                        throw new ApplicationException("Failed to save Project");
-                    }
-
+                    bool saveResult = await snapshot.TrySaveAsync();
                     projectFolderSemaphore.Release();
+
+                    if (!saveResult) throw new ApplicationException("Failed to save Project");
                 }
                 catch (Exception exc)
                 {

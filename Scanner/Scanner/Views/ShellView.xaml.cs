@@ -307,7 +307,8 @@ namespace Scanner.Views
                 SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                task.TrySetResult(dialog.SaveOptions);
+                if (result == ContentDialogResult.Primary) task.TrySetResult(dialog.SaveOptions);
+                else task.TrySetResult(null);
 
                 isDialogVisible = false;
             });
