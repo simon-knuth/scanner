@@ -29,9 +29,13 @@ namespace Scanner.Models
         private static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
         #endregion
 
+        #region Constants
+        private const string tesseractOutputFileDisplayName = "tessoutput";
+        #endregion
+
         public TargetFormat Format { get; private set; }
 
-        public string? FileName { get; private set; }
+        public string? DesiredFileName { get; private set; }
         public StorageFolder TargetFolder { get; private set; }
         public StorageFile? TargetFile { get; private set; }
 
@@ -44,8 +48,8 @@ namespace Scanner.Models
         public PdfProjectSnapshot(Project project)
         {
             Format = project.Format;
-            FileName = project.TargetFileName;
-            TargetFolder = project.TargetFolder;
+            DesiredFileName = project.FileNameInfo!.DesiredName;
+            TargetFolder = project.TargetFolder!;
             TargetFile = project.TargetFile;
 
             foreach (IProjectPage page in project.Pages)
@@ -58,39 +62,43 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> TrySaveAsync()
+        public async Task<(bool, StorageFile?)> TrySaveAsync()
         {
             // generate PDF
             try
             {
-                TesseractService.GeneratePdf(Pages, Path.Combine(AppDataService.PdfOutputFolder.Path, "output"));
+                TesseractService.GeneratePdf(Pages, Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName));
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error("PdfProjectSnapshot - Failed to generate PDF");
-                return false;
+                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to generate PDF");
+                return (false, null);
             }
 
             // save PDF to target folder
             try
             {
-                StorageFile pdfFile = await AppDataService.PdfOutputFolder.GetFileAsync("output.pdf");
+                StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{tesseractOutputFileDisplayName}.pdf");
                 if (TargetFile != null)
                 {
-                    await pdfFile.MoveAndReplaceAsync(TargetFile);
+                    await generatedFile.MoveAndReplaceAsync(TargetFile);
+
+                    if (generatedFile.Name != DesiredFileName)
+                    {
+                        await generatedFile.RenameAsync(DesiredFileName, NameCollisionOption.GenerateUniqueName);
+                    }
                 }
                 else
                 {
-                    await pdfFile.MoveAsync(TargetFolder, FileName, NameCollisionOption.GenerateUniqueName);
+                    await generatedFile.MoveAsync(TargetFolder, DesiredFileName, NameCollisionOption.GenerateUniqueName);
                 }
+                return (true, generatedFile);
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error("PdfProjectSnapshot - Failed to save PDF to target folder");
-                return false;
+                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to save PDF to target folder");
+                return (false, null);
             }
-
-            return true;
         }
     }
 }

@@ -69,8 +69,7 @@ namespace Scanner.Models
         [NotifyPropertyChangedFor(nameof(PageNumber))]
         private int index;
 
-        [ObservableProperty]
-        private string? targetFileName;
+        public FileNameInfo? FileNameInfo { get; private set; }
 
         public int PageNumber => Index + 1;
 
@@ -100,7 +99,7 @@ namespace Scanner.Models
         public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
         {
             ImagePage result = await CreateAsyncInternal(sourceFile, index, keepSourceFile, pagesFolder);
-            result.TargetFileName = targetFileName;
+            if (targetFileName != null) result.FileNameInfo = new FileNameInfo(targetFileName);
             result.TargetFolder = targetFolder;
             return result;
         }

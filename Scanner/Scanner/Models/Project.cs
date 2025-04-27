@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Models.Interfaces;
@@ -42,18 +44,9 @@ namespace Scanner.Models
         [ObservableProperty]
         private bool isSaving;
 
-        [ObservableProperty]
-        private bool isSaved;
+        public bool IsSaved => areFilesSaved && hasFileNameBeenApplied;
 
         public TaskCompletionSource? LatestSaveProcess;
-
-        private bool saveProcessWaitingToStart;
-
-        private SemaphoreSlim saveSemaphore = new(1, 1);                // needed to run a save process
-
-        private SemaphoreSlim projectObjectSemaphore = new(1, 1);       // needed to modify the Project object
-        private SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
-        private SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
 
         public ObservableCollection<IProjectPage> Pages
         {
@@ -67,10 +60,39 @@ namespace Scanner.Models
 
         public StorageFile? TargetFile;
 
-        [ObservableProperty]
-        private string? targetFileName;
+        public FileNameInfo? FileNameInfo { get; private set; }
 
         public bool IsPdf => Format == TargetFormat.PDF;
+
+        private bool _areFilesSaved;
+        private bool areFilesSaved
+        {
+            get => _areFilesSaved;
+            set
+            {
+                SetProperty(ref _areFilesSaved, value);
+                OnPropertyChanged(nameof(IsSaved));
+            }
+        }
+
+        private bool _hasFileNameBeenApplied = true;
+        private bool hasFileNameBeenApplied
+        {
+            get => _hasFileNameBeenApplied;
+            set
+            {
+                SetProperty(ref _hasFileNameBeenApplied, value);
+                OnPropertyChanged(nameof(IsSaved));
+            }
+        }
+
+        private bool saveProcessWaitingToStart;
+
+        private SemaphoreSlim saveSemaphore = new(1, 1);                // needed to run a save process
+
+        private SemaphoreSlim projectObjectSemaphore = new(1, 1);       // needed to modify the Project object
+        private SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
+        private SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +107,19 @@ namespace Scanner.Models
             {
                 // folder saved at project level for PDF and page level for all other formats
                 TargetFolder = targetFolder;
-                TargetFileName = targetFileName;
+                FileNameInfo = new FileNameInfo(targetFileName);
+                FileNameInfo.NameChanged += FileNameInfo_NameChanged;
+                hasFileNameBeenApplied = false;
+            }
+            else
+            {
+                foreach (IProjectPage page in pages)
+                {
+                    if (page is ImagePage imagePage)
+                    {
+                        imagePage.FileNameInfo.NameChanged += PageFileNameInfo_NameChanged;
+                    }
+                }
             }
         }
 
@@ -166,7 +200,7 @@ namespace Scanner.Models
 
                 PagesAdded?.Invoke(this, EventArgs.Empty);
 
-                IsSaved = false;
+                areFilesSaved = false;
                 return insertedPages;
             }
             finally
@@ -229,7 +263,7 @@ namespace Scanner.Models
 
                 PagesAdded?.Invoke(this, EventArgs.Empty);
 
-                IsSaved = false;
+                areFilesSaved = false;
             }
             finally
             {
@@ -293,7 +327,7 @@ namespace Scanner.Models
                     Pages[i].Index = i;
                 }
 
-                IsSaved = false;
+                areFilesSaved = false;
             }
             finally
             {
@@ -351,66 +385,124 @@ namespace Scanner.Models
                         saveProcessWaitingToStart = false;
                     });
 
-                    // lock data
-                    await projectObjectSemaphore.WaitAsync();
-                    await projectFolderSemaphore.WaitAsync();
-                    await changesFolderSemaphore.WaitAsync();
-
-                    // commit changes
-                    foreach (IProjectPage page in Pages)
+                    // apply actual file changes
+                    if (!areFilesSaved)
                     {
-                        if (page.CommitNeeded)
+                        // lock data
+                        await projectObjectSemaphore.WaitAsync();
+                        await projectFolderSemaphore.WaitAsync();
+                        await changesFolderSemaphore.WaitAsync();
+
+                        // commit changes
+                        foreach (IProjectPage page in Pages)
                         {
-                            // copy file to project folder
-                            StorageFile? fileToDelete = page.SourceFile;
-                            StorageFile newSourceFile;
-                            if (page.OutOfDateSourceFile != null)
+                            if (page.CommitNeeded)
                             {
-                                newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
-                                page.ClearOutOfDateSourceFile();
+                                // copy file to project folder
+                                StorageFile? fileToDelete = page.SourceFile;
+                                StorageFile newSourceFile;
+                                if (page.OutOfDateSourceFile != null)
+                                {
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    page.ClearOutOfDateSourceFile();
+                                }
+                                else
+                                {
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                }
+
+                                // update page
+                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                                {
+                                    page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile);
+                                });
+
+                                // delete old file
+                                if (fileToDelete != null)
+                                {
+                                    _ = Task.Run(async () =>
+                                    {
+                                        await fileToDelete.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                                    });
+                                }
+                            }
+                        }
+
+                        // take snapshot
+                        IProjectSnapshot? snapshot = null;
+                        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
+                        {
+                            if (IsPdf)
+                            {
+                                snapshot = new PdfProjectSnapshot(this);
                             }
                             else
                             {
-                                newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                throw new NotImplementedException();
                             }
+                        });
+                        if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
 
-                            // update page
-                            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-                            {
-                                page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile);
-                            });
+                        // continue processing edits during save process
+                        projectObjectSemaphore.Release();
+                        changesFolderSemaphore.Release();
 
-                            // delete old file
-                            if (fileToDelete != null)
+                        // save
+                        bool saveResult = false;
+                        if (snapshot is PdfProjectSnapshot pdfSnapshot)
+                        {
+                            (saveResult, StorageFile? savedFile) = await pdfSnapshot.TrySaveAsync();
+                            TargetFile = savedFile;
+
+                            // update file name
+                            if (saveResult && savedFile != null)
                             {
-                                _ = Task.Run(async () =>
+                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
                                 {
-                                    await fileToDelete.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                                    FileNameInfo!.UpdateNames(FileNameInfo!.DesiredName, savedFile.Name);
                                 });
                             }
                         }
+                        projectFolderSemaphore.Release();
+
+                        if (!saveResult) throw new ApplicationException("Failed to save Project");
                     }
 
-                    // take snapshot
-                    IProjectSnapshot snapshot;
+                    // apply file name
                     if (IsPdf)
                     {
-                        snapshot = new PdfProjectSnapshot(this);
+                        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                        {
+                            if (TargetFile!.Name != FileNameInfo!.DesiredName)
+                            {
+                                await TargetFile.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
+                                FileNameInfo.UpdateNames(TargetFile.Name, TargetFile.Name);
+                                hasFileNameBeenApplied = true;
+                            }
+                        });
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        await projectObjectSemaphore.WaitAsync();
+
+                        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                        {
+                            foreach (IProjectPage page in Pages)
+                            {
+                                if (page is ImagePage imagePage)
+                                {
+                                    if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
+                                    {
+                                        await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
+                                        imagePage.FileNameInfo.UpdateNames(imagePage.TargetFile.Name, imagePage.TargetFile.Name);
+                                        hasFileNameBeenApplied = true;
+                                    }
+                                }
+                            }
+                        });
+
+                        projectObjectSemaphore.Release();
                     }
-
-                    // continue processing edits during save process
-                    projectObjectSemaphore.Release();
-                    changesFolderSemaphore.Release();
-
-                    // save
-                    bool saveResult = await snapshot.TrySaveAsync();
-                    projectFolderSemaphore.Release();
-
-                    if (!saveResult) throw new ApplicationException("Failed to save Project");
                 }
                 catch (Exception exc)
                 {
@@ -426,7 +518,7 @@ namespace Scanner.Models
                         // update saved state
                         if (!saveProcessWaitingToStart)
                         {
-                            IsSaved = true;
+                            areFilesSaved = true;
                         }
 
                         saveProcess.TrySetResult();
@@ -626,6 +718,12 @@ namespace Scanner.Models
             // process instructions
             await RotatePagesAsync(mergedInstructions, pagesFolder);
 
+            // update save state
+            if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
+            {
+                areFilesSaved = false;
+            }
+
             return mergedInstructions;
         }
 
@@ -658,6 +756,32 @@ namespace Scanner.Models
         {
             projectObjectSemaphore.Release();
             changesFolderSemaphore.Release();
+        }
+
+        private void FileName_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Models.FileNameInfo.DesiredName):
+                case nameof(Models.FileNameInfo.ActualName):
+                    hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
+                    break;
+            }
+        }
+
+        private void FileNameInfo_NameChanged(object? sender, EventArgs e)
+        {
+            hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
+        }
+
+        private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)
+        {
+            if (sender == null) return;
+
+            if (((FileNameInfo)sender).DesiredName != ((FileNameInfo)sender).ActualName)
+            {
+                hasFileNameBeenApplied = false;
+            }
         }
     }
 

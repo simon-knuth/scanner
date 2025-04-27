@@ -19,6 +19,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using static Scanner.Helpers.Helpers;
 
 
 namespace Scanner.Views
@@ -70,6 +71,9 @@ namespace Scanner.Views
 
         private ScrollViewer? carouselScrollViewer;
 
+        private bool isFileNameTextBoxFocused;
+        private bool isTextBoxDiscardingUserInput;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,12 +81,28 @@ namespace Scanner.Views
         public ProjectView()
         {
             this.InitializeComponent();
+
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.FileName):
+                    // suppress change while user is typing
+                    if (!isFileNameTextBoxFocused && TextBoxProjectName != null)
+                    {
+                        TextBoxProjectName.Text = ViewModel.FileName;
+                    }
+                    break;
+            }
+        }
+
         private static void OnIsExpandedChanged(DependencyObject source, DependencyPropertyChangedEventArgs args)
         {
             if (source is ProjectView view)
@@ -124,6 +144,7 @@ namespace Scanner.Views
 
         private void TextBoxProjectName_GotFocus(object sender, RoutedEventArgs e)
         {
+            isFileNameTextBoxFocused = true;
             ((TextBox)sender).SelectAll();
         }
 
@@ -363,11 +384,75 @@ namespace Scanner.Views
 
         private void TextBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
         {
+            isFileNameTextBoxFocused = false;
+            if (ViewModel.CurrentProject == null) return;
+
+            if (isTextBoxDiscardingUserInput)
+            {
+                // discard and restore file name
+                TextBoxProjectName.Text = ViewModel.FileName;
+                isTextBoxDiscardingUserInput = false;
+            }
+            else
+            {
+                // update file name
+                ViewModel.FileName = TextBoxProjectName.Text + TargetFormatToFileExtension(ViewModel.CurrentProject.Format);
+            }
+
             // scroll TextBox to beginning
             ScrollViewer? scrollViewer = TextBoxProjectName.FindDescendant<ScrollViewer>();
             if (scrollViewer != null)
             {
                 scrollViewer.ChangeView(0, null, null);
+            }
+        }
+
+        private void TextBoxProjectName_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Windows.System.VirtualKey.Enter:
+                case Windows.System.VirtualKey.Accept:
+                    /// focus other control, file name will be applied in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
+                    if (IsExpanded)
+                    {
+                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+                    }
+                    else
+                    {
+                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+                    }
+                    break;
+                case Windows.System.VirtualKey.Escape:
+                case Windows.System.VirtualKey.Cancel:
+                    isTextBoxDiscardingUserInput = true;
+
+                    /// focus other control, file name will be restored in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
+                    if (IsExpanded)
+                    {
+                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+                    }
+                    else
+                    {
+                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+                    }
+                    break;
+            }
+        }
+
+        private void TextBoxProjectName_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            // block invalid chars
+            if (!string.IsNullOrEmpty(args.NewText))
+            {
+                foreach (char invalidChar in System.IO.Path.GetInvalidFileNameChars())
+                {
+                    if (args.NewText.Contains(invalidChar))
+                    {
+                        args.Cancel = true;
+                        return;
+                    }
+                }
             }
         }
     }

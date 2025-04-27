@@ -56,13 +56,7 @@ namespace Scanner.Models
         {
             appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder);
 
-            if (appliedRotations != null && appliedRotations.Count > 0
-                && appliedRotations.Values.Any((x) => x != BitmapRotation.None))
-            {
-                project.IsSaved = false;
-                return true;
-            }
-            return false;
+            return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
         }
 
         public async Task UndoAsync(Project project)

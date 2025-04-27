@@ -36,9 +36,22 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(FileName))]
         private Project? currentProject;
+        public Project? CurrentProject
+        {
+            get => currentProject;
+            set
+            {
+                if (currentProject != null && currentProject.FileNameInfo != null) currentProject.FileNameInfo.NameChanged -= ProjectFileNameInfo_NameChanged;
+
+                if (SetProperty(ref currentProject, value))
+                {
+                    OnPropertyChanged(nameof(FileName));
+
+                    if (value != null && value.FileNameInfo != null) value.FileNameInfo.NameChanged += ProjectFileNameInfo_NameChanged;
+                }
+            }
+        }
 
         public string FileName
         {
@@ -48,13 +61,26 @@ namespace Scanner.ViewModels
 
                 if (CurrentProject.IsPdf)
                 {
-                    return Path.GetFileNameWithoutExtension(CurrentProject.TargetFileName);
+                    return Path.GetFileNameWithoutExtension(CurrentProject.FileNameInfo!.DesiredName);
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    return Path.GetFileNameWithoutExtension(imagePage.TargetFileName);
+                    return Path.GetFileNameWithoutExtension(imagePage.FileNameInfo!.DesiredName);
                 }
                 return string.Empty;
+            }
+            set
+            {
+                if (CurrentProject == null) return;
+
+                if (CurrentProject.IsPdf)
+                {
+                    CurrentProject.FileNameInfo!.UpdateNames(value, CurrentProject.FileNameInfo!.ActualName);
+                }
+                else if (ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    imagePage.FileNameInfo!.UpdateNames(value, imagePage.FileNameInfo!.ActualName);
+                }
             }
         }
 
@@ -91,6 +117,11 @@ namespace Scanner.ViewModels
                     }
                     break;
             }
+        }
+
+        private void ProjectFileNameInfo_NameChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(FileName));
         }
 
         private void SelectPreviousPage()

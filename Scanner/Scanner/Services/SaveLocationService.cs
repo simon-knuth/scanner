@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
+using Scanner.Models.FileNaming;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Serilog;
@@ -132,9 +133,23 @@ namespace Scanner.Services
 
         public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, Project? existingProject)
         {
-            string fileExtension = TargetFormatToFileExtension(scanOptions.TargetFormat);
-            string fileName = $"TODO_FileName{fileExtension}";
+            // generate default file name
+            string fileName;
+            switch (SettingsService.SettingFileNamingPattern)
+            {
+                case SettingFileNamingPattern.DateTime:
+                default:
+                    fileName = FileNamingStatics.DateTimePattern.GenerateResult(scanOptions, true);
+                    break;
+                case SettingFileNamingPattern.Date:
+                    fileName = FileNamingStatics.DatePattern.GenerateResult(scanOptions, true);
+                    break;
+                case SettingFileNamingPattern.Custom:
+                    fileName = SettingsService.CustomFileNamingPattern.GenerateResult(scanOptions, true);
+                    break;
+            }
 
+            // determine final file name
             switch (SettingsService.SettingSaveLocationType)
             {
                 case SettingSaveLocationType.FixedLocation:
