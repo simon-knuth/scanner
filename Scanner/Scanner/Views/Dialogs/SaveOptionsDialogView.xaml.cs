@@ -42,6 +42,8 @@ namespace Scanner.Views.Dialogs
         [ObservableProperty]
         private double folderFlyoutWidth;
 
+        public CornerRadius TextBoxCornerRadius => ViewModel.IsFileNameCollision ? new(0, 0, 0, 0) : new(0, 0, 4, 4);
+
         public SaveOptions? SaveOptions => ViewModel.SaveOptions;
 
         private SaveOptionsDialogViewModel ViewModel;
@@ -68,6 +70,9 @@ namespace Scanner.Views.Dialogs
             {
                 case nameof(ViewModel.SelectedFileNamingPattern):
                     OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
+                    break;
+                case nameof(ViewModel.IsFileNameCollision):
+                    OnPropertyChanged(nameof(TextBoxCornerRadius));
                     break;
             }
         }

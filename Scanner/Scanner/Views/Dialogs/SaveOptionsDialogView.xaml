@@ -25,10 +25,10 @@
 
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Loading">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadingAsyncCommand}"/>
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadingAsyncCommand}" CommandParameter="{x:Bind DispatcherQueue}" />
         </core:EventTriggerBehavior>
         <core:EventTriggerBehavior EventName="Unloaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}" />
         </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 
@@ -63,7 +63,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <StackPanel Orientation="Vertical" Spacing="24" Margin="0,8,0,0">
+    <StackPanel Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
         <!-- File name type -->
         <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}">
             <labs:SegmentedItem CornerRadius="4,4,0,0">
@@ -85,15 +85,29 @@
                 </StackPanel>
             </labs:SegmentedItem>
         </labs:Segmented>
-        
+
         <!-- File name -->
-        <Grid ColumnSpacing="4" Margin="0,-24,0,0">
-            <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" CornerRadius="0,0,4,4" Typography.NumeralAlignment="Tabular" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBoxFileName_GotFocus" />
+        <Grid ColumnSpacing="4" Margin="0,-8,0,0">
+            <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,20,8" FontWeight="SemiBold" CornerRadius="{x:Bind TextBoxCornerRadius, Mode=OneWay}" Typography.NumeralAlignment="Tabular" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBoxFileName_GotFocus" />
             <FontIcon Glyph="&#xE91B;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
             <FontIcon Glyph="&#xEA90;" FontSize="20" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf}" />
             <TextBlock Text="{x:Bind ViewModel.FileExtension}" HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Center" Width="48" Style="{StaticResource BodyTextBlockStyle}" />
         </Grid>
-        
+
+        <!-- Collision warning -->
+        <Border Margin="0,-8,0,0" Height="28">
+            <Grid Padding="0,4,16,4" ToolTipService.ToolTip="Final name may be modified because another file with that name already exists." CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <FontIcon Grid.Column="0" Glyph="&#xEDAF;" FontSize="18" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                <FontIcon Grid.Column="0" Glyph="&#xEDB1;" FontSize="12" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource SystemFillColorCautionBackgroundBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                <TextBlock Grid.Column="1" Text="File with that name already exists" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+            </Grid>
+        </Border>
+
         <!-- Folder -->
         <Grid ColumnSpacing="4">
             <Grid.ColumnDefinitions>
@@ -111,7 +125,7 @@
                     <FontIcon Grid.Column="0" Glyph="&#xE8B7;" FontSize="20" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
                         <TextBlock Text="{x:Bind ViewModel.SelectedFolder.Name, Mode=OneWay}" Style="{StaticResource BaseTextBlockStyle}" />
-                        <TextBlock Text="{x:Bind ViewModel.SelectedFolderPathWithoutFolder, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind ViewModel.SelectedFolder.Path, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                     </StackPanel>
                 </Grid>
 

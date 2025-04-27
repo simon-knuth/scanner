@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.FileNaming;
 using Scanner.Services.Interfaces;
@@ -31,7 +33,7 @@ namespace Scanner.ViewModels
 
         #region Commands
         public AsyncRelayCommand PickFolderAsyncCommand;
-        public AsyncRelayCommand ViewLoadingAsyncCommand => new AsyncRelayCommand(ViewLoadingAsync);
+        public AsyncRelayCommand<DispatcherQueue> ViewLoadingAsyncCommand => new AsyncRelayCommand<DispatcherQueue>(ViewLoadingAsync);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -50,15 +52,27 @@ namespace Scanner.ViewModels
             }
         }
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(SelectedFolderPathWithoutFolder))]
-        [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
         private StorageFolder? selectedFolder;
+        public StorageFolder? SelectedFolder
+        {
+            get => selectedFolder;
+            set
+            {
+                SetProperty(ref selectedFolder, value);
+                OnPropertyChanged(nameof(AreValidOptionsSelected));
+                OnPropertyChanged(nameof(IsFileNameCollision));
+
+                _ = Task.Run(UpdateOccupiedFoldersAsync);
+            }
+        }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
         [NotifyPropertyChangedFor(nameof(SelectedFileNamingPattern))]
+        [NotifyPropertyChangedFor(nameof(IsFileNameCollision))]
         private string fileDisplayName;
+
+        public bool IsFileNameCollision => occupiedFileNames.Contains(FileDisplayName + FileExtension);
 
         public SettingFileNamingPattern? SelectedFileNamingPattern
         {
@@ -102,9 +116,7 @@ namespace Scanner.ViewModels
         public string DateFileNamingPatternValue;
         public string CustomFileNamingPatternValue;
 
-        public string? SelectedFolderPathWithoutFolder => SelectedFolder?.Path.Substring(0, SelectedFolder.Path.LastIndexOf(Path.DirectorySeparatorChar)) ?? string.Empty;
-
-        public string FileExtension => TargetFormatToFileExtension(ScanOptions.TargetFormat);
+        public string FileExtension;
 
         public bool IsPdf => ScanOptions.TargetFormat == TargetFormat.PDF;
 
@@ -116,6 +128,10 @@ namespace Scanner.ViewModels
 
         public List<StorageFolder> RecentFolders;
 
+        private string[] occupiedFileNames = [];
+
+        private DispatcherQueue? viewDispatcherQueue;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +140,7 @@ namespace Scanner.ViewModels
         {
             ScanOptions = scanOptions;
             Project = project;
+            FileExtension = TargetFormatToFileExtension(ScanOptions.TargetFormat);
 
             PickFolderAsyncCommand = new AsyncRelayCommand(() => SelectFolderAsync());
 
@@ -143,15 +160,19 @@ namespace Scanner.ViewModels
             Messenger.UnregisterAll(this);
         }
 
-        private async Task ViewLoadingAsync()
+        private async Task ViewLoadingAsync(DispatcherQueue dispatcherQueue)
         {
+            viewDispatcherQueue = dispatcherQueue;
+
             if (Project != null && Project.TargetFolder != null)
             {
                 SelectedFolder = Project.TargetFolder;
+                _ = Task.Run(UpdateOccupiedFoldersAsync);
             }
             else
             {
                 SelectedFolder = await SaveLocationService.GetFixedSaveLocationAsync();
+                _ = Task.Run(UpdateOccupiedFoldersAsync);
             }
 
             _ = GenerateRecentFoldersListAsync();
@@ -172,6 +193,19 @@ namespace Scanner.ViewModels
             }
         }
 
+        private async Task UpdateOccupiedFoldersAsync()
+        {
+            if (SelectedFolder == null)
+            {
+                occupiedFileNames = [];
+                return;
+            }
+
+            occupiedFileNames = (await SelectedFolder.GetFilesAsync()).Select((x) => x.Name).ToArray();
+
+            viewDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(IsFileNameCollision)));
+        }
+
         private async Task SelectFolderAsync()
         {
             // create picker
@@ -187,6 +221,7 @@ namespace Scanner.ViewModels
             if (folder != null)
             {
                 SelectedFolder = folder;
+                await UpdateOccupiedFoldersAsync();
             }
         }
 
