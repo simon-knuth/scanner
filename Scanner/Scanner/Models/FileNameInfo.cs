@@ -15,6 +15,8 @@ using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using System.IO;
+using Microsoft.UI.Dispatching;
+using Scanner.Extensions;
 
 namespace Scanner.Models
 {
@@ -68,14 +70,17 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void UpdateNames(string desiredName, string? actualName)
+        public async Task UpdateNamesAsync(string desiredName, string? actualName, DispatcherQueue uiDispatcherQueue)
         {
-            bool changed = DesiredName != desiredName || ActualName != actualName;
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
+            {
+                bool changed = DesiredName != desiredName || ActualName != actualName;
 
-            DesiredName = desiredName;
-            ActualName = actualName;
+                DesiredName = desiredName;
+                ActualName = actualName;
 
-            if (changed) NameChanged?.Invoke(this, EventArgs.Empty);
+                if (changed) NameChanged?.Invoke(this, EventArgs.Empty);
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Dispatching;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -12,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.System;
 
 namespace Scanner.ViewModels
 {
@@ -33,6 +33,7 @@ namespace Scanner.ViewModels
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
+        public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -75,14 +76,16 @@ namespace Scanner.ViewModels
 
                 if (CurrentProject.IsPdf)
                 {
-                    CurrentProject.FileNameInfo!.UpdateNames(value, CurrentProject.FileNameInfo!.ActualName);
+                    _ = CurrentProject.FileNameInfo!.UpdateNamesAsync(value, CurrentProject.FileNameInfo!.ActualName, viewDispatcherQueue!);
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    imagePage.FileNameInfo!.UpdateNames(value, imagePage.FileNameInfo!.ActualName);
+                    _ = CurrentProject.FileNameInfo!.UpdateNamesAsync(value, imagePage.FileNameInfo!.ActualName, viewDispatcherQueue!);
                 }
             }
         }
+
+        private DispatcherQueue? viewDispatcherQueue;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +104,14 @@ namespace Scanner.ViewModels
         public void Dispose()
         {
             Messenger.UnregisterAll(this);
+        }
+
+        private void ViewLoading(DispatcherQueue? dispatcherQueue)
+        {
+            if (dispatcherQueue != null)
+            {
+                viewDispatcherQueue = dispatcherQueue;
+            }
         }
 
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -149,7 +160,7 @@ namespace Scanner.ViewModels
             if (CurrentProject == null) return;
             if (CurrentProject.IsPdf)
             {
-                await Launcher.LaunchFolderAsync(CurrentProject.TargetFolder);
+                await Windows.System.Launcher.LaunchFolderAsync(CurrentProject.TargetFolder);
             }
             else
             {
@@ -158,7 +169,7 @@ namespace Scanner.ViewModels
 
                 if (page is not ImagePage imagePage) return;
 
-                await Launcher.LaunchFolderAsync(imagePage.TargetFolder);
+                await Windows.System.Launcher.LaunchFolderAsync(imagePage.TargetFolder);
             }
         }
     }

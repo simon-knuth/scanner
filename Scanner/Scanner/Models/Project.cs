@@ -457,10 +457,7 @@ namespace Scanner.Models
                             // update file name
                             if (saveResult && savedFile != null)
                             {
-                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
-                                {
-                                    FileNameInfo!.UpdateNames(FileNameInfo!.DesiredName, savedFile.Name);
-                                });
+                                await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, savedFile.Name, uiDispatcherQueue);
                             }
                         }
                         projectFolderSemaphore.Release();
@@ -476,7 +473,7 @@ namespace Scanner.Models
                             if (TargetFile!.Name != FileNameInfo!.DesiredName)
                             {
                                 await TargetFile.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
-                                FileNameInfo.UpdateNames(TargetFile.Name, TargetFile.Name);
+                                await FileNameInfo!.UpdateNamesAsync(TargetFile.Name, TargetFile.Name, uiDispatcherQueue);
                                 hasFileNameBeenApplied = true;
                             }
                         });
@@ -494,7 +491,7 @@ namespace Scanner.Models
                                     if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
                                     {
                                         await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
-                                        imagePage.FileNameInfo.UpdateNames(imagePage.TargetFile.Name, imagePage.TargetFile.Name);
+                                        await FileNameInfo!.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
                                         hasFileNameBeenApplied = true;
                                     }
                                 }

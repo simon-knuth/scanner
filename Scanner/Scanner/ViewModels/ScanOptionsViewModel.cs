@@ -34,7 +34,7 @@ namespace Scanner.ViewModels
         #region Commands
         public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(AddDebugScannerAsync);
         public AsyncRelayCommand DebugRemoveScannerCommand => new AsyncRelayCommand(RemoveDebugScannerAsync);
-        public RelayCommand<DispatcherQueue> LoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
+        public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
