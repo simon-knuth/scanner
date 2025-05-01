@@ -142,6 +142,37 @@ namespace Scanner.Helpers
             }
         }
 
+        public static TargetFormat FileExtensionToTargetFormat(string fileExtension)
+        {
+            if (string.IsNullOrEmpty(fileExtension))
+                throw new ArgumentException("File extension cannot be null or empty", nameof(fileExtension));
+            
+            // ensure extension starts with a period and is lowercase
+            string normalizedExtension = fileExtension.StartsWith(".") 
+                ? fileExtension.ToLower() 
+                : $".{fileExtension.ToLower()}";
+            
+            switch (normalizedExtension)
+            {
+                case ".pdf":
+                    return TargetFormat.PDF;
+                case ".jpg":
+                case ".jpeg":
+                    return TargetFormat.JPG;
+                case ".png":
+                    return TargetFormat.PNG;
+                case ".bmp":
+                    return TargetFormat.BMP;
+                case ".tiff":
+                case ".tif":
+                    return TargetFormat.TIFF;
+                case ".raw":
+                    return TargetFormat.RAW;
+                default:
+                    throw new ArgumentException($"Unsupported file extension: {fileExtension}", nameof(fileExtension));
+            }
+        }
+
         public static bool IsValidFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return false;

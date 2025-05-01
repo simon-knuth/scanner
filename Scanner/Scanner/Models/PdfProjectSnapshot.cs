@@ -15,6 +15,7 @@ using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using System.IO;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models
 {
@@ -35,11 +36,14 @@ namespace Scanner.Models
 
         public TargetFormat Format { get; private set; }
 
-        public string? DesiredFileName { get; private set; }
+        public string DesiredFileName { get; private set; }
         public StorageFolder TargetFolder { get; private set; }
         public StorageFile? TargetFile { get; private set; }
 
-        public List<StorageFile> Pages { get; private set; } = new();
+        /// <remarks>
+        /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
+        /// </remarks>
+        public Dictionary<IProjectPage, StorageFile> Pages { get; private set; } = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +58,7 @@ namespace Scanner.Models
 
             foreach (IProjectPage page in project.Pages)
             {
-                Pages.Add(page.SourceFile);
+                Pages.Add(page, page.SourceFile);
             }
         }
 
@@ -62,17 +66,19 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<(bool, StorageFile?)> TrySaveAsync()
+        public async Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
+            Dictionary<IProjectPage, StorageFile?> result = new();
+
             // generate PDF
             try
             {
-                TesseractService.GeneratePdf(Pages, Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName));
+                TesseractService.GeneratePdf(Pages.Values.ToList(), Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName));
             }
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to generate PDF");
-                return (false, null);
+                return result;
             }
 
             // save PDF to target folder
@@ -92,13 +98,14 @@ namespace Scanner.Models
                 {
                     await generatedFile.MoveAsync(TargetFolder, DesiredFileName, NameCollisionOption.GenerateUniqueName);
                 }
-                return (true, generatedFile);
+                result.Add(Pages.Keys.First(), generatedFile);
             }
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to save PDF to target folder");
-                return (false, null);
             }
+
+            return result;
         }
     }
 }

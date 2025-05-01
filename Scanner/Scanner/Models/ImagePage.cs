@@ -43,13 +43,9 @@ namespace Scanner.Models
         public StorageFile? OutOfDateSourceFile {  get; private set; }
         public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
 
-        public StorageFile? TargetFile
-        {
-            get;
-            private set;
-        }
+        public StorageFile? TargetFile { get; set; }
 
-        public StorageFolder? TargetFolder
+        public StorageFolder TargetFolder
         {
             get;
             private set;
@@ -69,7 +65,7 @@ namespace Scanner.Models
         [NotifyPropertyChangedFor(nameof(PageNumber))]
         private int index;
 
-        public FileNameInfo? FileNameInfo { get; private set; }
+        public FileNameInfo FileNameInfo { get; private set; }
 
         public int PageNumber => Index + 1;
 
@@ -80,11 +76,13 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index, string targetFileName, StorageFolder targetFolder)
         {
             SourceFile = sourceFile;
             BitmapUri = uri;
             Index = index;
+            TargetFolder = targetFolder;
+            FileNameInfo = new FileNameInfo(targetFileName);
         }
 
         /// <summary>
@@ -96,15 +94,14 @@ namespace Scanner.Models
         /// <param name="targetFolder">The target folder for this specific page.</param>
         /// <param name="keepSourceFile">Whether to keep the source file or delete it after processing.</param>
         /// <param name="pagesFolder">Which internal folder to copy/move the <paramref name="sourceFile"/> to.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder targetFolder, int index, string targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, index, keepSourceFile, pagesFolder);
+            ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder);
             if (targetFileName != null) result.FileNameInfo = new FileNameInfo(targetFileName);
-            result.TargetFolder = targetFolder;
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, int index, bool keepSourceFile, StorageFolder pagesFolder)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder targetFolder, int index, string targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
         {
             // check file
             if (sourceFile == null)
@@ -131,7 +128,7 @@ namespace Scanner.Models
             }
 
             // create ImagePage
-            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder);
             
             return result;
         }

@@ -347,7 +347,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, index, fileName, targetFolder, keepSourceFile, pagesFolder);
+                    return await ImagePage.CreateAsync(file, targetFolder!, index, fileName!, keepSourceFile, pagesFolder);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:
@@ -438,7 +438,7 @@ namespace Scanner.Models
                             }
                             else
                             {
-                                throw new NotImplementedException();
+                                snapshot = new ImageProjectSnapshot(this);
                             }
                         });
                         if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
@@ -448,21 +448,40 @@ namespace Scanner.Models
                         changesFolderSemaphore.Release();
 
                         // save
-                        bool saveResult = false;
+                        Dictionary<IProjectPage, StorageFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+
+                        // process save result
+                        if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
                         if (snapshot is PdfProjectSnapshot pdfSnapshot)
                         {
-                            (saveResult, StorageFile? savedFile) = await pdfSnapshot.TrySaveAsync();
-                            TargetFile = savedFile;
+                            // update target file
+                            await projectObjectSemaphore.WaitAsync();
+                            TargetFile = pageSaves.Values.First();
+                            projectObjectSemaphore.Release();
 
                             // update file name
-                            if (saveResult && savedFile != null)
+                            await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, pageSaves.Values.First()!.Name, uiDispatcherQueue);
+                        }
+                        else
+                        {
+                            // update target files
+                            await projectObjectSemaphore.WaitAsync();
+                            foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
                             {
-                                await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, savedFile.Name, uiDispatcherQueue);
+                                pageSave.Key.TargetFile = pageSave.Value;
+                            }
+                            projectObjectSemaphore.Release();
+
+                            // update file names
+                            foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                            {
+                                if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
+                                {
+                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, uiDispatcherQueue);
+                                }
                             }
                         }
                         projectFolderSemaphore.Release();
-
-                        if (!saveResult) throw new ApplicationException("Failed to save Project");
                     }
 
                     // apply file name
@@ -491,7 +510,7 @@ namespace Scanner.Models
                                     if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
                                     {
                                         await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
-                                        await FileNameInfo!.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
+                                        await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
                                         hasFileNameBeenApplied = true;
                                     }
                                 }

@@ -25,7 +25,7 @@ namespace Scanner.Models.Interfaces
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         StorageFile SourceFile { get; }
-        StorageFile? TargetFile { get; }
+        StorageFile? TargetFile { get; set; }
 
         /// <summary>
         /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
