@@ -80,7 +80,7 @@ namespace Scanner.ViewModels
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    _ = CurrentProject.FileNameInfo!.UpdateNamesAsync(value, imagePage.FileNameInfo!.ActualName, viewDispatcherQueue!);
+                    _ = imagePage.FileNameInfo!.UpdateNamesAsync(value, imagePage.FileNameInfo!.ActualName, viewDispatcherQueue!);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Scanner.ViewModels
                     CurrentProject = ProjectService.CurrentProject;
                     break;
                 case nameof(IProjectService.SelectedPage):
-                    if (CurrentProject != null && CurrentProject.IsPdf)
+                    if (CurrentProject != null && !CurrentProject.IsPdf)
                     {
                         OnPropertyChanged(nameof(FileName));
                     }

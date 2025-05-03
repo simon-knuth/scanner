@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,6 +84,7 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
 
 
@@ -99,6 +101,16 @@ namespace Scanner.Views
                     {
                         TextBoxProjectName.Text = ViewModel.FileName;
                     }
+                    break;
+            }
+        }
+
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.SelectedPage):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, DiscardProjectNameInputIfFocused);
                     break;
             }
         }
@@ -425,18 +437,25 @@ namespace Scanner.Views
                     break;
                 case Windows.System.VirtualKey.Escape:
                 case Windows.System.VirtualKey.Cancel:
-                    isTextBoxDiscardingUserInput = true;
-
-                    /// focus other control, file name will be restored in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
-                    if (IsExpanded)
-                    {
-                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
-                    }
-                    else
-                    {
-                        ButtonShowInFileExplorer.Focus(FocusState.Pointer);
-                    }
+                    DiscardProjectNameInputIfFocused();
                     break;
+            }
+        }
+
+        private void DiscardProjectNameInputIfFocused()
+        {
+            if (!isFileNameTextBoxFocused) return;
+
+            isTextBoxDiscardingUserInput = true;
+
+            /// focus other control, file name will be restored in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
+            if (IsExpanded)
+            {
+                ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+            }
+            else
+            {
+                ButtonShowInFileExplorer.Focus(FocusState.Pointer);
             }
         }
 
