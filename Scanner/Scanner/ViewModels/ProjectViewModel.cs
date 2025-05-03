@@ -43,13 +43,13 @@ namespace Scanner.ViewModels
             get => currentProject;
             set
             {
-                if (currentProject != null && currentProject.FileNameInfo != null) currentProject.FileNameInfo.NameChanged -= ProjectFileNameInfo_NameChanged;
+                if (currentProject != null && currentProject.FileNameInfo != null) currentProject.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
 
                 if (SetProperty(ref currentProject, value))
                 {
                     OnPropertyChanged(nameof(FileName));
 
-                    if (value != null && value.FileNameInfo != null) value.FileNameInfo.NameChanged += ProjectFileNameInfo_NameChanged;
+                    if (value != null && value.FileNameInfo != null) value.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
                 }
             }
         }
@@ -76,11 +76,11 @@ namespace Scanner.ViewModels
 
                 if (CurrentProject.IsPdf)
                 {
-                    _ = CurrentProject.FileNameInfo!.UpdateNamesAsync(value, CurrentProject.FileNameInfo!.ActualName, viewDispatcherQueue!);
+                    _ = ProjectService.ApplyActionAsync(new RenameAction(null, value));
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    _ = imagePage.FileNameInfo!.UpdateNamesAsync(value, imagePage.FileNameInfo!.ActualName, viewDispatcherQueue!);
+                    _ = ProjectService.ApplyActionAsync(new RenameAction(imagePage, value));
                 }
             }
         }
@@ -93,6 +93,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ProjectViewModel()
         {
+            ProjectService.PropertyChanging += ProjectService_PropertyChanging;
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
         }
@@ -114,6 +115,19 @@ namespace Scanner.ViewModels
             }
         }
 
+        private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.SelectedPage):
+                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage)
+                    {
+                        imagePage.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
+                    }
+                    break;
+            }
+        }
+
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -126,11 +140,16 @@ namespace Scanner.ViewModels
                     {
                         OnPropertyChanged(nameof(FileName));
                     }
+
+                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage)
+                    {
+                        imagePage.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
+                    }
                     break;
             }
         }
 
-        private void ProjectFileNameInfo_NameChanged(object? sender, EventArgs e)
+        private void FileNameInfo_NameChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(FileName));
         }

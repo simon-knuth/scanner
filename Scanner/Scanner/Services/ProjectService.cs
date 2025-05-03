@@ -383,7 +383,7 @@ namespace Scanner.Services
             try
             {
                 IsActionRunning = true;
-                await action.UndoAsync(CurrentProject);
+                await action.UndoAsync(CurrentProject, UiDispatcherQueue!);
 
                 // update undo/redo
                 RedoStack.Push(action);

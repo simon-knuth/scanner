@@ -19,33 +19,31 @@ using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Models
 {
-    public partial class RotatePagesAction : IProjectAction
+    public partial class RenameAction : IProjectAction
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private Dictionary<IProjectPage, RotationIntent> rotations;
+        private IProjectPage? page;
+        private string newName;
 
-        private Dictionary<IProjectPage, BitmapRotation>? appliedRotations;
+        private string? oldName;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Rotates a set of pages.
+        /// Renames a page.
         /// </summary>
-        /// <param name="rotations">
-        /// A sorted list of pages to rotate, with their respective rotation amounts. Rotations are applied in the order they are listed.
-        /// </param>
-        public RotatePagesAction(Dictionary<IProjectPage, RotationIntent> rotations)
+        public RenameAction(IProjectPage? page, string newName)
         {
-            this.rotations = rotations;
+            this.page = page;
+            this.newName = newName;
         }
 
 
@@ -54,31 +52,40 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder);
+            if (project.IsPdf)
+            {
+                oldName = project.FileNameInfo!.DesiredName;
+                await project.FileNameInfo!.UpdateNamesAsync(newName, project.FileNameInfo.ActualName, uiDispatcherQueue);
+            }
+            else if (page is ImagePage imagePage)
+            {
+                oldName = imagePage.FileNameInfo.DesiredName;
+                await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, uiDispatcherQueue);
+            }
 
-            return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
+            return true;
         }
 
         public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
-            if (appliedRotations == null)
+            if (oldName == null)
             {
-                throw new ProjectException("Can't undo RotatePagesAction without list of applied rotations");
+                throw new ProjectException("Can't undo RenameAction without old name");
             }
 
-            // gather instructions
-            Dictionary<IProjectPage, BitmapRotation> invertedRotations = new();
-            foreach (KeyValuePair<IProjectPage, BitmapRotation> rotation in appliedRotations)
+            if (project.IsPdf)
             {
-                invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
+                await project.FileNameInfo!.UpdateNamesAsync(oldName, project.FileNameInfo.ActualName, uiDispatcherQueue);
             }
-
-            await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder);
+            else if (page is ImagePage imagePage)
+            {
+                await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, uiDispatcherQueue);
+            }
         }
 
         public string GetFriendlyName()
         {
-            return nameof(RotatePagesAction);
+            return nameof(RenameAction);
         }
     }
 }

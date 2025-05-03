@@ -59,7 +59,7 @@ namespace Scanner.Models
             return addedPages != null && addedPages.Count > 0;
         }
 
-        public async Task UndoAsync(Project project)
+        public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
         {
             if (addedPages == null)
             {
