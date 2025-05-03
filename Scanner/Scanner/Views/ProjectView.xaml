@@ -151,12 +151,12 @@
 
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem Text="Save" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}">
+                        <MenuFlyoutItem Text="Save" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Save as...">
+                        <MenuFlyoutItem Text="Save as..." IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>

@@ -41,6 +41,9 @@ namespace Scanner.Services.Interfaces
         bool CanUndo { get; }
         bool CanRedo { get; }
 
+        bool CanSaveProject { get; }
+        bool CanSaveAsProject { get; }
+
         DispatcherQueue? UiDispatcherQueue { get; set; }
 
 

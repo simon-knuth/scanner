@@ -188,12 +188,27 @@
                             <KeyboardAccelerator Modifiers="Control" Key="O" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
+                    <Button x:Name="ButtonSave" ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}" RightTapped="ButtonSave_RightTapped">
                         <Grid>
                             <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             <ProgressRing x:Name="ProgressRingSave" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
                         </Grid>
 
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Text="Save" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Save as..." IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                        
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="S" />
                         </Button.KeyboardAccelerators>

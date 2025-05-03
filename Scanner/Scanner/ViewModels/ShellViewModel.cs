@@ -45,37 +45,16 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
         public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
-        public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
+        public AsyncRelayCommand TrySaveAsyncCommand;
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanStartNewProject))]
         private Project? currentProject;
-        public Project? CurrentProject
-        {
-            get => currentProject;
-            set
-            {
-                if (currentProject != null)
-                {
-                    currentProject.PropertyChanged -= Project_PropertyChanged;
-                }
-
-                if (SetProperty(ref currentProject, value))
-                {
-                    OnPropertyChanged(nameof(CanStartNewProject));
-                    OnPropertyChanged(nameof(CanSaveProject));
-
-                    if (value != null)
-                    {
-                        value.PropertyChanged += Project_PropertyChanged;
-                    }
-                }
-            }
-        }
 
         public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
-        public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaved && !ProjectService.IsProcessRunning;
 
         public bool CanUndo => ProjectService.CanUndo && !ProjectService.IsProcessRunning;
         public bool CanRedo => ProjectService.CanRedo && !ProjectService.IsProcessRunning;
@@ -89,6 +68,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ShellViewModel()
         {
+            TrySaveAsyncCommand = new AsyncRelayCommand(TrySaveAsync);
+
             _ = ScannerDiscoveryService.InitializeSearchAsync();
 
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
@@ -139,7 +120,6 @@ namespace Scanner.ViewModels
                     break;
                 case nameof(IProjectService.IsProcessRunning):
                     OnPropertyChanged(nameof(CanStartNewProject));
-                    OnPropertyChanged(nameof(CanSaveProject));
                     OnPropertyChanged(nameof(CanUndo));
                     OnPropertyChanged(nameof(CanRedo));
                     break;
@@ -233,16 +213,6 @@ namespace Scanner.ViewModels
         private void ShowSettings()
         {
             ((App)Application.Current).ShowSettings();
-        }
-
-        private void Project_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(Project.IsSaved):
-                    OnPropertyChanged(nameof(CanSaveProject));
-                    break;
-            }
         }
     }
 }

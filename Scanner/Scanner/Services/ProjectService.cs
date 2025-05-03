@@ -50,17 +50,21 @@ namespace Scanner.Services
                     if (currentProject != null)
                     {
                         currentProject.PagesAdded -= CurrentProject_PagesAdded;
+                        currentProject.PropertyChanged -= CurrentProject_PropertyChanged;
                     }
 
                     if (SetProperty(ref currentProject, value))
                     {
                         OnPropertyChanged(nameof(CanSelectPreviousPage));
                         OnPropertyChanged(nameof(CanSelectNextPage));
+                        OnPropertyChanged(nameof(CanSaveProject));
+                        OnPropertyChanged(nameof(CanSaveAsProject));
                     }
 
                     if (value != null)
                     {
                         currentProject.PagesAdded += CurrentProject_PagesAdded;
+                        currentProject.PropertyChanged += CurrentProject_PropertyChanged;
                     }
                 }
             }
@@ -75,6 +79,8 @@ namespace Scanner.Services
         [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
         [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
         [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
+        [NotifyPropertyChangedFor(nameof(CanSaveProject))]
+        [NotifyPropertyChangedFor(nameof(CanSaveAsProject))]
         private bool isActionRunning;
 
         public bool IsProcessRunning => IsScanProcessRunning || IsActionRunning;
@@ -86,6 +92,9 @@ namespace Scanner.Services
             private set
             {
                 SetProperty(ref isScanProcessRunning, value);
+                OnPropertyChanged(nameof(IsProcessRunning));
+                OnPropertyChanged(nameof(CanSaveProject));
+                OnPropertyChanged(nameof(CanSaveAsProject));
             }
         }
 
@@ -108,6 +117,9 @@ namespace Scanner.Services
         public Stack<IProjectAction> RedoStack { get; private set; } = new();
         public bool CanUndo => UndoStack.Count > 0;
         public bool CanRedo => RedoStack.Count > 0;
+
+        public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaving && !CurrentProject.IsSaved && !IsProcessRunning;
+        public bool CanSaveAsProject => CurrentProject != null && !CurrentProject.IsSaving && !IsProcessRunning;
 
         public DispatcherQueue? UiDispatcherQueue { get; set; }
 
@@ -483,6 +495,18 @@ namespace Scanner.Services
             {
                 if (pages.Count == 0) return;
                 SelectedPage = pages[pages.Count - 1];
+            }
+        }
+
+        private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Project.IsSaving):
+                case nameof(Project.IsSaved):
+                    OnPropertyChanged(nameof(CanSaveProject));
+                    OnPropertyChanged(nameof(CanSaveAsProject));
+                    break;
             }
         }
     }

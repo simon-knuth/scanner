@@ -33,6 +33,7 @@ namespace Scanner.ViewModels
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
+        public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -190,6 +191,12 @@ namespace Scanner.ViewModels
 
                 await Windows.System.Launcher.LaunchFolderAsync(imagePage.TargetFolder);
             }
+        }
+
+        private async Task TrySaveAsync()
+        {
+            if (CurrentProject == null) return;
+            await CurrentProject.SaveAsync(viewDispatcherQueue!);
         }
     }
 }

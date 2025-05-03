@@ -396,5 +396,10 @@ namespace Scanner.Views
             flyout.ActionSelected += async (sender, e) => await ViewModel.TryRedoAsyncCommand.ExecuteAsync(e);
             flyout.ShowAt((FrameworkElement)sender);
         }
+
+        private void ButtonSave_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(ButtonSave);
+        }
     }
 }
