@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 namespace Scanner.Models
 {
     /// <summary>
-    /// Thrown when an action on a <see cref="Project"/> fails but the changes could be rolled back.
+    /// Thrown when an action on a <see cref="ProjectBase"/> fails but the changes could be rolled back.
     /// </summary>
     public class ProjectException : Exception
     {

@@ -124,7 +124,7 @@ namespace Scanner.ViewModels
 
         public ScanOptions ScanOptions;
 
-        public Project? Project;
+        public ProjectBase? Project;
 
         public List<StorageFolder> RecentFolders;
 
@@ -136,7 +136,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveOptionsDialogViewModel(ScanOptions scanOptions, Project? project)
+        public SaveOptionsDialogViewModel(ScanOptions scanOptions, ProjectBase? project)
         {
             ScanOptions = scanOptions;
             Project = project;
@@ -164,9 +164,9 @@ namespace Scanner.ViewModels
         {
             viewDispatcherQueue = dispatcherQueue;
 
-            if (Project != null && Project.TargetFolder != null)
+            if (Project != null && Project is PdfProject pdfProject)
             {
-                SelectedFolder = Project.TargetFolder;
+                SelectedFolder = pdfProject.TargetFolder;
                 _ = Task.Run(UpdateOccupiedFoldersAsync);
             }
             else

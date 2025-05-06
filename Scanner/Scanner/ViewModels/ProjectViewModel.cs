@@ -38,19 +38,19 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        private Project? currentProject;
-        public Project? CurrentProject
+        private ProjectBase? currentProject;
+        public ProjectBase? CurrentProject
         {
             get => currentProject;
             set
             {
-                if (currentProject != null && currentProject.FileNameInfo != null) currentProject.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
+                if (currentProject != null && currentProject is PdfProject pdfProject) pdfProject.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
 
                 if (SetProperty(ref currentProject, value))
                 {
                     OnPropertyChanged(nameof(FileName));
 
-                    if (value != null && value.FileNameInfo != null) value.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
+                    if (value != null && value is PdfProject pdfProject2) pdfProject2.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
                 }
             }
         }
@@ -61,13 +61,13 @@ namespace Scanner.ViewModels
             {
                 if (CurrentProject == null) return string.Empty;
 
-                if (CurrentProject.IsPdf)
+                if (CurrentProject is PdfProject pdfProject)
                 {
-                    return Path.GetFileNameWithoutExtension(CurrentProject.FileNameInfo!.DesiredName);
+                    return Path.GetFileNameWithoutExtension(pdfProject.FileNameInfo.DesiredName);
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    return Path.GetFileNameWithoutExtension(imagePage.FileNameInfo!.DesiredName);
+                    return Path.GetFileNameWithoutExtension(imagePage.FileNameInfo.DesiredName);
                 }
                 return string.Empty;
             }
@@ -178,9 +178,9 @@ namespace Scanner.ViewModels
         private async Task ShowInFileExplorerAsync(IProjectPage? page)
         {
             if (CurrentProject == null) return;
-            if (CurrentProject.IsPdf)
+            if (CurrentProject is PdfProject pdfProject)
             {
-                await Windows.System.Launcher.LaunchFolderAsync(CurrentProject.TargetFolder);
+                await Windows.System.Launcher.LaunchFolderAsync(pdfProject.TargetFolder);
             }
             else
             {

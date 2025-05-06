@@ -35,7 +35,7 @@ namespace Scanner.Models
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Removes a set of pages from a <see cref="Project"/>.
+        /// Removes a set of pages from a <see cref="ProjectBase"/>.
         /// </summary>
         /// <param name="removals">
         /// A list of pages to remove.
@@ -49,7 +49,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             await project.RemovePagesAsync(removals, false);
             removedPages = removals;
@@ -57,7 +57,7 @@ namespace Scanner.Models
             return removedPages != null && removedPages.Count > 0;
         }
 
-        public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (removedPages == null)
             {

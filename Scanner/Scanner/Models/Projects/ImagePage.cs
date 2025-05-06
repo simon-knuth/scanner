@@ -45,7 +45,7 @@ namespace Scanner.Models
 
         public StorageFile? TargetFile { get; set; }
 
-        public StorageFolder TargetFolder
+        public StorageFolder? TargetFolder
         {
             get;
             private set;
@@ -89,7 +89,7 @@ namespace Scanner.Models
         ///    Creates a new ImagePage from a file.
         /// </summary>
         /// <param name="sourceFile">The image source file.</param>
-        /// <param name="index">The index of the page in the <see cref="Project"/>.</param>
+        /// <param name="index">The index of the page in the <see cref="ProjectBase"/>.</param>
         /// <param name="targetFileName">The desired target file name.</param>
         /// <param name="targetFolder">The target folder for this specific page.</param>
         /// <param name="keepSourceFile">Whether to keep the source file or delete it after processing.</param>

@@ -37,7 +37,7 @@ namespace Scanner.Services.Interfaces
         ///     cancelling the operation.
         /// </summary>
         /// <returns>A <see cref="StorageFile"/> to save to.</returns>
-        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, Project? existingProject);
+        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject);
 
         /// <summary>
         ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.

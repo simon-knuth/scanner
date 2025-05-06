@@ -52,14 +52,14 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder);
 
             return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
         }
 
-        public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (appliedRotations == null)
             {

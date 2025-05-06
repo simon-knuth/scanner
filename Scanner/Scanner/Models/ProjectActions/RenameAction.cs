@@ -50,12 +50,12 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            if (project.IsPdf)
+            if (project is PdfProject pdfProject)
             {
-                oldName = project.FileNameInfo!.DesiredName;
-                await project.FileNameInfo!.UpdateNamesAsync(newName, project.FileNameInfo.ActualName, uiDispatcherQueue);
+                oldName = pdfProject.FileNameInfo!.DesiredName;
+                await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, uiDispatcherQueue);
             }
             else if (page is ImagePage imagePage)
             {
@@ -66,16 +66,16 @@ namespace Scanner.Models
             return true;
         }
 
-        public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (oldName == null)
             {
                 throw new ProjectException("Can't undo RenameAction without old name");
             }
 
-            if (project.IsPdf)
+            if (project is PdfProject pdfProject)
             {
-                await project.FileNameInfo!.UpdateNamesAsync(oldName, project.FileNameInfo.ActualName, uiDispatcherQueue);
+                await pdfProject.FileNameInfo!.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, uiDispatcherQueue);
             }
             else if (page is ImagePage imagePage)
             {

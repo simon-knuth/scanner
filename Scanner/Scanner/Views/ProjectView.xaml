@@ -226,7 +226,7 @@
                                 <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Print">
+                        <MenuFlyoutItem Text="Print...">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>

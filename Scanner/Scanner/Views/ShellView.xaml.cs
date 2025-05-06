@@ -100,11 +100,11 @@ namespace Scanner.Views
         {
             if (sender == null) return;
 
-            if (lastPageCount < 2 && ((Project)sender).Pages.Count >= 2 && ViewModel.SettingsService.SettingExpandPageList)
+            if (lastPageCount < 2 && ((ProjectBase)sender).Pages.Count >= 2 && ViewModel.SettingsService.SettingExpandPageList)
             {
                 this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, TryExpandPageList);
             }
-            lastPageCount = ((Project)sender).Pages.Count;
+            lastPageCount = ((ProjectBase)sender).Pages.Count;
         }
 
         private void UpdateVisualState(double width)
@@ -247,7 +247,7 @@ namespace Scanner.Views
             ShowSaveChangesDialog(e);
         }
 
-        private void ViewModel_SaveFileDialogRequested1(object? sender, Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, Project?> e)
+        private void ViewModel_SaveFileDialogRequested1(object? sender, Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, ProjectBase?> e)
         {
             ShowSaveFileDialog(e.Item1, e.Item2, e.Item3);
         }
@@ -291,7 +291,7 @@ namespace Scanner.Views
             });
         }
 
-        private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, Project? project)
+        private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project)
         {
             this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
             {

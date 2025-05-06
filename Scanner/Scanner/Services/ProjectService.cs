@@ -39,8 +39,8 @@ namespace Scanner.Services
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
-        private Project? currentProject;
-        public Project? CurrentProject
+        private ProjectBase? currentProject;
+        public ProjectBase? CurrentProject
         {
             get => currentProject;
             private set
@@ -165,7 +165,21 @@ namespace Scanner.Services
 
                 // create project
                 CurrentScanState = ScanState.Processing;
-                CurrentProject = await Project.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
+                switch (scanOptions.TargetFormat)
+                {
+                    case TargetFormat.PDF:
+                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
+                        break;
+                    case TargetFormat.JPG:
+                    case TargetFormat.PNG:
+                    case TargetFormat.BMP:
+                    case TargetFormat.TIFF:
+                    case TargetFormat.RAW:
+                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
+                        break;
+                    default:
+                        throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
+                }
 
                 // auto rotate
                 if (SettingsService.SettingAutoRotate)
@@ -244,7 +258,7 @@ namespace Scanner.Services
                         instructions.Add(file, RotationIntent.Automatic);
                     }
 
-                    await Project.RotateFilesAsync(instructions, true, AppDataService.ProjectFolder);
+                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.ProjectFolder);
                 }
 
                 // add files
@@ -491,7 +505,7 @@ namespace Scanner.Services
         private void CurrentProject_PagesAdded(object? sender, EventArgs e)
         {
             // automatically select last page when pages are added
-            if (sender is Project project && project.Pages is ObservableCollection<IProjectPage> pages)
+            if (sender is ProjectBase project && project.Pages is ObservableCollection<IProjectPage> pages)
             {
                 if (pages.Count == 0) return;
                 SelectedPage = pages[pages.Count - 1];
@@ -502,8 +516,8 @@ namespace Scanner.Services
         {
             switch (e.PropertyName)
             {
-                case nameof(Project.IsSaving):
-                case nameof(Project.IsSaved):
+                case nameof(ProjectBase.IsSaving):
+                case nameof(ProjectBase.IsSaved):
                     OnPropertyChanged(nameof(CanSaveProject));
                     OnPropertyChanged(nameof(CanSaveAsProject));
                     break;

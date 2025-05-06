@@ -36,7 +36,7 @@ namespace Scanner.Models
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Adds a set of files to a <see cref="Project"/> at specific indices.
+        /// Adds a set of files to a <see cref="ProjectBase"/> at specific indices.
         /// </summary>
         /// <param name="insertions">
         /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
@@ -52,14 +52,14 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             addedPages = await project.AddFilesAsync(insertions, keepSourceFiles);
             
             return addedPages != null && addedPages.Count > 0;
         }
 
-        public async Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue)
+        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (addedPages == null)
             {

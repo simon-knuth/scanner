@@ -90,7 +90,7 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanScanModeBeSwitched))]
         [NotifyPropertyChangedFor(nameof(CanScanAndMerge))]
-        private Project? currentProject;
+        private ProjectBase? currentProject;
 
         [ObservableProperty]
         private bool addToProject;

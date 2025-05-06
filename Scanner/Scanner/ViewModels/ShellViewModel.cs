@@ -35,7 +35,7 @@ namespace Scanner.ViewModels
 
         #region Events
         public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
-        public event EventHandler<Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, Project?>> SaveFileDialogRequested;
+        public event EventHandler<Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, ProjectBase?>> SaveFileDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
@@ -52,7 +52,7 @@ namespace Scanner.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanStartNewProject))]
-        private Project? currentProject;
+        private ProjectBase? currentProject;
 
         public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
 
@@ -139,7 +139,7 @@ namespace Scanner.ViewModels
             return await result.Task;
         }
 
-        private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, Project? project)
+        private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, ProjectBase? project)
         {
             TaskCompletionSource<SaveOptions?> result = new();
             SaveFileDialogRequested?.Invoke(this, new(result, scanOptions, project));

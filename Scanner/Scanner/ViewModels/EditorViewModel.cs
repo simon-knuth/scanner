@@ -38,7 +38,7 @@ namespace Scanner.ViewModels
         #endregion
 
         [ObservableProperty]
-        private Project? currentProject;
+        private ProjectBase? currentProject;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

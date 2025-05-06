@@ -131,7 +131,7 @@ namespace Scanner.Services
             initializationCompleted.TrySetResult();
         }
 
-        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, Project? existingProject)
+        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject)
         {
             // generate default file name
             string fileName;
@@ -158,14 +158,26 @@ namespace Scanner.Services
                     return new SaveOptions(fixedSaveLocation!, fileName);
 
                 case SettingSaveLocationType.AskForEveryProject:
-                case SettingSaveLocationType.AskEveryTime:
-                    if (SettingsService.SettingSaveLocationType == SettingSaveLocationType.AskForEveryProject && existingProject != null)
+                    if (existingProject != null)
                     {
-                        return new SaveOptions(existingProject.TargetFolder!, fileName);
+                        if (existingProject is PdfProject pdfProject)
+                        {
+                            return new SaveOptions(pdfProject.TargetFolder!, fileName);
+                        }
+                        else if (existingProject.Pages[0] is ImagePage imagePage)
+                        {
+                            return new SaveOptions(imagePage.TargetFolder, fileName);
+                        }
                     }
 
                     // ask user for location
                     SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                    if (result != null) TrackRecentlyUsedFolder(result.TargetFolder);
+                    return result;
+
+                case SettingSaveLocationType.AskEveryTime:
+                    // ask user for location
+                    result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
                     if (result != null) TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;
 

@@ -1,0 +1,239 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI.Helpers;
+using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Extensions;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.Devices.Scanners;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using WinRT.Interop;
+using static Scanner.Helpers.RotationHelpers;
+
+namespace Scanner.Models
+{
+    public partial class ImageProject : ProjectBase
+    {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private ImageProject(IList<IProjectPage> pages, TargetFormat format) : base(pages, format)
+        {
+            foreach (IProjectPage page in pages)
+            {
+                if (page is ImagePage imagePage)
+                {
+                    imagePage.FileNameInfo.NameChanged += PageFileNameInfo_NameChanged;
+                }
+            }
+        }
+
+        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles)
+        {
+            // empty project folders
+            await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+
+            // create pages
+            List<IProjectPage> pages = new();
+            for (int i = 0; i < files.Count; i++)
+            {
+                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder));
+            }
+
+            // create project
+            return new ImageProject(pages, format);
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public override async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
+        {
+            // ensure maximum of one thread waiting to save
+            if (saveProcessWaitingToStart)
+            {
+                if (LatestSaveProcess != null)
+                {
+                    await LatestSaveProcess.Task;
+                }
+                return;
+            }
+            saveProcessWaitingToStart = true;
+
+            // enable waiting for save process (even if it is waiting to start)
+            TaskCompletionSource saveProcess = new();
+            LatestSaveProcess = saveProcess;
+
+            // save
+            await Task.Run(async () =>
+            {
+                await saveSemaphore.WaitAsync();
+
+                try
+                {
+                    uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        IsSaving = true;
+                        saveProcessWaitingToStart = false;
+                    });
+
+                    // apply actual file changes
+                    if (!areFilesSaved)
+                    {
+                        // lock data
+                        await projectObjectSemaphore.WaitAsync();
+                        await projectFolderSemaphore.WaitAsync();
+                        await changesFolderSemaphore.WaitAsync();
+
+                        // commit changes
+                        foreach (IProjectPage page in Pages)
+                        {
+                            if (page.CommitNeeded)
+                            {
+                                // copy file to project folder
+                                StorageFile? fileToDelete = page.SourceFile;
+                                StorageFile newSourceFile;
+                                if (page.OutOfDateSourceFile != null)
+                                {
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    page.ClearOutOfDateSourceFile();
+                                }
+                                else
+                                {
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                }
+
+                                // update page
+                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                                {
+                                    page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile);
+                                });
+
+                                // delete old file
+                                if (fileToDelete != null)
+                                {
+                                    _ = Task.Run(async () =>
+                                    {
+                                        await fileToDelete.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                                    });
+                                }
+                            }
+                        }
+
+                        // take snapshot
+                        ImageProjectSnapshot? snapshot = null;
+                        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
+                        {
+                            snapshot = new ImageProjectSnapshot(this);
+                        });
+                        if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
+
+                        // continue processing edits during save process
+                        projectObjectSemaphore.Release();
+                        changesFolderSemaphore.Release();
+
+                        // save
+                        Dictionary<IProjectPage, StorageFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+
+                        // process save result
+                        if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
+
+                        // update target files
+                        await projectObjectSemaphore.WaitAsync();
+                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        {
+                            pageSave.Key.TargetFile = pageSave.Value;
+                        }
+                        projectObjectSemaphore.Release();
+
+                        // update file names
+                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        {
+                            if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
+                            {
+                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, uiDispatcherQueue);
+                            }
+                        }
+
+                        projectFolderSemaphore.Release();
+                    }
+
+                    // apply file name
+                    await projectObjectSemaphore.WaitAsync();
+
+                    await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                    {
+                        foreach (IProjectPage page in Pages)
+                        {
+                            if (page is ImagePage imagePage)
+                            {
+                                if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
+                                {
+                                    await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
+                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
+                                    hasFileNameBeenApplied = true;
+                                }
+                            }
+                        }
+                    });
+
+                        projectObjectSemaphore.Release();
+                }
+                catch (Exception exc)
+                {
+                    saveProcess.TrySetException(exc);
+                    throw;
+                }
+                finally
+                {
+                    uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        IsSaving = false;
+
+                        // update saved state
+                        if (!saveProcessWaitingToStart)
+                        {
+                            areFilesSaved = true;
+                        }
+
+                        saveProcess.TrySetResult();
+                    });
+                    saveSemaphore.Release();
+                }
+            });
+        }
+
+        private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)
+        {
+            if (sender == null) return;
+
+            if (((FileNameInfo)sender).DesiredName != ((FileNameInfo)sender).ActualName)
+            {
+                hasFileNameBeenApplied = false;
+            }
+        }
+    }
+}

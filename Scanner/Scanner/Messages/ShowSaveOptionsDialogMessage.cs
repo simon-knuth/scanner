@@ -13,9 +13,9 @@ namespace Scanner.Messages
     internal class ShowSaveOptionsDialogMessage : RequestMessage<Task<SaveOptions?>>
     {
         public ScanOptions ScanOptions;
-        public Project? Project;
+        public ProjectBase? Project;
 
-        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, Project? project)
+        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project)
         {
             this.ScanOptions = scanOptions;
             this.Project = project;

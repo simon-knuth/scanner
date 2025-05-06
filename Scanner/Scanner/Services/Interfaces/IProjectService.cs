@@ -18,14 +18,14 @@ using Microsoft.UI.Dispatching;
 namespace Scanner.Services.Interfaces
 {
     /// <summary>
-    ///     Manages the current <see cref="Project"/>.
+    ///     Manages the current <see cref="ProjectBase"/>.
     /// </summary>
     public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChanging
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Project? CurrentProject { get; }
+        ProjectBase? CurrentProject { get; }
         IProjectPage? SelectedPage { get; set; }
 
         bool IsProcessRunning { get; }          // scan or edit in progres

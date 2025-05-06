@@ -36,24 +36,24 @@ namespace Scanner.Models.Interfaces
         /// Whether any changes were made.
         /// </returns>
         /// <exception cref="ProjectException">
-        /// Occurs when the action failed but changes to the <see cref="Project"/> could be rolled back.
+        /// Occurs when the action failed but changes to the <see cref="ProjectBase"/> could be rolled back.
         /// </exception>
         /// <exception cref="Exception">
-        /// Occurs when a fatal error occurred and the changes to the <see cref="Project"/> could not be rolled back.
+        /// Occurs when a fatal error occurred and the changes to the <see cref="ProjectBase"/> could not be rolled back.
         /// </exception>
-        Task<bool> ExecuteAsync(Project project, DispatcherQueue uiDispatcherQueue);
+        Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
-        /// Undoes the action after <see cref="ExecuteAsync(Project, DispatcherQueue)"/> has been run.
-        /// Once this method has been run, <see cref="ExecuteAsync(Project, DispatcherQueue)"/> can be run again.
+        /// Undoes the action after <see cref="ExecuteAsync(ProjectBase, DispatcherQueue)"/> has been run.
+        /// Once this method has been run, <see cref="ExecuteAsync(ProjectBase, DispatcherQueue)"/> can be run again.
         /// </summary>
         /// <exception cref="ProjectException">
-        /// Occurs when the action failed but changes to the <see cref="Project"/> could be rolled back.
+        /// Occurs when the action failed but changes to the <see cref="ProjectBase"/> could be rolled back.
         /// </exception>
         /// <exception cref="Exception">
-        /// Occurs when a fatal error occurred and the changes to the <see cref="Project"/> could not be rolled back.
+        /// Occurs when a fatal error occurred and the changes to the <see cref="ProjectBase"/> could not be rolled back.
         /// </exception>
-        Task UndoAsync(Project project, DispatcherQueue uiDispatcherQueue);
+        Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
         /// Gets the friendly name of the action.
