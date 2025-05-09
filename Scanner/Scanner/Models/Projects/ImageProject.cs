@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -8,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
+using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
@@ -17,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -257,6 +260,58 @@ namespace Scanner.Models
                     saveSemaphore.Release();
                 }
             });
+        }
+
+        public async Task CopyPagesAsync(List<IProjectPage> pages)
+        {
+            // wait for save processes to end
+            if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
+            {
+                await Messenger.Send(new ShowSaveInProgressDialogMessage()).Response;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            // copy files
+            try
+            {
+                if (IsSaved)
+                {
+                    List<StorageFile> files = new();
+                    foreach (IProjectPage page in pages)
+                    {
+                        if (page is ImagePage imagePage)
+                        {
+                            files.Add(imagePage.TargetFile!);
+                        }
+                    }
+
+                    // construct data package
+                    DataPackage dataPackage = new DataPackage();
+                    dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                    dataPackage.SetStorageItems(files, true);
+
+                    Clipboard.SetContent(dataPackage);
+                }
+                else
+                {
+                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    {
+                        Title = "Project not saved",
+                        Message = "The project needs to be saved to complete this action.",
+                        Severity = InfoBarSeverity.Error
+                    }));
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
         }
 
         private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)

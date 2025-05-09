@@ -102,7 +102,7 @@
 
             <Grid Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border x:Name="BorderToolbarNavigationBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
-                <TextBlock IsHitTestVisible="False" MaxLines="1" Margin="8,4,8,4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}">
+                <TextBlock IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}">
                     <Span>
                         <Run Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" />
                         <Run Text="of" />

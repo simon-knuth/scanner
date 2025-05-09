@@ -88,6 +88,10 @@ namespace Scanner.ViewModels
             {
                 m.Reply(ShowProjectDeletionDialogAsync(m.Project));
             });
+            Messenger.Register<ShowSaveInProgressDialogMessage>(this, (r, m) =>
+            {
+                m.Reply(ShowSaveInProgressDialogAsync());
+            });
             Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
             {
                 ShowNotificationRequested?.Invoke(this, m.Notification);

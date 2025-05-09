@@ -300,7 +300,7 @@ namespace Scanner.Services
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Something went wrong and your changes couldn't be completed"
+                    Title = "Something went wrong and the actions couldn't be completed"
                 }));
             }
             catch (Exception)
@@ -333,6 +333,62 @@ namespace Scanner.Services
             }
 
             // changes were handled (saved or discarded)
+            return true;
+        }
+
+        public async Task<bool> TryCopyProjectAsync()
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // copy project
+                if (CurrentProject is PdfProject pdfProject)
+                {
+                    await pdfProject.CopyAsync();
+                }
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TryCopyPagesAsync(List<IProjectPage> pages)
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // copy project
+                if (CurrentProject is ImageProject imageProject)
+                {
+                    await imageProject.CopyPagesAsync(pages);
+                }
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
             return true;
         }
 
@@ -416,7 +472,7 @@ namespace Scanner.Services
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Something went wrong and your changes couldn't be completed"
+                    Title = "Something went wrong and the actions couldn't be completed"
                 }));
 
                 if (redoing)
@@ -458,7 +514,7 @@ namespace Scanner.Services
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Something went wrong and your changes couldn't be completed"
+                    Title = "Something went wrong and the actions couldn't be completed"
                 }));
 
                 // update undo stack

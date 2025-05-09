@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -8,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
+using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
@@ -17,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -76,7 +79,6 @@ namespace Scanner.Models
         public override async Task DeleteAsync()
         {
             // wait for save processes to end
-            saveProcessWaitingToStart = true;
             if (LatestSaveProcess != null)
             {
                 await LatestSaveProcess.Task;
@@ -239,6 +241,47 @@ namespace Scanner.Models
                     saveSemaphore.Release();
                 }
             });
+        }
+
+        public async Task CopyAsync()
+        {
+            // wait for save processes to end
+            if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
+            {
+                await Messenger.Send(new ShowSaveInProgressDialogMessage()).Response;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            // copy file
+            try
+            {
+                if (IsSaved && TargetFile != null)
+                {
+                    DataPackage dataPackage = new DataPackage();
+                    dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                    dataPackage.SetStorageItems([TargetFile], true);
+                    Clipboard.SetContent(dataPackage);
+                }
+                else
+                {
+                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    {
+                        Title = "Project not saved",
+                        Message = "The project needs to be saved to complete this action.",
+                        Severity = InfoBarSeverity.Error
+                    }));
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
         }
 
         private void FileNameInfo_NameChanged(object? sender, EventArgs e)

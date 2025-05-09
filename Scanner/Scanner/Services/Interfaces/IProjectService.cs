@@ -59,6 +59,7 @@ namespace Scanner.Services.Interfaces
 
         Task<bool> TryDeleteProjectAsync();
         Task<bool> TrySaveProjectAsync();
+        Task<bool> TryCopyProjectAsync();
         Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
 
         void SelectPreviousPage();

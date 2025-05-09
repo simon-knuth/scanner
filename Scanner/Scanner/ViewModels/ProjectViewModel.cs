@@ -30,6 +30,7 @@ namespace Scanner.ViewModels
         #region Commands
         public AsyncRelayCommand TryRemoveCurrentPageAsyncCommand => new AsyncRelayCommand(TryRemoveCurrentPageAsync);
         public AsyncRelayCommand TryDeleteProjectAsyncCommand => new AsyncRelayCommand(TryDeleteProjectAsync);
+        public AsyncRelayCommand TryCopySelectionAsyncCommand => new AsyncRelayCommand(TryCopySelectionAsync);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
@@ -215,6 +216,20 @@ namespace Scanner.ViewModels
         {
             if (CurrentProject == null) return;
             await CurrentProject.SaveAsync(viewDispatcherQueue!);
+        }
+
+        private async Task TryCopySelectionAsync()
+        {
+            if (CurrentProject == null) return;
+            
+            if (CurrentProject is PdfProject)
+            {
+                await ProjectService.TryCopyProjectAsync();
+            }
+            else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
+            {
+                await imageProject.CopyPagesAsync(new List<IProjectPage>([ProjectService.SelectedPage]));
+            }
         }
     }
 }

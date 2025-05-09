@@ -234,7 +234,7 @@
                             </MenuFlyoutSubItem.Items>
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Copy">
+                        <MenuFlyoutItem Text="Copy" Command="{x:Bind ViewModel.TryCopySelectionAsyncCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
