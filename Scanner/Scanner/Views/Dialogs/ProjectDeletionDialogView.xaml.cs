@@ -17,7 +17,7 @@ using Windows.Foundation.Collections;
 
 namespace Scanner.Views.Dialogs
 {
-    public partial class SaveChangesDialogView : ContentDialog
+    public partial class ProjectDeletionDialogView : ContentDialog
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveChangesDialogView(ProjectBase project)
+        public ProjectDeletionDialogView(ProjectBase project)
         {
             this.project = project;
 
@@ -43,9 +43,9 @@ namespace Scanner.Views.Dialogs
         {
             this.IsEnabled = false;
 
-            // save changes
+            // delete project
             ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-            await project.SaveAsync(this.DispatcherQueue);
+            await project.DeleteAsync();
             deferral.Complete();
         }
     }

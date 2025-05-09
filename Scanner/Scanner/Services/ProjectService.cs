@@ -283,12 +283,50 @@ namespace Scanner.Services
             }
         }
 
+        public async Task<bool> TryDeleteProjectAsync()
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // get confirmation
+                if (await Messenger.Send(new ShowProjectDeletionDialogMessage(CurrentProject)).Response == false) return false;
+
+                // close project
+                await TryCloseProjectAsync(true);
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and your changes couldn't be completed"
+                }));
+            }
+            catch (Exception)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the project needs to be closed"
+                }));
+
+                // close project
+                await TryCloseProjectAsync(true);
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> TrySaveProjectAsync()
         {
             if (CurrentProject == null) return true;
 
             // handle unsaved changes
-            if (!CurrentProject.IsSaved && await Messenger.Send(new ShowSaveChangesDialogMessage()).Response == false)
+            if (!CurrentProject.IsSaved && await Messenger.Send(new ShowUnsavedChangesDialogMessage()).Response == false)
             {
                 // changes couldn't be handled
                 return false;

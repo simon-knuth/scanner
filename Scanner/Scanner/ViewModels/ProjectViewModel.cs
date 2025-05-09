@@ -28,6 +28,8 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
+        public AsyncRelayCommand TryRemoveCurrentPageAsyncCommand => new AsyncRelayCommand(TryRemoveCurrentPageAsync);
+        public AsyncRelayCommand TryDeleteProjectAsyncCommand => new AsyncRelayCommand(TryDeleteProjectAsync);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
@@ -163,6 +165,22 @@ namespace Scanner.ViewModels
         private void SelectNextPage()
         {
             ProjectService.SelectNextPage();
+        }
+
+        private async Task TryRemoveCurrentPageAsync()
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
+
+            await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
+            {
+                ProjectService.SelectedPage
+            }));
+        }
+
+        private async Task TryDeleteProjectAsync()
+        {
+            await ProjectService.TryDeleteProjectAsync();
         }
 
         private async Task TryCloseProjectAsync()

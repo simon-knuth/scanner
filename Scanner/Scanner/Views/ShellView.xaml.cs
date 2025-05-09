@@ -59,8 +59,9 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;
-            ViewModel.SaveFileDialogRequested += ViewModel_SaveFileDialogRequested1;
+            ViewModel.SaveFileDialogRequested += ViewModel_SaveFileDialogRequested;
             ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
+            ViewModel.ProjectDeletionDialogRequested += ViewModel_ProjectDeletionDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -247,14 +248,19 @@ namespace Scanner.Views
             ShowSaveChangesDialog(e);
         }
 
-        private void ViewModel_SaveFileDialogRequested1(object? sender, Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, ProjectBase?> e)
+        private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project) e)
         {
-            ShowSaveFileDialog(e.Item1, e.Item2, e.Item3);
+            ShowSaveFileDialog(e.Process, e.ScanOptions, e.Project);
         }
 
         private void ViewModel_SaveInProgressDialogRequested(object? sender, TaskCompletionSource e)
         {
             ShowSaveInProgressDialog(e);
+        }
+
+        private void ViewModel_ProjectDeletionDialogRequested(object? sender, (TaskCompletionSource<bool> Process, ProjectBase? Project) e)
+        {
+            ShowProjectDeletionDialog(e.Process, e.Project);
         }
 
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -282,7 +288,7 @@ namespace Scanner.Views
 
                 isDialogVisible = true;
 
-                SaveChangesDialogView dialog = new SaveChangesDialogView(ViewModel.CurrentProject);
+                UnsavedChangesDialogView dialog = new UnsavedChangesDialogView(ViewModel.CurrentProject);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
                 task.TrySetResult(result != ContentDialogResult.None);
@@ -331,6 +337,29 @@ namespace Scanner.Views
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
                 task.TrySetResult();
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowProjectDeletionDialog(TaskCompletionSource<bool> task, ProjectBase project)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    task.TrySetResult(false);
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                ProjectDeletionDialogView dialog = new ProjectDeletionDialogView(project);
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary) task.TrySetResult(true);
+                else task.TrySetResult(false);
 
                 isDialogVisible = false;
             });

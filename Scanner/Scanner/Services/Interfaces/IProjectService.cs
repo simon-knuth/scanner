@@ -57,6 +57,7 @@ namespace Scanner.Services.Interfaces
         Task TryCreateProjectAsync(ScanOptions scanOptions);
         Task TryScanToProjectAsync(ScanOptions scanOptions);
 
+        Task<bool> TryDeleteProjectAsync();
         Task<bool> TrySaveProjectAsync();
         Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
 

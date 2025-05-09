@@ -92,7 +92,10 @@
     <Page Update="Views\Dialogs\SaveInProgressDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Dialogs\SaveChangesDialogView.xaml">
+    <Page Update="Views\Dialogs\ProjectDeletionDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialogs\UnsavedChangesDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Flyouts\UndoRedoStackFlyout.xaml">

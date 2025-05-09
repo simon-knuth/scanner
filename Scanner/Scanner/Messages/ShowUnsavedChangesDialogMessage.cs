@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scanner.Messages
 {
-    internal class ShowSaveChangesDialogMessage : RequestMessage<Task<bool>>
+    internal class ShowUnsavedChangesDialogMessage : RequestMessage<Task<bool>>
     {
         
     }

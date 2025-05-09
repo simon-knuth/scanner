@@ -35,7 +35,8 @@ namespace Scanner.ViewModels
 
         #region Events
         public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
-        public event EventHandler<Tuple<TaskCompletionSource<SaveOptions?>, ScanOptions, ProjectBase?>> SaveFileDialogRequested;
+        public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project)> SaveFileDialogRequested;
+        public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
@@ -75,13 +76,17 @@ namespace Scanner.ViewModels
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
 
-            Messenger.Register<ShowSaveChangesDialogMessage>(this, (r, m) =>
+            Messenger.Register<ShowUnsavedChangesDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowSaveChangesDialogAsync());
             });
             Messenger.Register<ShowSaveOptionsDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project));
+            });
+            Messenger.Register<ShowProjectDeletionDialogMessage>(this, (r, m) =>
+            {
+                m.Reply(ShowProjectDeletionDialogAsync(m.Project));
             });
             Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
             {
@@ -151,6 +156,13 @@ namespace Scanner.ViewModels
             TaskCompletionSource result = new();
             SaveInProgressDialogRequested?.Invoke(this, result);
             await result.Task;
+        }
+
+        private async Task<bool> ShowProjectDeletionDialogAsync(ProjectBase project)
+        {
+            TaskCompletionSource<bool> result = new();
+            ProjectDeletionDialogRequested?.Invoke(this, (result, project));
+            return await result.Task;
         }
 
         private async void MainWindow_Closed(object sender, WindowEventArgs args)

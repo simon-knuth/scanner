@@ -73,6 +73,37 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public override async Task DeleteAsync()
+        {
+            // wait for save processes to end
+            saveProcessWaitingToStart = true;
+            if (LatestSaveProcess != null)
+            {
+                await LatestSaveProcess.Task;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            // delete file
+            try
+            {
+                if (TargetFile != null)
+                {
+                    await TargetFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
+        }
+
+
         public override async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
         {
             // ensure maximum of one thread waiting to save
