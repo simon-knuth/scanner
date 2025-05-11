@@ -295,7 +295,7 @@ namespace Scanner.Models
             }
         }
 
-        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string targetFileName, StorageFolder targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
+        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 

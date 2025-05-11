@@ -50,7 +50,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles)
+        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFiles)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);

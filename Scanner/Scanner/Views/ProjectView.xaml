@@ -125,7 +125,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button x:Name="ButtonShowInFileExplorer" ToolTipService.ToolTip="Show in File Explorer" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
-                        <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
                     <Button x:Name="ButtonMore" ToolTipService.ToolTip="More" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Click="ButtonMore_Click">
                         <AnimatedIcon Height="16">
@@ -159,6 +159,11 @@
                         <MenuFlyoutItem Text="Save as..." IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSubItem Text="Convert to">
@@ -200,9 +205,9 @@
                             </MenuFlyoutSubItem.Items>
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
+                        <MenuFlyoutItem Text="Add images from files..." Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.AddFilesCommand}">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE8B7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuFlyoutItemRename" Text="Rename" Click="MenuFlyoutItemRename_Click">
@@ -239,7 +244,7 @@
                                 <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Open with">
+                        <MenuFlyoutItem Text="Open with...">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
@@ -249,7 +254,7 @@
                                 <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Share">
+                        <MenuFlyoutItem Text="Share...">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
@@ -409,11 +414,24 @@
                             </GridView.ItemTemplate>
                         </GridView>
                         <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
-                            <Border>
-                                <StackPanel Orientation="Horizontal" Spacing="8" Padding="4" HorizontalAlignment="Center">
-                                    <ToggleButton Width="32" Height="32" Padding="0" Style="{StaticResource MutedToggleButtonStyle}">
-                                        <FontIcon Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    </ToggleButton>
+                            <Grid ColumnSpacing="4" Padding="4" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <ToggleButton Grid.Column="0" Height="32" Padding="12,0,12,0" Style="{StaticResource MutedToggleButtonStyle}">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Grid.Column="0" Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <TextBlock Grid.Column="1" Text="Select" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
+                                    </Grid>
+                                </ToggleButton>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
                                     <AppBarSeparator />
                                     <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ContextRequested="ButtonRotate_ContextRequested">
                                         <Grid>
@@ -447,14 +465,14 @@
                                     <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
                                         <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </Button>
-                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
+                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                         <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </Button>
-                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
+                                    <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                         <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </Button>
                                 </StackPanel>
-                            </Border>
+                            </Grid>
                         </Frame>
                     </Grid>
 

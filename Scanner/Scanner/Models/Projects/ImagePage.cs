@@ -65,7 +65,7 @@ namespace Scanner.Models
         [NotifyPropertyChangedFor(nameof(PageNumber))]
         private int index;
 
-        public FileNameInfo FileNameInfo { get; private set; }
+        public FileNameInfo? FileNameInfo { get; private set; }
 
         public int PageNumber => Index + 1;
 
@@ -76,13 +76,13 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index, string targetFileName, StorageFolder targetFolder)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder)
         {
             SourceFile = sourceFile;
             BitmapUri = uri;
             Index = index;
+            if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);
             TargetFolder = targetFolder;
-            FileNameInfo = new FileNameInfo(targetFileName);
         }
 
         /// <summary>
@@ -94,14 +94,14 @@ namespace Scanner.Models
         /// <param name="targetFolder">The target folder for this specific page.</param>
         /// <param name="keepSourceFile">Whether to keep the source file or delete it after processing.</param>
         /// <param name="pagesFolder">Which internal folder to copy/move the <paramref name="sourceFile"/> to.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder targetFolder, int index, string targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
         {
             ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder);
             if (targetFileName != null) result.FileNameInfo = new FileNameInfo(targetFileName);
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder targetFolder, int index, string targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
         {
             // check file
             if (sourceFile == null)

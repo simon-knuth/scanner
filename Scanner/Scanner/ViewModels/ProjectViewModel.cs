@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -13,6 +14,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.ViewModels
 {
@@ -37,6 +42,7 @@ namespace Scanner.ViewModels
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
         public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
+        public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -124,7 +130,7 @@ namespace Scanner.ViewModels
             switch (e.PropertyName)
             {
                 case nameof(IProjectService.SelectedPage):
-                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage)
+                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage && imagePage.FileNameInfo != null)
                     {
                         imagePage.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
                     }
@@ -145,7 +151,7 @@ namespace Scanner.ViewModels
                         OnPropertyChanged(nameof(FileName));
                     }
 
-                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage)
+                    if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage && imagePage.FileNameInfo != null)
                     {
                         imagePage.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
                     }
@@ -210,6 +216,44 @@ namespace Scanner.ViewModels
 
                 await Windows.System.Launcher.LaunchFolderAsync(imagePage.TargetFolder);
             }
+        }
+
+        private async Task AddFilesAsync()
+        {
+            if (CurrentProject == null) return;
+            if (!CurrentProject.IsPdf) throw new ApplicationException("Adding files is only supported for PDF projects");
+
+            // select files to add to project
+            FileOpenPicker picker = new();
+
+            // connect picker to window
+            IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
+            InitializeWithWindow.Initialize(picker, hwnd);
+
+            // set picker properties
+            picker.ViewMode = PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
+            picker.FileTypeFilter.Add(".tif");
+            picker.FileTypeFilter.Add(".tiff");
+
+            // pick files
+            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+            if (files == null || files.Count == 0) return;
+
+            // construct insertions
+            List<ProjectFileInsertion> insertions = new();
+            for (int i = 0; i < files.Count; i++)
+            {
+                insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, null, null));
+            }
+
+            // add files to project
+            AddFilesAction action = new AddFilesAction(insertions, true);
+            await ProjectService.ApplyActionAsync(action);
         }
 
         private async Task TrySaveAsync()
