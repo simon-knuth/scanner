@@ -93,13 +93,19 @@ namespace Scanner.ViewModels
             {
                 if (CurrentProject == null) return;
 
-                if (CurrentProject.IsPdf)
+                if (CurrentProject is PdfProject pdfProject)
                 {
-                    _ = ProjectService.ApplyActionAsync(new RenameAction(null, value));
+                    if (pdfProject.FileNameInfo.DesiredName != value)
+                    {
+                        _ = ProjectService.ApplyActionAsync(new RenameAction(null, value));
+                    }
                 }
                 else if (ProjectService.SelectedPage is ImagePage imagePage)
                 {
-                    _ = ProjectService.ApplyActionAsync(new RenameAction(imagePage, value));
+                    if (imagePage.FileNameInfo!.DesiredName != value)
+                    {
+                        _ = ProjectService.ApplyActionAsync(new RenameAction(imagePage, value));
+                    }
                 }
             }
         }
