@@ -14,6 +14,7 @@ using Scanner.Models;
 using System.ComponentModel;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Dispatching;
+using Windows.ApplicationModel;
 
 namespace Scanner.Services.Interfaces
 {
@@ -59,7 +60,13 @@ namespace Scanner.Services.Interfaces
 
         Task<bool> TryDeleteProjectAsync();
         Task<bool> TrySaveProjectAsync();
+
         Task<bool> TryCopyProjectAsync();
+        Task<bool> TryCopyPagesAsync(List<IProjectPage> pages);
+
+        Task<bool> TryOpenWithProjectAsync(AppInfo? app);
+        Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page);
+
         Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
 
         void SelectPreviousPage();

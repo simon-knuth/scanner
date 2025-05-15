@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
@@ -272,6 +274,57 @@ namespace Scanner.Models
                         Severity = InfoBarSeverity.Error
                     }));
                 }
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
+        }
+
+        public async Task TryOpenWithAsync(AppInfo? app)
+        {
+            // wait for save processes to end
+            if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
+            {
+                await Messenger.Send(new ShowSaveInProgressDialogMessage()).Response;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            try
+            {
+                if (!IsSaved)
+                {
+                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    {
+                        Title = "Project not saved",
+                        Message = "The project needs to be saved to complete this action.",
+                        Severity = InfoBarSeverity.Error
+                    }));
+                    return;
+                }
+
+                // get file
+                if (TargetFile == null) return;
+
+                // construct launcher options
+                Windows.System.LauncherOptions options = new();
+                if (app != null)
+                {
+                    options.TargetApplicationPackageFamilyName = app.PackageFamilyName;
+                }
+                else
+                {
+                    options.DisplayApplicationPicker = true;
+                }
+
+                // open with
+                await Windows.System.Launcher.LaunchFileAsync(TargetFile, options);
             }
             catch (Exception exc)
             {

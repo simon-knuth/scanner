@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
@@ -375,6 +376,62 @@ namespace Scanner.Services
                 if (CurrentProject is ImageProject imageProject)
                 {
                     await imageProject.CopyPagesAsync(pages);
+                }
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TryOpenWithProjectAsync(AppInfo? app)
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // open with project
+                if (CurrentProject is PdfProject pdfProject)
+                {
+                    await pdfProject.TryOpenWithAsync(app);
+                }
+            }
+            catch (ProjectException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page)
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // open with page
+                if (CurrentProject is ImageProject imageProject)
+                {
+                    await imageProject.TryOpenWithPageAsync(app, page);
                 }
             }
             catch (ProjectException)

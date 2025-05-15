@@ -12,6 +12,8 @@ using Microsoft.UI.Xaml.Shapes;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
+using Scanner.ViewModels;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +22,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx;
 using static Scanner.Helpers.Helpers;
 
 
@@ -472,6 +475,45 @@ namespace Scanner.Views
                         return;
                     }
                 }
+            }
+        }
+
+        private void MenuFlyoutSubItemOpenWith_Loading(FrameworkElement sender, object args)
+        {
+            MenuFlyoutSubItem mainItem = (MenuFlyoutSubItem)sender;
+
+            // clear list
+            while (mainItem.Items.Count > 3)
+            {
+                mainItem.Items.RemoveAt(0);
+            }
+
+            // add items
+            foreach (OpenWithTarget target in ViewModel.OpenWithTargets)
+            {
+                MenuFlyoutItem item = new MenuFlyoutItem()
+                {
+                    Text = target.AppInfo.DisplayInfo.DisplayName,
+                    Command = ViewModel.TryOpenWithAsyncCommand,
+                    CommandParameter = target.AppInfo,
+                };
+
+                // add logo
+                if (target.Logo != null)
+                {
+                    target.Logo.DecodePixelType = Microsoft.UI.Xaml.Media.Imaging.DecodePixelType.Logical;
+                    target.Logo.DecodePixelWidth = 32;
+                    target.Logo.DecodePixelHeight = 32;
+
+                    ImageIcon icon = new ImageIcon
+                    {
+                        Source = target.Logo
+                    };
+
+                    item.Icon = icon;
+                }
+
+                mainItem.Items.Insert(0, item);
             }
         }
     }

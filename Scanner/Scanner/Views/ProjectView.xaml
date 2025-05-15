@@ -155,11 +155,19 @@
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="S" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Save as..." IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="F12" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
                             <MenuFlyoutItem.Icon>
@@ -244,11 +252,21 @@
                                 <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Open with...">
-                            <MenuFlyoutItem.Icon>
+                        <MenuFlyoutSubItem x:Name="MenuFlyoutSubItemOpenWith" Text="Open with" Loading="MenuFlyoutSubItemOpenWith_Loading">
+                            <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+                            </MenuFlyoutSubItem.Icon>
+
+                            <MenuFlyoutSubItem.Items>
+                                <MenuFlyoutItem Text="Discover more apps in the Store" Command="{x:Bind ViewModel.FindAppForFileTypeCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE719;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Text="Show all apps" FontWeight="SemiBold" Command="{x:Bind ViewModel.TryOpenWithAsyncCommand}" />
+                            </MenuFlyoutSubItem.Items>
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutItem Text="Print...">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

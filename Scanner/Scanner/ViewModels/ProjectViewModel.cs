@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -14,8 +16,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.Devices.Scanners;
+using Windows.Foundation;
+using Windows.Graphics.Printing.PrintSupport;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
 
@@ -36,6 +43,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryRemoveCurrentPageAsyncCommand => new AsyncRelayCommand(TryRemoveCurrentPageAsync);
         public AsyncRelayCommand TryDeleteProjectAsyncCommand => new AsyncRelayCommand(TryDeleteProjectAsync);
         public AsyncRelayCommand TryCopySelectionAsyncCommand => new AsyncRelayCommand(TryCopySelectionAsync);
+        public AsyncRelayCommand<AppInfo?> TryOpenWithAsyncCommand => new AsyncRelayCommand<AppInfo?>(TryOpenWithAsync);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
@@ -43,6 +51,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
         public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
         public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
+        public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -95,6 +104,8 @@ namespace Scanner.ViewModels
             }
         }
 
+        public List<OpenWithTarget> OpenWithTargets = new();
+
         private DispatcherQueue? viewDispatcherQueue;
 
 
@@ -138,12 +149,13 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
+                    await UpdateOpenWithTargetsAsync();
                     break;
                 case nameof(IProjectService.SelectedPage):
                     if (CurrentProject != null && !CurrentProject.IsPdf)
@@ -272,8 +284,69 @@ namespace Scanner.ViewModels
             }
             else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
             {
-                await imageProject.CopyPagesAsync(new List<IProjectPage>([ProjectService.SelectedPage]));
+                await ProjectService.TryCopyPagesAsync(new List<IProjectPage>([ProjectService.SelectedPage]));
             }
         }
+
+        private async Task TryOpenWithAsync(AppInfo? app)
+        {
+            if (CurrentProject == null) return;
+
+            if (CurrentProject is PdfProject pdfProject)
+            {
+                await ProjectService.TryOpenWithProjectAsync(app);
+            }
+            if (CurrentProject is ImageProject)
+            {
+                if (ProjectService.SelectedPage == null) return;
+                await ProjectService.TryOpenWithPageAsync(app, ProjectService.SelectedPage);
+            }
+        }
+
+        private async Task UpdateOpenWithTargetsAsync()
+        {
+            if (CurrentProject == null) return;
+            List<OpenWithTarget> result = new();
+
+            // find installed apps for file type
+            string fileExtension = TargetFormatToFileExtension(CurrentProject.Format);
+            IReadOnlyList<AppInfo> readOnlyList = await Windows.System.Launcher.FindFileHandlersAsync(fileExtension);
+            foreach (AppInfo appInfo in readOnlyList)
+            {
+                try
+                {
+                    RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(128, 128));
+                    using (IRandomAccessStreamWithContentType content = await stream.OpenReadAsync())
+                    {
+                        BitmapImage bmp = new BitmapImage();
+                        await bmp.SetSourceAsync(content);
+                        result.Add(new OpenWithTarget(appInfo, bmp));
+                    }
+                }
+                catch (Exception)
+                {
+                    // add without logo
+                    result.Add(new OpenWithTarget(appInfo, null));
+                }
+
+                if (result.Count >= 5) break;   // 5 apps max
+            }
+
+            OpenWithTargets = result;
+        }
+
+        private async Task FindAppForFileTypeAsync()
+        {
+            if (CurrentProject == null) return;
+
+            string fileExtension = TargetFormatToFileExtension(CurrentProject.Format);
+            await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://assoc/?FileExt={fileExtension.Substring(1)}"));
+        }
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public record OpenWithTarget(AppInfo AppInfo, BitmapImage? Logo);
 }
