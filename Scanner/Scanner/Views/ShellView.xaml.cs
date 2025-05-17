@@ -38,6 +38,8 @@ namespace Scanner.Views
 
         public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll || ViewModel.ProjectService.IsScanProcessRunning;
 
+        public string SaveButtonGlyph => ViewModel.CurrentProject == null || ViewModel.CurrentProject.IsPdf ? "\uE74E" : "\uEA35";
+
         private bool isDialogVisible;
 
         private Notification DebugNotification = new Notification
@@ -92,6 +94,8 @@ namespace Scanner.Views
                         {
                             lastPageCount = 0;
                         }
+
+                        OnPropertyChanged(nameof(SaveButtonGlyph));
                     });
                     break;
             }

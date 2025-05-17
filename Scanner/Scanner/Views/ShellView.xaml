@@ -190,7 +190,7 @@
                     </Button>
                     <Button x:Name="ButtonSave" ToolTipService.ToolTip="Save" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}" RightTapped="ButtonSave_RightTapped">
                         <Grid>
-                            <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <FontIcon Glyph="{x:Bind SaveButtonGlyph, Mode=OneWay}" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             <ProgressRing x:Name="ProgressRingSave" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
                         </Grid>
 
