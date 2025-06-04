@@ -51,7 +51,15 @@ namespace Scanner.Services.Interfaces
         }
 
         /// <summary>
-        /// Contains the generated PDf file.
+        /// Holds preview files that are needed if destructive effects are applied to generate a target file.
+        /// </summary>
+        StorageFolder PreviewFolder
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Contains the generated PDF file.
         /// </summary>
         StorageFolder PdfOutputFolder
         {

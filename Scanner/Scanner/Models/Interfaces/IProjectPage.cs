@@ -28,6 +28,11 @@ namespace Scanner.Models.Interfaces
         StorageFile? TargetFile { get; set; }
 
         /// <summary>
+        /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.
+        /// </summary>
+        StorageFile? PreviewFile { get; }
+
+        /// <summary>
         /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
         /// </summary>
         bool CommitNeeded { get; }
@@ -38,7 +43,7 @@ namespace Scanner.Models.Interfaces
         /// </summary>
         StorageFile? OutOfDateSourceFile { get; }
 
-        Uri BitmapUri { get; }
+        Uri PreviewBitmapUri { get; }
 
         int Index { get; set; }
         int PageNumber { get; }

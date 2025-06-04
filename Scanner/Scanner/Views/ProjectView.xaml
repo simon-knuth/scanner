@@ -321,7 +321,7 @@
                                         <Frame Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
                                             <Image>
                                                 <Image.Source>
-                                                    <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
+                                                    <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
                                                 </Image.Source>
                                             </Image>
                                         </Frame>
@@ -417,7 +417,7 @@
                                             <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                                 <Image>
                                                     <Image.Source>
-                                                        <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
+                                                        <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
                                                     </Image.Source>
                                                 </Image>
                                             </Frame>

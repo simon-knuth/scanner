@@ -36,6 +36,7 @@ namespace Scanner.Services
         private const string IncomingFolderName = "Incoming";
         private const string ProjectFolderName = "Project";
         private const string ChangesFolderName = "Changes";
+        private const string PreviewFolderName = "Preview";
         private const string PdfOutputFolderName = "PdfOutput";
         private const string UndoFolderName = "Undo";
         private const string RedoFolderName = "Redo";
@@ -44,6 +45,8 @@ namespace Scanner.Services
         public StorageFolder IncomingFolder { get; private set; }
         public StorageFolder ProjectFolder { get; private set; }
         public StorageFolder ChangesFolder { get; private set; }
+        public StorageFolder PreviewFolder { get; private set; }
+        public StorageFolder EffectsAppliedForPdfFolder { get; private set; }
         public StorageFolder PdfOutputFolder { get; private set; }
         public StorageFolder UndoFolder { get; private set; }
         public StorageFolder RedoFolder { get; private set; }
@@ -89,6 +92,7 @@ namespace Scanner.Services
             IncomingFolder = await CreateOrReplaceFolderAsync(IncomingFolderName);
             ProjectFolder = await CreateOrReplaceFolderAsync(ProjectFolderName);
             ChangesFolder = await CreateOrReplaceFolderAsync(ChangesFolderName);
+            PreviewFolder = await CreateOrReplaceFolderAsync(PreviewFolderName);
             PdfOutputFolder = await CreateOrReplaceFolderAsync(PdfOutputFolderName);
             UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
             RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
@@ -134,6 +138,10 @@ namespace Scanner.Services
             else if (folder == ChangesFolder)
             {
                 return Path.Combine("ms-appdata:///temp/", ChangesFolderName, fileName);
+            }
+            else if (folder == PreviewFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", PreviewFolderName, fileName);
             }
             else if (folder == PdfOutputFolder)
             {

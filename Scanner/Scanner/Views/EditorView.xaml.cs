@@ -60,6 +60,82 @@ namespace Scanner.Views
         public bool CanZoomIn => PageZoomFactor < maxZoomFactor - 0.009f;
         public bool CanZoomOut => PageZoomFactor > minZoomFactor + 0.009f;
 
+        public bool IsFilterNone
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                    && imagePage.Filter == ImageFilter.None)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterGrayscale
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                    && imagePage.Filter == ImageFilter.Grayscale)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterMonochrome
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                    && imagePage.Filter == ImageFilter.Monochrome)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterNoneAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    return imagePage.AvailableFilters.Contains(ImageFilter.None);
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterGrayscaleAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    return imagePage.AvailableFilters.Contains(ImageFilter.Grayscale);
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterMonochromeAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    return imagePage.AvailableFilters.Contains(ImageFilter.Monochrome);
+                }
+                return false;
+            }
+        }
+
+
         private VirtualizingStackPanel? flipViewPanel;
 
         private ScrollViewer? _selectedItemScrollViewer;
@@ -91,15 +167,56 @@ namespace Scanner.Views
             this.InitializeComponent();
 
             ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+            ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;
+            ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.SelectedPage):
+                    if (ViewModel.ProjectService.SelectedPage != null)
+                    {
+                        ViewModel.ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
+                    }
+                    break;
+            }
+        }
+
+
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.SelectedPage):
+                    OnPropertyChanged(nameof(IsFilterNone));
+                    OnPropertyChanged(nameof(IsFilterGrayscale));
+                    OnPropertyChanged(nameof(IsFilterMonochrome));
+                    OnPropertyChanged(nameof(IsFilterNoneAvailable));
+                    OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
+                    OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+
+                    if (ViewModel.ProjectService.SelectedPage != null)
+                        ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
+                    break;
+            }
+        }
+
+        private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ImagePage.Filter):
+                    OnPropertyChanged(nameof(IsFilterNone));
+                    OnPropertyChanged(nameof(IsFilterGrayscale));
+                    OnPropertyChanged(nameof(IsFilterMonochrome));
+                    break;
+            }
         }
 
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -110,6 +227,11 @@ namespace Scanner.Views
                     _ = ApplyFlipViewOrientationAsync(SettingEditorOrientationToOrientation(ViewModel.SettingsService.SettingEditorOrientation));
                     break;
             }
+        }
+
+        private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
 
         private async Task ApplyFlipViewOrientationAsync(Orientation orientation)

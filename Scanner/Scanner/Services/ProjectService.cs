@@ -169,14 +169,14 @@ namespace Scanner.Services
                 switch (scanOptions.TargetFormat)
                 {
                     case TargetFormat.PDF:
-                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
+                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, GetBaseFilterForScanOptions(scanOptions), GetFilterForScanOptions(scanOptions));
                         break;
                     case TargetFormat.JPG:
                     case TargetFormat.PNG:
                     case TargetFormat.BMP:
                     case TargetFormat.TIFF:
                     case TargetFormat.RAW:
-                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false);
+                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, GetBaseFilterForScanOptions(scanOptions), GetFilterForScanOptions(scanOptions));
                         break;
                     default:
                         throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
@@ -267,7 +267,7 @@ namespace Scanner.Services
                 List<ProjectFileInsertion> insertions = new();
                 for (int i = 0; i < files.Count; i++)
                 {
-                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder));
+                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder, GetBaseFilterForScanOptions(scanOptions), GetFilterForScanOptions(scanOptions)));
                 }
                 IProjectAction action = new AddFilesAction(insertions, false);
 
@@ -281,6 +281,49 @@ namespace Scanner.Services
             finally
             {
                 IsActionRunning = IsScanProcessRunning = false;
+            }
+        }
+
+        private static ImageFilter GetFilterForScanOptions(ScanOptions scanOptions)
+        {
+            switch (scanOptions.ColorMode)
+            {
+                case ScannerColorMode.None:
+                case ScannerColorMode.Color:
+                case ScannerColorMode.Automatic:
+                    return ImageFilter.None;
+                case ScannerColorMode.Grayscale:
+                    return ImageFilter.Grayscale;
+                case ScannerColorMode.Monochrome:
+                    return ImageFilter.Monochrome;
+                default:
+                    throw new ArgumentException("Failed to determine page's Filter for given configuration");
+            }
+        }
+
+        private static ImageFilter GetBaseFilterForScanOptions(ScanOptions scanOptions)
+        {
+            switch (scanOptions.SourceMode)
+            {
+                case ScannerSource.Auto:
+                    return ImageFilter.None;
+                case ScannerSource.Flatbed:
+                    if (scanOptions.Scanner.IsFlatbedColorAllowed)
+                        return ImageFilter.None;
+                    else if (scanOptions.Scanner.IsFlatbedGrayscaleAllowed)
+                        return ImageFilter.Grayscale;
+                    else
+                        return ImageFilter.Monochrome;
+                case ScannerSource.Feeder:
+                    if (scanOptions.Scanner.IsFeederColorAllowed)
+                        return ImageFilter.None;
+                    else if (scanOptions.Scanner.IsFeederGrayscaleAllowed)
+                        return ImageFilter.Grayscale;
+                    else
+                        return ImageFilter.Monochrome;
+                case ScannerSource.None:
+                default:
+                    throw new ArgumentException("Failed to determine page's BaseFilter for given configuration");
             }
         }
 
@@ -464,6 +507,7 @@ namespace Scanner.Services
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.PreviewFolder);
 
             // update undo/redo stacks
             UndoStack.Clear();

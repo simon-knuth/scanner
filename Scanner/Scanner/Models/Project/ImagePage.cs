@@ -28,7 +28,7 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private static string[] allowedFileExtensions = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff" };
+        private static string[] allowedFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"];
 
         private StorageFile sourceFile;
         public StorageFile SourceFile
@@ -37,6 +37,16 @@ namespace Scanner.Models
             private set
             {
                 SetProperty(ref sourceFile, value);
+            }
+        }
+
+        private StorageFile? previewFile;
+        public StorageFile? PreviewFile
+        {
+            get => previewFile;
+            private set
+            {
+                SetProperty(ref previewFile, value);
             }
         }
 
@@ -51,13 +61,13 @@ namespace Scanner.Models
             private set;
         }
 
-        private Uri bitmapUri;
-        public Uri BitmapUri
+        private Uri previewBitmapUri;
+        public Uri PreviewBitmapUri
         {
-            get => bitmapUri;
+            get => previewBitmapUri;
             private set
             {
-                SetProperty(ref bitmapUri, value);
+                SetProperty(ref previewBitmapUri, value);
             }
         }
 
@@ -72,17 +82,37 @@ namespace Scanner.Models
         public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
         public BitmapRotation? RecommendedRotation { get; set; } = null;
 
+        public bool IsUsingDestructiveEffects => Filter != ImageFilter.None;
+
+        /// <summary>
+        /// The <see cref="ImageFilter"/> used by the source file, usually <see cref="ImageFilter.None"/>.
+        /// For example, if a scanner only supports grayscale, this will be set to <see cref="ImageFilter.Grayscale"/> and
+        /// indicate that <see cref="ImageFilter.None"/> is unavailable due to the lack of color information.
+        /// </summary>
+        public ImageFilter BaseFilter { get; private set; }
+
+        /// <summary>
+        /// The currently applied <see cref="ImageFilter"/>. Has to be one of the elements in <see cref="AvailableFilters"/>.
+        /// </summary>
+        [ObservableProperty]
+        private ImageFilter filter = ImageFilter.None;
+
+        public ImageFilter[] AvailableFilters { get; private set; }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter)
         {
             SourceFile = sourceFile;
-            BitmapUri = uri;
+            PreviewBitmapUri = uri;
             Index = index;
             if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);
             TargetFolder = targetFolder;
+            BaseFilter = baseFilter;
+            Filter = filter;
+            AvailableFilters = GetAvailableFilters();
         }
 
         /// <summary>
@@ -94,14 +124,16 @@ namespace Scanner.Models
         /// <param name="targetFolder">The target folder for this specific page.</param>
         /// <param name="keepSourceFile">Whether to keep the source file or delete it after processing.</param>
         /// <param name="pagesFolder">Which internal folder to copy/move the <paramref name="sourceFile"/> to.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
+        /// <param name="baseFilter">The filter applied to the source file, indicating which other filters are available.</param>
+        /// <param name="filter">The filter to apply right from the start.</param>
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder);
+            ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter);
             if (targetFileName != null) result.FileNameInfo = new FileNameInfo(targetFileName);
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
         {
             // check file
             if (sourceFile == null)
@@ -128,7 +160,7 @@ namespace Scanner.Models
             }
 
             // create ImagePage
-            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter);
             
             return result;
         }
@@ -145,13 +177,73 @@ namespace Scanner.Models
                 OutOfDateSourceFile = SourceFile;
             }
 
+            if (PreviewFile == SourceFile)
+            {
+                // no separate preview ~> preview bitmap URI changes
+                PreviewFile = file;
+                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+            }
             SourceFile = file;
-            BitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+        }
+
+        public async Task ChangeAndCleanUpPreviewFileAsync(StorageFile? file)
+        {
+            StorageFile? previousFile = PreviewFile != SourceFile ? PreviewFile : null;
+
+            // change file
+            if (file != null)
+            {
+                PreviewFile = file;
+                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, file.Name));
+            }
+            else
+            {
+                PreviewFile = SourceFile;
+                if (CommitNeeded)
+                {
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ChangesFolder, SourceFile.Name));
+                }
+                else
+                {
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, SourceFile.Name));
+                }
+            }
+
+            // remove previous one
+            if (previousFile != null)
+            {
+                await previousFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
         }
 
         public void ClearOutOfDateSourceFile()
         {
             OutOfDateSourceFile = null;
         }
+
+        private ImageFilter[] GetAvailableFilters()
+        {
+            switch (BaseFilter)
+            {
+                case ImageFilter.None:
+                    return [ImageFilter.None, ImageFilter.Grayscale, ImageFilter.Monochrome];
+                case ImageFilter.Grayscale:
+                    return [ImageFilter.Grayscale, ImageFilter.Monochrome];
+                case ImageFilter.Monochrome:
+                    return [ImageFilter.Monochrome];
+                default:
+                    throw new ArgumentException($"Failed to get available ImageFilters for BaseFilter {BaseFilter}");
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public enum ImageFilter
+    {
+        None,
+        Grayscale,
+        Monochrome
     }
 }

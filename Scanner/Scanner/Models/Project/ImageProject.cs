@@ -11,7 +11,6 @@ using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
-using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,31 +30,31 @@ using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Models
 {
-    public partial class PdfProject : ProjectBase
+    /// <summary>
+    /// A project that produces one or more image file(s).
+    /// </summary>
+    public partial class ImageProject : ProjectBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public StorageFolder TargetFolder;
-
-        public StorageFile? TargetFile;
-
-        public FileNameInfo FileNameInfo { get; private set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private PdfProject(IList<IProjectPage> pages, TargetFormat format, string targetFileName, StorageFolder targetFolder) : base(pages, format)
+        private ImageProject(IList<IProjectPage> pages, TargetFormat format) : base(pages, format)
         {
-            // folder saved at project level for PDF and page level for all other formats
-            TargetFolder = targetFolder;
-            FileNameInfo = new FileNameInfo(targetFileName);
-            FileNameInfo.NameChanged += FileNameInfo_NameChanged;
-            hasFileNameBeenApplied = false;
+            foreach (IProjectPage page in pages)
+            {
+                if (page is ImagePage imagePage && imagePage.FileNameInfo != null)
+                {
+                    imagePage.FileNameInfo.NameChanged += PageFileNameInfo_NameChanged;
+                }
+            }
         }
 
-        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles)
+        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -67,11 +66,13 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, baseFilter, filter));
             }
 
-            // create project
-            return new PdfProject(pages, format, targetFileName, targetFolder);
+            // create project and update previews
+            ImageProject project = new ImageProject(pages, format);
+            await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList());
+            return project;
         }
 
 
@@ -81,6 +82,7 @@ namespace Scanner.Models
         public override async Task DeleteAsync()
         {
             // wait for save processes to end
+            saveProcessWaitingToStart = true;
             if (LatestSaveProcess != null)
             {
                 await LatestSaveProcess.Task;
@@ -88,12 +90,15 @@ namespace Scanner.Models
             await saveSemaphore.WaitAsync();
             await projectObjectSemaphore.WaitAsync();
 
-            // delete file
+            // delete files
             try
             {
-                if (TargetFile != null)
+                foreach (IProjectPage page in Pages)
                 {
-                    await TargetFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    if (page.TargetFile != null)
+                    {
+                        await page.TargetFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    }
                 }
             }
             catch (Exception exc)
@@ -106,7 +111,6 @@ namespace Scanner.Models
                 saveSemaphore.Release();
             }
         }
-
 
         public override async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
         {
@@ -182,10 +186,10 @@ namespace Scanner.Models
                         }
 
                         // take snapshot
-                        PdfProjectSnapshot? snapshot = null;
+                        ImageProjectSnapshot? snapshot = null;
                         await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
                         {
-                            snapshot = new PdfProjectSnapshot(this);
+                            snapshot = new ImageProjectSnapshot(this);
                         });
                         if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
 
@@ -198,28 +202,47 @@ namespace Scanner.Models
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
-                            
-                        // update target file
+
+                        // update target files
                         await projectObjectSemaphore.WaitAsync();
-                        TargetFile = pageSaves.Values.First();
+                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        {
+                            pageSave.Key.TargetFile = pageSave.Value;
+                        }
                         projectObjectSemaphore.Release();
 
-                        // update file name
-                        await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, pageSaves.Values.First()!.Name, uiDispatcherQueue);
+                        // update file names
+                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        {
+                            if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
+                            {
+                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, uiDispatcherQueue);
+                            }
+                        }
 
                         projectFolderSemaphore.Release();
                     }
 
                     // apply file name
+                    await projectObjectSemaphore.WaitAsync();
+
                     await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                     {
-                        if (TargetFile!.Name != FileNameInfo!.DesiredName)
+                        foreach (IProjectPage page in Pages)
                         {
-                            await TargetFile.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
-                            await FileNameInfo!.UpdateNamesAsync(TargetFile.Name, TargetFile.Name, uiDispatcherQueue);
-                            hasFileNameBeenApplied = true;
+                            if (page is ImagePage imagePage)
+                            {
+                                if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
+                                {
+                                    await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
+                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
+                                    hasFileNameBeenApplied = true;
+                                }
+                            }
                         }
                     });
+
+                        projectObjectSemaphore.Release();
                 }
                 catch (Exception exc)
                 {
@@ -245,7 +268,7 @@ namespace Scanner.Models
             });
         }
 
-        public async Task CopyAsync()
+        public async Task CopyPagesAsync(List<IProjectPage> pages)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -255,14 +278,25 @@ namespace Scanner.Models
             await saveSemaphore.WaitAsync();
             await projectObjectSemaphore.WaitAsync();
 
-            // copy file
+            // copy files
             try
             {
-                if (IsSaved && TargetFile != null)
+                if (IsSaved)
                 {
+                    List<StorageFile> files = new();
+                    foreach (IProjectPage page in pages)
+                    {
+                        if (page is ImagePage imagePage)
+                        {
+                            files.Add(imagePage.TargetFile!);
+                        }
+                    }
+
+                    // construct data package
                     DataPackage dataPackage = new DataPackage();
                     dataPackage.RequestedOperation = DataPackageOperation.Copy;
-                    dataPackage.SetStorageItems([TargetFile], true);
+                    dataPackage.SetStorageItems(files, true);
+
                     Clipboard.SetContent(dataPackage);
                 }
                 else
@@ -286,7 +320,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task TryOpenWithAsync(AppInfo? app)
+        public async Task TryOpenWithPageAsync(AppInfo? app, IProjectPage page)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -310,7 +344,7 @@ namespace Scanner.Models
                 }
 
                 // get file
-                if (TargetFile == null) return;
+                if (page.TargetFile == null) return;
 
                 // construct launcher options
                 Windows.System.LauncherOptions options = new();
@@ -324,7 +358,7 @@ namespace Scanner.Models
                 }
 
                 // open with
-                await Windows.System.Launcher.LaunchFileAsync(TargetFile, options);
+                await Windows.System.Launcher.LaunchFileAsync(page.TargetFile, options);
             }
             catch (Exception exc)
             {
@@ -337,9 +371,14 @@ namespace Scanner.Models
             }
         }
 
-        private void FileNameInfo_NameChanged(object? sender, EventArgs e)
+        private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)
         {
-            hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
+            if (sender == null) return;
+
+            if (((FileNameInfo)sender).DesiredName != ((FileNameInfo)sender).ActualName)
+            {
+                hasFileNameBeenApplied = false;
+            }
         }
     }
 }

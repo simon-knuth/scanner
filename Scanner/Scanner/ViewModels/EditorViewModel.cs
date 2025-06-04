@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Models.ImagePage;
 
 namespace Scanner.ViewModels
 {
@@ -33,6 +34,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RotateCurrentPage270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees270));
         public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
         public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
+        public AsyncRelayCommand<ImageFilter> ApplyFilterToCurrentPageAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToCurrentPageAsync);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -94,6 +96,17 @@ namespace Scanner.ViewModels
             {
                 ProjectService.SelectedPage
             }));
+        }
+
+        private async Task ApplyFilterToCurrentPageAsync(ImageFilter filter)
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
+
+            if (ProjectService.SelectedPage is ImagePage imagePage)
+            {
+                await ProjectService.ApplyActionAsync(new ApplyFilterAction([imagePage], filter));
+            }
         }
     }
 

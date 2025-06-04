@@ -1,29 +1,33 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Extensions;
+using Scanner.Models;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Formatting.Compact;
+using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
 using System.Threading;
-using Windows.Devices.Enumeration;
-using Serilog.Sinks.File;
-using Serilog;
-using System.IO;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Windows.System;
-using Serilog.Formatting.Compact;
-using Serilog.Exceptions;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Windows.Graphics.Imaging;
+using System.Threading.Tasks;
 using Tesseract;
-using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Enumeration;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using WinRT.Interop;
+using static Scanner.Models.PdfProjectSnapshot;
 
 namespace Scanner.Services
 {
@@ -99,20 +103,56 @@ namespace Scanner.Services
             }
         }
 
-        public void GeneratePdf(List<StorageFile> Files, string targetFilePath)
+        public async Task GeneratePdfAsync(List<PdfProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
         {
             using (TesseractEngine engine = new TesseractEngine(trainingDataFolderPath, "eng"))
             {
                 using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, false))
                 {
                     renderer.BeginDocument("Scan");
-                    foreach (StorageFile file in Files)
+                    foreach (PdfProjectSnapshotPage snapshotPage in pages)
                     {
-                        using (Pix image = Pix.LoadFromFile(file.Path))
+                        if (snapshotPage.Filter == ImageFilter.None)
                         {
-                            using (Page page = engine.Process(image))
+                            // source file can be used directly
+                            using (Pix image = Pix.LoadFromFile(snapshotPage.SourceFile.Path))
                             {
-                                renderer.AddPage(page);
+                                using (Page pdfPage = engine.Process(image))
+                                {
+                                    renderer.AddPage(pdfPage);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // source file needs to be adjusted first
+                            using (IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read))
+                            using (IRandomAccessStream targetStream = new InMemoryRandomAccessStream())
+                            {
+                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                                {
+                                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(snapshotPage.SourceFile), targetStream);
+                                    await ProjectBase.ApplyFilterAsync(sourceStream, encoder, snapshotPage.Filter);
+                                });
+
+                                // reset stream position and load into a byte array
+                                targetStream.Seek(0);
+                                using (DataReader reader = new DataReader(targetStream.GetInputStreamAt(0)))
+                                {
+                                    uint size = (uint)targetStream.Size;
+                                    await reader.LoadAsync(size);
+                                    byte[] imageBytes = new byte[size];
+                                    reader.ReadBytes(imageBytes);
+
+                                    // load the processed image into Tesseract
+                                    using (Pix image = Pix.LoadFromMemory(imageBytes))
+                                    {
+                                        using (Page pdfPage = engine.Process(image))
+                                        {
+                                            renderer.AddPage(pdfPage);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

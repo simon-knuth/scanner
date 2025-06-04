@@ -266,7 +266,7 @@ namespace Scanner.ViewModels
             List<ProjectFileInsertion> insertions = new();
             for (int i = 0; i < files.Count; i++)
             {
-                insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, null, null));
+                insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, null, null, ImageFilter.None, ImageFilter.None));
             }
 
             // add files to project

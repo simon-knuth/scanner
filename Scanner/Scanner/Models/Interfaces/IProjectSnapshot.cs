@@ -18,6 +18,10 @@ using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models.Interfaces
 {
+    /// <summary>
+    /// A snapshot of a project with all necessary data to save it. Used to enable saving in the background while the user
+    /// can still make edits.
+    /// </summary>
     public interface IProjectSnapshot
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

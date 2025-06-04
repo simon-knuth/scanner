@@ -1,21 +1,22 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.ComponentModel;
 using Windows.Graphics.Imaging;
-using System.IO;
-using Microsoft.UI.Dispatching;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using WinRT.Interop;
 
 namespace Scanner.Models
 {
@@ -43,7 +44,7 @@ namespace Scanner.Models
         /// <remarks>
         /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
         /// </remarks>
-        public Dictionary<IProjectPage, StorageFile> Pages { get; private set; } = new();
+        public Dictionary<IProjectPage, PdfProjectSnapshotPage> Pages { get; private set; } = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +59,14 @@ namespace Scanner.Models
 
             foreach (IProjectPage page in project.Pages)
             {
-                Pages.Add(page, page.SourceFile);
+                if (page is ImagePage imagePage)
+                {
+                    Pages.Add(page, new(page.SourceFile, imagePage.Filter));
+                }
+                else
+                {
+                    Pages.Add(page, new(page.SourceFile, ImageFilter.None));
+                }
             }
         }
 
@@ -69,11 +77,12 @@ namespace Scanner.Models
         public async Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
             Dictionary<IProjectPage, StorageFile?> result = new();
+            List<StorageFile> files = [];
 
             // generate PDF
             try
             {
-                TesseractService.GeneratePdf(Pages.Values.ToList(), Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName));
+                await TesseractService.GeneratePdfAsync(Pages.Values.ToList(), Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName), uiDispatcherQueue);
             }
             catch (Exception exc)
             {
@@ -107,5 +116,11 @@ namespace Scanner.Models
 
             return result;
         }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public record PdfProjectSnapshotPage(StorageFile SourceFile, ImageFilter Filter);
     }
 }

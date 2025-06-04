@@ -183,6 +183,12 @@ namespace Scanner.ViewModels
         {
             switch (ScanOptions?.SourceMode)
             {
+                case ScannerSource.Auto:
+                    ScanOptions.ColorMode = ScannerColorMode.None;
+                    ScanOptions.AutoCropMode = ScannerAutoCropMode.None;
+                    ScanOptions.Brightness = 0;
+                    ScanOptions.Contrast = 0;
+                    break;
                 case ScannerSource.Flatbed:
                     // color mode
                     switch (ScanOptions.ColorMode)

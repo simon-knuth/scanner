@@ -14,6 +14,8 @@ using Scanner.Models;
 using Scanner.Models.ScanningDevices;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using static Scanner.Models.PdfProjectSnapshot;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Services.Interfaces
 {
@@ -31,6 +33,6 @@ namespace Scanner.Services.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         BitmapRotation? GetRecommendedRotation(StorageFile file);
-        void GeneratePdf(List<StorageFile> Files, string targetFilePath);
+        Task GeneratePdfAsync(List<PdfProjectSnapshotPage> Pages, string targetFilePath, DispatcherQueue uiDispatcherQueue);
     }
 }

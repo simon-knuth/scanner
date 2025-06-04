@@ -58,7 +58,8 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(page, new ImageProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!, imagePage.FileNameInfo!.DesiredName));
+                    Pages.Add(page, new ImageProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!,
+                        imagePage.FileNameInfo!.DesiredName, imagePage.Filter));
                 }
             }
         }
@@ -77,9 +78,9 @@ namespace Scanner.Models
                 foreach (KeyValuePair<IProjectPage, ImageProjectSnapshotPage> page in Pages)
                 {
                     StorageFile generatedFile;
-                    if (FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
+                    if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
                     {
-                        // conversion necessary ~> prepare file
+                        // encoding necessary ~> prepare file
                         if (page.Value.TargetFile == null)
                         {
                             generatedFile = await page.Value.TargetFolder.CreateFileAsync(page.Value.DesiredFileName, CreationCollisionOption.GenerateUniqueName);
@@ -89,25 +90,31 @@ namespace Scanner.Models
                             generatedFile = page.Value.TargetFile;
                         }
 
-                        // perform conversion
+                        // perform decoding and encoding
                         await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                         {
-                            // open and decode source file
                             using (IRandomAccessStream sourceStream = await page.Value.SourceFile.OpenAsync(FileAccessMode.Read))
+                            using (IRandomAccessStream targetStream = await generatedFile.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
-                                using (SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync())
-                                {
-                                    // encode and save the target file
-                                    using (IRandomAccessStream targetStream = await generatedFile.OpenAsync(FileAccessMode.ReadWrite))
-                                    {
-                                        BitmapEncoder encoder = await CreateBitmapEncoderAsync(targetStream);
-                                        encoder.SetSoftwareBitmap(softwareBitmap);
+                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedFile), targetStream);
 
+                                if (page.Value.Filter != ImageFilter.None)
+                                {
+                                    // use Win2D effects pipeline
+                                    await ProjectBase.ApplyFilterAsync(sourceStream, encoder, page.Value.Filter);
+                                }
+                                else
+                                {
+                                    // just decode and encode
+                                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+                                    using (SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync())
+                                    {
+                                        encoder.SetSoftwareBitmap(softwareBitmap);
                                         await encoder.FlushAsync();
                                     }
                                 }
-                            }
+                                
+                            }                                
                         });
                     }
                     else
@@ -181,6 +188,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public record ImageProjectSnapshotPage(StorageFile SourceFile, StorageFile? TargetFile, StorageFolder TargetFolder, string? DesiredFileName);
+        public record ImageProjectSnapshotPage(StorageFile SourceFile, StorageFile? TargetFile, StorageFolder TargetFolder,
+            string? DesiredFileName, ImageFilter Filter);
     }
 }

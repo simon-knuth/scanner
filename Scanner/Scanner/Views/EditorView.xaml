@@ -10,6 +10,7 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:models="using:Scanner.Models"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
@@ -77,11 +78,11 @@
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded">
                         <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
-                            <Border x:Name="BorderPage" Padding="16,16,16,88" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
+                            <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                     <Image>
                                         <Image.Source>
-                                            <BitmapImage UriSource="{x:Bind BitmapUri, Mode=OneWay}" />
+                                            <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" />
                                         </Image.Source>
                                     </Image>
                                 </Frame>
@@ -151,7 +152,17 @@
                             <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button Style="{StaticResource EditorButtonStyle}">
-                            <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <Grid>
+                                <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Grid>
+
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <RadioMenuFlyoutItem Text="None" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                    <RadioMenuFlyoutItem Text="Grayscale" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                    <RadioMenuFlyoutItem Text="Monochrome" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
+                                </MenuFlyout>
+                            </Button.Flyout>
                         </Button>
                         <Button Style="{StaticResource EditorButtonStyle}">
                             <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

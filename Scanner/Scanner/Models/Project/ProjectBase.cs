@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI.Helpers;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
@@ -17,12 +19,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Tesseract;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Models.ImagePage;
 
 namespace Scanner.Models
 {
@@ -123,7 +127,7 @@ namespace Scanner.Models
                     // add files
                     foreach (ProjectFileInsertion insertion in insertions)
                     {
-                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder);
+                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
                         copiedFiles.Add(page.SourceFile);
 
                         preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
@@ -134,6 +138,13 @@ namespace Scanner.Models
                     {
                         Pages.Insert(insertion.Value, insertion.Key);
                         insertedPages.Add(insertion.Key);
+                    }
+
+                    // update previews
+                    List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
+                    if (imagePages.Any())
+                    {
+                        await UpdatePagePreviewsAsync(imagePages);
                     }
                 }
                 catch (Exception exc)
@@ -197,6 +208,13 @@ namespace Scanner.Models
                         Pages.Insert(insertion.Index, insertion);
                         insertedPages.Add(insertion);
                     }
+
+                    // update previews
+                    List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
+                    if (imagePages.Any())
+                    {
+                        await UpdatePagePreviewsAsync(imagePages);
+                    }
                 }
                 catch (Exception exc)
                 {
@@ -250,7 +268,7 @@ namespace Scanner.Models
                         deletedFiles.Add(page.SourceFile);
                         deletedIndices.Add(page.Index);
 
-                        if (page is ImagePage)
+                        if (page is ImagePage imagePage)
                         {
                             if (isUndoing)
                             {
@@ -262,8 +280,13 @@ namespace Scanner.Models
                                 // move to undo folder
                                 await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                             }
-                        }
 
+                            if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
+                            {
+                                await imagePage.ChangeAndCleanUpPreviewFileAsync(null);
+                            }
+                        }
+                        
                         Pages.Remove(page);
                     }
                 }
@@ -295,7 +318,7 @@ namespace Scanner.Models
             }
         }
 
-        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder)
+        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -307,7 +330,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, targetFolder, index, targetFileName, keepSourceFile, pagesFolder);
+                    return await ImagePage.CreateAsync(file, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:
@@ -514,7 +537,113 @@ namespace Scanner.Models
             return mergedInstructions;
         }
 
-        private static Guid GetBitmapEncoderIdForFile(StorageFile file)
+        public async Task ApplyFilterToPagesAsync(List<ImagePage> pages, ImageFilter filter)
+        {
+            await StartEditingAsync();
+
+            try
+            {
+                foreach (ImagePage page in pages)
+                {
+                    page.Filter = filter;
+                }
+
+                areFilesSaved = false;
+
+                await UpdatePagePreviewsAsync(pages);
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+            finally
+            {
+                FinishEditing();
+            }
+        }
+
+        public static async Task ApplyFilterAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter)
+        {
+            using (CanvasDevice device = CanvasDevice.GetSharedDevice())
+            using (CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream))
+            using (CanvasRenderTarget renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi))
+            using (CanvasDrawingSession session = renderer.CreateDrawingSession())
+            {
+                switch (filter)
+                {
+                    case ImageFilter.Grayscale:
+                        GrayscaleEffect grayscaleEffect = new GrayscaleEffect
+                        {
+                            Source = bitmap,
+                        };
+
+                        session.DrawImage(grayscaleEffect);
+                        session.Flush();
+                        break;
+                    case ImageFilter.Monochrome:
+                        grayscaleEffect = new GrayscaleEffect
+                        {
+                            Source = bitmap,
+                        };
+
+                        DiscreteTransferEffect thresholdEffect = new DiscreteTransferEffect
+                        {
+                            Source = grayscaleEffect,
+                            RedTable = [0, 1],
+                            GreenTable = [0, 1],
+                            BlueTable = [0, 1]
+                        };
+
+                        session.DrawImage(thresholdEffect);
+                        session.Flush();
+                        break;
+                    default:
+                        throw new ArgumentException("Can't apply filter for " + filter);
+                }
+
+                // encode result
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
+                                         (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
+                                         renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
+                await encoder.FlushAsync();
+            }
+        }
+        
+        protected async Task UpdatePagePreviewsAsync(List<ImagePage> pages)
+        {
+            try
+            {
+                foreach (ImagePage page in pages)
+                {
+                    if (!page.IsUsingDestructiveEffects)
+                    {
+                        // page doesn't require separate preview file
+                        await page.ChangeAndCleanUpPreviewFileAsync(null);
+                        continue;
+                    }
+
+                    // create preview file
+                    StorageFile targetFile = await AppDataService.PreviewFolder.CreateFileAsync(page.SourceFile.Name, CreationCollisionOption.GenerateUniqueName);
+
+                    // apply effects
+                    using (var sourceStream = await page.SourceFile.OpenAsync(FileAccessMode.Read))
+                    using (var targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(targetFile), targetStream);
+                        await ApplyFilterAsync(sourceStream, encoder, page.Filter);
+                    }
+
+                    // update preview file
+                    await page.ChangeAndCleanUpPreviewFileAsync(targetFile);
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ProjectException(exc);
+            }
+        }
+
+        public static Guid GetBitmapEncoderIdForFile(StorageFile file)
         {
             switch (file.FileType.ToLower())
             {
@@ -550,5 +679,5 @@ namespace Scanner.Models
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder);
+    public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter);
 }
