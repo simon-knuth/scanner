@@ -27,7 +27,20 @@ namespace Scanner.Services.Interfaces
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ProjectBase? CurrentProject { get; }
+
+        /// <summary>
+        /// The currently selected <see cref="IProjectPage"/>.
+        /// Null if no page or multiple pages are selected.
+        /// </summary>
         IProjectPage? SelectedPage { get; set; }
+
+        /// <summary>
+        /// The currently selected <see cref="IProjectPage"/>s.
+        /// Null if no page or just one page is selected.
+        /// </summary>
+        ObservableCollection<IProjectPage>? SelectedPages { get; set; }
+
+        int SelectedPagesCount { get; }
 
         bool IsProcessRunning { get; }          // scan or edit in progres
         bool IsScanProcessRunning { get; }      // scan in progress

@@ -51,6 +51,7 @@ namespace Scanner.Services
                     if (currentProject != null)
                     {
                         currentProject.PagesAdded -= CurrentProject_PagesAdded;
+                        currentProject.PagesRemoved -= CurrentProject_PagesRemoved;
                         currentProject.PropertyChanged -= CurrentProject_PropertyChanged;
                     }
 
@@ -64,17 +65,46 @@ namespace Scanner.Services
 
                     if (value != null)
                     {
-                        currentProject.PagesAdded += CurrentProject_PagesAdded;
-                        currentProject.PropertyChanged += CurrentProject_PropertyChanged;
+                        value.PagesAdded += CurrentProject_PagesAdded;
+                        value.PagesRemoved += CurrentProject_PagesRemoved;
+                        value.PropertyChanged += CurrentProject_PropertyChanged;
                     }
                 }
             }
         }
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
-        [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
         private IProjectPage? selectedPage;
+        public IProjectPage? SelectedPage
+        {
+            get => selectedPage;
+            set
+            {
+                if (SetProperty(ref selectedPage, value))
+                {
+                    OnPropertyChanged(nameof(CanSelectPreviousPage));
+                    OnPropertyChanged(nameof(CanSelectNextPage));
+
+                    if (value != null)
+                        SelectedPagesCount = 1;
+                }
+            }
+        }
+
+        private ObservableCollection<IProjectPage>? selectedPages;
+        public ObservableCollection<IProjectPage>? SelectedPages
+        {
+            get => selectedPages;
+            set
+            {
+                if (SetProperty(ref selectedPages, value) && value != null)
+                {
+                    value.CollectionChanged += SelectedPages_CollectionChanged;
+                }
+            }
+        }
+
+        [ObservableProperty]
+        private int selectedPagesCount;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
@@ -707,6 +737,26 @@ namespace Scanner.Services
             }
         }
 
+        private void CurrentProject_PagesRemoved(object? sender, EventArgs e)
+        {
+            // update selection accordingly
+            if (SelectedPages != null)
+            {
+                for (int i = 0; i < SelectedPages.Count; i++)
+                {
+                    if (CurrentProject?.Pages.Contains(SelectedPages[i]) == false)
+                    {
+                        SelectedPages.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+            else if (SelectedPage != null && CurrentProject?.Pages.Contains(SelectedPage) == false)
+            {
+                SelectedPage = CurrentProject?.Pages.FirstOrDefault();
+            }
+        }
+
         private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -717,6 +767,11 @@ namespace Scanner.Services
                     OnPropertyChanged(nameof(CanSaveAsProject));
                     break;
             }
+        }
+
+        private void SelectedPages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SelectedPagesCount = SelectedPages.Count;
         }
     }
 }

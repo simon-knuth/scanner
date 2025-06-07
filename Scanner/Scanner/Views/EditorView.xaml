@@ -59,6 +59,8 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter" />
+            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -67,7 +69,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
-        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded">
+        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded">
             <FlipView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" Loading="VirtualizingStackPanel_Loading" />
@@ -94,7 +96,7 @@
         </FlipView>
         
         <!-- Bottom toolbar -->
-        <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="Auto" />

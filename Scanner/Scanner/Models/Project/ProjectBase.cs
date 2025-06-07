@@ -43,6 +43,7 @@ namespace Scanner.Models
 
         #region Events
         public event EventHandler PagesAdded;
+        public event EventHandler PagesRemoved;
         #endregion
 
         [ObservableProperty]
@@ -309,6 +310,8 @@ namespace Scanner.Models
                 {
                     Pages[i].Index = i;
                 }
+
+                PagesRemoved?.Invoke(this, EventArgs.Empty);
 
                 areFilesSaved = false;
             }

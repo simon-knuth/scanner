@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using Sentry.Protocol;
@@ -60,6 +61,7 @@ namespace Scanner.Views
             set
             {
                 SetValue(IsExpandedProperty, value);
+                ViewModel.IsMultiSelect = false;
             }
         }
 
@@ -68,6 +70,10 @@ namespace Scanner.Views
 
         [ObservableProperty]
         private bool isHoveringCarousel;
+
+        public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunning && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
+
+        public bool ShowTextBlockTotalPages => ViewModel.CurrentProject?.IsPdf == true || ViewModel.IsMultiSelect;
 
         private bool isCarouselScrollSelectionDisabled;
 
@@ -105,6 +111,12 @@ namespace Scanner.Views
                         TextBoxProjectName.Text = ViewModel.FileName;
                     }
                     break;
+                case nameof(ViewModel.CurrentProject):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => OnPropertyChanged(nameof(ShowTextBlockTotalPages)));
+                    break;
+                case nameof(ViewModel.IsMultiSelect):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, ApplyIsMultiSelect);
+                    break;
             }
         }
 
@@ -114,6 +126,30 @@ namespace Scanner.Views
             {
                 case nameof(IProjectService.SelectedPage):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, DiscardProjectNameInputIfFocused);
+                    break;
+                case nameof(IProjectService.SelectedPages):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        if (ViewModel.ProjectService.SelectedPages == null)
+                            return;
+
+                        // select items
+                        foreach (IProjectPage page in ViewModel.ProjectService.SelectedPages)
+                        {
+                            GridViewItem? item = GridViewPageList.ContainerFromItem(page) as GridViewItem;
+
+                            if (item == null)
+                                continue;
+
+                            item.IsSelected = true;
+                        }
+                    });
+                    break;
+                case nameof(IProjectService.SelectedPagesCount):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
+                    break;
+                case nameof(IProjectService.IsProcessRunning):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
                     break;
             }
         }
@@ -338,6 +374,36 @@ namespace Scanner.Views
 
         private void GridViewPageList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // synchronize selection with ProjectService
+            if (ViewModel.IsMultiSelect)
+            {
+                // add selected pages
+                foreach (IProjectPage page in GridViewPageList.SelectedItems)
+                {
+                    if (ViewModel.ProjectService.SelectedPages?.Contains(page) == false)
+                    {
+                        ViewModel.ProjectService.SelectedPages.Add(page);
+                    }
+                }
+
+                // remove deselected pages
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    for (int i = 0; i < ViewModel.ProjectService.SelectedPages.Count; i++)
+                    {
+                        if (!GridViewPageList.SelectedItems.Contains(ViewModel.ProjectService.SelectedPages[i]))
+                        {
+                            ViewModel.ProjectService.SelectedPages.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ViewModel.ProjectService.SelectedPage = GridViewPageList.SelectedItem as IProjectPage;
+            }
+
             // scroll to item
             try
             {
@@ -514,6 +580,24 @@ namespace Scanner.Views
                 }
 
                 mainItem.Items.Insert(0, item);
+            }
+        }
+
+        private void ApplyIsMultiSelect()
+        {
+            OnPropertyChanged(nameof(AreMultiSelectActionsAvailable));
+            OnPropertyChanged(nameof(ShowTextBlockTotalPages));
+
+            if (GridViewPageList == null)
+                return;
+
+            if (ViewModel.IsMultiSelect)
+            {
+                GridViewPageList.SelectionMode = ListViewSelectionMode.Multiple;
+            }
+            else
+            {
+                GridViewPageList.SelectionMode = ListViewSelectionMode.Single;
             }
         }
     }

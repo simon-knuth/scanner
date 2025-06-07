@@ -25,6 +25,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.ViewModels
 {
@@ -42,7 +43,7 @@ namespace Scanner.ViewModels
         #region Commands
         public AsyncRelayCommand TryRemoveCurrentPageAsyncCommand => new AsyncRelayCommand(TryRemoveCurrentPageAsync);
         public AsyncRelayCommand TryDeleteProjectAsyncCommand => new AsyncRelayCommand(TryDeleteProjectAsync);
-        public AsyncRelayCommand TryCopySelectionAsyncCommand => new AsyncRelayCommand(TryCopySelectionAsync);
+        public AsyncRelayCommand TryCopyProjectOrPageAsyncCommand => new AsyncRelayCommand(TryCopyProjectOrPageAsync);
         public AsyncRelayCommand<AppInfo?> TryOpenWithAsyncCommand => new AsyncRelayCommand<AppInfo?>(TryOpenWithAsync);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
@@ -52,6 +53,12 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
         public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
         public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
+        public AsyncRelayCommand RotateSelectedPages90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees90));
+        public AsyncRelayCommand RotateSelectedPages180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees180));
+        public AsyncRelayCommand RotateSelectedPages270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees270));
+        public AsyncRelayCommand RotateSelectedPagesAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Automatic));
+        public AsyncRelayCommand RemoveSelectedPagesAsyncCommand => new AsyncRelayCommand(RemoveSelectedPagesAsync);
+        public AsyncRelayCommand TryCopySelectedPagesAsyncCommand => new AsyncRelayCommand(TryCopySelectedPagesAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -110,6 +117,40 @@ namespace Scanner.ViewModels
             }
         }
 
+        private bool isMultiSelect;
+        public bool IsMultiSelect
+        {
+            get => isMultiSelect;
+            set
+            {
+                IProjectPage? selectedPage = ProjectService.SelectedPage;
+                if (SetProperty(ref isMultiSelect, value))
+                {
+                    if (value)
+                    {
+                        if (selectedPage != null)
+                        {
+                            ProjectService.SelectedPages = new([selectedPage]);
+                        }
+                        else
+                        {
+                            ProjectService.SelectedPages = new();
+                        }
+                        ProjectService.SelectedPage = null;
+                    }
+                    else
+                    {
+                        ProjectService.SelectedPage = ProjectService.SelectedPages?.OrderBy(x => x.Index).FirstOrDefault();
+                        if (ProjectService.SelectedPage == null && ProjectService.CurrentProject?.Pages.Count > 0)
+                        {
+                            ProjectService.SelectedPage = ProjectService.CurrentProject.Pages[0];
+                        }
+                        ProjectService.SelectedPages = null;
+                    }
+                }
+            }
+        }
+
         public List<OpenWithTarget> OpenWithTargets = new();
 
         private DispatcherQueue? viewDispatcherQueue;
@@ -150,6 +191,12 @@ namespace Scanner.ViewModels
                     if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage && imagePage.FileNameInfo != null)
                     {
                         imagePage.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
+                    }
+                    break;
+                case nameof(IProjectService.IsScanProcessRunning):
+                    if (ProjectService.IsScanProcessRunning)
+                    {
+                        IsMultiSelect = false;
                     }
                     break;
             }
@@ -280,7 +327,7 @@ namespace Scanner.ViewModels
             await CurrentProject.SaveAsync(viewDispatcherQueue!);
         }
 
-        private async Task TryCopySelectionAsync()
+        private async Task TryCopyProjectOrPageAsync()
         {
             if (CurrentProject == null) return;
             
@@ -347,6 +394,43 @@ namespace Scanner.ViewModels
 
             string fileExtension = TargetFormatToFileExtension(CurrentProject.Format);
             await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://assoc/?FileExt={fileExtension.Substring(1)}"));
+        }
+
+        private async Task RotateSelectedPagesAsync(RotationIntent rotationIntent)
+        {
+            if (CurrentProject == null) return;
+            if (!IsMultiSelect) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+            if (ProjectService.SelectedPages == null) return;
+
+            // gather instructions
+            Dictionary<IProjectPage, RotationIntent> rotations = new();
+            foreach (IProjectPage page in ProjectService.SelectedPages)
+            {
+                rotations.Add(page, rotationIntent);
+            }
+
+            await ProjectService.ApplyActionAsync(new RotatePagesAction(rotations));
+        }
+
+        private async Task RemoveSelectedPagesAsync()
+        {
+            if (CurrentProject == null) return;
+            if (!IsMultiSelect) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+            if (ProjectService.SelectedPages == null) return;
+
+            await ProjectService.ApplyActionAsync(new RemovePagesAction(ProjectService.SelectedPages.ToList()));
+        }
+
+        private async Task TryCopySelectedPagesAsync()
+        {
+            if (CurrentProject == null) return;
+            if (!IsMultiSelect) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+            if (ProjectService.SelectedPages == null) return;
+
+            await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
         }
     }
 
