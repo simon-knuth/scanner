@@ -7,9 +7,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -390,6 +392,21 @@ namespace Scanner.Views
                 selectedItemScrollViewer.ChangeView(newHorizontalOffset, newVerticalOffset, newFactor, !animate);
             }
             catch (Exception) { }
+        }
+
+        private void ImagePreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            // prevent item recycling from causing another image to be displayed intermittently
+            if (sender.Tag == args.NewValue)
+                return;
+
+            sender.Visibility = Visibility.Collapsed;
+            sender.Tag = args.NewValue;
+        }
+
+        private void ImagePreview_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            ((Image)sender).Visibility = Visibility.Visible;
         }
     }
 }
