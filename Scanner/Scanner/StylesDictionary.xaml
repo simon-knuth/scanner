@@ -1685,8 +1685,8 @@
                                     Background="{ThemeResource FlipViewNextPreviousButtonBackground}"
                                     BorderThickness="{ThemeResource FlipViewButtonBorderThemeThickness}"
                                     BorderBrush="{ThemeResource FlipViewNextPreviousButtonBorderBrush}"
-                                    v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    v1803:CornerRadius="{ThemeResource ControlCornerRadius}">
+                                    v1809:CornerRadius="8"
+                                    v1803:CornerRadius="8">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
                                             <VisualState x:Name="Normal" />
@@ -1747,8 +1747,8 @@
                                     Background="{ThemeResource FlipViewNextPreviousButtonBackground}"
                                     BorderThickness="{ThemeResource FlipViewButtonBorderThemeThickness}"
                                     BorderBrush="{ThemeResource FlipViewNextPreviousButtonBorderBrush}"
-                                    v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    v1803:CornerRadius="{ThemeResource ControlCornerRadius}">
+                                    v1809:CornerRadius="8"
+                                    v1803:CornerRadius="8">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
                                             <VisualState x:Name="Normal" />
@@ -1809,8 +1809,8 @@
                                         Background="{ThemeResource FlipViewNextPreviousButtonBackground}"
                                         BorderThickness="{ThemeResource FlipViewButtonBorderThemeThickness}"
                                         BorderBrush="{ThemeResource FlipViewNextPreviousButtonBorderBrush}"
-                                        v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
-                                        v1803:CornerRadius="{ThemeResource ControlCornerRadius}">
+                                        v1809:CornerRadius="8"
+                                        v1803:CornerRadius="8">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
                                             <VisualState x:Name="Normal" />
@@ -1870,8 +1870,8 @@
                                     Background="{ThemeResource FlipViewNextPreviousButtonBackground}"
                                     BorderThickness="{ThemeResource FlipViewButtonBorderThemeThickness}"
                                     BorderBrush="{ThemeResource FlipViewNextPreviousButtonBorderBrush}"
-                                    v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    v1803:CornerRadius="{ThemeResource ControlCornerRadius}">
+                                    v1809:CornerRadius="8"
+                                    v1803:CornerRadius="8">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
                                             <VisualState x:Name="Normal" />
@@ -1949,8 +1949,8 @@
                         </ScrollViewer>
                         <Button x:Name="PreviousButtonHorizontal"
                             Template="{StaticResource HorizontalPreviousTemplate}"
-                            Width="16"
-                            Height="38"
+                            Width="28"
+                            Height="28"
                             Margin="20,20,20,80"
                             v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
                             IsTabStop="False"
@@ -1959,8 +1959,8 @@
                             VerticalAlignment="Center" />
                         <Button x:Name="NextButtonHorizontal"
                             Template="{StaticResource HorizontalNextTemplate}"
-                            Width="16"
-                            Height="38"
+                            Width="28"
+                            Height="28"
                             Margin="20,20,20,80"
                             v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
                             IsTabStop="False"
@@ -1969,9 +1969,9 @@
                             VerticalAlignment="Center" />
                         <Button x:Name="PreviousButtonVertical"
                             Template="{StaticResource VerticalPreviousTemplate}"
-                            Width="38"
-                            Height="16"
-                            Margin="20,20,20,80"
+                            Width="28"
+                            Height="28"
+                            Margin="20,20,20,20"
                             v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
                             IsTabStop="False"
                             UseSystemFocusVisuals="False"
@@ -1979,9 +1979,9 @@
                             VerticalAlignment="Top" />
                         <Button x:Name="NextButtonVertical"
                             Template="{StaticResource VerticalNextTemplate}"
-                            Width="38"
-                            Height="16"
-                            Margin="20,20,20,80"
+                            Width="28"
+                            Height="28"
+                            Margin="20,20,20,20"
                             v1809:CornerRadius="{ThemeResource ControlCornerRadius}"
                             IsTabStop="False"
                             UseSystemFocusVisuals="False"

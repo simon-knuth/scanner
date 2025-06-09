@@ -259,7 +259,7 @@ namespace Scanner.Views
                     }
                     else
                     {
-                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlStrokeColorOnAccentTertiaryBrush"] as Brush;
+                        innerSelectionIndicator.Stroke = Application.Current.Resources["SurfaceStrokeColorDefaultBrush"] as Brush;
                         innerSelectionIndicator.StrokeThickness = 0;
                         outerSelectionIndicator.StrokeThickness = 0;
                         pageNumber.Foreground = Application.Current.Resources["TextFillColorSecondaryBrush"] as SolidColorBrush;

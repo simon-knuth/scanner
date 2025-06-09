@@ -81,7 +81,7 @@
                     <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded">
                         <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
-                                <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
+                                <Frame Margin="0" CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                     <Image x:Name="ImagePreview" ImageOpened="ImagePreview_ImageOpened" DataContextChanged="ImagePreview_DataContextChanged">
                                         <Image.Source>
                                             <BitmapImage x:Name="BitmapImagePreview" UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" />

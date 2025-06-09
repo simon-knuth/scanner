@@ -327,14 +327,14 @@
                             <DataTemplate x:DataType="interfaces:IProjectPage">
                                 <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                     <Grid>
-                                        <Frame Margin="4,4,4,16" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
+                                        <Frame Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
                                             <Image>
                                                 <Image.Source>
                                                     <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
                                                 </Image.Source>
                                             </Image>
                                         </Frame>
-                                        <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" StrokeThickness="0" />
+                                        <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
                                         <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
                                         <Grid MinWidth="24" Height="24" Margin="0,0,0,4" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
                                             <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
@@ -423,14 +423,14 @@
                                 <DataTemplate x:DataType="interfaces:IProjectPage">
                                     <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
                                         <Grid>
-                                            <Frame Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
+                                            <Frame Margin="8" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                                 <Image>
                                                     <Image.Source>
                                                         <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
                                                     </Image.Source>
                                                 </Image>
                                             </Frame>
-                                            <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource ControlStrokeColorOnAccentTertiaryBrush}" StrokeThickness="0" />
+                                            <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
                                             <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
                                             <Grid MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                                                 <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />

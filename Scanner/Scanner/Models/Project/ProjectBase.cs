@@ -204,7 +204,7 @@ namespace Scanner.Models
                     }
 
                     // add pages
-                    foreach (IProjectPage insertion in insertions)
+                    foreach (IProjectPage insertion in insertions.OrderBy(x => x.Index))
                     {
                         Pages.Insert(insertion.Index, insertion);
                         insertedPages.Add(insertion);

@@ -128,6 +128,8 @@ namespace Scanner.ViewModels
                 {
                     if (value)
                     {
+                        ProjectService.SelectedPage = null;
+
                         if (selectedPage != null)
                         {
                             ProjectService.SelectedPages = new([selectedPage]);
@@ -136,7 +138,6 @@ namespace Scanner.ViewModels
                         {
                             ProjectService.SelectedPages = new();
                         }
-                        ProjectService.SelectedPage = null;
                     }
                     else
                     {
@@ -145,6 +146,7 @@ namespace Scanner.ViewModels
                         {
                             ProjectService.SelectedPage = ProjectService.CurrentProject.Pages[0];
                         }
+
                         ProjectService.SelectedPages = null;
                     }
                 }
