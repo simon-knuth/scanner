@@ -43,22 +43,22 @@
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.04" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="4" />
-                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.2" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.2" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.15" CornerRadius="4" />
-                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.3" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.3" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
-                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
-                    <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
-                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
-                    <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="2" />
+                    <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="4" />
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="2" />
+                    <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="8" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
@@ -107,8 +107,20 @@
                 </Grid.ColumnDefinitions>
 
                 <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
-                <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.FileName}" FontSize="16" Margin="-4,0,-12,0" Padding="4,4,4,0" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus" />
+                <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.FileName}" FontSize="16" Margin="-4,0,-12,0" Padding="4,4,4,0" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                    </animations:Implicit.ShowAnimations>
+
+                    <animations:Implicit.HideAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.1" To="0.0" EasingMode="EaseInOut" />
+                    </animations:Implicit.HideAnimations>
+                </TextBox>
                 <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                    </animations:Implicit.ShowAnimations>
+                    
                     <Span>
                         <Run Text="{x:Bind ViewModel.ProjectService.SelectedPagesCount, Mode=OneWay}" />
                         <Run Text="pages selected" />
@@ -161,6 +173,12 @@
 
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Bottom">
+                        <MenuFlyout.MenuFlyoutPresenterStyle>
+                            <Style BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}" TargetType="MenuFlyoutPresenter">
+                                <Setter Property="Margin" Value="0,-4,0,0" />
+                            </Style>
+                        </MenuFlyout.MenuFlyoutPresenterStyle>
+                        
                         <MenuFlyoutItem Text="Save" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

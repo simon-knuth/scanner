@@ -489,13 +489,13 @@ namespace Scanner.Views
             }
             else
             {
-                ViewModel.ProjectService.SelectedPage = GridViewPageList.SelectedItem as IProjectPage;
+                ViewModel.ProjectService.SelectedPage = GridViewPageList?.SelectedItem as IProjectPage;
             }
 
             // scroll to item
             try
             {
-                GridViewPageList.ScrollIntoView(GridViewPageList.SelectedItem);
+                GridViewPageList?.ScrollIntoView(GridViewPageList.SelectedItem);
             }
             catch (Exception) { }
         }
@@ -521,7 +521,7 @@ namespace Scanner.Views
                 try
                 {
                     if (carouselScrollViewer != null && ViewModel.CurrentProject != null
-                        && ViewModel.ProjectService.SelectedPage.Index == ViewModel.CurrentProject.Pages.Count - 1)
+                        && ViewModel.ProjectService.SelectedPage?.Index == ViewModel.CurrentProject.Pages.Count - 1)
                     {
                         carouselScrollViewer.ChangeView(ViewModel.CurrentProject.Pages.Count * 64, null, null);
                     }

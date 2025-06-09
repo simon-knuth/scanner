@@ -41,13 +41,13 @@
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.04" CornerRadius="4" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.2" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.2" CornerRadius="4" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
-                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="0" />
+                    <media:AttachedCardShadow x:Key="ShadowPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             
