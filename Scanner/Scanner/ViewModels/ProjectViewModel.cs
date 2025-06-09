@@ -59,6 +59,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RotateSelectedPagesAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Automatic));
         public AsyncRelayCommand RemoveSelectedPagesAsyncCommand => new AsyncRelayCommand(RemoveSelectedPagesAsync);
         public AsyncRelayCommand TryCopySelectedPagesAsyncCommand => new AsyncRelayCommand(TryCopySelectedPagesAsync);
+        public AsyncRelayCommand<ImageFilter> ApplyFilterToSelectedPagesAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToSelectedPagesAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -433,6 +434,20 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPages == null) return;
 
             await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
+        }
+
+        private async Task ApplyFilterToSelectedPagesAsync(ImageFilter filter)
+        {
+            if (CurrentProject == null) return;
+            if (!IsMultiSelect) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+            if (ProjectService.SelectedPages == null) return;
+
+            List<ImagePage> pages = ProjectService.SelectedPages.OfType<ImagePage>().ToList();
+            if (pages.Count > 0)
+            {
+                await ProjectService.ApplyActionAsync(new ApplyFilterAction(pages, filter));
+            }
         }
     }
 

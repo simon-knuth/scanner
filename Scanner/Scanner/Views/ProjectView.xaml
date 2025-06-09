@@ -14,6 +14,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:models="using:Scanner.Models"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -490,12 +491,14 @@
                                                 </MenuFlyout>
                                             </FlyoutBase.AttachedFlyout>
                                         </Button>
-                                        <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" IsEnabled="False">
+                                        <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}">
                                             <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                                             <Button.Flyout>
                                                 <MenuFlyout Placement="Bottom">
-                                                    
+                                                    <RadioMenuFlyoutItem Text="None" IsChecked="{x:Bind AreFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                                    <RadioMenuFlyoutItem Text="Grayscale" IsChecked="{x:Bind AreFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                                    <RadioMenuFlyoutItem Text="Monochrome" IsChecked="{x:Bind AreFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
                                                 </MenuFlyout>
                                             </Button.Flyout>
                                         </Button>

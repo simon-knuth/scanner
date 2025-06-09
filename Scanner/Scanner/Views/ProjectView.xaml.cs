@@ -75,6 +75,78 @@ namespace Scanner.Views
 
         public bool ShowTextBlockTotalPages => ViewModel.CurrentProject?.IsPdf == true || ViewModel.IsMultiSelect;
 
+        public bool AreFilterNone
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.Filter == ImageFilter.None);
+                }
+                return false;
+            }
+        }
+
+        public bool AreFilterGrayscale
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.Filter == ImageFilter.Grayscale);
+                }
+                return false;
+            }
+        }
+
+        public bool AreFilterMonochrome
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.Filter == ImageFilter.Monochrome);
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterNoneAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.AvailableFilters.Contains(ImageFilter.None));
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterGrayscaleAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.AvailableFilters.Contains(ImageFilter.Grayscale));
+                }
+                return false;
+            }
+        }
+
+        public bool IsFilterMonochromeAvailable
+        {
+            get
+            {
+                if (ViewModel.ProjectService.SelectedPages != null)
+                {
+                    return ViewModel.ProjectService.SelectedPages.OfType<ImagePage>().All(x => x.AvailableFilters.Contains(ImageFilter.Monochrome));
+                }
+                return false;
+            }
+        }
+
         private bool isCarouselScrollSelectionDisabled;
 
         private bool showEntranceExitAnimations;
@@ -119,7 +191,7 @@ namespace Scanner.Views
                     break;
             }
         }
-
+        
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -130,6 +202,13 @@ namespace Scanner.Views
                 case nameof(IProjectService.SelectedPages):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
                     {
+                        OnPropertyChanged(nameof(AreFilterNone));
+                        OnPropertyChanged(nameof(AreFilterGrayscale));
+                        OnPropertyChanged(nameof(AreFilterMonochrome));
+                        OnPropertyChanged(nameof(IsFilterNoneAvailable));
+                        OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
+                        OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+
                         if (ViewModel.ProjectService.SelectedPages == null)
                             return;
 
@@ -146,7 +225,16 @@ namespace Scanner.Views
                     });
                     break;
                 case nameof(IProjectService.SelectedPagesCount):
-                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        OnPropertyChanged(nameof(AreMultiSelectActionsAvailable));
+                        OnPropertyChanged(nameof(AreFilterNone));
+                        OnPropertyChanged(nameof(AreFilterGrayscale));
+                        OnPropertyChanged(nameof(AreFilterMonochrome));
+                        OnPropertyChanged(nameof(IsFilterNoneAvailable));
+                        OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
+                        OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+                    });
                     break;
                 case nameof(IProjectService.IsProcessRunning):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
