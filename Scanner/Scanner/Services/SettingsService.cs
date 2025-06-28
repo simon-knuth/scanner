@@ -26,6 +26,7 @@ using Scanner.ViewModels;
 using static Scanner.Helpers.Helpers;
 using System.Security.Cryptography;
 using Scanner.Models.FileNaming;
+using Scanner.Views;
 
 namespace Scanner.Services
 {
@@ -116,9 +117,9 @@ namespace Scanner.Services
             set => SetSetting(nameof(IsFirstAppLaunchEver), value);
         }
 
-        public AspectRatioOption LastUsedCropAspectRatio
+        public AspectRatio LastUsedCropAspectRatio
         {
-            get => (AspectRatioOption)GetSetting(nameof(LastUsedCropAspectRatio), (int)AspectRatioOption.Custom);
+            get => (AspectRatio)GetSetting(nameof(LastUsedCropAspectRatio), (int)AspectRatio.Custom);
             set => SetSetting(nameof(LastUsedCropAspectRatio), (int)value);
         }
 

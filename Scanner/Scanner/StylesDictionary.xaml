@@ -406,6 +406,17 @@
         <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
     </Style>
 
+    <Style x:Key="EditorButtonWithTextStyle" TargetType="Button" BasedOn="{StaticResource MutedButtonStyle}">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Padding" Value="12,0,12,0" />
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style x:Key="EditorAccentButtonWithTextStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Padding" Value="12,0,12,0" />
+    </Style>
+
     <Style x:Key="AcrylicButtonStyle" TargetType="Button">
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
         <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />

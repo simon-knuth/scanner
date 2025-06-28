@@ -42,8 +42,11 @@ namespace Scanner.Services.Interfaces
 
         int SelectedPagesCount { get; }
 
-        bool IsProcessRunning { get; }          // scan or edit in progres
-        bool IsScanProcessRunning { get; }      // scan in progress
+        bool IsActionRunning { get; }               // scan/action in progres
+        bool IsProcessRunning { get; }              // scan/action/edit in progres
+        bool IsProcessRunningOrEditing { get; }     // scan/action/edit in progres
+        bool IsScanProcessRunning { get; }          // scan in progress
+        bool IsEditing { get; set; }                // edit in progress
 
         ScanState CurrentScanState { get; }
 

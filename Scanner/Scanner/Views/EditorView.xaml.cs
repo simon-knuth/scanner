@@ -9,12 +9,15 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.VisualBasic.FileIO;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
+using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -22,6 +25,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Core;
 using static Scanner.Helpers.Helpers;
 
@@ -54,13 +58,28 @@ namespace Scanner.Views
 
         public string FriendlyPageZoomFactor => string.Format(GetLocalized("TextZoomFactor"), PageZoomFactor * 100);
 
-        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f;
+        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping;
 
         [ObservableProperty]
         private bool isHoveringZoomControls;
 
         public bool CanZoomIn => PageZoomFactor < maxZoomFactor - 0.009f;
         public bool CanZoomOut => PageZoomFactor > minZoomFactor + 0.009f;
+
+        private bool isCropping;
+        public bool IsCropping
+        {
+            get => isCropping;
+            set
+            {
+                if (SetProperty(ref isCropping, value))
+                {
+                    ViewModel.ProjectService.IsEditing = value;
+
+                    OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+                }
+            }
+        }
 
         public bool IsFilterNone
         {
@@ -137,6 +156,11 @@ namespace Scanner.Views
             }
         }
 
+        [ObservableProperty]
+        private bool isSimilarPagesFlyoutOpen;
+
+        [ObservableProperty]
+        private bool areSimilarPagesSelectedForCrop;
 
         private VirtualizingStackPanel? flipViewPanel;
 
@@ -407,6 +431,167 @@ namespace Scanner.Views
         private void ImagePreview_ImageOpened(object sender, RoutedEventArgs e)
         {
             ((Image)sender).Visibility = Visibility.Visible;
+        }
+
+        private void ButtonCrop_Click(object sender, RoutedEventArgs e)
+        {
+            IsCropping = true;
+        }
+
+        private async void ImageCropper_Loading(FrameworkElement sender, object args)
+        {
+            if (ViewModel.CurrentProject == null)
+                return;
+            if (ViewModel.ProjectService.SelectedPage == null)
+                return;
+
+            // load image into ImageCropper
+            ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).AspectRatio = ViewModel.SelectedAspectRatioValue;
+            await ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).LoadImageFromFile(ViewModel.ProjectService.SelectedPage.SourceFile);
+        }
+
+        private void ButtonDiscardCrop_Click(object sender, RoutedEventArgs e)
+        {
+            IsCropping = false;
+        }
+
+        private void ToggleMenuFlyoutItemAspectRatio_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuFlyoutItem item = (ToggleMenuFlyoutItem)sender;
+
+            // prevent unchecking
+            if (!item.IsChecked)
+                item.IsChecked = true;
+
+            // apply selection
+            AspectRatio aspectRatio = (AspectRatio)item.Tag;
+            ViewModel.SelectedAspectRatio = aspectRatio;
+        }
+
+        private void MenuFlyoutItemCropAspectRatioFlip_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageCropper == null)
+                return;
+
+            ViewModel.SelectedAspectRatioValue = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
+
+            // fix aspect ratio locked after flipping custom
+            if (ViewModel.SelectedAspectRatio == AspectRatio.Custom)
+            {
+                ViewModel.SelectedAspectRatioValue = null;
+            }
+        }
+
+        private async void SplitButtonSaveCrop_Click(SplitButton sender, SplitButtonClickEventArgs args)
+        {
+            await SaveCropAsync(false);
+        }
+
+        private async void MenuFlyoutItemSaveCrop_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveCropAsync(false);
+        }
+
+        private async Task SaveCropAsync(bool asCopy)
+        {
+            if (asCopy)
+                await ViewModel.CropCurrentPageAsCopyAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+            else
+                await ViewModel.CropCurrentPageAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+
+            IsCropping = false;
+        }
+
+        private void MenuFlyoutItemCropSimilarPages_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(GridCropToolbar);
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            ListViewCropSimilarPages.SelectAll();
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ListViewCropSimilarPages.SelectedItem = null;
+        }
+
+        private void CheckBoxCropSimilarPagesSelectAll_Indeterminate(object sender, RoutedEventArgs e)
+        {
+            // prevent indeterminate state if caused by selecting CheckBox
+            uint selectedItems = 0;
+            foreach (ItemIndexRange range in ListViewCropSimilarPages.SelectedRanges)
+            {
+                selectedItems += range.Length;
+            }
+
+            if (selectedItems == ListViewCropSimilarPages.Items.Count)
+            {
+                CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
+            }
+        }
+
+        private void ListViewCropSimilarPagesCurrent_Loading(FrameworkElement sender, object args)
+        {
+            if (ViewModel.ProjectService.SelectedPage == null) return;
+
+            ((ListView)sender).ItemsSource = new List<IProjectPage>([ViewModel.ProjectService.SelectedPage]);
+            ((ListView)sender).SelectedIndex = 0;
+        }
+
+        private void ListViewCropSimilarPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListViewCropSimilarPages.SelectedItems.Count == ListViewCropSimilarPages.Items.Count)
+                CheckBoxCropSimilarPagesSelectAll.IsChecked = true;
+            else if (ListViewCropSimilarPages.SelectedItems.Count == 0)
+                CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
+            else
+                CheckBoxCropSimilarPagesSelectAll.IsChecked = null;
+
+            AreSimilarPagesSelectedForCrop = ListViewCropSimilarPages.SelectedItems.Count > 0;
+        }
+
+        private void ButtonCropSimilarPagesCancel_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
+        }
+
+        private async void ButtonCropSimilarPagesConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            // collect pages
+            List<IProjectPage> pages = ListViewCropSimilarPages.SelectedItems.OfType<IProjectPage>().ToList();
+            if (ViewModel.ProjectService.SelectedPage != null)
+                pages.Insert(0, ViewModel.ProjectService.SelectedPage);
+
+            // crop
+            FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
+            await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, ImageCropper.CroppedRegion));
+        }
+
+        private void FlyoutCropSimilarPages_Opened(object sender, object e)
+        {
+            IsSimilarPagesFlyoutOpen = true;
+        }
+
+        private void FlyoutCropSimilarPages_Closed(object sender, object e)
+        {
+            IsSimilarPagesFlyoutOpen = false;
+        }
+
+        private void MenuFlyoutItemCropSimilarPages_Loading(FrameworkElement sender, object args)
+        {
+            ((MenuFlyoutItem)sender).IsEnabled = ViewModel.AreSimilarPagesForCropAvailable;
+        }
+
+        private void ListViewCropSimilarPages_Loading(FrameworkElement sender, object args)
+        {
+            ((ListView)sender).ItemsSource = ViewModel.SimilarPagesForCrop;
+        }
+
+        private async void MenuFlyoutItemSaveCropAsCopy_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveCropAsync(true);
         }
     }
 }

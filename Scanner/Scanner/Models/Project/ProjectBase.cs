@@ -16,14 +16,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Tesseract;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
+using Windows.UI.WebUI;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
@@ -117,68 +120,73 @@ namespace Scanner.Models
 
             try
             {
-                // keep track of changes in case of error
-                List<StorageFile> copiedFiles = new();
-                List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
-                List<IProjectPage> insertedPages = new();
-
-                // revertable section
-                try
-                {
-                    // add files
-                    foreach (ProjectFileInsertion insertion in insertions)
-                    {
-                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
-                        copiedFiles.Add(page.SourceFile);
-
-                        preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
-                    }
-
-                    // add pages
-                    foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
-                    {
-                        Pages.Insert(insertion.Value, insertion.Key);
-                        insertedPages.Add(insertion.Key);
-                    }
-
-                    // update previews
-                    List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
-                    if (imagePages.Any())
-                    {
-                        await UpdatePagePreviewsAsync(imagePages);
-                    }
-                }
-                catch (Exception exc)
-                {
-                    // roll back changes
-                    foreach (StorageFile file in copiedFiles)
-                    {
-                        await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    }
-
-                    foreach (IProjectPage page in insertedPages)
-                    {
-                        Pages.Remove(page);
-                    }
-
-                    throw new ProjectException(exc);
-                }
-
-                // update indices
-                for (int i = 0; i < Pages.Count; i++)
-                {
-                    Pages[i].Index = i;
-                }
-
-                PagesAdded?.Invoke(this, EventArgs.Empty);
-
-                areFilesSaved = false;
-                return insertedPages;
+                return await AddFilesInternalAsync(insertions, keepSourceFiles);
             }
             finally
             {
                 FinishEditing();
             }
+        }
+
+        private async Task<List<IProjectPage>> AddFilesInternalAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
+        {
+            // keep track of changes in case of error
+            List<StorageFile> copiedFiles = new();
+            List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
+            List<IProjectPage> insertedPages = new();
+
+            // revertable section
+            try
+            {
+                // add files
+                foreach (ProjectFileInsertion insertion in insertions)
+                {
+                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
+                    copiedFiles.Add(page.SourceFile);
+
+                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
+                }
+
+                // add pages
+                foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
+                {
+                    Pages.Insert(insertion.Value, insertion.Key);
+                    insertedPages.Add(insertion.Key);
+                }
+
+                // update previews
+                List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
+                if (imagePages.Any())
+                {
+                    await UpdatePagePreviewsAsync(imagePages);
+                }
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (StorageFile file in copiedFiles)
+                {
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+
+                foreach (IProjectPage page in insertedPages)
+                {
+                    Pages.Remove(page);
+                }
+
+                throw new ProjectException(exc);
+            }
+
+            // update indices
+            for (int i = 0; i < Pages.Count; i++)
+            {
+                Pages[i].Index = i;
+            }
+
+            PagesAdded?.Invoke(this, EventArgs.Empty);
+
+            areFilesSaved = false;
+            return insertedPages;
         }
 
         public async Task AddPagesAsync(List<IProjectPage> insertions)
@@ -250,6 +258,16 @@ namespace Scanner.Models
             }
         }
 
+        /// <summary>
+        /// Removes a given set of pages from the project.
+        /// </summary>
+        /// <param name="pages">
+        /// The pages to remove.
+        /// </param>
+        /// <param name="isUndoing">
+        /// Whether to move the source files of the removed pages to the Redo folder.
+        /// </param>
+        /// <exception cref="ProjectException"></exception>
         public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
         {
             await StartEditingAsync();
@@ -415,7 +433,7 @@ namespace Scanner.Models
             {
                 if (rotation == BitmapRotation.None) return file;
 
-                bool isFolderChanging = pagesFolder.Path == (await file.GetParentAsync()).Path;
+                bool isFolderChanging = pagesFolder.Path != (await file.GetParentAsync()).Path;
 
                 // create empty file to save to
                 TaskCompletionSource<StorageFile> targetFileCreation = new();
@@ -531,6 +549,17 @@ namespace Scanner.Models
             // process instructions
             await RotatePagesAsync(mergedInstructions, pagesFolder);
 
+            // update dimensions
+            foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in mergedInstructions)
+            {
+                if (instruction.Value is BitmapRotation.Clockwise90Degrees or BitmapRotation.Clockwise270Degrees)
+                {
+                    uint width = instruction.Key.Width;
+                    instruction.Key.Width = instruction.Key.Height;
+                    instruction.Key.Height = width;
+                }
+            }
+
             // update save state
             if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
             {
@@ -540,6 +569,11 @@ namespace Scanner.Models
             return mergedInstructions;
         }
 
+        /// <summary>
+        /// Applies an <see cref="ImageFilter"/> to pages.
+        /// </summary>
+        /// <param name="pages">The pages to apply the filter to.</param>
+        /// <param name="filter">The filter to apply.</param>
         public async Task ApplyFilterToPagesAsync(List<ImagePage> pages, ImageFilter filter)
         {
             await StartEditingAsync();
@@ -565,6 +599,12 @@ namespace Scanner.Models
             }
         }
 
+        /// <summary>
+        /// Renders a bitmap with an <see cref="ImageFilter"/> applied.
+        /// </summary>
+        /// <param name="sourceStream">The bitmap source stream.</param>
+        /// <param name="encoder">The encoder load the resulting pixel data into.</param>
+        /// <param name="filter">The filter to render.</param>
         public static async Task ApplyFilterAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter)
         {
             using (CanvasDevice device = CanvasDevice.GetSharedDevice())
@@ -646,6 +686,130 @@ namespace Scanner.Models
             }
         }
 
+        public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder)
+        {
+            List<AppliedCrop> result = [];
+
+            foreach (IProjectPage page in pages)
+            {
+                StorageFile oldFile = page.SourceFile;
+                StorageFile newFile;
+                AppliedCrop appliedCrop = new(page, oldFile, page.Width, page.Height);
+
+                await StartEditingAsync();
+                try
+                {
+                    newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder);
+                    page.Width = (uint)Math.Round(cropRegion.Width);
+                    page.Height = (uint)Math.Round(cropRegion.Height);
+                }
+                finally
+                {
+                    FinishEditing();
+                }
+                page.ChangeSourceFile(pagesFolder, newFile);
+
+                // move to undo folder
+                await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                result.Add(appliedCrop);
+            }
+
+            return result;
+        }
+
+        public async Task<List<IProjectPage>> CropPagesAsCopyAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder)
+        {
+            List<IProjectPage> result = [];
+
+            foreach (IProjectPage page in pages)
+            {
+                StorageFile newFile;
+
+                await StartEditingAsync();
+                try
+                {
+                    // copy file
+                    newFile = await page.SourceFile.CopyAsync(pagesFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                    
+                    // crop
+                    await CropFileAsync(newFile, cropRegion, true, pagesFolder);
+                    page.Width = (uint)Math.Round(cropRegion.Width);
+                    page.Height = (uint)Math.Round(cropRegion.Height);
+
+                    // generate page
+                    ImagePage? imagePage = page as ImagePage;
+                    string? fileName = imagePage?.FileNameInfo?.DesiredName;
+                    StorageFolder? targetFolder = imagePage?.TargetFolder;
+                    ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder, imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None);
+                    result.AddRange(await AddFilesInternalAsync([insertion], false));
+                }
+                finally
+                {
+                    FinishEditing();
+                }
+            }
+
+            return result;
+        }
+
+        private static async Task<StorageFile> CropFileAsync(StorageFile file, Rect cropRegion, bool overwriteFileDirectly, StorageFolder pagesFolder)
+        {
+            try
+            {
+                bool isFolderChanging = pagesFolder.Path != (await file.GetParentAsync()).Path;
+
+                // create empty file to save to
+                TaskCompletionSource<StorageFile> targetFileCreation = new();
+                StorageFile targetFile = file;
+                if (isFolderChanging || !overwriteFileDirectly)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        targetFileCreation.TrySetResult(await pagesFolder.CreateFileAsync(file.Name, CreationCollisionOption.GenerateUniqueName));
+                    });
+                }
+                else
+                {
+                    targetFileCreation.TrySetResult(targetFile);
+                }
+
+                // perform edit
+                cropRegion.X = Math.Max(cropRegion.X, 0);
+                cropRegion.Y = Math.Max(cropRegion.Y, 0);
+                uint x = (uint)Math.Floor(cropRegion.X);
+                uint y = (uint)Math.Floor(cropRegion.Y);
+                uint width = (uint)Math.Floor(cropRegion.Width);
+                uint height = (uint)Math.Floor(cropRegion.Height);
+
+                using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    targetFile = await targetFileCreation.Task;
+                    using (IRandomAccessStream targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetStream);
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+                        encoder.BitmapTransform.Bounds = new BitmapBounds
+                        {
+                            X = x,
+                            Y = y,
+                            Width = width,
+                            Height = height
+                        };
+                        await encoder.FlushAsync();
+                    }
+                }
+
+                return targetFile;
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Cropping page failed", e);
+            }
+        }
+
         public static Guid GetBitmapEncoderIdForFile(StorageFile file)
         {
             switch (file.FileType.ToLower())
@@ -683,4 +847,5 @@ namespace Scanner.Models
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter);
+    public record AppliedCrop(IProjectPage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);
 }

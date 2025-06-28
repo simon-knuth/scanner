@@ -38,6 +38,7 @@ namespace Scanner.ViewModels
         public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project)> SaveFileDialogRequested;
         public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
+        public event EventHandler<Task> MultiEditInProgressDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
@@ -55,10 +56,10 @@ namespace Scanner.ViewModels
         [NotifyPropertyChangedFor(nameof(CanStartNewProject))]
         private ProjectBase? currentProject;
 
-        public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunning;
+        public bool CanStartNewProject => CurrentProject != null && !ProjectService.IsProcessRunningOrEditing;
 
-        public bool CanUndo => ProjectService.CanUndo && !ProjectService.IsProcessRunning;
-        public bool CanRedo => ProjectService.CanRedo && !ProjectService.IsProcessRunning;
+        public bool CanUndo => ProjectService.CanUndo && !ProjectService.IsProcessRunningOrEditing;
+        public bool CanRedo => ProjectService.CanRedo && !ProjectService.IsProcessRunningOrEditing;
 
         private TaskCompletionSource viewLoading = new();
         private DispatcherQueue? viewDispatcherQueue;
@@ -91,6 +92,10 @@ namespace Scanner.ViewModels
             Messenger.Register<ShowSaveInProgressDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowSaveInProgressDialogAsync());
+            });
+            Messenger.Register<ShowMultiEditInProgressDialogMessage>(this, (r, m) =>
+            {
+                m.Reply(ShowMultiEditInProgressDialogAsync(m.Process));
             });
             Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
             {
@@ -127,7 +132,7 @@ namespace Scanner.ViewModels
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
                     break;
-                case nameof(IProjectService.IsProcessRunning):
+                case nameof(IProjectService.IsProcessRunningOrEditing):
                     OnPropertyChanged(nameof(CanStartNewProject));
                     OnPropertyChanged(nameof(CanUndo));
                     OnPropertyChanged(nameof(CanRedo));
@@ -167,6 +172,12 @@ namespace Scanner.ViewModels
             TaskCompletionSource<bool> result = new();
             ProjectDeletionDialogRequested?.Invoke(this, (result, project));
             return await result.Task;
+        }
+
+        private async Task ShowMultiEditInProgressDialogAsync(Task process)
+        {
+            MultiEditInProgressDialogRequested?.Invoke(this, process);
+            await process;
         }
 
         private async void MainWindow_Closed(object sender, WindowEventArgs args)

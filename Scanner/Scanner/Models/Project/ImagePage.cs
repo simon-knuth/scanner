@@ -15,6 +15,7 @@ using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using System.IO;
+using Windows.Storage.FileProperties;
 
 namespace Scanner.Models
 {
@@ -99,11 +100,17 @@ namespace Scanner.Models
 
         public ImageFilter[] AvailableFilters { get; private set; }
 
+        [ObservableProperty]
+        private uint width;
+
+        [ObservableProperty]
+        private uint height;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, uint width, uint height)
         {
             SourceFile = sourceFile;
             PreviewBitmapUri = uri;
@@ -113,6 +120,8 @@ namespace Scanner.Models
             BaseFilter = baseFilter;
             Filter = filter;
             AvailableFilters = GetAvailableFilters();
+            Width = width;
+            Height = height;
         }
 
         /// <summary>
@@ -159,8 +168,11 @@ namespace Scanner.Models
                 await sourceFile.MoveAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
             }
 
+            // get image attributes
+            ImageProperties imageProperties = await sourceFile.Properties.GetImagePropertiesAsync();
+
             // create ImagePage
-            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, imageProperties.Width, imageProperties.Height);
             
             return result;
         }

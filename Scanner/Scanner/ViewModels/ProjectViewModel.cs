@@ -413,7 +413,12 @@ namespace Scanner.ViewModels
                 rotations.Add(page, rotationIntent);
             }
 
-            await ProjectService.ApplyActionAsync(new RotatePagesAction(rotations));
+            Task process = ProjectService.ApplyActionAsync(new RotatePagesAction(rotations));
+
+            if (rotations.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process));
+
+            await process;
         }
 
         private async Task RemoveSelectedPagesAsync()
@@ -423,7 +428,14 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPagesCount == 0) return;
             if (ProjectService.SelectedPages == null) return;
 
-            await ProjectService.ApplyActionAsync(new RemovePagesAction(ProjectService.SelectedPages.ToList()));
+            List<IProjectPage> pages = ProjectService.SelectedPages.ToList();
+
+            Task process = ProjectService.ApplyActionAsync(new RemovePagesAction(pages));
+
+            if (pages.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process));
+
+            await process;
         }
 
         private async Task TryCopySelectedPagesAsync()

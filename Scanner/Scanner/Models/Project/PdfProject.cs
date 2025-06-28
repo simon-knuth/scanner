@@ -70,7 +70,7 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, baseFilter, filter));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, null, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, baseFilter, filter));
             }
 
             // create project and update previews

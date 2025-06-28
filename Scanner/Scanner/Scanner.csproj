@@ -55,6 +55,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.ImageCropper" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
@@ -85,6 +86,9 @@
   <ItemGroup>
     <Page Update="Controls\ScanOptionsPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Dialogs\MultiEditInProgressDialogView.xaml">
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\SaveOptionsDialogView.xaml">
       <SubType>Designer</SubType>

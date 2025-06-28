@@ -64,6 +64,7 @@ namespace Scanner.Views
             ViewModel.SaveFileDialogRequested += ViewModel_SaveFileDialogRequested;
             ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
             ViewModel.ProjectDeletionDialogRequested += ViewModel_ProjectDeletionDialogRequested;
+            ViewModel.MultiEditInProgressDialogRequested += ViewModel_MultiEditInProgressDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -267,6 +268,11 @@ namespace Scanner.Views
             ShowProjectDeletionDialog(e.Process, e.Project);
         }
 
+        private void ViewModel_MultiEditInProgressDialogRequested(object? sender, Task e)
+        {
+            ShowMultiEditInProgressDialog(e);
+        }
+
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
 #if DEBUG
@@ -364,6 +370,26 @@ namespace Scanner.Views
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result == ContentDialogResult.Primary) task.TrySetResult(true);
                 else task.TrySetResult(false);
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowMultiEditInProgressDialog(Task task)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                MultiEditInProgressDialogView dialog = new MultiEditInProgressDialogView(task);
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
 
                 isDialogVisible = false;
             });

@@ -71,7 +71,7 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool isHoveringCarousel;
 
-        public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunning && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
+        public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
 
         public bool ShowTextBlockTotalPages => ViewModel.CurrentProject?.IsPdf == true || ViewModel.IsMultiSelect;
 
@@ -236,7 +236,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
                     });
                     break;
-                case nameof(IProjectService.IsProcessRunning):
+                case nameof(IProjectService.IsProcessRunningOrEditing):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
                     break;
             }

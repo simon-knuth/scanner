@@ -108,13 +108,24 @@ namespace Scanner.Services
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
+        [NotifyPropertyChangedFor(nameof(IsProcessRunningOrEditing))]
         [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
         [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
         [NotifyPropertyChangedFor(nameof(CanSaveProject))]
         [NotifyPropertyChangedFor(nameof(CanSaveAsProject))]
         private bool isActionRunning;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
+        [NotifyPropertyChangedFor(nameof(IsProcessRunningOrEditing))]
+        [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
+        [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
+        [NotifyPropertyChangedFor(nameof(CanSaveProject))]
+        [NotifyPropertyChangedFor(nameof(CanSaveAsProject))]
+        private bool isEditing;
+
         public bool IsProcessRunning => IsScanProcessRunning || IsActionRunning;
+        public bool IsProcessRunningOrEditing => IsScanProcessRunning || IsActionRunning || IsEditing;
 
         private bool isScanProcessRunning;
         public bool IsScanProcessRunning
@@ -124,6 +135,7 @@ namespace Scanner.Services
             {
                 SetProperty(ref isScanProcessRunning, value);
                 OnPropertyChanged(nameof(IsProcessRunning));
+                OnPropertyChanged(nameof(IsProcessRunningOrEditing));
                 OnPropertyChanged(nameof(CanSaveProject));
                 OnPropertyChanged(nameof(CanSaveAsProject));
             }
@@ -141,8 +153,8 @@ namespace Scanner.Services
 
 
         // TODO: Update properties if selected page is moved
-        public bool CanSelectPreviousPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
-        public bool CanSelectNextPage => !IsProcessRunning && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
+        public bool CanSelectPreviousPage => !IsProcessRunningOrEditing && CurrentProject != null && SelectedPage != null && SelectedPage.Index > 0;
+        public bool CanSelectNextPage => !IsProcessRunningOrEditing && CurrentProject != null && SelectedPage != null && SelectedPage.Index < CurrentProject.Pages.Count - 1;
 
         public Stack<IProjectAction> UndoStack { get; private set; } = new();
         public Stack<IProjectAction> RedoStack { get; private set; } = new();
@@ -534,6 +546,7 @@ namespace Scanner.Services
 
             // close project
             CurrentProject = null;
+            SelectedPage = null;
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
@@ -544,6 +557,11 @@ namespace Scanner.Services
             RedoStack.Clear();
             OnPropertyChanged(nameof(CanUndo));
             OnPropertyChanged(nameof(CanRedo));
+
+            // end processes
+            IsActionRunning = false;
+            IsEditing = false;
+            IsScanProcessRunning = false;
 
             return true;
         }
