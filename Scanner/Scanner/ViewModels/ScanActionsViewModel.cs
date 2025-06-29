@@ -58,9 +58,9 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         private bool isScanning;
 
-        public bool CanScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunning;
-        public bool CanPreviewScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunning && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
-        public bool CanScanModeBeSwitched => CurrentProject != null && !ProjectService.IsProcessRunning && CanAddToProject;
+        public bool CanScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunningOrEditing;
+        public bool CanPreviewScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunningOrEditing && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
+        public bool CanScanModeBeSwitched => CurrentProject != null && !ProjectService.IsProcessRunningOrEditing && CanAddToProject;
         public bool CanScanAndMerge => CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat && CurrentProject.Format == TargetFormat.PDF 
             && ScanOptions?.SourceMode == ScannerSource.Feeder;
 

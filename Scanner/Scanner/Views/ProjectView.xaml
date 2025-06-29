@@ -96,7 +96,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Frame Grid.Row="0" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+            <Frame Grid.Row="0" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                 <Grid x:Name="GridHeader" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28" />
@@ -109,7 +109,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
-                    <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.FileName}" FontSize="16" Margin="-4,0,-12,0" Padding="4,4,4,0" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
+                    <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.FileName}" FontSize="16" Margin="-8,0,-12,-4" Padding="8,4,4,4" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
