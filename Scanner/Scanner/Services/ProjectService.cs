@@ -13,6 +13,7 @@ using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -689,13 +690,20 @@ namespace Scanner.Services
             if (!CanUndo) return;
             if (upUntil != null && !UndoStack.Contains(upUntil)) return;
 
-            if (upUntil == null) upUntil = UndoStack.Peek();
+            TaskCompletionSource process = new();
+
+            if (upUntil == null)
+                upUntil = UndoStack.Peek();
+            else
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
 
             while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil)
             {
                 await UndoActionAsync(UndoStack.Pop());
             }
             if (UndoStack.Count > 0) await UndoActionAsync(UndoStack.Pop());
+
+            process.TrySetResult();
         }
 
         public async Task TryRedoAsync(IProjectAction? upUntil = null)
@@ -703,13 +711,20 @@ namespace Scanner.Services
             if (!CanRedo) return;
             if (upUntil != null && !RedoStack.Contains(upUntil)) return;
 
-            if (upUntil == null) upUntil = RedoStack.Peek();
+            TaskCompletionSource process = new();
+
+            if (upUntil == null)
+                upUntil = RedoStack.Peek();
+            else
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
 
             while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil)
             {
                 await InternalApplyActionAsync(RedoStack.Pop(), true);
             }
             if (RedoStack.Count > 0) await InternalApplyActionAsync(RedoStack.Pop(), true);
+
+            process.TrySetResult();
         }
 
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
