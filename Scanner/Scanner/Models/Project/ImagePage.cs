@@ -16,6 +16,7 @@ using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using System.IO;
 using Windows.Storage.FileProperties;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models
 {
@@ -181,7 +182,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void ChangeSourceFile(StorageFolder parentFolder, StorageFile file)
+        public void ChangeSourceFile(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue)
         {
             if (OutOfDateSourceFile == null && parentFolder == AppDataService.ChangesFolder)
             {

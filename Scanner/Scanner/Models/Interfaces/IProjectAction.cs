@@ -35,7 +35,7 @@ namespace Scanner.Models.Interfaces
         /// <returns>
         /// Whether any changes were made.
         /// </returns>
-        /// <exception cref="ProjectException">
+        /// <exception cref="ActionFailedAndRolledBackException">
         /// Occurs when the action failed but changes to the <see cref="ProjectBase"/> could be rolled back.
         /// </exception>
         /// <exception cref="Exception">
@@ -47,7 +47,7 @@ namespace Scanner.Models.Interfaces
         /// Undoes the action after <see cref="ExecuteAsync(ProjectBase, DispatcherQueue)"/> has been run.
         /// Once this method has been run, <see cref="ExecuteAsync(ProjectBase, DispatcherQueue)"/> can be run again.
         /// </summary>
-        /// <exception cref="ProjectException">
+        /// <exception cref="ActionFailedAndRolledBackException">
         /// Occurs when the action failed but changes to the <see cref="ProjectBase"/> could be rolled back.
         /// </exception>
         /// <exception cref="Exception">

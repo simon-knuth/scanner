@@ -174,7 +174,7 @@ namespace Scanner.Models
                     Pages.Remove(page);
                 }
 
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
 
             // update indices
@@ -189,7 +189,7 @@ namespace Scanner.Models
             return insertedPages;
         }
 
-        public async Task AddPagesAsync(List<IProjectPage> insertions)
+        public async Task AddPagesAsync(List<IProjectPage> insertions, DispatcherQueue uiDispatcherQueue)
         {
             await StartEditingAsync();
 
@@ -207,7 +207,7 @@ namespace Scanner.Models
                     {
                         StorageFolder previousFolder = await insertion.SourceFile.GetParentAsync();
                         await insertion.SourceFile.MoveAsync(AppDataService.ChangesFolder, insertion.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
-                        insertion.ChangeSourceFile(AppDataService.ChangesFolder, insertion.SourceFile);
+                        insertion.ChangeSourceFile(AppDataService.ChangesFolder, insertion.SourceFile, uiDispatcherQueue);
                         moves.Add(new KeyValuePair<StorageFile, StorageFolder>(insertion.SourceFile, previousFolder));
                     }
 
@@ -236,10 +236,10 @@ namespace Scanner.Models
                     foreach (IProjectPage page in insertedPages)
                     {
                         Pages.Remove(page);
-                        page.ChangeSourceFile(await page.SourceFile.GetParentAsync(), page.SourceFile);
+                        page.ChangeSourceFile(await page.SourceFile.GetParentAsync(), page.SourceFile, uiDispatcherQueue);
                     }
 
-                    throw new ProjectException(exc);
+                    throw new ActionFailedAndRolledBackException(exc);
                 }
 
                 // update indices
@@ -267,7 +267,7 @@ namespace Scanner.Models
         /// <param name="isUndoing">
         /// Whether to move the source files of the removed pages to the Redo folder.
         /// </param>
-        /// <exception cref="ProjectException"></exception>
+        /// <exception cref="ActionFailedAndRolledBackException"></exception>
         public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
         {
             await StartEditingAsync();
@@ -320,7 +320,7 @@ namespace Scanner.Models
                     {
                         Pages.Insert(deletedIndices[i], pages[i]);
                     }
-                    throw new ProjectException(exc);
+                    throw new ActionFailedAndRolledBackException(exc);
                 }
 
                 // update indices
@@ -388,7 +388,7 @@ namespace Scanner.Models
         /// </summary>
         /// <param name="instructions">Which page to rotate how much.</param>
         /// <returns></returns>
-        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions, StorageFolder pagesFolder)
+        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
@@ -406,7 +406,7 @@ namespace Scanner.Models
                 {
                     FinishEditing();
                 }
-                instruction.Key.ChangeSourceFile(pagesFolder, newFile);
+                instruction.Key.ChangeSourceFile(pagesFolder, newFile, uiDispatcherQueue);
 
                 // delete old file
                 if (oldFile != newFile)
@@ -519,8 +519,9 @@ namespace Scanner.Models
         /// </summary>
         /// <param name="instructions">Which page to rotate how much.</param>
         /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
+        /// <param name="uiDispatcherQueue">The UI dispatcher queue.</param>
         /// <returns>The actual rotations performed for each file.</returns>
-        public async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions, StorageFolder pagesFolder)
+        public async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             // split instructions
             Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
@@ -547,7 +548,7 @@ namespace Scanner.Models
             }
 
             // process instructions
-            await RotatePagesAsync(mergedInstructions, pagesFolder);
+            await RotatePagesAsync(mergedInstructions, pagesFolder, uiDispatcherQueue);
 
             // update dimensions
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in mergedInstructions)
@@ -591,7 +592,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
             finally
             {
@@ -682,11 +683,11 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
         }
 
-        public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder)
+        public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             List<AppliedCrop> result = [];
 
@@ -707,7 +708,7 @@ namespace Scanner.Models
                 {
                     FinishEditing();
                 }
-                page.ChangeSourceFile(pagesFolder, newFile);
+                page.ChangeSourceFile(pagesFolder, newFile, uiDispatcherQueue);
 
                 // move to undo folder
                 await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);

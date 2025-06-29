@@ -80,7 +80,7 @@ namespace Scanner.Models
         {
             if (previousFilters == null)
             {
-                throw new ProjectException("Can't undo ApplyFilterAction without list of previous filters");
+                throw new ActionFailedAndRolledBackException("Can't undo ApplyFilterAction without list of previous filters");
             }
 
             foreach (KeyValuePair<ImagePage, ImageFilter> pair in previousFilters)

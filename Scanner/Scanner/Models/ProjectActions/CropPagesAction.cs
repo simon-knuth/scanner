@@ -61,7 +61,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            appliedCrops = await project.CropPagesAsync(pages, cropRegion, AppDataService.ChangesFolder);
+            appliedCrops = await project.CropPagesAsync(pages, cropRegion, AppDataService.ChangesFolder, uiDispatcherQueue);
 
             return appliedCrops.Count > 0;
         }
@@ -70,7 +70,7 @@ namespace Scanner.Models
         {
             if (appliedCrops == null)
             {
-                throw new ProjectException("Can't undo CropPagesAction without list of applied crops");
+                throw new ActionFailedAndRolledBackException("Can't undo CropPagesAction without list of applied crops");
             }
 
             // replace with pre-crop files
@@ -79,10 +79,7 @@ namespace Scanner.Models
                 StorageFile croppedFile = appliedCrop.Page.SourceFile;
                 await appliedCrop.PreviousFile.MoveAsync(AppDataService.ChangesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
 
-                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-                {
-                    appliedCrop.Page.ChangeSourceFile(AppDataService.ChangesFolder, appliedCrop.PreviousFile);
-                });
+                appliedCrop.Page.ChangeSourceFile(AppDataService.ChangesFolder, appliedCrop.PreviousFile, uiDispatcherQueue);
 
                 appliedCrop.Page.Width = appliedCrop.PreviousWidth;
                 appliedCrop.Page.Height = appliedCrop.PreviousHeight;

@@ -103,7 +103,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
             finally
             {
@@ -169,10 +169,7 @@ namespace Scanner.Models
                                 }
 
                                 // update page
-                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-                                {
-                                    page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile);
-                                });
+                                page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
 
                                 // delete old file
                                 if (fileToDelete != null)
@@ -281,7 +278,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
             finally
             {
@@ -332,7 +329,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                throw new ProjectException(exc);
+                throw new ActionFailedAndRolledBackException(exc);
             }
             finally
             {

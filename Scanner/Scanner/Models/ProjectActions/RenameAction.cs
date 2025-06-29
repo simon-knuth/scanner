@@ -70,7 +70,7 @@ namespace Scanner.Models
         {
             if (oldName == null)
             {
-                throw new ProjectException("Can't undo RenameAction without old name");
+                throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old name");
             }
 
             if (project is PdfProject pdfProject)

@@ -63,7 +63,7 @@ namespace Scanner.Models
         {
             if (addedPages == null)
             {
-                throw new ProjectException("Can't undo AddFilesAction without list of added pages");
+                throw new ActionFailedAndRolledBackException("Can't undo AddFilesAction without list of added pages");
             }
 
             await project.RemovePagesAsync(addedPages, true);

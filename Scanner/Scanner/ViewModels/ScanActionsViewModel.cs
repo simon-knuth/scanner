@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Dispatching;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
@@ -28,6 +29,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<bool> ScanCommand => new AsyncRelayCommand<bool>(ScanAsync);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
 
+        public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -95,6 +97,9 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         private bool addToProject;
 
+        private TaskCompletionSource viewLoading = new();
+        private DispatcherQueue? viewDispatcherQueue;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,9 +121,18 @@ namespace Scanner.ViewModels
             Messenger.UnregisterAll(this);
         }
 
+        private void ViewLoading(DispatcherQueue? dispatcherQueue)
+        {
+            viewDispatcherQueue = dispatcherQueue;
+            ProjectService.UiDispatcherQueue = dispatcherQueue;
+            viewLoading.TrySetResult();
+        }
+
         private async Task ScanAsync(bool addToProject)
         {
             if (ScanOptions == null) return;
+
+            await viewLoading.Task;
 
             if (addToProject)
             {
@@ -126,7 +140,7 @@ namespace Scanner.ViewModels
             }
             else
             {
-                await ProjectService.TryCreateProjectAsync(ScanOptions);
+                await ProjectService.TryCreateProjectAsync(ScanOptions, viewDispatcherQueue);
             }
         }
 

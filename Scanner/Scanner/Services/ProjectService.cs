@@ -182,7 +182,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task TryCreateProjectAsync(ScanOptions scanOptions)
+        public async Task TryCreateProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -235,7 +235,7 @@ namespace Scanner.Services
                         instructions.Add(page, RotationIntent.Automatic);
                     }
 
-                    await CurrentProject.RotatePagesAsync(instructions, AppDataService.ProjectFolder);
+                    await CurrentProject.RotatePagesAsync(instructions, AppDataService.ProjectFolder, uiDispatcherQueue);
                 }
 
                 // save if needed
@@ -382,7 +382,7 @@ namespace Scanner.Services
                 // close project
                 await TryCloseProjectAsync(true);
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -435,7 +435,7 @@ namespace Scanner.Services
                     await pdfProject.CopyAsync();
                 }
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -463,7 +463,7 @@ namespace Scanner.Services
                     await imageProject.CopyPagesAsync(pages);
                 }
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -491,7 +491,7 @@ namespace Scanner.Services
                     await pdfProject.TryOpenWithAsync(app);
                 }
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -519,7 +519,7 @@ namespace Scanner.Services
                     await imageProject.TryOpenWithPageAsync(app, page);
                 }
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -617,7 +617,7 @@ namespace Scanner.Services
                     OnPropertyChanged(nameof(CanRedo));
                 }
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -659,7 +659,7 @@ namespace Scanner.Services
                 OnPropertyChanged(nameof(CanUndo));
                 OnPropertyChanged(nameof(CanRedo));
             }
-            catch (ProjectException)
+            catch (ActionFailedAndRolledBackException)
             {
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {

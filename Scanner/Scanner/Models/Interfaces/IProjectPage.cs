@@ -16,6 +16,7 @@ using Windows.Devices.Scanners;
 using Windows.Storage;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models.Interfaces
 {
@@ -55,7 +56,7 @@ namespace Scanner.Models.Interfaces
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void ChangeSourceFile(StorageFolder parentFolder, StorageFile file);
+        void ChangeSourceFile(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue);
         void ClearOutOfDateSourceFile();
     }
 }

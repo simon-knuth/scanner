@@ -61,10 +61,10 @@ namespace Scanner.Models
         {
             if (removedPages == null)
             {
-                throw new ProjectException("Can't undo RemovePagesAction without list of removed pages");
+                throw new ActionFailedAndRolledBackException("Can't undo RemovePagesAction without list of removed pages");
             }
 
-            await project.AddPagesAsync(removedPages);
+            await project.AddPagesAsync(removedPages, uiDispatcherQueue);
             removedPages = null;
         }
 

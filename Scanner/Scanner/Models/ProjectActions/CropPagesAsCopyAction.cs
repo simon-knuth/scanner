@@ -70,7 +70,7 @@ namespace Scanner.Models
         {
             if (addedPages == null)
             {
-                throw new ProjectException("Can't undo CropPagesAsCopyAction without list of applied crops");
+                throw new ActionFailedAndRolledBackException("Can't undo CropPagesAsCopyAction without list of applied crops");
             }
 
             // remove added pages

@@ -21,6 +21,9 @@
     </Page.DataContext>
 
     <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loading">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.ViewLoadingCommand}" CommandParameter="{x:Bind DispatcherQueue}" />
+        </core:EventTriggerBehavior>
         <core:EventTriggerBehavior EventName="Unloaded">
             <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>
         </core:EventTriggerBehavior>

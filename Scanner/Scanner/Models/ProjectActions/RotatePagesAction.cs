@@ -54,7 +54,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder);
+            appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder, uiDispatcherQueue);
 
             return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
         }
@@ -63,7 +63,7 @@ namespace Scanner.Models
         {
             if (appliedRotations == null)
             {
-                throw new ProjectException("Can't undo RotatePagesAction without list of applied rotations");
+                throw new ActionFailedAndRolledBackException("Can't undo RotatePagesAction without list of applied rotations");
             }
 
             // gather instructions
@@ -73,7 +73,7 @@ namespace Scanner.Models
                 invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
             }
 
-            await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder);
+            await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder, uiDispatcherQueue);
         }
 
         public string GetFriendlyName()
