@@ -29,14 +29,25 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - -   CONTROL CONTENT  - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid VerticalAlignment="Center">
+    <Grid ColumnSpacing="8" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="{x:Bind ScanOptions.Scanner.Name, Mode=OneWay}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-        <ItemsControl Grid.Row="1" Margin="-4,0,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <FontIcon Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Glyph="&#xE7EA;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
+            <FontIcon.RenderTransform>
+                <RotateTransform Angle="90" />
+            </FontIcon.RenderTransform>
+        </FontIcon>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Scan options" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+        <ItemsControl Grid.Row="1" Grid.Column="1" Margin="-4,0,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" Spacing="0" />

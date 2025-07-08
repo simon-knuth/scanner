@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Labs.WinUI.SegmentedControl" Version="0.1.230830" />
-    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250703-build.2173" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
