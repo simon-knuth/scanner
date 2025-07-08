@@ -64,6 +64,8 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <StackPanel Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
+        <TextBlock Text="File name" Style="{StaticResource BaseTextBlockStyle}" />
+
         <!-- File name type -->
         <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}">
             <labs:SegmentedItem CornerRadius="4,4,0,0">
@@ -95,19 +97,31 @@
         </Grid>
 
         <!-- Collision warning -->
-        <Border Margin="0,-8,0,0" Height="28">
-            <Grid Padding="0,4,16,4" ToolTipService.ToolTip="Final name may be modified because another file with that name already exists." CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
+        <Grid Margin="0,-8,0,0" Padding="0,4,16,4" ToolTipService.ToolTip="Final name may be modified because another file with that name already exists." CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-                <FontIcon Grid.Column="0" Glyph="&#xEDAF;" FontSize="18" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                <FontIcon Grid.Column="0" Glyph="&#xEDB1;" FontSize="12" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource SystemFillColorCautionBackgroundBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                <TextBlock Grid.Column="1" Text="File with that name already exists" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-            </Grid>
-        </Border>
+            <FontIcon Grid.Column="0" Glyph="&#xEDAF;" FontSize="18" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+            <FontIcon Grid.Column="0" Glyph="&#xEDB1;" FontSize="12" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource SystemFillColorCautionBackgroundBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+            <TextBlock Grid.Column="1" Text="File with that name already exists" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+        </Grid>
+        
+        <!-- AI file name generation -->
+        <CheckBox x:Name="CheckBoxAIFileNameGeneration" Margin="0,0,0,12" IsChecked="{x:Bind ViewModel.GenerateAIFileName, Mode=TwoWay}" Visibility="{x:Bind ViewModel.IsPdf}" x:Load="{x:Bind ViewModel.CopilotRuntimeService.IsSupported}">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,0">
+                <ImageIcon Width="16" Height="16" VerticalAlignment="Bottom">
+                    <ImageIcon.Source>
+                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" />
+                    </ImageIcon.Source>
+                </ImageIcon>
+                <TextBlock Text="Replace with AI-generated name" />
+            </StackPanel>
+        </CheckBox>
 
+        <TextBlock Text="File location" Style="{StaticResource BaseTextBlockStyle}" />
+        
         <!-- Folder -->
         <Grid ColumnSpacing="4">
             <Grid.ColumnDefinitions>

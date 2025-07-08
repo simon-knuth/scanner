@@ -219,6 +219,12 @@ namespace Scanner.Services
             set => SetSetting(nameof(CustomFileNamingPattern), value.GetSerialized(false));
         }
 
+        public bool SettingGenerateFileNameWithAI
+        {
+            get => GetSetting<bool>(nameof(SettingGenerateFileNameWithAI), true);
+            set => SetSetting(nameof(SettingGenerateFileNameWithAI), value);
+        }
+
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;
         private const int latestSettingsVersion = 0;
 

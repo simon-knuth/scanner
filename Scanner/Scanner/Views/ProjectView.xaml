@@ -109,15 +109,31 @@
                     </Grid.ColumnDefinitions>
 
                     <Ellipse x:Name="EllipseUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="4" Height="4" Margin="-12,4,0,0" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
-                    <TextBox x:Name="TextBoxProjectName" Grid.Row="0" Grid.Column="0" Text="{x:Bind ViewModel.FileName}" FontSize="16" Margin="-8,0,-12,-4" Padding="8,4,4,4" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
-                        <animations:Implicit.ShowAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                        </animations:Implicit.ShowAnimations>
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="-8,0,-12,-4" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+                        <TextBox x:Name="TextBoxProjectName" Text="{x:Bind ViewModel.FileName}" FontSize="16" Padding="8,4,4,4" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                            </animations:Implicit.ShowAnimations>
 
-                        <animations:Implicit.HideAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.1" To="0.0" EasingMode="EaseInOut" />
-                        </animations:Implicit.HideAnimations>
-                    </TextBox>
+                            <animations:Implicit.HideAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.1" To="0.0" EasingMode="EaseInOut" />
+                            </animations:Implicit.HideAnimations>
+                        </TextBox>
+                        <Button x:Name="ButtonFileNameGeneration" CornerRadius="2" Margin="4,4,6,4" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ShowFileNameGenerationButton, Mode=OneWay}" Command="{x:Bind ViewModel.StartStopGenerateFileNameWithAICommand}" GettingFocus="ButtonFileNameGeneration_GettingFocus" LostFocus="ButtonFileNameGeneration_LostFocus">
+                            <Grid Width="24" Height="24">
+                                <ImageIcon Margin="4" Visibility="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                    <ImageIcon.Source>
+                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                    </ImageIcon.Source>
+                                </ImageIcon>
+                                
+                                <Grid Visibility="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}">
+                                    <ProgressRing Width="20" Height="20" IsActive="True" />
+                                    <FontIcon Glyph="&#xEE95;" FontSize="10" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Grid>
+                            </Grid>
+                        </Button>
+                    </Grid>
                     <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>

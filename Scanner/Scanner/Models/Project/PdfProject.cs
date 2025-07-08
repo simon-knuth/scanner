@@ -2,12 +2,14 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
+using Microsoft.Graphics.Imaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
@@ -206,7 +208,7 @@ namespace Scanner.Models
                         projectObjectSemaphore.Release();
 
                         // update file name
-                        await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, pageSaves.Values.First()!.Name, uiDispatcherQueue);
+                        await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, pageSaves.Values.First()!.Name, false, uiDispatcherQueue);
 
                         projectFolderSemaphore.Release();
                     }
@@ -217,7 +219,7 @@ namespace Scanner.Models
                         if (TargetFile!.Name != FileNameInfo!.DesiredName)
                         {
                             await TargetFile.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
-                            await FileNameInfo!.UpdateNamesAsync(TargetFile.Name, TargetFile.Name, uiDispatcherQueue);
+                            await FileNameInfo!.UpdateNamesAsync(TargetFile.Name, TargetFile.Name, false, uiDispatcherQueue);
                             hasFileNameBeenApplied = true;
                         }
                     });
@@ -335,6 +337,67 @@ namespace Scanner.Models
             {
                 projectObjectSemaphore.Release();
                 saveSemaphore.Release();
+            }
+        }
+
+        public async Task<ImageBuffer> GetImageBufferForAIFileNameGenerationAsync(DispatcherQueue uiDispatcherQueue)
+        {
+            // decode bitmap
+            using IRandomAccessStream sourceFileStream = await Pages[0].PreviewFile.OpenReadAsync();
+            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
+
+            // scale down
+            BitmapTransform transform = new BitmapTransform()
+            {
+                ScaledWidth = decoder.PixelWidth / 4,
+                ScaledHeight = decoder.PixelHeight / 4
+            };
+            using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync(
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Premultiplied,
+                transform,
+                ExifOrientationMode.RespectExifOrientation,
+                ColorManagementMode.DoNotColorManage);
+
+            // generate ImageBuffer for AI
+            using ImageBuffer imageBuffer = ImageBuffer.CreateForSoftwareBitmap(softwareBitmap);
+
+            return imageBuffer;
+        }
+
+        public async Task GenerateFileNameWithAIAsync(DispatcherQueue uiDispatcherQueue)
+        {
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = true);
+
+            try
+            {
+                using ImageBuffer imageBuffer = await GetImageBufferForAIFileNameGenerationAsync(uiDispatcherQueue);
+                await GenerateFileNameWithAIAsync(imageBuffer, uiDispatcherQueue);
+            }
+            finally
+            {
+                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = false);
+            }
+        }
+
+        public async Task GenerateFileNameWithAIAsync(ImageBuffer imageBuffer, DispatcherQueue uiDispatcherQueue)
+        {
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = true);
+
+            try
+            {
+                // generate name
+                FileNameInfo.NameGenerationCts?.Cancel();
+                FileNameInfo.NameGenerationCts = new();
+                string? fileName = await CopilotRuntimeService.TryGenerateFileNameForImageAsync(imageBuffer, FileNameInfo.NameGenerationCts);
+
+                // apply result
+                if (fileName != null)
+                    await FileNameInfo.UpdateNamesAsync(fileName, FileNameInfo.ActualName, true, uiDispatcherQueue);
+            }
+            finally
+            {
+                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = false);
             }
         }
 

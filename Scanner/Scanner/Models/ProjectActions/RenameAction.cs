@@ -54,13 +54,15 @@ namespace Scanner.Models
         {
             if (project is PdfProject pdfProject)
             {
+                pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
                 oldName = pdfProject.FileNameInfo!.DesiredName;
-                await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, uiDispatcherQueue);
+                await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
             }
             else if (page is ImagePage imagePage)
             {
+                imagePage.FileNameInfo.NameGenerationCts?.Cancel();
                 oldName = imagePage.FileNameInfo.DesiredName;
-                await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, uiDispatcherQueue);
+                await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
             }
 
             return true;
@@ -75,11 +77,11 @@ namespace Scanner.Models
 
             if (project is PdfProject pdfProject)
             {
-                await pdfProject.FileNameInfo!.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, uiDispatcherQueue);
+                await pdfProject.FileNameInfo.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
             }
             else if (page is ImagePage imagePage)
             {
-                await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, uiDispatcherQueue);
+                await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
             }
         }
 

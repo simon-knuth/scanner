@@ -40,6 +40,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         protected static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+        protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         protected static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
         #endregion
@@ -455,19 +456,18 @@ namespace Scanner.Models
                 {
                     // load bitmap
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceFileStream);
-                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
                     // get target file
                     targetFile = await targetFileCreation.Task;
-                    using (IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
-                    {
-                        // rotate
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetFileStream);
-                        encoder.SetSoftwareBitmap(softwareBitmap);
-                        encoder.BitmapTransform.Rotation = rotation;
+                    using IRandomAccessStream targetFileStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite);
 
-                        await encoder.FlushAsync();
-                    }
+                    // rotate
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetFileStream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    encoder.BitmapTransform.Rotation = rotation;
+
+                    await encoder.FlushAsync();
                 }
 
                 return targetFile;
@@ -786,21 +786,20 @@ namespace Scanner.Models
                 using (IRandomAccessStream sourceStream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
-                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                     targetFile = await targetFileCreation.Task;
-                    using (IRandomAccessStream targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
+                    using IRandomAccessStream targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite);
+                    
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetStream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    encoder.BitmapTransform.Bounds = new BitmapBounds
                     {
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(file), targetStream);
-                        encoder.SetSoftwareBitmap(softwareBitmap);
-                        encoder.BitmapTransform.Bounds = new BitmapBounds
-                        {
-                            X = x,
-                            Y = y,
-                            Width = width,
-                            Height = height
-                        };
-                        await encoder.FlushAsync();
-                    }
+                        X = x,
+                        Y = y,
+                        Width = width,
+                        Height = height
+                    };
+                    await encoder.FlushAsync();
                 }
 
                 return targetFile;

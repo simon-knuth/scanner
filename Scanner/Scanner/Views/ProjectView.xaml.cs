@@ -71,6 +71,17 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool isHoveringCarousel;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+        private bool isFileNameTextBoxFocused;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+        private bool isFileNameGenerationButtonFocused;
+
+        public bool ShowFileNameGenerationButton => ViewModel.CopilotRuntimeService.IsSupported &&
+            (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || ViewModel.IsFileNameGenerationInProgress);
+
         public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
 
         public bool ShowTextBlockTotalPages => ViewModel.CurrentProject?.IsPdf == true || ViewModel.IsMultiSelect;
@@ -153,7 +164,6 @@ namespace Scanner.Views
 
         private ScrollViewer? carouselScrollViewer;
 
-        private bool isFileNameTextBoxFocused;
         private bool isTextBoxDiscardingUserInput;
 
 
@@ -178,7 +188,7 @@ namespace Scanner.Views
             {
                 case nameof(ViewModel.FileName):
                     // suppress change while user is typing
-                    if (!isFileNameTextBoxFocused && TextBoxProjectName != null)
+                    if (!IsFileNameTextBoxFocused && TextBoxProjectName != null)
                     {
                         TextBoxProjectName.Text = ViewModel.FileName;
                     }
@@ -188,6 +198,15 @@ namespace Scanner.Views
                     break;
                 case nameof(ViewModel.IsMultiSelect):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, ApplyIsMultiSelect);
+                    break;
+                case nameof(ViewModel.IsFileNameGenerationInProgress):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        if (!ViewModel.IsFileNameGenerationInProgress)
+                            IsFileNameGenerationButtonFocused = false;
+
+                        OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                    });
                     break;
             }
         }
@@ -283,7 +302,7 @@ namespace Scanner.Views
 
         private void TextBoxProjectName_GotFocus(object sender, RoutedEventArgs e)
         {
-            isFileNameTextBoxFocused = true;
+            IsFileNameTextBoxFocused = true;
             ((TextBox)sender).SelectAll();
         }
 
@@ -553,7 +572,7 @@ namespace Scanner.Views
 
         private void TextBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
         {
-            isFileNameTextBoxFocused = false;
+            IsFileNameTextBoxFocused = false;
             if (ViewModel.CurrentProject == null) return;
 
             if (isTextBoxDiscardingUserInput)
@@ -601,7 +620,7 @@ namespace Scanner.Views
 
         private void DiscardProjectNameInputIfFocused()
         {
-            if (!isFileNameTextBoxFocused) return;
+            if (!IsFileNameTextBoxFocused) return;
 
             isTextBoxDiscardingUserInput = true;
 
@@ -687,6 +706,16 @@ namespace Scanner.Views
             {
                 GridViewPageList.SelectionMode = ListViewSelectionMode.Single;
             }
+        }
+
+        private void ButtonFileNameGeneration_GettingFocus(UIElement sender, GettingFocusEventArgs args)
+        {
+            IsFileNameGenerationButtonFocused = true;
+        }
+
+        private void ButtonFileNameGeneration_LostFocus(object sender, RoutedEventArgs e)
+        {
+            IsFileNameGenerationButtonFocused = false;
         }
     }
 }

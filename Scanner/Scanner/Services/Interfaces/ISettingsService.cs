@@ -55,6 +55,7 @@ namespace Scanner.Services.Interfaces
         bool SettingAutoSave { get; set; }
         SettingFileNamingPattern SettingFileNamingPattern { get; set; }
         FileNamingPattern CustomFileNamingPattern { get; set; }
+        bool SettingGenerateFileNameWithAI { get; set; }
 
         void TryLogAllSettings();
     }

@@ -10,6 +10,7 @@ using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        public readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
@@ -60,6 +62,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RemoveSelectedPagesAsyncCommand => new AsyncRelayCommand(RemoveSelectedPagesAsync);
         public AsyncRelayCommand TryCopySelectedPagesAsyncCommand => new AsyncRelayCommand(TryCopySelectedPagesAsync);
         public AsyncRelayCommand<ImageFilter> ApplyFilterToSelectedPagesAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToSelectedPagesAsync);
+        public RelayCommand StartStopGenerateFileNameWithAICommand => new RelayCommand(StartStopGenerateFileNameWithAI);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -75,6 +78,7 @@ namespace Scanner.ViewModels
                 if (SetProperty(ref currentProject, value))
                 {
                     OnPropertyChanged(nameof(FileName));
+                    OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
 
                     if (value != null && value is PdfProject pdfProject2) pdfProject2.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
                 }
@@ -115,6 +119,24 @@ namespace Scanner.ViewModels
                         _ = ProjectService.ApplyActionAsync(new RenameAction(imagePage, value));
                     }
                 }
+            }
+        }
+
+        public bool IsFileNameGenerationInProgress
+        {
+            get
+            {
+                if (CurrentProject == null) return false;
+
+                if (CurrentProject is PdfProject pdfProject)
+                {
+                    return pdfProject.FileNameInfo.IsNameGenerationInProgress;
+                }
+                else if (ProjectService.SelectedPage is ImagePage imagePage)
+                {
+                    return imagePage.FileNameInfo.IsNameGenerationInProgress;
+                }
+                return false;
             }
         }
 
@@ -190,10 +212,15 @@ namespace Scanner.ViewModels
         {
             switch (e.PropertyName)
             {
+                case nameof(IProjectService.CurrentProject):
+                    if (ProjectService.CurrentProject != null && ProjectService.CurrentProject is PdfProject pdfProject)
+                        pdfProject.FileNameInfo.PropertyChanged -= FileNameInfo_PropertyChanged;
+                    break;
                 case nameof(IProjectService.SelectedPage):
                     if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage && imagePage.FileNameInfo != null)
                     {
                         imagePage.FileNameInfo.NameChanged -= FileNameInfo_NameChanged;
+                        imagePage.FileNameInfo.PropertyChanged -= FileNameInfo_PropertyChanged;
                     }
                     break;
                 case nameof(IProjectService.IsScanProcessRunning):
@@ -212,24 +239,36 @@ namespace Scanner.ViewModels
                 case nameof(IProjectService.CurrentProject):
                     CurrentProject = ProjectService.CurrentProject;
                     await UpdateOpenWithTargetsAsync();
+
+                    if (ProjectService.CurrentProject != null && ProjectService.CurrentProject is PdfProject pdfProject)
+                        pdfProject.FileNameInfo.PropertyChanged += FileNameInfo_PropertyChanged;
                     break;
                 case nameof(IProjectService.SelectedPage):
                     if (CurrentProject != null && !CurrentProject.IsPdf)
                     {
                         OnPropertyChanged(nameof(FileName));
+                        OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
                     }
 
                     if (ProjectService.SelectedPage != null && ProjectService.SelectedPage is ImagePage imagePage && imagePage.FileNameInfo != null)
                     {
                         imagePage.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
+                        imagePage.FileNameInfo.PropertyChanged += FileNameInfo_PropertyChanged;
                     }
                     break;
             }
         }
 
+        private void FileNameInfo_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(FileNameInfo.IsNameGenerationInProgress))
+                OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
+        }
+
         private void FileNameInfo_NameChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(FileName));
+            OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
         }
 
         private void SelectPreviousPage()
@@ -459,6 +498,23 @@ namespace Scanner.ViewModels
             if (pages.Count > 0)
             {
                 await ProjectService.ApplyActionAsync(new ApplyFilterAction(pages, filter));
+            }
+        }
+
+        private void StartStopGenerateFileNameWithAI()
+        {
+            if (CurrentProject == null) return;
+
+            if (CurrentProject is PdfProject pdfProject)
+            {
+                if (pdfProject.FileNameInfo.IsNameGenerationInProgress)
+                    pdfProject.FileNameInfo.NameGenerationCts?.Cancel();
+                else
+                    pdfProject.GenerateFileNameWithAIAsync(viewDispatcherQueue);
+            }
+            if (CurrentProject is ImageProject)
+            {
+                throw new NotImplementedException();
             }
         }
     }

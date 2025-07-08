@@ -114,6 +114,17 @@
                                 <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>
                         </controls:SettingsCard>
+                        <controls:SettingsCard Header="Generate PDF file name using AI" Visibility="{x:Bind ViewModel.CopilotRuntimeService.IsSupported}">
+                            <controls:SettingsCard.HeaderIcon>
+                                <ImageIcon>
+                                    <ImageIcon.Source>
+                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="48" RasterizePixelHeight="48" />
+                                    </ImageIcon.Source>
+                                </ImageIcon>
+                            </controls:SettingsCard.HeaderIcon>
+
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingGenerateFileNameWithAI, Mode=TwoWay}" />
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

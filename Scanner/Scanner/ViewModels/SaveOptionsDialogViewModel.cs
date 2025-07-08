@@ -27,6 +27,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        public readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
@@ -43,7 +44,7 @@ namespace Scanner.ViewModels
             {
                 if (AreValidOptionsSelected)
                 {
-                    return new SaveOptions(SelectedFolder!, FileDisplayName + FileExtension);
+                    return new SaveOptions(SelectedFolder!, FileDisplayName + FileExtension, GenerateAIFileName);
                 }
                 else
                 {
@@ -72,7 +73,7 @@ namespace Scanner.ViewModels
         [NotifyPropertyChangedFor(nameof(IsFileNameCollision))]
         private string fileDisplayName;
 
-        public bool IsFileNameCollision => occupiedFileNames.Contains(FileDisplayName + FileExtension);
+        public bool IsFileNameCollision => occupiedFileNames.Contains(FileDisplayName.ToLower() + FileExtension);
 
         public SettingFileNamingPattern? SelectedFileNamingPattern
         {
@@ -111,6 +112,9 @@ namespace Scanner.ViewModels
                 }
             }
         }
+
+        [ObservableProperty]
+        private bool generateAIFileName;
 
         public string DateTimeFileNamingPatternValue;
         public string DateFileNamingPatternValue;
@@ -201,7 +205,7 @@ namespace Scanner.ViewModels
                 return;
             }
 
-            occupiedFileNames = (await SelectedFolder.GetFilesAsync()).Select((x) => x.Name).ToArray();
+            occupiedFileNames = (await SelectedFolder.GetFilesAsync()).Select((x) => x.Name.ToLower()).ToArray();
 
             viewDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(IsFileNameCollision)));
         }

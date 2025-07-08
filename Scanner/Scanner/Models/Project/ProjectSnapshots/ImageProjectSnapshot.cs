@@ -107,11 +107,9 @@ namespace Scanner.Models
                                 {
                                     // just decode and encode
                                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
-                                    using (SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync())
-                                    {
-                                        encoder.SetSoftwareBitmap(softwareBitmap);
-                                        await encoder.FlushAsync();
-                                    }
+                                    using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                    encoder.SetSoftwareBitmap(softwareBitmap);
+                                    await encoder.FlushAsync();
                                 }
                                 
                             }                                

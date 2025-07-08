@@ -213,7 +213,7 @@ namespace Scanner.Models
                         {
                             if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
                             {
-                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, uiDispatcherQueue);
+                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, false, uiDispatcherQueue);
                             }
                         }
 
@@ -232,7 +232,7 @@ namespace Scanner.Models
                                 if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
                                 {
                                     await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
-                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, uiDispatcherQueue);
+                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, false, uiDispatcherQueue);
                                     hasFileNameBeenApplied = true;
                                 }
                             }

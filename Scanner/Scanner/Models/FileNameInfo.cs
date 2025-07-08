@@ -1,22 +1,23 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Extensions;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.ComponentModel;
 using Windows.Graphics.Imaging;
-using System.IO;
-using Microsoft.UI.Dispatching;
-using Scanner.Extensions;
+using Windows.Storage;
+using WinRT.Interop;
 
 namespace Scanner.Models
 {
@@ -52,10 +53,12 @@ namespace Scanner.Models
         public string? ActualName { get; private set; }
 
         [ObservableProperty]
-        private string preGenerationName;
+        private string? preGenerationName;
 
         [ObservableProperty]
         private bool isNameGenerationInProgress;
+
+        public CancellationTokenSource? NameGenerationCts;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,16 +73,23 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task UpdateNamesAsync(string desiredName, string? actualName, DispatcherQueue uiDispatcherQueue)
+        public async Task UpdateNamesAsync(string desiredName, string? actualName, bool isAIGenerated, DispatcherQueue uiDispatcherQueue)
         {
             await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
             {
                 bool changed = DesiredName != desiredName || ActualName != actualName;
 
+                if (isAIGenerated && DesiredName != desiredName)
+                    PreGenerationName = DesiredName;
+
+                if (!isAIGenerated && DesiredName != desiredName)
+                    PreGenerationName = null;
+
                 DesiredName = desiredName;
                 ActualName = actualName;
 
-                if (changed) NameChanged?.Invoke(this, EventArgs.Empty);
+                if (changed)
+                    NameChanged?.Invoke(this, EventArgs.Empty);
             });
         }
     }

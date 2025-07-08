@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Graphics.Imaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
@@ -23,6 +24,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.System.Threading;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
@@ -36,6 +38,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+        private readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         private readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
@@ -197,6 +200,10 @@ namespace Scanner.Services
                 SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject);
                 if (saveOptions == null) return;
 
+                // preheat AI models
+                if (saveOptions.GenerateAIFileName)
+                    _ = Task.Run(CopilotRuntimeService.PreheatFileNameGenerationModelsAsync);
+
                 // scan
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
@@ -239,6 +246,23 @@ namespace Scanner.Services
                     await CurrentProject.RotatePagesAsync(instructions, AppDataService.ProjectFolder, uiDispatcherQueue);
                 }
 
+                // kick off AI file name generation
+                if (saveOptions.GenerateAIFileName)
+                {
+                    if (CurrentProject is PdfProject pdfProject)
+                    {
+                        // load bitmap
+                        using ImageBuffer imageBuffer = await pdfProject.GetImageBufferForAIFileNameGenerationAsync(uiDispatcherQueue);
+
+                        // generate name in the background
+                        _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(imageBuffer, uiDispatcherQueue));
+                    }
+                    else if (CurrentProject is ImageProject imageProject)
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+
                 // save if needed
                 if (SettingsService.SettingAutoSave)
                 {
@@ -265,6 +289,7 @@ namespace Scanner.Services
             finally
             {
                 IsActionRunning = IsScanProcessRunning = false;
+                _ = Task.Run(CopilotRuntimeService.StopPreheatingFileNameGenerationModelsAsync);
             }
         }
 
