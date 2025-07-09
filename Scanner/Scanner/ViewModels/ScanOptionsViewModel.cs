@@ -27,8 +27,9 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
-        private ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+        private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        private readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
         #endregion
 
         #region Commands
@@ -70,10 +71,7 @@ namespace Scanner.ViewModels
             }
         }
 
-        [ObservableProperty]
-        private bool isScanning;
-
-        public bool AreScanOptionsAvailable => SelectedScanner != null;
+        public bool AreScanOptionsAvailable => SelectedScanner != null && !ProjectService.IsScanProcessRunning;
 
         public ObservableCollection<IScanningDevice> Scanners = new();
         private SemaphoreSlim semaphoreScanners = new SemaphoreSlim(1, 1);
@@ -92,6 +90,8 @@ namespace Scanner.ViewModels
             ScannerDiscoveryService.ScanningDeviceFound += ScannerDiscoveryService_ScanningDeviceFound;
             ScannerDiscoveryService.ScanningDeviceLost += ScannerDiscoveryService_ScanningDeviceLost;
             ScannerDiscoveryService.InitialCrawlCompleted += ScannerDiscoveryService_InitialCrawlCompleted;
+
+            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
 
             Messenger.Register<SelectedScannerRequestMessage>(this, (r, m) =>
             {
@@ -139,6 +139,12 @@ namespace Scanner.ViewModels
         private async void ScannerDiscoveryService_InitialCrawlCompleted(object? sender, EventArgs e)
         {
             await SelectBestAvailableScannerAsync();
+        }
+
+        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IProjectService.IsScanProcessRunning))
+                OnPropertyChanged(nameof(AreScanOptionsAvailable));
         }
 
         private async Task SelectBestAvailableScannerAsync()

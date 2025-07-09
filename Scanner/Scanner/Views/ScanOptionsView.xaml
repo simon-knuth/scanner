@@ -59,6 +59,7 @@
             </DataTemplate>
 
             <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
     </Page.Resources>
@@ -332,7 +333,7 @@
                 </ScrollViewer>
                 
                 <Grid Grid.Row="0" Padding="16,4,16,0">
-                    <Frame Margin="-8,0,-8,0" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}">
+                    <Frame Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}">
                         <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                             <ComboBox.Items>
                                 <ComboBoxItem IsEnabled="False">
