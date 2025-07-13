@@ -15,6 +15,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:models="using:Scanner.Models"
+    xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -119,7 +120,7 @@
                                 <animations:OpacityAnimation Duration="0:0:0.1" To="0.0" EasingMode="EaseInOut" />
                             </animations:Implicit.HideAnimations>
                         </TextBox>
-                        <Button x:Name="ButtonFileNameGeneration" CornerRadius="2" Margin="4,4,6,4" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ShowFileNameGenerationButton, Mode=OneWay}" Command="{x:Bind ViewModel.StartStopGenerateFileNameWithAICommand}" GettingFocus="ButtonFileNameGeneration_GettingFocus" LostFocus="ButtonFileNameGeneration_LostFocus">
+                        <Button x:Name="ButtonFileNameGeneration" CornerRadius="2" Margin="4,4,6,4" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ShowFileNameGenerationButton, Mode=OneWay}" GettingFocus="ButtonFileNameGeneration_GettingFocus" LostFocus="ButtonFileNameGeneration_LostFocus" Click="ButtonFileNameGeneration_Click" RightTapped="ButtonFileNameGeneration_RightTapped">
                             <Grid Width="24" Height="24">
                                 <ImageIcon Margin="4" Visibility="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                     <ImageIcon.Source>
@@ -575,5 +576,8 @@
                 </Grid>
             </Frame>
         </Grid>
+
+        <teachingtips:CopilotRuntimeDownloadTeachingTip x:Name="TeachingTipCopilotRuntimeDownload" PreferredPlacement="RightBottom" PlacementMargin="4" ShouldConstrainToRootBounds="False" />
+        <teachingtips:AIDisclaimerTeachingTip x:Name="TeachingTipAIDisclaimer" PreferredPlacement="RightBottom" PlacementMargin="4" ShouldConstrainToRootBounds="False" />
     </Grid>
 </Page>

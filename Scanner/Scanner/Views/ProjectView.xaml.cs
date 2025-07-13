@@ -717,5 +717,24 @@ namespace Scanner.Views
         {
             IsFileNameGenerationButtonFocused = false;
         }
+
+        private void ButtonFileNameGeneration_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CopilotRuntimeService.AreModelsInstalled)
+            {
+                ViewModel.StartStopGenerateFileNameWithAICommand.Execute(null);
+            }
+            else
+            {
+                TeachingTipCopilotRuntimeDownload.Target = TextBoxProjectName;
+                TeachingTipCopilotRuntimeDownload.IsOpen = true;
+            }
+        }
+
+        private void ButtonFileNameGeneration_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            TeachingTipAIDisclaimer.Target = TextBoxProjectName;
+            TeachingTipAIDisclaimer.IsOpen = true;
+        }
     }
 }

@@ -14,6 +14,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
+    xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     mc:Ignorable="d"
     Loading="Page_Loading">
 
@@ -123,7 +124,12 @@
                                 </ImageIcon>
                             </controls:SettingsCard.HeaderIcon>
 
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingGenerateFileNameWithAI, Mode=TwoWay}" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <HyperlinkButton x:Name="HyperlinkButtonAIDisclaimer" Grid.Column="1" Click="HyperlinkButtonAIDisclaimer_Click">
+                                    <FontIcon Glyph="&#xE946;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </HyperlinkButton>
+                                <ToggleSwitch x:Name="ToggleSwitchGenerateFileNameWithAI" IsOn="{x:Bind ViewModel.SettingsService.SettingGenerateFileNameWithAI, Mode=TwoWay}" Toggled="ToggleSwitchGenerateFileNameWithAI_Toggled" />
+                            </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -181,5 +187,8 @@
                 </controls:SettingsCard>
             </StackPanel>
         </ScrollViewer>
+
+        <teachingtips:CopilotRuntimeDownloadTeachingTip x:Name="TeachingTipCopilotRuntimeDownload" PreferredPlacement="Right" PlacementMargin="8" ShouldConstrainToRootBounds="False" />
+        <teachingtips:AIDisclaimerTeachingTip x:Name="TeachingTipAIDisclaimer" PreferredPlacement="Top" PlacementMargin="4" ShouldConstrainToRootBounds="False" />
     </Grid>
 </settings:SettingsPage>

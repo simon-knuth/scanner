@@ -183,6 +183,8 @@ namespace Scanner.Services
                     LanguageModel.EnsureReadyAsync().AsTask(),
                 ];
                 await Task.WhenAll(tasks);
+
+                UpdateStatus();
             }
             catch (Exception exc)
             {
@@ -194,14 +196,11 @@ namespace Scanner.Services
         {
             AIFeatureReadyState imageDescriptionGeneratorState = ImageDescriptionGenerator.GetReadyState();
             AIFeatureReadyState languageModelState = LanguageModel.GetReadyState();
-            AIFeatureReadyState imageScalerState = ImageScaler.GetReadyState();
 
             // check support
             IsSupported = imageDescriptionGeneratorState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
             if (IsSupported)
                 IsSupported = languageModelState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
-            if (IsSupported)
-                IsSupported = imageScalerState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
 
             // check install status
             AreModelsInstalled = imageDescriptionGeneratorState is AIFeatureReadyState.Ready;

@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
+using Scanner.Views.TeachingTips;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -118,6 +119,23 @@ namespace Scanner.Views.Dialogs
         private void MenuFlyoutItemRecentFolder_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.SelectedFolder = (StorageFolder)((MenuFlyoutItem)sender).CommandParameter;
+        }
+
+        private void CheckBoxAIFileNameGeneration_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!ViewModel.CopilotRuntimeService.AreModelsInstalled)
+            {
+                CheckBoxAIFileNameGeneration.IsChecked = false;
+
+                TeachingTipCopilotRuntimeDownload.Target = CheckBoxAIFileNameGeneration;
+                TeachingTipCopilotRuntimeDownload.IsOpen = true;
+            }
+        }
+
+        private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
+        {
+            TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
+            TeachingTipAIDisclaimer.IsOpen = true;
         }
     }
 }

@@ -57,5 +57,25 @@ namespace Scanner.Views.Settings
         {
             OnPageNavigationRequested(typeof(SettingsViewCustomFileNaming));
         }
+
+        private void ToggleSwitchGenerateFileNameWithAI_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel == null)
+                return;
+
+            if (ToggleSwitchGenerateFileNameWithAI.IsOn && !ViewModel.CopilotRuntimeService.AreModelsInstalled)
+            {
+                ToggleSwitchGenerateFileNameWithAI.IsOn = false;
+
+                TeachingTipCopilotRuntimeDownload.Target = ToggleSwitchGenerateFileNameWithAI;
+                TeachingTipCopilotRuntimeDownload.IsOpen = true;
+            }
+        }
+
+        private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
+        {
+            TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
+            TeachingTipAIDisclaimer.IsOpen = true;
+        }
     }
 }

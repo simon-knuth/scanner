@@ -86,6 +86,14 @@
     <Folder Include="Views\DataTemplateSelectors\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\TeachingTips\AIDisclaimerTeachingTip.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TeachingTips\CopilotRuntimeDownloadTeachingTip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Controls\ScanOptionsPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
