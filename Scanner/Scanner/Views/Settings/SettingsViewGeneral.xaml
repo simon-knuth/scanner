@@ -189,17 +189,6 @@
 
                     <Button Content="Reset list" />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Expand page list" Description="Automatically expand the page list when a second page has been scanned">
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE7EA;" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
-                            <FontIcon.RenderTransform>
-                                <RotateTransform Angle="270" />
-                            </FontIcon.RenderTransform>
-                        </FontIcon>
-                    </controls:SettingsCard.HeaderIcon>
-
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingExpandPageList, Mode=TwoWay}" />
-                </controls:SettingsCard>
             </StackPanel>
         </ScrollViewer>
 
