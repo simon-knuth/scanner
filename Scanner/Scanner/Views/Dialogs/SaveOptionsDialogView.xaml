@@ -73,7 +73,7 @@
                 <labs:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xEC92;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                        <TextBlock Text="Time and date" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                        <TextBlock Text="Date and time" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
                 </labs:SegmentedItem>
                 <labs:SegmentedItem CornerRadius="4,4,0,0">

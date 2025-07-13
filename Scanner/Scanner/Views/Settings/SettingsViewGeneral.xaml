@@ -94,9 +94,24 @@
                     <controls:SettingsExpander.Content>
                         <ComboBox SelectedIndex="{x:Bind ViewModel.SettingFileNamingPattern, Mode=TwoWay}">
                             <ComboBox.Items>
-                                <ComboBoxItem Content="Date and time" FontWeight="SemiBold" />
-                                <ComboBoxItem Content="Date" />
-                                <ComboBoxItem Content="Custom pattern" />
+                                <ComboBoxItem FontWeight="SemiBold">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC92;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                        <TextBlock Text="Time and date" />
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE787;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                        <TextBlock Text="Date" />
+                                    </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEF60;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                        <TextBlock Text="Custom pattern" />
+                                    </StackPanel>
+                                </ComboBoxItem>
                             </ComboBox.Items>
                         </ComboBox>
                     </controls:SettingsExpander.Content>
