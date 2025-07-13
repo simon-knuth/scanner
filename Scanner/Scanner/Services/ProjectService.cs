@@ -402,7 +402,7 @@ namespace Scanner.Services
 
             try
             {
-                // get confirmation
+                // get confirmation and delete
                 if (await Messenger.Send(new ShowProjectDeletionDialogMessage(CurrentProject)).Response == false) return false;
 
                 // close project

@@ -1,29 +1,32 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Messages;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.Storage;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.ComponentModel;
-using Microsoft.UI.Dispatching;
+using WinRT.Interop;
 
 namespace Scanner.Models
 {
-    public partial class RemovePagesAction : IProjectAction
+    public partial class RemovePagesAction : ObservableRecipient, IProjectAction
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         #region Services
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private static readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
         private List<IProjectPage> removals;
@@ -51,9 +54,12 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            await project.RemovePagesAsync(removals, false);
-            removedPages = removals;
+            if (project.Pages.Count == removals.Count)
+                return await ProjectService.TryDeleteProjectAsync();
+            else
+                await project.RemovePagesAsync(removals, false);
 
+            removedPages = removals;
             return removedPages != null && removedPages.Count > 0;
         }
 
