@@ -379,7 +379,7 @@ namespace Scanner.ViewModels
             }
             else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
             {
-                await ProjectService.TryCopyPagesAsync(new List<IProjectPage>([ProjectService.SelectedPage]));
+                await ProjectService.TryCopyPagesAsync([.. imageProject.Pages]);
             }
         }
 
@@ -480,11 +480,12 @@ namespace Scanner.ViewModels
         private async Task TryCopySelectedPagesAsync()
         {
             if (CurrentProject == null) return;
-            if (!IsMultiSelect) return;
             if (ProjectService.SelectedPagesCount == 0) return;
-            if (ProjectService.SelectedPages == null) return;
 
-            await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
+            if (IsMultiSelect && ProjectService.SelectedPages != null)
+                await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
+            else if (ProjectService.SelectedPage != null)
+                await ProjectService.TryCopyPagesAsync([ProjectService.SelectedPage]);
         }
 
         private async Task ApplyFilterToSelectedPagesAsync(ImageFilter filter)

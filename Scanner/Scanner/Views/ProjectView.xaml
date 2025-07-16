@@ -294,11 +294,29 @@
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Copy" Command="{x:Bind ViewModel.TryCopyProjectOrPageAsyncCommand}">
+                            <MenuFlyoutItem Text="Copy" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryCopyProjectOrPageAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+                            <MenuFlyoutSubItem Text="Copy" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutSubItem.Icon>
+
+                                <MenuFlyoutSubItem.Items>
+                                    <MenuFlyoutItem Text="Current page" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Entire project" Command="{x:Bind ViewModel.TryCopyProjectOrPageAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xF571;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyoutSubItem.Items>
+                            </MenuFlyoutSubItem>
                             <MenuFlyoutSubItem x:Name="MenuFlyoutSubItemOpenWith" Text="Open with" Loading="MenuFlyoutSubItemOpenWith_Loading">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
