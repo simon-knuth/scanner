@@ -17,7 +17,8 @@
     xmlns:models="using:Scanner.Models"
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded">
 
     <Page.DataContext>
         <viewModels:ProjectViewModel x:Name="ViewModel"/>
@@ -269,6 +270,10 @@
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
+
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="F2" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Delete" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryDeleteProjectAsyncCommand}">
                                 <MenuFlyoutItem.Icon>

@@ -286,8 +286,16 @@ namespace Scanner.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            ((App)Application.Current).KeyDown += App_KeyDown;
+
             await Task.Delay(500);
             showEntranceExitAnimations = true;
+        }
+
+        private void App_KeyDown(object? sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.F2)
+                FocusProjectNameTextBox();
         }
 
         private void ControlAnimated_Loading(FrameworkElement sender, object args)
@@ -567,7 +575,7 @@ namespace Scanner.Views
 
         private void MenuFlyoutItemRename_Click(object sender, RoutedEventArgs e)
         {
-            TextBoxProjectName.Focus(FocusState.Programmatic);
+            FocusProjectNameTextBox();
         }
 
         private void TextBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
@@ -735,6 +743,16 @@ namespace Scanner.Views
         {
             TeachingTipAIDisclaimer.Target = TextBoxProjectName;
             TeachingTipAIDisclaimer.IsOpen = true;
+        }
+
+        private void FocusProjectNameTextBox()
+        {
+            TextBoxProjectName.Focus(FocusState.Programmatic);
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).KeyDown -= App_KeyDown;
         }
     }
 }

@@ -460,5 +460,10 @@ namespace Scanner.Views
         {
             FlyoutBase.ShowAttachedFlyout(ButtonSave);
         }
+
+        private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            ((App)Application.Current).InvokeKeyDown(e);
+        }
     }
 }

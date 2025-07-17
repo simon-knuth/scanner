@@ -37,6 +37,10 @@ namespace Scanner
         private ILogService? LogService;
         #endregion
 
+        #region Events
+        public event EventHandler<KeyRoutedEventArgs> KeyDown;
+        #endregion
+
         public MainWindow MainWindow;
         public SettingsWindow? SettingsWindow;
         public DispatcherQueue MainDispatcherQueue;
@@ -158,6 +162,11 @@ namespace Scanner
         private void SettingsWindow_Closed(object sender, WindowEventArgs args)
         {
             SettingsWindow = null;
+        }
+
+        public void InvokeKeyDown(KeyRoutedEventArgs e)
+        {
+            KeyDown?.Invoke(this, e);
         }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
