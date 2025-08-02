@@ -17,6 +17,7 @@ using Windows.Graphics.Imaging;
 using System.IO;
 using Windows.Storage.FileProperties;
 using Microsoft.UI.Dispatching;
+using Scanner.Extensions;
 
 namespace Scanner.Models
 {
@@ -182,7 +183,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void ChangeSourceFile(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue)
+        public async Task ChangeSourceFileAsync(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue)
         {
             if (OutOfDateSourceFile == null && parentFolder == AppDataService.ChangesFolder)
             {
@@ -194,7 +195,11 @@ namespace Scanner.Models
             {
                 // no separate preview ~> preview bitmap URI changes
                 PreviewFile = file;
-                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+                Uri previewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                {
+                    PreviewBitmapUri = previewBitmapUri;
+                });
             }
             SourceFile = file;
         }

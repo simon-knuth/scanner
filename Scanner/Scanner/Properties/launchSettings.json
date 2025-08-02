@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Scanner": {
+    "Scanner (Package)": {
       "commandName": "MsixPackage",
       "alwaysReinstallApp": false,
       "remoteDebugEnabled": false,

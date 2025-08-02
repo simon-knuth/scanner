@@ -208,7 +208,7 @@ namespace Scanner.Models
                     {
                         StorageFolder previousFolder = await insertion.SourceFile.GetParentAsync();
                         await insertion.SourceFile.MoveAsync(AppDataService.ChangesFolder, insertion.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
-                        insertion.ChangeSourceFile(AppDataService.ChangesFolder, insertion.SourceFile, uiDispatcherQueue);
+                        await insertion.ChangeSourceFileAsync(AppDataService.ChangesFolder, insertion.SourceFile, uiDispatcherQueue);
                         moves.Add(new KeyValuePair<StorageFile, StorageFolder>(insertion.SourceFile, previousFolder));
                     }
 
@@ -237,7 +237,7 @@ namespace Scanner.Models
                     foreach (IProjectPage page in insertedPages)
                     {
                         Pages.Remove(page);
-                        page.ChangeSourceFile(await page.SourceFile.GetParentAsync(), page.SourceFile, uiDispatcherQueue);
+                        await page.ChangeSourceFileAsync(await page.SourceFile.GetParentAsync(), page.SourceFile, uiDispatcherQueue);
                     }
 
                     throw new ActionFailedAndRolledBackException(exc);
@@ -407,7 +407,7 @@ namespace Scanner.Models
                 {
                     FinishEditing();
                 }
-                instruction.Key.ChangeSourceFile(pagesFolder, newFile, uiDispatcherQueue);
+                await instruction.Key.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
 
                 // delete old file
                 if (oldFile != newFile)
@@ -708,7 +708,7 @@ namespace Scanner.Models
                 {
                     FinishEditing();
                 }
-                page.ChangeSourceFile(pagesFolder, newFile, uiDispatcherQueue);
+                await page.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
 
                 // move to undo folder
                 await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);

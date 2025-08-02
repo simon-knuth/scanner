@@ -79,7 +79,7 @@ namespace Scanner.Models
                 StorageFile croppedFile = appliedCrop.Page.SourceFile;
                 await appliedCrop.PreviousFile.MoveAsync(AppDataService.ChangesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
 
-                appliedCrop.Page.ChangeSourceFile(AppDataService.ChangesFolder, appliedCrop.PreviousFile, uiDispatcherQueue);
+                await appliedCrop.Page.ChangeSourceFileAsync(AppDataService.ChangesFolder, appliedCrop.PreviousFile, uiDispatcherQueue);
 
                 appliedCrop.Page.Width = appliedCrop.PreviousWidth;
                 appliedCrop.Page.Height = appliedCrop.PreviousHeight;

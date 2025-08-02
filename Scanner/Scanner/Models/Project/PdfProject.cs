@@ -171,7 +171,7 @@ namespace Scanner.Models
                                 }
 
                                 // update page
-                                page.ChangeSourceFile(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
+                                await page.ChangeSourceFileAsync(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
 
                                 // delete old file
                                 if (fileToDelete != null)
