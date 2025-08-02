@@ -417,6 +417,9 @@ namespace Scanner.Views
 
         private void GridCarousel_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            if (e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touch)
+                return;
+
             IsHoveringCarousel = true;
         }
 
