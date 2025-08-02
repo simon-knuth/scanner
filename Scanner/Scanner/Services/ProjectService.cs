@@ -215,6 +215,20 @@ namespace Scanner.Services
                     return;
                 }
 
+                // auto rotate
+                if (SettingsService.SettingAutoRotate)
+                {
+                    CurrentScanState = ScanState.AutomaticRotation;
+
+                    Dictionary<StorageFile, RotationIntent> instructions = new();
+                    foreach (StorageFile file in files)
+                    {
+                        instructions.Add(file, RotationIntent.Automatic);
+                    }
+
+                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
+                }
+
                 // create project
                 CurrentScanState = ScanState.Processing;
                 switch (scanOptions.TargetFormat)
@@ -231,20 +245,6 @@ namespace Scanner.Services
                         break;
                     default:
                         throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
-                }
-
-                // auto rotate
-                if (SettingsService.SettingAutoRotate)
-                {
-                    CurrentScanState = ScanState.AutomaticRotation;
-
-                    Dictionary<IProjectPage, RotationIntent> instructions = new();
-                    foreach (IProjectPage page in CurrentProject.Pages)
-                    {
-                        instructions.Add(page, RotationIntent.Automatic);
-                    }
-
-                    await CurrentProject.RotatePagesAsync(instructions, AppDataService.ProjectFolder, uiDispatcherQueue);
                 }
 
                 // kick off AI file name generation
@@ -329,7 +329,7 @@ namespace Scanner.Services
                         instructions.Add(file, RotationIntent.Automatic);
                     }
 
-                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.ProjectFolder);
+                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
                 }
 
                 // add files
