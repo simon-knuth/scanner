@@ -383,38 +383,6 @@ namespace Scanner.Views
             }
         }
 
-        private void GridViewItem_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (sender is GridViewItem gridViewItem)
-            {
-                if (gridViewItem.IsSelected)
-                {
-                    Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
-                    Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
-                    TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
-                    if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
-                    {
-                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
-                        innerSelectionIndicator.StrokeThickness = 3;
-                        outerSelectionIndicator.StrokeThickness = 2;
-                        pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
-                    }
-                }
-
-                long token = gridViewItem.RegisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, OnIsSelectedChanged);
-                RoutedEventHandler? handler = null;
-                handler = new RoutedEventHandler((s, e) =>
-                {
-                    if (s is GridViewItem item)
-                    {
-                        item.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, token);
-                        item.Unloaded -= handler;
-                    }
-                });
-                gridViewItem.Unloaded += handler;
-            }
-        }
-
         private void GridCarousel_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touch)
@@ -756,6 +724,41 @@ namespace Scanner.Views
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             ((App)Application.Current).KeyDown -= App_KeyDown;
+        }
+
+        private void GridViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            if (sender is GridViewItem gridViewItem)
+            {
+                if (gridViewItem.IsSelected)
+                {
+                    Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+                    Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
+                    TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
+                    if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
+                    {
+                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
+                        innerSelectionIndicator.StrokeThickness = 3;
+                        outerSelectionIndicator.StrokeThickness = 2;
+                        pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
+                    }
+                }
+
+                if (gridViewItem.Tag != null)
+                    gridViewItem.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
+
+                gridViewItem.Tag = gridViewItem.RegisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, OnIsSelectedChanged);
+                RoutedEventHandler? handler = null;
+                handler = new RoutedEventHandler((s, e) =>
+                {
+                    if (s is GridViewItem item)
+                    {
+                        item.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
+                        item.Unloaded -= handler;
+                    }
+                });
+                gridViewItem.Unloaded += handler;
+            }
         }
     }
 }

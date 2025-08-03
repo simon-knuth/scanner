@@ -388,7 +388,7 @@
 
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="interfaces:IProjectPage">
-                                    <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                    <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
                                         <Grid>
                                             <Frame Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
                                                 <Image>
@@ -484,7 +484,7 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="interfaces:IProjectPage">
-                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" Loaded="GridViewItem_Loaded">
+                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
                                             <Grid>
                                                 <Frame Margin="8" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                                     <Image>
