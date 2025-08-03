@@ -236,11 +236,10 @@ namespace Scanner.Models
                         IsSaving = false;
 
                         // update saved state
-                        if (!saveProcessWaitingToStart)
-                        {
+                        if (!saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
                             areFilesSaved = true;
-                        }
 
+                        hasMadeChangesDuringSaveProcess = false;
                         saveProcess.TrySetResult();
                     });
                     saveSemaphore.Release();

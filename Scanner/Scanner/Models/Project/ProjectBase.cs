@@ -75,6 +75,9 @@ namespace Scanner.Models
             {
                 SetProperty(ref _areFilesSaved, value);
                 OnPropertyChanged(nameof(IsSaved));
+
+                if (!value && LatestSaveProcess != null)
+                    hasMadeChangesDuringSaveProcess = true;
             }
         }
 
@@ -90,6 +93,7 @@ namespace Scanner.Models
         }
 
         protected bool saveProcessWaitingToStart;
+        protected bool hasMadeChangesDuringSaveProcess;
 
         protected SemaphoreSlim saveSemaphore = new(1, 1);                // needed to run a save process
 
