@@ -514,7 +514,7 @@ Fuzzy</comment>
     <value>返回应用以查看及修改结果</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
-  <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
+  <data name="Contributors" xml:space="preserve">
     <value>贡献者</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
@@ -694,10 +694,6 @@ Fuzzy</comment>
     <value>在 Microsoft Store 中评分</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
-  </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
     <value>自动旋转了一页或多页。可以在设置中禁用此功能。</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
@@ -706,7 +702,7 @@ Fuzzy</comment>
     <value>自动旋转</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
-  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+  <data name="LatestChangelog" xml:space="preserve">
     <value>最新更新日志</value>
     <comment>The hyperlink text for viewing the latest changelog.</comment>
   </data>
@@ -1402,7 +1398,7 @@ Fuzzy</comment>
     <value>小时</value>
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
-  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+  <data name="FileNamingBlockHourPeriod" xml:space="preserve">
     <value>上午/下午</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.</comment>
   </data>
@@ -1542,7 +1538,7 @@ Fuzzy</comment>
     <value>取消</value>
     <comment>The cancel button in the custom file naming dialog.</comment>
   </data>
-  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+  <data name="ErrorMessageRenameInvalidFileName" xml:space="preserve">
     <value>文件名无效</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
