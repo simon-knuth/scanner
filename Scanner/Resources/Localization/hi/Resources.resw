@@ -513,7 +513,7 @@ Fuzzy</comment>
     <value>परिणाम देखने और संपादित करने के लिए ऐप पर लौटें।</value>
     <comment>The body for the notification that appears when a scan is completed in the background.</comment>
   </data>
-  <data name="HyperlinkSettingsTranslationsContributors.Text" xml:space="preserve">
+  <data name="Contributors" xml:space="preserve">
     <value>योगदानकर्ता</value>
     <comment>The hyperlink text in the settings that leads to the translation contributors.</comment>
   </data>
@@ -693,10 +693,6 @@ Fuzzy</comment>
     <value>माइक्रोसॉफ्ट स्टोर में रेट करें</value>
     <comment>The hyperlink text allowing the user to rate the app in the Microsoft Store from the &quot;Help &amp; setup&quot; section in settings.</comment>
   </data>
-  <data name="HyperlinkSettingsFeedbackGithub.Text" xml:space="preserve">
-    <value>GitHub</value>
-    <comment>The hyperlink text for navigating to the GitHub repository from the &quot;Feedback&quot; section in settings.</comment>
-  </data>
   <data name="PerformedAutoRotationBody" xml:space="preserve">
     <value>एक या अधिक पृष्ठ स्वचालित रूप से घुमाए गए थे। इस सुविधा को सेटिंग्स में अक्षम किया जा सकता है।</value>
     <comment>The body for the message that appears when one or more pages were automatically rotated for the first time.</comment>
@@ -705,7 +701,7 @@ Fuzzy</comment>
     <value>स्वचालित घूर्णन</value>
     <comment>The heading for the message that appears when one or more pages were automatically rotated for the first time.</comment>
   </data>
-  <data name="HyperlinkSettingsAboutChangelog.Text" xml:space="preserve">
+  <data name="LatestChangelog" xml:space="preserve">
     <value>नवीनतम चेंजलॉग</value>
     <comment>The hyperlink text for viewing the latest changelog.</comment>
   </data>
@@ -1402,7 +1398,7 @@ Fuzzy</comment>
     <value>घंटा</value>
     <comment>The title for the &quot;Hour&quot; file naming block.</comment>
   </data>
-  <data name="HeadingFileNamingBlockHourPeriod.Text" xml:space="preserve">
+  <data name="FileNamingBlockHourPeriod" xml:space="preserve">
     <value>ए.एम/पी.एम</value>
     <comment>The title for the &quot;Hour period&quot; file naming block.
 Fuzzy</comment>
@@ -1544,7 +1540,7 @@ Fuzzy</comment>
     <value>रद्द करें</value>
     <comment>The cancel button in the custom file naming dialog.</comment>
   </data>
-  <data name="ErrorMessageRenameInvalidFileName.Text" xml:space="preserve">
+  <data name="ErrorMessageRenameInvalidFileName" xml:space="preserve">
     <value>अमान्य फ़ाइल नाम</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
