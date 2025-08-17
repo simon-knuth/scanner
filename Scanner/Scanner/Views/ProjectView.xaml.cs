@@ -158,7 +158,9 @@ namespace Scanner.Views
             }
         }
 
-        private bool isCarouselScrollSelectionDisabled;
+        public string SelectedPagesString => string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.SelectedPagesIndicator), ViewModel.ProjectService.SelectedPagesCount);
+        public string TotalPagesString => string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.TotalPagesIndicator), ViewModel.ProjectService.TotalNumberOfPages);
+        public string SelectedFileString => string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.SelectedFileIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
 
         private bool showEntranceExitAnimations;
 
@@ -216,7 +218,11 @@ namespace Scanner.Views
             switch (e.PropertyName)
             {
                 case nameof(IProjectService.SelectedPage):
-                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, DiscardProjectNameInputIfFocused);
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        DiscardProjectNameInputIfFocused();
+                        OnPropertyChanged(nameof(SelectedFileString));
+                    });
                     break;
                 case nameof(IProjectService.SelectedPages):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
@@ -246,6 +252,8 @@ namespace Scanner.Views
                 case nameof(IProjectService.SelectedPagesCount):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
                     {
+                        OnPropertyChanged(nameof(SelectedPagesString));
+                        OnPropertyChanged(nameof(SelectedFileString));
                         OnPropertyChanged(nameof(AreMultiSelectActionsAvailable));
                         OnPropertyChanged(nameof(AreFilterNone));
                         OnPropertyChanged(nameof(AreFilterGrayscale));
@@ -257,6 +265,13 @@ namespace Scanner.Views
                     break;
                 case nameof(IProjectService.IsProcessRunningOrEditing):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
+                    break;
+                case nameof(IProjectService.TotalNumberOfPages):
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        OnPropertyChanged(nameof(TotalPagesString));
+                        OnPropertyChanged(nameof(SelectedFileString));
+                    });
                     break;
             }
         }

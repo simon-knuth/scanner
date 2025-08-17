@@ -163,7 +163,7 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool areSimilarPagesSelectedForCrop;
 
-        public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.CurrentProject?.Pages.Count);
+        public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
 
         private VirtualizingStackPanel? flipViewPanel;
 
@@ -214,13 +214,6 @@ namespace Scanner.Views
                         ViewModel.ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
                     }
                     break;
-                case nameof(IProjectService.CurrentProject):
-                    if (ViewModel.ProjectService.CurrentProject != null)
-                    {
-                        ViewModel.ProjectService.CurrentProject.PagesAdded -= CurrentProject_PagesAdded;
-                        ViewModel.ProjectService.CurrentProject.PagesRemoved -= CurrentProject_PagesRemoved;
-                    }
-                    break;
             }
         }
 
@@ -243,24 +236,11 @@ namespace Scanner.Views
                     break;
                 case nameof(IProjectService.CurrentProject):
                     OnPropertyChanged(nameof(ProjectNavigationIndicator));
-
-                    if (ViewModel.ProjectService.CurrentProject != null)
-                    {
-                        ViewModel.ProjectService.CurrentProject.PagesAdded += CurrentProject_PagesAdded;
-                        ViewModel.ProjectService.CurrentProject.PagesRemoved += CurrentProject_PagesRemoved;
-                    }
+                    break;
+                case nameof(IProjectService.TotalNumberOfPages):
+                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
                     break;
             }
-        }
-
-        private void CurrentProject_PagesRemoved(object? sender, EventArgs e)
-        {
-            OnPropertyChanged(nameof(ProjectNavigationIndicator));
-        }
-
-        private void CurrentProject_PagesAdded(object? sender, EventArgs e)
-        {
-            OnPropertyChanged(nameof(ProjectNavigationIndicator));
         }
 
         private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

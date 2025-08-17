@@ -28,6 +28,8 @@ namespace Scanner.Services.Interfaces
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ProjectBase? CurrentProject { get; }
 
+        int TotalNumberOfPages { get; }
+
         /// <summary>
         /// The currently selected <see cref="IProjectPage"/>.
         /// Null if no page or multiple pages are selected.

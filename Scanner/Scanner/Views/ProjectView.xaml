@@ -139,32 +139,15 @@
                             </Grid>
                         </Button>
                     </Grid>
-                    <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                    <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Text="{x:Bind SelectedPagesString, Mode=OneWay}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
-                        
-                        <Span>
-                            <Run Text="{x:Bind ViewModel.ProjectService.SelectedPagesCount, Mode=OneWay}" />
-                            <Run Text="pages selected" />
-                        </Span>
                     </TextBlock>
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8" VerticalAlignment="Bottom">
                         <TextBlock Text="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-                        <TextBlock x:Name="TextBlockTotalPages" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ShowTextBlockTotalPages, Mode=OneWay}">
-                            <Span>
-                                <Run Text="{x:Bind ViewModel.CurrentProject.Pages.Count, Mode=OneWay}" />
-                                <Run Text="pages" />
-                            </Span>
-                        </TextBlock>
-                        <TextBlock x:Name="TextBlockSelectedPage" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" Typography.NumeralAlignment="Tabular" Visibility="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
-                            <Span>
-                                <Run Text="File" />
-                                <Run Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" />
-                                <Run Text="of" />
-                                <Run Text="{x:Bind ViewModel.CurrentProject.Pages.Count, Mode=OneWay}" />
-                            </Span>
-                        </TextBlock>
+                        <TextBlock x:Name="TextBlockTotalPages" Text="{x:Bind TotalPagesString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ShowTextBlockTotalPages, Mode=OneWay}" />
+                        <TextBlock x:Name="TextBlockSelectedPage" Text="{x:Bind SelectedFileString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" Typography.NumeralAlignment="Tabular" Visibility="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
                     </StackPanel>
                     <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <StackPanel Orientation="Horizontal" Spacing="4">

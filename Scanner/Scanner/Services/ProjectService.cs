@@ -66,6 +66,7 @@ namespace Scanner.Services
                         OnPropertyChanged(nameof(CanSelectNextPage));
                         OnPropertyChanged(nameof(CanSaveProject));
                         OnPropertyChanged(nameof(CanSaveAsProject));
+                        OnPropertyChanged(nameof(TotalNumberOfPages));
                     }
 
                     if (value != null)
@@ -77,6 +78,8 @@ namespace Scanner.Services
                 }
             }
         }
+
+        public int TotalNumberOfPages => CurrentProject?.Pages?.Count ?? 0;
 
         private IProjectPage? selectedPage;
         public IProjectPage? SelectedPage
@@ -835,6 +838,8 @@ namespace Scanner.Services
                 if (pages.Count == 0) return;
                 SelectedPage = pages[pages.Count - 1];
             }
+
+            OnPropertyChanged(nameof(TotalNumberOfPages));
         }
 
         private void CurrentProject_PagesRemoved(object? sender, EventArgs e)
@@ -855,6 +860,8 @@ namespace Scanner.Services
             {
                 SelectedPage = CurrentProject?.Pages.FirstOrDefault();
             }
+
+            OnPropertyChanged(nameof(TotalNumberOfPages));
         }
 
         private void CurrentProject_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

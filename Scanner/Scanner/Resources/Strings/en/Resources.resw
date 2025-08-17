@@ -1808,7 +1808,16 @@ Fuzzy</comment>
     <comment>Short version of the "Flatbed" source option.</comment>
   </data>
   <data name="SourceFeederShort" xml:space="preserve">
-    <value></value>
+    <value>Feed.</value>
     <comment>Short version of the "Feeder" source option.</comment>
+  </data>
+  <data name="SelectedPagesIndicator" xml:space="preserve">
+    <value>{0} pages selected</value>
+  </data>
+  <data name="TotalPagesIndicator" xml:space="preserve">
+    <value>{0} pages</value>
+  </data>
+  <data name="SelectedFileIndicator" xml:space="preserve">
+    <value>File {0} of {1}</value>
   </data>
 </root>

@@ -1792,4 +1792,13 @@ Fuzzy</comment>
   <data name="SourceFeederShort" xml:space="preserve">
     <value></value>
   </data>
+  <data name="SelectedPagesIndicator" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TotalPagesIndicator" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SelectedFileIndicator" xml:space="preserve">
+    <value></value>
+  </data>
 </root>
