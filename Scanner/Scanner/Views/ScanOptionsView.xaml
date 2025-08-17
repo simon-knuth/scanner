@@ -13,6 +13,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -86,7 +87,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Line Grid.Column="0" Margin="0,0,8,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
-                <TextBlock Grid.Column="1" Text="Scan options" VerticalAlignment="Center" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ScanOptions}" MaxWidth="200" MaxLines="2" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" />
                 <Line Grid.Column="2" Margin="8,0,8,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
                 <Button x:Name="ButtonPageList" Grid.Column="3" Padding="12,4,16,4" VerticalAlignment="Center" CornerRadius="12" Background="{ThemeResource SubtleFillColorTertiaryBrush}" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" Click="ButtonPageList_Click">
                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -95,7 +96,7 @@
                                 <RotateTransform Angle="270" />
                             </FontIcon.RenderTransform>
                         </FontIcon>
-                        <TextBlock Text="Pages" MaxLines="1" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind strings:Resources.PagesHeading}" MaxLines="1" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                     </StackPanel>
                 </Button>
                 <Line Grid.Column="4" Margin="8,0,0,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
@@ -119,8 +120,8 @@
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="Automatic configuration" />
-                                    <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
+                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceAuto}" />
+                                    <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
                                 </Grid>
                             </RadioButton>
                             <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}">
@@ -130,8 +131,8 @@
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="Flatbed" />
-                                    <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
+                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceFlatbed}" />
+                                    <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
                                 </Grid>
                             </RadioButton>
                             <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}">
@@ -141,18 +142,18 @@
                                         <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="Feeder" />
-                                    <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
+                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceFeeder}" />
+                                    <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
                                 </Grid>
                             </RadioButton>
                         </StackPanel>
 
                         <!-- File format -->
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
-                            <TextBlock Text="Save as" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.FileFormatHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
                                 <ComboBox.Items>
-                                    <ComboBoxItem Content="Multi-page formats" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                    <ComboBoxItem Content="{x:Bind strings:Resources.MultiPageFormats}" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
@@ -167,10 +168,10 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="PDF" MaxLines="1" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Best for grouping multiple pages. Viewable on any device, but difficult to edit later." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionPDF}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
-                                    <ComboBoxItem Content="Single-page formats" Padding="8,12,8,4" FontSize="12" IsEnabled="False" />
+                                    <ComboBoxItem Content="{x:Bind strings:Resources.SinglePageFormats}" Padding="8,12,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
@@ -185,7 +186,7 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="JPG" MaxLines="1" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Good quality and small file size. Easily view and edit on any device." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionJPG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -202,7 +203,7 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="PNG" MaxLines="1" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Great quality. Easily view and edit on any device." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionPNG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -219,7 +220,7 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="BMP" MaxLines="1" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Great quality and large file size. Easily view and edit on any device." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionBMP}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                     <ComboBoxItem Foreground="{ThemeResource TextFillColorSecondaryBrush}">
@@ -236,7 +237,7 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="TIFF" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Legacy format. Only for specific use cases." Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionTIFF}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                     <ComboBoxItem Foreground="{ThemeResource TextFillColorSecondaryBrush}">
@@ -253,7 +254,7 @@
 
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="RAW" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Professional image format. Only for specific use cases." Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionRAW}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                 </ComboBox.Items>
@@ -262,45 +263,45 @@
                         
                         <!-- Color mode -->
                         <StackPanel x:Name="StackPanelColorMode" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
-                            <TextBlock Text="Color mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.ColorModeHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeColor, Mode=TwoWay}" Visibility="{x:Bind IsColorModeColorSupported, Mode=OneWay}">
-                                    <TextBlock Text="Color" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.ColorModeColor}" Margin="4,0,0,0" />
                                 </RadioButton>
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeGrayscale, Mode=TwoWay}" Visibility="{x:Bind IsColorModeGrayscaleSupported, Mode=OneWay}">
-                                    <TextBlock Text="Grayscale" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.ColorModeGrayscale}" Margin="4,0,0,0" />
                                 </RadioButton>
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsColorModeMonochrome, Mode=TwoWay}" Visibility="{x:Bind IsColorModeMonochromeSupported, Mode=OneWay}">
-                                    <TextBlock Text="Monochrome" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.ColorModeMonochrome}" Margin="4,0,0,0" />
                                 </RadioButton>
                             </StackPanel>
                         </StackPanel>
                         
                         <!-- Resolution -->
                         <StackPanel x:Name="StackPanelResolution" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
-                            <TextBlock Text="Resolution" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.ResolutionHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" IsEditable="True" SelectedItem="{x:Bind SelectedResolution, Mode=OneWay}" ItemsSource="{x:Bind Resolutions, Mode=OneWay}" TextSubmitted="ComboBoxResolution_TextSubmitted" SelectionChanged="ComboBoxResolution_SelectionChanged" />
                         </StackPanel>
 
                         <!-- Auto crop -->
                         <StackPanel x:Name="StackPanelAutoCrop" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
-                            <TextBlock Text="Automatic crop" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.AutoCropHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropDisabled, Mode=TwoWay}">
-                                    <TextBlock Text="Disabled" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropDisabled}" Margin="4,0,0,0" />
                                 </RadioButton>
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropSingle, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}">
-                                    <TextBlock Text="Single region" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropSingle}" Margin="4,0,0,0" />
                                 </RadioButton>
                                 <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropMulti, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropMultiSupported, Mode=OneWay}">
-                                    <TextBlock Text="Multiple regions" Margin="4,0,0,0" />
+                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropMultiple}" Margin="4,0,0,0" />
                                 </RadioButton>
                             </StackPanel>
                         </StackPanel>
 
                         <!-- Brightness -->
                         <StackPanel x:Name="StackPanelBrightness" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
-                            <TextBlock Text="Brightness" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.Brightness}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <Grid ColumnSpacing="12" Margin="0,0,4,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -308,7 +309,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
-                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetBrightness, Mode=OneWay}" Click="ButtonBrightnessReset_Click">
+                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetBrightness, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Click="ButtonBrightnessReset_Click">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>
@@ -316,7 +317,7 @@
 
                         <!-- Contrast -->
                         <StackPanel x:Name="StackPanelContrast" Orientation="Vertical" Spacing="8" Margin="0,12,0,0" x:Load="{x:Bind IsColorModeResolutionBrightnessContrastVisible, Mode=OneWay}">
-                            <TextBlock Text="Contrast" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.Contrast}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <Grid ColumnSpacing="12" Margin="0,0,4,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -324,7 +325,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Slider Grid.Column="0" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
-                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetContrast, Mode=OneWay}" Click="ButtonContrastReset_Click">
+                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetContrast, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Click="ButtonContrastReset_Click">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>
@@ -339,7 +340,7 @@
                                 <ComboBoxItem IsEnabled="False">
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <ProgressRing Width="16" Height="16" Foreground="{ThemeResource AccentFillColorSecondaryBrush}" />
-                                        <TextBlock Text="Searching scanners..." MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind strings:Resources.SearchingScanners}" MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                                     </StackPanel>
                                 </ComboBoxItem>
                             </ComboBox.Items>

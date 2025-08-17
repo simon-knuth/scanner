@@ -19,7 +19,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockDay/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockDay);
         }
 
         private DayType _Type = DayType.DayOfMonth;

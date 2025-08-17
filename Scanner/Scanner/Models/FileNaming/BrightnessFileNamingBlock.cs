@@ -19,7 +19,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockBrightness/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Brightness);
         }
 
         private bool _SkipIfDefault;

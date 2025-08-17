@@ -19,7 +19,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockHourPeriod/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHourPeriod);
         }
 
         private bool _AllCaps;

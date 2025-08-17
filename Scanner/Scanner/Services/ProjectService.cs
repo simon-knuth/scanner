@@ -28,6 +28,7 @@ using Windows.Storage.Streams;
 using Windows.System.Threading;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Services
 {
@@ -152,8 +153,11 @@ namespace Scanner.Services
             private set
             {
                 SetProperty(ref currentScanState, value);
+                OnPropertyChanged(nameof(FriendlyCurrentScanState));
             }
         }
+
+        public string FriendlyCurrentScanState => GetFriendlyCurrentScanState();
 
 
         // TODO: Update properties if selected page is moved
@@ -868,6 +872,19 @@ namespace Scanner.Services
         private void SelectedPages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SelectedPagesCount = SelectedPages.Count;
+        }
+
+        private string GetFriendlyCurrentScanState()
+        {
+            return CurrentScanState switch
+            {
+                ScanState.Scanning => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressScanning),
+                ScanState.AutomaticRotation => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressAutomaticRotation),
+                ScanState.GeneratingPDF => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressPdfGeneration),
+                ScanState.Processing => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressProcessing),
+                ScanState.Saving => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressSaving),
+                _ => "",
+            };
         }
     }
 }

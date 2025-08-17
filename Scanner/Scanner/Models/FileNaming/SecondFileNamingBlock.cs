@@ -19,7 +19,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockSecond/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockSecond);
         }
 
         private bool _Use2Digits = true;

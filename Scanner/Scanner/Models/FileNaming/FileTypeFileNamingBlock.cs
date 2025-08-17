@@ -18,7 +18,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockFileType/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockFileType);
         }
 
         private bool _AllCaps = true;

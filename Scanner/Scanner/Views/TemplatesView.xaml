@@ -9,6 +9,7 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -50,12 +51,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Templates" Margin="12,0,0,0" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Templates}" Margin="12,0,0,0" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Padding="8,0,8,0">
                     <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
                         <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
-                    <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
+                    <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
                                 <MenuFlyoutSubItem Text="Sort by">

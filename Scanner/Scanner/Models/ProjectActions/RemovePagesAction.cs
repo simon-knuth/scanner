@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using WinRT.Interop;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -76,7 +77,10 @@ namespace Scanner.Models
 
         public string GetFriendlyName()
         {
-            return nameof(RemovePagesAction);
+            if (removals.Count >= 2)
+                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRemovePages), removals.Count);
+            else
+                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRemovePage);
         }
     }
 }

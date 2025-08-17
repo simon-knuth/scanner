@@ -36,7 +36,7 @@ namespace Scanner.Models
             Resolution = resolution;
             Annotation = annotation;
             FriendlyText = GenerateFriendlyText();
-            FriendlyShortText = String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
+            FriendlyShortText = String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValue), Resolution.DpiX);
         }
 
         public ScanResolution(float resolution, ResolutionAnnotation annotation)
@@ -44,7 +44,7 @@ namespace Scanner.Models
             Resolution = new ImageScannerResolution { DpiX = resolution, DpiY = resolution };
             Annotation = annotation;
             FriendlyText = GenerateFriendlyText();
-            FriendlyShortText = String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
+            FriendlyShortText = String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValue), Resolution.DpiX);
         }
 
 
@@ -56,14 +56,14 @@ namespace Scanner.Models
             switch (Annotation)
             {
                 case ResolutionAnnotation.Default:
-                    return String.Format(GetLocalized("OptionScanOptionsResolutionDefault"), Resolution.DpiX);
+                    return String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValueDefault), Resolution.DpiX);
                 case ResolutionAnnotation.Documents:
-                    return String.Format(GetLocalized("OptionScanOptionsResolutionDocuments"), Resolution.DpiX);
+                    return String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValueDocuments), Resolution.DpiX);
                 case ResolutionAnnotation.Photos:
-                    return String.Format(GetLocalized("OptionScanOptionsResolutionPhotos"), Resolution.DpiX);
+                    return String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValuePhotos), Resolution.DpiX);
                 case ResolutionAnnotation.None:
                 default:
-                    return String.Format(GetLocalized("OptionScanOptionsResolution"), Resolution.DpiX);
+                    return String.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ResolutionValue), Resolution.DpiX);
             }
         }
 

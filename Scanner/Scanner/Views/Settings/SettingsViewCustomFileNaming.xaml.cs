@@ -74,7 +74,7 @@ namespace Scanner.Views.Settings
             // create parent items for date & time
             MenuFlyoutSubItem dateParentItem = new MenuFlyoutSubItem
             {
-                Text = GetLocalized("HeadingFileNamingBlockDate/Text"),
+                Text = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockDate),
                 Icon = new FontIcon
                 {
                     Glyph = "\uE163"
@@ -82,7 +82,7 @@ namespace Scanner.Views.Settings
             };
             MenuFlyoutSubItem timeParentItem = new MenuFlyoutSubItem
             {
-                Text = GetLocalized("HeadingFileNamingBlockTime/Text"),
+                Text = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockTime),
                 Icon = new FontIcon
                 {
                     Glyph = "\uE121"

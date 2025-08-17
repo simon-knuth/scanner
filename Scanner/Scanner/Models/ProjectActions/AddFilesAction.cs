@@ -14,6 +14,7 @@ using Scanner.Services.Interfaces;
 using Scanner.Models.Interfaces;
 using System.ComponentModel;
 using Microsoft.UI.Dispatching;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -72,7 +73,10 @@ namespace Scanner.Models
 
         public string GetFriendlyName()
         {
-            return nameof(AddFilesAction);
+            if (insertions.Count >= 2)
+                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFiles), insertions.Count);
+            else
+                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFile);
         }
     }
 }

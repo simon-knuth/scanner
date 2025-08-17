@@ -19,7 +19,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockHour/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHour);
         }
 
         private bool _Use24Hours;

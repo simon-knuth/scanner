@@ -13,6 +13,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customcontrols="using:Scanner.Controls"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -102,7 +103,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
+            <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.Templates}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -134,7 +135,7 @@
 
                 <Grid>
                     <customcontrols:ScanOptionsPresenter x:Name="ScanOptionsPresenter" ScanOptions="{x:Bind ViewModel.ScanOptions, Mode=OneWay}" x:Load="{x:Bind ViewModel.ScanOptions.Scanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
-                    <TextBlock x:Name="TextBlockScanOptionsNoScanner" Text="Select a scanner" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" x:Load="{x:Bind ViewModel.ScanOptions.Scanner, Mode=OneWay, Converter={StaticResource NullBoolConverter}}" />
+                    <TextBlock x:Name="TextBlockScanOptionsNoScanner" Text="{x:Bind strings:Resources.SelectScanner}" Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" x:Load="{x:Bind ViewModel.ScanOptions.Scanner, Mode=OneWay, Converter={StaticResource NullBoolConverter}}" />
                 </Grid>
 
                 <Button.ContextFlyout>
@@ -149,7 +150,7 @@
             </Button>
 
             <!-- Right buttons -->
-            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
+            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Preview}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
                 <Button.Transitions>
                     <TransitionCollection>
                         <RepositionThemeTransition IsStaggeringEnabled="False" />
@@ -172,14 +173,14 @@
 
                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
-            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
+            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" ToolTipService.ToolTip="{x:Bind strings:Resources.CancelScanToolTip}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.2" Delay="0:0:0.2" To="1.0" />
                 </animations:Implicit.ShowAnimations>
                 
                 <StackPanel Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind ScanStateDescription, Mode=OneWay}" MaxLines="1" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-                    <TextBlock Text="Click to cancel" MaxLines="1" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.ProjectService.FriendlyCurrentScanState, Mode=OneWay}" MaxLines="1" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind strings:Resources.Cancel}" MaxLines="1" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                </StackPanel>
             </Button>
             <SplitButton x:Name="SplitButtonScan" Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}" CommandParameter="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
@@ -200,14 +201,14 @@
 
                     <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="2" Margin="0,0,4,0" Padding="8" Style="{StaticResource MutedOnAccentButtonStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
                         <Grid>
-                            <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
+                            <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.ScanActionAddToProject}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                                 <FontIcon.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromVerticalOffset="4" />
                                     </TransitionCollection>
                                 </FontIcon.Transitions>
                             </FontIcon>
-                            <FontIcon x:Name="FontIconScanModeNew" Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                            <FontIcon x:Name="FontIconScanModeNew" Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.ScanActionStartNewProject}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                                 <FontIcon.Transitions>
                                     <TransitionCollection>
                                         <EntranceThemeTransition FromVerticalOffset="4" />
@@ -216,15 +217,15 @@
                             </FontIcon>
                         </Grid>
                     </Button>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Scan" Style="{StaticResource BaseTextBlockStyle}" />
-                    <TextBlock x:Name="TextBlockScanModeAdd" Grid.Row="1" Grid.Column="1" Text="Add" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.StartScan}" Style="{StaticResource BaseTextBlockStyle}" />
+                    <TextBlock x:Name="TextBlockScanModeAdd" Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanActionAddToProjectShort}" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                         <TextBlock.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="4" />
                             </TransitionCollection>
                         </TextBlock.Transitions>
                     </TextBlock>
-                    <TextBlock x:Name="TextBlockScanModeNew" Grid.Row="1" Grid.Column="1" Text="New" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <TextBlock x:Name="TextBlockScanModeNew" Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanActionStartNewProjectShort}" Opacity="0.6" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <TextBlock.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromVerticalOffset="4" />
@@ -235,7 +236,7 @@
 
                 <SplitButton.Flyout>
                     <MenuFlyout Placement="BottomEdgeAlignedRight">
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="Scan and add to project" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemAddToProject_Loading">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="{x:Bind strings:Resources.ScanActionAddToProject}" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemAddToProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
@@ -244,7 +245,7 @@
                                 <x:Boolean>True</x:Boolean>
                             </MenuFlyoutItem.CommandParameter>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="MenuFlyoutItemNewProject" Text="Scan to new project" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemNewProject_Loading">
+                        <MenuFlyoutItem x:Name="MenuFlyoutItemNewProject" Text="{x:Bind strings:Resources.ScanActionStartNewProject}" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemNewProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
@@ -253,18 +254,18 @@
                                 <x:Boolean>False</x:Boolean>
                             </MenuFlyoutItem.CommandParameter>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Scan and merge into project" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}">
+                        <MenuFlyoutItem Text="{x:Bind strings:Resources.ScanMerge}" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xEA3C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Preview" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}">
+                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Preview}" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE713;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>

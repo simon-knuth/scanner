@@ -96,9 +96,9 @@ namespace Scanner.Helpers
             return $"{(Math.Sign(byteCount) * num):n1} {suffix}";
         }
 
-        public static string GetLocalized(string resourceName)
+        public static string GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum stringResource)
         {
-            return resourceLoader.GetString(resourceName);
+            return resourceLoader.GetString(stringResource.ToString());
         }
 
         public static bool IsWindows11()

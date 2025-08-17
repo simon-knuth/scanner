@@ -19,6 +19,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:serviceinterfaces="using:Scanner.Services.Interfaces"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -446,13 +447,7 @@
 
             <Grid Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                 <Border x:Name="BorderToolbarNavigationBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
-                <TextBlock IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}">
-                    <Span>
-                        <Run Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" />
-                        <Run Text="of" />
-                        <Run Text="{x:Bind ViewModel.CurrentProject.Pages.Count, Mode=OneWay}" />
-                    </Span>
-                </TextBlock>
+                <TextBlock Text="{x:Bind ProjectNavigationIndicator, Mode=OneWay}" IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
             </Grid>
 
             <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -461,10 +456,10 @@
                 <!-- Main editing controls -->
                 <Frame Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" Click="ButtonCrop_Click">
+                        <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
                             <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                        <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateToolTip}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
                             <Grid>
                                 <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -472,10 +467,10 @@
 
                             <FlyoutBase.AttachedFlyout>
                                 <MenuFlyout Placement="Top">
-                                    <MenuFlyoutItem Text="Rotate 90 degrees" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="Rotate 180 degrees" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="Rotate 270 degrees" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="Rotate automatically" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate180}" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate270}" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateAutomatically}" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <ImageIcon>
                                                 <ImageIcon.Source>
@@ -485,7 +480,7 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Text="Settings" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         </MenuFlyoutItem.Icon>
@@ -493,29 +488,29 @@
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
                         </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}">
+                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}">
                             <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}">
+                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
                             <Grid>
                                 <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </Grid>
 
                             <Button.Flyout>
                                 <MenuFlyout>
-                                    <RadioMenuFlyoutItem Text="None" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
-                                    <RadioMenuFlyoutItem Text="Grayscale" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
-                                    <RadioMenuFlyoutItem Text="Monochrome" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
+                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}">
+                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
                             <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}">
+                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
                             <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
+                        <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
                             <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                     </StackPanel>
@@ -542,33 +537,33 @@
                                 </Grid.ColumnDefinitions>
 
                                 <FontIcon Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Glyph="&#xE799;" FontSize="16" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="Aspect ratio" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.AspectRatio}" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                             </Grid>
 
                             <Button.Flyout>
                                 <MenuFlyout x:Name="MenuFlyoutAspectRatio" Placement="Bottom">
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioCustom" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}" FontWeight="SemiBold" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Custom}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioSquare" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Square}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio3by2" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=2}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.ThreeByTwo}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatio4by3" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=3}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.FourByThree}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioCustom}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}" FontWeight="SemiBold" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Custom}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioSquare}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Square}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatio3By2}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=2}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.ThreeByTwo}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatio4By3}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=3}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.FourByThree}"/>
                                     <MenuFlyoutSeparator/>
-                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioInternational" IsEnabled="False" FontWeight="SemiBold"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioInternationalDINA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=4}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.DinA}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioInternationalHeading}" IsEnabled="False" FontWeight="SemiBold"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioInternationalDINA}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=4}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.DinA}"/>
                                     <MenuFlyoutSeparator/>
-                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioNA" IsEnabled="False" FontWeight="SemiBold"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIA" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiA}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIB" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiB}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNAANSIC" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiC}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioNALegal" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=12}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Legal}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioNAHeading}" IsEnabled="False" FontWeight="SemiBold"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioNAANSIA}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=5}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiA}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioNAANSIB}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=6}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiB}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioNAANSIC}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=7}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.AnsiC}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioNALegal}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=12}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Legal}"/>
                                     <MenuFlyoutSeparator/>
-                                    <ToggleMenuFlyoutItem x:Uid="HeadingEditCropAspectRatioChinese" IsEnabled="False" FontWeight="SemiBold"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai4" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai4}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai8" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=9}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai8}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai16" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=10}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai16}"/>
-                                    <ToggleMenuFlyoutItem x:Uid="ButtonEditCropAspectRatioChineseKai32" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=11}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai32}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioChineseHeading}" IsEnabled="False" FontWeight="SemiBold"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioChineseKai4}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=8}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai4}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioChineseKai8}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=9}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai8}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioChineseKai16}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=10}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai16}"/>
+                                    <ToggleMenuFlyoutItem Text="{x:Bind strings:Resources.AspectRatioChineseKai32}" IsChecked="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=11}" Click="ToggleMenuFlyoutItemAspectRatio_Click" Tag="{x:Bind serviceinterfaces:AspectRatio.Kai32}"/>
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem x:Uid="ButtonEditCropAspectRatioFlip" Icon="Orientation" Click="MenuFlyoutItemCropAspectRatioFlip_Click"/>
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.FlipAspectRatio}" Icon="Orientation" Click="MenuFlyoutItemCropAspectRatioFlip_Click"/>
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
@@ -582,19 +577,19 @@
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Grid.Column="0" Glyph="&#xE8FB;" FontSize="16" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    <TextBlock Grid.Column="1" Text="Apply" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.Apply}" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                                 </Grid>
 
                                 <SplitButton.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveCrop" Text="Apply" FontWeight="SemiBold" Click="MenuFlyoutItemSaveCrop_Click">
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveCrop" Text="{x:Bind strings:Resources.Apply}" FontWeight="SemiBold" Click="MenuFlyoutItemSaveCrop_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8FB;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveCropAsCopy" Text="Apply as copy" Click="MenuFlyoutItemSaveCropAsCopy_Click" />
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveCropAsCopy" Text="{x:Bind strings:Resources.ApplyAsCopy}" Click="MenuFlyoutItemSaveCropAsCopy_Click" />
                                         <MenuFlyoutSeparator />
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemCropSimilarPages" Text="Apply to similar pages..." Click="MenuFlyoutItemCropSimilarPages_Click" Loading="MenuFlyoutItemCropSimilarPages_Loading">
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemCropSimilarPages" Text="{x:Bind strings:Resources.ApplySimilarPages}" Click="MenuFlyoutItemCropSimilarPages_Click" Loading="MenuFlyoutItemCropSimilarPages_Loading">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE133;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </MenuFlyoutItem.Icon>
@@ -602,7 +597,7 @@
                                     </MenuFlyout>
                                 </SplitButton.Flyout>
                             </SplitButton>
-                            <Button x:Name="ButtonDiscardCrop" Style="{StaticResource EditorButtonStyle}" Click="ButtonDiscardCrop_Click">
+                            <Button x:Name="ButtonDiscardCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Cancel}" Click="ButtonDiscardCrop_Click">
                                 <FontIcon Glyph="&#xE711;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </Button>
                         </StackPanel>
@@ -618,8 +613,8 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock x:Uid="HeadingEditCropSimilarPages" Grid.Row="0" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}"/>
-                                    <TextBlock x:Uid="TextEditCropSimilarPages" Grid.Row="1" Grid.Column="0" Style="{StaticResource BodyTextBlockStyle}" />
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Bind strings:Resources.CropSimilarPages}" Style="{StaticResource BaseTextBlockStyle}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind strings:Resources.CropSimilarPagesBody}" Style="{StaticResource BodyTextBlockStyle}" />
 
                                     <ListView Grid.Row="2" Margin="-16,0,-16,0" IsEnabled="False" SelectedIndex="0" Padding="12" SelectionMode="Multiple" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemTemplate="{StaticResource SimilarPageDataTemplate}" Loading="ListViewCropSimilarPagesCurrent_Loading">
                                         <ListView.ItemContainerTransitions>
@@ -633,7 +628,7 @@
                                         </ListView.ItemContainerTransitions>
 
                                         <ListView.Header>
-                                            <CheckBox x:Name="CheckBoxCropSimilarPagesSelectAll" x:Uid="OptionEditCropSimilarPagesSelectAll" Grid.Row="3" Content="Select all" FontWeight="SemiBold" Margin="14,0,12,12" Padding="12,0,12,0" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" IsThreeState="True" Checked="CheckBoxCropSimilarPagesSelectAll_Checked" Unchecked="CheckBoxCropSimilarPagesSelectAll_Unchecked" Indeterminate="CheckBoxCropSimilarPagesSelectAll_Indeterminate" />
+                                            <CheckBox x:Name="CheckBoxCropSimilarPagesSelectAll" Grid.Row="3" Content="{x:Bind strings:Resources.SelectAll}" FontWeight="SemiBold" Margin="14,0,12,12" Padding="12,0,12,0" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" IsThreeState="True" Checked="CheckBoxCropSimilarPagesSelectAll_Checked" Unchecked="CheckBoxCropSimilarPagesSelectAll_Unchecked" Indeterminate="CheckBoxCropSimilarPagesSelectAll_Indeterminate" />
                                         </ListView.Header>
                                     </ListView>
                                     
@@ -643,8 +638,8 @@
                                             <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="ButtonCropSimilarPagesConfirm" Grid.Column="0" x:Uid="ButtonEditCropSimilarPagesConfirm" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind AreSimilarPagesSelectedForCrop, Mode=OneWay}" Click="ButtonCropSimilarPagesConfirm_Click" />
-                                        <Button x:Name="ButtonCropSimilarPagesCancel" Grid.Column="1" x:Uid="ButtonEditCropSimilarPagesCancel" HorizontalAlignment="Stretch" Click="ButtonCropSimilarPagesCancel_Click" />
+                                        <Button x:Name="ButtonCropSimilarPagesConfirm" Grid.Column="0" Content="{x:Bind strings:Resources.Confirm}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind AreSimilarPagesSelectedForCrop, Mode=OneWay}" Click="ButtonCropSimilarPagesConfirm_Click" />
+                                        <Button x:Name="ButtonCropSimilarPagesCancel" Grid.Column="1" Content="{x:Bind strings:Resources.Cancel}" HorizontalAlignment="Stretch" Click="ButtonCropSimilarPagesCancel_Click" />
                                     </Grid>
                                 </Grid>
                             </Flyout>
@@ -661,14 +656,14 @@
 
                 <Border x:Name="BorderToolbarZoomBackground" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
                 <StackPanel x:Name="StackPanelZoomControls" Grid.Column="0" Orientation="Horizontal" x:Load="{x:Bind IsHoveringZoomControls, Mode=OneWay}">
-                    <Button x:Name="ButtonPageZoomFactorIncrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="8,0,0,8" IsEnabled="{x:Bind CanZoomIn, Mode=OneWay}" Click="ButtonPageZoomFactorIncrease_Click">
+                    <Button x:Name="ButtonPageZoomFactorIncrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="8,0,0,8" IsEnabled="{x:Bind CanZoomIn, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomInToolTip}" Click="ButtonPageZoomFactorIncrease_Click">
                         <FontIcon Glyph="&#xE710;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
-                    <Button x:Name="ButtonPageZoomFactorDecrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0" IsEnabled="{x:Bind CanZoomOut, Mode=OneWay}" Click="ButtonPageZoomFactorDecrease_Click">
+                    <Button x:Name="ButtonPageZoomFactorDecrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0" IsEnabled="{x:Bind CanZoomOut, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomOutToolTip}" Click="ButtonPageZoomFactorDecrease_Click">
                         <FontIcon Glyph="&#xE738;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
                 </StackPanel>
-                <Button x:Name="ButtonPageZoomFactor" Grid.Column="1" Padding="8" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0,8,8,0" Click="ButtonPageZoomFactor_Click">
+                <Button x:Name="ButtonPageZoomFactor" Grid.Column="1" Padding="8" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0,8,8,0" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetZoomToolTip}" Click="ButtonPageZoomFactor_Click">
                     <TextBlock Text="{x:Bind FriendlyPageZoomFactor, Mode=OneWay}" MaxLines="1" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Button>
             </Grid>

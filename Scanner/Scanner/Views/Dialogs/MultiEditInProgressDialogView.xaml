@@ -11,9 +11,10 @@
     xmlns:interfaces="using:Scanner.Models.Interfaces"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     Style="{StaticResource DefaultContentDialogStyle}"
-    Title="Applying changes"
+    Title="{x:Bind strings:Resources.ApplyingChanges}"
     Loaded="ContentDialog_Loaded">
 
     

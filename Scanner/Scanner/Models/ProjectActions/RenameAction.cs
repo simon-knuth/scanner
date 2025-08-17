@@ -16,6 +16,7 @@ using System.ComponentModel;
 using Windows.Graphics.Imaging;
 using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -87,7 +88,7 @@ namespace Scanner.Models
 
         public string GetFriendlyName()
         {
-            return nameof(RenameAction);
+            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRename);
         }
     }
 }

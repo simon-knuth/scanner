@@ -215,8 +215,8 @@ namespace Scanner.Services
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = GetLocalized("ErrorMessageResetFolderUnauthorizedHeading"),
-                    Message = GetLocalized("ErrorMessageResetFolderUnauthorizedBody"),
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderUnauthorizedHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderUnauthorizedBody),
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
             }
@@ -228,8 +228,8 @@ namespace Scanner.Services
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = GetLocalized("ErrorMessageResetFolderHeading"),
-                    Message = GetLocalized("ErrorMessageResetFolderBody"),
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderBody),
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
             }
@@ -272,7 +272,7 @@ namespace Scanner.Services
 
         private string GetDefaultScanFolderName()
         {
-            string defaultScanFolderName = GetLocalized("DefaultScanFolderName");
+            string defaultScanFolderName = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.DefaultScanFolderName);
             bool validName = true;
 
             // safeguard against localization mistakes

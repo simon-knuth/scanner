@@ -9,6 +9,8 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
     xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:models="using:Scanner.Models"
     mc:Ignorable="d"
     IsHitTestVisible="False"
     HighContrastAdjustment="None">
@@ -46,7 +48,7 @@
             </FontIcon.RenderTransform>
         </FontIcon>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Scan options" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.ScanOptions}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
         <ItemsControl Grid.Row="1" Grid.Column="1" Margin="-4,0,0,2" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -57,7 +59,7 @@
             <ItemsControl.Items>
                 <!-- Source mode -->
                 <Border Padding="4,2,4,2" Background="Transparent" CornerRadius="8">
-                    <TextBlock Text="{x:Bind ScanOptions.SourceMode, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ScanOptions.ShortFriendlySourceMode, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Border>
 
                 <!-- File format -->
@@ -67,12 +69,12 @@
 
                 <!-- Color mode -->
                 <Border x:Name="BorderColorMode" Padding="4,2,4,2" Background="Transparent" CornerRadius="8" x:Load="{x:Bind ScanOptions.SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
-                    <controls:SwitchPresenter Value="{x:Bind ScanOptions.ColorMode, Mode=OneWay, Converter={StaticResource EnumStringConverter}}">
-                        <controls:Case Value="Color">
+                    <controls:SwitchPresenter Value="{x:Bind ScanOptions.ColorMode, Mode=OneWay}">
+                        <controls:Case Value="{x:Bind models:ScannerColorMode.Color}">
                             <FontIcon Glyph="&#xE790;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </controls:Case>
 
-                        <controls:Case Value="Grayscale">
+                        <controls:Case Value="{x:Bind models:ScannerColorMode.Grayscale}">
                             <Grid>
                                 <FontIcon Glyph="&#xEA3B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}">
                                     <FontIcon.Foreground>
@@ -88,7 +90,7 @@
                             </Grid>
                         </controls:Case>
 
-                        <controls:Case Value="Monochrome">
+                        <controls:Case Value="{x:Bind models:ScannerColorMode.Monochrome}">
                             <FontIcon Glyph="&#xE7A1;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </controls:Case>
                     </controls:SwitchPresenter>

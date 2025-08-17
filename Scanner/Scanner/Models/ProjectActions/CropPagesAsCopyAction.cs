@@ -18,6 +18,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -78,8 +79,8 @@ namespace Scanner.Models
         }
 
         public string GetFriendlyName()
-        {
-            return nameof(CropPagesAction);
+        { 
+            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionCropPageAsCopy);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Scanner.Models.FileNaming
 
         public string DisplayName
         {
-            get => GetLocalized("HeadingFileNamingBlockContrast/Text");
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Contrast);
         }
 
         private bool _SkipIfDefault;

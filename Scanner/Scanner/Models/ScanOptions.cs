@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Scanner.Models.Interfaces;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -24,7 +25,10 @@ namespace Scanner.Models
         private IScanningDevice scanner;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShortFriendlySourceMode))]
         private ScannerSource sourceMode;
+
+        public string ShortFriendlySourceMode => GetShortFriendlySourceMode();
 
         [ObservableProperty]
         private TargetFormat targetFormat;
@@ -203,6 +207,17 @@ namespace Scanner.Models
                 }
             }
             Resolution = resolution;
+        }
+
+        private string GetShortFriendlySourceMode()
+        {
+            return SourceMode switch
+            {
+                ScannerSource.Auto => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.SourceAutoShort),
+                ScannerSource.Flatbed => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.SourceFlatbedShort),
+                ScannerSource.Feeder => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.SourceFeederShort),
+                _ => "",
+            };
         }
     }
 

@@ -49,6 +49,7 @@ namespace Scanner.Services.Interfaces
         bool IsEditing { get; set; }                // edit in progress
 
         ScanState CurrentScanState { get; }
+        string FriendlyCurrentScanState { get; }
 
         bool CanSelectPreviousPage { get; }
         bool CanSelectNextPage { get; }

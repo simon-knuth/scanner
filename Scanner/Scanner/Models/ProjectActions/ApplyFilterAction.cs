@@ -17,6 +17,7 @@ using Windows.Graphics.Imaging;
 using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
+using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
@@ -91,7 +92,10 @@ namespace Scanner.Models
 
         public string GetFriendlyName()
         {
-            return nameof(ApplyFilterAction);
+            if (pages.Count >= 2)
+                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPages), pages.Count);
+            else
+                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPage);
         }
     }
 }

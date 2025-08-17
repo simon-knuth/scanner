@@ -15,11 +15,12 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:storage="using:Windows.Storage"
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     Style="{StaticResource DefaultContentDialogStyle}"
-    Title="Choose file name and location"
-    PrimaryButtonText="Save"
-    CloseButtonText="Cancel"
+    Title="{x:Bind strings:Resources.SaveOptionsDialogHeading}"
+    PrimaryButtonText="{x:Bind strings:Resources.Save}"
+    CloseButtonText="{x:Bind strings:Resources.Cancel}"
     DefaultButton="Primary"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.AreValidOptionsSelected, Mode=OneWay}">
@@ -66,26 +67,26 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
         <StackPanel Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
-            <TextBlock Text="File name" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Text="{x:Bind strings:Resources.FileName}" Style="{StaticResource BaseTextBlockStyle}" />
 
             <!-- File name type -->
             <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}">
                 <labs:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xEC92;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                        <TextBlock Text="Date and time" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind strings:Resources.FileNamingDateTimePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
                 </labs:SegmentedItem>
                 <labs:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xE787;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                        <TextBlock Text="Date" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind strings:Resources.FileNamingDatePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
                 </labs:SegmentedItem>
                 <labs:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                        <TextBlock Text="Custom pattern" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind strings:Resources.FileNamingCustomPattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
                 </labs:SegmentedItem>
             </labs:Segmented>
@@ -99,7 +100,7 @@
             </Grid>
 
             <!-- Collision warning -->
-            <Grid Margin="0,-8,0,0" Padding="0,4,16,4" ToolTipService.ToolTip="Final name may be modified because another file with that name already exists." CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
+            <Grid Margin="0,-8,0,0" Padding="0,4,16,4" ToolTipService.ToolTip="{x:Bind strings:Resources.FileNameCollisionToolTip}" CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
@@ -107,7 +108,7 @@
 
                 <FontIcon Grid.Column="0" Glyph="&#xEDAF;" FontSize="18" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 <FontIcon Grid.Column="0" Glyph="&#xEDB1;" FontSize="12" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource SystemFillColorCautionBackgroundBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                <TextBlock Grid.Column="1" Text="File with that name already exists" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.FileNameCollision}" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
             </Grid>
 
             <!-- AI file name generation -->
@@ -124,7 +125,7 @@
                                 <SvgImageSource UriSource="/Assets/AI Sparkles.svg" />
                             </ImageIcon.Source>
                         </ImageIcon>
-                        <TextBlock Text="Replace with AI-generated name" />
+                        <TextBlock Text="{x:Bind strings:Resources.SaveOptionsAIFileNameGeneration}" />
                     </StackPanel>
                 </CheckBox>
                 <HyperlinkButton x:Name="HyperlinkButtonAIDisclaimer" Grid.Column="1" Click="HyperlinkButtonAIDisclaimer_Click">
@@ -132,7 +133,7 @@
                 </HyperlinkButton>
             </Grid>
 
-            <TextBlock Text="File location" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Text="{x:Bind strings:Resources.SaveLocation}" Style="{StaticResource BaseTextBlockStyle}" />
 
             <!-- Folder -->
             <Grid ColumnSpacing="4">
@@ -158,7 +159,7 @@
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="MenuFlyoutFolder" Placement="Bottom" Opening="MenuFlyoutFolder_Opening">
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Browse" Width="{x:Bind FolderFlyoutWidth, Mode=OneWay}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveLocationBrowse}" Width="{x:Bind FolderFlyoutWidth, Mode=OneWay}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE712;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -166,7 +167,7 @@
                         </MenuFlyout>
                     </DropDownButton.Flyout>
                 </DropDownButton>
-                <Button x:Name="ButtonSelectFolder" Grid.Column="1" Height="64" HorizontalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
+                <Button x:Name="ButtonSelectFolder" Grid.Column="1" Height="64" HorizontalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.SaveLocationBrowse}" Command="{x:Bind ViewModel.PickFolderAsyncCommand}">
                     <FontIcon Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 </Button>
             </Grid>

@@ -13,6 +13,7 @@ using Microsoft.VisualBasic.FileIO;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Resources.Strings;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
@@ -56,7 +57,7 @@ namespace Scanner.Views
         [NotifyPropertyChangedFor(nameof(CanZoomOut))]
         private float pageZoomFactor = 1.0f;
 
-        public string FriendlyPageZoomFactor => string.Format(GetLocalized("TextZoomFactor"), PageZoomFactor * 100);
+        public string FriendlyPageZoomFactor => string.Format(GetLocalized(ResourcesExtension.KeyEnum.TextZoomFactor), PageZoomFactor * 100);
 
         public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping;
 
@@ -162,6 +163,8 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool areSimilarPagesSelectedForCrop;
 
+        public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.CurrentProject?.Pages.Count);
+
         private VirtualizingStackPanel? flipViewPanel;
 
         private ScrollViewer? _selectedItemScrollViewer;
@@ -211,6 +214,13 @@ namespace Scanner.Views
                         ViewModel.ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
                     }
                     break;
+                case nameof(IProjectService.CurrentProject):
+                    if (ViewModel.ProjectService.CurrentProject != null)
+                    {
+                        ViewModel.ProjectService.CurrentProject.PagesAdded -= CurrentProject_PagesAdded;
+                        ViewModel.ProjectService.CurrentProject.PagesRemoved -= CurrentProject_PagesRemoved;
+                    }
+                    break;
             }
         }
 
@@ -226,11 +236,31 @@ namespace Scanner.Views
                     OnPropertyChanged(nameof(IsFilterNoneAvailable));
                     OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
                     OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
 
                     if (ViewModel.ProjectService.SelectedPage != null)
                         ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
                     break;
+                case nameof(IProjectService.CurrentProject):
+                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
+
+                    if (ViewModel.ProjectService.CurrentProject != null)
+                    {
+                        ViewModel.ProjectService.CurrentProject.PagesAdded += CurrentProject_PagesAdded;
+                        ViewModel.ProjectService.CurrentProject.PagesRemoved += CurrentProject_PagesRemoved;
+                    }
+                    break;
             }
+        }
+
+        private void CurrentProject_PagesRemoved(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(ProjectNavigationIndicator));
+        }
+
+        private void CurrentProject_PagesAdded(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(ProjectNavigationIndicator));
         }
 
         private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
