@@ -423,6 +423,7 @@
             </FlipView.ItemTemplate>
         </FlipView>
 
+        <!-- Crop experience -->
         <controls:ImageCropper x:Name="ImageCropper" Padding="16,16,16,80" Style="{StaticResource CustomImageCropperStyle}" AspectRatio="{x:Bind ViewModel.SelectedAspectRatioValue, Mode=TwoWay}" x:Load="{x:Bind IsCropping, Mode=OneWay}" Loading="ImageCropper_Loading">
             <animations:Implicit.ShowAnimations>
                 <animations:ImplicitAnimationSet>
@@ -436,6 +437,34 @@
                 </animations:ImplicitAnimationSet>
             </animations:Implicit.HideAnimations>
         </controls:ImageCropper>
+
+        <!-- Draw experience -->
+        <Border x:Name="BorderDraw" x:Load="{x:Bind IsDrawing, Mode=OneWay}">
+            <animations:Implicit.ShowAnimations>
+                <animations:ImplicitAnimationSet>
+                    <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3" />
+                </animations:ImplicitAnimationSet>
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:ImplicitAnimationSet>
+                    <animations:OpacityAnimation To="0.0" Duration="0:0:0.3" />
+                </animations:ImplicitAnimationSet>
+            </animations:Implicit.HideAnimations>
+
+            <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
+                <Grid Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerDraw, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerDraw, Path=ViewportHeight, Mode=OneWay}">
+                    <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="{x:Bind ViewModel.ProjectService.SelectedPage.PreviewBitmapUri, Mode=OneWay}" />
+                            </Image.Source>
+                        </Image>
+                    </Frame>
+                    <InkCanvas x:Name="InkCanvasDraw" />
+                </Grid>
+            </ScrollViewer>
+        </Border>
 
         <!-- Bottom toolbar -->
         <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
@@ -454,7 +483,7 @@
                 <Border x:Name="BorderToolbarToolsBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
 
                 <!-- Main editing controls -->
-                <Frame Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                <Frame Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
                             <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -488,7 +517,7 @@
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
                         </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}">
+                        <Button x:Name="ButtonDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}" Click="ButtonDraw_Click">
                             <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
@@ -644,6 +673,50 @@
                                 </Grid>
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
+                    </Grid>
+                </Frame>
+
+                <!-- Draw controls -->
+                <Frame x:Name="FrameDrawToolbar" Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" x:Load="{x:Bind IsDrawing, Mode=OneWay}">
+                    <Grid x:Name="GridDrawToolbar" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,4,0">
+                            <ToggleButton VerticalAlignment="Stretch" Style="{StaticResource MutedToggleButtonStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}">
+                                <FontIcon Glyph="&#xED5F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </ToggleButton>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                            <AppBarSeparator />
+                            <SplitButton x:Name="SplitButtonSaveDraw" VerticalAlignment="Stretch" Style="{StaticResource AccentSplitButtonStyle}">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Grid.Column="0" Glyph="&#xE8FB;" FontSize="16" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.Apply}" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                                </Grid>
+
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDraw" Text="{x:Bind strings:Resources.Apply}" FontWeight="SemiBold">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8FB;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDrawAsCopy" Text="{x:Bind strings:Resources.ApplyAsCopy}" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                            <Button x:Name="ButtonDiscardDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Cancel}" Click="ButtonDiscardDraw_Click">
+                                <FontIcon Glyph="&#xE711;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                        </StackPanel>
                     </Grid>
                 </Frame>
             </Grid>

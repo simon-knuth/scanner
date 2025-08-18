@@ -59,7 +59,7 @@ namespace Scanner.Views
 
         public string FriendlyPageZoomFactor => string.Format(GetLocalized(ResourcesExtension.KeyEnum.TextZoomFactor), PageZoomFactor * 100);
 
-        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping;
+        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping || IsDrawing;
 
         [ObservableProperty]
         private bool isHoveringZoomControls;
@@ -78,9 +78,28 @@ namespace Scanner.Views
                     ViewModel.ProjectService.IsEditing = value;
 
                     OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+                    OnPropertyChanged(nameof(IsEditingExperienceActive));
                 }
             }
         }
+
+        private bool isDrawing;
+        public bool IsDrawing
+        {
+            get => isDrawing;
+            set
+            {
+                if (SetProperty(ref isDrawing, value))
+                {
+                    ViewModel.ProjectService.IsEditing = value;
+
+                    OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+                    OnPropertyChanged(nameof(IsEditingExperienceActive));
+                }
+            }
+        }
+
+        public bool IsEditingExperienceActive => IsCropping || IsDrawing;
 
         public bool IsFilterNone
         {
@@ -165,8 +184,6 @@ namespace Scanner.Views
 
         public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
 
-        private VirtualizingStackPanel? flipViewPanel;
-
         private ScrollViewer? _selectedItemScrollViewer;
         private ScrollViewer? selectedItemScrollViewer
         {
@@ -186,6 +203,12 @@ namespace Scanner.Views
                 }
             }
         }
+
+        private CoreInputDeviceTypes inkCanvasInputDeviceTypes => ViewModel.SettingsService.LastTouchDrawState ?
+            CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
+            CoreInputDeviceTypes.Pen;
+
+        private VirtualizingStackPanel? flipViewPanel;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -602,6 +625,16 @@ namespace Scanner.Views
         private async void MenuFlyoutItemSaveCropAsCopy_Click(object sender, RoutedEventArgs e)
         {
             await SaveCropAsync(true);
+        }
+
+        private void ButtonDraw_Click(object sender, RoutedEventArgs e)
+        {
+            IsDrawing = true;
+        }
+
+        private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)
+        {
+            IsDrawing = false;
         }
     }
 }
