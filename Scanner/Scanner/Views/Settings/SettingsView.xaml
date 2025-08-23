@@ -12,7 +12,8 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}">
 
     <Page.DataContext>
         <viewModels:SettingsViewModel x:Name="ViewModel"/>

@@ -17,7 +17,9 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
-    KeyDown="Page_KeyDown">
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
+    KeyDown="Page_KeyDown"
+    Loading="Page_Loading">
 
     <Page.DataContext>
         <viewModels:ShellViewModel x:Name="ViewModel"/>
@@ -359,7 +361,7 @@
             </Grid>
             
             <!-- Content -->
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" FlowDirection="{x:Bind LayoutFlowDirection}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="Auto" />
@@ -372,7 +374,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Border x:Name="BorderProjectView" Grid.Row="0" Grid.Column="0" Margin="0,8,0,0">
-                    <views:ProjectView x:Name="ProjectView" CanExpandPageList="{x:Bind ShowExpandButtonInProjectView, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" IsExpandedChanged="ProjectView_IsExpandedChanged" />
+                    <views:ProjectView x:Name="ProjectView" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" CanExpandPageList="{x:Bind ShowExpandButtonInProjectView, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" IsExpandedChanged="ProjectView_IsExpandedChanged" />
                 </Border>
                 <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Padding="0,152,0,0" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True">
                     <animations:Implicit.ShowAnimations>
@@ -385,15 +387,15 @@
                         <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
-                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" ExpandPageListRequested="ExpandPageListRequested" PropertyChanged="ScanOptionsView_PropertyChanged" />
+                    <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" PropertyChanged="ScanOptionsView_PropertyChanged" />
                 </Border>
                 <Border x:Name="BorderScanActionsView" Grid.Row="1" Grid.Column="0">
-                    <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" AreScanOptionsVisibleChanged="ScanActionsView_AreScanOptionsVisibleChanged" />
+                    <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" AreScanOptionsVisibleChanged="ScanActionsView_AreScanOptionsVisibleChanged" />
                 </Border>
                 <Line Grid.Row="1" Grid.Column="0" X1="0" X2="1" Stretch="Fill" Stroke="{ThemeResource DividerStrokeColorDefault}" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="{x:Bind ShowScanActionsDivider, Mode=OneWay}" />
 
                 <Border x:Name="BorderEditor" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0">
-                    <views:EditorView />
+                    <views:EditorView FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" />
                 </Border>
             </Grid>
             

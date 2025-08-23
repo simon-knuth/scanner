@@ -65,6 +65,7 @@ namespace Scanner
                 .AddSingleton<ITesseractService, TesseractService>()
                 .AddSingleton<ISaveLocationService, SaveLocationService>()
                 .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
+                .AddSingleton<IAccessibilityService, AccessibilityService>()
                 .BuildServiceProvider());
         }
 

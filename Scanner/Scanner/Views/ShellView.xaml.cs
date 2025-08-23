@@ -34,6 +34,9 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private FlowDirection LayoutFlowDirection => ViewModel.SettingsService.SettingMirrorAppLayout ?
+            ViewModel.AccessibilityService.InvertedFlowDirection : ViewModel.AccessibilityService.DefaultFlowDirection;
+
         public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
 
         public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll || ViewModel.ProjectService.IsScanProcessRunning;
@@ -464,6 +467,11 @@ namespace Scanner.Views
         private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             ((App)Application.Current).InvokeKeyDown(e);
+        }
+
+        private async void Page_Loading(FrameworkElement sender, object args)
+        {
+            await ViewModel.AccessibilityService.InitializeForLanguageTagAsync(this.DispatcherQueue, sender.Language);
         }
     }
 }
