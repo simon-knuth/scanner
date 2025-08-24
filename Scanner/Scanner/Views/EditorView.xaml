@@ -461,7 +461,7 @@
                             </Image.Source>
                         </Image>
                     </Frame>
-                    <InkCanvas x:Name="InkCanvasDraw" />
+                    <!--<InkCanvas x:Name="InkCanvasDraw" />-->
                 </Grid>
             </ScrollViewer>
         </Border>

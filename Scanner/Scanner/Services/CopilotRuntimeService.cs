@@ -96,7 +96,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to generate file name");
+                LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to generate image description for file name");
                 return null;
             }
             finally
@@ -156,10 +156,6 @@ namespace Scanner.Services
             catch (Exception exc)
             {
                 LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to generate file name");
-            }
-            finally
-            {
-                fileNameModelsSemaphore.Release();
             }
 
             return null;

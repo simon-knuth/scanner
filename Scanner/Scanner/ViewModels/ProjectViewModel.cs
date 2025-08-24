@@ -511,7 +511,7 @@ namespace Scanner.ViewModels
                 if (pdfProject.FileNameInfo.IsNameGenerationInProgress)
                     pdfProject.FileNameInfo.NameGenerationCts?.Cancel();
                 else
-                    pdfProject.GenerateFileNameWithAIAsync(viewDispatcherQueue);
+                    Task.Run(() => pdfProject.GenerateFileNameWithAIAsync(viewDispatcherQueue));
             }
             if (CurrentProject is ImageProject)
             {
