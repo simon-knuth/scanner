@@ -27,6 +27,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
         public readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();

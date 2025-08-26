@@ -13,7 +13,8 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     mc:Ignorable="d"
-    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}">
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
+    Loading="Page_Loading">
 
     <Page.DataContext>
         <viewModels:SettingsViewModel x:Name="ViewModel"/>
@@ -56,9 +57,15 @@
         </Grid.ColumnDefinitions>
         
         <!-- Titlebar -->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Padding="16,0,8,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TextBlock Text="Settings" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
-        </Border>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Padding="16,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetHeader" Width="0" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetFooter" Width="0" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" Text="Settings" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+        </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0">
             <NavigationView IsPaneToggleButtonVisible="False" IsSettingsVisible="False" Style="{StaticResource NavigationViewStyleNoContent}" IsBackButtonVisible="Collapsed" OpenPaneLength="232" CompactModeThresholdWidth="0" ExpandedModeThresholdWidth="0" MenuItemsSource="{x:Bind ViewModel.HeaderSettingsPages}" FooterMenuItemsSource="{x:Bind ViewModel.FooterSettingsPages}" SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}">

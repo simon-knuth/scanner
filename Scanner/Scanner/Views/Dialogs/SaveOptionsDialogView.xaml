@@ -23,7 +23,8 @@
     CloseButtonText="{x:Bind strings:Resources.Cancel}"
     DefaultButton="Primary"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
-    IsPrimaryButtonEnabled="{x:Bind ViewModel.AreValidOptionsSelected, Mode=OneWay}">
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.AreValidOptionsSelected, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}">
 
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Loading">

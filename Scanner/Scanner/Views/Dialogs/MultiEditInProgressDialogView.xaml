@@ -15,6 +15,7 @@
     mc:Ignorable="d"
     Style="{StaticResource DefaultContentDialogStyle}"
     Title="{x:Bind strings:Resources.ApplyingChanges}"
+    FlowDirection="{x:Bind AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
     Loaded="ContentDialog_Loaded">
 
     

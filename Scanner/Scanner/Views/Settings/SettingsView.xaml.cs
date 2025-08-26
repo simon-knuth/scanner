@@ -1,3 +1,4 @@
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -121,6 +122,21 @@ namespace Scanner.Views.Settings
             {
                 ((SettingsPage)FrameContent.Content).PageNavigationRequested += SettingsView_PageNavigationRequested;
                 ((SettingsPage)FrameContent.Content).GoBackRequested += SettingsView_GoBackRequested;
+            }
+        }
+
+        private void Page_Loading(FrameworkElement sender, object args)
+        {
+            // update titlebar spacing
+            AppWindowTitleBar? titlebar = ((App)Application.Current).SettingsWindow?.AppWindow.TitleBar;
+
+            if (titlebar != null)
+            {
+                double scaleAdjustment = this.XamlRoot.RasterizationScale;
+                double headerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset : titlebar.RightInset;
+                double footerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset : titlebar.LeftInset;
+                ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
+                ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
             }
         }
     }

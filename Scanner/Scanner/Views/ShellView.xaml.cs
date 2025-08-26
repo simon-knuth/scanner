@@ -154,8 +154,10 @@ namespace Scanner.Views
             AppWindowTitleBar titlebar = ((App)Application.Current).MainWindow.AppWindow.TitleBar;
 
             double scaleAdjustment = this.XamlRoot.RasterizationScale;
-
-            ColumnDefinitionTitlebarInset.Width = new GridLength((titlebar.RightInset + 24) / scaleAdjustment);
+            double headerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset + 0 : titlebar.RightInset + 24;
+            double footerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset + 24 : titlebar.LeftInset + 0;
+            ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
+            ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
 
             GeneralTransform transform = StackPanelTitlebarButtonsLeft.TransformToVisual(null);
             Rect bounds = transform.TransformBounds(new Rect(0, 0,
