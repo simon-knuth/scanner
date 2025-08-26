@@ -105,21 +105,21 @@ namespace Scanner.Services
                 }
 
                 // recent folders may be cached
-                try
+                for (int i = 0; i < recentFoldersLimit; i++)
                 {
-                    for (int i = 0; i < recentFoldersLimit; i++)
+                    string token = $"{futureAccessListRecentFoldersToken}{i}";
+                    try
                     {
-                        string token = $"{futureAccessListRecentFoldersToken}{i}";
                         if (futureAccessList.ContainsItem(token))
                         {
                             recentFolders.Add(await futureAccessList.GetFolderAsync(token));
                         }
                     }
-                }
-                catch (Exception)
-                {
-
-                    throw;
+                    catch (Exception)
+                    {
+                        // folder probably deleted
+                        futureAccessList.Remove(token);
+                    }
                 }
             }
             else
