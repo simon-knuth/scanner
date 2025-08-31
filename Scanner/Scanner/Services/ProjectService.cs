@@ -815,12 +815,16 @@ namespace Scanner.Services
                 TimerElapsedHandler? handler = null;
                 handler = new TimerElapsedHandler(async (source) =>
                 {
+                    if (SettingsService?.SettingAutoSave == false)
+                        return;
+
                     if (CurrentProject != null && !CurrentProject.IsSaved)
                     {
                         await CurrentProject.SaveAsync(UiDispatcherQueue);
                     }
                     autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
                 });
+                autoSaveTimer?.Cancel();
                 autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
             }
             else
