@@ -339,6 +339,47 @@ namespace Scanner.Models
             }
         }
 
+        public async Task ShareAsync()
+        {
+            // wait for save processes to end
+            if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
+            {
+                await Messenger.Send(new ShowSaveInProgressDialogMessage()).Response;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            // share file
+            try
+            {
+                if (!IsSaved)
+                {
+                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    {
+                        Title = "Project not saved",
+                        Message = "The project needs to be saved to complete this action.",
+                        Severity = InfoBarSeverity.Error
+                    }));
+                    return;
+                }
+
+                // set file for sharing
+                Messenger.Send(new SetShareFilesMessage([TargetFile]));
+
+                // invoke share UI
+                Messenger.Send(new InvokeShareUIMessage());
+            }
+            catch (Exception exc)
+            {
+                throw new ActionFailedAndRolledBackException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
+        }
+
         public async Task<ImageBuffer> GetImageBufferForAIFileNameGenerationAsync(DispatcherQueue uiDispatcherQueue)
         {
             // decode bitmap

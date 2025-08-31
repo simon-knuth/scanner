@@ -10,7 +10,8 @@ namespace Scanner.Messages
 {
     internal class ShowNotificationMessage
     {
-        public Notification Notification { get; }
+        public readonly Notification Notification;
+
         public ShowNotificationMessage(Notification notification)
         {
             Notification = notification;

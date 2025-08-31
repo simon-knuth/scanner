@@ -605,6 +605,62 @@ namespace Scanner.Services
             return true;
         }
 
+        public async Task<bool> TryShareProjectAsync()
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // share project
+                if (CurrentProject is PdfProject pdfProject)
+                {
+                    await pdfProject.ShareAsync();
+                }
+            }
+            catch (ActionFailedAndRolledBackException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> TrySharePagesAsync(List<IProjectPage> pages)
+        {
+            if (CurrentProject == null) return true;
+            IsActionRunning = true;
+
+            try
+            {
+                // copy project
+                if (CurrentProject is ImageProject imageProject)
+                {
+                    await imageProject.SharePagesAsync(pages);
+                }
+            }
+            catch (ActionFailedAndRolledBackException)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Something went wrong and the action couldn't be completed"
+                }));
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false)
         {
             if (CurrentProject == null) return true;

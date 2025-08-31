@@ -86,6 +86,9 @@ namespace Scanner.Services.Interfaces
         Task<bool> TryOpenWithProjectAsync(AppInfo? app);
         Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page);
 
+        Task<bool> TryShareProjectAsync();
+        Task<bool> TrySharePagesAsync(List<IProjectPage> pages);
+
         Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
 
         void SelectPreviousPage();

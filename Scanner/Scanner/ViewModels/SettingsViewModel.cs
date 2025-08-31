@@ -108,6 +108,8 @@ namespace Scanner.ViewModels
             set => SettingsService.SettingEditorOrientation = (SettingEditorOrientation)value;
         }
 
+        public bool IsAutoSaveAvailable => SettingsService.SettingSaveLocationType != Services.Interfaces.SettingSaveLocationType.AskAfterNewProject;
+
         public string CurrentVersion => Helpers.Helpers.GetCurrentVersion();
 
         private DispatcherQueue? viewDispatcherQueue;
@@ -243,6 +245,9 @@ namespace Scanner.ViewModels
                 case nameof(ISettingsService.SettingFileNamingPattern):
                 case nameof(ISettingsService.CustomFileNamingPattern):
                     UpdateFileNamingPatternPreview();
+                    break;
+                case nameof(ISettingsService.SettingSaveLocationType):
+                    OnPropertyChanged(nameof(IsAutoSaveAvailable));
                     break;
             }
         }

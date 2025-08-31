@@ -9,7 +9,7 @@ namespace Scanner.Messages
 {
     internal class ShowMultiEditInProgressDialogMessage : RequestMessage<Task>
     {
-        public Task Process;
+        public readonly Task Process;
 
         public ShowMultiEditInProgressDialogMessage(Task process)
         {

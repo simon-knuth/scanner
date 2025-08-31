@@ -98,7 +98,7 @@ namespace Scanner.Services
                     catch (Exception exc2)
                     {
                         isFixedSaveLocationSupported = false;
-                        SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskForEveryProject;
+                        SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
                         LogService?.Log.Error(exc2, "SaveLocationService - Fixed save location is not supported");
                         SentryService?.TrackError(exc2);
                     }
@@ -157,7 +157,7 @@ namespace Scanner.Services
                     TrackRecentlyUsedFolder(fixedSaveLocation!);
                     return new SaveOptions(fixedSaveLocation!, fileName, SettingsService.SettingGenerateFileNameWithAI);
 
-                case SettingSaveLocationType.AskForEveryProject:
+                case SettingSaveLocationType.AskBeforeNewProject:
                     if (existingProject != null)
                     {
                         if (existingProject is PdfProject pdfProject)
@@ -172,13 +172,33 @@ namespace Scanner.Services
 
                     // ask user for location
                     SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
-                    if (result != null) TrackRecentlyUsedFolder(result.TargetFolder);
+                    if (result?.TargetFolder != null)
+                        TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;
+
+                case SettingSaveLocationType.AskAfterNewProject:
+                    if (existingProject != null)
+                    {
+                        if (existingProject is PdfProject pdfProject)
+                        {
+                            return new SaveOptions(pdfProject.TargetFolder!, fileName, false);
+                        }
+                        else if (existingProject.Pages[0] is ImagePage imagePage)
+                        {
+                            return new SaveOptions(imagePage.TargetFolder, fileName, false);
+                        }
+                    }
+
+                    if (scanOptions.TargetFormat == TargetFormat.PDF)
+                        return new SaveOptions(null, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                    else
+                        return new SaveOptions(null, fileName, false);
 
                 case SettingSaveLocationType.AskEveryTime:
                     // ask user for location
                     result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
-                    if (result != null) TrackRecentlyUsedFolder(result.TargetFolder);
+                    if (result?.TargetFolder != null)
+                        TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;
 
                 default:
@@ -210,7 +230,7 @@ namespace Scanner.Services
             catch (UnauthorizedAccessException exc)
             {
                 isFixedSaveLocationSupported = false;
-                SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskForEveryProject;
+                SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
                 LogService?.Log.Error(exc, "SaveLocationService - Resetting fixed save location failed (Unauthorized)");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
@@ -223,7 +243,7 @@ namespace Scanner.Services
             catch (Exception exc)
             {
                 isFixedSaveLocationSupported = false;
-                SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskForEveryProject;
+                SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
                 LogService?.Log.Error(exc, "SaveLocationService - Resetting fixed save location failed");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification

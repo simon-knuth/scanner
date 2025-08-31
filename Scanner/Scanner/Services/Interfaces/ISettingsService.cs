@@ -62,9 +62,25 @@ namespace Scanner.Services.Interfaces
 
     public enum SettingSaveLocationType
     {
+        /// <summary>
+        /// Save files to a fixed location.
+        /// </summary>
         FixedLocation = 0,
-        AskForEveryProject = 1,
-        AskEveryTime = 2
+
+        /// <summary>
+        /// Ask for a location before starting a new project.
+        /// </summary>
+        AskBeforeNewProject = 1,
+
+        /// <summary>
+        /// Ask for a location once the user saves a project.
+        /// </summary>
+        AskAfterNewProject = 2,
+
+        /// <summary>
+        /// Ask for a location every time a new project is started or a new file is being added.
+        /// </summary>
+        AskEveryTime = 3
     }
 
     public enum SettingAppTheme

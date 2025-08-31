@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Services.Interfaces;
 using System;
@@ -19,6 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using WinRT.Interop;
 using WinUIEx;
 using static Scanner.Helpers.Helpers;
@@ -26,12 +28,19 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.AppWindows
 {
+    [ObservableRecipientAttribute]
+    [ObservableObjectAttribute]
     public sealed partial class MainWindow : WindowEx
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public IDataTransferManagerInterop DataTransferManagerInterop { get; private set; }
+
+
         private AppWindowTitleBar titlebar;
+
+        private List<StorageFile> shareFiles;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,12 +70,38 @@ namespace Scanner.AppWindows
             titlebar.PreferredHeightOption = TitleBarHeightOption.Tall;
             titlebar.ButtonBackgroundColor = Colors.Transparent;
             titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            SetUpSharing();
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+        private void SetUpSharing()
+        {
+            WeakReferenceMessenger.Default.Register<SetShareFilesMessage>(this, (r, m) => shareFiles = m.Files);
+            DataTransferManagerInterop = Windows.ApplicationModel.DataTransfer.DataTransferManager.As
+                <IDataTransferManagerInterop>();
+
+            IntPtr result = DataTransferManagerInterop.GetForWindow(WindowNative.GetWindowHandle(this), DataTransferManagerInteropGuids.Dtm_iid);
+            Windows.ApplicationModel.DataTransfer.DataTransferManager dataTransferManager = WinRT.MarshalInterface
+                <Windows.ApplicationModel.DataTransfer.DataTransferManager>.FromAbi(result);
+
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+        }
+
+        private void DataTransferManager_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
+        {
+            if (shareFiles != null && shareFiles.Count >= 1)
+            {
+                args.Request.Data.SetStorageItems(shareFiles);
+
+                if (shareFiles.Count == 1)
+                    args.Request.Data.Properties.Title = shareFiles[0].Name;
+                else
+                    args.Request.Data.Properties.Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ShareUITitleMultipleFiles);
+            }
+        }
     }
 }

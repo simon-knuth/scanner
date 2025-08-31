@@ -48,7 +48,19 @@ namespace Scanner.Services
         public SettingSaveLocationType SettingSaveLocationType
         {
             get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.FixedLocation);
-            set => SetSetting(nameof(SettingSaveLocationType), (int)value);
+            set
+            {
+                if (value == SettingSaveLocationType.AskAfterNewProject)
+                {
+                    SetSetting(nameof(SettingAutoSave), false);
+                }
+                else if (SettingSaveLocationType == SettingSaveLocationType.AskAfterNewProject)
+                {
+                    SetSetting(nameof(SettingAutoSave), true);
+                }
+
+                SetSetting(nameof(SettingSaveLocationType), (int)value);
+            }
         }
 
         public SettingAppTheme SettingAppTheme

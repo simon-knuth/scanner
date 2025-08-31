@@ -46,6 +46,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryRemoveCurrentPageAsyncCommand => new AsyncRelayCommand(TryRemoveCurrentPageAsync);
         public AsyncRelayCommand TryDeleteProjectAsyncCommand => new AsyncRelayCommand(TryDeleteProjectAsync);
         public AsyncRelayCommand TryCopyProjectOrPageAsyncCommand => new AsyncRelayCommand(TryCopyProjectOrPageAsync);
+        public AsyncRelayCommand TryShareProjectOrPageAsyncCommand => new AsyncRelayCommand(TryShareProjectOrPageAsync);
         public AsyncRelayCommand<AppInfo?> TryOpenWithAsyncCommand => new AsyncRelayCommand<AppInfo?>(TryOpenWithAsync);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public RelayCommand SelectPreviousPageCommand => new RelayCommand(SelectPreviousPage);
@@ -61,6 +62,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RotateSelectedPagesAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Automatic));
         public AsyncRelayCommand RemoveSelectedPagesAsyncCommand => new AsyncRelayCommand(RemoveSelectedPagesAsync);
         public AsyncRelayCommand TryCopySelectedPagesAsyncCommand => new AsyncRelayCommand(TryCopySelectedPagesAsync);
+        public AsyncRelayCommand TryShareSelectedPagesAsyncCommand => new AsyncRelayCommand(TryShareSelectedPagesAsync);
         public AsyncRelayCommand<ImageFilter> ApplyFilterToSelectedPagesAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToSelectedPagesAsync);
         public RelayCommand StartStopGenerateFileNameWithAICommand => new RelayCommand(StartStopGenerateFileNameWithAI);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
@@ -383,6 +385,20 @@ namespace Scanner.ViewModels
             }
         }
 
+        private async Task TryShareProjectOrPageAsync()
+        {
+            if (CurrentProject == null) return;
+
+            if (CurrentProject is PdfProject)
+            {
+                await ProjectService.TryShareProjectAsync();
+            }
+            else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
+            {
+                await ProjectService.TrySharePagesAsync([.. imageProject.Pages]);
+            }
+        }
+
         private async Task TryOpenWithAsync(AppInfo? app)
         {
             if (CurrentProject == null) return;
@@ -486,6 +502,17 @@ namespace Scanner.ViewModels
                 await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
             else if (ProjectService.SelectedPage != null)
                 await ProjectService.TryCopyPagesAsync([ProjectService.SelectedPage]);
+        }
+
+        private async Task TryShareSelectedPagesAsync()
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+
+            if (IsMultiSelect && ProjectService.SelectedPages != null)
+                await ProjectService.TrySharePagesAsync(ProjectService.SelectedPages.ToList());
+            else if (ProjectService.SelectedPage != null)
+                await ProjectService.TrySharePagesAsync([ProjectService.SelectedPage]);
         }
 
         private async Task ApplyFilterToSelectedPagesAsync(ImageFilter filter)

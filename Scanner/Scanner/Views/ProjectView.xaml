@@ -328,11 +328,29 @@
                                     <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Share}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryShareProjectOrPageAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutSubItem.Icon>
+
+                                <MenuFlyoutSubItem.Items>
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.ActionExtentCurrentPage}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.ActionExtentProject}" Command="{x:Bind ViewModel.TryShareProjectOrPageAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xF571;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyoutSubItem.Items>
+                            </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Text="{x:Bind strings:Resources.CloseProject}" Command="{x:Bind ViewModel.TryCloseProjectAsyncCommand}">
                                 <MenuFlyoutItem.Icon>

@@ -12,7 +12,7 @@ namespace Scanner.Messages
 {
     internal class ShowProjectDeletionDialogMessage : RequestMessage<Task<bool>>
     {
-        public ProjectBase Project;
+        public readonly ProjectBase Project;
 
         public ShowProjectDeletionDialogMessage(ProjectBase project)
         {

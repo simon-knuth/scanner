@@ -50,17 +50,59 @@
                 </StackPanel.ChildrenTransitions>
                 
                 <TextBlock Text="General" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Save options" Margin="0,0,0,8" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.Content>
-                        <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
+                        <ComboBox x:Name="ComboBoxSettingSaveLocation" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
                             <ComboBox.Items>
-                                <ComboBoxItem Content="Fixed location" FontWeight="SemiBold" IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}" />
-                                <ComboBoxItem Content="Ask for every new project" />
-                                <ComboBoxItem Content="Ask every time" />
+                                <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Fixed location" MaxLines="1" Style="{StaticResource BaseTextBlockStyle}" />
+                                        <TextBlock Grid.Row="1" Text="Save all files to the same folder." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                    </Grid>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Ask before starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                        <TextBlock Grid.Row="1" Text="Select where to save files when starting a new project." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                    </Grid>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Ask after starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                        <TextBlock Grid.Row="1" Text="Select where to save files when attempting to save the project for the first time." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                    </Grid>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Ask for every new file" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                        <TextBlock Grid.Row="1" Text="Select a folder every time you start a new PDF project or scan to a new image file." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                    </Grid>
+                                </ComboBoxItem>
                             </ComboBox.Items>
                         </ComboBox>
                     </controls:SettingsExpander.Content>
@@ -149,13 +191,15 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard Header="Save changes automatically">
+                <controls:SettingsCard Header="Save changes automatically" IsEnabled="{x:Bind ViewModel.IsAutoSaveAvailable, Mode=OneWay}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE74E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=TwoWay}" />
                 </controls:SettingsCard>
+
+                <TextBlock Text="Scanning" Margin="0,24,0,8" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsCard Header="Automatic rotation">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7AD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />

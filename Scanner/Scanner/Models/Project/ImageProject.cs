@@ -367,6 +367,58 @@ namespace Scanner.Models
             }
         }
 
+        public async Task SharePagesAsync(List<IProjectPage> pages)
+        {
+            // wait for save processes to end
+            if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
+            {
+                await Messenger.Send(new ShowSaveInProgressDialogMessage()).Response;
+            }
+            await saveSemaphore.WaitAsync();
+            await projectObjectSemaphore.WaitAsync();
+
+            // share files
+            try
+            {
+                if (IsSaved)
+                {
+                    // collect files
+                    List<StorageFile> files = [];
+                    foreach (IProjectPage page in pages)
+                    {
+                        if (page.TargetFile == null)
+                            throw new ActionFailedAndRolledBackException("Failed to collect files for sharing");
+
+                        files.Add(page.TargetFile);
+                    }
+
+                    // set share files
+                    Messenger.Send(new SetShareFilesMessage(files));
+
+                    // invoke share UI
+                    Messenger.Send(new InvokeShareUIMessage());
+                }
+                else
+                {
+                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    {
+                        Title = "Project not saved",
+                        Message = "The project needs to be saved to complete this action.",
+                        Severity = InfoBarSeverity.Error
+                    }));
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ActionFailedAndRolledBackException(exc);
+            }
+            finally
+            {
+                projectObjectSemaphore.Release();
+                saveSemaphore.Release();
+            }
+        }
+
         private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)
         {
             if (sender == null) return;

@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Xaml;
@@ -10,6 +11,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Scanner.Extensions;
+using Scanner.Helpers;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
@@ -21,14 +24,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT;
+using WinRT.Interop;
 using WinUIEx;
 using static Scanner.Helpers.Helpers;
 
 
 namespace Scanner.Views
 {
+    [ObservableRecipientAttribute]
     [ObservableObjectAttribute]
     public sealed partial class ProjectView : Page
     {
@@ -178,6 +185,8 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+
+            WeakReferenceMessenger.Default.Register<InvokeShareUIMessage>(this, (r, m) => InvokeShareUI());
         }
 
 
@@ -774,6 +783,24 @@ namespace Scanner.Views
                 });
                 gridViewItem.Unloaded += handler;
             }
+        }
+
+        private void InvokeShareUI()
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+            {
+                // share UI options currently not supported in WASDK
+                //Rect rectangle;
+                //ShareUIOptions shareUIOptions = new ShareUIOptions();
+
+                //GeneralTransform transform;
+                //transform = GridHeader.TransformToVisual(null);
+                //rectangle = transform.TransformBounds(new Rect(0, 0, GridHeader.ActualWidth, GridHeader.ActualHeight));
+                //shareUIOptions.SelectionRect = rectangle;
+
+                IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
+                ((App)Application.Current).MainWindow.DataTransferManagerInterop.ShowShareUIForWindow(hwnd);
+            });
         }
     }
 }
