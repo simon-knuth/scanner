@@ -204,7 +204,7 @@ namespace Scanner.Services
 
                 // get save options
                 IsActionRunning = true;
-                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject);
+                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false);
                 if (saveOptions == null) return;
 
                 // preheat AI models
@@ -241,14 +241,14 @@ namespace Scanner.Services
                 switch (scanOptions.TargetFormat)
                 {
                     case TargetFormat.PDF:
-                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions));
+                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
                         break;
                     case TargetFormat.JPG:
                     case TargetFormat.PNG:
                     case TargetFormat.BMP:
                     case TargetFormat.TIFF:
                     case TargetFormat.RAW:
-                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions));
+                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
                         break;
                     default:
                         throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
@@ -314,7 +314,7 @@ namespace Scanner.Services
                 SaveOptions? saveOptions = null;
                 if (scanOptions.TargetFormat != TargetFormat.PDF)
                 {
-                    saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject);
+                    saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false);
                     if (saveOptions == null) return;
                 }
 

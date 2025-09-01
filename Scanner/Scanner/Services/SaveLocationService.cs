@@ -131,7 +131,7 @@ namespace Scanner.Services
             initializationCompleted.TrySetResult();
         }
 
-        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject)
+        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject, bool enforceFolderSelection)
         {
             // generate default file name
             string fileName;
@@ -181,18 +181,35 @@ namespace Scanner.Services
                     {
                         if (existingProject is PdfProject pdfProject)
                         {
-                            return new SaveOptions(pdfProject.TargetFolder!, fileName, false);
+                            if (!enforceFolderSelection || pdfProject.TargetFolder != null)
+                                return new SaveOptions(pdfProject.TargetFolder, fileName, false);
                         }
                         else if (existingProject.Pages[0] is ImagePage imagePage)
                         {
-                            return new SaveOptions(imagePage.TargetFolder, fileName, false);
+                            if (!enforceFolderSelection || imagePage.TargetFolder != null)
+                                return new SaveOptions(imagePage.TargetFolder, fileName, false);
                         }
                     }
 
-                    if (scanOptions.TargetFormat == TargetFormat.PDF)
-                        return new SaveOptions(null, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                    if (enforceFolderSelection)
+                    {
+                        // ask user for location
+                        result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                        if (result?.TargetFolder != null)
+                            TrackRecentlyUsedFolder(result.TargetFolder);
+                        return result;
+                    }
                     else
-                        return new SaveOptions(null, fileName, false);
+                    {
+                        if (scanOptions.TargetFormat == TargetFormat.PDF)
+                        {
+                            return new SaveOptions(null, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                        }
+                        else
+                        {
+                            return new SaveOptions(null, fileName, false);
+                        }
+                    }
 
                 case SettingSaveLocationType.AskEveryTime:
                     // ask user for location

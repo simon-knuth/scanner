@@ -5,6 +5,7 @@ using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
@@ -43,7 +44,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImageProject(IList<IProjectPage> pages, TargetFormat format) : base(pages, format)
+        private ImageProject(IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
         {
             foreach (IProjectPage page in pages)
             {
@@ -54,7 +55,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter)
+        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -70,7 +71,7 @@ namespace Scanner.Models
             }
 
             // create project and update previews
-            ImageProject project = new ImageProject(pages, format);
+            ImageProject project = new ImageProject(pages, format, initialScanOptions);
             await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList());
             return project;
         }
@@ -112,21 +113,23 @@ namespace Scanner.Models
             }
         }
 
-        public override async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
+        public override async Task<bool> SaveAsync(DispatcherQueue uiDispatcherQueue)
         {
+            bool success = false;
+
             // ensure maximum of one thread waiting to save
             if (saveProcessWaitingToStart)
             {
                 if (LatestSaveProcess != null)
                 {
-                    await LatestSaveProcess.Task;
+                    return await LatestSaveProcess.Task;
                 }
-                return;
+                return true;
             }
             saveProcessWaitingToStart = true;
 
             // enable waiting for save process (even if it is waiting to start)
-            TaskCompletionSource saveProcess = new();
+            TaskCompletionSource<bool> saveProcess = new();
             LatestSaveProcess = saveProcess;
 
             // save
@@ -141,6 +144,24 @@ namespace Scanner.Models
                         IsSaving = true;
                         saveProcessWaitingToStart = false;
                     });
+
+                    // ensure target file is set for every file
+                    if (Pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
+                    {
+                        // get save options
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true);
+                        if (saveOptions == null || saveOptions.TargetFolder == null)
+                            return;
+
+                        foreach (IProjectPage page in Pages)
+                        {
+                            if (page is ImagePage imagePage)
+                            {
+                                imagePage.TargetFolder = saveOptions.TargetFolder;
+                                imagePage.FileNameInfo = new(saveOptions.FileName);
+                            }
+                        }
+                    }
 
                     // apply actual file changes
                     if (!areFilesSaved)
@@ -239,7 +260,8 @@ namespace Scanner.Models
                         }
                     });
 
-                        projectObjectSemaphore.Release();
+                    success = true;
+                    projectObjectSemaphore.Release();
                 }
                 catch (Exception exc)
                 {
@@ -257,11 +279,13 @@ namespace Scanner.Models
                             areFilesSaved = true;
 
                         hasMadeChangesDuringSaveProcess = false;
-                        saveProcess.TrySetResult();
+                        saveProcess.TrySetResult(success);
                     });
                     saveSemaphore.Release();
                 }
             });
+
+            return success;
         }
 
         public async Task CopyPagesAsync(List<IProjectPage> pages)

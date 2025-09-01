@@ -42,6 +42,7 @@ namespace Scanner.Models
         protected static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        protected static readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         protected static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
         #endregion
 
@@ -55,7 +56,7 @@ namespace Scanner.Models
 
         public bool IsSaved => areFilesSaved && hasFileNameBeenApplied;
 
-        public TaskCompletionSource? LatestSaveProcess;
+        public TaskCompletionSource<bool>? LatestSaveProcess;
 
         public ObservableCollection<IProjectPage> Pages
         {
@@ -63,7 +64,11 @@ namespace Scanner.Models
             private set;
         }
 
-        public TargetFormat Format;
+        /// <summary>
+        /// The <see cref="ScanOptions"/> in use when this project was created in the first place.
+        /// </summary>
+        public readonly ScanOptions? InitialScanOptions;
+        public readonly TargetFormat Format;
 
         public bool IsPdf => Format == TargetFormat.PDF;
 
@@ -105,10 +110,11 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        protected ProjectBase(IList<IProjectPage> pages, TargetFormat format)
+        protected ProjectBase(IList<IProjectPage> pages, TargetFormat targetFormat, ScanOptions initialScanOptions)
         {
             Pages = new ObservableCollection<IProjectPage>(pages);
-            Format = format;
+            Format = targetFormat;
+            InitialScanOptions = initialScanOptions;
         }
 
 

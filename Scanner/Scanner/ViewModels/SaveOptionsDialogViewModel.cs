@@ -169,7 +169,7 @@ namespace Scanner.ViewModels
         {
             viewDispatcherQueue = dispatcherQueue;
 
-            if (Project != null && Project is PdfProject pdfProject)
+            if (Project != null && Project is PdfProject pdfProject && pdfProject.TargetFolder != null)
             {
                 SelectedFolder = pdfProject.TargetFolder;
                 _ = Task.Run(UpdateOccupiedFoldersAsync);

@@ -58,11 +58,7 @@ namespace Scanner.Models
 
         public StorageFile? TargetFile { get; set; }
 
-        public StorageFolder? TargetFolder
-        {
-            get;
-            private set;
-        }
+        public StorageFolder? TargetFolder { get; set; }
 
         private Uri previewBitmapUri;
         public Uri PreviewBitmapUri
@@ -78,7 +74,7 @@ namespace Scanner.Models
         [NotifyPropertyChangedFor(nameof(PageNumber))]
         private int index;
 
-        public FileNameInfo? FileNameInfo { get; private set; }
+        public FileNameInfo? FileNameInfo { get; set; }
 
         public int PageNumber => Index + 1;
 

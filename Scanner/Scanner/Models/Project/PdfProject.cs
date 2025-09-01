@@ -6,6 +6,7 @@ using Microsoft.Graphics.Imaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
@@ -41,7 +42,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public StorageFolder TargetFolder;
+        public StorageFolder? TargetFolder;
 
         public StorageFile? TargetFile;
 
@@ -51,7 +52,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private PdfProject(IList<IProjectPage> pages, TargetFormat format, string targetFileName, StorageFolder targetFolder) : base(pages, format)
+        private PdfProject(IList<IProjectPage> pages, TargetFormat format, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
         {
             // folder saved at project level for PDF and page level for all other formats
             TargetFolder = targetFolder;
@@ -60,7 +61,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = false;
         }
 
-        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter)
+        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -76,7 +77,7 @@ namespace Scanner.Models
             }
 
             // create project and update previews
-            PdfProject project = new PdfProject(pages, format, targetFileName, targetFolder);
+            PdfProject project = new PdfProject(pages, format, targetFileName, targetFolder, initialScanOptions);
             await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList());
             return project;
         }
@@ -114,21 +115,23 @@ namespace Scanner.Models
             }
         }
 
-        public override async Task SaveAsync(DispatcherQueue uiDispatcherQueue)
+        public override async Task<bool> SaveAsync(DispatcherQueue uiDispatcherQueue)
         {
+            bool success = false;
+
             // ensure maximum of one thread waiting to save
             if (saveProcessWaitingToStart)
             {
                 if (LatestSaveProcess != null)
                 {
-                    await LatestSaveProcess.Task;
+                    return await LatestSaveProcess.Task;
                 }
-                return;
+                return true;
             }
             saveProcessWaitingToStart = true;
 
             // enable waiting for save process (even if it is waiting to start)
-            TaskCompletionSource saveProcess = new();
+            TaskCompletionSource<bool> saveProcess = new();
             LatestSaveProcess = saveProcess;
 
             // save
@@ -143,6 +146,18 @@ namespace Scanner.Models
                         IsSaving = true;
                         saveProcessWaitingToStart = false;
                     });
+
+                    // ensure target folder is set
+                    if (TargetFile == null && TargetFolder == null)
+                    {
+                        // get save options
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true);
+                        if (saveOptions == null || saveOptions.TargetFolder == null)
+                            return;
+
+                        TargetFolder = saveOptions.TargetFolder;
+                        await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
+                    }
 
                     // apply actual file changes
                     if (!areFilesSaved)
@@ -223,6 +238,8 @@ namespace Scanner.Models
                             hasFileNameBeenApplied = true;
                         }
                     });
+
+                    success = true;
                 }
                 catch (Exception exc)
                 {
@@ -240,11 +257,13 @@ namespace Scanner.Models
                             areFilesSaved = true;
 
                         hasMadeChangesDuringSaveProcess = false;
-                        saveProcess.TrySetResult();
+                        saveProcess.TrySetResult(success);
                     });
                     saveSemaphore.Release();
                 }
             });
+
+            return success;
         }
 
         public async Task CopyAsync()
