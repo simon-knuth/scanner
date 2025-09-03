@@ -177,7 +177,9 @@ namespace Scanner.ViewModels
 
         private async Task ShowMultiEditInProgressDialogAsync(Task process)
         {
-            MultiEditInProgressDialogRequested?.Invoke(this, process);
+            if (!ProjectService.IsScanProcessRunning)
+                MultiEditInProgressDialogRequested?.Invoke(this, process);
+            
             await process;
         }
 

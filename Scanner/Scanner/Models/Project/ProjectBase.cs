@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
@@ -10,11 +11,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
+using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -127,6 +130,10 @@ namespace Scanner.Models
 
         public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
         {
+            TaskCompletionSource process = new();
+            if (insertions.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             await StartEditingAsync();
 
             try
@@ -136,6 +143,7 @@ namespace Scanner.Models
             finally
             {
                 FinishEditing();
+                process.TrySetResult();
             }
         }
 
@@ -205,6 +213,10 @@ namespace Scanner.Models
 
         public async Task AddPagesAsync(List<IProjectPage> insertions, DispatcherQueue uiDispatcherQueue)
         {
+            TaskCompletionSource process = new();
+            if (insertions.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             await StartEditingAsync();
 
             try
@@ -269,6 +281,7 @@ namespace Scanner.Models
             finally
             {
                 FinishEditing();
+                process.TrySetResult();
             }
         }
 
@@ -284,6 +297,10 @@ namespace Scanner.Models
         /// <exception cref="ActionFailedAndRolledBackException"></exception>
         public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
         {
+            TaskCompletionSource process = new();
+            if (pages.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             await StartEditingAsync();
 
             try
@@ -350,6 +367,7 @@ namespace Scanner.Models
             finally
             {
                 FinishEditing();
+                process.TrySetResult();
             }
         }
 
@@ -404,6 +422,10 @@ namespace Scanner.Models
         /// <returns></returns>
         public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
+            TaskCompletionSource process = new();
+            if (instructions.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
                 if (instruction.Value == BitmapRotation.None) continue;
@@ -431,6 +453,8 @@ namespace Scanner.Models
                     });
                 }
             }
+
+            process.TrySetResult();
         }
 
         /// <summary>
@@ -590,6 +614,10 @@ namespace Scanner.Models
         /// <param name="filter">The filter to apply.</param>
         public async Task ApplyFilterToPagesAsync(List<ImagePage> pages, ImageFilter filter)
         {
+            TaskCompletionSource process = new();
+            if (pages.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             await StartEditingAsync();
 
             try
@@ -610,6 +638,7 @@ namespace Scanner.Models
             finally
             {
                 FinishEditing();
+                process.TrySetResult();
             }
         }
 
@@ -702,6 +731,10 @@ namespace Scanner.Models
 
         public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
+            TaskCompletionSource process = new();
+            if (pages.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             List<AppliedCrop> result = [];
 
             foreach (IProjectPage page in pages)
@@ -729,11 +762,16 @@ namespace Scanner.Models
                 result.Add(appliedCrop);
             }
 
+            process.TrySetResult();
             return result;
         }
 
         public async Task<List<IProjectPage>> CropPagesAsCopyAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder)
         {
+            TaskCompletionSource process = new();
+            if (pages.Count > 1)
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+
             List<IProjectPage> result = [];
 
             foreach (IProjectPage page in pages)
@@ -764,6 +802,7 @@ namespace Scanner.Models
                 }
             }
 
+            process.TrySetResult();
             return result;
         }
 
