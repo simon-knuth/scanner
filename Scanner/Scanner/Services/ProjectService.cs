@@ -215,44 +215,51 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
-                IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
+                IList<StorageFile> files = [];
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder));
 
                 if (files.Count == 0)
-                {
                     return;
-                }
 
-                // auto rotate
+                // automatic rotation
                 if (SettingsService.SettingAutoRotate)
                 {
                     CurrentScanState = ScanState.AutomaticRotation;
 
-                    Dictionary<StorageFile, RotationIntent> instructions = new();
-                    foreach (StorageFile file in files)
+                    await Task.Run(async () =>
                     {
-                        instructions.Add(file, RotationIntent.Automatic);
-                    }
+                        Dictionary<StorageFile, RotationIntent> instructions = new();
+                        foreach (StorageFile file in files)
+                        {
+                            instructions.Add(file, RotationIntent.Automatic);
+                        }
 
-                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
+                        await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
+                    });
                 }
 
                 // create project
                 CurrentScanState = ScanState.Processing;
-                switch (scanOptions.TargetFormat)
+                ProjectBase? project = null;
+                await Task.Run(async () =>
                 {
-                    case TargetFormat.PDF:
-                        CurrentProject = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
-                        break;
-                    case TargetFormat.JPG:
-                    case TargetFormat.PNG:
-                    case TargetFormat.BMP:
-                    case TargetFormat.TIFF:
-                    case TargetFormat.RAW:
-                        CurrentProject = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
-                        break;
-                    default:
-                        throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
-                }
+                    switch (scanOptions.TargetFormat)
+                    {
+                        case TargetFormat.PDF:
+                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
+                            break;
+                        case TargetFormat.JPG:
+                        case TargetFormat.PNG:
+                        case TargetFormat.BMP:
+                        case TargetFormat.TIFF:
+                        case TargetFormat.RAW:
+                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
+                            break;
+                        default:
+                            throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
+                    }
+                });
+                CurrentProject = project;
 
                 // kick off AI file name generation
                 if (saveOptions.GenerateAIFileName)
@@ -283,7 +290,7 @@ namespace Scanner.Services
                     {
                         CurrentScanState = ScanState.Saving;
                     }
-                    await CurrentProject.SaveAsync(UiDispatcherQueue!);
+                    await Task.Run(async () => await CurrentProject.SaveAsync(UiDispatcherQueue!));
                 }
 
                 // free up space
@@ -322,21 +329,24 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
-                IList<StorageFile> files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder);
-                IsScanProcessRunning = false;
+                IList<StorageFile> files = [];
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder));
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
                 {
                     CurrentScanState = ScanState.AutomaticRotation;
 
-                    Dictionary<StorageFile, RotationIntent> instructions = new();
-                    foreach (StorageFile file in files)
+                    await Task.Run(async () =>
                     {
-                        instructions.Add(file, RotationIntent.Automatic);
-                    }
+                        Dictionary<StorageFile, RotationIntent> instructions = new();
+                        foreach (StorageFile file in files)
+                        {
+                            instructions.Add(file, RotationIntent.Automatic);
+                        }
 
-                    await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
+                        await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
+                    });
                 }
 
                 // add files

@@ -150,13 +150,16 @@ namespace Scanner.Models
             try
             {
                 // add files
-                foreach (ProjectFileInsertion insertion in insertions)
+                await Task.Run(async () =>
                 {
-                    IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
-                    copiedFiles.Add(page.SourceFile);
+                    foreach (ProjectFileInsertion insertion in insertions)
+                    {
+                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
+                        copiedFiles.Add(page.SourceFile);
 
-                    preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
-                }
+                        preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
+                    }
+                });
 
                 // add pages
                 foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
@@ -704,13 +707,13 @@ namespace Scanner.Models
             foreach (IProjectPage page in pages)
             {
                 StorageFile oldFile = page.SourceFile;
-                StorageFile newFile;
+                StorageFile? newFile = null;
                 AppliedCrop appliedCrop = new(page, oldFile, page.Width, page.Height);
 
                 await StartEditingAsync();
                 try
                 {
-                    newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder);
+                    await Task.Run(async () => newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder));
                     page.Width = (uint)Math.Round(cropRegion.Width);
                     page.Height = (uint)Math.Round(cropRegion.Height);
                 }
@@ -718,7 +721,7 @@ namespace Scanner.Models
                 {
                     FinishEditing();
                 }
-                await page.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
+                await page.ChangeSourceFileAsync(pagesFolder, newFile!, uiDispatcherQueue);
 
                 // move to undo folder
                 await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);
@@ -744,7 +747,7 @@ namespace Scanner.Models
                     newFile = await page.SourceFile.CopyAsync(pagesFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                     
                     // crop
-                    await CropFileAsync(newFile, cropRegion, true, pagesFolder);
+                    await Task.Run(async () => await CropFileAsync(newFile, cropRegion, true, pagesFolder));
                     page.Width = (uint)Math.Round(cropRegion.Width);
                     page.Height = (uint)Math.Round(cropRegion.Height);
 

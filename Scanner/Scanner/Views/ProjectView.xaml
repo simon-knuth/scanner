@@ -394,7 +394,7 @@
                                 <DataTemplate x:DataType="interfaces:IProjectPage">
                                     <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
                                         <Grid>
-                                            <Frame Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
+                                            <Frame x:Name="FramePreview" Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
                                                 <Image>
                                                     <Image.Source>
                                                         <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
@@ -490,7 +490,7 @@
                                     <DataTemplate x:DataType="interfaces:IProjectPage">
                                         <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
                                             <Grid>
-                                                <Frame Margin="8" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
+                                                <Frame x:Name="FramePreview" Margin="8" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                                     <Image>
                                                         <Image.Source>
                                                             <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
