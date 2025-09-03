@@ -199,7 +199,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="2" Margin="0,0,4,0" Padding="8" Style="{StaticResource MutedOnAccentButtonStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
+                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="4" Margin="0,0,4,0" Padding="8" Style="{StaticResource ButtonOnAccentStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
                         <Grid>
                             <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.ScanActionAddToProject}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                                 <FontIcon.Transitions>
