@@ -113,7 +113,7 @@
             </Grid>
 
             <!-- AI file name generation -->
-            <Grid x:Name="GridAIFileNameGeneration" Margin="0,0,0,12" Visibility="{x:Bind ViewModel.IsPdf}" x:Load="{x:Bind ViewModel.CopilotRuntimeService.IsSupported}">
+            <Grid x:Name="GridAIFileNameGeneration" Visibility="{x:Bind ViewModel.IsPdf}" x:Load="{x:Bind ViewModel.CanGenerateAIFileName}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
@@ -134,7 +134,7 @@
                 </HyperlinkButton>
             </Grid>
 
-            <TextBlock Text="{x:Bind strings:Resources.SaveLocation}" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Text="{x:Bind strings:Resources.SaveLocation}" Margin="0,12,0,0" Style="{StaticResource BaseTextBlockStyle}" />
 
             <!-- Folder -->
             <Grid ColumnSpacing="4">

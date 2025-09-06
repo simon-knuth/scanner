@@ -117,6 +117,8 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         private bool generateAIFileName;
 
+        public bool CanGenerateAIFileName => CopilotRuntimeService.IsSupported && ScanOptions.TargetFormat == TargetFormat.PDF && Project == null;
+
         public string DateTimeFileNamingPatternValue;
         public string DateFileNamingPatternValue;
         public string CustomFileNamingPatternValue;
