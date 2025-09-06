@@ -1606,14 +1606,6 @@ Fuzzy</comment>
   <data name="ScanActionStartNewProjectShort" xml:space="preserve">
     <value>New</value>
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
-    <comment>The option to select all similar pages for cropping.</comment>
-  </data>
   <data name="Templates" xml:space="preserve">
     <value>Templates</value>
   </data>
@@ -1646,6 +1638,12 @@ Fuzzy</comment>
     <value>More</value>
     <comment>The text for a button that shows more options.</comment>
   </data>
+  <data name="ProjectActionAddFiles" xml:space="preserve">
+    <value>Add {0} files</value>
+  </data>
+  <data name="ProjectActionApplyFilterToPage" xml:space="preserve">
+    <value>Apply filter</value>
+  </data>
   <data name="ProjectActionCropPages" xml:space="preserve">
     <value>Crop {0} pages</value>
   </data>
@@ -1657,9 +1655,6 @@ Fuzzy</comment>
   </data>
   <data name="ProjectActionRotatePages" xml:space="preserve">
     <value>Rotate {0} pages</value>
-  </data>
-  <data name="ProjectActionApplyFilterToPage" xml:space="preserve">
-    <value>Apply filter</value>
   </data>
   <data name="ProjectActionAddFile" xml:space="preserve">
     <value>Add file</value>
@@ -1673,17 +1668,14 @@ Fuzzy</comment>
   <data name="RotatePage" xml:space="preserve">
     <value>Rotate page</value>
   </data>
-  <data name="ProjectActionRemovePage" xml:space="preserve">
-    <value>Remove page</value>
-  </data>
   <data name="ProjectActionApplyFilterToPages" xml:space="preserve">
     <value>Apply filter to {0} pages</value>
   </data>
+  <data name="ProjectActionRemovePage" xml:space="preserve">
+    <value>Remove page</value>
+  </data>
   <data name="ProjectActionRotatePage" xml:space="preserve">
     <value>Rotate page</value>
-  </data>
-  <data name="ProjectActionAddFiles" xml:space="preserve">
-    <value>Add {0} files</value>
   </data>
   <data name="RotateAutomatically" xml:space="preserve">
     <value>Rotate automatically</value>
@@ -1819,5 +1811,16 @@ Fuzzy</comment>
   </data>
   <data name="SelectedFileIndicator" xml:space="preserve">
     <value>File {0} of {1}</value>
+  </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ScanMultiplePages" xml:space="preserve">
+    <value>Scan multiple pages</value>
   </data>
 </root>

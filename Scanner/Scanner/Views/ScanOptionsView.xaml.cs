@@ -364,8 +364,12 @@ namespace Scanner.Views
 
         private bool IsColorModeResolutionBrightnessContrastVisible => ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
         private bool IsAutoCropVisible => ViewModel.SelectedScanner != null
-            && ((ViewModel.ScanOptions.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
-            || (ViewModel.ScanOptions.SourceMode == ScannerSource.Feeder && ViewModel.SelectedScanner.IsFeederAutoCropSupported));
+            && ((ViewModel.ScanOptions?.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
+            || (ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder && ViewModel.SelectedScanner.IsFeederAutoCropSupported));
+
+        private bool IsDuplexVisible => ViewModel.SelectedScanner != null
+            && ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder
+            && ViewModel.SelectedScanner.IsFeederDuplexSupported;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -460,6 +464,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropSingleSupported));
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
+                        OnPropertyChanged(nameof(IsDuplexVisible));
 
                         OnPropertyChanged(nameof(ScanOptions));
                     });
@@ -487,6 +492,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropDisabled));
                         OnPropertyChanged(nameof(IsAutoCropSingle));
                         OnPropertyChanged(nameof(IsAutoCropMulti));
+                        OnPropertyChanged(nameof(IsDuplexVisible));
                     });
                     break;
                 case nameof(ScanOptions.ColorMode):

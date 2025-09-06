@@ -283,6 +283,15 @@
                             <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" IsEditable="True" SelectedItem="{x:Bind SelectedResolution, Mode=OneWay}" ItemsSource="{x:Bind Resolutions, Mode=OneWay}" TextSubmitted="ComboBoxResolution_TextSubmitted" SelectionChanged="ComboBoxResolution_SelectionChanged" />
                         </StackPanel>
 
+                        <!-- Duplex -->
+                        <StackPanel x:Name="StackPanelDuplex" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsDuplexVisible, Mode=OneWay}">
+                            <TextBlock Text="{x:Bind strings:Resources.FeederOptionsHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <StackPanel Orientation="Vertical" Spacing="4">
+                                <CheckBox Content="{x:Bind strings:Resources.ScanMultiplePages}" IsChecked="{x:Bind ViewModel.ScanOptions.ScanMultiplePages, Mode=TwoWay}" />
+                                <CheckBox Content="{x:Bind strings:Resources.Duplex}" IsChecked="{x:Bind ViewModel.ScanOptions.Duplex, Mode=TwoWay}" />
+                            </StackPanel>
+                        </StackPanel>
+
                         <!-- Auto crop -->
                         <StackPanel x:Name="StackPanelAutoCrop" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                             <TextBlock Text="{x:Bind strings:Resources.AutoCropHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />

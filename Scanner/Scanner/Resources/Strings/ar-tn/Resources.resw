@@ -1607,198 +1607,198 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="Templates" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="History" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="NewProjectToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="OpenProjectToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveProjectToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveProjectAs" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="UndoToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="RedoToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveProject" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="More" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionAddFiles" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionApplyFilterToPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionCropPages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionRemovePages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionRename" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionRotatePages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionAddFile" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionCropPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionCropPageAsCopy" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="RotatePage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionApplyFilterToPages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionRemovePage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ProjectActionRotatePage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="RotateAutomatically" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="RotateSelectedPagesAutomatically" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ApplyFilterToPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FilterNone" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FilterGrayscale" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FilterMonochrome" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ResetZoomToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="Apply" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ApplyAsCopy" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ApplySimilarPages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SelectScanner" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="UnsavedChanges" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ConvertTo" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="AddPagesFromImages" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="Copy" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ActionExtentCurrentPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ActionExtentProject" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="CloseProject" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="PreviousPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="NextPage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ToggleMultiSelect" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ApplyFilterToSelectedPagesToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ApplyingChanges" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="DeleteProjectDialogHeading" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="DeleteProjectDialogBody" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SavingChanges" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveOptionsDialogHeading" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileName" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileNamingDateTimePattern" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileNamingDatePattern" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileNamingCustomPattern" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileNameCollision" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="FileNameCollisionToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveOptionsAIFileNameGeneration" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveLocation" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SaveLocationBrowse" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SourceAutoShort" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SourceFlatbedShort" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SourceFeederShort" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SelectedPagesIndicator" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="TotalPagesIndicator" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="SelectedFileIndicator" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
 </root>

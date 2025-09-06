@@ -42,7 +42,11 @@ namespace Scanner.Models
         [ObservableProperty]
         private ScannerAutoCropMode autoCropMode;
 
-        public bool IsFeederDuplexSupported;
+        [ObservableProperty]
+        private bool duplex;
+
+        [ObservableProperty]
+        private bool scanMultiplePages;
 
         [ObservableProperty]
         private int brightness;
@@ -180,7 +184,8 @@ namespace Scanner.Models
                 }
 
                 // duplex
-                IsFeederDuplexSupported = Scanner.IsFeederDuplexSupported;
+                ScanMultiplePages = true;
+                Duplex = false;
             }
 
             TargetFormat = TargetFormat.PDF;

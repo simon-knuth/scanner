@@ -335,6 +335,10 @@ namespace Scanner.ViewModels
                     // resolution
                     ScanOptions.SetDefaultResolution(ScanOptions.Scanner.FeederResolutions);
 
+                    // feeder options
+                    ScanOptions.ScanMultiplePages = true;
+                    ScanOptions.Duplex = false;
+
                     // auto crop mode
                     switch (ScanOptions.AutoCropMode)
                     {
