@@ -9,7 +9,8 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Placement="TopEdgeAlignedLeft">
 
 
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->

@@ -95,7 +95,7 @@
             </Border.Background>
         </Border>
 
-        <Grid Padding="12,12,16,12">
+        <Grid x:Name="GridContent" Margin="12,12,16,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1*" />

@@ -123,9 +123,8 @@ namespace Scanner.Views
 
         private void ShowTemplates()
         {
-            TemplatesFlyout flyout = new TemplatesFlyout(GridRoot.ActualWidth);
-            flyout.Placement = FlyoutPlacementMode.Top;
-            flyout.ShowAt(GridRoot);
+            TemplatesFlyout flyout = new TemplatesFlyout(GridContent.ActualWidth);
+            flyout.ShowAt(GridContent);
         }
 
         private void ButtonTemplates_Click(object sender, RoutedEventArgs e)

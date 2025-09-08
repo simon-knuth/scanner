@@ -29,7 +29,7 @@ namespace Scanner.Views.Flyouts
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public TemplatesFlyout(double desiredWidth)
         {
-            DesiredWidth = desiredWidth - 32;
+            DesiredWidth = desiredWidth;
 
             this.InitializeComponent();
         }
@@ -40,7 +40,7 @@ namespace Scanner.Views.Flyouts
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void GridRoot_Loading(FrameworkElement sender, object args)
         {
-            sender.MaxWidth = DesiredWidth;
+            sender.MinWidth = sender.MaxWidth = DesiredWidth;
         }
     }
 }
