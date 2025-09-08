@@ -14,7 +14,9 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
-    xmlns:filenaming="using:Scanner.Models.FileNaming" xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:filenaming="using:Scanner.Models.FileNaming"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -53,7 +55,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="32,0,32,0">
-            <TextBlock x:Uid="HeadingDialogCustomFileNaming" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Text="{x:Bind strings:Resources.CustomFileNamingDialogHeading}" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnSpacing="12">
@@ -67,7 +69,7 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer Grid.Row="0" VerticalAlignment="Top" Padding="32,0,32,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                <TextBlock x:Uid="TextCustomFileNamingExplanation" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingCustomPatternExplanation}" Style="{StaticResource BodyTextBlockStyle}" />
             </ScrollViewer>
 
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
@@ -106,7 +108,7 @@
 
                                             <controls:Case Value="TEXT">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <FontIcon x:Uid="TextFileNamingBlockInvalid" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA39;" FontSize="16" Margin="8,0,8,0" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind IsValid, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
+                                                    <FontIcon ToolTipService.ToolTip="{x:Bind strings:Resources.FileNamingBlockInvalid}" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA39;" FontSize="16" Margin="8,0,8,0" Foreground="{ThemeResource SystemFillColorCriticalBrush}" Visibility="{x:Bind IsValid, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
                                                     <TextBlock Text="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringWhitespaceVisualizationConverter}}" Style="{StaticResource CaptionTextBlockStyle}" Visibility="{Binding Path=Text, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
                                                 </StackPanel>
                                             </controls:Case>
@@ -122,7 +124,7 @@
                                                 <!-- Text -->
                                                 <controls:Case Value="TEXT">
                                                     <StackPanel Orientation="Vertical" Spacing="12">
-                                                        <TextBlock x:Uid="HeadingFileNamingBlockText" Style="{StaticResource BaseTextBlockStyle}" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockText}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         <TextBox Text="{Binding Path=Text, Mode=TwoWay}" Tag="{x:Bind}" KeyUp="TextBoxText_KeyUp" Loaded="TextBoxText_Loaded" />
                                                     </StackPanel>
                                                 </controls:Case>
@@ -132,10 +134,10 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE121;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockHour" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockHour}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlock24Hours" IsChecked="{Binding Path=Use24Hours, Mode=TwoWay}" />
-                                                        <CheckBox x:Uid="OptionFileNamingBlockTwoDigits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlock24Hours}" IsChecked="{Binding Path=Use24Hours, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockTwoDigits}" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -144,9 +146,9 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE121;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockHourPeriod" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockHourPeriod}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockAllCaps}" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -166,9 +168,9 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE121;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockSecond" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockSecond}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockTwoDigits" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockTwoDigits}" IsChecked="{Binding Path=Use2Digits, Mode=TwoWay}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -177,12 +179,12 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE163;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockDay" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockDay}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
                                                         <RadioButtons Style="{StaticResource CompactRadioButtonsStyle}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsDayTypeConverter}}">
-                                                            <RadioButton x:Uid="OptionFileNamingBlockDayWeek" />
-                                                            <RadioButton x:Uid="OptionFileNamingBlockDayMonth" />
-                                                            <RadioButton x:Uid="OptionFileNamingBlockDayYear" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockDayWeek}" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockDayMonth}" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockDayYear}" />
                                                         </RadioButtons>
                                                         <Frame>
                                                             <interactivity:Interaction.Behaviors>
@@ -195,11 +197,11 @@
                                                             </interactivity:Interaction.Behaviors>
 
                                                             <StackPanel Orientation="Vertical" Spacing="6">
-                                                                <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
+                                                                <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockMinimumDigits}" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
                                                                 <NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
                                                             </StackPanel>
                                                         </Frame>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockAllCaps}" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
                                                             <interactivity:Interaction.Behaviors>
                                                                 <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="Equal" Value="0">
                                                                     <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
@@ -220,7 +222,7 @@
                                                             </interactivity:Interaction.Behaviors>
 
                                                             <StackPanel Orientation="Vertical" Spacing="6">
-                                                                <CheckBox x:Uid="OptionFileNamingBlockMaximumLetters" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
+                                                                <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockMaximumLetters}" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
                                                                 <NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=LimitMaxChars, Mode=OneWay}" Value="{Binding Path=MaxChars, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
                                                             </StackPanel>
                                                         </Frame>
@@ -232,12 +234,12 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE163;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockMonth" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockMonth}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
                                                         <RadioButtons Style="{StaticResource CompactRadioButtonsStyle}" MaxColumns="1" SelectedIndex="{Binding Path=Type, Mode=TwoWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}">
-                                                            <RadioButton x:Uid="OptionFileNamingBlockMonthNumber" />
-                                                            <RadioButton x:Uid="OptionFileNamingBlockMonthName" />
-                                                            <RadioButton x:Uid="OptionFileNamingBlockMonthShortName" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockMonthNumber}" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockMonthName}" />
+                                                            <RadioButton Content="{x:Bind strings:Resources.FileNamingBlockMonthShortName}" />
                                                         </RadioButtons>
                                                         <Frame>
                                                             <interactivity:Interaction.Behaviors>
@@ -250,11 +252,11 @@
                                                             </interactivity:Interaction.Behaviors>
 
                                                             <StackPanel Orientation="Vertical" Spacing="6">
-                                                                <CheckBox x:Uid="OptionFileNamingBlockMinimumDigits" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
+                                                                <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockMinimumDigits}" IsChecked="{Binding Path=UseMinimumDigits, Mode=TwoWay}" />
                                                                 <NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=UseMinimumDigits, Mode=OneWay}" Value="{Binding Path=MinimumDigits, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
                                                             </StackPanel>
                                                         </Frame>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockAllCaps}" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}">
                                                             <interactivity:Interaction.Behaviors>
                                                                 <core:DataTriggerBehavior Binding="{Binding Path=Type, Mode=OneWay, Converter={StaticResource RadioButtonsMonthTypeConverter}}" ComparisonCondition="NotEqual" Value="0">
                                                                     <core:ChangePropertyAction PropertyName="IsEnabled" Value="True" />
@@ -275,7 +277,7 @@
                                                             </interactivity:Interaction.Behaviors>
 
                                                             <StackPanel Orientation="Vertical" Spacing="6">
-                                                                <CheckBox x:Uid="OptionFileNamingBlockMaximumLetters" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
+                                                                <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockMaximumLetters}" IsChecked="{Binding Path=LimitMaxChars, Mode=TwoWay}" />
                                                                 <NumberBox Margin="28,0,0,0" IsEnabled="{Binding Path=LimitMaxChars, Mode=OneWay}" Value="{Binding Path=MaxChars, Mode=TwoWay}" Minimum="1" AcceptsExpression="False" SmallChange="1" LargeChange="1" SpinButtonPlacementMode="Inline" />
                                                             </StackPanel>
                                                         </Frame>
@@ -287,7 +289,7 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE163;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockYear" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockYear}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </controls:Case>
@@ -297,9 +299,9 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE744;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockResolution" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockResolution}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockSkippedForAuto}" Style="{StaticResource CaptionTextBlockStyle}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -308,9 +310,9 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A5;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockFileType" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockFileType}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockAllCaps}" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -319,9 +321,9 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE294;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockScannerName" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockScannerName}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockAllCaps" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockAllCaps}" IsChecked="{Binding Path=AllCaps, Mode=TwoWay}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -330,10 +332,10 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF08C;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockBrightness" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.Brightness}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockSkipIfDefault" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
-                                                        <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockSkipIfDefault}" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockSkippedForAuto}" Style="{StaticResource CaptionTextBlockStyle}" />
                                                     </StackPanel>
                                                 </controls:Case>
 
@@ -342,10 +344,10 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF08C;" FontSize="16"/>
-                                                            <TextBlock x:Uid="HeadingFileNamingBlockContrast" Style="{StaticResource BaseTextBlockStyle}" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.Contrast}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
-                                                        <CheckBox x:Uid="OptionFileNamingBlockSkipIfDefault" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
-                                                        <TextBlock x:Uid="TextFileNamingBlockSkippedForAuto" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                        <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockSkipIfDefault}" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockSkippedForAuto}" Style="{StaticResource CaptionTextBlockStyle}" />
                                                     </StackPanel>
                                                 </controls:Case>
                                             </controls:SwitchPresenter>
@@ -356,20 +358,20 @@
                                 <!-- Movement menu -->
                                 <ListViewItem.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Uid="ButtonMoveToFront" Command="{x:Bind ViewModel.MoveBlockToFrontCommand}" CommandParameter="{x:Bind}" />
-                                        <MenuFlyoutItem x:Uid="ButtonMoveForward" Command="{x:Bind ViewModel.MoveBlockForwardCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.MoveToFront}" Command="{x:Bind ViewModel.MoveBlockToFrontCommand}" CommandParameter="{x:Bind}" />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.MoveForward}" Command="{x:Bind ViewModel.MoveBlockForwardCommand}" CommandParameter="{x:Bind}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76B;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem x:Uid="ButtonMoveBackward" Command="{x:Bind ViewModel.MoveBlockBackwardCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.MoveBackward}" Command="{x:Bind ViewModel.MoveBlockBackwardCommand}" CommandParameter="{x:Bind}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76C;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem x:Uid="ButtonMoveToBack" Command="{x:Bind ViewModel.MoveBlockToBackCommand}" CommandParameter="{x:Bind}" />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.MoveToBack}" Command="{x:Bind ViewModel.MoveBlockToBackCommand}" CommandParameter="{x:Bind}" />
                                         <MenuFlyoutSeparator />
-                                        <MenuFlyoutItem x:Uid="ButtonDeleteBlock" Command="{x:Bind ViewModel.DeleteBlockCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.FileNamingDeleteBlock}" Command="{x:Bind ViewModel.DeleteBlockCommand}" CommandParameter="{x:Bind}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE107;" />
                                             </MenuFlyoutItem.Icon>
@@ -387,7 +389,7 @@
                     <ColumnDefinition Width="48" />
                 </Grid.ColumnDefinitions>
 
-                <DropDownButton x:Name="ButtonAddBlock" Grid.Column="0" x:Uid="ButtonFileNamingAddBlock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="ButtonAddBlock_Loaded">
+                <DropDownButton x:Name="ButtonAddBlock" Grid.Column="0" Content="{x:Bind strings:Resources.FileNamingAddBlock}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="ButtonAddBlock_Loaded">
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation Duration="0:0:0.3" To="1.0" EasingMode="EaseInOut"/>
                     </animations:Implicit.ShowAnimations>
@@ -400,7 +402,7 @@
                         <MenuFlyout x:Name="MenuFlyoutAddBlock" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
-                <Button x:Name="ButtonClearPattern" Grid.Column="1" x:Uid="ButtonFileNamingClearPattern" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}" AutomationProperties.Name="{x:Bind ButtonClearPattern, Converter={StaticResource ToolTipConverter}}">
+                <Button x:Name="ButtonClearPattern" Grid.Column="1" ToolTipService.ToolTip="{x:Bind strings:Resources.FileNamingClearPattern}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{x:Bind ViewModel.DeleteAllBlocksCommand}" AutomationProperties.Name="{x:Bind ButtonClearPattern, Converter={StaticResource ToolTipConverter}}">
                     <interactivity:Interaction.Behaviors>
                         <core:DataTriggerBehavior Binding="{x:Bind ViewModel.SelectedBlocks.Count, Mode=OneWay}" ComparisonCondition="Equal" Value="0">
                             <core:ChangePropertyAction PropertyName="IsEnabled" Value="False" />
@@ -444,7 +446,7 @@
             </Grid>
 
             <!-- Preview -->
-            <TextBlock Grid.Row="3" x:Uid="HeadingFileNamingPreview" Style="{StaticResource BaseTextBlockStyle}" Margin="32,32,32,0" VerticalAlignment="Bottom" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
+            <TextBlock Grid.Row="3" Text="{x:Bind strings:Resources.FileNamingPreviewHeading}" Style="{StaticResource BaseTextBlockStyle}" Margin="32,32,32,0" VerticalAlignment="Bottom" AutomationProperties.LandmarkType="Navigation" AutomationProperties.HeadingLevel="Level2" />
             <ScrollViewer Grid.Row="4" Height="80" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid ColumnSpacing="24" Margin="48,0,32,0">
                     <Grid.ColumnDefinitions>
