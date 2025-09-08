@@ -312,9 +312,12 @@ namespace Scanner.ViewModels
         private async Task ShowInFileExplorerAsync(IProjectPage? page)
         {
             if (CurrentProject == null) return;
+
+            // get folder
+            StorageFolder? folder = null;
             if (CurrentProject is PdfProject pdfProject)
             {
-                await Windows.System.Launcher.LaunchFolderAsync(pdfProject.TargetFolder);
+                folder = pdfProject.TargetFolder;
             }
             else
             {
@@ -323,8 +326,23 @@ namespace Scanner.ViewModels
 
                 if (page is not ImagePage imagePage) return;
 
-                await Windows.System.Launcher.LaunchFolderAsync(imagePage.TargetFolder);
+                folder = imagePage.TargetFolder;
             }
+
+            // ensure folder
+            if (folder == null)
+            {
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                {
+                    Title = "Project not saved",
+                    Message = "The project needs to be saved to complete this action.",
+                    Severity = InfoBarSeverity.Error
+                }));
+                return;
+            }
+
+            // open it
+            await Windows.System.Launcher.LaunchFolderAsync(folder);
         }
 
         private async Task AddFilesAsync()

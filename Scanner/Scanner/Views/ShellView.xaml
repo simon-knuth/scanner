@@ -401,7 +401,7 @@
             </Grid>
             
             <!-- Notifications -->
-            <Frame Grid.Row="1" Grid.Column="0" Margin="24" CornerRadius="8" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="{x:Bind InfoBarNotifications.IsOpen, Mode=OneWay}" ui:VisualExtensions.Scale="0,0" ui:VisualExtensions.NormalizedCenterPoint="0.5,1">
+            <Frame Grid.Row="1" Grid.Column="0" Margin="24,24,24,72" CornerRadius="8" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="{x:Bind InfoBarNotifications.IsOpen, Mode=OneWay}" ui:VisualExtensions.Scale="0,0" ui:VisualExtensions.NormalizedCenterPoint="0.5,1">
                 <ui:Effects.Shadow>
                     <media:AttachedCardShadow Offset="0,4" BlurRadius="24" Color="Black" Opacity="0.1" CornerRadius="8" />
                 </ui:Effects.Shadow>
