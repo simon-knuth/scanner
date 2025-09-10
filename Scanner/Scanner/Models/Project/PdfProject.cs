@@ -115,10 +115,8 @@ namespace Scanner.Models
             }
         }
 
-        public override async Task<bool> SaveAsync(DispatcherQueue uiDispatcherQueue)
+        public override async Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue)
         {
-            bool success = false;
-
             // ensure maximum of one thread waiting to save
             if (saveProcessWaitingToStart)
             {
@@ -135,6 +133,12 @@ namespace Scanner.Models
             LatestSaveProcess = saveProcess;
 
             // save
+            return await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
+        }
+
+        private async Task<bool> SaveInternalAsync(bool forceLocationSelection, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
+        {
+            bool success = false;
             await Task.Run(async () =>
             {
                 await saveSemaphore.WaitAsync();
@@ -147,20 +151,26 @@ namespace Scanner.Models
                         saveProcessWaitingToStart = false;
                     });
 
-                    // ensure target folder is set
-                    if (TargetFile == null && TargetFolder == null)
+                    // update target location if needed
+                    bool forceSaving = false;
+                    if (forceLocationSelection || (TargetFile == null && TargetFolder == null))
                     {
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, forceLocationSelection);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
 
+                        if (forceLocationSelection)
+                            TargetFile = null;
+
                         TargetFolder = saveOptions.TargetFolder;
                         await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
+
+                        forceSaving = true;
                     }
 
                     // apply actual file changes
-                    if (!areFilesSaved)
+                    if (!areFilesSaved || forceSaving)
                     {
                         // lock data
                         await projectObjectSemaphore.WaitAsync();
@@ -216,7 +226,7 @@ namespace Scanner.Models
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
-                            
+
                         // update target file
                         await projectObjectSemaphore.WaitAsync();
                         TargetFile = pageSaves.Values.First();
@@ -253,7 +263,7 @@ namespace Scanner.Models
                         IsSaving = false;
 
                         // update saved state
-                        if (!saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
+                        if (success && !saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
                             areFilesSaved = true;
 
                         hasMadeChangesDuringSaveProcess = false;
@@ -262,7 +272,6 @@ namespace Scanner.Models
                     saveSemaphore.Release();
                 }
             });
-
             return success;
         }
 

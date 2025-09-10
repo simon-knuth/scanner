@@ -53,7 +53,9 @@ namespace Scanner.ViewModels
         public RelayCommand SelectNextPageCommand => new RelayCommand(SelectNextPage);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public AsyncRelayCommand<IProjectPage?> ShowInFileExplorerAsyncCommand => new AsyncRelayCommand<IProjectPage?>(ShowInFileExplorerAsync);
-        public AsyncRelayCommand TrySaveAsyncCommand => new AsyncRelayCommand(TrySaveAsync);
+        public AsyncRelayCommand SaveAsyncCommand => new AsyncRelayCommand(SaveAsync);
+        public AsyncRelayCommand SaveAsAsyncCommand => new AsyncRelayCommand(SaveAsAsync);
+        public AsyncRelayCommand SaveAsCurrentPageAsyncCommand => new AsyncRelayCommand(SaveAsCurrentPageAsync);
         public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
         public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
         public AsyncRelayCommand RotateSelectedPages90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees90));
@@ -383,10 +385,25 @@ namespace Scanner.ViewModels
             await ProjectService.ApplyActionAsync(action);
         }
 
-        private async Task TrySaveAsync()
+        private async Task SaveAsync()
         {
             if (CurrentProject == null) return;
-            await CurrentProject.SaveAsync(viewDispatcherQueue!);
+            await CurrentProject.SaveAsync(false, viewDispatcherQueue!);
+        }
+
+        private async Task SaveAsAsync()
+        {
+            if (CurrentProject == null) return;
+            await CurrentProject.SaveAsync(true, viewDispatcherQueue!);
+        }
+
+        private async Task SaveAsCurrentPageAsync()
+        {
+            if (CurrentProject == null) return;
+            if (CurrentProject is not ImageProject imageProject) return;
+
+            if (ProjectService.SelectedPage != null)
+                await imageProject.SaveAsSinglePageAsync(ProjectService.SelectedPage, viewDispatcherQueue!);
         }
 
         private async Task TryCopyProjectOrPageAsync()

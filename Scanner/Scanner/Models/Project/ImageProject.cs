@@ -113,10 +113,8 @@ namespace Scanner.Models
             }
         }
 
-        public override async Task<bool> SaveAsync(DispatcherQueue uiDispatcherQueue)
+        public async override Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue)
         {
-            bool success = false;
-
             // ensure maximum of one thread waiting to save
             if (saveProcessWaitingToStart)
             {
@@ -133,6 +131,33 @@ namespace Scanner.Models
             LatestSaveProcess = saveProcess;
 
             // save
+            return await SaveInternalAsync(saveAs, [.. Pages], saveProcess, uiDispatcherQueue);
+        }
+
+        public async Task<bool> SaveAsSinglePageAsync(IProjectPage page, DispatcherQueue uiDispatcherQueue)
+        {
+            // ensure maximum of one thread waiting to save
+            if (saveProcessWaitingToStart)
+            {
+                if (LatestSaveProcess != null)
+                {
+                    return await LatestSaveProcess.Task;
+                }
+                return true;
+            }
+            saveProcessWaitingToStart = true;
+
+            // enable waiting for save process (even if it is waiting to start)
+            TaskCompletionSource<bool> saveProcess = new();
+            LatestSaveProcess = saveProcess;
+
+            // save
+            return await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
+        }
+
+        private async Task<bool> SaveInternalAsync(bool forceLocationSelection, List<IProjectPage> pages, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
+        {
+            bool success = false;
             await Task.Run(async () =>
             {
                 await saveSemaphore.WaitAsync();
@@ -145,26 +170,32 @@ namespace Scanner.Models
                         saveProcessWaitingToStart = false;
                     });
 
-                    // ensure target file is set for every file
-                    if (Pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
+                    // update target location for every file if needed
+                    bool forceSaving = false;
+                    if (forceLocationSelection || pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
                     {
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, forceLocationSelection);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
 
-                        foreach (IProjectPage page in Pages)
+                        foreach (IProjectPage page in pages)
                         {
+                            if (forceLocationSelection)
+                                page.TargetFile = null;
+
                             if (page is ImagePage imagePage)
                             {
                                 imagePage.TargetFolder = saveOptions.TargetFolder;
-                                imagePage.FileNameInfo = new(saveOptions.FileName);
+                                await imagePage.FileNameInfo!.UpdateNamesAsync(saveOptions.FileName, saveOptions.FileName, false, uiDispatcherQueue);
                             }
                         }
+
+                        forceSaving = true;
                     }
 
                     // apply actual file changes
-                    if (!areFilesSaved)
+                    if (!areFilesSaved || forceSaving)
                     {
                         // lock data
                         await projectObjectSemaphore.WaitAsync();
@@ -172,7 +203,7 @@ namespace Scanner.Models
                         await changesFolderSemaphore.WaitAsync();
 
                         // commit changes
-                        foreach (IProjectPage page in Pages)
+                        foreach (IProjectPage page in pages)
                         {
                             if (page.CommitNeeded)
                             {
@@ -246,7 +277,7 @@ namespace Scanner.Models
 
                     await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                     {
-                        foreach (IProjectPage page in Pages)
+                        foreach (IProjectPage page in pages)
                         {
                             if (page is ImagePage imagePage)
                             {
@@ -275,7 +306,7 @@ namespace Scanner.Models
                         IsSaving = false;
 
                         // update saved state
-                        if (!saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
+                        if (success && !saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
                             areFilesSaved = true;
 
                         hasMadeChangesDuringSaveProcess = false;
@@ -284,7 +315,6 @@ namespace Scanner.Models
                     saveSemaphore.Release();
                 }
             });
-
             return success;
         }
 

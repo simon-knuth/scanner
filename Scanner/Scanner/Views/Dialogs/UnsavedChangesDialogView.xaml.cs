@@ -52,7 +52,7 @@ namespace Scanner.Views.Dialogs
 
             // save changes
             ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-            await project.SaveAsync(this.DispatcherQueue);
+            await project.SaveAsync(false, this.DispatcherQueue);
             deferral.Complete();
         }
     }

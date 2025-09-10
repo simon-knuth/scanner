@@ -81,7 +81,9 @@ namespace Scanner.Models
             get => _areFilesSaved;
             set
             {
-                SetProperty(ref _areFilesSaved, value);
+                if (!SetProperty(ref _areFilesSaved, value))
+                    return;
+
                 OnPropertyChanged(nameof(IsSaved));
 
                 if (!value && LatestSaveProcess != null)
@@ -125,7 +127,7 @@ namespace Scanner.Models
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public abstract Task DeleteAsync();
-        public abstract Task SaveAsync(DispatcherQueue uiDispatcherQueue);
+        public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue);
 
 
         public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)

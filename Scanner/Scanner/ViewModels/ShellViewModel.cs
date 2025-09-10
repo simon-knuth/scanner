@@ -7,6 +7,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Scanner.AppWindows;
+using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -48,7 +49,9 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
         public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
-        public AsyncRelayCommand TrySaveAsyncCommand;
+        public AsyncRelayCommand SaveAsyncCommand;
+        public AsyncRelayCommand SaveAsAsyncCommand;
+        public AsyncRelayCommand SaveAsCurrentPageAsyncCommand;
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -71,7 +74,9 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ShellViewModel()
         {
-            TrySaveAsyncCommand = new AsyncRelayCommand(TrySaveAsync);
+            SaveAsyncCommand = new AsyncRelayCommand(SaveAsync);
+            SaveAsAsyncCommand = new AsyncRelayCommand(SaveAsAsync);
+            SaveAsCurrentPageAsyncCommand = new AsyncRelayCommand(SaveAsCurrentPageAsync);
 
             _ = ScannerDiscoveryService.InitializeSearchAsync();
 
@@ -219,10 +224,25 @@ namespace Scanner.ViewModels
             }
         }
 
-        private async Task TrySaveAsync()
+        private async Task SaveAsync()
         {
             if (CurrentProject == null) return;
-            await CurrentProject.SaveAsync(viewDispatcherQueue);
+            await CurrentProject.SaveAsync(false, viewDispatcherQueue!);
+        }
+
+        private async Task SaveAsAsync()
+        {
+            if (CurrentProject == null) return;
+            await CurrentProject.SaveAsync(true, viewDispatcherQueue!);
+        }
+
+        private async Task SaveAsCurrentPageAsync()
+        {
+            if (CurrentProject == null) return;
+            if (CurrentProject is not ImageProject imageProject) return;
+
+            if (ProjectService.SelectedPage != null)
+                await imageProject.SaveAsSinglePageAsync(ProjectService.SelectedPage, viewDispatcherQueue!);
         }
 
         private async Task TryCloseProjectAsync()

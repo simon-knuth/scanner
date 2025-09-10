@@ -36,8 +36,8 @@ namespace Scanner.Services.Interfaces
         ///     Determines the save location to use for a scan. This can result in a file picker dialog opening and even the user
         ///     cancelling the operation.
         /// </summary>
-        /// <returns>A <see cref="StorageFile"/> to save to.</returns>
-        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject, bool enforceFolderSelection);
+        /// <returns>The <see cref="SaveOptions?"/> to use for saving.</returns>
+        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject, bool forceTargetFolder, bool forceSaveDialog = false);
 
         /// <summary>
         ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.

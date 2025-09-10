@@ -136,7 +136,6 @@ namespace Scanner.Models
         public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
         {
             ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter);
-            if (targetFileName != null) result.FileNameInfo = new FileNameInfo(targetFileName);
             return result;
         }
 

@@ -65,7 +65,6 @@ namespace Scanner.Services
                         OnPropertyChanged(nameof(CanSelectPreviousPage));
                         OnPropertyChanged(nameof(CanSelectNextPage));
                         OnPropertyChanged(nameof(CanSaveProject));
-                        OnPropertyChanged(nameof(CanSaveAsProject));
                         OnPropertyChanged(nameof(TotalNumberOfPages));
                     }
 
@@ -120,7 +119,6 @@ namespace Scanner.Services
         [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
         [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
         [NotifyPropertyChangedFor(nameof(CanSaveProject))]
-        [NotifyPropertyChangedFor(nameof(CanSaveAsProject))]
         private bool isActionRunning;
 
         [ObservableProperty]
@@ -129,7 +127,6 @@ namespace Scanner.Services
         [NotifyPropertyChangedFor(nameof(CanSelectPreviousPage))]
         [NotifyPropertyChangedFor(nameof(CanSelectNextPage))]
         [NotifyPropertyChangedFor(nameof(CanSaveProject))]
-        [NotifyPropertyChangedFor(nameof(CanSaveAsProject))]
         private bool isEditing;
 
         public bool IsProcessRunning => IsScanProcessRunning || IsActionRunning;
@@ -145,7 +142,6 @@ namespace Scanner.Services
                 OnPropertyChanged(nameof(IsProcessRunning));
                 OnPropertyChanged(nameof(IsProcessRunningOrEditing));
                 OnPropertyChanged(nameof(CanSaveProject));
-                OnPropertyChanged(nameof(CanSaveAsProject));
             }
         }
 
@@ -172,8 +168,7 @@ namespace Scanner.Services
         public bool CanUndo => UndoStack.Count > 0;
         public bool CanRedo => RedoStack.Count > 0;
 
-        public bool CanSaveProject => CurrentProject != null && !CurrentProject.IsSaving && !CurrentProject.IsSaved && !IsProcessRunning;
-        public bool CanSaveAsProject => CurrentProject != null && !CurrentProject.IsSaving && !IsProcessRunning;
+        public bool CanSaveProject => CurrentProject != null && !IsProcessRunning;
 
         public DispatcherQueue? UiDispatcherQueue { get; set; }
 
@@ -290,7 +285,7 @@ namespace Scanner.Services
                     {
                         CurrentScanState = ScanState.Saving;
                     }
-                    await Task.Run(async () => await CurrentProject.SaveAsync(UiDispatcherQueue!));
+                    await Task.Run(async () => await CurrentProject.SaveAsync(false, UiDispatcherQueue!));
                 }
 
                 // free up space
@@ -886,7 +881,7 @@ namespace Scanner.Services
 
                     if (CurrentProject != null && !CurrentProject.IsSaved)
                     {
-                        await CurrentProject.SaveAsync(UiDispatcherQueue);
+                        await CurrentProject.SaveAsync(false, UiDispatcherQueue);
                     }
                     autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
                 });
@@ -941,7 +936,6 @@ namespace Scanner.Services
                 case nameof(ProjectBase.IsSaving):
                 case nameof(ProjectBase.IsSaved):
                     OnPropertyChanged(nameof(CanSaveProject));
-                    OnPropertyChanged(nameof(CanSaveAsProject));
                     break;
             }
         }

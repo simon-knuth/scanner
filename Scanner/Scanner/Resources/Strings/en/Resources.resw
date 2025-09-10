@@ -1716,7 +1716,7 @@ Fuzzy</comment>
     <comment>Indicates that there are unsaved changes.</comment>
   </data>
   <data name="ConvertTo" xml:space="preserve">
-    <value>Convert to...</value>
+    <value>Convert project to...</value>
   </data>
   <data name="AddPagesFromImages" xml:space="preserve">
     <value>Add pages from images...</value>

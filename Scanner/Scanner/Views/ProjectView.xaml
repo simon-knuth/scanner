@@ -185,7 +185,7 @@
                                 </Style>
                             </MenuFlyout.MenuFlyoutPresenterStyle>
 
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Save}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.TrySaveAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Save}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -194,7 +194,7 @@
                                     <KeyboardAccelerator Modifiers="Control" Key="S" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -203,6 +203,28 @@
                                     <KeyboardAccelerator Key="F12" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutSubItem.Icon>
+
+                                <MenuFlyoutSubItem.Items>
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.ActionExtentCurrentPage}" Command="{x:Bind ViewModel.SaveAsCurrentPageAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Key="F12" />
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.ActionExtentProject}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xF571;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyoutSubItem.Items>
+                            </MenuFlyoutSubItem>
                             <MenuFlyoutItem Text="{x:Bind strings:Resources.ShowInFileExplorer}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

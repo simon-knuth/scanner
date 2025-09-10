@@ -131,7 +131,8 @@ namespace Scanner.Services
             initializationCompleted.TrySetResult();
         }
 
-        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject, bool enforceFolderSelection)
+        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions,
+            ProjectBase? existingProject, bool forceTargetFolder, bool forceSaveDialog = false)
         {
             // generate default file name
             string fileName;
@@ -147,6 +148,15 @@ namespace Scanner.Services
                 case SettingFileNamingPattern.Custom:
                     fileName = SettingsService.CustomFileNamingPattern.GenerateResult(scanOptions, true);
                     break;
+            }
+
+            // show save dialog if forced
+            if (forceSaveDialog)
+            {
+                SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                if (result?.TargetFolder != null)
+                    TrackRecentlyUsedFolder(result.TargetFolder);
+                return result;
             }
 
             // determine final file name
@@ -181,17 +191,17 @@ namespace Scanner.Services
                     {
                         if (existingProject is PdfProject pdfProject)
                         {
-                            if (!enforceFolderSelection || pdfProject.TargetFolder != null)
+                            if (!forceTargetFolder || pdfProject.TargetFolder != null)
                                 return new SaveOptions(pdfProject.TargetFolder, fileName, false);
                         }
                         else if (existingProject.Pages[0] is ImagePage imagePage)
                         {
-                            if (!enforceFolderSelection || imagePage.TargetFolder != null)
+                            if (!forceTargetFolder || imagePage.TargetFolder != null)
                                 return new SaveOptions(imagePage.TargetFolder, fileName, false);
                         }
                     }
 
-                    if (enforceFolderSelection)
+                    if (forceTargetFolder)
                     {
                         // ask user for location
                         result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
