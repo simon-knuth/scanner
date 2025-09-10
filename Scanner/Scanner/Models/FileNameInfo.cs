@@ -50,6 +50,8 @@ namespace Scanner.Models
             }
         }
 
+        public string DesiredDisplayName => Path.GetFileNameWithoutExtension(DesiredName);
+
         public string? ActualName { get; private set; }
 
         [ObservableProperty]

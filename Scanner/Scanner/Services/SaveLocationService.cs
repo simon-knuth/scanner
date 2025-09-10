@@ -132,7 +132,7 @@ namespace Scanner.Services
         }
 
         public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions,
-            ProjectBase? existingProject, bool forceTargetFolder, bool forceSaveDialog = false)
+            ProjectBase? existingProject, bool forceTargetFolder, bool saveAs = false, string? desiredFileDisplayName = null)
         {
             // generate default file name
             string fileName;
@@ -151,9 +151,9 @@ namespace Scanner.Services
             }
 
             // show save dialog if forced
-            if (forceSaveDialog)
+            if (saveAs)
             {
-                SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, desiredFileDisplayName)).Response;
                 if (result?.TargetFolder != null)
                     TrackRecentlyUsedFolder(result.TargetFolder);
                 return result;
@@ -181,7 +181,7 @@ namespace Scanner.Services
                     }
 
                     // ask user for location
-                    SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                    SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null)).Response;
                     if (result?.TargetFolder != null)
                         TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;
@@ -203,8 +203,15 @@ namespace Scanner.Services
 
                     if (forceTargetFolder)
                     {
+                        // get base file display name
+                        string? baseFileDisplayName = null;
+                        if (existingProject is PdfProject pdfProject)
+                            baseFileDisplayName = pdfProject.FileNameInfo.DesiredDisplayName;
+                        else if (existingProject is ImageProject imageProject && imageProject.Pages[0] is ImagePage imagePage)
+                            baseFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;                            
+
                         // ask user for location
-                        result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                        result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, baseFileDisplayName)).Response;
                         if (result?.TargetFolder != null)
                             TrackRecentlyUsedFolder(result.TargetFolder);
                         return result;
@@ -223,7 +230,7 @@ namespace Scanner.Services
 
                 case SettingSaveLocationType.AskEveryTime:
                     // ask user for location
-                    result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject)).Response;
+                    result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null)).Response;
                     if (result?.TargetFolder != null)
                         TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;

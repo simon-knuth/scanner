@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using Scanner.Views.TeachingTips;
@@ -53,9 +54,9 @@ namespace Scanner.Views.Dialogs
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project)
+        public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
         {
-            ViewModel = new SaveOptionsDialogViewModel(scanOptions, project);
+            ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName);
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             this.InitializeComponent();
@@ -136,6 +137,11 @@ namespace Scanner.Views.Dialogs
         {
             TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
             TeachingTipAIDisclaimer.IsOpen = true;
+        }
+
+        private void TextBoxFileName_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBoxFileName.Focus(FocusState.Programmatic);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            DateTime currentTime = DateTime.Now;
+            DateTime currentTime = scanOptions.ScanTime;
             string result;
             if (Use24Hours)
             {

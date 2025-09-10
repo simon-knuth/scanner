@@ -258,9 +258,9 @@ namespace Scanner.Views
             ShowSaveChangesDialog(e);
         }
 
-        private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project) e)
+        private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName) e)
         {
-            ShowSaveFileDialog(e.Process, e.ScanOptions, e.Project);
+            ShowSaveFileDialog(e.Process, e.ScanOptions, e.Project, e.DesiredFileDisplayName);
         }
 
         private void ViewModel_SaveInProgressDialogRequested(object? sender, TaskCompletionSource e)
@@ -312,7 +312,7 @@ namespace Scanner.Views
             });
         }
 
-        private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project)
+        private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
         {
             this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
             {
@@ -325,7 +325,7 @@ namespace Scanner.Views
 
                 isDialogVisible = true;
 
-                SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project);
+                SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
                 if (result == ContentDialogResult.Primary) task.TrySetResult(dialog.SaveOptions);

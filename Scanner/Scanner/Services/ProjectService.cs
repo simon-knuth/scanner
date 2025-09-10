@@ -199,7 +199,7 @@ namespace Scanner.Services
 
                 // get save options
                 IsActionRunning = true;
-                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false);
+                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false, false, null);
                 if (saveOptions == null) return;
 
                 // preheat AI models
@@ -316,7 +316,7 @@ namespace Scanner.Services
                 SaveOptions? saveOptions = null;
                 if (scanOptions.TargetFormat != TargetFormat.PDF)
                 {
-                    saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false);
+                    saveOptions = await SaveLocationService.GetSaveOptionsAsync(UiDispatcherQueue!, ((App)Application.Current).MainWindow, scanOptions, CurrentProject, false, false, null);
                     if (saveOptions == null) return;
                 }
 

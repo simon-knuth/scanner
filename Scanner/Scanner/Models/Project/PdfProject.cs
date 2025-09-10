@@ -136,7 +136,7 @@ namespace Scanner.Models
             return await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
         }
 
-        private async Task<bool> SaveInternalAsync(bool forceLocationSelection, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
+        private async Task<bool> SaveInternalAsync(bool saveAs, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
         {
             bool success = false;
             await Task.Run(async () =>
@@ -153,14 +153,14 @@ namespace Scanner.Models
 
                     // update target location if needed
                     bool forceSaving = false;
-                    if (forceLocationSelection || (TargetFile == null && TargetFolder == null))
+                    if (saveAs || (TargetFile == null && TargetFolder == null))
                     {
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, forceLocationSelection);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, saveAs, FileNameInfo.DesiredDisplayName);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
 
-                        if (forceLocationSelection)
+                        if (saveAs)
                             TargetFile = null;
 
                         TargetFolder = saveOptions.TargetFolder;

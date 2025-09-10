@@ -134,6 +134,7 @@ namespace Scanner.ViewModels
 
             await viewLoading.Task;
 
+            ScanOptions.ScanTime = DateTime.Now;
             if (addToProject)
             {
                 await ProjectService.TryScanToProjectAsync(ScanOptions);

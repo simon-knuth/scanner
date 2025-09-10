@@ -123,7 +123,8 @@ namespace Scanner.Models.FileNaming
                 Contrast = 5,
                 TargetFormat = TargetFormat.PDF,
                 Resolution = new ScanResolution(300f, ResolutionAnnotation.Default),
-                SourceMode = ScannerSource.Flatbed
+                SourceMode = ScannerSource.Flatbed,
+                ScanTime = DateTime.Now
             };
         }
     }

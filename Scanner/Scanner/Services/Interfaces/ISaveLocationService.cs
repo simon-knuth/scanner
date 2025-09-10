@@ -37,7 +37,8 @@ namespace Scanner.Services.Interfaces
         ///     cancelling the operation.
         /// </summary>
         /// <returns>The <see cref="SaveOptions?"/> to use for saving.</returns>
-        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions, ProjectBase? existingProject, bool forceTargetFolder, bool forceSaveDialog = false);
+        Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions,
+            ProjectBase? existingProject, bool forceTargetFolder, bool saveAs = false, string? desiredFileDisplayName = null);
 
         /// <summary>
         ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.

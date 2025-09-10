@@ -37,7 +37,7 @@ namespace Scanner.ViewModels
 
         #region Events
         public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
-        public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project)> SaveFileDialogRequested;
+        public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName)> SaveFileDialogRequested;
         public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Task> MultiEditInProgressDialogRequested;
@@ -89,7 +89,7 @@ namespace Scanner.ViewModels
             });
             Messenger.Register<ShowSaveOptionsDialogMessage>(this, (r, m) =>
             {
-                m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project));
+                m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project, m.DesiredFileDisplayName));
             });
             Messenger.Register<ShowProjectDeletionDialogMessage>(this, (r, m) =>
             {
@@ -159,10 +159,10 @@ namespace Scanner.ViewModels
             return await result.Task;
         }
 
-        private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, ProjectBase? project)
+        private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
         {
             TaskCompletionSource<SaveOptions?> result = new();
-            SaveFileDialogRequested?.Invoke(this, new(result, scanOptions, project));
+            SaveFileDialogRequested?.Invoke(this, new(result, scanOptions, project, desiredFileDisplayName));
             return await result.Task;
         }
 

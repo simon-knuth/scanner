@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.FileNaming;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -143,7 +144,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveOptionsDialogViewModel(ScanOptions scanOptions, ProjectBase? project)
+        public SaveOptionsDialogViewModel(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
         {
             ScanOptions = scanOptions;
             Project = project;
@@ -156,6 +157,10 @@ namespace Scanner.ViewModels
             DateFileNamingPatternValue = FileNamingStatics.DatePattern.GenerateResult(ScanOptions, false);
             CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
             SelectedFileNamingPattern = SettingsService.SettingFileNamingPattern;
+
+            // keep name if already present
+            if (desiredFileDisplayName != null)
+                FileDisplayName = desiredFileDisplayName;
         }
 
 

@@ -57,11 +57,11 @@ namespace Scanner.Models.FileNaming
         {
             if (Use2Digits)
             {
-                return DateTime.Now.Minute.ToString().PadLeft(2, '0');
+                return scanOptions.ScanTime.Minute.ToString().PadLeft(2, '0');
             }
             else
             {
-                return DateTime.Now.Minute.ToString();
+                return scanOptions.ScanTime.Minute.ToString();
             }
         }
 

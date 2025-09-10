@@ -57,7 +57,7 @@ namespace Scanner.Models.FileNaming
         {
             string result;
             
-            DateTime currentTime = DateTime.Now;
+            DateTime currentTime = scanOptions.ScanTime;
             result = currentTime.ToString("tt").ToUpper();
 
             if (string.IsNullOrWhiteSpace(result))

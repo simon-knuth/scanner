@@ -14,11 +14,13 @@ namespace Scanner.Messages
     {
         public readonly ScanOptions ScanOptions;
         public readonly ProjectBase? Project;
+        public readonly string? DesiredFileDisplayName;
 
-        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project)
+        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
         {
-            this.ScanOptions = scanOptions;
-            this.Project = project;
+            ScanOptions = scanOptions;
+            Project = project;
+            DesiredFileDisplayName = desiredFileDisplayName;
         }
     }
 }

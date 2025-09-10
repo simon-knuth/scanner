@@ -96,7 +96,7 @@ namespace Scanner.Models.FileNaming
         public string ToString(ScanOptions scanOptions)
         {
             string result;
-            DateTime currentTime = DateTime.Now;
+            DateTime currentTime = scanOptions.ScanTime;
 
             switch (Type)
             {

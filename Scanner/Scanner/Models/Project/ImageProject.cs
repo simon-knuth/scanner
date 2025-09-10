@@ -155,7 +155,7 @@ namespace Scanner.Models
             return await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
         }
 
-        private async Task<bool> SaveInternalAsync(bool forceLocationSelection, List<IProjectPage> pages, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
+        private async Task<bool> SaveInternalAsync(bool saveAs, List<IProjectPage> pages, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
         {
             bool success = false;
             await Task.Run(async () =>
@@ -172,22 +172,27 @@ namespace Scanner.Models
 
                     // update target location for every file if needed
                     bool forceSaving = false;
-                    if (forceLocationSelection || pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
+                    if (saveAs || pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
                     {
+                        // get desired name
+                        string? desiredFileDisplayName = null;
+                        if (pages[0] is ImagePage imagePage)
+                            desiredFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;
+
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, forceLocationSelection);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, saveAs, desiredFileDisplayName);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
 
                         foreach (IProjectPage page in pages)
                         {
-                            if (forceLocationSelection)
+                            if (saveAs)
                                 page.TargetFile = null;
 
-                            if (page is ImagePage imagePage)
+                            if (page is ImagePage imagePageToUpdate)
                             {
-                                imagePage.TargetFolder = saveOptions.TargetFolder;
-                                await imagePage.FileNameInfo!.UpdateNamesAsync(saveOptions.FileName, saveOptions.FileName, false, uiDispatcherQueue);
+                                imagePageToUpdate.TargetFolder = saveOptions.TargetFolder;
+                                await imagePageToUpdate.FileNameInfo!.UpdateNamesAsync(saveOptions.FileName, saveOptions.FileName, false, uiDispatcherQueue);
                             }
                         }
 
