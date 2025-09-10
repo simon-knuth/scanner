@@ -86,7 +86,7 @@ namespace Scanner.Views
         [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
         private bool isFileNameGenerationButtonFocused;
 
-        public bool ShowFileNameGenerationButton => ViewModel.CopilotRuntimeService.IsSupported &&
+        public bool ShowFileNameGenerationButton => ViewModel.CurrentProject is PdfProject && ViewModel.CopilotRuntimeService.IsSupported &&
             (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || ViewModel.IsFileNameGenerationInProgress);
 
         public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
@@ -205,7 +205,11 @@ namespace Scanner.Views
                     }
                     break;
                 case nameof(ViewModel.CurrentProject):
-                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => OnPropertyChanged(nameof(ShowTextBlockTotalPages)));
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                    {
+                        OnPropertyChanged(nameof(ShowTextBlockTotalPages));
+                        OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                    });
                     break;
                 case nameof(ViewModel.IsMultiSelect):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, ApplyIsMultiSelect);
