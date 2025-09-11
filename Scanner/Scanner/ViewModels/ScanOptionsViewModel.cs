@@ -133,6 +133,10 @@ namespace Scanner.ViewModels
                 Scanners.Add(e);
 
             SemaphoreScanners.Release();
+
+            if (SelectedScanner == null)
+                await SelectBestAvailableScannerAsync();
+
         }
 
         private async void ScannerDiscoveryService_ScanningDeviceLost(object? sender, IScanningDevice e)
