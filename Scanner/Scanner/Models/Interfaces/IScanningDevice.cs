@@ -82,7 +82,7 @@ namespace Scanner.Models.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Task<BitmapImage> GetPreviewAsync();
-        Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder);
+        Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder);
         void CancelPreview();
         void CancelScan();
         bool IsPreviewSupported(ScannerSource source);

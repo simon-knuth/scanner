@@ -1,23 +1,24 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Scanner.Models.Interfaces;
+using Scanner.Services;
+using Scanner.Services.Interfaces;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Scanner.Models.Interfaces;
-using Windows.Devices.Scanners;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Enumeration;
-using Scanner.Services;
-using Scanner.Services.Interfaces;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using System.Collections.ObjectModel;
+using Windows.Devices.Scanners;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using WinRT.Interop;
 
 namespace Scanner.Models.ScanningDevices
 {
@@ -52,6 +53,7 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFlatbedMonochromeAllowed { get; private set; }
         public bool IsFlatbedAutoColorAllowed { get; private set; }
 
+        public bool IsFlatbedAutoCropAllowed => IsFlatbedAutoCropSingleRegionAllowed || IsFlatbedAutoCropMultiRegionAllowed;
         public bool IsFlatbedAutoCropSingleRegionAllowed { get; private set; }
         public bool IsFlatbedAutoCropMultiRegionAllowed { get; private set; }
 
@@ -69,6 +71,7 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFeederMonochromeAllowed { get; private set; }
         public bool IsFeederAutoColorAllowed { get; private set; }
 
+        public bool IsFeederAutoCropAllowed => IsFeederAutoCropSingleRegionAllowed || IsFeederAutoCropMultiRegionAllowed;
         public bool IsFeederAutoCropSingleRegionAllowed { get; private set; }
         public bool IsFeederAutoCropMultiRegionAllowed { get; private set; }
 
@@ -271,33 +274,128 @@ namespace Scanner.Models.ScanningDevices
             throw new NotImplementedException();
         }
 
-        public Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder)
+        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
         {
-            throw new NotImplementedException();
+            // apply scan options
+            ApplyScanOptions(scanOptions);
+
+            // scan
+            ImageScannerScanResult result = await imageScanner.ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder);
+
+            // process result
+            return result.ScannedFiles;
+        }
+
+        private void ApplyScanOptions(ScanOptions scanOptions)
+        {
+            switch (scanOptions.SourceMode)
+            {
+                case ScannerSource.Auto:
+                    // file format
+                    imageScanner.AutoConfiguration.Format = AutoFormats.First();
+                    break;
+                case ScannerSource.Flatbed:
+                    // file format
+                    imageScanner.FlatbedConfiguration.Format = FlatbedFormats.First();
+
+                    // color mode
+                    imageScanner.FlatbedConfiguration.ColorMode = scanOptions.GetColorModeForScanning();
+
+                    // resolution
+                    imageScanner.FlatbedConfiguration.DesiredResolution = new ImageScannerResolution
+                    {
+                        DpiX = scanOptions.Resolution.Resolution.DpiX,
+                        DpiY = scanOptions.Resolution.Resolution.DpiY
+                    };
+
+                    // auto crop mode
+                    if (IsFlatbedAutoCropAllowed)
+                        imageScanner.FlatbedConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
+
+                    // scan region
+                    if (scanOptions.SelectedRegion != null)
+                    {
+                        try
+                        {
+                            imageScanner.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                            {
+                                X = scanOptions.SelectedRegion.Value.X,
+                                Y = scanOptions.SelectedRegion.Value.Y,
+                                Width = scanOptions.SelectedRegion.Value.Width,
+                                Height = scanOptions.SelectedRegion.Value.Height
+                            };
+                        }
+                        catch (Exception exc)
+                        {
+                            throw new ArgumentException("Selected scan region is invalid", exc);
+                        }
+                    }
+                    else
+                    {
+                        imageScanner.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                        {
+                            X = 0,
+                            Y = 0,
+                            Width = imageScanner.FlatbedConfiguration.MaxScanArea.Width,
+                            Height = imageScanner.FlatbedConfiguration.MaxScanArea.Height
+                        };
+                    }
+                    break;
+                case ScannerSource.Feeder:
+                    // file format
+                    imageScanner.FeederConfiguration.Format = FeederFormats.First();
+
+                    // color mode
+                    imageScanner.FeederConfiguration.ColorMode = scanOptions.GetColorModeForScanning();
+
+                    // resolution
+                    imageScanner.FeederConfiguration.DesiredResolution = new ImageScannerResolution
+                    {
+                        DpiX = scanOptions.Resolution.Resolution.DpiX,
+                        DpiY = scanOptions.Resolution.Resolution.DpiY
+                    };
+
+                    // auto crop mode
+                    if (IsFeederAutoCropAllowed)
+                        imageScanner.FeederConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
+
+                    // multiple pages
+                    if (scanOptions.ScanMultiplePages)
+                        imageScanner.FeederConfiguration.MaxNumberOfPages = uint.MaxValue;
+                    else
+                        imageScanner.FeederConfiguration.MaxNumberOfPages = 1;
+
+                    // duplex
+                    imageScanner.FeederConfiguration.Duplex = scanOptions.Duplex;
+                    break;
+                case ScannerSource.None:
+                default:
+                    throw new ArgumentException("Can't apply scan options without source mode");
+            }
         }
 
         private List<ImageScannerFormat> GenerateFormats(IImageScannerFormatConfiguration config)
         {
             List<ImageScannerFormat> result = new();
 
-            if (config.IsFormatSupported(ImageScannerFormat.Jpeg))
-            {
-                result.Add(ImageScannerFormat.Jpeg);
-            }
-
             if (config.IsFormatSupported(ImageScannerFormat.Png))
             {
                 result.Add(ImageScannerFormat.Png);
             }
 
-            if (config.IsFormatSupported(ImageScannerFormat.Tiff))
-            {
-                result.Add(ImageScannerFormat.Tiff);
-            }
-
             if (config.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
             {
                 result.Add(ImageScannerFormat.DeviceIndependentBitmap);
+            }
+
+            if (config.IsFormatSupported(ImageScannerFormat.Jpeg))
+            {
+                result.Add(ImageScannerFormat.Jpeg);
+            }          
+
+            if (config.IsFormatSupported(ImageScannerFormat.Tiff))
+            {
+                result.Add(ImageScannerFormat.Tiff);
             }
 
             return result;

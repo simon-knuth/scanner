@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -574,17 +575,16 @@ namespace Scanner.Views
                 {
                     case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                         if (e.NewItems == null) return;
+
                         for (int i = 0; i < e.NewItems.Count; i++)
                         {
-                            // generate ComboBoxItem
-                            StackPanel stackPanel = (StackPanel)DataTemplateScanner.LoadContent();
-                            stackPanel.DataContext = e.NewItems[i] as IScanningDevice;
-                            ComboBoxItem item = new()
-                            {
-                                Content = stackPanel,
-                                Tag = e.NewItems[i] as IScanningDevice
-                            };
+                            if (e.NewItems[i] is not IScanningDevice scanningDevice)
+                                continue;
 
+                            if (ComboBoxScanners.Items.Any(x => ((ComboBoxItem)x).Tag == scanningDevice))
+                                continue;
+
+                            ComboBoxItem item = CreateScannerComboBoxItem(scanningDevice);
                             ComboBoxScanners.Items.Insert(e.NewStartingIndex + i, item);
 
                             // select if necessary
@@ -624,15 +624,10 @@ namespace Scanner.Views
                         if (e.NewItems == null || e.OldItems == null) return;                        
                         for (int i = 0; i < e.OldItems.Count; i++)
                         {
-                            // generate ComboBoxItem
-                            StackPanel stackPanel = (StackPanel)DataTemplateScanner.LoadContent();
-                            stackPanel.DataContext = e.NewItems[i] as IScanningDevice;
-                            ComboBoxItem item = new()
-                            {
-                                Content = stackPanel,
-                                Tag = e.NewItems[i] as IScanningDevice
-                            };
+                            if (e.NewItems[i] is not IScanningDevice scanningDevice)
+                                continue;
 
+                            ComboBoxItem item = CreateScannerComboBoxItem(scanningDevice);
                             ComboBoxScanners.Items[e.OldStartingIndex + i] = item;
                         }
                         break;
@@ -650,6 +645,17 @@ namespace Scanner.Views
                 }
                 ScannerCount = ViewModel.Scanners.Count;
             });
+        }
+
+        private ComboBoxItem CreateScannerComboBoxItem(IScanningDevice device)
+        {
+            StackPanel stackPanel = (StackPanel)DataTemplateScanner.LoadContent();
+            stackPanel.DataContext = device;
+            return new ComboBoxItem()
+            {
+                Content = stackPanel,
+                Tag = device
+            };
         }
 
         private void ComboBoxScanners_RightTapped(object sender, RightTappedRoutedEventArgs e)

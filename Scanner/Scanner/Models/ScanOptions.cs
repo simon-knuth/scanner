@@ -71,21 +71,113 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ImageScannerScanSource GetSourceModeForScanning()
+        {
+            switch (SourceMode)
+            {
+                case ScannerSource.Auto:
+                    return ImageScannerScanSource.AutoConfigured;
+                case ScannerSource.Flatbed:
+                    return ImageScannerScanSource.Flatbed;
+                case ScannerSource.Feeder:
+                    return ImageScannerScanSource.Feeder;
+                case ScannerSource.None:
+                default:
+                    throw new ArgumentException(String.Format("Can't convert {0} to ImageScannerScanSource.", SourceMode));
+            }
+        }
+
         public ImageScannerColorMode GetColorModeForScanning()
         {
             switch (ColorMode)
             {
                 case ScannerColorMode.Color:
-                    return ImageScannerColorMode.Color;
+                    switch (SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            if (Scanner.IsFlatbedColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Flatbed doesn't support color");
+                        case ScannerSource.Feeder:
+                            if (Scanner.IsFeederColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Feeder doesn't support color");
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            throw new ArgumentException("Can't get color mode for source mode " + SourceMode);
+                    }
                 case ScannerColorMode.Grayscale:
-                    return ImageScannerColorMode.Grayscale;
+                    switch (SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            if (Scanner.IsFlatbedGrayscaleAllowed)
+                                return ImageScannerColorMode.Grayscale;
+                            else if (Scanner.IsFlatbedColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Flatbed doesn't support grayscale or fallback");
+                        case ScannerSource.Feeder:
+                            if (Scanner.IsFeederGrayscaleAllowed)
+                                return ImageScannerColorMode.Grayscale;
+                            else if (Scanner.IsFeederColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Feeder doesn't support grayscale or fallback");
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            throw new ArgumentException("Can't get color mode for source mode " + SourceMode);
+                    }
                 case ScannerColorMode.Monochrome:
-                    return ImageScannerColorMode.Monochrome;
+                    switch (SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            if (Scanner.IsFlatbedMonochromeAllowed)
+                                return ImageScannerColorMode.Monochrome;
+                            else if (Scanner.IsFlatbedGrayscaleAllowed)
+                                return ImageScannerColorMode.Grayscale;
+                            else if (Scanner.IsFlatbedColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Flatbed doesn't support monochrome or fallback");
+                        case ScannerSource.Feeder:
+                            if (Scanner.IsFeederMonochromeAllowed)
+                                return ImageScannerColorMode.Monochrome;
+                            else if (Scanner.IsFeederGrayscaleAllowed)
+                                return ImageScannerColorMode.Grayscale;
+                            else if (Scanner.IsFeederColorAllowed)
+                                return ImageScannerColorMode.Color;
+                            else
+                                throw new ArgumentException("Feeder doesn't support monochrome or fallback");
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            throw new ArgumentException("Can't get color mode for source mode " + SourceMode);
+                    }
                 case ScannerColorMode.Automatic:
-                    return ImageScannerColorMode.AutoColor;
+                    switch (SourceMode)
+                    {
+                        case ScannerSource.Flatbed:
+                            if (Scanner.IsFlatbedAutoColorAllowed)
+                                return ImageScannerColorMode.AutoColor;
+                            else
+                                throw new ArgumentException("Flatbed doesn't support auto color");
+                        case ScannerSource.Feeder:
+                            if (Scanner.IsFeederAutoColorAllowed)
+                                return ImageScannerColorMode.AutoColor;
+                            else
+                                throw new ArgumentException("Feeder doesn't support auto color");
+                        case ScannerSource.Auto:
+                        case ScannerSource.None:
+                        default:
+                            throw new ArgumentException("Can't get color mode for source mode " + SourceMode);
+                    }
                 case ScannerColorMode.None:
                 default:
-                    throw new ArgumentOutOfRangeException(String.Format("Can't convert {0} to ImageScannerColorMode.", ColorMode));
+                    throw new ArgumentException(String.Format("Can't convert {0} to ImageScannerColorMode.", ColorMode));
             }
         }
 
@@ -101,7 +193,7 @@ namespace Scanner.Models
                     return ImageScannerAutoCroppingMode.MultipleRegion;
                 case ScannerAutoCropMode.None:
                 default:
-                    throw new ArgumentOutOfRangeException(String.Format("Can't convert {0} to ImageScannerAutoCroppingMode.", AutoCropMode));
+                    throw new ArgumentException(String.Format("Can't convert {0} to ImageScannerAutoCroppingMode.", AutoCropMode));
             }
         }
 

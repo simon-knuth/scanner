@@ -157,7 +157,7 @@ namespace Scanner.Models.ScanningDevices
             throw new NotImplementedException();
         }
 
-        public async Task<IList<StorageFile>> GetScanAsync(StorageFolder targetFolder)
+        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
         {
             // select files to simulate scan
             FileOpenPicker picker = new();

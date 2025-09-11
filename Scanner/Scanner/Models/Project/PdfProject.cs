@@ -61,7 +61,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = false;
         }
 
-        public static async Task<ProjectBase> CreateAsync(IList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions)
+        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);

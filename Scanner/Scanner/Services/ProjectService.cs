@@ -210,8 +210,8 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
-                IList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder));
+                IReadOnlyList<StorageFile> files = [];
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
 
                 if (files.Count == 0)
                     return;
@@ -324,8 +324,8 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
-                IList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(AppDataService.IncomingFolder));
+                IReadOnlyList<StorageFile> files = [];
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)

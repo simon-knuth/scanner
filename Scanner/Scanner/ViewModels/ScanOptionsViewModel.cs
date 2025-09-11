@@ -35,7 +35,7 @@ namespace Scanner.ViewModels
         #region Commands
         public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(AddDebugScannerAsync);
         public AsyncRelayCommand DebugRemoveScannerCommand => new AsyncRelayCommand(RemoveDebugScannerAsync);
-        public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
+        public AsyncRelayCommand<DispatcherQueue> ViewLoadingAsyncCommand => new AsyncRelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
@@ -74,7 +74,7 @@ namespace Scanner.ViewModels
         public bool AreScanOptionsAvailable => SelectedScanner != null && !ProjectService.IsScanProcessRunning;
 
         public ObservableCollection<IScanningDevice> Scanners = new();
-        private SemaphoreSlim semaphoreScanners = new SemaphoreSlim(1, 1);
+        public SemaphoreSlim SemaphoreScanners = new SemaphoreSlim(1, 1);
 
         public DebugScannerSetupProperties DebugScannerSetupProperties = new();
 
@@ -87,9 +87,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanOptionsViewModel()
         {
-            ScannerDiscoveryService.ScanningDeviceFound += ScannerDiscoveryService_ScanningDeviceFound;
             ScannerDiscoveryService.ScanningDeviceLost += ScannerDiscoveryService_ScanningDeviceLost;
-            ScannerDiscoveryService.InitialCrawlCompleted += ScannerDiscoveryService_InitialCrawlCompleted;
 
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
 
@@ -108,37 +106,40 @@ namespace Scanner.ViewModels
             Messenger.UnregisterAll(this);
         }
 
-        private void ViewLoading(DispatcherQueue? dispatcherQueue)
+        private async Task ViewLoading(DispatcherQueue? dispatcherQueue)
         {
             if (dispatcherQueue != null)
             {
                 viewDispatcherQueue = dispatcherQueue;
             }
             viewLoading.TrySetResult();
+
+            await ScannerDiscoveryService.InitialCrawlCompletion.Task;
+            await SemaphoreScanners.WaitAsync();
+            ScannerDiscoveryService.ScanningDeviceFound += ScannerDiscoveryService_ScanningDeviceFound;
+            foreach (IScanningDevice device in await ScannerDiscoveryService.GetScanningDevicesAsync())
+            {
+                Scanners.Add(device);
+            }
+            SemaphoreScanners.Release();
+            await SelectBestAvailableScannerAsync();
         }
 
         private async void ScannerDiscoveryService_ScanningDeviceFound(object? sender, IScanningDevice e)
         {
-            await semaphoreScanners.WaitAsync();
-            Scanners.Add(e);
-            semaphoreScanners.Release();
+            await SemaphoreScanners.WaitAsync();
 
-            if (SelectedScanner == null && ScannerDiscoveryService.InitialCrawlCompletion.Task.IsCompletedSuccessfully)
-            {
-                await SelectBestAvailableScannerAsync();
-            }
+            if (!Scanners.Contains(e))
+                Scanners.Add(e);
+
+            SemaphoreScanners.Release();
         }
 
         private async void ScannerDiscoveryService_ScanningDeviceLost(object? sender, IScanningDevice e)
         {
-            await semaphoreScanners.WaitAsync();
+            await SemaphoreScanners.WaitAsync();
             Scanners.Remove(e);
-            semaphoreScanners.Release();
-        }
-
-        private async void ScannerDiscoveryService_InitialCrawlCompleted(object? sender, EventArgs e)
-        {
-            await SelectBestAvailableScannerAsync();
+            SemaphoreScanners.Release();
         }
 
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -149,7 +150,7 @@ namespace Scanner.ViewModels
 
         private async Task SelectBestAvailableScannerAsync()
         {
-            await semaphoreScanners.WaitAsync();
+            await SemaphoreScanners.WaitAsync();
             if (Scanners.Count > 0)
             {
                 await viewLoading.Task;
@@ -158,7 +159,7 @@ namespace Scanner.ViewModels
                     SelectedScanner = Scanners[0];
                 });
             }
-            semaphoreScanners.Release();
+            SemaphoreScanners.Release();
         }
 
         private async Task AddDebugScannerAsync()
