@@ -1,0 +1,105 @@
+<Page
+    x:Class="Scanner.Views.FeedbackView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:strings="using:Scanner.Resources.Strings"
+    mc:Ignorable="d"
+    FlowDirection="{x:Bind AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
+    Loading="Page_Loading">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Titlebar -->
+        <Grid Grid.Row="0" Padding="16,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetHeader" Width="0" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetFooter" Width="0" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.GiveFeedback}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+        </Grid>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Spacing="4" Margin="16,16,16,0" Orientation="Vertical">
+                <TextBlock Text="{x:Bind strings:Resources.GiveFeedbackDialogHeading}" FontSize="20" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                <TextBlock Text="{x:Bind strings:Resources.GiveFeedbackDialogBody}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+            <Grid Grid.Row="1" RowSpacing="8" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="{x:Bind strings:Resources.GiveFeedbackDialogName}" Style="{ThemeResource BodyTextBlockStyle}" />
+                <TextBox Grid.Row="1" Margin="0,0,0,12" Text="{x:Bind Name, Mode=TwoWay}" />
+
+                <TextBlock Grid.Row="2" Text="{x:Bind strings:Resources.GiveFeedbackDialogEmail}" Style="{ThemeResource BodyTextBlockStyle}" />
+                <TextBox Grid.Row="3" InputScope="EmailNameOrAddress" Margin="0,0,0,12" Text="{x:Bind Email, Mode=TwoWay}"  />
+
+                <TextBlock Grid.Row="4" Text="{x:Bind strings:Resources.GiveFeedbackDialogType}" Style="{ThemeResource BodyTextBlockStyle}" />
+                <RadioButtons Grid.Row="5" MaxColumns="2" Margin="0,-12,0,0" SelectedIndex="{x:Bind SelectedFeedbackTypeIndex, Mode=TwoWay}">
+                    <RadioButton Content="{x:Bind strings:Resources.GiveFeedbackDialogTypeError}" />
+                    <RadioButton Content="{x:Bind strings:Resources.GiveFeedbackDialogTypeSuggestion}" />
+                </RadioButtons>
+
+                <TextBlock Grid.Row="6" Text="{x:Bind strings:Resources.GiveFeedbackDialogMessage}" Style="{ThemeResource BodyTextBlockStyle}" />
+                <TextBox Grid.Row="7" AcceptsReturn="True" Text="{x:Bind Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+            <InfoBar Grid.Row="2" Margin="8,-8,8,0" Title="{x:Bind strings:Resources.GiveFeedbackDialogInfoHeading}" Message="{x:Bind strings:Resources.GiveFeedbackDialogInfoBody}" IsOpen="True" Severity="Informational" />
+            <Button x:Name="ButtonSend" Grid.Row="3" Margin="16,0,16,16" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind CanSend, Mode=OneWay}" Click="ButtonSend_Click">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Text="{x:Bind strings:Resources.GiveFeedbackDialogSend}" VerticalAlignment="Center" />
+                    <FontIcon Glyph="&#xE724;" FontSize="16" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" MirroredWhenRightToLeft="True" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

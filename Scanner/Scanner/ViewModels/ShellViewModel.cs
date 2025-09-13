@@ -46,6 +46,7 @@ namespace Scanner.ViewModels
 
         #region Commands
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
+        public RelayCommand ShowFeedbackCommand => new RelayCommand(ShowFeedback);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
         public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
@@ -110,6 +111,10 @@ namespace Scanner.ViewModels
             Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
             {
                 ShowSettings();
+            });
+            Messenger.Register<ShowFeedbackMessage>(this, (r, m) =>
+            {
+                ShowFeedback();
             });
         }
 
@@ -263,6 +268,11 @@ namespace Scanner.ViewModels
         private void ShowSettings()
         {
             ((App)Application.Current).ShowSettings();
+        }
+
+        private void ShowFeedback()
+        {
+            ((App)Application.Current).ShowFeedback();
         }
     }
 }

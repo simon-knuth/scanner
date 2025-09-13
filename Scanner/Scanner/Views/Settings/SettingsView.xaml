@@ -12,6 +12,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
     Loading="Page_Loading">
@@ -64,7 +65,7 @@
                 <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetFooter" Width="0" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Text="Settings" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.Settings}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0">

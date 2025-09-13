@@ -43,6 +43,7 @@ namespace Scanner
 
         public MainWindow MainWindow;
         public SettingsWindow? SettingsWindow;
+        public FeedbackWindow? FeedbackWindow;
         public DispatcherQueue MainDispatcherQueue;
 
 
@@ -160,9 +161,24 @@ namespace Scanner
             SettingsWindow.Activate();
         }
 
+        public void ShowFeedback()
+        {
+            if (FeedbackWindow == null)
+            {
+                FeedbackWindow = new FeedbackWindow();
+                FeedbackWindow.Closed += FeedbackWindow_Closed;
+            }
+            FeedbackWindow.Activate();
+        }
+
         private void SettingsWindow_Closed(object sender, WindowEventArgs args)
         {
             SettingsWindow = null;
+        }
+
+        private void FeedbackWindow_Closed(object sender, WindowEventArgs args)
+        {
+            FeedbackWindow = null;
         }
 
         public void InvokeKeyDown(KeyRoutedEventArgs e)

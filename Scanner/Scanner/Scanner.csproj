@@ -116,7 +116,7 @@
     <Page Update="Views\Flyouts\UndoRedoStackFlyout.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\SettingsView.xaml">
+    <Page Update="Views\FeedbackView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

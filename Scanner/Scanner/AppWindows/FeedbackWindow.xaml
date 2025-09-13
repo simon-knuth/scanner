@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<winuiex:WindowEx
+    xmlns:winuiex="using:WinUIEx"
+    x:Class="Scanner.AppWindows.FeedbackWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Scanner"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:Scanner.Views"
+    mc:Ignorable="d"
+    Title="Settings"
+    MinWidth="500"
+    MinHeight="700"
+    Width="500"
+    Height="700"
+    MaxWidth="500"
+    MaxHeight="700"
+    IsMinimizable="False"
+    IsMaximizable="False">
+
+    <views:FeedbackView FeedbackSent="FeedbackView_FeedbackSent" />
+</winuiex:WindowEx>

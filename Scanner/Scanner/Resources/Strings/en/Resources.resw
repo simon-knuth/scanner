@@ -1823,4 +1823,40 @@ Fuzzy</comment>
   <data name="ScanMultiplePages" xml:space="preserve">
     <value>Scan multiple pages</value>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value>Give feedback</value>
+  </data>
+  <data name="GiveFeedbackDialogHeading" xml:space="preserve">
+    <value>We'd love your feedback</value>
+  </data>
+  <data name="GiveFeedbackDialogBody" xml:space="preserve">
+    <value>Share your thoughts, suggestions, or bug reports to help us improve.</value>
+  </data>
+  <data name="GiveFeedbackDialogName" xml:space="preserve">
+    <value>Your Name (optional)</value>
+  </data>
+  <data name="GiveFeedbackDialogEmail" xml:space="preserve">
+    <value>Email (optional)</value>
+  </data>
+  <data name="GiveFeedbackDialogMessage" xml:space="preserve">
+    <value>Message (required)</value>
+  </data>
+  <data name="GiveFeedbackDialogType" xml:space="preserve">
+    <value>Feedback type</value>
+  </data>
+  <data name="GiveFeedbackDialogSend" xml:space="preserve">
+    <value>Send feedback</value>
+  </data>
+  <data name="GiveFeedbackDialogTypeError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="GiveFeedbackDialogTypeSuggestion" xml:space="preserve">
+    <value>Suggestion</value>
+  </data>
+  <data name="GiveFeedbackDialogInfoHeading" xml:space="preserve">
+    <value>Heads up</value>
+  </data>
+  <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
+    <value>This app is free and open-source, mostly built by a single developer. While you may not get a reply to your message, your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
+  </data>
 </root>

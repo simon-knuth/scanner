@@ -1614,4 +1614,7 @@ Fuzzy</comment>
     <value>Zaznacz wszystkie</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value />
+  </data>
 </root>

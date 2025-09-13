@@ -33,6 +33,8 @@ namespace Scanner.Services.Interfaces
         void TrackWarning(Exception exception);
         void TrackError(Exception exception, bool isFatal = false);
         void TrackEvent(AnalyticsEvent sentryEvent, IDictionary<string, string> properties = null);
+        void SendErrorFeedback(string message, string? contactEmail, string? name);
+        void SendSuggestionFeedback(string message, string? contactEmail, string? name);
         Task<string> GetCurrentLogPathAsync(bool flush);
         void GenerateTestCrash();
         void Initialize();

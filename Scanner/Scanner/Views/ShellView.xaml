@@ -282,6 +282,9 @@
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.Help}" Style="{StaticResource TitlebarButtonStyle}">
                             <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
+                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.GiveFeedback}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowFeedbackCommand}">
+                            <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </Button>
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}">
                             <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>

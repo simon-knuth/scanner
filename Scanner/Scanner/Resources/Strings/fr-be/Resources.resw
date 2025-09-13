@@ -1331,4 +1331,7 @@ Fuzzy</comment>
   <data name="FileFormatDescriptionRAW" xml:space="preserve">
     <value>Professional image format. Only for specific use cases.</value>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value />
+  </data>
 </root>
