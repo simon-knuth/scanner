@@ -469,9 +469,9 @@
         <!-- Bottom toolbar -->
         <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="64" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="64" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
@@ -483,66 +483,68 @@
                 <Border x:Name="BorderToolbarToolsBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
 
                 <!-- Main editing controls -->
-                <Frame Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
-                            <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        </Button>
-                        <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateToolTip}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
-                            <Grid>
-                                <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </Grid>
+                <Frame IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" BorderThickness="1" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                    <ScrollViewer x:Name="ScrollViewerMainEditingControls" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" SizeChanged="ScrollViewerMainEditingControls_SizeChanged">
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
+                                <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                            <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateToolTip}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                                <Grid>
+                                    <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Grid>
 
-                            <FlyoutBase.AttachedFlyout>
-                                <MenuFlyout Placement="Top">
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate180}" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate270}" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateAutomatically}" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
-                                        <MenuFlyoutItem.Icon>
-                                            <ImageIcon>
-                                                <ImageIcon.Source>
-                                                    <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
-                                                </ImageIcon.Source>
-                                            </ImageIcon>
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                </MenuFlyout>
-                            </FlyoutBase.AttachedFlyout>
-                        </Button>
-                        <Button x:Name="ButtonDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}" Click="ButtonDraw_Click">
-                            <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
-                            <Grid>
-                                <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </Grid>
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout Placement="Top">
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate180}" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate270}" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateAutomatically}" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
+                                            <MenuFlyoutItem.Icon>
+                                                <ImageIcon>
+                                                    <ImageIcon.Source>
+                                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                                    </ImageIcon.Source>
+                                                </ImageIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator />
+                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button>
+                            <Button x:Name="ButtonDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}" Click="ButtonDraw_Click">
+                                <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
+                                <Grid>
+                                    <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Grid>
 
-                            <Button.Flyout>
-                                <MenuFlyout>
-                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
-                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
-                                    <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
-                            <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        </Button>
-                        <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
-                            <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        </Button>
-                        <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
-                            <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                        </Button>
-                    </StackPanel>
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
+                                <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
+                                <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                            <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
+                                <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Frame>
             
                 <!-- Crop controls -->
@@ -721,7 +723,7 @@
                 </Frame>
             </Grid>
 
-            <Grid x:Name="GridToolbarZoom" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" IsHitTestVisible="True" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" PointerEntered="GridToolbarZoom_PointerEntered" PointerExited="GridToolbarZoom_PointerExited">
+            <Grid x:Name="GridToolbarZoom" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" IsHitTestVisible="True" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" PointerEntered="GridToolbarZoom_PointerEntered" PointerExited="GridToolbarZoom_PointerExited">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -729,13 +731,13 @@
 
                 <Border x:Name="BorderToolbarZoomBackground" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
                 <StackPanel x:Name="StackPanelZoomControls" Grid.Column="0" Orientation="Horizontal" x:Load="{x:Bind IsHoveringZoomControls, Mode=OneWay}">
-                    <Button x:Name="ButtonPageZoomFactorIncrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="8,0,0,8" IsEnabled="{x:Bind CanZoomIn, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomInToolTip}" Click="ButtonPageZoomFactorIncrease_Click">
-                        <FontIcon Glyph="&#xE710;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                    </Button>
-                    <Button x:Name="ButtonPageZoomFactorDecrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0" IsEnabled="{x:Bind CanZoomOut, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomOutToolTip}" Click="ButtonPageZoomFactorDecrease_Click">
-                        <FontIcon Glyph="&#xE738;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                    </Button>
-                </StackPanel>
+                        <Button x:Name="ButtonPageZoomFactorIncrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="8,0,0,8" IsEnabled="{x:Bind CanZoomIn, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomInToolTip}" Click="ButtonPageZoomFactorIncrease_Click">
+                            <FontIcon Glyph="&#xE710;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </Button>
+                        <Button x:Name="ButtonPageZoomFactorDecrease" Padding="8" VerticalAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0" IsEnabled="{x:Bind CanZoomOut, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ZoomOutToolTip}" Click="ButtonPageZoomFactorDecrease_Click">
+                            <FontIcon Glyph="&#xE738;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </Button>
+                    </StackPanel>
                 <Button x:Name="ButtonPageZoomFactor" Grid.Column="1" Padding="8" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="0,8,8,0" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetZoomToolTip}" Click="ButtonPageZoomFactor_Click">
                     <TextBlock Text="{x:Bind FriendlyPageZoomFactor, Mode=OneWay}" MaxLines="1" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Button>

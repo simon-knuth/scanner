@@ -59,7 +59,7 @@ namespace Scanner.Views
 
         public string FriendlyPageZoomFactor => string.Format(GetLocalized(ResourcesExtension.KeyEnum.TextZoomFactor), PageZoomFactor * 100);
 
-        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping || IsDrawing;
+        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping || IsDrawing || ScrollViewerMainEditingControls?.ScrollableWidth > 0;
 
         [ObservableProperty]
         private bool isHoveringZoomControls;
@@ -635,6 +635,11 @@ namespace Scanner.Views
         private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)
         {
             IsDrawing = false;
+        }
+
+        private void ScrollViewerMainEditingControls_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
         }
     }
 }
