@@ -361,6 +361,11 @@
                                         <FontIcon Glyph="&#xE81C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="{x:Bind strings:Resources.GiveFeedback}" Command="{x:Bind ViewModel.ShowFeedbackCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="{x:Bind strings:Resources.Help}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

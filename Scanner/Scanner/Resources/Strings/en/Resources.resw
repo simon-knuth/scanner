@@ -1851,7 +1851,7 @@ Fuzzy</comment>
     <value>Error</value>
   </data>
   <data name="GiveFeedbackDialogTypeSuggestion" xml:space="preserve">
-    <value>Suggestion</value>
+    <value>Suggestion/Opinion</value>
   </data>
   <data name="GiveFeedbackDialogInfoHeading" xml:space="preserve">
     <value>Heads up</value>
