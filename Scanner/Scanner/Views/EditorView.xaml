@@ -20,6 +20,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:serviceinterfaces="using:Scanner.Services.Interfaces"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:graphics="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -410,11 +411,9 @@
                         <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
-                                    <Image x:Name="ImagePreview" ImageOpened="ImagePreview_ImageOpened" DataContextChanged="ImagePreview_DataContextChanged">
-                                        <Image.Source>
-                                            <BitmapImage x:Name="BitmapImagePreview" UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" />
-                                        </Image.Source>
-                                    </Image>
+                                    <Viewbox Stretch="Uniform">
+                                        <graphics:CanvasControl x:Name="CanvasPreview" CreateResources="CanvasPreview_CreateResources" DataContextChanged="CanvasPreview_DataContextChanged" Draw="CanvasPreview_Draw" Unloaded="CanvasPreview_Unloaded" />
+                                    </Viewbox>
                                 </Frame>
                             </Border>
                         </ScrollViewer>
@@ -536,9 +535,51 @@
                             </Button>
                             <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
                                 <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                
+                                <Button.Flyout>
+                                    <Flyout x:Name="FlyoutBrightness" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
+                                        <Flyout.FlyoutPresenterStyle>
+                                            <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+                                                <Setter Property="MinHeight" Value="0" />
+                                                <Setter Property="Padding" Value="16,8,16,8" />
+                                                <Setter Property="Margin" Value="0,48,0,0" />
+                                            </Style>
+                                        </Flyout.FlyoutPresenterStyle>
+
+                                        <StackPanel Orientation="Vertical" Spacing="4">
+                                            <TextBlock Text="{x:Bind strings:Resources.Brightness}" HorizontalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <FontIcon Glyph="&#xEC8A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" />
+                                                <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
                             </Button>
                             <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
                                 <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="FlyoutContrast" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
+                                        <Flyout.FlyoutPresenterStyle>
+                                            <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+                                                <Setter Property="MinHeight" Value="0" />
+                                                <Setter Property="Padding" Value="16,8,16,8" />
+                                                <Setter Property="Margin" Value="0,48,0,0" />
+                                            </Style>
+                                        </Flyout.FlyoutPresenterStyle>
+
+                                        <StackPanel Orientation="Vertical" Spacing="4">
+                                            <TextBlock Text="{x:Bind strings:Resources.Contrast}" HorizontalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <FontIcon Glyph="&#xEA3A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" />
+                                                <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
                             </Button>
                             <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
                                 <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

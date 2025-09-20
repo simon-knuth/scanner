@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -22,11 +24,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using static Scanner.Helpers.Helpers;
 
@@ -209,6 +213,8 @@ namespace Scanner.Views
             CoreInputDeviceTypes.Pen;
 
         private VirtualizingStackPanel? flipViewPanel;
+
+        private Dictionary<IProjectPage, CanvasControl> pageCanvases = [];
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -451,19 +457,103 @@ namespace Scanner.Views
             catch (Exception) { }
         }
 
-        private void ImagePreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        private async void CanvasPreview_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            // prevent item recycling from causing another image to be displayed intermittently
-            if (sender.Tag == args.NewValue)
+            IProjectPage? page = sender.DataContext as IProjectPage;
+            if (page == null)
                 return;
 
-            sender.Visibility = Visibility.Collapsed;
-            sender.Tag = args.NewValue;
+            sender.Tag = await CacheCanvasBitmapAsync(sender, page, null);
         }
 
-        private void ImagePreview_ImageOpened(object sender, RoutedEventArgs e)
+        private void CanvasPreview_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            ((Image)sender).Visibility = Visibility.Visible;
+            CanvasPageData? canvasPageData = sender.Tag as CanvasPageData;
+            if (canvasPageData == null)
+                return;
+
+            args.DrawingSession.DrawImage(canvasPageData.Bitmap);
+
+            sender.Width = canvasPageData.Bitmap.Size.Width;
+            sender.Height = canvasPageData.Bitmap.Size.Height;
+        }
+
+        private void CanvasPreview_Unloaded(object sender, RoutedEventArgs e)
+        {
+            CanvasControl canvas = (CanvasControl)sender;
+            CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
+            if (canvasPageData == null)
+                return;
+
+            canvasPageData.Bitmap.Dispose();
+        }
+
+        private async void CanvasPreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            CanvasControl canvas = (CanvasControl)sender;
+            CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
+
+            if (!canvas.ReadyToDraw)
+                return;
+
+            // clear canvas to prevent wrong image from briefly being displayed during recycling
+            canvas.Tag = null;
+            canvas.Invalidate();
+
+            try
+            {
+                IProjectPage page = (IProjectPage)canvas.DataContext;
+
+                // discard old data
+                if (canvasPageData != null)
+                    canvasPageData.Bitmap.Dispose();
+
+                // load new data
+                if (page == null || page.PreviewBitmapUri == null)
+                    return;
+
+                canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
+            }
+            finally
+            {
+                canvas.Invalidate();
+            }
+        }
+
+        private async Task<CanvasPageData> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
+        {
+            if (previousPage != null)
+            {
+                previousPage.PropertyChanged -= Page_PropertyChanged;
+                pageCanvases.Remove(previousPage);
+            }
+
+            pageCanvases[page] = canvas;
+            page.PropertyChanged += Page_PropertyChanged;
+
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(page.PreviewBitmapUri);
+
+            // load the image file into a CanvasBitmap
+            using IRandomAccessStreamWithContentType stream = await file.OpenReadAsync();
+            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, stream);
+
+            canvas.Width = newBitmap.Size.Width;
+            canvas.Height = newBitmap.Size.Height;
+
+            return new CanvasPageData(page, newBitmap);
+        }
+
+        private async void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(IProjectPage.PreviewBitmapUri))
+                return;
+
+            IProjectPage? page = sender as IProjectPage;
+            if (page == null)
+                return;
+
+            CanvasControl canvas = pageCanvases[page];
+            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
         }
 
         private void ButtonCrop_Click(object sender, RoutedEventArgs e)
@@ -641,5 +731,11 @@ namespace Scanner.Views
         {
             OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
         }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private record CanvasPageData(IProjectPage Page, CanvasBitmap Bitmap);
     }
 }
