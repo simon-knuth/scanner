@@ -317,12 +317,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                                <NumberBox Grid.Column="1" Minimum="-100" Maximum="100" MaxWidth="100" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
-                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetBrightness, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Click="ButtonBrightnessReset_Click">
+                                <NumberBox Grid.Column="1" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
+                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetBrightness, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>
-                            <Slider VerticalAlignment="Center" TickPlacement="BottomRight" IsThumbToolTipEnabled="False" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" />
+                            <Slider x:Name="SliderBrightness" VerticalAlignment="Center" TickPlacement="BottomRight" IsThumbToolTipEnabled="False" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Brightness, Mode=TwoWay}" DoubleTapped="SliderBrightness_DoubleTapped" />
                         </StackPanel>
 
                         <!-- Contrast -->
@@ -334,12 +334,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                                <NumberBox Grid.Column="1" Minimum="-100" Maximum="100" MaxWidth="100" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
-                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetContrast, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Click="ButtonContrastReset_Click">
+                                <NumberBox Grid.Column="1" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
+                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind CanResetContrast, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" Command="{x:Bind ViewModel.ResetContrastCommand}">
                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Button>
                             </Grid>
-                            <Slider VerticalAlignment="Center" TickPlacement="BottomRight" IsThumbToolTipEnabled="False" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" />
+                            <Slider x:Name="SliderContrast" VerticalAlignment="Center" TickPlacement="BottomRight" IsThumbToolTipEnabled="False" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" Value="{x:Bind ViewModel.ScanOptions.Contrast, Mode=TwoWay}" DoubleTapped="SliderContrast_DoubleTapped" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

@@ -35,6 +35,8 @@ namespace Scanner.ViewModels
         #region Commands
         public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(AddDebugScannerAsync);
         public AsyncRelayCommand DebugRemoveScannerCommand => new AsyncRelayCommand(RemoveDebugScannerAsync);
+        public RelayCommand ResetBrightnessCommand => new RelayCommand(ResetBrightness);
+        public RelayCommand ResetContrastCommand => new RelayCommand(ResetContrast);
         public AsyncRelayCommand<DispatcherQueue> ViewLoadingAsyncCommand => new AsyncRelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -397,6 +399,18 @@ namespace Scanner.ViewModels
                     }
                     break;
             }
+        }
+
+        private void ResetBrightness()
+        {
+            if (ScanOptions != null)
+                ScanOptions.Brightness = 0;
+        }
+
+        private void ResetContrast()
+        {
+            if (ScanOptions != null)
+                ScanOptions.Contrast = 0;
         }
     }
 }

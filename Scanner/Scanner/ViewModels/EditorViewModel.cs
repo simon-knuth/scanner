@@ -40,6 +40,8 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, false));
         public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, true));
         public AsyncRelayCommand<(List<IProjectPage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<IProjectPage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
+        public RelayCommand ResetBrightnessCommand => new RelayCommand(() => PageBrightnessDouble = 0);
+        public RelayCommand ResetContrastCommand => new RelayCommand(() => PageContrastDouble = 0);
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -68,6 +70,63 @@ namespace Scanner.ViewModels
 
         public bool AreSimilarPagesForCropAvailable => GetAreSimilarPagesForCropAvailable();
         public List<IProjectPage> SimilarPagesForCrop => GetSimilarPagesForCrop();
+
+        public int PageBrightness
+        {
+            get
+            {
+                if (ProjectService.SelectedPage is not ImagePage imagePage)
+                    return 0;
+
+                return imagePage.Brightness;
+            }
+            set
+            {
+                if (ProjectService.SelectedPage is not ImagePage imagePage)
+                    return;
+
+                imagePage.Brightness = value;
+                OnPropertyChanged(nameof(PageBrightness));
+                OnPropertyChanged(nameof(PageBrightnessDouble));
+                OnPropertyChanged(nameof(CanResetBrightness));
+            }
+        }
+
+        public int PageContrast
+        {
+            get
+            {
+                if (ProjectService.SelectedPage is not ImagePage imagePage)
+                    return 0;
+
+                return imagePage.Contrast;
+            }
+            set
+            {
+                if (ProjectService.SelectedPage is not ImagePage imagePage)
+                    return;
+
+                imagePage.Contrast = value;
+                OnPropertyChanged(nameof(PageContrast));
+                OnPropertyChanged(nameof(PageContrastDouble));
+                OnPropertyChanged(nameof(CanResetContrast));
+            }
+        }
+
+        public double PageBrightnessDouble
+        {
+            get => PageBrightness;
+            set => PageBrightness = (int)value;
+        }
+
+        public double PageContrastDouble
+        {
+            get => PageContrast;
+            set => PageContrast = (int)value;
+        }
+
+        public bool CanResetBrightness => PageBrightness != 0;
+        public bool CanResetContrast => PageContrast != 0;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +159,12 @@ namespace Scanner.ViewModels
                 case nameof(IProjectService.SelectedPage):
                     OnPropertyChanged(nameof(AreSimilarPagesForCropAvailable));
                     OnPropertyChanged(nameof(SimilarPagesForCrop));
+                    OnPropertyChanged(nameof(PageBrightness));
+                    OnPropertyChanged(nameof(PageContrast));
+                    OnPropertyChanged(nameof(PageBrightnessDouble));
+                    OnPropertyChanged(nameof(PageContrastDouble));
+                    OnPropertyChanged(nameof(CanResetBrightness));
+                    OnPropertyChanged(nameof(CanResetContrast));
                     break;
             }
         }

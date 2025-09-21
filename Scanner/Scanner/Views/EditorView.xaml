@@ -96,7 +96,7 @@
                 </ListViewItem>
             </DataTemplate>
 
-            <!-- Styles -->
+            <!-- Styles -->            
             <Style x:Key="HorizontalImageCropperThumbStyle" TargetType="controls:ImageCropperThumb">
                 <Setter Property="IsTabStop" Value="True" />
                 <Setter Property="UseSystemFocusVisuals" Value="True" />
@@ -541,16 +541,27 @@
                                         <Flyout.FlyoutPresenterStyle>
                                             <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
                                                 <Setter Property="MinHeight" Value="0" />
-                                                <Setter Property="Padding" Value="16,8,16,8" />
+                                                <Setter Property="Padding" Value="0" />
                                                 <Setter Property="Margin" Value="0,48,0,0" />
                                             </Style>
                                         </Flyout.FlyoutPresenterStyle>
 
                                         <StackPanel Orientation="Vertical" Spacing="4">
-                                            <TextBlock Text="{x:Bind strings:Resources.Brightness}" HorizontalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <Grid Padding="16,8,16,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageBrightness, Mode=TwoWay}" />
+                                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetBrightness, Mode=OneWay}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
+                                                    <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </Button>
+                                            </Grid>
+                                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <FontIcon Glyph="&#xEC8A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" />
+                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.PageBrightnessDouble, Mode=TwoWay}" DoubleTapped="SliderBrightness_DoubleTapped" />
                                                 <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </StackPanel>
                                         </StackPanel>
@@ -565,16 +576,27 @@
                                         <Flyout.FlyoutPresenterStyle>
                                             <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
                                                 <Setter Property="MinHeight" Value="0" />
-                                                <Setter Property="Padding" Value="16,8,16,8" />
+                                                <Setter Property="Padding" Value="0" />
                                                 <Setter Property="Margin" Value="0,48,0,0" />
                                             </Style>
                                         </Flyout.FlyoutPresenterStyle>
 
                                         <StackPanel Orientation="Vertical" Spacing="4">
-                                            <TextBlock Text="{x:Bind strings:Resources.Contrast}" HorizontalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <Grid Padding="16,8,16,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageContrast, Mode=TwoWay}" />
+                                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetContrast, Mode=OneWay}" Command="{x:Bind ViewModel.ResetContrastCommand}">
+                                                    <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </Button>
+                                            </Grid>
+                                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <FontIcon Glyph="&#xEA3A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" />
+                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.PageContrastDouble, Mode=TwoWay}" DoubleTapped="SliderContrast_DoubleTapped" />
                                                 <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </StackPanel>
                                         </StackPanel>

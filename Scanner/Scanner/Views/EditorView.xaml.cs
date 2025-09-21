@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -29,9 +30,11 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Globalization.NumberFormatting;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.WebUI;
 using static Scanner.Helpers.Helpers;
 
 
@@ -472,7 +475,57 @@ namespace Scanner.Views
             if (canvasPageData == null)
                 return;
 
-            args.DrawingSession.DrawImage(canvasPageData.Bitmap);
+            // get effect values
+            float brightness = 0;
+            float contrast = 0;
+            if (canvasPageData.Page is ImagePage imagePage)
+            {
+                brightness = imagePage.Brightness / 100f;
+                contrast = imagePage.Contrast / 100f;
+            }
+
+            var brightnessEffect = new BrightnessEffect()
+            {
+                Source = canvasPageData.Bitmap,
+                BlackPoint = new Vector2(0, 0),
+                WhitePoint = new Vector2(1, 1)
+            };
+
+            var contrastEffect = new ContrastEffect()
+            {
+                Source = brightnessEffect,
+                Contrast = contrast
+            };
+
+            var colorMatrixEffect = new ColorMatrixEffect()
+            {
+                Source = contrastEffect,
+                ColorMatrix = new Matrix5x4()
+                {
+                    M11 = 1,
+                    M12 = 0,
+                    M13 = 0,
+                    M14 = 0,
+                    M21 = 0,
+                    M22 = 1,
+                    M23 = 0,
+                    M24 = 0,
+                    M31 = 0,
+                    M32 = 0,
+                    M33 = 1,
+                    M34 = 0,
+                    M41 = 0,
+                    M42 = 0,
+                    M43 = 0,
+                    M44 = 1,
+                    M51 = brightness,
+                    M52 = brightness,
+                    M53 = brightness,
+                    M54 = 0
+                }
+            };
+
+            args.DrawingSession.DrawImage(colorMatrixEffect);
 
             sender.Width = canvasPageData.Bitmap.Size.Width;
             sender.Height = canvasPageData.Bitmap.Size.Height;
@@ -537,23 +590,40 @@ namespace Scanner.Views
             using IRandomAccessStreamWithContentType stream = await file.OpenReadAsync();
             CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, stream);
 
+            // update canvas size
             canvas.Width = newBitmap.Size.Width;
             canvas.Height = newBitmap.Size.Height;
 
             return new CanvasPageData(page, newBitmap);
         }
 
-        private async void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(IProjectPage.PreviewBitmapUri))
-                return;
+            this.RunOnUIThread(DispatcherQueuePriority.Normal, async () =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(IProjectPage.PreviewBitmapUri):
+                        IProjectPage? page = sender as IProjectPage;
+                        if (page == null)
+                            return;
 
-            IProjectPage? page = sender as IProjectPage;
-            if (page == null)
-                return;
+                        CanvasControl canvas = pageCanvases[page];
+                        canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
+                        break;
+                    case nameof(ImagePage.Brightness):
+                    case nameof(ImagePage.Contrast):
+                        page = sender as IProjectPage;
+                        if (page == null)
+                            return;
 
-            CanvasControl canvas = pageCanvases[page];
-            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
+                        canvas = pageCanvases[page];
+                        canvas.Invalidate();
+                        break;
+                    default:
+                        return;
+                }
+            });        
         }
 
         private void ButtonCrop_Click(object sender, RoutedEventArgs e)
@@ -730,6 +800,16 @@ namespace Scanner.Views
         private void ScrollViewerMainEditingControls_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+        }
+
+        private void SliderBrightness_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ViewModel.ResetBrightnessCommand.Execute(null);
+        }
+
+        private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ViewModel.ResetContrastCommand.Execute(null);
         }
 
 

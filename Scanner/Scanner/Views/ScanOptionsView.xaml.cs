@@ -665,18 +665,6 @@ namespace Scanner.Views
 #endif
         }
 
-        private void ButtonBrightnessReset_Click(object sender, RoutedEventArgs e)
-        {
-            // reset brightness
-            ViewModel.ScanOptions.Brightness = 0;
-        }
-
-        private void ButtonContrastReset_Click(object sender, RoutedEventArgs e)
-        {
-            // reset contrast
-            ViewModel.ScanOptions.Contrast = 0;
-        }
-
         private void ComboBoxResolution_TextSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
         {
             if (int.TryParse(args.Text, out int intValue))
@@ -720,6 +708,16 @@ namespace Scanner.Views
         private void StackPanelContent_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             OnPropertyChanged(nameof(CanScroll));
+        }
+
+        private void SliderBrightness_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ViewModel.ResetBrightnessCommand.Execute(null);
+        }
+
+        private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ViewModel.ResetContrastCommand.Execute(null);
         }
     }
 }
