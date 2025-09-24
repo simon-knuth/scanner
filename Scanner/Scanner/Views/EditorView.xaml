@@ -554,7 +554,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageBrightness, Mode=TwoWay}" />
+                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageBrightness, Mode=TwoWay}" />
                                                 <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetBrightness, Mode=OneWay}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
                                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </Button>
@@ -589,7 +589,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" TextAlignment="Right" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageContrast, Mode=TwoWay}" />
+                                                <NumberBox Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageContrast, Mode=TwoWay}" />
                                                 <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetContrast, Mode=OneWay}" Command="{x:Bind ViewModel.ResetContrastCommand}">
                                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </Button>

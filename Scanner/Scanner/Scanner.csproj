@@ -67,17 +67,17 @@
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250702007-experimental4" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
     <PackageReference Include="ReswPlus" Version="0.3.1.5" />
-    <PackageReference Include="Sentry" Version="5.15.0" />
+    <PackageReference Include="Sentry" Version="5.15.1" />
     <PackageReference Include="Serilog" Version="4.3.0" />
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
-    <PackageReference Include="WinUIEx" Version="2.6.0" />
+    <PackageReference Include="WinUIEx" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\contrast-black\" />
