@@ -73,7 +73,7 @@ namespace Scanner.Models
                 }
             }
 
-            await project.ApplyFilterToPagesAsync(pages, filter);
+            await project.ApplyFilterToPagesAsync(pages, filter, uiDispatcherQueue);
             return performedChanges;
         }
 
@@ -86,7 +86,7 @@ namespace Scanner.Models
 
             foreach (KeyValuePair<ImagePage, ImageFilter> pair in previousFilters)
             {
-                await project.ApplyFilterToPagesAsync([pair.Key], pair.Value);
+                await project.ApplyFilterToPagesAsync([pair.Key], pair.Value, uiDispatcherQueue);
             }
         }
 

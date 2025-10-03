@@ -392,7 +392,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
-        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded">
+        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded" Unloaded="FlipViewPages_Unloaded">
             <animations:Implicit.HideAnimations>
                 <animations:ImplicitAnimationSet>
                     <animations:OpacityAnimation To="1.0" Duration="0:0:0.3" />
@@ -412,7 +412,7 @@
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                     <Viewbox Stretch="Uniform">
-                                        <graphics:CanvasControl x:Name="CanvasPreview" CreateResources="CanvasPreview_CreateResources" DataContextChanged="CanvasPreview_DataContextChanged" Draw="CanvasPreview_Draw" Unloaded="CanvasPreview_Unloaded" />
+                                        <graphics:CanvasControl x:Name="CanvasPreview" CreateResources="CanvasPreview_CreateResources" DataContextChanged="CanvasPreview_DataContextChanged" Draw="CanvasPreview_Draw" />
                                     </Viewbox>
                                 </Frame>
                             </Border>

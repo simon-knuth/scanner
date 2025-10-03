@@ -58,7 +58,7 @@ namespace Scanner.Models
             if (project.Pages.Count == removals.Count)
                 return await ProjectService.TryDeleteProjectAsync();
             else
-                await project.RemovePagesAsync(removals, false);
+                await project.RemovePagesAsync(removals, false, uiDispatcherQueue);
 
             removedPages = removals;
             return removedPages != null && removedPages.Count > 0;

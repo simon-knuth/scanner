@@ -59,7 +59,7 @@ namespace Scanner.Models
                 if (page is ImagePage imagePage)
                 {
                     Pages.Add(page, new ImageProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!,
-                        imagePage.FileNameInfo!.DesiredName, imagePage.Filter));
+                        imagePage.FileNameInfo!.DesiredName, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace Scanner.Models
                                 if (page.Value.Filter != ImageFilter.None)
                                 {
                                     // use Win2D effects pipeline
-                                    await ProjectBase.ApplyFilterAsync(sourceStream, encoder, page.Value.Filter);
+                                    await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, page.Value.Filter, page.Value.Brightness, page.Value.Contrast);
                                 }
                                 else
                                 {
@@ -187,6 +187,6 @@ namespace Scanner.Models
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public record ImageProjectSnapshotPage(StorageFile SourceFile, StorageFile? TargetFile, StorageFolder TargetFolder,
-            string? DesiredFileName, ImageFilter Filter);
+            string? DesiredFileName, ImageFilter Filter, int Brightness, int Contrast);
     }
 }

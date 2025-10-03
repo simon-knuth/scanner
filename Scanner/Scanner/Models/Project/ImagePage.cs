@@ -1,23 +1,23 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Extensions;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.ComponentModel;
 using Windows.Graphics.Imaging;
-using System.IO;
+using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Microsoft.UI.Dispatching;
-using Scanner.Extensions;
+using WinRT.Interop;
 
 namespace Scanner.Models
 {
@@ -81,7 +81,7 @@ namespace Scanner.Models
         public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
         public BitmapRotation? RecommendedRotation { get; set; } = null;
 
-        public bool IsUsingDestructiveEffects => Filter != ImageFilter.None;
+        public bool IsUsingDestructiveEffects => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0;
 
         /// <summary>
         /// The <see cref="ImageFilter"/> used by the source file, usually <see cref="ImageFilter.None"/>.
@@ -202,31 +202,35 @@ namespace Scanner.Models
                     PreviewBitmapUri = previewBitmapUri;
                 });
             }
+
             SourceFile = file;
         }
 
-        public async Task ChangeAndCleanUpPreviewFileAsync(StorageFile? file)
+        public async Task ChangeAndCleanUpPreviewFileAsync(StorageFile? file, DispatcherQueue uiDispatcherQueue)
         {
             StorageFile? previousFile = PreviewFile != SourceFile ? PreviewFile : null;
 
             // change file
-            if (file != null)
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
             {
-                PreviewFile = file;
-                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, file.Name));
-            }
-            else
-            {
-                PreviewFile = SourceFile;
-                if (CommitNeeded)
+                if (file != null)
                 {
-                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ChangesFolder, SourceFile.Name));
+                    PreviewFile = file;
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, file.Name));
                 }
                 else
                 {
-                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, SourceFile.Name));
+                    PreviewFile = SourceFile;
+                    if (CommitNeeded)
+                    {
+                        PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ChangesFolder, SourceFile.Name));
+                    }
+                    else
+                    {
+                        PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, SourceFile.Name));
+                    }
                 }
-            }
+            });
 
             // remove previous one
             if (previousFile != null)

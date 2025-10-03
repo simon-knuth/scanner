@@ -61,7 +61,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = false;
         }
 
-        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions)
+        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -78,7 +78,7 @@ namespace Scanner.Models
 
             // create project and update previews
             PdfProject project = new PdfProject(pages, format, targetFileName, targetFolder, initialScanOptions);
-            await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList());
+            await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }
 

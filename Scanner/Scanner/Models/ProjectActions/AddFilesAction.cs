@@ -55,7 +55,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            addedPages = await project.AddFilesAsync(insertions, keepSourceFiles);
+            addedPages = await project.AddFilesAsync(insertions, keepSourceFiles, uiDispatcherQueue);
             
             return addedPages != null && addedPages.Count > 0;
         }
@@ -67,7 +67,7 @@ namespace Scanner.Models
                 throw new ActionFailedAndRolledBackException("Can't undo AddFilesAction without list of added pages");
             }
 
-            await project.RemovePagesAsync(addedPages, true);
+            await project.RemovePagesAsync(addedPages, true, uiDispatcherQueue);
             addedPages = null;
         }
 

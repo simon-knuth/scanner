@@ -61,11 +61,11 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(page, new(page.SourceFile, imagePage.Filter));
+                    Pages.Add(page, new(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
                 else
                 {
-                    Pages.Add(page, new(page.SourceFile, ImageFilter.None));
+                    Pages.Add(page, new(page.SourceFile, ImageFilter.None, 0, 0));
                 }
             }
         }
@@ -121,6 +121,6 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public record PdfProjectSnapshotPage(StorageFile SourceFile, ImageFilter Filter);
+        public record PdfProjectSnapshotPage(StorageFile SourceFile, ImageFilter Filter, int Brightness, int Contrast);
     }
 }

@@ -241,14 +241,14 @@ namespace Scanner.Services
                     switch (scanOptions.TargetFormat)
                     {
                         case TargetFormat.PDF:
-                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
+                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions, uiDispatcherQueue);
                             break;
                         case TargetFormat.JPG:
                         case TargetFormat.PNG:
                         case TargetFormat.BMP:
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
-                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions);
+                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions, uiDispatcherQueue);
                             break;
                         default:
                             throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");

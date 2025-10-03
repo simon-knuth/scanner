@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -130,7 +131,7 @@ namespace Scanner.Models
         public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue);
 
 
-        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
+        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (insertions.Count > 1)
@@ -140,7 +141,7 @@ namespace Scanner.Models
 
             try
             {
-                return await AddFilesInternalAsync(insertions, keepSourceFiles);
+                return await AddFilesInternalAsync(insertions, keepSourceFiles, uiDispatcherQueue);
             }
             finally
             {
@@ -149,7 +150,7 @@ namespace Scanner.Models
             }
         }
 
-        private async Task<List<IProjectPage>> AddFilesInternalAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
+        private async Task<List<IProjectPage>> AddFilesInternalAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             // keep track of changes in case of error
             List<StorageFile> copiedFiles = new();
@@ -182,7 +183,7 @@ namespace Scanner.Models
                 List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
                 if (imagePages.Any())
                 {
-                    await UpdatePagePreviewsAsync(imagePages);
+                    await UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
@@ -250,7 +251,7 @@ namespace Scanner.Models
                     List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
                     if (imagePages.Any())
                     {
-                        await UpdatePagePreviewsAsync(imagePages);
+                        await UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
                     }
                 }
                 catch (Exception exc)
@@ -297,7 +298,7 @@ namespace Scanner.Models
         /// Whether to move the source files of the removed pages to the Redo folder.
         /// </param>
         /// <exception cref="ActionFailedAndRolledBackException"></exception>
-        public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing)
+        public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
@@ -335,7 +336,7 @@ namespace Scanner.Models
 
                             if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
                             {
-                                await imagePage.ChangeAndCleanUpPreviewFileAsync(null);
+                                await imagePage.ChangeAndCleanUpPreviewFileAsync(null, uiDispatcherQueue);
                             }
                         }
                         
@@ -455,6 +456,9 @@ namespace Scanner.Models
                     });
                 }
             }
+
+            // update previews
+            await UpdatePagePreviewsAsync(instructions.Keys.ToList(), uiDispatcherQueue);
 
             process.TrySetResult();
         }
@@ -600,6 +604,9 @@ namespace Scanner.Models
                 }
             }
 
+            // update previews
+            await UpdatePagePreviewsAsync(mergedInstructions.Keys.ToList(), uiDispatcherQueue);
+
             // update save state
             if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
             {
@@ -614,7 +621,7 @@ namespace Scanner.Models
         /// </summary>
         /// <param name="pages">The pages to apply the filter to.</param>
         /// <param name="filter">The filter to apply.</param>
-        public async Task ApplyFilterToPagesAsync(List<ImagePage> pages, ImageFilter filter)
+        public async Task ApplyFilterToPagesAsync(List<ImagePage> pages, ImageFilter filter, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
@@ -631,7 +638,7 @@ namespace Scanner.Models
 
                 areFilesSaved = false;
 
-                await UpdatePagePreviewsAsync(pages);
+                await UpdatePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
             }
             catch (Exception exc)
             {
@@ -645,59 +652,85 @@ namespace Scanner.Models
         }
 
         /// <summary>
-        /// Renders a bitmap with an <see cref="ImageFilter"/> applied.
+        /// Renders a bitmap with effects (<see cref="ImageFilter"/>, brightness, contrast) applied.
         /// </summary>
         /// <param name="sourceStream">The bitmap source stream.</param>
         /// <param name="encoder">The encoder load the resulting pixel data into.</param>
         /// <param name="filter">The filter to render.</param>
-        public static async Task ApplyFilterAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter)
+        /// <param name="brightness">The brightness adjustment to apply.</param>
+        /// <param name="contrast">The contrast adjustment to apply.</param>
+        public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast)
         {
-            using (CanvasDevice device = CanvasDevice.GetSharedDevice())
-            using (CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream))
-            using (CanvasRenderTarget renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi))
-            using (CanvasDrawingSession session = renderer.CreateDrawingSession())
+            using CanvasDevice device = CanvasDevice.GetSharedDevice();
+            using CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
+            using CanvasRenderTarget renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi);
+            using CanvasDrawingSession session = renderer.CreateDrawingSession();
+            ICanvasImage finalImage;
+
+            // apply filter
+            switch (filter)
             {
-                switch (filter)
-                {
-                    case ImageFilter.Grayscale:
-                        GrayscaleEffect grayscaleEffect = new GrayscaleEffect
-                        {
-                            Source = bitmap,
-                        };
-
-                        session.DrawImage(grayscaleEffect);
-                        session.Flush();
-                        break;
-                    case ImageFilter.Monochrome:
-                        grayscaleEffect = new GrayscaleEffect
-                        {
-                            Source = bitmap,
-                        };
-
-                        DiscreteTransferEffect thresholdEffect = new DiscreteTransferEffect
-                        {
-                            Source = grayscaleEffect,
-                            RedTable = [0, 1],
-                            GreenTable = [0, 1],
-                            BlueTable = [0, 1]
-                        };
-
-                        session.DrawImage(thresholdEffect);
-                        session.Flush();
-                        break;
-                    default:
-                        throw new ArgumentException("Can't apply filter for " + filter);
-                }
-
-                // encode result
-                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                                         (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
-                                         renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
-                await encoder.FlushAsync();
+                case ImageFilter.None:
+                    finalImage = bitmap;
+                    break;
+                case ImageFilter.Grayscale:
+                    GrayscaleEffect grayscaleEffect = new GrayscaleEffect
+                    {
+                        Source = bitmap,
+                    };
+                    finalImage = grayscaleEffect;
+                    break;
+                case ImageFilter.Monochrome:
+                    grayscaleEffect = new GrayscaleEffect
+                    {
+                        Source = bitmap,
+                    };
+                    DiscreteTransferEffect thresholdEffect = new DiscreteTransferEffect
+                    {
+                        Source = grayscaleEffect,
+                        RedTable = [0, 1],
+                        GreenTable = [0, 1],
+                        BlueTable = [0, 1]
+                    };
+                    finalImage = thresholdEffect;
+                    break;
+                default:
+                    throw new ArgumentException("Can't apply filter for " + filter);
             }
+
+            // apply brightness/contrast
+            if (brightness != 0 || contrast != 0)
+            {
+                float brightnessValue = brightness / 100.0f;
+                float contrastValue = 1.0f + (contrast / 100.0f);
+
+                BrightnessEffect brightnessEffect = new()
+                {
+                    Source = finalImage,
+                    WhitePoint = new Vector2(brightnessValue, brightnessValue),
+                    BlackPoint = new Vector2(0, 0)
+                };
+
+                ContrastEffect contrastEffect = new()
+                {
+                    Source = brightnessEffect,
+                    Contrast = contrastValue
+                };
+
+                finalImage = contrastEffect;
+            }
+
+            session.DrawImage(finalImage);
+            session.Flush();
+
+            // encode result
+            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
+                                     (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
+                                     renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
+            await encoder.FlushAsync();
         }
         
-        protected async Task UpdatePagePreviewsAsync(List<ImagePage> pages)
+        protected async Task UpdatePagePreviewsAsync(List<ImagePage> pages, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -706,7 +739,7 @@ namespace Scanner.Models
                     if (!page.IsUsingDestructiveEffects)
                     {
                         // page doesn't require separate preview file
-                        await page.ChangeAndCleanUpPreviewFileAsync(null);
+                        await page.ChangeAndCleanUpPreviewFileAsync(null, uiDispatcherQueue);
                         continue;
                     }
 
@@ -718,17 +751,23 @@ namespace Scanner.Models
                     using (var targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
                         BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(targetFile), targetStream);
-                        await ApplyFilterAsync(sourceStream, encoder, page.Filter);
+                        await ApplyEffectsAsync(sourceStream, encoder, page.Filter, page.Brightness, page.Contrast);
                     }
 
                     // update preview file
-                    await page.ChangeAndCleanUpPreviewFileAsync(targetFile);
+                    await page.ChangeAndCleanUpPreviewFileAsync(targetFile, uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
             {
                 throw new ActionFailedAndRolledBackException(exc);
             }
+        }
+
+        protected Task UpdatePagePreviewsAsync(List<IProjectPage> pages, DispatcherQueue uiDispatcherQueue)
+        {
+            List<ImagePage> imagePages = [.. pages.Where((x) => x is ImagePage).Cast<ImagePage>()];
+            return UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
         }
 
         public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
@@ -764,11 +803,14 @@ namespace Scanner.Models
                 result.Add(appliedCrop);
             }
 
+            // update previews
+            await UpdatePagePreviewsAsync(pages, uiDispatcherQueue);
+
             process.TrySetResult();
             return result;
         }
 
-        public async Task<List<IProjectPage>> CropPagesAsCopyAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder)
+        public async Task<List<IProjectPage>> CropPagesAsCopyAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
@@ -796,13 +838,16 @@ namespace Scanner.Models
                     string? fileName = imagePage?.FileNameInfo?.DesiredName;
                     StorageFolder? targetFolder = imagePage?.TargetFolder;
                     ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder, imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None);
-                    result.AddRange(await AddFilesInternalAsync([insertion], false));
+                    result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
                 }
                 finally
                 {
                     FinishEditing();
                 }
             }
+
+            // update previews
+            await UpdatePagePreviewsAsync(pages, uiDispatcherQueue);
 
             process.TrySetResult();
             return result;

@@ -62,7 +62,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            addedPages = await project.CropPagesAsCopyAsync(pages, cropRegion, AppDataService.ChangesFolder);
+            addedPages = await project.CropPagesAsCopyAsync(pages, cropRegion, AppDataService.ChangesFolder, uiDispatcherQueue);
 
             return addedPages.Count > 0;
         }
@@ -75,7 +75,7 @@ namespace Scanner.Models
             }
 
             // remove added pages
-            await project.RemovePagesAsync(addedPages, false);
+            await project.RemovePagesAsync(addedPages, false, uiDispatcherQueue);
         }
 
         public string GetFriendlyName()

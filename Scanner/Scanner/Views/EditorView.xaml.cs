@@ -472,7 +472,7 @@ namespace Scanner.Views
         private void CanvasPreview_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             CanvasPageData? canvasPageData = sender.Tag as CanvasPageData;
-            if (canvasPageData == null)
+            if (canvasPageData == null || canvasPageData.Bitmap == null)
                 return;
 
             // get effect values
@@ -531,16 +531,6 @@ namespace Scanner.Views
             sender.Height = canvasPageData.Bitmap.Size.Height;
         }
 
-        private void CanvasPreview_Unloaded(object sender, RoutedEventArgs e)
-        {
-            CanvasControl canvas = (CanvasControl)sender;
-            CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
-            if (canvasPageData == null)
-                return;
-
-            canvasPageData.Bitmap.Dispose();
-        }
-
         private async void CanvasPreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             CanvasControl canvas = (CanvasControl)sender;
@@ -559,7 +549,10 @@ namespace Scanner.Views
 
                 // discard old data
                 if (canvasPageData != null)
+                {
+                    canvas.Tag = null;
                     canvasPageData.Bitmap.Dispose();
+                }
 
                 // load new data
                 if (page == null || page.PreviewBitmapUri == null)
@@ -582,14 +575,12 @@ namespace Scanner.Views
             }
 
             pageCanvases[page] = canvas;
+            page.PropertyChanged -= Page_PropertyChanged;
             page.PropertyChanged += Page_PropertyChanged;
 
-            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(page.PreviewBitmapUri);
-
             // load the image file into a CanvasBitmap
-            using IRandomAccessStreamWithContentType stream = await file.OpenReadAsync();
-            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, stream);
-
+            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.PreviewBitmapUri);
+            
             // update canvas size
             canvas.Width = newBitmap.Size.Width;
             canvas.Height = newBitmap.Size.Height;
@@ -609,6 +600,15 @@ namespace Scanner.Views
                             return;
 
                         CanvasControl canvas = pageCanvases[page];
+                        CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
+
+                        // discard old data
+                        if (canvasPageData != null)
+                        {
+                            canvas.Tag = null;
+                            canvasPageData.Bitmap.Dispose();
+                        }
+
                         canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
                         break;
                     case nameof(ImagePage.Brightness):
@@ -810,6 +810,16 @@ namespace Scanner.Views
         private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             ViewModel.ResetContrastCommand.Execute(null);
+        }
+
+        private void FlipViewPages_Unloaded(object sender, RoutedEventArgs e)
+        {
+            foreach (CanvasControl canvas in pageCanvases.Values)
+            {
+                ((CanvasPageData?)canvas.Tag)?.Bitmap.Dispose();
+                canvas.RemoveFromVisualTree();
+            }
+            pageCanvases.Clear();
         }
 
 
