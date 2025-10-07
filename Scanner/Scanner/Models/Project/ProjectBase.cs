@@ -336,7 +336,7 @@ namespace Scanner.Models
 
                             if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
                             {
-                                await imagePage.ChangeAndCleanUpPreviewFileAsync(null, uiDispatcherQueue);
+                                await imagePage.UpdatePreviewFileAsync(null, uiDispatcherQueue);
                             }
                         }
                         
@@ -739,7 +739,7 @@ namespace Scanner.Models
                     if (!page.IsUsingDestructiveEffects)
                     {
                         // page doesn't require separate preview file
-                        await page.ChangeAndCleanUpPreviewFileAsync(null, uiDispatcherQueue);
+                        await page.UpdatePreviewFileAsync(null, uiDispatcherQueue);
                         continue;
                     }
 
@@ -755,7 +755,7 @@ namespace Scanner.Models
                     }
 
                     // update preview file
-                    await page.ChangeAndCleanUpPreviewFileAsync(targetFile, uiDispatcherQueue);
+                    await page.UpdatePreviewFileAsync(targetFile, uiDispatcherQueue);
                 }
             }
             catch (Exception exc)

@@ -206,17 +206,17 @@ namespace Scanner.Models
             SourceFile = file;
         }
 
-        public async Task ChangeAndCleanUpPreviewFileAsync(StorageFile? file, DispatcherQueue uiDispatcherQueue)
+        public async Task UpdatePreviewFileAsync(StorageFile? newPreviewFile, DispatcherQueue uiDispatcherQueue)
         {
             StorageFile? previousFile = PreviewFile != SourceFile ? PreviewFile : null;
 
             // change file
             await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
             {
-                if (file != null)
+                if (newPreviewFile != null)
                 {
-                    PreviewFile = file;
-                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, file.Name));
+                    PreviewFile = newPreviewFile;
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, newPreviewFile.Name));
                 }
                 else
                 {
