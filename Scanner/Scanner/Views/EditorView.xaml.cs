@@ -543,27 +543,20 @@ namespace Scanner.Views
             canvas.Tag = null;
             canvas.Invalidate();
 
-            try
+            IProjectPage page = (IProjectPage)canvas.DataContext;
+
+            // discard old data
+            if (canvasPageData != null)
             {
-                IProjectPage page = (IProjectPage)canvas.DataContext;
-
-                // discard old data
-                if (canvasPageData != null)
-                {
-                    canvas.Tag = null;
-                    canvasPageData.Bitmap.Dispose();
-                }
-
-                // load new data
-                if (page == null || page.PreviewBitmapUri == null)
-                    return;
-
-                canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
+                canvas.Tag = null;
+                canvasPageData.Bitmap.Dispose();
             }
-            finally
-            {
-                canvas.Invalidate();
-            }
+
+            // load new data
+            if (page == null || page.PreviewBitmapUri == null)
+                return;
+
+            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
         }
 
         private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
@@ -587,6 +580,7 @@ namespace Scanner.Views
                 // update canvas size
                 canvas.Width = newBitmap.Size.Width;
                 canvas.Height = newBitmap.Size.Height;
+                canvas.Invalidate();
 
                 return new CanvasPageData(page, newBitmap);
             }
