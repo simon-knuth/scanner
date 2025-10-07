@@ -61,7 +61,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = false;
         }
 
-        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ImageFilter baseFilter, ImageFilter filter, ScanOptions initialScanOptions, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ScanOptions initialScanOptions, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -73,7 +73,7 @@ namespace Scanner.Models
             List<IProjectPage> pages = new();
             for (int i = 0; i < files.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, null, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, baseFilter, filter));
+                pages.Add(await CreatePageFromFileAsync(files[i], i, null, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
             }
 
             // create project and update previews

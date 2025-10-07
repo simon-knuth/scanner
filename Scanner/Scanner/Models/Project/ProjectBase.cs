@@ -165,7 +165,7 @@ namespace Scanner.Models
                 {
                     foreach (ProjectFileInsertion insertion in insertions)
                     {
-                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter);
+                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
                         copiedFiles.Add(page.SourceFile);
 
                         preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
@@ -374,7 +374,7 @@ namespace Scanner.Models
             }
         }
 
-        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
+        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -386,7 +386,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter);
+                    return await ImagePage.CreateAsync(file, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:
@@ -834,7 +834,7 @@ namespace Scanner.Models
                     ImagePage? imagePage = page as ImagePage;
                     string? fileName = imagePage?.FileNameInfo?.DesiredName;
                     StorageFolder? targetFolder = imagePage?.TargetFolder;
-                    ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder, imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None);
+                    ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder, imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None, imagePage?.Brightness ?? 0, imagePage?.Contrast ?? 0);
                     result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
                 }
                 finally
@@ -942,6 +942,6 @@ namespace Scanner.Models
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter);
+    public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter, int Brightness, int Contrast);
     public record AppliedCrop(IProjectPage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);
 }

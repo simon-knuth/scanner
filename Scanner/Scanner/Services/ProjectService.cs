@@ -29,6 +29,7 @@ using Windows.System.Threading;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
+using Scanner.Extensions;
 
 namespace Scanner.Services
 {
@@ -209,7 +210,6 @@ namespace Scanner.Services
                 // scan
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-                ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
                 IReadOnlyList<StorageFile> files = [];
                 await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
 
@@ -241,14 +241,14 @@ namespace Scanner.Services
                     switch (scanOptions.TargetFormat)
                     {
                         case TargetFormat.PDF:
-                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions, uiDispatcherQueue);
+                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, scanOptions, uiDispatcherQueue);
                             break;
                         case TargetFormat.JPG:
                         case TargetFormat.PNG:
                         case TargetFormat.BMP:
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
-                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, baseFilter, GetFilterForScanOptions(scanOptions), scanOptions, uiDispatcherQueue);
+                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, scanOptions, uiDispatcherQueue);
                             break;
                         default:
                             throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
@@ -323,7 +323,6 @@ namespace Scanner.Services
                 // scan
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-                ImageFilter baseFilter = GetBaseFilterForScanOptions(scanOptions);
                 IReadOnlyList<StorageFile> files = [];
                 await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
 
@@ -349,7 +348,7 @@ namespace Scanner.Services
                 List<ProjectFileInsertion> insertions = new();
                 for (int i = 0; i < files.Count; i++)
                 {
-                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder, baseFilter, GetFilterForScanOptions(scanOptions)));
+                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder, scanOptions.GetBaseFilter(), scanOptions.GetFilter(), scanOptions.Brightness, scanOptions.Contrast));
                 }
                 IProjectAction action = new AddFilesAction(insertions, false);
 
@@ -363,85 +362,6 @@ namespace Scanner.Services
             finally
             {
                 IsActionRunning = IsScanProcessRunning = false;
-            }
-        }
-
-        private static ImageFilter GetFilterForScanOptions(ScanOptions scanOptions)
-        {
-            switch (scanOptions.ColorMode)
-            {
-                case ScannerColorMode.None:
-                case ScannerColorMode.Color:
-                case ScannerColorMode.Automatic:
-                    return ImageFilter.None;
-                case ScannerColorMode.Grayscale:
-                    return ImageFilter.Grayscale;
-                case ScannerColorMode.Monochrome:
-                    return ImageFilter.Monochrome;
-                default:
-                    throw new ArgumentException("Failed to determine page's Filter for given configuration");
-            }
-        }
-
-        private static ImageFilter GetBaseFilterForScanOptions(ScanOptions scanOptions)
-        {
-            switch (scanOptions.SourceMode)
-            {
-                case ScannerSource.Auto:
-                    if (scanOptions.Scanner.IsColorAllowedInAnyMode)
-                        return ImageFilter.None;
-                    else if (scanOptions.Scanner.IsGrayscaleAllowedInAnyMode)
-                        return ImageFilter.Grayscale;
-                    else
-                        return ImageFilter.Monochrome;
-
-                case ScannerSource.Flatbed:
-                    switch (scanOptions.ColorMode)
-                    {
-                        case ScannerColorMode.None:
-                        case ScannerColorMode.Color:
-                        case ScannerColorMode.Automatic:
-                        default:
-                            return ImageFilter.None;
-                        case ScannerColorMode.Grayscale:
-                            if (scanOptions.Scanner.IsFlatbedGrayscaleAllowed)
-                                return ImageFilter.Grayscale;
-                            else
-                                return ImageFilter.None;
-                        case ScannerColorMode.Monochrome:
-                            if (scanOptions.Scanner.IsFlatbedMonochromeAllowed)
-                                return ImageFilter.Monochrome;
-                            else if (scanOptions.Scanner.IsFlatbedColorAllowed)
-                                return ImageFilter.None;
-                            else
-                                return ImageFilter.Grayscale;
-                    }
-
-                case ScannerSource.Feeder:
-                    switch (scanOptions.ColorMode)
-                    {
-                        case ScannerColorMode.None:
-                        case ScannerColorMode.Color:
-                        case ScannerColorMode.Automatic:
-                        default:
-                            return ImageFilter.None;
-                        case ScannerColorMode.Grayscale:
-                            if (scanOptions.Scanner.IsFeederGrayscaleAllowed)
-                                return ImageFilter.Grayscale;
-                            else
-                                return ImageFilter.None;
-                        case ScannerColorMode.Monochrome:
-                            if (scanOptions.Scanner.IsFeederMonochromeAllowed)
-                                return ImageFilter.Monochrome;
-                            else if (scanOptions.Scanner.IsFeederColorAllowed)
-                                return ImageFilter.None;
-                            else
-                                return ImageFilter.Grayscale;
-                    }
-
-                case ScannerSource.None:
-                default:
-                    throw new ArgumentException("Failed to determine page's BaseFilter for given configuration");
             }
         }
 

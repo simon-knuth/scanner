@@ -114,7 +114,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, uint width, uint height)
+        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
         {
             SourceFile = sourceFile;
             PreviewBitmapUri = uri;
@@ -124,6 +124,8 @@ namespace Scanner.Models
             BaseFilter = baseFilter;
             Filter = filter;
             AvailableFilters = GetAvailableFilters();
+            Brightness = brightness;
+            Contrast = contrast;
             Width = width;
             Height = height;
         }
@@ -139,13 +141,15 @@ namespace Scanner.Models
         /// <param name="pagesFolder">Which internal folder to copy/move the <paramref name="sourceFile"/> to.</param>
         /// <param name="baseFilter">The filter applied to the source file, indicating which other filters are available.</param>
         /// <param name="filter">The filter to apply right from the start.</param>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
+        /// <param name="brightness">The brightness value to apply right from the start.</param>
+        /// <param name="contrast">The contrast value to apply right from the start.</param>
+        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter);
+            ImagePage result = await CreateAsyncInternal(sourceFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
             return result;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter)
+        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {
             // check file
             if (sourceFile == null)
@@ -175,7 +179,7 @@ namespace Scanner.Models
             ImageProperties imageProperties = await sourceFile.Properties.GetImagePropertiesAsync();
 
             // create ImagePage
-            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, imageProperties.Width, imageProperties.Height);
+            ImagePage result = new ImagePage(sourceFile, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, brightness, contrast, imageProperties.Width, imageProperties.Height);
             
             return result;
         }
