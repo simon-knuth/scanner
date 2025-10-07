@@ -183,7 +183,7 @@ namespace Scanner.Models
                 List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
                 if (imagePages.Any())
                 {
-                    await UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
+                    await GeneratePagePreviewsAsync(imagePages, uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
@@ -251,7 +251,7 @@ namespace Scanner.Models
                     List<ImagePage> imagePages = insertedPages.OfType<ImagePage>().ToList();
                     if (imagePages.Any())
                     {
-                        await UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
+                        await GeneratePagePreviewsAsync(imagePages, uiDispatcherQueue);
                     }
                 }
                 catch (Exception exc)
@@ -457,9 +457,6 @@ namespace Scanner.Models
                 }
             }
 
-            // update previews
-            await UpdatePagePreviewsAsync(instructions.Keys.ToList(), uiDispatcherQueue);
-
             process.TrySetResult();
         }
 
@@ -605,7 +602,7 @@ namespace Scanner.Models
             }
 
             // update previews
-            await UpdatePagePreviewsAsync(mergedInstructions.Keys.ToList(), uiDispatcherQueue);
+            await GeneratePagePreviewsAsync(mergedInstructions.Keys.ToList(), uiDispatcherQueue);
 
             // update save state
             if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
@@ -638,7 +635,7 @@ namespace Scanner.Models
 
                 areFilesSaved = false;
 
-                await UpdatePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
+                await GeneratePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
             }
             catch (Exception exc)
             {
@@ -730,7 +727,7 @@ namespace Scanner.Models
             await encoder.FlushAsync();
         }
         
-        protected async Task UpdatePagePreviewsAsync(List<ImagePage> pages, DispatcherQueue uiDispatcherQueue)
+        protected async Task GeneratePagePreviewsAsync(List<ImagePage> pages, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -764,10 +761,10 @@ namespace Scanner.Models
             }
         }
 
-        protected Task UpdatePagePreviewsAsync(List<IProjectPage> pages, DispatcherQueue uiDispatcherQueue)
+        protected Task GeneratePagePreviewsAsync(List<IProjectPage> pages, DispatcherQueue uiDispatcherQueue)
         {
             List<ImagePage> imagePages = [.. pages.Where((x) => x is ImagePage).Cast<ImagePage>()];
-            return UpdatePagePreviewsAsync(imagePages, uiDispatcherQueue);
+            return GeneratePagePreviewsAsync(imagePages, uiDispatcherQueue);
         }
 
         public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
@@ -804,7 +801,7 @@ namespace Scanner.Models
             }
 
             // update previews
-            await UpdatePagePreviewsAsync(pages, uiDispatcherQueue);
+            await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
 
             process.TrySetResult();
             return result;
@@ -847,7 +844,7 @@ namespace Scanner.Models
             }
 
             // update previews
-            await UpdatePagePreviewsAsync(pages, uiDispatcherQueue);
+            await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
 
             process.TrySetResult();
             return result;

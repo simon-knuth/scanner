@@ -78,7 +78,7 @@ namespace Scanner.Models
 
             // create project and update previews
             PdfProject project = new PdfProject(pages, format, targetFileName, targetFolder, initialScanOptions);
-            await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+            await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }
 

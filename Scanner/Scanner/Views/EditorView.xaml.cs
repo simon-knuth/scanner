@@ -566,7 +566,7 @@ namespace Scanner.Views
             }
         }
 
-        private async Task<CanvasPageData> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
+        private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
         {
             if (previousPage != null)
             {
@@ -579,13 +579,24 @@ namespace Scanner.Views
             page.PropertyChanged += Page_PropertyChanged;
 
             // load the image file into a CanvasBitmap
-            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.PreviewBitmapUri);
-            
-            // update canvas size
-            canvas.Width = newBitmap.Size.Width;
-            canvas.Height = newBitmap.Size.Height;
+            CanvasBitmap newBitmap;
+            try
+            {
+                newBitmap = await CanvasBitmap.LoadAsync(canvas, page.PreviewBitmapUri);
 
-            return new CanvasPageData(page, newBitmap);
+                // update canvas size
+                canvas.Width = newBitmap.Size.Width;
+                canvas.Height = newBitmap.Size.Height;
+
+                return new CanvasPageData(page, newBitmap);
+            }
+            catch (ObjectDisposedException)
+            {
+                // this happens if we try to load an image from a different folder than before for some reason, no way to recover the control
+                // the performance impact is significant but I don't know how to fix this
+                ((Viewbox)canvas.Parent).Child = pageCanvases[page] = CreateCanvas();
+                return null;
+            }
         }
 
         private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -820,6 +831,20 @@ namespace Scanner.Views
                 canvas.RemoveFromVisualTree();
             }
             pageCanvases.Clear();
+        }
+
+        private void ViewboxCanvas_Loading(FrameworkElement sender, object args)
+        {
+            ((Viewbox)sender).Child = CreateCanvas();
+        }
+
+        private CanvasControl CreateCanvas()
+        {
+            CanvasControl canvas = new();
+            canvas.CreateResources += CanvasPreview_CreateResources;
+            canvas.DataContextChanged += CanvasPreview_DataContextChanged;
+            canvas.Draw += CanvasPreview_Draw;
+            return canvas;
         }
 
 

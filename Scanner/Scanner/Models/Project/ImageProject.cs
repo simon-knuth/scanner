@@ -72,7 +72,7 @@ namespace Scanner.Models
 
             // create project and update previews
             ImageProject project = new ImageProject(pages, format, initialScanOptions);
-            await project.UpdatePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+            await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }
 
