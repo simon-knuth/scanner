@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
@@ -658,66 +659,13 @@ namespace Scanner.Models
         /// <param name="contrast">The contrast adjustment to apply.</param>
         public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast)
         {
-            using CanvasDevice device = CanvasDevice.GetSharedDevice();
+            CanvasDevice device = CanvasDevice.GetSharedDevice();
             using CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
             using CanvasRenderTarget renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi);
             using CanvasDrawingSession session = renderer.CreateDrawingSession();
-            ICanvasImage finalImage;
 
-            // apply filter
-            switch (filter)
-            {
-                case ImageFilter.None:
-                    finalImage = bitmap;
-                    break;
-                case ImageFilter.Grayscale:
-                    GrayscaleEffect grayscaleEffect = new GrayscaleEffect
-                    {
-                        Source = bitmap,
-                    };
-                    finalImage = grayscaleEffect;
-                    break;
-                case ImageFilter.Monochrome:
-                    grayscaleEffect = new GrayscaleEffect
-                    {
-                        Source = bitmap,
-                    };
-                    DiscreteTransferEffect thresholdEffect = new DiscreteTransferEffect
-                    {
-                        Source = grayscaleEffect,
-                        RedTable = [0, 1],
-                        GreenTable = [0, 1],
-                        BlueTable = [0, 1]
-                    };
-                    finalImage = thresholdEffect;
-                    break;
-                default:
-                    throw new ArgumentException("Can't apply filter for " + filter);
-            }
-
-            // apply brightness/contrast
-            if (brightness != 0 || contrast != 0)
-            {
-                float brightnessValue = brightness / 100.0f;
-                float contrastValue = 1.0f + (contrast / 100.0f);
-
-                BrightnessEffect brightnessEffect = new()
-                {
-                    Source = finalImage,
-                    WhitePoint = new Vector2(brightnessValue, brightnessValue),
-                    BlackPoint = new Vector2(0, 0)
-                };
-
-                ContrastEffect contrastEffect = new()
-                {
-                    Source = brightnessEffect,
-                    Contrast = contrastValue
-                };
-
-                finalImage = contrastEffect;
-            }
-
-            session.DrawImage(finalImage);
+            ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(bitmap, filter, brightness, contrast);
+            session.DrawImage(effectChain);
             session.Flush();
 
             // encode result

@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
 using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Resources.Strings;
@@ -478,54 +479,18 @@ namespace Scanner.Views
             // get effect values
             float brightness = 0;
             float contrast = 0;
+            ImageFilter filter = ImageFilter.None;
+
             if (canvasPageData.Page is ImagePage imagePage)
             {
-                brightness = imagePage.Brightness / 100f;
-                contrast = imagePage.Contrast / 100f;
+                brightness = imagePage.Brightness;
+                contrast = imagePage.Contrast;
+                filter = imagePage.Filter;
             }
 
-            var brightnessEffect = new BrightnessEffect()
-            {
-                Source = canvasPageData.Bitmap,
-                BlackPoint = new Vector2(0, 0),
-                WhitePoint = new Vector2(1, 1)
-            };
-
-            var contrastEffect = new ContrastEffect()
-            {
-                Source = brightnessEffect,
-                Contrast = contrast
-            };
-
-            var colorMatrixEffect = new ColorMatrixEffect()
-            {
-                Source = contrastEffect,
-                ColorMatrix = new Matrix5x4()
-                {
-                    M11 = 1,
-                    M12 = 0,
-                    M13 = 0,
-                    M14 = 0,
-                    M21 = 0,
-                    M22 = 1,
-                    M23 = 0,
-                    M24 = 0,
-                    M31 = 0,
-                    M32 = 0,
-                    M33 = 1,
-                    M34 = 0,
-                    M41 = 0,
-                    M42 = 0,
-                    M43 = 0,
-                    M44 = 1,
-                    M51 = brightness,
-                    M52 = brightness,
-                    M53 = brightness,
-                    M54 = 0
-                }
-            };
-
-            args.DrawingSession.DrawImage(colorMatrixEffect);
+            // draw image with effects
+            ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(canvasPageData.Bitmap, filter, (int)brightness, (int)contrast);
+            args.DrawingSession.DrawImage(effectChain);
 
             sender.Width = canvasPageData.Bitmap.Size.Width;
             sender.Height = canvasPageData.Bitmap.Size.Height;
@@ -553,7 +518,7 @@ namespace Scanner.Views
             }
 
             // load new data
-            if (page == null || page.PreviewBitmapUri == null)
+            if (page == null)
                 return;
 
             canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
@@ -572,25 +537,14 @@ namespace Scanner.Views
             page.PropertyChanged += Page_PropertyChanged;
 
             // load the image file into a CanvasBitmap
-            CanvasBitmap newBitmap;
-            try
-            {
-                newBitmap = await CanvasBitmap.LoadAsync(canvas, page.PreviewBitmapUri);
+            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
 
-                // update canvas size
-                canvas.Width = newBitmap.Size.Width;
-                canvas.Height = newBitmap.Size.Height;
-                canvas.Invalidate();
+            // update canvas size
+            canvas.Width = newBitmap.Size.Width;
+            canvas.Height = newBitmap.Size.Height;
+            canvas.Invalidate();
 
-                return new CanvasPageData(page, newBitmap);
-            }
-            catch (ObjectDisposedException)
-            {
-                // this happens if we try to load an image from a different folder than before for some reason, no way to recover the control
-                // the performance impact is significant but I don't know how to fix this
-                ((Viewbox)canvas.Parent).Child = pageCanvases[page] = CreateCanvas();
-                return null;
-            }
+            return new CanvasPageData(page, newBitmap);
         }
 
         private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -599,7 +553,7 @@ namespace Scanner.Views
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(IProjectPage.PreviewBitmapUri):
+                    case nameof(IProjectPage.SourceBitmapUri):
                         IProjectPage? page = sender as IProjectPage;
                         if (page == null)
                             return;
@@ -616,6 +570,7 @@ namespace Scanner.Views
 
                         canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
                         break;
+                    case nameof(ImagePage.Filter):
                     case nameof(ImagePage.Brightness):
                     case nameof(ImagePage.Contrast):
                         page = sender as IProjectPage;

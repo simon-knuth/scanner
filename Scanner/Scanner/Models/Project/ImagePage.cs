@@ -60,15 +60,11 @@ namespace Scanner.Models
 
         public StorageFolder? TargetFolder { get; set; }
 
+        [ObservableProperty]
+        private Uri sourceBitmapUri;
+
+        [ObservableProperty]
         private Uri previewBitmapUri;
-        public Uri PreviewBitmapUri
-        {
-            get => previewBitmapUri;
-            private set
-            {
-                SetProperty(ref previewBitmapUri, value);
-            }
-        }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(PageNumber))]
@@ -114,10 +110,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, Uri uri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
+        private ImagePage(StorageFile sourceFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
         {
             SourceFile = sourceFile;
-            PreviewBitmapUri = uri;
+            SourceBitmapUri = PreviewBitmapUri = sourceBitmapUri;
             Index = index;
             if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);
             TargetFolder = targetFolder;
@@ -196,11 +192,11 @@ namespace Scanner.Models
                 OutOfDateSourceFile = SourceFile;
             }
 
+            Uri previewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
             if (PreviewFile == SourceFile)
             {
                 // no separate preview ~> preview bitmap URI changes
                 PreviewFile = file;
-                Uri previewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
                 await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
                 {
                     PreviewBitmapUri = previewBitmapUri;
@@ -208,6 +204,10 @@ namespace Scanner.Models
             }
 
             SourceFile = file;
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+            {
+                SourceBitmapUri = previewBitmapUri;
+            });
         }
 
         public async Task UpdatePreviewFileAsync(StorageFile? newPreviewFile, DispatcherQueue uiDispatcherQueue)

@@ -25,13 +25,35 @@ namespace Scanner.Models.Interfaces
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// The page's source file with all information intact and without any destructive effects applied.
+        /// </summary>
         StorageFile SourceFile { get; }
+
+        /// <summary>
+        /// The file to save changes to, including destructive effects.
+        /// </summary>
         StorageFile? TargetFile { get; set; }
 
         /// <summary>
         /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.
         /// </summary>
         StorageFile? PreviewFile { get; }
+
+        /// <summary>
+        /// The URI for the bitmap representing the <see cref="SourceFile"/>.
+        /// Will raise <see cref="INotifyPropertyChanged"/> event every
+        /// time the bitmap changes, even if the file is the same.
+        /// </summary>
+        Uri SourceBitmapUri { get; }
+
+        /// <summary>
+        /// The URI for the bitmap representing the <see cref="PreviewFile"/>.
+        /// Usually the same as <see cref="SourceBitmapUri"/>, unless a destructive effect is applied.
+        /// Will raise <see cref="INotifyPropertyChanged"/> event every
+        /// time the bitmap changes, even if the file is the same.
+        /// </summary>
+        Uri PreviewBitmapUri { get; }
 
         /// <summary>
         /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
@@ -43,8 +65,6 @@ namespace Scanner.Models.Interfaces
         /// and a file already exists, this is the file it will replace there.
         /// </summary>
         StorageFile? OutOfDateSourceFile { get; }
-
-        Uri PreviewBitmapUri { get; }
 
         int Index { get; set; }
         int PageNumber { get; }
