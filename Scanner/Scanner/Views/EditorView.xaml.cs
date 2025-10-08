@@ -782,21 +782,6 @@ namespace Scanner.Views
             pageCanvases.Clear();
         }
 
-        private void ViewboxCanvas_Loading(FrameworkElement sender, object args)
-        {
-            ((Viewbox)sender).Child = CreateCanvas();
-        }
-
-        private CanvasControl CreateCanvas()
-        {
-            CanvasControl canvas = new();
-            canvas.CreateResources += CanvasPreview_CreateResources;
-            canvas.DataContextChanged += CanvasPreview_DataContextChanged;
-            canvas.Draw += CanvasPreview_Draw;
-            return canvas;
-        }
-
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
