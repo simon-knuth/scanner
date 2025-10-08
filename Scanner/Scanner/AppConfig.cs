@@ -26,6 +26,9 @@ namespace Scanner
         public static double WarningAttachmentRate = 0.01;
         #endregion
 
+        public const int DefaultBrightness = 0;
+        public const int DefaultContrast = 0;
+
         public const float DocumentsResolution = 300;      // the recommended resolution for documents
         public const float PhotosResolution = 500;         // the recommended resolution for photos
 

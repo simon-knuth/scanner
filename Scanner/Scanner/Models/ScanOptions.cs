@@ -49,10 +49,10 @@ namespace Scanner.Models
         private bool scanMultiplePages;
 
         [ObservableProperty]
-        private int brightness;
+        private int brightness = AppConfig.DefaultBrightness;
 
         [ObservableProperty]
-        private int contrast;
+        private int contrast = AppConfig.DefaultContrast;
 
         public Rect? SelectedRegion;
 

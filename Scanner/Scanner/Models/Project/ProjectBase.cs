@@ -834,7 +834,9 @@ namespace Scanner.Models
                     ImagePage? imagePage = page as ImagePage;
                     string? fileName = imagePage?.FileNameInfo?.DesiredName;
                     StorageFolder? targetFolder = imagePage?.TargetFolder;
-                    ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder, imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None, imagePage?.Brightness ?? 0, imagePage?.Contrast ?? 0);
+                    ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder,
+                        imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None,
+                        imagePage?.Brightness ?? AppConfig.DefaultBrightness, imagePage?.Contrast ?? AppConfig.DefaultContrast);
                     result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
                 }
                 finally
