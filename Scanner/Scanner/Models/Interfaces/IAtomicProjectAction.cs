@@ -50,7 +50,7 @@ namespace Scanner.Models.Interfaces
         /// <exception cref="Exception">
         /// Occurs when a fatal error occurred and the changes to the <see cref="ProjectBase"/> could not be rolled back.
         /// </exception>
-        bool Execute(ProjectBase project);
+        bool Execute(ProjectBase project, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
         /// Execute the action using the value from <paramref name="action"/>.
@@ -67,6 +67,6 @@ namespace Scanner.Models.Interfaces
         /// <exception cref="Exception">
         /// Occurs when a fatal error occurred and the changes to the <see cref="ProjectBase"/> could not be rolled back.
         /// </exception>
-        bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action);
+        bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue);
     }
 }

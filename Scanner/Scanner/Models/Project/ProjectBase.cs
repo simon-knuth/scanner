@@ -16,6 +16,7 @@ using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -31,6 +32,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
+using Windows.System.Threading;
 using Windows.UI.WebUI;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
@@ -112,6 +114,8 @@ namespace Scanner.Models
         protected SemaphoreSlim projectObjectSemaphore = new(1, 1);       // needed to modify the Project object
         protected SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
         protected SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
+
+        private ConcurrentDictionary<ImagePage, ThreadPoolTimer> consecutiveAtomicActionMergeTimers = [];
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -854,6 +858,32 @@ namespace Scanner.Models
             {
                 throw new ApplicationException("Cropping page failed", e);
             }
+        }
+
+        public void SetBrightness(ImagePage page, int brightness, DispatcherQueue uiDispatcherQueue)
+        {
+            consecutiveAtomicActionMergeTimers.TryGetValue(page, out ThreadPoolTimer? existingTimer);
+            existingTimer?.Cancel();
+
+            page.Brightness = brightness;
+            consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
+            {
+                consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
+                await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
+            }, AppConfig.ConsecutiveAtomicActionMergeTime);
+        }
+
+        public void SetContrast(ImagePage page, int contrast, DispatcherQueue uiDispatcherQueue)
+        {
+            consecutiveAtomicActionMergeTimers.TryGetValue(page, out ThreadPoolTimer? existingTimer);
+            existingTimer?.Cancel();
+
+            page.Contrast = contrast;
+            consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
+            {
+                consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
+                await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
+            }, AppConfig.ConsecutiveAtomicActionMergeTime);
         }
 
         public static Guid GetBitmapEncoderIdForFile(StorageFile file)

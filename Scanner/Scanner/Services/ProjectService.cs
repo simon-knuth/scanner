@@ -664,13 +664,13 @@ namespace Scanner.Services
                         && previousAtomicProjectAction.Page == atomicProjectAction.Page)
                     {
                         // merge with previous action
-                        changesMade = previousAtomicProjectAction.MergeAndExecute(CurrentProject, atomicProjectAction);
+                        changesMade = previousAtomicProjectAction.MergeAndExecute(CurrentProject, atomicProjectAction, UiDispatcherQueue);
                         merged = true;
                     }
                     else
                     {
                         // use separate action
-                        changesMade = atomicProjectAction.Execute(CurrentProject);
+                        changesMade = atomicProjectAction.Execute(CurrentProject, UiDispatcherQueue);
                     }
                 }
                 else

@@ -61,23 +61,23 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public bool Execute(ProjectBase project)
+        public bool Execute(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             previousValue ??= Page.Brightness;
-            Page.Brightness = TargetValue;
+            project.SetBrightness(Page, TargetValue, uiDispatcherQueue);
             MostRecentExecution = DateTime.Now;
             return true;
         }
 
         public Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
-            return Task.FromResult(Execute(project));
+            return Task.FromResult(Execute(project, uiDispatcherQueue));
         }
 
-        public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action)
+        public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue)
         {
             TargetValue = action.TargetValue;
-            return Execute(projectBase);
+            return Execute(projectBase, uiDispatcherQueue);
         }
 
         public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
