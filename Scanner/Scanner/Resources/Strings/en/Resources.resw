@@ -1812,17 +1812,6 @@ Fuzzy</comment>
   <data name="SelectedFileIndicator" xml:space="preserve">
     <value>File {0} of {1}</value>
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
-    <comment>The option to select all similar pages for cropping.</comment>
-  </data>
-  <data name="ScanMultiplePages" xml:space="preserve">
-    <value>Scan multiple pages</value>
-  </data>
   <data name="GiveFeedback" xml:space="preserve">
     <value>Give feedback</value>
   </data>
@@ -1858,5 +1847,22 @@ Fuzzy</comment>
   </data>
   <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
     <value>This app is free and open-source, mostly built by a single developer. While you may not get a reply to your message, your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
+  </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+    <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ScanMultiplePages" xml:space="preserve">
+    <value>Scan multiple pages</value>
+  </data>
+  <data name="ProjectActionSetBrightness" xml:space="preserve">
+    <value>Change brightness</value>
+  </data>
+  <data name="ProjectActionSetContrast" xml:space="preserve">
+    <value>Change contrast</value>
   </data>
 </root>

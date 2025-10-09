@@ -782,6 +782,27 @@ namespace Scanner.Views
             pageCanvases.Clear();
         }
 
+        private void NumberBoxBrightness_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
+        }
+
+        private void SliderBrightness_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
+        }
+
+        private void NumberBoxContrast_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
+        }
+
+        private void SliderContrast_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
+        }
+
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

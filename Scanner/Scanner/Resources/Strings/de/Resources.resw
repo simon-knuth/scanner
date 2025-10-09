@@ -1587,6 +1587,9 @@ Fuzzy</comment>
   <data name="FileFormatDescriptionRAW" xml:space="preserve">
     <value>Professional image format. Only for specific use cases.</value>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Ziehen und platzieren Sie Blöcke um Ihr eigenes dynamisches Dateinamenmuster zu bauen. Wählen Sie einen Block um seine Ausgabe anzupassen, oder ziehen Sie ihn den Mülleimer, um ihn zu löschen.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1594,8 +1597,5 @@ Fuzzy</comment>
   <data name="SelectAll" xml:space="preserve">
     <value>Alle auswählen</value>
     <comment>The option to select all similar pages for cropping.</comment>
-  </data>
-  <data name="GiveFeedback" xml:space="preserve">
-    <value />
   </data>
 </root>

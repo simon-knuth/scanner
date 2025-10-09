@@ -26,6 +26,8 @@ namespace Scanner
         public static double WarningAttachmentRate = 0.01;
         #endregion
 
+        public static TimeSpan ConsecutiveAtomicActionMergeTime = TimeSpan.FromSeconds(1);
+
         public const int DefaultBrightness = 0;
         public const int DefaultContrast = 0;
 

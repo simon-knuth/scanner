@@ -40,8 +40,10 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, false));
         public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, true));
         public AsyncRelayCommand<(List<IProjectPage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<IProjectPage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
-        public RelayCommand ResetBrightnessCommand => new RelayCommand(() => PageBrightnessDouble = 0);
-        public RelayCommand ResetContrastCommand => new RelayCommand(() => PageContrastDouble = 0);
+        public AsyncRelayCommand<int> SetBrightnessForCurrentPageCommand => new AsyncRelayCommand<int>(SetBrightnessForCurrentPageAsync);
+        public AsyncRelayCommand<int> SetContrastForCurrentPageCommand => new AsyncRelayCommand<int>(SetContrastForCurrentPageAsync);
+        public AsyncRelayCommand ResetBrightnessCommand => new AsyncRelayCommand(async () => await SetBrightnessForCurrentPageAsync(AppConfig.DefaultBrightness));
+        public AsyncRelayCommand ResetContrastCommand => new AsyncRelayCommand(async () => await SetContrastForCurrentPageAsync(AppConfig.DefaultContrast));
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -76,19 +78,9 @@ namespace Scanner.ViewModels
             get
             {
                 if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return 0;
+                    return AppConfig.DefaultBrightness;
 
                 return imagePage.Brightness;
-            }
-            set
-            {
-                if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return;
-
-                imagePage.Brightness = value;
-                OnPropertyChanged(nameof(PageBrightness));
-                OnPropertyChanged(nameof(PageBrightnessDouble));
-                OnPropertyChanged(nameof(CanResetBrightness));
             }
         }
 
@@ -97,32 +89,20 @@ namespace Scanner.ViewModels
             get
             {
                 if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return 0;
+                    return AppConfig.DefaultContrast;
 
                 return imagePage.Contrast;
-            }
-            set
-            {
-                if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return;
-
-                imagePage.Contrast = value;
-                OnPropertyChanged(nameof(PageContrast));
-                OnPropertyChanged(nameof(PageContrastDouble));
-                OnPropertyChanged(nameof(CanResetContrast));
             }
         }
 
         public double PageBrightnessDouble
         {
             get => PageBrightness;
-            set => PageBrightness = (int)value;
         }
 
         public double PageContrastDouble
         {
             get => PageContrast;
-            set => PageContrast = (int)value;
         }
 
         public bool CanResetBrightness => PageBrightness != 0;
@@ -134,6 +114,7 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public EditorViewModel()
         {
+            ProjectService.PropertyChanging += ProjectService_PropertyChanging;
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
 
@@ -147,6 +128,17 @@ namespace Scanner.ViewModels
         public void Dispose()
         {
             Messenger.UnregisterAll(this);
+        }
+
+        private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IProjectService.SelectedPage):
+                    if (ProjectService.SelectedPage != null)
+                        ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
+                    break;
+            }
         }
 
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -164,6 +156,26 @@ namespace Scanner.ViewModels
                     OnPropertyChanged(nameof(PageBrightnessDouble));
                     OnPropertyChanged(nameof(PageContrastDouble));
                     OnPropertyChanged(nameof(CanResetBrightness));
+                    OnPropertyChanged(nameof(CanResetContrast));
+
+                    if (ProjectService.SelectedPage != null)
+                        ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
+                    break;
+            }
+        }
+
+        private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ImagePage.Brightness):
+                    OnPropertyChanged(nameof(PageBrightness));
+                    OnPropertyChanged(nameof(PageBrightnessDouble));
+                    OnPropertyChanged(nameof(CanResetBrightness));
+                    break;
+                case nameof(ImagePage.Contrast):
+                    OnPropertyChanged(nameof(PageContrast));
+                    OnPropertyChanged(nameof(PageContrastDouble));
                     OnPropertyChanged(nameof(CanResetContrast));
                     break;
             }
@@ -262,6 +274,28 @@ namespace Scanner.ViewModels
             }
 
             return result;
+        }
+
+        private async Task SetBrightnessForCurrentPageAsync(int brightness)
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
+
+            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.Brightness != brightness)
+            {
+                await ProjectService.ApplyActionAsync(new SetBrightnessAction(imagePage, brightness));
+            }
+        }
+
+        private async Task SetContrastForCurrentPageAsync(int contrast)
+        {
+            if (CurrentProject == null) return;
+            if (ProjectService.SelectedPage == null) return;
+
+            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.Contrast != contrast)
+            {
+                await ProjectService.ApplyActionAsync(new SetContrastAction(imagePage, contrast));
+            }
         }
 
         private double? AspectRatioToValue(AspectRatio aspectRatio)

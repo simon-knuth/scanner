@@ -1550,11 +1550,11 @@ Fuzzy</comment>
   <data name="FileFormatDescriptionRAW" xml:space="preserve">
     <value>Professional image format. Only for specific use cases.</value>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
     <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="GiveFeedback" xml:space="preserve">
-    <value />
   </data>
 </root>

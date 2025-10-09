@@ -1805,36 +1805,36 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="GiveFeedbackDialogHeading" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogBody" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogName" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogEmail" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogMessage" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogType" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogSend" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogTypeError" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogTypeSuggestion" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogInfoHeading" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
 </root>

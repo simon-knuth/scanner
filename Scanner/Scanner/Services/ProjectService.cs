@@ -651,10 +651,35 @@ namespace Scanner.Services
 
             try
             {
-                IsActionRunning = true;
-                bool changesMade = await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
+                bool changesMade = false;
+                bool merged = false;
 
-                if (changesMade)
+                if (action is IAtomicProjectAction atomicProjectAction)
+                {
+                    // check if action can be merged with previous one
+                    UndoStack.TryPeek(out IProjectAction? undoAction);
+                    if (undoAction != null
+                        && undoAction is IAtomicProjectAction previousAtomicProjectAction
+                        && DateTime.Now < previousAtomicProjectAction.MostRecentExecution + AppConfig.ConsecutiveAtomicActionMergeTime
+                        && previousAtomicProjectAction.Page == atomicProjectAction.Page)
+                    {
+                        // merge with previous action
+                        changesMade = previousAtomicProjectAction.MergeAndExecute(CurrentProject, atomicProjectAction);
+                        merged = true;
+                    }
+                    else
+                    {
+                        // use separate action
+                        changesMade = atomicProjectAction.Execute(CurrentProject);
+                    }
+                }
+                else
+                {
+                    IsActionRunning = true;
+                    changesMade = await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
+                }
+
+                if (changesMade && !merged && CurrentProject != null)
                 {
                     // update undo stack
                     UndoStack.Push(action);
@@ -745,7 +770,7 @@ namespace Scanner.Services
 
             if (upUntil == null)
                 upUntil = UndoStack.Peek();
-            else
+            else if (upUntil != UndoStack.Peek())
                 Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
 
             while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil)
@@ -766,7 +791,7 @@ namespace Scanner.Services
 
             if (upUntil == null)
                 upUntil = RedoStack.Peek();
-            else
+            else if (upUntil != RedoStack.Peek())
                 Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
 
             while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil)

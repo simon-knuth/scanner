@@ -1569,11 +1569,11 @@ Fuzzy</comment>
   <data name="FileFormatDescriptionRAW" xml:space="preserve">
     <value>Professional image format. Only for specific use cases.</value>
   </data>
+  <data name="GiveFeedback" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arrastre y suelte bloques para crear su propio patrón dinámico de nombres de archivos. Seleccione un bloque para modificar su salida o arrástrelo al contenedor para eliminarlo.</value>
     <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="GiveFeedback" xml:space="preserve">
-    <value />
   </data>
 </root>
