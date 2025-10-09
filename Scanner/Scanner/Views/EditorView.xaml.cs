@@ -784,6 +784,9 @@ namespace Scanner.Views
 
         private void NumberBoxBrightness_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
+            if (double.IsNaN(args.OldValue))    // ignore initial event
+                return;
+
             _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
         }
 
@@ -794,6 +797,9 @@ namespace Scanner.Views
 
         private void NumberBoxContrast_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
+            if (double.IsNaN(args.OldValue))    // ignore initial event
+                return;
+
             _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
         }
 
