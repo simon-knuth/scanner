@@ -9,10 +9,12 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -88,6 +90,13 @@ namespace Scanner.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// A copy of <see cref="ProjectBase.Pages"/> which is always in sync with the original, unless the user just reordered
+        /// it and the new order is about to be applied to the original.
+        /// </summary>
+        [ObservableProperty]
+        private ObservableCollection<IProjectPage> pages = [];
 
         public string FileName
         {
@@ -193,6 +202,9 @@ namespace Scanner.ViewModels
             ProjectService.PropertyChanging += ProjectService_PropertyChanging;
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
+
+            if (CurrentProject != null)
+                Pages = new(CurrentProject.Pages);
         }
 
 
@@ -217,6 +229,9 @@ namespace Scanner.ViewModels
             switch (e.PropertyName)
             {
                 case nameof(IProjectService.CurrentProject):
+                    if (ProjectService.CurrentProject != null)
+                        ProjectService.CurrentProject.Pages.CollectionChanged -= Pages_CollectionChanged;
+
                     if (ProjectService.CurrentProject != null && ProjectService.CurrentProject is PdfProject pdfProject)
                         pdfProject.FileNameInfo.PropertyChanged -= FileNameInfo_PropertyChanged;
                     break;
@@ -244,6 +259,12 @@ namespace Scanner.ViewModels
                     CurrentProject = ProjectService.CurrentProject;
                     await UpdateOpenWithTargetsAsync();
 
+                    if (CurrentProject != null)
+                    {
+                        CurrentProject.Pages.CollectionChanged += Pages_CollectionChanged;
+                        Pages = new(CurrentProject.Pages);
+                    }
+
                     if (ProjectService.CurrentProject != null && ProjectService.CurrentProject is PdfProject pdfProject)
                         pdfProject.FileNameInfo.PropertyChanged += FileNameInfo_PropertyChanged;
                     break;
@@ -259,6 +280,53 @@ namespace Scanner.ViewModels
                         imagePage.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
                         imagePage.FileNameInfo.PropertyChanged += FileNameInfo_PropertyChanged;
                     }
+                    break;
+            }
+        }
+
+        private void Pages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ObservableCollection<IProjectPage>? collection = sender as ObservableCollection<IProjectPage>;
+            if (collection == null)
+                return;
+
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    if (e.NewItems == null)
+                        return;
+
+                    foreach (IProjectPage page in e.NewItems)
+                    {
+                        int index = collection.IndexOf(page);
+                        if (index >= 0)
+                            Pages.Insert(index, page);
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems == null)
+                        return;
+
+                    foreach (IProjectPage page in e.OldItems)
+                    {
+                        Pages.Remove(page);
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    if (e.NewItems == null)
+                        return;
+
+                    foreach (IProjectPage page in e.NewItems)
+                    {
+                        int index = Pages.IndexOf(page);
+                        if (index != -1)
+                            Pages[index] = page;
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                    throw new NotImplementedException("Can't sync Pages collection for Move action");
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                    Pages = new(collection);
                     break;
             }
         }

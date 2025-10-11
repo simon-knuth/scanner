@@ -504,11 +504,13 @@ namespace Scanner.Views
             if (!canvas.ReadyToDraw)
                 return;
 
+            IProjectPage page = (IProjectPage)canvas.DataContext;
+            if (canvasPageData?.Page == page)
+                return;
+
             // clear canvas to prevent wrong image from briefly being displayed during recycling
             canvas.Tag = null;
             canvas.Invalidate();
-
-            IProjectPage page = (IProjectPage)canvas.DataContext;
 
             // discard old data
             if (canvasPageData != null)
@@ -521,17 +523,21 @@ namespace Scanner.Views
             if (page == null)
                 return;
 
+            // clean up
+            if (canvasPageData?.Page != null)
+            {
+                if (pageCanvases.TryGetValue(canvasPageData.Page, out var trackedCanvas) && trackedCanvas == canvas)
+                {
+                    canvasPageData.Page.PropertyChanged -= Page_PropertyChanged;
+                    pageCanvases.Remove(canvasPageData.Page);
+                }
+            }
+
             canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
         }
 
         private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
         {
-            if (previousPage != null)
-            {
-                previousPage.PropertyChanged -= Page_PropertyChanged;
-                pageCanvases.Remove(previousPage);
-            }
-
             pageCanvases[page] = canvas;
             page.PropertyChanged -= Page_PropertyChanged;
             page.PropertyChanged += Page_PropertyChanged;

@@ -528,9 +528,12 @@ namespace Scanner.Views
 
         private void GridViewPageList_Loaded(object sender, RoutedEventArgs e)
         {
-            if (GridViewPageList.SelectedItem != null)
+            GridView gridView = (GridView)sender;
+
+            gridView.SelectedItem = ViewModel.ProjectService.SelectedPage;
+            if (gridView.SelectedItem != null)
             {
-                GridViewPageList.ScrollIntoView(GridViewPageList.SelectedItem);
+                gridView.ScrollIntoView(gridView.SelectedItem);
             }
         }
 
@@ -547,9 +550,9 @@ namespace Scanner.Views
                 try
                 {
                     if (carouselScrollViewer != null && ViewModel.CurrentProject != null
-                        && ViewModel.ProjectService.SelectedPage?.Index == ViewModel.CurrentProject.Pages.Count - 1)
+                        && ViewModel.ProjectService.SelectedPage?.Index == ViewModel.Pages.Count - 1)
                     {
-                        carouselScrollViewer.ChangeView(ViewModel.CurrentProject.Pages.Count * 64, null, null);
+                        carouselScrollViewer.ChangeView(ViewModel.Pages.Count * 64, null, null);
                     }
                 }
                 catch (Exception) { }
@@ -805,6 +808,12 @@ namespace Scanner.Views
                 IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
                 ((App)Application.Current).MainWindow.DataTransferManagerInterop.ShowShareUIForWindow(hwnd);
             });
+        }
+
+        private void GridViewItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (GridViewPageList != null)
+                GridViewPageList.SelectedItem = ViewModel.ProjectService.SelectedPage;
         }
     }
 }
