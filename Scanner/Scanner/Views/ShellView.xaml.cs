@@ -69,6 +69,7 @@ namespace Scanner.Views
             ViewModel.ProjectDeletionDialogRequested += ViewModel_ProjectDeletionDialogRequested;
             ViewModel.MultiEditInProgressDialogRequested += ViewModel_MultiEditInProgressDialogRequested;
             ViewModel.DonationDialogRequested += ViewModel_DonationDialogRequested;
+            ViewModel.OtherAppsDialogRequested += ViewModel_OtherAppsDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -284,6 +285,11 @@ namespace Scanner.Views
             ShowDonationDialog();
         }
 
+        private void ViewModel_OtherAppsDialogRequested(object? sender, EventArgs e)
+        {
+            ShowOtherAppsDialog();
+        }
+
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
 #if DEBUG
@@ -419,6 +425,26 @@ namespace Scanner.Views
                 isDialogVisible = true;
 
                 DonationDialogView dialog = new DonationDialogView();
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowOtherAppsDialog()
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                OtherAppsDialogView dialog = new OtherAppsDialogView();
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
 

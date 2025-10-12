@@ -37,6 +37,7 @@ namespace Scanner
         public static Uri PrivacyPolicyUri = new Uri("https://simon-knuth.github.io/scanner/privacy-policy");
         public static Uri SimonUri = new Uri("https://simon-knuth.github.io/");
         public static Uri DonationUri = new Uri("https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url");
+        public static Uri ClipShelfStoreUri = new Uri("ms-windows-store://pdp/?productid=9NV7F7JGLRPL&cid=scanner");
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

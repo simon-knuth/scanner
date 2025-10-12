@@ -288,7 +288,7 @@
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
                             <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.OtherApps}" Style="{StaticResource TitlebarButtonStyle}">
+                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.OtherApps}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowOtherAppsDialogCommand}">
                             <FontIcon Glyph="&#xECAD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button x:Name="ButtonSettings" ToolTipService.ToolTip="{x:Bind strings:Resources.Settings}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowSettingsCommand}" RightTapped="ButtonSettings_RightTapped">
@@ -376,7 +376,7 @@
                                         <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="{x:Bind strings:Resources.OtherApps}">
+                                <MenuFlyoutItem Text="{x:Bind strings:Resources.OtherApps}" Command="{x:Bind ViewModel.ShowOtherAppsDialogCommand}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xECAD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>

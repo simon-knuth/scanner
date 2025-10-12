@@ -42,6 +42,7 @@ namespace Scanner.ViewModels
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Task> MultiEditInProgressDialogRequested;
         public event EventHandler DonationDialogRequested;
+        public event EventHandler OtherAppsDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
@@ -49,6 +50,7 @@ namespace Scanner.ViewModels
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand ShowFeedbackCommand => new RelayCommand(ShowFeedback);
         public RelayCommand ShowDonationDialogCommand => new RelayCommand(ShowDonationDialog);
+        public RelayCommand ShowOtherAppsDialogCommand => new RelayCommand(ShowOtherAppsDialog);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
         public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
@@ -284,6 +286,11 @@ namespace Scanner.ViewModels
         private void ShowDonationDialog()
         {
             DonationDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ShowOtherAppsDialog()
+        {
+            OtherAppsDialogRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

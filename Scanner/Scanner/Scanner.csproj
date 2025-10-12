@@ -84,10 +84,14 @@
     <Folder Include="Assets\contrast-black\" />
     <Folder Include="Assets\contrast-high\" />
     <Folder Include="Assets\contrast-white\" />
+    <Folder Include="Assets\ClipShelf\" />
     <Folder Include="Resources\Test Images\" />
     <Folder Include="Views\DataTemplateSelectors\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Dialogs\OtherAppsDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Dialogs\DonationDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>

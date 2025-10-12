@@ -1,0 +1,84 @@
+<ContentDialog
+    x:Class="Scanner.Views.Dialogs.OtherAppsDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:local="using:Scanner"
+    xmlns:strings="using:Scanner.Resources.Strings"
+    mc:Ignorable="d"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    CloseButtonText="{x:Bind strings:Resources.Close}"
+    FlowDirection="{x:Bind AccessibilityService.DefaultFlowDirection, Mode=OneWay}">
+
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <x:Double x:Key="ContentDialogMinWidth">400</x:Double>
+            <x:Double x:Key="ContentDialogMinHeight">400</x:Double>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <ContentDialog.Title>
+        <StackPanel Orientation="Vertical" Spacing="4" Margin="0,0,0,12">
+            <TextBlock Text="{x:Bind strings:Resources.OtherAppsDialogHeading}" AutomationProperties.HeadingLevel="Level1"/>
+            <TextBlock Text="{x:Bind strings:Resources.OtherAppsDialogBody}" Style="{StaticResource BodyTextBlockStyle}"/>
+        </StackPanel>
+    </ContentDialog.Title>
+
+    <Frame HorizontalAlignment="Left" MaxHeight="248" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+        <ui:Effects.Shadow>
+            <media:AttachedCardShadow Offset="0,2" BlurRadius="8" Color="Black" Opacity="0.02" CornerRadius="8" />
+        </ui:Effects.Shadow>
+
+        <Grid CornerRadius="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="1" Source="/Assets/ClipShelf/Hero Image Alt Close-Up.jpg" HorizontalAlignment="Center" VerticalAlignment="Stretch" Stretch="UniformToFill" />
+
+            <Grid Grid.Column="0" RowSpacing="24" ColumnSpacing="12" Padding="20" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Source="/Assets/ClipShelf/Logo.svg" MaxWidth="28" MaxHeight="28" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="ClipShelf" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level2" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind strings:Resources.OtherAppsDialogClipShelfBody}" Style="{StaticResource BodyTextBlockStyle}" />
+                <Button x:Name="ButtonGetClipShelf" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MinWidth="120" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Click="ButtonGetClipShelf_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{x:Bind strings:Resources.OtherAppsDialogFree}" Style="{StaticResource BodyTextBlockStyle}" />
+                        <FontIcon Glyph="&#xE8A7;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+    </Frame>
+</ContentDialog>
