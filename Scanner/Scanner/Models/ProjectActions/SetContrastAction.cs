@@ -18,6 +18,7 @@ using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
 using static Scanner.Helpers.Helpers;
+using Windows.UI.WebUI;
 
 namespace Scanner.Models
 {
@@ -76,6 +77,9 @@ namespace Scanner.Models
 
         public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue)
         {
+            if (action is not SetContrastAction)
+                throw new ArgumentException("Only actions of the same type can be merged");
+
             TargetValue = action.TargetValue;
             return Execute(projectBase, uiDispatcherQueue);
         }
@@ -83,11 +87,9 @@ namespace Scanner.Models
         public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (previousValue == null)
-            {
                 throw new ActionFailedAndRolledBackException($"Can't undo {nameof(SetContrastAction)} without previous value");
-            }
 
-            Page.Contrast = (int)previousValue;
+            project.SetContrast(Page, (int)previousValue, uiDispatcherQueue);
         }
 
         public string GetFriendlyName()

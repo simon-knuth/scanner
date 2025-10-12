@@ -76,6 +76,9 @@ namespace Scanner.Models
 
         public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue)
         {
+            if (action is not SetBrightnessAction)
+                throw new ArgumentException("Only actions of the same type can be merged");
+
             TargetValue = action.TargetValue;
             return Execute(projectBase, uiDispatcherQueue);
         }
@@ -83,11 +86,9 @@ namespace Scanner.Models
         public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
         {
             if (previousValue == null)
-            {
                 throw new ActionFailedAndRolledBackException($"Can't undo {nameof(SetBrightnessAction)} without previous value");
-            }
 
-            Page.Brightness = (int)previousValue;
+            project.SetBrightness(Page, (int)previousValue, uiDispatcherQueue);
         }
 
         public string GetFriendlyName()
