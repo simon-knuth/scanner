@@ -829,7 +829,10 @@ namespace Scanner.Views
 
             for (int i = 0; i < GridViewPageList.Items.Count; i++)
             {
-                InitializeGridViewItemAppearance((GridViewItem)GridViewPageList.ContainerFromIndex(i));
+                GridViewItem? item = GridViewPageList.ContainerFromIndex(i) as GridViewItem;
+
+                if (item != null)
+                    InitializeGridViewItemAppearance(item);
             }
         }
     }
