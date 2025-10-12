@@ -43,8 +43,8 @@ namespace Scanner.Models
             }
         }
 
-        private StorageFile? previewFile;
-        public StorageFile? PreviewFile
+        private StorageFile previewFile;
+        public StorageFile PreviewFile
         {
             get => previewFile;
             private set
@@ -112,7 +112,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private ImagePage(StorageFile sourceFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
         {
-            SourceFile = sourceFile;
+            SourceFile = PreviewFile = sourceFile;
             SourceBitmapUri = PreviewBitmapUri = sourceBitmapUri;
             Index = index;
             if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);

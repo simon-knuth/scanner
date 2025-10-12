@@ -38,7 +38,7 @@ namespace Scanner.Models.Interfaces
         /// <summary>
         /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.
         /// </summary>
-        StorageFile? PreviewFile { get; }
+        StorageFile PreviewFile { get; }
 
         /// <summary>
         /// The URI for the bitmap representing the <see cref="SourceFile"/>.

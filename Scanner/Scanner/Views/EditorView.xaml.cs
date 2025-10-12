@@ -609,7 +609,7 @@ namespace Scanner.Views
 
             // load image into ImageCropper
             ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).AspectRatio = ViewModel.SelectedAspectRatioValue;
-            await ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).LoadImageFromFile(ViewModel.ProjectService.SelectedPage.SourceFile);
+            await ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).LoadImageFromFile(ViewModel.ProjectService.SelectedPage.PreviewFile);
         }
 
         private void ButtonDiscardCrop_Click(object sender, RoutedEventArgs e)
