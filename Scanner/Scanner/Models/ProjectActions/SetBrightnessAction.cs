@@ -95,5 +95,10 @@ namespace Scanner.Models
         {
             return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionSetBrightness);
         }
+
+        public bool IsActionCompatibleForMerge(IAtomicProjectAction action)
+        {
+            return action is SetBrightnessAction;
+        }
     }
 }

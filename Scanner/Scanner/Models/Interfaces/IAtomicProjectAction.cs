@@ -68,5 +68,11 @@ namespace Scanner.Models.Interfaces
         /// Occurs when a fatal error occurred and the changes to the <see cref="ProjectBase"/> could not be rolled back.
         /// </exception>
         bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue);
+
+        /// <summary>
+        /// Checks whether the given <paramref name="action"/> can be merged with this action.
+        /// </summary>
+        /// <param name="action">The action to merge.</param>
+        bool IsActionCompatibleForMerge(IAtomicProjectAction action);
     }
 }

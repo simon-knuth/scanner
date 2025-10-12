@@ -658,19 +658,21 @@ namespace Scanner.Services
                 {
                     // check if action can be merged with previous one
                     UndoStack.TryPeek(out IProjectAction? undoAction);
-                    if (undoAction != null
+                    if (!redoing
+                        && undoAction != null
                         && undoAction is IAtomicProjectAction previousAtomicProjectAction
                         && DateTime.Now < previousAtomicProjectAction.MostRecentExecution + AppConfig.ConsecutiveAtomicActionMergeTime
-                        && previousAtomicProjectAction.Page == atomicProjectAction.Page)
+                        && previousAtomicProjectAction.Page == atomicProjectAction.Page
+                        && previousAtomicProjectAction.IsActionCompatibleForMerge(atomicProjectAction))
                     {
                         // merge with previous action
-                        changesMade = previousAtomicProjectAction.MergeAndExecute(CurrentProject, atomicProjectAction, UiDispatcherQueue);
+                        changesMade = previousAtomicProjectAction.MergeAndExecute(CurrentProject, atomicProjectAction, UiDispatcherQueue!);
                         merged = true;
                     }
                     else
                     {
                         // use separate action
-                        changesMade = atomicProjectAction.Execute(CurrentProject, UiDispatcherQueue);
+                        changesMade = atomicProjectAction.Execute(CurrentProject, UiDispatcherQueue!);
                     }
                 }
                 else

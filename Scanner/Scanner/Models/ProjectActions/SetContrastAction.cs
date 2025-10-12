@@ -96,5 +96,10 @@ namespace Scanner.Models
         {
             return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionSetContrast);
         }
+
+        public bool IsActionCompatibleForMerge(IAtomicProjectAction action)
+        {
+            return action is SetContrastAction;
+        }
     }
 }
