@@ -192,7 +192,7 @@ namespace Scanner.Models
                                 }
                                 else
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                                 }
 
                                 // update page

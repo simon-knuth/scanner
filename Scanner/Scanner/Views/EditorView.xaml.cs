@@ -285,6 +285,9 @@ namespace Scanner.Views
                     OnPropertyChanged(nameof(IsFilterGrayscale));
                     OnPropertyChanged(nameof(IsFilterMonochrome));
                     break;
+                case nameof(IProjectPage.Index):
+                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
+                    break;
             }
         }
 

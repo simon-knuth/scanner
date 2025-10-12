@@ -501,16 +501,17 @@
                                 <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                             </animations:Implicit.HideAnimations>
 
-                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged">
+                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" AllowDrop="True" CanReorderItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" CanDragItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" ReorderMode="Enabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged">
                                 <GridView.ItemContainerTransitions>
                                     <TransitionCollection>
-
+                                        <ReorderThemeTransition />
+                                        <RepositionThemeTransition IsStaggeringEnabled="False" />
                                     </TransitionCollection>
                                 </GridView.ItemContainerTransitions>
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="interfaces:IProjectPage">
-                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged" Loaded="GridViewItem_Loaded">
+                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged" Loaded="GridViewItem_Loaded" DropCompleted="GridViewItem_DropCompleted">
                                             <Grid>
                                                 <Frame x:Name="FramePreview" Margin="8" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
                                                     <Image>

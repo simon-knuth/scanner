@@ -169,7 +169,7 @@ namespace Scanner.Services
         public bool CanUndo => UndoStack.Count > 0;
         public bool CanRedo => RedoStack.Count > 0;
 
-        public bool CanSaveProject => CurrentProject != null && !IsProcessRunning;
+        public bool CanSaveProject => CurrentProject != null && !IsProcessRunning && !CurrentProject.IsSaved;
 
         public DispatcherQueue? UiDispatcherQueue { get; set; }
 

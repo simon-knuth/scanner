@@ -445,6 +445,7 @@ namespace Scanner.Models
                 try
                 {
                     newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
+                    areFilesSaved = false;
                 }
                 finally
                 {
@@ -739,6 +740,8 @@ namespace Scanner.Models
                     await Task.Run(async () => newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder));
                     page.Width = (uint)Math.Round(cropRegion.Width);
                     page.Height = (uint)Math.Round(cropRegion.Height);
+
+                    areFilesSaved = false;
                 }
                 finally
                 {
@@ -790,6 +793,8 @@ namespace Scanner.Models
                         imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None,
                         imagePage?.Brightness ?? AppConfig.DefaultBrightness, imagePage?.Contrast ?? AppConfig.DefaultContrast);
                     result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
+
+                    areFilesSaved = false;
                 }
                 finally
                 {
@@ -871,6 +876,8 @@ namespace Scanner.Models
                 consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
                 await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
             }, AppConfig.ConsecutiveAtomicActionMergeTime);
+
+            areFilesSaved = false;
         }
 
         public void SetContrast(ImagePage page, int contrast, DispatcherQueue uiDispatcherQueue)
@@ -884,6 +891,40 @@ namespace Scanner.Models
                 consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
                 await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
             }, AppConfig.ConsecutiveAtomicActionMergeTime);
+
+            areFilesSaved = false;
+        }
+
+        /// <summary>
+        /// Reorders the project pages.
+        /// </summary>
+        /// <param name="targetOrder">The desired order.</param>
+        public async Task<bool> ApplyOrderOfPagesAsync(List<IProjectPage> targetOrder, DispatcherQueue uiDispatcherQueue)
+        {
+            await StartEditingAsync();
+            try
+            {
+                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                {
+                    for (int i = 0; i < targetOrder.Count; i++)
+                    {
+                        int currentIndex = Pages.IndexOf(targetOrder[i]);
+                        if (currentIndex != i)
+                        {
+                            Pages.Move(currentIndex, i);
+                        }
+                        Pages[i].Index = i;
+                    }
+                });
+
+                areFilesSaved = false;
+            }
+            finally
+            {
+                FinishEditing();
+            }
+
+            return true;
         }
 
         public static Guid GetBitmapEncoderIdForFile(StorageFile file)

@@ -1865,4 +1865,7 @@ Fuzzy</comment>
   <data name="ProjectActionSetContrast" xml:space="preserve">
     <value>Change contrast</value>
   </data>
+  <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
+    <value>Reorder pages</value>
+  </data>
 </root>

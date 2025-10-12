@@ -759,37 +759,39 @@ namespace Scanner.Views
 
         private void GridViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            if (sender is GridViewItem gridViewItem)
+            InitializeGridViewItemAppearance((GridViewItem)sender);
+        }
+
+        private void InitializeGridViewItemAppearance(GridViewItem gridViewItem)
+        {
+            if (gridViewItem.IsSelected)
             {
-                if (gridViewItem.IsSelected)
+                Rectangle? innerSelectionIndicator = gridViewItem.FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
+                Rectangle? outerSelectionIndicator = gridViewItem.FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
+                TextBlock? pageNumber = gridViewItem.FindDescendant("TextBlockPageNumber") as TextBlock;
+                if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
                 {
-                    Rectangle? innerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorInner") as Rectangle;
-                    Rectangle? outerSelectionIndicator = ((FrameworkElement)sender).FindDescendant("RectangleSelectionIndicatorOuter") as Rectangle;
-                    TextBlock? pageNumber = ((FrameworkElement)sender).FindDescendant("TextBlockPageNumber") as TextBlock;
-                    if (innerSelectionIndicator != null && outerSelectionIndicator != null && pageNumber != null)
-                    {
-                        innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
-                        innerSelectionIndicator.StrokeThickness = 3;
-                        outerSelectionIndicator.StrokeThickness = 2;
-                        pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
-                    }
+                    innerSelectionIndicator.Stroke = Application.Current.Resources["ControlSolidFillColorDefaultBrush"] as Brush;
+                    innerSelectionIndicator.StrokeThickness = 3;
+                    outerSelectionIndicator.StrokeThickness = 2;
+                    pageNumber.Foreground = Application.Current.Resources["AccentTextFillColorPrimaryBrush"] as SolidColorBrush;
                 }
-
-                if (gridViewItem.Tag != null)
-                    gridViewItem.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
-
-                gridViewItem.Tag = gridViewItem.RegisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, OnIsSelectedChanged);
-                RoutedEventHandler? handler = null;
-                handler = new RoutedEventHandler((s, e) =>
-                {
-                    if (s is GridViewItem item)
-                    {
-                        item.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
-                        item.Unloaded -= handler;
-                    }
-                });
-                gridViewItem.Unloaded += handler;
             }
+
+            if (gridViewItem.Tag != null)
+                gridViewItem.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
+
+            gridViewItem.Tag = gridViewItem.RegisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, OnIsSelectedChanged);
+            RoutedEventHandler? handler = null;
+            handler = new RoutedEventHandler((s, e) =>
+            {
+                if (s is GridViewItem item)
+                {
+                    item.UnregisterPropertyChangedCallback(GridViewItem.IsSelectedProperty, (long)gridViewItem.Tag);
+                    item.Unloaded -= handler;
+                }
+            });
+            gridViewItem.Unloaded += handler;
         }
 
         private void InvokeShareUI()
@@ -814,6 +816,21 @@ namespace Scanner.Views
         {
             if (GridViewPageList != null)
                 GridViewPageList.SelectedItem = ViewModel.ProjectService.SelectedPage;
+
+            InitializeGridViewItemAppearance((GridViewItem)sender);
+        }
+
+        private async void GridViewItem_DropCompleted(UIElement sender, DropCompletedEventArgs args)
+        {
+            await ViewModel.ApplyOrderOfPagesToProjectAsyncCommand.ExecuteAsync(null);
+
+            if (GridViewPageList == null)
+                return;
+
+            for (int i = 0; i < GridViewPageList.Items.Count; i++)
+            {
+                InitializeGridViewItemAppearance((GridViewItem)GridViewPageList.ContainerFromIndex(i));
+            }
         }
     }
 }

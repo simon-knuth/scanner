@@ -29,6 +29,7 @@ using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
 using static Scanner.Helpers.RotationHelpers;
+using static System.Net.WebRequestMethods;
 
 namespace Scanner.ViewModels
 {
@@ -69,6 +70,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand TryShareSelectedPagesAsyncCommand => new AsyncRelayCommand(TryShareSelectedPagesAsync);
         public AsyncRelayCommand<ImageFilter> ApplyFilterToSelectedPagesAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToSelectedPagesAsync);
         public RelayCommand StartStopGenerateFileNameWithAICommand => new RelayCommand(StartStopGenerateFileNameWithAI);
+        public AsyncRelayCommand ApplyOrderOfPagesToProjectAsyncCommand => new AsyncRelayCommand(ApplyOrderOfPagesToProjectAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -324,7 +326,7 @@ namespace Scanner.ViewModels
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
-                    throw new NotImplementedException("Can't sync Pages collection for Move action");
+                    break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     Pages = new(collection);
                     break;
@@ -647,6 +649,15 @@ namespace Scanner.ViewModels
             {
                 throw new NotImplementedException();
             }
+        }
+
+        private async Task ApplyOrderOfPagesToProjectAsync()
+        {
+            if (CurrentProject == null) return;
+
+            IProjectPage? selectedPage = ProjectService.SelectedPage;
+            await ProjectService.ApplyActionAsync(new ApplyOrderOfPagesAction(Pages.ToList()));
+            ProjectService.SelectedPage = selectedPage;
         }
     }
 
