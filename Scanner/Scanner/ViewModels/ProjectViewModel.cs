@@ -326,6 +326,8 @@ namespace Scanner.ViewModels
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                    if (collection[e.NewStartingIndex] != Pages[e.NewStartingIndex])
+                        Pages.Move(e.OldStartingIndex, e.NewStartingIndex);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     Pages = new(collection);
