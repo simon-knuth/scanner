@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\contrast-standard\Logo small.svg" />
+    <None Remove="Assets\Simon.jpg" />
     <None Remove="Controls\ScanOptionsPresenter.xaml" />
     <None Remove="Resources\Licenses\.NET Community Toolkit.txt" />
     <None Remove="Resources\Licenses\.NET Platform.txt" />
@@ -87,6 +88,9 @@
     <Folder Include="Views\DataTemplateSelectors\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Dialogs\DonationDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\TeachingTips\AIDisclaimerTeachingTip.xaml">
       <SubType>Designer</SubType>
     </Page>

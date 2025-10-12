@@ -285,7 +285,7 @@
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.GiveFeedback}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowFeedbackCommand}">
                             <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}">
+                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
                             <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.OtherApps}" Style="{StaticResource TitlebarButtonStyle}">
@@ -371,7 +371,7 @@
                                         <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="{x:Bind strings:Resources.SupportDevelopment}">
+                                <MenuFlyoutItem Text="{x:Bind strings:Resources.SupportDevelopment}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>

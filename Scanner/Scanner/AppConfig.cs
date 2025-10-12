@@ -35,6 +35,8 @@ namespace Scanner
         public const float PhotosResolution = 500;         // the recommended resolution for photos
 
         public static Uri PrivacyPolicyUri = new Uri("https://simon-knuth.github.io/scanner/privacy-policy");
+        public static Uri SimonUri = new Uri("https://simon-knuth.github.io/");
+        public static Uri DonationUri = new Uri("https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url");
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -41,12 +41,14 @@ namespace Scanner.ViewModels
         public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
         public event EventHandler<Task> MultiEditInProgressDialogRequested;
+        public event EventHandler DonationDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
         #region Commands
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
         public RelayCommand ShowFeedbackCommand => new RelayCommand(ShowFeedback);
+        public RelayCommand ShowDonationDialogCommand => new RelayCommand(ShowDonationDialog);
         public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
         public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
         public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
@@ -103,6 +105,10 @@ namespace Scanner.ViewModels
             Messenger.Register<ShowMultiEditInProgressDialogMessage>(this, (r, m) =>
             {
                 m.Reply(ShowMultiEditInProgressDialogAsync(m.Process));
+            });
+            Messenger.Register<ShowDonationDialogMessage>(this, (r, m) =>
+            {
+                ShowDonationDialog();
             });
             Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
             {
@@ -273,6 +279,11 @@ namespace Scanner.ViewModels
         private void ShowFeedback()
         {
             ((App)Application.Current).ShowFeedback();
+        }
+
+        private void ShowDonationDialog()
+        {
+            DonationDialogRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

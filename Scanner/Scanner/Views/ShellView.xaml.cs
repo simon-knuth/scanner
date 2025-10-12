@@ -68,6 +68,7 @@ namespace Scanner.Views
             ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
             ViewModel.ProjectDeletionDialogRequested += ViewModel_ProjectDeletionDialogRequested;
             ViewModel.MultiEditInProgressDialogRequested += ViewModel_MultiEditInProgressDialogRequested;
+            ViewModel.DonationDialogRequested += ViewModel_DonationDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -278,6 +279,11 @@ namespace Scanner.Views
             ShowMultiEditInProgressDialog(e);
         }
 
+        private void ViewModel_DonationDialogRequested(object? sender, EventArgs e)
+        {
+            ShowDonationDialog();
+        }
+
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
 #if DEBUG
@@ -393,6 +399,26 @@ namespace Scanner.Views
                 isDialogVisible = true;
 
                 MultiEditInProgressDialogView dialog = new MultiEditInProgressDialogView(task);
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowDonationDialog()
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                DonationDialogView dialog = new DonationDialogView();
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
 
