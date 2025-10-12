@@ -361,7 +361,8 @@ namespace Scanner.Views
         public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
         #endregion
 
-        public bool CanScroll => ScrollViewerContent.ScrollableHeight > 0;
+        public bool CanScroll => ScrollViewerContent.ScrollableHeight > 0
+            && ScrollViewerContent.VerticalOffset + 8 < ScrollViewerContent.ScrollableHeight;
 
         private bool IsColorModeResolutionBrightnessContrastVisible => ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
         private bool IsAutoCropVisible => ViewModel.SelectedScanner != null
