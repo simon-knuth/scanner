@@ -17,6 +17,7 @@
     xmlns:models="using:Scanner.Models"
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:controls="using:Scanner.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     Unloaded="Page_Unloaded">
@@ -77,6 +78,15 @@
             <StaticResource x:Key="GridViewItemSelectedDisabledBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="GridViewItemBackgroundSelectedDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+            
+            <!-- Styles -->
+            <Style x:Key="ConversionFormatMenuFlyoutItemStyle" BasedOn="{StaticResource DefaultMenuFlyoutItemStyle}" TargetType="MenuFlyoutItem">
+                <Setter Property="MaxWidth" Value="300" />
+            </Style>
+
+            <Style x:Key="ConversionFormatMenuFlyoutItemCustomContentStyle" BasedOn="{StaticResource DefaultMenuFlyoutItemCustomContentStyle}" TargetType="controls:MenuFlyoutItemCustomContent">
+                <Setter Property="MaxWidth" Value="300" />
+            </Style>
 
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
@@ -230,42 +240,129 @@
                                     <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Export pages as separate PDFs..." Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                             <MenuFlyoutSubItem Text="{x:Bind strings:Resources.ConvertTo}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xEA4E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>
 
                                 <MenuFlyoutSubItem.Items>
-                                    <MenuFlyoutItem Text="PDF">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xEA90;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
+                                    <MenuFlyoutItem FontSize="12" Text="{x:Bind strings:Resources.MultiPageFormats}" IsEnabled="False" Style="{StaticResource ConversionFormatMenuFlyoutItemStyle}">
+                                        <MenuFlyoutItem.Resources>
+                                            <Thickness x:Key="MenuFlyoutItemPlaceholderThemeThickness">0</Thickness>
+                                        </MenuFlyoutItem.Resources>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="JPG">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
+                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="PDF" MaxLines="1" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionPDF}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
+                                    <MenuFlyoutItem FontSize="12" Text="{x:Bind strings:Resources.SinglePageFormats}" IsEnabled="False" Margin="0,4,0,0" Style="{StaticResource ConversionFormatMenuFlyoutItemStyle}">
+                                        <MenuFlyoutItem.Resources>
+                                            <Thickness x:Key="MenuFlyoutItemPlaceholderThemeThickness">0</Thickness>
+                                        </MenuFlyoutItem.Resources>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="PNG">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="BMP">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="TIFF">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="RAW">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
+                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="JPG" MaxLines="1" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionJPG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
+                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="PNG" MaxLines="1" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionPNG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
+                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="BMP" MaxLines="1" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionBMP}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
+                                    <controls:MenuFlyoutItemCustomContent Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="TIFF" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionTIFF}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
+                                    <controls:MenuFlyoutItemCustomContent Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="RAW" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionRAW}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </controls:MenuFlyoutItemCustomContent>
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
