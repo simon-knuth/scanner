@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
+using Scanner.Models.Project;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ScanOptions initialScanOptions, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(ImageProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -65,13 +66,14 @@ namespace Scanner.Models
 
             // create pages
             List<IProjectPage> pages = new();
-            for (int i = 0; i < files.Count; i++)
+            for (int i = 0; i < creationData.Pages.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, targetFileName, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                PageCreationData pageData = creationData.Pages[i];
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
             }
 
             // create project and update previews
-            ImageProject project = new ImageProject(pages, format, initialScanOptions);
+            ImageProject project = new ImageProject(pages, creationData.Format, creationData.InitialScanOptions);
             await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }

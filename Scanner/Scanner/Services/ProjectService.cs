@@ -241,14 +241,16 @@ namespace Scanner.Services
                     switch (scanOptions.TargetFormat)
                     {
                         case TargetFormat.PDF:
-                            project = await PdfProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, scanOptions, uiDispatcherQueue);
+                            PdfProjectCreationData pdfCreationData = new(files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
+                            project = await PdfProject.CreateAsync(pdfCreationData, false, uiDispatcherQueue);
                             break;
                         case TargetFormat.JPG:
                         case TargetFormat.PNG:
                         case TargetFormat.BMP:
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
-                            project = await ImageProject.CreateAsync(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, false, scanOptions, uiDispatcherQueue);
+                            ImageProjectCreationData imageCreationData = new(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
+                            project = await ImageProject.CreateAsync(imageCreationData, false, uiDispatcherQueue);
                             break;
                         default:
                             throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
@@ -603,6 +605,8 @@ namespace Scanner.Services
             await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.PreviewFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
 
             // update undo/redo stacks
             UndoStack.Clear();
@@ -803,6 +807,48 @@ namespace Scanner.Services
             if (RedoStack.Count > 0) await InternalApplyActionAsync(RedoStack.Pop(), true);
 
             process.TrySetResult();
+        }
+
+        public async Task<bool> ConvertProjectAsync(TargetFormat targetFormat)
+        {
+            if (CurrentProject == null) return false;
+            IsActionRunning = true;
+
+            try
+            {
+                // collect page data for new project
+                IProjectCreationData creationData;
+                switch (targetFormat)
+                {
+                    case TargetFormat.PDF:
+                        // get file name and target folder from first page
+                        ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
+                        creationData = new PdfProjectCreationData(CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions);
+                        break;
+                    case TargetFormat.JPG:
+                    case TargetFormat.PNG:
+                    case TargetFormat.BMP:
+                    case TargetFormat.TIFF:
+                    case TargetFormat.RAW:
+                        if (CurrentProject is ImageProject imageProject)
+                            creationData = new ImageProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions);
+                        else if (CurrentProject is PdfProject pdfProject)
+                            creationData = new ImageProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredName, CurrentProject.InitialScanOptions);
+                        break;
+                    default:
+                        throw new ArgumentException("Can't convert project to " + targetFormat.ToString());
+                }
+
+                // close project
+                if (!await TryCloseProjectAsync())
+                    return false;
+            }
+            finally
+            {
+                IsActionRunning = false;
+            }
+
+            return true;
         }
 
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
+using Scanner.Models.Project;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
@@ -52,7 +53,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private PdfProject(IList<IProjectPage> pages, TargetFormat format, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
+        private PdfProject(IList<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(pages, TargetFormat.PDF, initialScanOptions)
         {
             // folder saved at project level for PDF and page level for all other formats
             TargetFolder = targetFolder;
@@ -61,7 +62,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = false;
         }
 
-        public static async Task<ProjectBase> CreateAsync(IReadOnlyList<StorageFile> files, TargetFormat format, string targetFileName, StorageFolder? targetFolder, bool keepSourceFiles, ScanOptions initialScanOptions, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(PdfProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -71,13 +72,14 @@ namespace Scanner.Models
 
             // create pages
             List<IProjectPage> pages = new();
-            for (int i = 0; i < files.Count; i++)
+            for (int i = 0; i < creationData.Pages.Count; i++)
             {
-                pages.Add(await CreatePageFromFileAsync(files[i], i, null, targetFolder, keepSourceFiles, AppDataService.ProjectFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                PageCreationData pageData = creationData.Pages[i];
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, null, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
             }
 
             // create project and update previews
-            PdfProject project = new PdfProject(pages, format, targetFileName, targetFolder, initialScanOptions);
+            PdfProject project = new PdfProject(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
             await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }

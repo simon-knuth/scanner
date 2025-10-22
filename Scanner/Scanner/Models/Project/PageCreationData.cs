@@ -15,24 +15,43 @@ using Windows.Devices.Scanners;
 using Windows.Storage;
 using System.ComponentModel;
 using Microsoft.UI.Dispatching;
+using Scanner.Models.Interfaces;
 
-namespace Scanner.Models.Interfaces
+namespace Scanner.Models.Project
 {
     /// <summary>
-    /// A snapshot of a project with all necessary data to save or create it.
-    /// Used to enable saving in the background while the user can still make edits.
+    /// All data that's necessary to create an <see cref="IProjectPage"/>.
     /// </summary>
-    public interface IProjectSnapshot
+    public class PageCreationData
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TargetFormat Format { get; }
+        public StorageFile File { get; }
+
+        public string? TargetFileName { get; }
+        public StorageFolder? TargetFolder { get; }
+
+        public ImageFilter BaseFilter { get; }
+        public ImageFilter Filter { get; }
+
+        public int Brightness { get; }
+        public int Contrast { get; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue);
+        public PageCreationData(StorageFile file, string? targetFileName, StorageFolder? targetFolder,
+            ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+        {
+            File = file;
+            TargetFileName = targetFileName;
+            TargetFolder = targetFolder;
+            BaseFilter = baseFilter;
+            Filter = filter;
+            Brightness = brightness;
+            Contrast = contrast;
+        }
     }
 }

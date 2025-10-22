@@ -91,6 +91,7 @@
             <!-- XAML Converters -->
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
+            <converters:NegativeEnumIntComparisonVisibilityConverter x:Key="NegativeEnumIntComparisonVisibilityConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
             <converters:NullBoolConverter x:Key="NullBoolConverter" />
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
@@ -251,12 +252,12 @@
                                 </MenuFlyoutSubItem.Icon>
 
                                 <MenuFlyoutSubItem.Items>
-                                    <MenuFlyoutItem FontSize="12" Text="{x:Bind strings:Resources.MultiPageFormats}" IsEnabled="False" Style="{StaticResource ConversionFormatMenuFlyoutItemStyle}">
+                                    <MenuFlyoutItem FontSize="12" Text="{x:Bind strings:Resources.MultiPageFormats}" IsEnabled="False" Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=1}" Style="{StaticResource ConversionFormatMenuFlyoutItemStyle}">
                                         <MenuFlyoutItem.Resources>
                                             <Thickness x:Key="MenuFlyoutItemPlaceholderThemeThickness">0</Thickness>
                                         </MenuFlyoutItem.Resources>
                                     </MenuFlyoutItem>
-                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=1}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.PDF}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -278,7 +279,7 @@
                                             <Thickness x:Key="MenuFlyoutItemPlaceholderThemeThickness">0</Thickness>
                                         </MenuFlyoutItem.Resources>
                                     </MenuFlyoutItem>
-                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=2}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.JPG}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -295,7 +296,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionJPG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </controls:MenuFlyoutItemCustomContent>
-                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=3}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.PNG}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -312,7 +313,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionPNG}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </controls:MenuFlyoutItemCustomContent>
-                                    <controls:MenuFlyoutItemCustomContent Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=4}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.BMP}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -329,7 +330,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionBMP}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </controls:MenuFlyoutItemCustomContent>
-                                    <controls:MenuFlyoutItemCustomContent Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=5}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.TIFF}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -346,7 +347,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionTIFF}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </controls:MenuFlyoutItemCustomContent>
-                                    <controls:MenuFlyoutItemCustomContent Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}">
+                                    <controls:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=6}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.RAW}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />

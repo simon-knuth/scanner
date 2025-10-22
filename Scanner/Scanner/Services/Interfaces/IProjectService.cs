@@ -76,6 +76,8 @@ namespace Scanner.Services.Interfaces
         Task TryCreateProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
         Task TryScanToProjectAsync(ScanOptions scanOptions);
 
+        Task<bool> ConvertProjectAsync(TargetFormat targetFormat);
+
         Task<bool> TryDeleteProjectAsync();
         Task<bool> TrySaveProjectAsync();
 

@@ -74,7 +74,7 @@ namespace Scanner.Models
         /// <summary>
         /// The <see cref="ScanOptions"/> in use when this project was created in the first place.
         /// </summary>
-        public readonly ScanOptions? InitialScanOptions;
+        public readonly ScanOptions InitialScanOptions;
         public readonly TargetFormat Format;
 
         public bool IsPdf => Format == TargetFormat.PDF;

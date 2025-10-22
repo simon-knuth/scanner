@@ -8,6 +8,7 @@ using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -35,10 +36,10 @@ namespace Scanner.Models
         private const string tesseractOutputFileDisplayName = "tessoutput";
         #endregion
 
-        public TargetFormat Format { get; private set; }
+        public TargetFormat Format { get; private set; } = TargetFormat.PDF;
 
-        public string DesiredFileName { get; private set; }
-        public StorageFolder TargetFolder { get; private set; }
+        public string? DesiredFileName { get; private set; }
+        public StorageFolder? TargetFolder { get; private set; }
         public StorageFile? TargetFile { get; private set; }
 
         /// <remarks>
@@ -52,7 +53,6 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public PdfProjectSnapshot(PdfProject project)
         {
-            Format = project.Format;
             DesiredFileName = project.FileNameInfo!.DesiredName;
             TargetFolder = project.TargetFolder!;
             TargetFile = project.TargetFile;

@@ -143,45 +143,6 @@ namespace Scanner.Models
             return result;
         }
 
-        private async Task<BitmapEncoder> CreateBitmapEncoderAsync(IRandomAccessStream stream)
-        {
-            // get encoder ID
-            Guid encoderId;
-            switch (Format)
-            {
-                case TargetFormat.JPG:
-                    encoderId = BitmapEncoder.JpegEncoderId;
-                    break;
-                case TargetFormat.PNG:
-                    encoderId = BitmapEncoder.PngEncoderId;
-                    break;
-                case TargetFormat.TIFF:
-                    encoderId = BitmapEncoder.TiffEncoderId;
-                    break;
-                case TargetFormat.BMP:
-                    encoderId = BitmapEncoder.BmpEncoderId;
-                    break;
-                default:
-                    throw new ArgumentException($"CreateBitmapEncoderAsync received invalid format {Format}");
-            }
-
-            // create encoder
-            if (Format == TargetFormat.JPG)
-            {
-                // prevent large JPG size
-                var propertySet = new BitmapPropertySet();
-                var qualityValue = new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single);
-                propertySet.Add("ImageQuality", qualityValue);
-
-                stream.Size = 0;
-                return await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
-            }
-            else
-            {
-                return await BitmapEncoder.CreateAsync(encoderId, stream);
-            }
-        }
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////

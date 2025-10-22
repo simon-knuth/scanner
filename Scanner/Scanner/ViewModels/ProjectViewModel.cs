@@ -60,6 +60,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand SaveAsAsyncCommand => new AsyncRelayCommand(SaveAsAsync);
         public AsyncRelayCommand SaveAsCurrentPageAsyncCommand => new AsyncRelayCommand(SaveAsCurrentPageAsync);
         public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
+        public AsyncRelayCommand<TargetFormat> ConvertProjectAsyncCommand => new AsyncRelayCommand<TargetFormat>(ConvertProjectAsync);
         public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
         public AsyncRelayCommand RotateSelectedPages90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees90));
         public AsyncRelayCommand RotateSelectedPages180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees180));
@@ -455,6 +456,12 @@ namespace Scanner.ViewModels
             // add files to project
             AddFilesAction action = new AddFilesAction(insertions, true);
             await ProjectService.ApplyActionAsync(action);
+        }
+
+        private async Task ConvertProjectAsync(TargetFormat targetFormat)
+        {
+            if (CurrentProject == null) return;
+            await ProjectService.ConvertProjectAsync(targetFormat);
         }
 
         private async Task SaveAsync()
