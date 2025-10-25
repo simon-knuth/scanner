@@ -461,7 +461,7 @@ namespace Scanner.ViewModels
         private async Task ConvertProjectAsync(TargetFormat targetFormat)
         {
             if (CurrentProject == null) return;
-            await ProjectService.ConvertProjectAsync(targetFormat);
+            await ProjectService.ConvertProjectAsync(targetFormat, viewDispatcherQueue!);
         }
 
         private async Task SaveAsync()

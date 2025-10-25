@@ -65,7 +65,7 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.Name, imagePage.TargetFolder,
+                    Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, imagePage.TargetFolder,
                         imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }
@@ -75,6 +75,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+        public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        {
+            return await ImageProject.CreateAsync(this, keepSourceFiles, uiDispatcherQueue);
+        }
     }
 }

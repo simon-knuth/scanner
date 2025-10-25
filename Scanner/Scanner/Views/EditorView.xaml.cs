@@ -268,6 +268,9 @@ namespace Scanner.Views
                         ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
                     break;
                 case nameof(IProjectService.CurrentProject):
+                    if (ViewModel.ProjectService.CurrentProject == null)
+                        ClearCanvasData();
+
                     OnPropertyChanged(nameof(ProjectNavigationIndicator));
                     break;
                 case nameof(IProjectService.TotalNumberOfPages):
@@ -783,9 +786,21 @@ namespace Scanner.Views
 
         private void FlipViewPages_Unloaded(object sender, RoutedEventArgs e)
         {
+            ClearCanvasData();
+        }
+
+        private void ClearCanvasData()
+        {
             foreach (CanvasControl canvas in pageCanvases.Values)
             {
-                ((CanvasPageData?)canvas.Tag)?.Bitmap.Dispose();
+                CanvasPageData? pageData = canvas.Tag as CanvasPageData;
+                if (pageData != null)
+                {
+                    canvas.Draw -= CanvasPreview_Draw;
+                    canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
+                    pageData.Bitmap.Dispose();
+                    pageData.Page.PropertyChanged -= Page_PropertyChanged;
+                }
                 canvas.RemoveFromVisualTree();
             }
             pageCanvases.Clear();

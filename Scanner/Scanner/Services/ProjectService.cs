@@ -189,7 +189,44 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task TryCreateProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
+        public async Task TryCreateProjectAsync(IProjectCreationData creationData, DispatcherQueue uiDispatcherQueue)
+        {
+            try
+            {
+                // close project
+                if (await TryCloseProjectAsync() == false) return;
+
+                // create project
+                CurrentScanState = ScanState.Processing;
+                ProjectBase? project = null;
+                await Task.Run(async () =>
+                {
+                    project = await creationData.CreateProjectAsync(false, uiDispatcherQueue);
+                });
+                CurrentProject = project;
+
+                // save if needed
+                if (SettingsService.SettingAutoSave)
+                {
+                    // save
+                    await Task.Run(async () => await project.SaveAsync(false, UiDispatcherQueue!));
+                }
+
+                // free up space
+                _ = Task.Run(() => _ = AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder));
+            }
+            catch (Exception)
+            {
+                // TODO: catch exceptions and notify user
+                throw;
+            }
+            finally
+            {
+                IsActionRunning = IsScanProcessRunning = false;
+            }
+        }
+
+        public async Task TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -242,7 +279,7 @@ namespace Scanner.Services
                     {
                         case TargetFormat.PDF:
                             PdfProjectCreationData pdfCreationData = new(files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
-                            project = await PdfProject.CreateAsync(pdfCreationData, false, uiDispatcherQueue);
+                            project = await pdfCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         case TargetFormat.JPG:
                         case TargetFormat.PNG:
@@ -250,7 +287,7 @@ namespace Scanner.Services
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
                             ImageProjectCreationData imageCreationData = new(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
-                            project = await ImageProject.CreateAsync(imageCreationData, false, uiDispatcherQueue);
+                            project = await imageCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         default:
                             throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
@@ -378,7 +415,7 @@ namespace Scanner.Services
                 if (await Messenger.Send(new ShowProjectDeletionDialogMessage(CurrentProject)).Response == false) return false;
 
                 // close project
-                await TryCloseProjectAsync(true);
+                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
             }
             catch (ActionFailedAndRolledBackException)
             {
@@ -395,7 +432,7 @@ namespace Scanner.Services
                 }));
 
                 // close project
-                await TryCloseProjectAsync(true);
+                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
             }
             finally
             {
@@ -588,9 +625,10 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false)
+        public async Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false)
         {
-            if (CurrentProject == null) return true;
+            if (CurrentProject == null)
+                return true;
 
             // handle unsaved changes
             if (!ignoreUnsavedChanges && await TrySaveProjectAsync() == false)
@@ -599,14 +637,27 @@ namespace Scanner.Services
             }
 
             // close project
+            ObservableCollection<IProjectPage> pages = CurrentProject.Pages;
             CurrentProject = null;
             SelectedPage = null;
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+
+            if (preserveSourceFilesInIncomingFolder)
+            {
+                // move all source files to the Incoming folder before clearing
+                Task[] tasks = new Task[pages.Count];
+                for (int i = 0; i < pages.Count; i++)
+                {
+                    tasks[i] = pages[i].SourceFile.MoveAsync(AppDataService.IncomingFolder, pages[i].SourceFile.Name, NameCollisionOption.GenerateUniqueName).AsTask();
+                }
+                await Task.WhenAll(tasks);
+            }
+
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
             await AppDataService.EmptyFolderAsync(AppDataService.PreviewFolder);
-            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);
-            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);                
 
             // update undo/redo stacks
             UndoStack.Clear();
@@ -720,7 +771,7 @@ namespace Scanner.Services
                 {
                     Title = "Something went wrong and the project needs to be closed"
                 }));
-                await TryCloseProjectAsync(true);
+                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
             }
             finally
             {
@@ -759,7 +810,7 @@ namespace Scanner.Services
                 {
                     Title = "Something went wrong and the project needs to be closed"
                 }));
-                await TryCloseProjectAsync(true);
+                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
             }
             finally
             {
@@ -809,7 +860,7 @@ namespace Scanner.Services
             process.TrySetResult();
         }
 
-        public async Task<bool> ConvertProjectAsync(TargetFormat targetFormat)
+        public async Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue)
         {
             if (CurrentProject == null) return false;
             IsActionRunning = true;
@@ -817,12 +868,13 @@ namespace Scanner.Services
             try
             {
                 // collect page data for new project
-                IProjectCreationData creationData;
+                IProjectCreationData? creationData = null;
                 switch (targetFormat)
                 {
                     case TargetFormat.PDF:
                         // get file name and target folder from first page
                         ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
+
                         creationData = new PdfProjectCreationData(CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions);
                         break;
                     case TargetFormat.JPG:
@@ -839,9 +891,17 @@ namespace Scanner.Services
                         throw new ArgumentException("Can't convert project to " + targetFormat.ToString());
                 }
 
-                // close project
-                if (!await TryCloseProjectAsync())
+                if (creationData == null)
                     return false;
+
+                // close project and preserve files
+                if (!await TryCloseProjectAsync(preserveSourceFilesInIncomingFolder: true))
+                    return false;
+
+                // create new project from preserved files
+                Task createProjectTask = TryCreateProjectAsync(creationData, uiDispatcherQueue);
+                Messenger.Send(new ShowMultiEditInProgressDialogMessage(createProjectTask));
+                await createProjectTask;
             }
             finally
             {

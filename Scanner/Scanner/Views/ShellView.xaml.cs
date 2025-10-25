@@ -318,9 +318,9 @@ namespace Scanner.Views
                 UnsavedChangesDialogView dialog = new UnsavedChangesDialogView(ViewModel.CurrentProject);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                task.TrySetResult(result != ContentDialogResult.None);
 
                 isDialogVisible = false;
+                task.TrySetResult(result != ContentDialogResult.None);
             });
         }
 
@@ -340,10 +340,10 @@ namespace Scanner.Views
                 SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                if (result == ContentDialogResult.Primary) task.TrySetResult(dialog.SaveOptions);
-                else task.TrySetResult(null);
 
                 isDialogVisible = false;
+                if (result == ContentDialogResult.Primary) task.TrySetResult(dialog.SaveOptions);
+                else task.TrySetResult(null);
             });
         }
 
@@ -363,9 +363,9 @@ namespace Scanner.Views
                 SaveInProgressDialogView dialog = new SaveInProgressDialogView(ViewModel.CurrentProject);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                task.TrySetResult();
 
                 isDialogVisible = false;
+                task.TrySetResult();
             });
         }
 
@@ -385,10 +385,10 @@ namespace Scanner.Views
                 ProjectDeletionDialogView dialog = new ProjectDeletionDialogView(project);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
-                if (result == ContentDialogResult.Primary) task.TrySetResult(true);
-                else task.TrySetResult(false);
 
                 isDialogVisible = false;
+                if (result == ContentDialogResult.Primary) task.TrySetResult(true);
+                else task.TrySetResult(false);
             });
         }
 

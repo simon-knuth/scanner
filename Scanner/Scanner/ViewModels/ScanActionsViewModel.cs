@@ -141,7 +141,7 @@ namespace Scanner.ViewModels
             }
             else
             {
-                await ProjectService.TryCreateProjectAsync(ScanOptions, viewDispatcherQueue);
+                await ProjectService.TryCreateProjectFromScanAsync(ScanOptions, viewDispatcherQueue);
             }
         }
 

@@ -93,6 +93,7 @@
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
             <converters:NegativeEnumIntComparisonVisibilityConverter x:Key="NegativeEnumIntComparisonVisibilityConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:NotNullVisibilityConverter x:Key="NotNullVisibilityConverter" />
             <converters:NullBoolConverter x:Key="NullBoolConverter" />
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
         </ResourceDictionary>
@@ -111,7 +112,7 @@
 
             <!-- Header -->
             <Frame Grid.Row="0" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
-                <Grid x:Name="GridHeader" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                <Grid x:Name="GridHeader" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" Visibility="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28" />
                         <RowDefinition Height="Auto" />

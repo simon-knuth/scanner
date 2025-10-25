@@ -73,10 +73,11 @@ namespace Scanner.Services.Interfaces
         Task TryUndoAsync(IProjectAction? upUntil = null);
         Task TryRedoAsync(IProjectAction? upUntil = null);
         
-        Task TryCreateProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+        Task TryCreateProjectAsync(IProjectCreationData creationData, DispatcherQueue uiDispatcherQueue);
+        Task TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
         Task TryScanToProjectAsync(ScanOptions scanOptions);
 
-        Task<bool> ConvertProjectAsync(TargetFormat targetFormat);
+        Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
 
         Task<bool> TryDeleteProjectAsync();
         Task<bool> TrySaveProjectAsync();
@@ -90,7 +91,7 @@ namespace Scanner.Services.Interfaces
         Task<bool> TryShareProjectAsync();
         Task<bool> TrySharePagesAsync(List<IProjectPage> pages);
 
-        Task<bool> TryCloseProjectAsync(bool ignoreUnsavedChanges = false);
+        Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = true, bool ignoreUnsavedChanges = false);
 
         void SelectPreviousPage();
         void SelectNextPage();
