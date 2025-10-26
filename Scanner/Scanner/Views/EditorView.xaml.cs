@@ -791,6 +791,9 @@ namespace Scanner.Views
 
         private void ClearCanvasData()
         {
+            Dictionary<IProjectPage, CanvasControl> canvases = pageCanvases;
+            pageCanvases = [];
+
             foreach (CanvasControl canvas in pageCanvases.Values)
             {
                 CanvasPageData? pageData = canvas.Tag as CanvasPageData;
