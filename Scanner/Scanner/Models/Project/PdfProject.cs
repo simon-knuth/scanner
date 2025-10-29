@@ -20,6 +20,7 @@ using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -32,6 +33,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Models.PdfProjectSnapshot;
 
 namespace Scanner.Models
 {
@@ -43,6 +45,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Constants
+        private const string tesseractOutputFileDisplayName = "tessoutput";
+        #endregion
+
         public StorageFolder? TargetFolder;
 
         public StorageFile? TargetFile;
@@ -474,6 +480,50 @@ namespace Scanner.Models
         private void FileNameInfo_NameChanged(object? sender, EventArgs e)
         {
             hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
+        }
+
+        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, PdfProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, DispatcherQueue uiDispatcherQueue)
+        {
+            Dictionary<IProjectPage, StorageFile?> result = new();
+            List<StorageFile> files = [];
+            string pdfGenerationFilePath = Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName);
+
+            // generate PDF
+            try
+            {
+                await TesseractService.GeneratePdfAsync(pages.Values.ToList(), pdfGenerationFilePath, uiDispatcherQueue);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to generate PDF");
+                return result;
+            }
+
+            // save PDF to target folder
+            try
+            {
+                StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{tesseractOutputFileDisplayName}.pdf");
+                if (targetFile != null)
+                {
+                    await generatedFile.MoveAndReplaceAsync(targetFile);
+
+                    if (generatedFile.Name != desiredFileName)
+                    {
+                        await generatedFile.RenameAsync(desiredFileName, NameCollisionOption.GenerateUniqueName);
+                    }
+                }
+                else
+                {
+                    await generatedFile.MoveAsync(targetFolder, desiredFileName, NameCollisionOption.GenerateUniqueName);
+                }
+                result.Add(pages.Keys.First(), generatedFile);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to save PDF to target folder");
+            }
+
+            return result;
         }
     }
 }

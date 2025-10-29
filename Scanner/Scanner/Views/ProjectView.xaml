@@ -242,7 +242,7 @@
                                     <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Export pages as separate PDFs..." Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.ExportAllPagesAsSeparatePDFs}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -693,10 +693,13 @@
                                             <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeleteSelectedPages}" Command="{x:Bind ViewModel.RemoveSelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ExportSelectedPagesAsSeparatePDF}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
+                                                <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" IsEnabled="False" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
                                         </StackPanel>

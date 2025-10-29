@@ -29,6 +29,7 @@ using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
 using static Scanner.Helpers.RotationHelpers;
+using static Scanner.Models.PdfProjectSnapshot;
 using static System.Net.WebRequestMethods;
 
 namespace Scanner.ViewModels
@@ -42,6 +43,7 @@ namespace Scanner.ViewModels
         public readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+        public readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
@@ -69,6 +71,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RemoveSelectedPagesAsyncCommand => new AsyncRelayCommand(RemoveSelectedPagesAsync);
         public AsyncRelayCommand TryCopySelectedPagesAsyncCommand => new AsyncRelayCommand(TryCopySelectedPagesAsync);
         public AsyncRelayCommand TryShareSelectedPagesAsyncCommand => new AsyncRelayCommand(TryShareSelectedPagesAsync);
+        public AsyncRelayCommand ExportSelectedPagesAsSeparatePDFAsyncCommand => new AsyncRelayCommand(ExportSelectedPagesAsSeparatePDFAsync);
         public AsyncRelayCommand<ImageFilter> ApplyFilterToSelectedPagesAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToSelectedPagesAsync);
         public RelayCommand StartStopGenerateFileNameWithAICommand => new RelayCommand(StartStopGenerateFileNameWithAI);
         public AsyncRelayCommand ApplyOrderOfPagesToProjectAsyncCommand => new AsyncRelayCommand(ApplyOrderOfPagesToProjectAsync);
@@ -667,6 +670,49 @@ namespace Scanner.ViewModels
             IProjectPage? selectedPage = ProjectService.SelectedPage;
             await ProjectService.ApplyActionAsync(new ApplyOrderOfPagesAction(Pages.ToList()));
             ProjectService.SelectedPage = selectedPage;
+        }
+
+        private async Task ExportSelectedPagesAsSeparatePDFAsync()
+        {
+            if (CurrentProject == null) return;
+            if (CurrentProject is not PdfProject pdfProject) return;
+            if (ProjectService.SelectedPagesCount == 0) return;
+
+            // get save options
+            SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(viewDispatcherQueue!, ((App)Application.Current).MainWindow, CurrentProject.InitialScanOptions,
+                CurrentProject, true, false, pdfProject.FileNameInfo.DesiredDisplayName);
+            if (saveOptions == null)
+                return;
+
+            // export
+            if (IsMultiSelect && ProjectService.SelectedPages != null)
+            {
+                // export selected pages as one PDF file
+                Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
+                foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
+                {
+                    if (page is not ImagePage imagePage)
+                        continue;
+
+                    pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                }
+                await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
+            }
+            else if (ProjectService.SelectedPage != null)
+            {
+                // export every page as a separate PDF
+                foreach (IProjectPage page in CurrentProject.Pages)
+                {
+                    if (page is not ImagePage imagePage)
+                        continue;
+
+                    Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
+                    pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+
+                    await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
+                }
+                await ProjectService.TrySharePagesAsync([ProjectService.SelectedPage]);
+            }
         }
     }
 

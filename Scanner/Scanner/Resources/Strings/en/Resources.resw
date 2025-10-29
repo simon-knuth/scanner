@@ -1868,4 +1868,10 @@ Fuzzy</comment>
   <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
     <value>Reorder pages</value>
   </data>
+  <data name="ExportSelectedPagesAsSeparatePDF" xml:space="preserve">
+    <value>Export selected pages as separate PDF...</value>
+  </data>
+  <data name="ExportAllPagesAsSeparatePDFs" xml:space="preserve">
+    <value>Export all pages as separate PDFs...</value>
+  </data>
 </root>

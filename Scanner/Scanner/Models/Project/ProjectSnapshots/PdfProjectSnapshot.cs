@@ -32,10 +32,6 @@ namespace Scanner.Models
         private static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
         #endregion
 
-        #region Constants
-        private const string tesseractOutputFileDisplayName = "tessoutput";
-        #endregion
-
         public TargetFormat Format { get; private set; } = TargetFormat.PDF;
 
         public string? DesiredFileName { get; private set; }
@@ -74,47 +70,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
+        public Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
-            Dictionary<IProjectPage, StorageFile?> result = new();
-            List<StorageFile> files = [];
-
-            // generate PDF
-            try
-            {
-                await TesseractService.GeneratePdfAsync(Pages.Values.ToList(), Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName), uiDispatcherQueue);
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to generate PDF");
-                return result;
-            }
-
-            // save PDF to target folder
-            try
-            {
-                StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{tesseractOutputFileDisplayName}.pdf");
-                if (TargetFile != null)
-                {
-                    await generatedFile.MoveAndReplaceAsync(TargetFile);
-
-                    if (generatedFile.Name != DesiredFileName)
-                    {
-                        await generatedFile.RenameAsync(DesiredFileName, NameCollisionOption.GenerateUniqueName);
-                    }
-                }
-                else
-                {
-                    await generatedFile.MoveAsync(TargetFolder, DesiredFileName, NameCollisionOption.GenerateUniqueName);
-                }
-                result.Add(Pages.Keys.First(), generatedFile);
-            }
-            catch (Exception exc)
-            {
-                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to save PDF to target folder");
-            }
-
-            return result;
+            return PdfProject.CreatePdfFromPagesAsync(Pages, TargetFile, DesiredFileName, TargetFolder, uiDispatcherQueue);
         }
 
 
